@@ -25,6 +25,8 @@ export const DIRECTIVES = [
   d.KiLink,
   d.KiList,
   d.KiListItem,
+  d.KiMobileNav,
+  d.KiMobileNavItem,
   d.KiNote,
   d.KiOption,
   d.KiProgress,

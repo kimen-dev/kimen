@@ -8008,6 +8008,389 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-mobile-nav.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMobileNav",
+          "customElement": true,
+          "tagName": "ki-mobile-nav",
+          "description": "A fixed or floating navigation bar for the main destinations of a phone layout.",
+          "whenToUse": "Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.",
+          "whenNotToUse": "Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main'",
+              "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"fixed\" | \"floating\""
+              },
+              "default": "'fixed'",
+              "description": "Place the bar edge to edge or inset it as a raised pill."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main'",
+              "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"fixed\" | \"floating\""
+              },
+              "default": "'fixed'",
+              "description": "Place the bar edge to edge or inset it as a raised pill.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Three to five direct ki-mobile-nav-item destinations."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "bar",
+              "description": "The native navigation landmark and painted bar."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-mobile-nav-backdrop-filter",
+              "description": "Complete optional backdrop filter for either bar variant."
+            },
+            {
+              "name": "--ki-mobile-nav-bg",
+              "description": "Fixed bar surface."
+            },
+            {
+              "name": "--ki-mobile-nav-bg-image",
+              "description": "Optional decorative image for either bar variant."
+            },
+            {
+              "name": "--ki-mobile-nav-border",
+              "description": "Stroke along the fixed bar or around the floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-border-width",
+              "description": "Bar border width."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-bg",
+              "description": "Floating bar surface."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-inset",
+              "description": "Space beside and below the floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-padding",
+              "description": "Inline padding inside the floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-radius",
+              "description": "Floating bar pill shape."
+            },
+            {
+              "name": "--ki-mobile-nav-floating-shadow",
+              "description": "Elevation of the floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-font-family",
+              "description": "Typeface for the bar and its destination labels."
+            },
+            {
+              "name": "--ki-mobile-nav-height",
+              "description": "Minimum height before the safe area and border are added."
+            },
+            {
+              "name": "--ki-mobile-nav-item-target-min",
+              "description": "Minimum block and inline link target size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMobileNav",
+          "declaration": {
+            "name": "KiMobileNav",
+            "module": "dist/components/ki-mobile-nav.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-mobile-nav",
+          "declaration": {
+            "name": "KiMobileNav",
+            "module": "dist/components/ki-mobile-nav.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-mobile-nav-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiMobileNavItem",
+          "customElement": true,
+          "tagName": "ki-mobile-nav-item",
+          "description": "An icon and visible label for one mobile navigation destination.",
+          "whenToUse": "Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.",
+          "whenNotToUse": "For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.",
+          "attributes": [
+            {
+              "name": "count",
+              "fieldName": "count",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99."
+            },
+            {
+              "name": "count-label",
+              "fieldName": "countLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{count} new'",
+              "description": "Localized suffix for the link name. Use {count} for the full rounded count."
+            },
+            {
+              "name": "current",
+              "fieldName": "current",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks this link as the current page."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
+              "required": true,
+              "format": "url"
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string"
+              },
+              "description": "Registered icon name. The visible destination text supplies the link name.",
+              "required": true
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "count",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99.",
+              "attribute": "count",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "countLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{count} new'",
+              "description": "Localized suffix for the link name. Use {count} for the full rounded count.",
+              "attribute": "count-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "current",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks this link as the current page.",
+              "attribute": "current",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
+              "attribute": "href",
+              "reflects": false,
+              "required": true,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Registered icon name. The visible destination text supplies the link name.",
+              "attribute": "icon-name",
+              "reflects": false,
+              "required": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Visible destination text. Use plain text or noninteractive phrasing content."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "indicator",
+              "description": "The icon well painted on the current destination."
+            },
+            {
+              "name": "label",
+              "description": "The always-visible destination label."
+            },
+            {
+              "name": "link",
+              "description": "The native anchor and focus target."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-mobile-nav-border-width",
+              "description": "Bar border width."
+            },
+            {
+              "name": "--ki-mobile-nav-font-family",
+              "description": "Typeface for the bar and its destination labels."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-bg",
+              "description": "Fill behind the current destination icon."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-block-size",
+              "description": "Current icon pill height."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-fg",
+              "description": "Icon ink on the current destination fill."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-inline-size",
+              "description": "Current icon pill width."
+            },
+            {
+              "name": "--ki-mobile-nav-indicator-radius",
+              "description": "Current icon pill corner radius."
+            },
+            {
+              "name": "--ki-mobile-nav-item-current-fg",
+              "description": "Label ink of the current destination on the fixed or floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-item-fg",
+              "description": "Foreground ink of an inactive destination on the fixed or floating bar."
+            },
+            {
+              "name": "--ki-mobile-nav-item-focus-radius",
+              "description": "Corner radius of the keyboard focus indication."
+            },
+            {
+              "name": "--ki-mobile-nav-item-font-size",
+              "description": "Destination label font size."
+            },
+            {
+              "name": "--ki-mobile-nav-item-font-weight",
+              "description": "Destination label font weight."
+            },
+            {
+              "name": "--ki-mobile-nav-item-gap",
+              "description": "Gap between the glyph and its label."
+            },
+            {
+              "name": "--ki-mobile-nav-item-icon-size",
+              "description": "Destination glyph size."
+            },
+            {
+              "name": "--ki-mobile-nav-item-line-height",
+              "description": "Destination label line height."
+            },
+            {
+              "name": "--ki-mobile-nav-item-target-min",
+              "description": "Minimum block and inline link target size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiMobileNavItem",
+          "declaration": {
+            "name": "KiMobileNavItem",
+            "module": "dist/components/ki-mobile-nav-item.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-mobile-nav-item",
+          "declaration": {
+            "name": "KiMobileNavItem",
+            "module": "dist/components/ki-mobile-nav-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-note.js",
       "declarations": [
         {

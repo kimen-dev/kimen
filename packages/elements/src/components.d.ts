@@ -26,6 +26,7 @@ import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+import { KiMobileNavVariant } from "./components/ki-mobile-nav/ki-mobile-nav";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -63,6 +64,7 @@ export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+export { KiMobileNavVariant } from "./components/ki-mobile-nav/ki-mobile-nav";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -932,6 +934,54 @@ export namespace Components {
           * @default 'md'
          */
         "size": KiListItemSize;
+    }
+    /**
+     * A fixed or floating navigation bar for the main destinations of a phone layout.
+     * @whenToUse Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
+     * @whenNotToUse Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+     */
+    interface KiMobileNav {
+        /**
+          * Accessible name of the landmark. Supply a distinct name when the page has more than one navigation landmark.
+          * @default 'Main'
+         */
+        "label": string;
+        /**
+          * Place the bar edge to edge or inset it as a raised pill.
+          * @default 'fixed'
+         */
+        "variant": KiMobileNavVariant;
+    }
+    /**
+     * An icon and visible label for one mobile navigation destination.
+     * @whenToUse Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
+     * @whenNotToUse For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
+     */
+    interface KiMobileNavItem {
+        /**
+          * Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.
+          * @default undefined
+         */
+        "count"?: number;
+        /**
+          * Localized suffix for the link name. Use {count} for the full rounded count.
+          * @default '{count} new'
+         */
+        "countLabel": string;
+        /**
+          * Marks this link as the current page.
+          * @default false
+         */
+        "current": boolean;
+        /**
+          * Destination URL. Relative paths and fragments use native anchor resolution.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Registered icon name. The visible destination text supplies the link name.
+         */
+        "iconName": string;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -2235,6 +2285,28 @@ declare global {
         new (): HTMLKiListItemElement;
     };
     /**
+     * A fixed or floating navigation bar for the main destinations of a phone layout.
+     * @whenToUse Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
+     * @whenNotToUse Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+     */
+    interface HTMLKiMobileNavElement extends Components.KiMobileNav, HTMLStencilElement {
+    }
+    var HTMLKiMobileNavElement: {
+        prototype: HTMLKiMobileNavElement;
+        new (): HTMLKiMobileNavElement;
+    };
+    /**
+     * An icon and visible label for one mobile navigation destination.
+     * @whenToUse Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
+     * @whenNotToUse For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
+     */
+    interface HTMLKiMobileNavItemElement extends Components.KiMobileNavItem, HTMLStencilElement {
+    }
+    var HTMLKiMobileNavItemElement: {
+        prototype: HTMLKiMobileNavItemElement;
+        new (): HTMLKiMobileNavItemElement;
+    };
+    /**
      * A compact, static explanation beside a control or inside a card.
      * @whenToUse Add a short constraint, tip or consequence next to the content
      * it explains. Put the consequence first when warning the reader.
@@ -2707,6 +2779,8 @@ declare global {
         "ki-link": HTMLKiLinkElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
+        "ki-mobile-nav": HTMLKiMobileNavElement;
+        "ki-mobile-nav-item": HTMLKiMobileNavItemElement;
         "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
@@ -3635,6 +3709,54 @@ declare namespace LocalJSX {
           * @default 'md'
          */
         "size"?: KiListItemSize;
+    }
+    /**
+     * A fixed or floating navigation bar for the main destinations of a phone layout.
+     * @whenToUse Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
+     * @whenNotToUse Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+     */
+    interface KiMobileNav {
+        /**
+          * Accessible name of the landmark. Supply a distinct name when the page has more than one navigation landmark.
+          * @default 'Main'
+         */
+        "label"?: string;
+        /**
+          * Place the bar edge to edge or inset it as a raised pill.
+          * @default 'fixed'
+         */
+        "variant"?: KiMobileNavVariant;
+    }
+    /**
+     * An icon and visible label for one mobile navigation destination.
+     * @whenToUse Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
+     * @whenNotToUse For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
+     */
+    interface KiMobileNavItem {
+        /**
+          * Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.
+          * @default undefined
+         */
+        "count"?: number;
+        /**
+          * Localized suffix for the link name. Use {count} for the full rounded count.
+          * @default '{count} new'
+         */
+        "countLabel"?: string;
+        /**
+          * Marks this link as the current page.
+          * @default false
+         */
+        "current"?: boolean;
+        /**
+          * Destination URL. Relative paths and fragments use native anchor resolution.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Registered icon name. The visible destination text supplies the link name.
+         */
+        "iconName": string;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -4617,6 +4739,17 @@ declare namespace LocalJSX {
     interface KiListItemAttributes {
         "size": KiListItemSize;
     }
+    interface KiMobileNavAttributes {
+        "label": string;
+        "variant": KiMobileNavVariant;
+    }
+    interface KiMobileNavItemAttributes {
+        "href": string;
+        "iconName": string;
+        "current": boolean;
+        "count": number;
+        "countLabel": string;
+    }
     interface KiNoteAttributes {
         "tone": KiNoteTone;
         "size": KiNoteSize;
@@ -4787,6 +4920,8 @@ declare namespace LocalJSX {
         "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
         "ki-list": KiList;
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
+        "ki-mobile-nav": Omit<KiMobileNav, keyof KiMobileNavAttributes> & { [K in keyof KiMobileNav & keyof KiMobileNavAttributes]?: KiMobileNav[K] } & { [K in keyof KiMobileNav & keyof KiMobileNavAttributes as `attr:${K}`]?: KiMobileNavAttributes[K] } & { [K in keyof KiMobileNav & keyof KiMobileNavAttributes as `prop:${K}`]?: KiMobileNav[K] };
+        "ki-mobile-nav-item": Omit<KiMobileNavItem, keyof KiMobileNavItemAttributes> & { [K in keyof KiMobileNavItem & keyof KiMobileNavItemAttributes]?: KiMobileNavItem[K] } & { [K in keyof KiMobileNavItem & keyof KiMobileNavItemAttributes as `attr:${K}`]?: KiMobileNavItemAttributes[K] } & { [K in keyof KiMobileNavItem & keyof KiMobileNavItemAttributes as `prop:${K}`]?: KiMobileNavItem[K] } & OneOf<"href", KiMobileNavItem["href"], KiMobileNavItemAttributes["href"]> & OneOf<"iconName", KiMobileNavItem["iconName"], KiMobileNavItemAttributes["iconName"]>;
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
@@ -5081,6 +5216,18 @@ declare module "@stencil/core" {
              * tabular row, navigation link or whole-item clickable control.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
+            /**
+             * A fixed or floating navigation bar for the main destinations of a phone layout.
+             * @whenToUse Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow.
+             * @whenNotToUse Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.
+             */
+            "ki-mobile-nav": LocalJSX.IntrinsicElements["ki-mobile-nav"] & JSXBase.HTMLAttributes<HTMLKiMobileNavElement>;
+            /**
+             * An icon and visible label for one mobile navigation destination.
+             * @whenToUse Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation.
+             * @whenNotToUse For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.
+             */
+            "ki-mobile-nav-item": LocalJSX.IntrinsicElements["ki-mobile-nav-item"] & JSXBase.HTMLAttributes<HTMLKiMobileNavItemElement>;
             /**
              * A compact, static explanation beside a control or inside a card.
              * @whenToUse Add a short constraint, tip or consequence next to the content

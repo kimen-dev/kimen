@@ -29,6 +29,8 @@ import { defineCustomElement as defineKiInput } from '@kimen/elements/components
 import { defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
+import { defineCustomElement as defineKiMobileNav } from '@kimen/elements/components/ki-mobile-nav.js';
+import { defineCustomElement as defineKiMobileNavItem } from '@kimen/elements/components/ki-mobile-nav-item.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
@@ -633,6 +635,52 @@ export class KiListItem {
 
 
 export declare interface KiListItem extends Components.KiListItem {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMobileNav,
+  inputs: ['label', 'variant']
+})
+@Component({
+  selector: 'ki-mobile-nav',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label', 'variant'],
+})
+export class KiMobileNav {
+  protected el: HTMLKiMobileNavElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMobileNav extends Components.KiMobileNav {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMobileNavItem,
+  inputs: ['count', 'countLabel', 'current', 'href', 'iconName']
+})
+@Component({
+  selector: 'ki-mobile-nav-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['count', 'countLabel', 'current', { name: 'href', required: true }, { name: 'iconName', required: true }],
+})
+export class KiMobileNavItem {
+  protected el: HTMLKiMobileNavItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMobileNavItem extends Components.KiMobileNavItem {}
 
 
 @ProxyCmp({

@@ -3217,9 +3217,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-mobile-nav-item"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-mobile-nav-item": [
+          "ki-counter"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
@@ -3931,9 +3937,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-mobile-nav-item"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-mobile-nav-item": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -5869,6 +5881,337 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-mobile-nav/ki-mobile-nav.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-mobile-nav",
+      "docs": "A fixed or floating navigation bar for the main destinations of a phone layout.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations."
+        },
+        {
+          "name": "slot",
+          "text": "- Three to five direct ki-mobile-nav-item destinations."
+        },
+        {
+          "name": "part",
+          "text": "bar - The native navigation landmark and painted bar."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-mobile-nav\n\nUse one bottom navigation bar for the three to five top-level destinations in\nthe phone layout. Place it after the content. The host reserves space in the\napp shell so the last content can scroll above the links.\n\n```js\nimport '@kimen/elements/icons/house';\nimport '@kimen/elements/icons/search';\nimport '@kimen/elements/icons/inbox';\n```\n\n```html\n<main>\n  <!-- App content -->\n</main>\n<ki-mobile-nav label=\"Main\" variant=\"floating\">\n  <ki-mobile-nav-item href=\"/\" icon-name=\"house\" current>Home</ki-mobile-nav-item>\n  <ki-mobile-nav-item href=\"/search\" icon-name=\"search\">Search</ki-mobile-nav-item>\n  <ki-mobile-nav-item href=\"/inbox\" icon-name=\"inbox\" count=\"3\">Inbox</ki-mobile-nav-item>\n</ki-mobile-nav>\n```\n\nOmit `variant` for an edge-to-edge bar. When switching to TopNav or Sidebar,\nuse one app breakpoint to hide this bar and show the wider navigation.\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Main'"
+            }
+          ],
+          "default": "'Main'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"fixed\" | \"floating\"",
+          "complexType": {
+            "original": "KiMobileNavVariant",
+            "resolved": "\"fixed\" | \"floating\"",
+            "references": {
+              "KiMobileNavVariant": {
+                "location": "local",
+                "path": "src/components/ki-mobile-nav/ki-mobile-nav.tsx",
+                "id": "src/components/ki-mobile-nav/ki-mobile-nav.tsx::KiMobileNavVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Place the bar edge to edge or inset it as a raised pill.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'fixed'"
+            }
+          ],
+          "default": "'fixed'",
+          "values": [
+            {
+              "value": "fixed",
+              "type": "string"
+            },
+            {
+              "value": "floating",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Three to five direct ki-mobile-nav-item destinations."
+        }
+      ],
+      "parts": [
+        {
+          "name": "bar",
+          "docs": "The native navigation landmark and painted bar."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-mobile-nav-item/ki-mobile-nav-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-mobile-nav-item",
+      "docs": "An icon and visible label for one mobile navigation destination.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link."
+        },
+        {
+          "name": "slot",
+          "text": "- Visible destination text. Use plain text or noninteractive phrasing content."
+        },
+        {
+          "name": "part",
+          "text": "link - The native anchor and focus target."
+        },
+        {
+          "name": "part",
+          "text": "indicator - The icon well painted on the current destination."
+        },
+        {
+          "name": "part",
+          "text": "label - The always-visible destination label."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-mobile-nav-item\n\nUse a short label, a registered icon and a destination URL for each native\nlink inside `ki-mobile-nav`.\n\n```html\n<ki-mobile-nav-item href=\"/\" icon-name=\"house\" current>Home</ki-mobile-nav-item>\n<ki-mobile-nav-item href=\"/inbox\" icon-name=\"inbox\" count=\"125\" count-label=\"{count} unread\">\n  Inbox\n</ki-mobile-nav-item>\n```\n\nMark the active destination with `current`. The second link shows `99+` in the\nbadge and is announced as “Inbox, 125 unread”. A zero count hides the badge.\n"
+      },
+      "props": [
+        {
+          "name": "count",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count",
+          "reflectToAttr": false,
+          "docs": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "countLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count-label",
+          "reflectToAttr": false,
+          "docs": "Localized suffix for the link name. Use {count} for the full rounded count.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} new'"
+            }
+          ],
+          "default": "'{count} new'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "current",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "current",
+          "reflectToAttr": true,
+          "docs": "Marks this link as the current page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "Destination URL. Relative paths and fragments use native anchor resolution.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Registered icon name. The visible destination text supplies the link name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Visible destination text. Use plain text or noninteractive phrasing content."
+        }
+      ],
+      "parts": [
+        {
+          "name": "indicator",
+          "docs": "The icon well painted on the current destination."
+        },
+        {
+          "name": "label",
+          "docs": "The always-visible destination label."
+        },
+        {
+          "name": "link",
+          "docs": "The native anchor and focus target."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-counter"
+      ],
+      "dependencyGraph": {
+        "ki-mobile-nav-item": [
+          "ki-icon",
+          "ki-counter"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-note/ki-note.tsx",
@@ -10785,6 +11128,11 @@
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
+    },
+    "src/components/ki-mobile-nav/ki-mobile-nav.tsx::KiMobileNavVariant": {
+      "declaration": "export type KiMobileNavVariant = 'fixed' | 'floating';",
+      "docstring": "",
+      "path": "src/components/ki-mobile-nav/ki-mobile-nav.tsx"
     },
     "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
       "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",

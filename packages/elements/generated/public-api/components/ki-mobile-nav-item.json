@@ -1,0 +1,297 @@
+{
+  "component": {
+    "attributes": {
+      "count": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "count-label": {
+        "default": "'{count} new'",
+        "deprecatedSince": null,
+        "description": "Localized suffix for the link name. Use {count} for the full rounded count.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "current": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Marks this link as the current page.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "icon-name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Registered icon name. The visible destination text supplies the link name.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Bar border width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface for the bar and its destination labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-indicator-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill behind the current destination icon.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-indicator-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current icon pill height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-indicator-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Icon ink on the current destination fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-indicator-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current icon pill width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-indicator-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current icon pill corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-current-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label ink of the current destination on the fixed or floating bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground ink of an inactive destination on the fixed or floating bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-focus-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the keyboard focus indication.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination label font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination label font weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the glyph and its label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination glyph size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination label line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-mobile-nav-item-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum block and inline link target size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "An icon and visible label for one mobile navigation destination.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The icon well painted on the current destination.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The always-visible destination label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "link": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native anchor and focus target.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "count": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "countLabel": {
+        "default": "'{count} new'",
+        "deprecatedSince": null,
+        "description": "Localized suffix for the link name. Use {count} for the full rounded count.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "current": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Marks this link as the current page.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "iconName": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Registered icon name. The visible destination text supplies the link name.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible destination text. Use plain text or noninteractive phrasing content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-mobile-nav-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-mobile-nav-item.d.ts",
+    "symbols": {
+      "KiMobileNavItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiMobileNavItem extends Components.KiMobileNavItem, HTMLElement {\n}\nexport const KiMobileNavItem: {\n    prototype: KiMobileNavItem;\n    new (): KiMobileNavItem;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-mobile-nav-item.js"
+  }
+}

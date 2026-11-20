@@ -1214,6 +1214,69 @@ export const catalogData = {
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
     },
+    "ki-mobile-nav": {
+      "description": "A fixed or floating navigation bar for the main destinations of a phone layout.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the landmark. Supply a distinct name when the page\nhas more than one navigation landmark.",
+          "default": "Main"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "floating"
+          ],
+          "description": "Place the bar edge to edge or inset it as a raised pill.",
+          "default": "fixed"
+        }
+      },
+      "slots": {
+        "": "Three to five direct ki-mobile-nav-item destinations."
+      },
+      "tag": "ki-mobile-nav",
+      "whenNotToUse": "Use buttons for actions. Use TopNav or Sidebar on wide layouts or when there are more than five destinations.",
+      "whenToUse": "Place after the main content of a narrow layout. Supply three to five direct ki-mobile-nav-item children and mark the current page on its item. The host reserves room for the bar in normal flow."
+    },
+    "ki-mobile-nav-item": {
+      "description": "An icon and visible label for one mobile navigation destination.",
+      "events": {},
+      "props": {
+        "count": {
+          "type": "number",
+          "description": "Optional count of new items. Only finite counts of at least one are shown.\nThe painted count is abbreviated above 99."
+        },
+        "count-label": {
+          "type": "string",
+          "description": "Localized suffix for the link name. Use {count} for the full rounded count.",
+          "default": "{count} new"
+        },
+        "current": {
+          "type": "boolean",
+          "description": "Marks this link as the current page.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Destination URL. Relative paths and fragments use native anchor resolution.",
+          "required": true,
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered icon name. The visible destination text supplies the link name.",
+          "required": true
+        }
+      },
+      "slots": {
+        "": "Visible destination text. Use plain text or noninteractive phrasing content."
+      },
+      "tag": "ki-mobile-nav-item",
+      "whenNotToUse": "For a command on the current page, use a button. For inline navigation outside a bottom bar, use ki-link.",
+      "whenToUse": "Place directly in ki-mobile-nav. Register a decorative icon and supply a short visible text label. Leave the catalog click action unset for native navigation."
+    },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",
       "events": {},

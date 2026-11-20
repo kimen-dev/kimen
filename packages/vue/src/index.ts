@@ -28,6 +28,8 @@ export { KiInput } from './ki-input.js';
 export { KiLink } from './ki-link.js';
 export { KiList } from './ki-list.js';
 export { KiListItem } from './ki-list-item.js';
+export { KiMobileNav } from './ki-mobile-nav.js';
+export { KiMobileNavItem } from './ki-mobile-nav-item.js';
 export { KiNote } from './ki-note.js';
 export { KiOption } from './ki-option.js';
 export { KiProgress } from './ki-progress.js';

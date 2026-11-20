@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 435 semantic
-and 1386 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 442 semantic
+and 1412 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -250,6 +250,18 @@ every component at once.
 | `--ki-motion-easing-standard-accelerate` | `cubic-bezier(0.42, 0, 1, 1)` | Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in). |
 | `--ki-motion-easing-standard-decelerate` | `cubic-bezier(0, 0, 0.58, 1)` | Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out). |
 | `--ki-motion-scale-activity-pulse-min` | `0.7` | Smallest visual scale of an activity pulse. |
+
+### `ki.navigation-bar`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-navigation-bar-bar-height` | `4rem` | Minimum baseline height of a bottom navigation bar. |
+| `--ki-navigation-bar-bar-inset` | `1rem` | Space beside and below an inset bottom navigation bar. |
+| `--ki-navigation-bar-bar-padding` | `0.5rem` | Inline padding inside a floating bottom navigation bar. |
+| `--ki-navigation-bar-destination-gap` | `0.125rem` | Space between a destination icon and its label. |
+| `--ki-navigation-bar-destination-target` | `48px` | Minimum block and inline size of a mobile navigation destination. |
+| `--ki-navigation-bar-indicator-block-size` | `1.75rem` | Height of the current destination icon pill. |
+| `--ki-navigation-bar-indicator-inline-size` | `3.5rem` | Width of the current destination icon pill. |
 
 ### `ki.notification-marker`
 
@@ -1503,6 +1515,42 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-list-item-xl-secondary-font-size` | `0.8125rem` | dimension used by the list component for xl secondary font size (List 10063:2066 xl description: UI/para). |
 | `--ki-list-item-xl-secondary-line-height` | `1.25rem` | dimension used by the list component for xl secondary line height (List 10063:2066 xl). |
 | `--ki-list-padding` | `0rem` | dimension used by the list component for padding. |
+
+### `ki-mobile-nav`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-mobile-nav-backdrop-filter` | `none` | Complete optional backdrop filter for either bar variant. |
+| `--ki-mobile-nav-bg` | `#ffffff` | Fixed bar surface. |
+| `--ki-mobile-nav-bg-image` | `none` | Optional decorative image for either bar variant. |
+| `--ki-mobile-nav-border` | `rgba(24, 22, 19, 0.1)` | Stroke along the fixed bar or around the floating bar. |
+| `--ki-mobile-nav-border-width` | `1px` | Bar border width. |
+| `--ki-mobile-nav-floating-bg` | `#f9f7f4` | Floating bar surface. |
+| `--ki-mobile-nav-floating-inset` | `1rem` | Space beside and below the floating bar. |
+| `--ki-mobile-nav-floating-padding` | `0.5rem` | Inline padding inside the floating bar. |
+| `--ki-mobile-nav-floating-radius` | `1000px` | Floating bar pill shape. |
+| `--ki-mobile-nav-floating-shadow` | `0 4px 12px 0 rgba(24, 22, 19, 0.07), 0 20px 44px 0 rgba(24, 22, 19, 0.12), 0 18px 40px 0 transparent` | Elevation of the floating bar. |
+| `--ki-mobile-nav-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface for the bar and its destination labels. |
+| `--ki-mobile-nav-height` | `4rem` | Minimum height before the safe area and border are added. |
+| `--ki-mobile-nav-indicator-bg` | `#ffebe5` | Fill behind the current destination icon. |
+| `--ki-mobile-nav-indicator-block-size` | `1.75rem` | Current icon pill height. |
+| `--ki-mobile-nav-indicator-fg` | `#ad411c` | Icon ink on the current destination fill. |
+| `--ki-mobile-nav-indicator-inline-size` | `3.5rem` | Current icon pill width. |
+| `--ki-mobile-nav-indicator-radius` | `1000px` | Current icon pill corner radius. |
+
+### `ki-mobile-nav-item`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-mobile-nav-item-current-fg` | `#ad411c` | Label ink of the current destination on the fixed or floating bar. |
+| `--ki-mobile-nav-item-fg` | `#5e5953` | Foreground ink of an inactive destination on the fixed or floating bar. |
+| `--ki-mobile-nav-item-focus-radius` | `8px` | Corner radius of the keyboard focus indication. |
+| `--ki-mobile-nav-item-font-size` | `0.625rem` | Destination label font size. |
+| `--ki-mobile-nav-item-font-weight` | `600` | Destination label font weight. |
+| `--ki-mobile-nav-item-gap` | `0.125rem` | Gap between the glyph and its label. |
+| `--ki-mobile-nav-item-icon-size` | `1.25rem` | Destination glyph size. |
+| `--ki-mobile-nav-item-line-height` | `1rem` | Destination label line height. |
+| `--ki-mobile-nav-item-target-min` | `48px` | Minimum block and inline link target size. |
 
 ### `ki-note`
 
