@@ -13,7 +13,7 @@ sighted discoverability. While the action it started is in progress, set
 ## When not to use
 
 whenever a visible label fits (use ki-button), toggling
-state (a future toggle icon button), navigation (use a link), or form
+state without supplying `pressed`, navigation (use a link), or form
 submit/reset (ki-icon-button is not form-associated; use ki-button, whose
 visible label communicates the consequence).
 
@@ -59,6 +59,15 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 </ki-tooltip>
 ```
 
+An icon button in the dialog footer can dismiss it by ID. The dialog must be
+in the same document or shadow root as the icon button.
+
+```html
+<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+</ki-icon-button>
+```
+
 While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
 
 ```html
@@ -69,10 +78,14 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 
 ## Attributes
 
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
+- `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
 - `loading` (boolean, default false): Pending state of the action this icon button started (refreshing, sending). While set, every activation is blocked (pointer, Enter and Space), but the icon button stays focusable, in the Tab order and at its size: the icon stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its `label`, and `loadingLabel` is announced as a polite status message. `disabled` wins over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this icon button started is running, so a second activation cannot repeat it. When NOT to use: for an icon button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the icon button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Refreshing"). When NOT to use: do not repeat `label` here; the person already hears it on focus.
+- `pressed` (boolean | undefined): Application-owned toggle state. The native icon button exposes this as `aria-pressed`. Omit for a momentary action.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, and `ghost` for accent icon actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
@@ -80,6 +93,7 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 ## Slots
 
 - (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name — that comes from `label` alone.
+- `counter`: Decorative ki-counter in the block-start inline-end corner. Include its meaning in the button label.
 
 ## Parts
 
@@ -238,6 +252,7 @@ None.
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
 - `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
+- `--ki-counter-ring-width`: Thickness of the separating ring.
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-icon-button-lg-icon-size`: dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px).

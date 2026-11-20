@@ -1,0 +1,27 @@
+{
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
+  "catalog": true,
+  "budgetGroup": {
+    "members": ["ki-menu", "ki-menu-item", "ki-menu-group"]
+  },
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 24408,
+      "gzip": 6210,
+      "brotli": 4660
+    },
+    "mcpServer": {
+      "raw": 36999,
+      "gzip": 7729,
+      "brotli": 5733
+    },
+    "tokenStylesheets": {
+      "onmars": 324
+    }
+  }
+}

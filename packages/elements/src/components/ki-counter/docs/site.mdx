@@ -1,0 +1,47 @@
+---
+title: ki-counter
+description: A decorative unread count or presence dot on a trigger.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a counter for unread or pending items on a trigger, or for presence on
+an avatar. Use `ki-badge` for object status and text or `ki-badge` for a count
+within a list row.
+
+<Demo code={`<ki-icon-button variant="secondary" label="Messages, 120 unread">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+    <path d="M3 4h18v12H9l-6 4V4Z" stroke-width="2" stroke-linejoin="round" />
+  </svg>
+  <ki-counter slot="counter" value="120"></ki-counter>
+</ki-icon-button>
+<ki-avatar initials="AG" label="Ana García, online">
+  <ki-counter slot="counter" tone="success" dot></ki-counter>
+</ki-avatar>`} />
+
+A count of zero hides the pill. Values above `max` display the cap with a
+plus sign. Set `dot` for a marker without digits. The tone defaults to
+`danger` and also accepts `primary`, `success`, and `neutral`.
+
+## Accessible placement
+
+Use the `counter` slot on `ki-icon-button` or `ki-avatar`. For an external
+trigger such as a link, set `for` to its ID in the same document or shadow root.
+
+```html
+<a id="inbox-link" href="/inbox" aria-label="Inbox, 120 unread">Inbox</a>
+<ki-counter for="inbox-link" value="120"></ki-counter>
+<p id="inbox-updates" role="status"></p>
+```
+
+Include the meaning in the trigger's accessible name. For important changes,
+update a pre-existing polite status region once with the localized message.
+
+## API reference
+
+<CemApi tag="ki-counter" />
+
+## Workshop
+
+[Open ki-counter in Storybook](/storybook/?path=/docs/docs-components-ki-counter--docs)

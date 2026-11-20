@@ -225,9 +225,8 @@ compose several into `ki-avatar-group` for a compact "who is involved"
 stack with overflow.
 When NOT to use: as a clickable control (compose the avatar inside an
 interactive host such as ki-button), for logos or arbitrary illustrations
-(plain `img`), for presence/verification adornments overlaid on the corner
-(a future overlay concern shared with the nav badge), or unlabeled when no
-adjacent text names the identity.
+(plain `img`), or unlabeled when no adjacent text names the identity.
+Use the counter slot for a decorative count or presence dot.
 
 Examples:
 
@@ -259,7 +258,8 @@ Attributes:
 - `size` ("lg" | "md" | "sm" | "xl" | "xs" | "xxs", default 'md'): Size step over the shared scale; per-size metrics (box, initials font, figure glyph) are per-theme component tokens, never hardcoded (FR-004). An unrecognized value matches no style selector, so the avatar keeps the default medium metrics (fallback by CSS construction, FR-007).
 - `src` (string | undefined, URL): Portrait URL, the first step of the fallback chain. When it fails to load — initially or at runtime — the avatar silently falls back to the initials (or the generic figure) with no error, no layout change and no event (FR-001). Loading policy follows the platform image defaults.
 
-Slots: none
+Slots:
+- `counter`: Decorative ki-counter. Counts sit at block-start inline-end and dots at block-end inline-end. Include its meaning in the avatar label.
 
 Parts:
 - `avatar`: The avatar box: size, shape, surface, border and typography.
@@ -297,6 +297,7 @@ CSS custom properties:
 - `--ki-avatar-xxs-font-size`: dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px).
 - `--ki-avatar-xxs-icon-size`: dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl).
 - `--ki-avatar-xxs-size`: dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md).
+- `--ki-counter-ring-width`: Thickness of the separating ring.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
@@ -425,7 +426,7 @@ only reinforces the text, it never replaces it.
 When NOT to use: feedback that must be announced (that is
 ki-alert's job — the badge has no live region), an interactive
 chip, filter or button, empty content (the label IS the meaning), or a
-notification-counter overlay (a future, separate concern).
+notification-counter overlay (use ki-counter).
 
 Examples:
 
@@ -539,6 +540,18 @@ A standalone primary action:
 </form>
 ```
 
+Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
+dialog and invoker share a document or shadow root. The command takes
+precedence over form submission or reset.
+
+```html
+<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
+<ki-dialog id="draft-preview" heading="Draft preview">
+  This draft is visible only to you.
+  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
+</ki-dialog>
+```
+
 Programmatic creation after registration; string attributes and properties are interchangeable:
 
 ```ts
@@ -574,13 +587,15 @@ While the action a button started is in progress, set `loading` on it instead of
 ```
 
 Attributes:
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
 - `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
-- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
 - `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
@@ -789,18 +804,133 @@ CSS custom properties:
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
+### ki-button-group
+
+Arranges related actions as a spaced group, attached group, or keyboard toolbar.
+
+When to use: place two to five related actions together, present a primary
+action with a menu of alternatives, or give formatting tools one Tab stop.
+When NOT to use: for a single-choice setting, unrelated actions, or navigation.
+Use a segmented control for a single-choice setting and links for navigation.
+
+Examples:
+
+# Using ki-button-group
+
+## Spaced and attached groups
+
+Use a label that describes what the actions do together. In attached mode the
+first button provides the common variant and size. An explicit group size
+applies in both modes.
+
+```html
+<ki-button-group label="History">
+  <ki-button type="button">Undo</ki-button>
+  <ki-button type="button">Redo</ki-button>
+</ki-button-group>
+
+<ki-button-group label="Clipboard" attached size="sm">
+  <ki-button type="button">Copy</ki-button>
+  <ki-button type="button">Paste</ki-button>
+</ki-button-group>
+```
+
+## Formatting toolbar
+
+Import the glyphs used by your page. Give each icon button a tooltip using the
+same label. The application sets `pressed` as the formatting state changes. The native button exposes it as `aria-pressed`.
+
+```js
+import '@kimen/elements/icons/bold';
+import '@kimen/elements/icons/list';
+```
+
+```html
+<ki-button-group label="Formatting" toolbar size="sm">
+  <ki-tooltip label="Bold">
+    <ki-icon-button label="Bold" variant="ghost" pressed="true">
+      <ki-icon name="bold"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+  <span role="separator" aria-orientation="vertical"></span>
+  <ki-tooltip label="Bulleted list">
+    <ki-icon-button label="Bulleted list" variant="ghost">
+      <ki-icon name="list"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+</ki-button-group>
+```
+
+## Split button
+
+With a build that includes `ki-menu`, anchor the menu to the chevron action.
+Import `@kimen/elements/icons/chevron-down` before mounting the group. Handle the
+main button's click and menu selection as separate actions.
+
+```html
+<ki-button-group label="Save actions" attached>
+  <ki-button type="button" variant="primary">Save</ki-button>
+  <ki-tooltip label="More save options">
+    <ki-icon-button id="save-options" label="More save options" aria-haspopup="menu" expanded="false">
+      <ki-icon name="chevron-down"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+</ki-button-group>
+
+<ki-menu anchor="save-options">
+  <ki-menu-item value="draft">Save as draft</ki-menu-item>
+  <ki-menu-item value="copy">Save a copy</ki-menu-item>
+</ki-menu>
+```
+
+Keep the icon button's `expanded` property in sync with the menu's `open`
+state. Its native button exposes that state as `aria-expanded`.
+
+Attributes:
+- `attached` (boolean, default false): Joins neighboring actions at their inner edges. Buttons share the first button's variant and use its size when the group has no explicit size. Use for a closely related set of actions or for a split button.
+- `label` (string, required): Required accessible name for the group or toolbar (for example, "Text formatting"). Provide a localized name that describes the actions' shared purpose.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs" | undefined): Applies one token-backed size to each button while it belongs to the group. Omit it to keep individual sizes in spaced mode.
+- `toolbar` (boolean, default false): Gives the group toolbar semantics, a framed surface and one Tab stop. Horizontal arrows, Home and End move between the toolbar's actions.
+
+Slots:
+- (default): Related ki-button and ki-icon-button controls, in reading order. Wrap labeled icon actions in ki-tooltip with the same label to show the label on focus and hover. A toolbar can also include vertical separators.
+
+Parts:
+- `group`: The named group or toolbar surface.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-button-group-attached-gap`: Gap between joined actions.
+- `--ki-button-group-attached-radius`: Radius of the logical corners along a shared button edge.
+- `--ki-button-group-backdrop-filter`: Complete optional backdrop filter for the toolbar surface.
+- `--ki-button-group-bg`: Toolbar surface colour.
+- `--ki-button-group-bg-image`: Optional decorative image over the toolbar surface.
+- `--ki-button-group-border-color`: Thin toolbar frame colour.
+- `--ki-button-group-border-width`: Thickness of the toolbar frame and divider.
+- `--ki-button-group-divider`: Decorative toolbar separator ink.
+- `--ki-button-group-divider-size`: Block size of a vertical toolbar separator.
+- `--ki-button-group-fg`: Default toolbar foreground on its raised surface.
+- `--ki-button-group-gap`: Gap between actions in a spaced group.
+- `--ki-button-group-padding`: Toolbar frame inset and divider margin.
+- `--ki-button-group-radius`: Logical outside radius of the toolbar frame.
+- `--ki-button-group-seam-overlap`: Shared-edge overlap between adjacent attached actions.
+- `--ki-button-group-toolbar-gap`: Gap between toolbar actions.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-card
 
-A non-interactive card surface for grouping related content.
+A card surface for grouping related content, with an optional primary link or action.
 
-When to use: group related media, heading, supporting text and actions into
-one scannable surface visually distinct from the page; fill any subset of
-regions. Supply the heading element yourself in the `header` slot — plain
-text slotted there carries no heading semantics for assistive technology.
-When NOT to use: as a button or link target, form control, fieldset, page
-landmark, section replacement or nested card. For an interactive card, slot
-the button or link INSIDE a region (whole-card interactivity is a future
-feature, not this component).
+When to use: group related media, a title, supporting text and actions into
+one scannable surface. Set `href` for navigation or `interactive` for a
+declared action. Give a clickable card one text heading in the header
+slot and place secondary controls in the body or footer.
+When NOT to use: as a form field, fieldset, page landmark, section replacement
+or nested card. Use a standalone button or link for a control without
+supporting content.
 
 Examples:
 
@@ -824,7 +954,7 @@ Any subset of regions works — a text-only card is valid:
 </ki-card>
 ```
 
-Actions go in the `footer` slot (no dedicated actions slot exists in v1), and interactive elements always sit inside a region — the card itself is never a click target:
+Place independent actions in the `footer` slot.
 
 ```html
 <ki-card>
@@ -835,12 +965,32 @@ Actions go in the `footer` slot (no dedicated actions slot exists in v1), and in
 </ki-card>
 ```
 
-Attributes: none
+Use `href` for a primary destination. Use `interactive` to emit the
+`ki-activate` action event. Supply a single text heading for either option
+and keep secondary controls in their own slot content.
+
+```html
+<ki-card href="/incidents/42" variant="outlined">
+  <h3 slot="header">Search index rebuild</h3>
+  <p>Scheduled for midnight.</p>
+  <ki-button slot="footer" type="button" variant="secondary">Bookmark</ki-button>
+</ki-card>
+
+<ki-card interactive variant="filled">
+  <h3 slot="header">Preview monthly report</h3>
+  <p>Review the new report before publishing it.</p>
+</ki-card>
+```
+
+Attributes:
+- `href` (string | undefined, URL): Destination for the card's title link. Supply a text heading in the header slot. A nonblank href takes precedence over interactive.
+- `interactive` (boolean | undefined, default false): Gives a titled card a primary button that emits ki-activate. Use href for navigation. Keep other actions in separate controls in the card.
+- `variant` ("default" | "elevated" | "filled" | "outlined" | undefined, default 'default'): Surface treatment. Choose elevated for a raised panel, filled for a tinted group or outlined for a bordered surface. Use default to follow the theme's existing card treatment.
 
 Slots:
 - (default): Body region for supporting text or arbitrary composed content.
 - `footer`: Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1.
-- `header`: Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics.
+- `header`: Title region. Supply one nonempty text heading at the surrounding document level for a clickable card.
 - `media`: Leading visual region for an image, video or illustration.
 
 Parts:
@@ -849,33 +999,56 @@ Parts:
 - `footer`: Footer region wrapper.
 - `header`: Header region wrapper.
 - `media`: Media region wrapper.
+- `trigger`: Native link or action button in a clickable card’s heading.
 
-Events: none
+Events:
+- `ki-activate` (CustomEvent<void>): Fires once when the user activates an action card by pointer or keyboard.
 
 Methods: none
 
 CSS custom properties:
+- `--ki-card-backdrop-filter`: Complete card backdrop filter, off by default.
 - `--ki-card-bg`: color used by the card component for background (MarsUI Dashboard masters bind Surface/special/light-s0_dark-s1: white light / Dark/900 dark; #f9f9fa is the nested media panel, so the old s1 value inverted the surface hierarchy).
+- `--ki-card-bg-image`: Optional decorative image over the card background.
 - `--ki-card-body-padding`: dimension used by the card component for body padding.
 - `--ki-card-border-color`: color used by the card component for border color (MarsUI Outline/base_em hairline — painted on large Chart cards; Dashboard_info leaves width 0, which stays the default via ki.card.border-width).
 - `--ki-card-border-width`: dimension used by the card component for border width.
+- `--ki-card-elevated-bg`: Raised card background.
+- `--ki-card-elevated-fg`: Text on the elevated card background.
+- `--ki-card-elevated-shadow`: Resting shadow for an elevated card.
 - `--ki-card-elevation`: Card resting elevation: MarsUI elevation ramp level e1 (brief §5, drop 0/1/1/-0.5 in the scheme shadow color; replaces the migrated M2-era shadow).
 - `--ki-card-fg`: color used by the card component for foreground.
+- `--ki-card-filled-bg`: Tinted card background.
+- `--ki-card-filled-fg`: Text on the filled card background.
 - `--ki-card-footer-padding`: dimension used by the card component for footer padding.
 - `--ki-card-gap`: dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override).
 - `--ki-card-header-padding`: dimension used by the card component for header padding.
+- `--ki-card-hover-overlay`: Pointer hover state layer on a primary-action card.
+- `--ki-card-hover-shadow`: Hover shadow of a primary-action card.
 - `--ki-card-media-padding`: dimension used by the card component for media padding (MarsUI Dashboard masters inset media panels 8px inline; material3 keeps full-bleed zero via its override).
 - `--ki-card-media-radius`: dimension used by the card component for slotted media corner radius (MarsUI nested media panel Radius/big_component/radius_sm 20px; formalizes the fallback ki-card.css already consumes).
+- `--ki-card-outlined-bg`: Page-coloured background for an outlined card.
+- `--ki-card-outlined-border`: Boundary colour for an outlined card.
+- `--ki-card-outlined-border-width`: Hairline width for an outlined card.
+- `--ki-card-outlined-fg`: Text on the outlined card background.
 - `--ki-card-padding-block`: dimension used by the card component for the surface block padding (16px carried by the card surface itself so stacked region paddings no longer double to 32px; formalizes the fallback ki-card.css already consumes).
 - `--ki-card-radius`: dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px).
+- `--ki-card-title-family`: Family used for a clickable card title.
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-elevation-e2`: MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5).
+- `--ki-elevation-none`: Flat surfaces carry no resting shadow.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-title-1`: semantic dimension for typography line height title 1.
+- `--ki-typography-size-title-1`: semantic dimension for typography size title 1.
 
 ### ki-checkbox
 
@@ -1027,14 +1200,369 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-checkbox-group
+
+A form-associated group of independently selectable checkboxes.
+
+When to use: people may select several visible options that share a question,
+form field, and optional selection limits.
+When NOT to use: mutually exclusive choices (use `ki-radio-group`) or an
+immediate on/off setting (use `ki-switch`). Provide a group label.
+
+Examples:
+
+# Checkbox group examples
+
+## Submit several selections
+
+```html
+<form id="settings">
+  <ki-checkbox-group
+    id="regions"
+    label="Regions"
+    name="regions"
+    min="1"
+    help-text="Choose the regions you serve."
+    error-text="Choose at least one region."
+  >
+    <ki-checkbox value="eu" checked>Europe</ki-checkbox>
+    <ki-checkbox value="am">Americas</ki-checkbox>
+    <ki-checkbox value="apac">Asia-Pacific</ki-checkbox>
+  </ki-checkbox-group>
+  <button type="submit">Save regions</button>
+</form>
+```
+
+Reading `new FormData(form).getAll('regions')` returns each checked value
+in option order. Keep individual option labels visible and give each option
+a distinct value when you need to select it independently from JavaScript.
+
+## Read and update selection
+
+```js
+import { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';
+import { defineCustomElement as defineCheckboxGroup } from '@kimen/elements/ki-checkbox-group';
+
+defineCheckbox();
+defineCheckboxGroup();
+
+const group = document.querySelector('#regions');
+group.value = ['eu', 'apac'];
+
+group.addEventListener('ki-change', (event) => {
+  const selectedRegions = event.detail.value;
+  console.log(selectedRegions);
+});
+```
+
+## Horizontal choices
+
+```html
+<ki-checkbox-group label="Notifications" orientation="horizontal">
+  <ki-checkbox value="mentions">Mentions</ki-checkbox>
+  <ki-checkbox value="reviews">Review requests</ki-checkbox>
+</ki-checkbox-group>
+```
+
+Attributes:
+- `disabled` (boolean, default false): Makes the group unavailable and excludes it from form submission.
+- `error-text` (string | undefined): Localized message displayed for a failing selection limit.
+- `help-text` (string | undefined): One line of guidance displayed under the choices.
+- `label` (string, required): Visible legend and accessible name for these choices.
+- `max` (number | undefined): Maximum number of checked options, as a nonnegative integer.
+- `min` (number | undefined): Minimum number of checked options, as a nonnegative integer.
+- `name` (string | undefined): Form-data key repeated for each selected option.
+- `orientation` ("horizontal" | "vertical", default 'vertical'): Lays choices out vertically or in a wrapping horizontal row.
+
+Slots:
+- (default): Direct `ki-checkbox` options, each with its own visible label and value. Put form naming and constraints on the group.
+
+Parts:
+- `error`: Polite error message shown in place of the help.
+- `help`: Guidance below the options and the group's accessible description.
+- `label`: Legend that names the group.
+
+Events:
+- `ki-change` (CustomEvent<KiCheckboxGroupChangeDetail>): Fires once for a committed user toggle with a copy of the current selection.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-checkbox-group-gap`: Space between checkbox options and the group label and messages.
+- `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size.
+- `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight.
+- `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).
+- `--ki-text-danger-high-em`: semantic color for text danger high em.
+- `--ki-text-high-em`: semantic color for text high em.
+- `--ki-text-med-em`: semantic color for text med em.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+
+### ki-chip
+
+A compact filter toggle, removable picked value, or contextual action.
+
+When to use: apply independent filters, represent values selected in an entry
+field, or offer a small contextual action alongside content.
+When NOT to use: static status (ki-badge), primary actions (ki-button), suggested
+prompts, or mutually exclusive choices (ki-radio-group).
+
+Examples:
+
+# Chip examples
+
+Use a filter group for independent toggles. Read `ki-change.detail.selected` to
+update the results. The chip's `value` identifies the filter.
+
+```html
+<ki-chip-group label="Team" type="filter">
+  <ki-chip value="design" selected>Design</ki-chip>
+  <ki-chip value="eng">Engineering</ki-chip>
+</ki-chip-group>
+```
+
+Use an input group for picked values. Link the entry field by ID so focus
+returns to it after the last chip. Listen to `ki-remove` to update your
+collection. If a framework owns these nodes, cancel the event and let it
+apply the DOM change, then focus the next chip or the linked field.
+
+```html
+<ki-chip-group label="Recipients" type="input" focus-target="recipient">
+  <ki-chip value="ana" removable>
+    <ki-avatar slot="start" size="xxs" initials="AG" label="Ana García"></ki-avatar>
+    Ana García
+  </ki-chip>
+  <ki-chip value="luis" removable>Luis</ki-chip>
+</ki-chip-group>
+<input id="recipient" aria-label="Add recipient">
+```
+
+Use assist for a contextual action. Handle `ki-activate` in application code.
+
+```html
+<ki-chip type="assist" value="calendar">
+  <svg slot="start" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <rect x="3" y="5" width="18" height="16" rx="2"/>
+    <path d="M3 10h18M8 2v6m8-6v6"/>
+  </svg>
+  Add to calendar
+</ki-chip>
+```
+
+Attributes:
+- `disabled` (boolean, default false): Prevents activation, removal and moving the chip.
+- `removable` (boolean, default false): Gives an input chip a trailing remove button and keyboard deletion.
+- `remove-label` (string, default 'Remove'): Localized action prefix in the remove button's accessible name, followed by the chip label.
+- `selected` (boolean, default false): The pressed state of a filter chip. The user can toggle it in place.
+- `size` ("md" | "sm", default 'md'): Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.
+- `type` ("assist" | "filter" | "input" | undefined): Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.
+- `value` (string, default ''): Value sent with removal, contextual activation and reorder events.
+
+Slots:
+- (default): The visible text label. Use text or non-interactive markup.
+- `start`: One decorative glyph or extra-extra-small avatar. A filter check replaces it when selected. Do not slot controls.
+
+Parts:
+- `chip`: The painted pill.
+- `drag-handle`: The grip enabled by a reorderable parent group.
+- `label`: The text wrapper around the default slot.
+- `remove`: The native remove button on a removable input chip.
+- `selection-icon`: The selected filter check.
+- `start`: The decorative leading content.
+
+Events:
+- `ki-activate` (CustomEvent<{
+    value: string;
+  }>): Emitted by an assist chip when its native button is activated.
+- `ki-change` (CustomEvent<{
+    selected: boolean;
+  }>): Emitted after a filter chip changes its pressed state.
+- `ki-remove` (CustomEvent<{ value: string }>): Remove request for an input chip. Cancel it to keep application ownership of the chip.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-chip-assist-icon-fg`: Decorative glyph in an assist chip.
+- `--ki-chip-backdrop-filter`: Default compact pill surface leaves the backdrop unfiltered.
+- `--ki-chip-bg`: Resting filter and assist surface.
+- `--ki-chip-bg-image`: Default compact pill surface uses a solid color.
+- `--ki-chip-border`: Outline of an unselected filter or assist chip.
+- `--ki-chip-border-width`: Default thickness of a compact pill border.
+- `--ki-chip-disabled-border`: Outline of a disabled chip.
+- `--ki-chip-disabled-ink`: Label on a disabled chip.
+- `--ki-chip-fg`: Resting filter and assist label.
+- `--ki-chip-font-family`: Font family for the visible chip label.
+- `--ki-chip-font-size`: Default chip label size.
+- `--ki-chip-font-size-sm`: Small chip label size.
+- `--ki-chip-font-weight`: Weight for a chip label.
+- `--ki-chip-gap`: Gap between content in a compact pill.
+- `--ki-chip-height`: Default height of a compact pill.
+- `--ki-chip-height-sm`: Small height of a compact pill.
+- `--ki-chip-hover-bg`: Surface under the hovering pointer.
+- `--ki-chip-hover-fg`: Label over the hover surface.
+- `--ki-chip-icon-size`: Icon size inside a compact pill.
+- `--ki-chip-input-bg`: Surface of a picked value.
+- `--ki-chip-input-fg`: Label of a picked value.
+- `--ki-chip-inset`: Default inline padding of a compact pill.
+- `--ki-chip-inset-action`: Trailing inset beside a pill action.
+- `--ki-chip-inset-sm`: Small inline padding of a compact pill.
+- `--ki-chip-line-height`: Default line height of the chip label.
+- `--ki-chip-line-height-sm`: Small line height of the chip label.
+- `--ki-chip-pressed-bg`: Surface while the activation is held.
+- `--ki-chip-pressed-fg`: Label while the activation is held.
+- `--ki-chip-radius`: Fully rounded compact pill shape.
+- `--ki-chip-remove-bg`: Remove button surface inside an input chip.
+- `--ki-chip-remove-fg`: Resting remove glyph.
+- `--ki-chip-remove-hover-bg`: Remove button hover surface.
+- `--ki-chip-remove-hover-fg`: Remove glyph over the hover surface.
+- `--ki-chip-selected-bg`: Selected filter surface.
+- `--ki-chip-selected-border`: Accessible boundary of a selected filter.
+- `--ki-chip-selected-fg`: Selected filter label and check.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+
+### ki-chip-group
+
+A named collection of filter, input or assist chips, with optional ordering.
+
+When to use: label related chips or let people change their reading order.
+When NOT to use: choose exactly one option or submit a form value.
+
+Examples:
+
+# Chip group examples
+
+A labelled group lets the user reorder direct chips with a drag handle,
+two pointer activations on the handles, or Alt+Left/Right. The order is
+announced on each move. Listen for `ki-reorder` to persist the new order.
+
+```html
+<ki-chip-group label="Recipients" type="input" reorderable focus-target="recipient">
+  <ki-chip value="ana" removable>Ana García</ki-chip>
+  <ki-chip value="luis" removable>Luis</ki-chip>
+</ki-chip-group>
+<input id="recipient" aria-label="Add recipient">
+```
+
+Attributes:
+- `focus-target` (string | undefined): ID of the entry field in the same document or shadow root for focus after the last chip.
+- `label` (string, default ''): Accessible name for the group or list.
+- `reorder-announcement` (string, default '{label} moved to position {position} of {total}.'): Localized polite message using {label}, {position} and {total}. Position is one-based.
+- `reorderable` (boolean, default false): Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.
+- `type` ("assist" | "filter" | "input", default 'filter'): Shared chip kind and collection semantics. Input chips are presented as a list.
+
+Slots:
+- (default): Direct ki-chip children in reading order.
+
+Parts:
+- `group`: The wrapping chip layout.
+
+Events:
+- `ki-reorder` (CustomEvent<KiChipReorderDetail>): Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-chip-group-font-family`: Font family inherited by chip group content.
+- `--ki-chip-group-gap`: Gap between adjacent chips and rows.
+- `--ki-chip-height-sm`: Small height of a compact pill.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+
+### ki-counter
+
+A decorative count or dot over a trigger or avatar.
+
+When to use: mark unread or pending items on a trigger, or presence on an
+avatar. Supply the full meaning in the host's accessible name and use a
+page-owned polite live region for important updates.
+When NOT to use: for an object's status (use ki-badge), a count inside a list
+row (use text or ki-badge), or an announcement that needs its own semantics.
+
+Examples:
+
+# Notification count and presence
+
+Provide the actual count or presence in the host's label. The visible counter
+is decorative, so a label can expose the full count even if the pill says
+`99+`.
+
+```html
+<ki-icon-button variant="secondary" label="Notifications, 3 unread">
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor">
+    <path d="M6 17h12l-2-3V9a4 4 0 0 0-8 0v5l-2 3Zm4 3h4" stroke-width="2" />
+  </svg>
+  <ki-counter slot="counter" value="3"></ki-counter>
+</ki-icon-button>
+
+<ki-avatar initials="AG" label="Ana García, online">
+  <ki-counter slot="counter" tone="success" dot></ki-counter>
+</ki-avatar>
+```
+
+The `for` attribute attaches the indicator to a trigger ID in the same
+document or shadow root. Set the trigger's accessible name directly.
+
+```html
+<a id="inbox-link" href="/inbox" aria-label="Inbox, 120 unread">Inbox</a>
+<ki-counter for="inbox-link" value="120" max="99"></ki-counter>
+<p id="inbox-updates" role="status"></p>
+```
+
+For an important count update, update the trigger name and the counter, then
+write one localized announcement to the pre-existing status region.
+
+Attributes:
+- `dot` (boolean, default false): Show a dot independently of the count, including when the value is zero.
+- `for` (string | undefined): Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
+- `max` (number, default 99): Largest count displayed in full. Higher values display the cap with a plus sign. Fractional caps round down; invalid caps use 99.
+- `tone` ("danger" | "neutral" | "primary" | "success", default 'danger'): Semantic palette of the pill or dot. An unknown tone uses danger.
+- `value` (number | undefined): Count of unread or pending items. Finite values are rounded down. Values below one and non-finite values hide the count.
+
+Slots: none
+
+Parts:
+- `indicator`: Painted pill or dot, including the surrounding ring.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-counter-backdrop-filter`: Complete backdrop filter for the indicator.
+- `--ki-counter-bg`: Danger notification indicator fill.
+- `--ki-counter-bg-image`: Optional image over the notification indicator fill.
+- `--ki-counter-dot-size`: Width and height of the presence dot.
+- `--ki-counter-fg`: Danger notification count text.
+- `--ki-counter-font-family`: Font family for the count.
+- `--ki-counter-font-size`: Font size for the count.
+- `--ki-counter-font-weight`: Font weight for the count.
+- `--ki-counter-neutral-bg`: Neutral notification indicator fill.
+- `--ki-counter-neutral-fg`: Neutral notification count text.
+- `--ki-counter-padding-inline`: Horizontal padding of a count pill.
+- `--ki-counter-primary-bg`: Primary notification indicator fill.
+- `--ki-counter-primary-fg`: Primary notification count text.
+- `--ki-counter-radius`: Radius of the painted pill or dot.
+- `--ki-counter-ring`: Surface-colored ring that separates the indicator from the trigger.
+- `--ki-counter-ring-width`: Thickness of the separating ring.
+- `--ki-counter-size`: Minimum width and height of a count pill.
+- `--ki-counter-success-bg`: Success notification indicator fill.
+- `--ki-counter-success-fg`: Success notification count text.
+
 ### ki-dialog
 
 A modal dialog for one interrupting decision or short focused task.
 
 When to use: destructive confirmations, blocking choices, and brief
 critical input that must be resolved before returning to the page. Always
-provide a `heading`, place actions in the `footer` slot, wire each footer
-action to `close()`, and in destructive confirmations put `autofocus` on
+provide a `heading`, place actions in the `footer` slot, wire each
+dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
 the least destructive action.
 When NOT to use: non-blocking feedback (`ki-alert`, `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -1042,23 +1570,22 @@ supplementary hints (`ki-tooltip`), long forms or multi-step flows
 
 Examples:
 
-A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:
+A modal confirmation. `heading` names the dialog and actions go in the `footer`
+slot. Each invoker uses the dialog's ID within the same document or shadow root.
 
 ```html
+<ki-button commandfor="confirm-dialog" command="show-modal" tone="danger">Delete draft</ki-button>
 <ki-dialog heading="Delete draft?" id="confirm-dialog">
   <p>This permanently removes the draft.</p>
-  <ki-button slot="footer" type="button">Cancel</ki-button>
-  <ki-button slot="footer" tone="danger" variant="primary">Delete</ki-button>
+  <ki-button slot="footer" commandfor="confirm-dialog" command="request-close" autofocus>Cancel</ki-button>
+  <ki-button slot="footer" commandfor="confirm-dialog" command="close" tone="danger" variant="primary">Delete</ki-button>
 </ki-dialog>
 ```
 
-Open it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):
-
-```html
-<ki-button type="button" onclick="document.getElementById('confirm-dialog').show()">
-  Delete draft
-</ki-button>
-```
+`close` dismisses the dialog. `request-close` first gives the dialog a chance
+to cancel the request. After an accepted close command, the opening button
+regains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and
+`close()` remain available for programmatic control.
 
 Attributes:
 - `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
@@ -1067,7 +1594,7 @@ Attributes:
 
 Slots:
 - (default): Dialog body content.
-- `footer`: Dialog actions; applications wire every action to `close()`.
+- `footer`: Dialog actions. Dismiss using an invoker command or `close()`.
 
 Parts:
 - `body`: Scrollable body region.
@@ -1076,10 +1603,10 @@ Parts:
 - `heading`: Visible h2 title, rendered only when `heading` is non-empty.
 
 Events:
-- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
 
 Methods:
-- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
+- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method or an invoker command. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
 - `show()` (Promise<void>): Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
 
 CSS custom properties:
@@ -1187,6 +1714,114 @@ CSS custom properties:
 - `--ki-divider-thickness`: dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-empty-state
+
+A short explanation and next step for an empty view.
+
+When to use: explain an empty list, table, search result, or first-run view.
+Supply a localized heading that names what is empty and a short next step.
+Use announce for results that change after an interaction.
+When NOT to use: signal that results are loading or draw attention to an error
+that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+
+Examples:
+
+Use EmptyState when a list, table or first-run screen is empty. Name what is
+empty, explain why or what to do next, and offer at most one primary action.
+
+```ts
+import '@kimen/elements/icons/folder-plus';
+```
+
+```html
+<ki-empty-state heading="No projects yet" icon-name="folder-plus" tone="primary-light">
+  Projects hold your surfaces, catalogs and themes.
+  <ki-button slot="actions" variant="primary">New project</ki-button>
+</ki-empty-state>
+```
+
+Use `announce` for search or filter results. Insert the message when results
+become empty. If it remains visible for a subsequent search, update its heading
+and description.
+
+```html
+<ki-empty-state heading="No results for webhok" heading-level="2" size="sm" announce>
+  Check the spelling or remove a filter.
+  <ki-button slot="actions" variant="secondary">Clear filters</ki-button>
+</ki-empty-state>
+```
+
+Put a decorative illustration in `media` to replace the icon.
+
+```html
+<ki-empty-state heading="Your inbox is clear">
+  <img slot="media" src="/images/empty-inbox.svg" alt="" width="120" height="80">
+  New messages will appear here.
+</ki-empty-state>
+```
+
+Attributes:
+- `announce` (boolean, default false): Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.
+- `heading` (string, required): Localized heading that identifies the empty view. Blank text omits the heading.
+- `heading-level` (number, default 3, minimum 2, maximum 6): Native heading level for the surrounding document outline. Only integers from 2 through 6 are valid; unsupported values use level 3.
+- `icon-name` (string | undefined): Optional decorative Lucide glyph. Register it with a per-icon import before mounting. A supplied illustration takes precedence.
+- `size` ("md" | "sm", default 'md'): Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.
+- `tone` ("danger" | "info" | "neutral" | "primary" | "primary-light" | "success" | "warning", default 'neutral'): FeatureIcon tone. Unrecognized tones use the neutral tile.
+
+Slots:
+- (default): Localized supporting text with a reason or recovery advice.
+- `actions`: Optional controls for the next step, with at most one primary action. In a guarded surface, bind actions to these controls.
+- `media`: Optional decorative illustration in place of the icon. Use an image with empty alt text or a decorative SVG. Keep this slot free of controls.
+
+Parts:
+- `actions`: Wrapping row of consumer-supplied controls.
+- `container`: Centered layout for the illustration, message and actions.
+- `description`: Wrapper for the default slot.
+- `heading`: Native heading at the selected document level.
+- `media`: Decorative illustration or FeatureIcon tile.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-empty-state-backdrop-filter`: Complete filter applied behind the empty view.
+- `--ki-empty-state-bg`: Background behind the empty view.
+- `--ki-empty-state-bg-image`: Optional image above the background color.
+- `--ki-empty-state-description-bg`: Background layer behind the supporting copy.
+- `--ki-empty-state-description-fg`: Supporting text ink, strengthened in contrast-more mode.
+- `--ki-empty-state-description-line-height`: Line height of the supporting copy.
+- `--ki-empty-state-description-size`: Font size of the supporting copy.
+- `--ki-empty-state-fg`: Foreground ink for the heading.
+- `--ki-empty-state-gap`: Gap between the decorative media, message and action row.
+- `--ki-empty-state-gap-sm`: Gap between regions in a compact empty view.
+- `--ki-empty-state-heading-font-family`: Typeface for the native heading.
+- `--ki-empty-state-heading-line-height`: Heading line height in a regular empty view.
+- `--ki-empty-state-heading-line-height-sm`: Heading line height in a compact empty view.
+- `--ki-empty-state-heading-size`: Heading font size in a regular empty view.
+- `--ki-empty-state-heading-size-sm`: Heading font size in a compact empty view.
+- `--ki-empty-state-heading-weight`: Weight of the heading.
+- `--ki-empty-state-max-width`: Maximum inline size of the centered content.
+- `--ki-empty-state-tile-danger-bg`: Background of the danger decorative tile.
+- `--ki-empty-state-tile-danger-fg`: Glyph ink on the danger decorative tile.
+- `--ki-empty-state-tile-info-bg`: Background of the info decorative tile.
+- `--ki-empty-state-tile-info-fg`: Glyph ink on the info decorative tile.
+- `--ki-empty-state-tile-neutral-bg`: Background of the neutral decorative tile.
+- `--ki-empty-state-tile-neutral-fg`: Glyph ink on the neutral decorative tile.
+- `--ki-empty-state-tile-primary-bg`: Background of the primary decorative tile.
+- `--ki-empty-state-tile-primary-fg`: Glyph ink on the primary decorative tile.
+- `--ki-empty-state-tile-primary-light-bg`: Background of the primary-light decorative tile.
+- `--ki-empty-state-tile-primary-light-fg`: Glyph ink on the primary-light decorative tile.
+- `--ki-empty-state-tile-radius`: Corner radius of the regular fallback tile.
+- `--ki-empty-state-tile-radius-sm`: Corner radius of the compact fallback tile.
+- `--ki-empty-state-tile-size`: Regular FeatureIcon fallback tile size.
+- `--ki-empty-state-tile-size-sm`: Compact FeatureIcon fallback tile size.
+- `--ki-empty-state-tile-success-bg`: Background of the success decorative tile.
+- `--ki-empty-state-tile-success-fg`: Glyph ink on the success decorative tile.
+- `--ki-empty-state-tile-warning-bg`: Background of the warning decorative tile.
+- `--ki-empty-state-tile-warning-fg`: Glyph ink on the warning decorative tile.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-feature-icon
@@ -1298,6 +1933,94 @@ CSS custom properties:
 - `--ki-feature-icon-xs-radius`: Corner radius of an extra-small square feature icon tile.
 - `--ki-feature-icon-xs-size`: Edge length of an extra-small feature icon tile.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-format-date
+
+Displays an ISO date or timestamp in the reader's language.
+
+When to use: For raw date and timestamp values in tables, records and prose.
+When NOT to use: For an editable date or an elapsed time that should change as the clock advances.
+
+Examples:
+
+# Format a date
+
+Use a calendar date when the day is the value, and send an offset or `Z` when
+the value is a timestamp. Set `lang` on the surrounding document or section.
+
+```html
+<section lang="es-ES">
+  <ki-format-date date="2026-11-19" date-style="long"></ki-format-date>
+  <ki-format-date
+    date="2026-11-19T23:41:00Z"
+    date-style="long"
+    time-style="short"
+    time-zone="Europe/Madrid"
+  ></ki-format-date>
+</section>
+```
+
+Attributes:
+- `date` (string | undefined): ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.
+- `date-style` ("full" | "long" | "medium" | "short" | undefined): Date detail. Defaults to medium when neither date style nor time style is supplied.
+- `lang` (string | undefined): Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.
+- `time-style` ("full" | "long" | "medium" | "short" | undefined): Time detail. Omit to show the date alone.
+- `time-zone` (string | undefined): IANA time zone for a timestamp. A calendar date keeps its day in every zone.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-format-date-font-family`: Default body font family for ki-format-date on a bare page.
+
+### ki-format-number
+
+Displays a raw number using local number conventions and tabular figures.
+
+When to use: For numeric data, currency amounts, ratios and measurements in content.
+When NOT to use: For numeric input or values that already include localized formatting.
+
+Examples:
+
+# Format a number
+
+Pass raw numbers and let the nearest `lang` declaration select the separators,
+spacing and symbols. A percent takes a ratio.
+
+```html
+<section lang="es-ES">
+  <ki-format-number value="1284.5"></ki-format-number>
+  <ki-format-number value="49" currency="EUR"></ki-format-number>
+  <ki-format-number value="0.496" format-style="percent" maximum-fraction-digits="1"></ki-format-number>
+  <ki-format-number value="23" format-style="unit" unit="celsius"></ki-format-number>
+  <ki-format-number value="59320" notation="compact"></ki-format-number>
+</section>
+```
+
+Attributes:
+- `currency` (string | undefined): ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.
+- `format-style` ("decimal" | "percent" | "unit" | undefined): Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.
+- `maximum-fraction-digits` (number | undefined, minimum 0): Maximum number of fraction digits.
+- `minimum-fraction-digits` (number | undefined, minimum 0): Minimum number of fraction digits.
+- `notation` ("compact" | undefined): Use compact notation for abbreviated large numbers. Omit for standard notation.
+- `unit` (string | undefined): Intl unit identifier, such as celsius or kilometer. Use with format-style="unit".
+- `value` (number | undefined): Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-format-number-font-family`: Default body font family for ki-format-number on a bare page.
 
 ### ki-grid
 
@@ -1435,7 +2158,7 @@ data-row actions. Always supply `label`; usually pair with ki-tooltip for
 sighted discoverability. While the action it started is in progress, set
 `loading` instead of disabling it.
 When NOT to use: whenever a visible label fits (use ki-button), toggling
-state (a future toggle icon button), navigation (use a link), or form
+state without supplying `pressed`, navigation (use a link), or form
 submit/reset (ki-icon-button is not form-associated; use ki-button, whose
 visible label communicates the consequence).
 
@@ -1481,6 +2204,15 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 </ki-tooltip>
 ```
 
+An icon button in the dialog footer can dismiss it by ID. The dialog must be
+in the same document or shadow root as the icon button.
+
+```html
+<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+</ki-icon-button>
+```
+
 While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
 
 ```html
@@ -1490,16 +2222,21 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 ```
 
 Attributes:
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
+- `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
 - `loading` (boolean, default false): Pending state of the action this icon button started (refreshing, sending). While set, every activation is blocked (pointer, Enter and Space), but the icon button stays focusable, in the Tab order and at its size: the icon stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its `label`, and `loadingLabel` is announced as a polite status message. `disabled` wins over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this icon button started is running, so a second activation cannot repeat it. When NOT to use: for an icon button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the icon button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Refreshing"). When NOT to use: do not repeat `label` here; the person already hears it on focus.
+- `pressed` (boolean | undefined): Application-owned toggle state. The native icon button exposes this as `aria-pressed`. Omit for a momentary action.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, and `ghost` for accent icon actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
 Slots:
 - (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name — that comes from `label` alone.
+- `counter`: Decorative ki-counter in the block-start inline-end corner. Include its meaning in the button label.
 
 Parts:
 - `button`: Internal native button.
@@ -1652,6 +2389,7 @@ CSS custom properties:
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
 - `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
+- `--ki-counter-ring-width`: Thickness of the separating ring.
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-icon-button-lg-icon-size`: dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px).
@@ -1671,6 +2409,85 @@ CSS custom properties:
 - `--ki-icon-button-xs-spinner-size`: dimension used by the icon button component for the xs loading spinner box (16px, the xs icon size; spec 046 D5: the spinner takes the place of the icon).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-image
+
+Displays one accessible image in a reserved frame, with an optional caption and a fallback if the source is refused or fails to load.
+
+When to use: to show a photo, illustration, or diagram with a predictable
+layout. Supply task-relevant alt text, or mark purely decorative media as
+decorative. Set an explicit ratio when the layout must stay fixed.
+When NOT to use: for a background decoration, a video, or an interactive
+control. Use a separate control to open or otherwise act on an image.
+
+Examples:
+
+# Using ki-image
+
+Give an informative image alt text that describes the detail the reader needs.
+An explicit ratio reserves the same frame while the image loads and when the
+fallback appears. Add supporting context in the caption slot.
+
+```html
+<ki-image src="/hills.jpg" alt="Low green hills under a pale sky" ratio="16:9">
+  <span slot="caption">View from the ridge</span>
+</ki-image>
+```
+
+Use `contain` when the whole image must stay visible. The fallback for this
+example is named `Image unavailable: Office floor plan` if the source fails.
+
+```html
+<ki-image src="/floor-plan.png" alt="Office floor plan" ratio="4:3" fit="contain"></ki-image>
+```
+
+Use `decorative` for ornamentation. The image and fallback stay out of the
+accessibility tree.
+
+```html
+<ki-image src="/divider.svg" decorative radius="none"></ki-image>
+```
+
+Attributes:
+- `alt` (string | undefined): Describe what the image shows for the task at hand. Required and nonblank for an informative image. Omit it for a decorative image.
+- `decorative` (boolean, default false): Hide the media from assistive technology when it conveys no information.
+- `fallback-label` (string, default 'Image unavailable'): Localizable fallback label. An informative fallback appends the image's description, when available, to this label.
+- `fit` ("contain" | "cover", default 'cover'): Cover fills the frame. Contain preserves the whole image in it.
+- `loading` ("eager" | "lazy", default 'lazy'): Native loading hint. Use eager for a critical image above the fold.
+- `radius` ("lg" | "md" | "none", default 'lg'): Corner radius of the media frame.
+- `ratio` ("16:9" | "1:1" | "3:2" | "4:3" | "auto", default 'auto'): An explicit ratio reserves the same frame before load and on failure. Auto reserves 16:9 first and uses the intrinsic ratio after load.
+- `src` (string, required, URL): Relative or HTTP(S) image URL. Refused sources are left unloaded.
+
+Slots:
+- `caption`: Optional visible context displayed below the media in a figcaption.
+
+Parts:
+- `caption`: The figcaption carrying the slotted caption.
+- `fallback`: The unavailable-image indicator inside the frame.
+- `figure`: The figure containing the frame and optional caption.
+- `frame`: The reserved media box and its shape and backing surface.
+- `image`: The native image and its fit within the frame.
+
+Events:
+- `ki-error` (CustomEvent<void>): Reports a load failure or rejected URL once per source attempt. Bubbles and crosses shadow boundaries so consumers can observe it on a surface.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-image-caption-fg`: Text colour of the visible caption.
+- `--ki-image-caption-font-family`: Typeface of the visible caption.
+- `--ki-image-caption-font-size`: Type size of the visible caption.
+- `--ki-image-caption-gap`: Space between the image frame and its caption.
+- `--ki-image-caption-line-height`: Line height of the visible caption.
+- `--ki-image-fallback-backdrop-filter`: Complete filter applied behind the media surface.
+- `--ki-image-fallback-bg`: Solid fill behind the image and fallback symbol.
+- `--ki-image-fallback-bg-image`: Optional background image over the media fill.
+- `--ki-image-fallback-fg`: Foreground of the fallback symbol.
+- `--ki-image-fallback-icon-size`: Inline and block size of the unavailable-image symbol.
+- `--ki-image-fallback-icon-stroke-width`: Stroke width of the unavailable-image symbol.
+- `--ki-image-radius`: Corner radius of the default media frame.
+- `--ki-image-radius-md`: Corner radius of the medium media frame.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-indicator
@@ -1916,6 +2733,91 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-link
+
+A native navigation link with Kimen ink, underline, and focus styles.
+
+When to use: navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+When NOT to use: perform an action on the current page. Use ki-button variant="ghost" for that.
+
+Examples:
+
+## Read a related page
+
+```html
+<p>Read the <ki-link href="/docs/catalog">catalog contract</ki-link> before adding a component.</p>
+```
+
+## Open an external resource
+
+```html
+<ki-link href="https://github.com/kimen-dev/kimen" external>Source on GitHub</ki-link>
+```
+
+## Link from standalone navigation
+
+```html
+<nav aria-label="Resources">
+  <ki-link href="/docs" underline="hover">Documentation</ki-link>
+  <ki-link href="/changelog" variant="neutral" underline="hover">Changelog</ki-link>
+</nav>
+```
+
+## Navigate from a guarded surface
+
+Supply `href` and the default text slot. The surface URL policy applies.
+Leave the action binding unset for native navigation.
+
+```json
+{
+  "version": 1,
+  "root": {
+    "component": "ki-link",
+    "props": { "href": "/docs/catalog" },
+    "slots": { "": ["Catalog contract"] }
+  }
+}
+```
+
+Attributes:
+- `download` (string | undefined): Native download attribute. Set it to an empty string to let the browser choose the file name, or supply a suggested file name.
+- `external` (boolean, default false): Requests a new tab with noopener and adds an icon and an accessible announcement. An explicit download still follows native download rules.
+- `external-label` (string, default '(opens in a new tab)'): Localizable text appended to the accessible name in external mode.
+- `href` (string, required, URL): Destination URL. Relative URLs and fragments use native anchor resolution.
+- `rel` (string | undefined): Space-separated native link relationships. External links always include noopener.
+- `target` (string | undefined): Native browsing-context name. External links use _blank.
+- `underline` ("always" | "hover", default 'always'): Keep the underline in running text. Use hover for standalone navigation, where placement identifies the link and keyboard focus still underlines it.
+- `variant` ("neutral" | "primary", default 'primary'): Ink role. Primary uses accent ink and neutral uses body ink.
+
+Slots:
+- (default): Descriptive link text. Use phrasing content without nested interactive controls.
+
+Parts:
+- `link`: The native anchor that renders the link and receives focus.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-link-bg`: Transparent backing for primary link text.
+- `--ki-link-bg-image`: Optional image overlay for link backing.
+- `--ki-link-fg`: Accent ink for primary links.
+- `--ki-link-font-family`: Body typeface used by link text.
+- `--ki-link-icon-gap`: Space between the label and the external link icon.
+- `--ki-link-icon-size`: External link icon edge relative to the inherited text size.
+- `--ki-link-neutral-bg`: Transparent backing for neutral link text.
+- `--ki-link-neutral-fg`: Body ink for neutral links.
+- `--ki-link-radius`: Corner radius used by the link focus outline.
+- `--ki-link-underline-offset`: Space between link text and its underline.
+- `--ki-link-underline-thickness`: Resting underline thickness.
+- `--ki-link-underline-thickness-hover`: Underline thickness under a hover-capable pointer.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+
 ### ki-list
 
 A non-interactive vertical list container for read-only collections of similar entries composed with `ki-list-item` children.
@@ -2108,6 +3010,327 @@ CSS custom properties:
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-menu
+
+A popup of actions opened by a button in the same document or shadow root.
+
+When to use: row actions, account commands, split buttons, and overflow actions.
+When NOT to use: form values, navigation destinations, or long action lists.
+
+Examples:
+
+# Menu examples
+
+## Row actions
+
+Register `ki-button`, `ki-menu`, `ki-menu-item`, `ki-menu-group`, and
+`ki-divider` when using the elements individually.
+
+```html
+<ki-button id="row-actions" type="button">Actions</ki-button>
+<ki-menu id="row-menu" anchor="row-actions" filter-label="Filter actions">
+  <ki-menu-group label="Edit">
+    <ki-menu-item value="rename" shortcut="F2">Rename</ki-menu-item>
+    <ki-menu-item value="duplicate">Duplicate</ki-menu-item>
+    <ki-menu-item value="move" disabled>Move to…</ki-menu-item>
+    <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+  </ki-menu-group>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="delete" tone="danger">Delete</ki-menu-item>
+</ki-menu>
+```
+
+```js
+const menu = document.getElementById('row-menu');
+menu.addEventListener('ki-select', ({ detail: { value, checked } }) => {
+  dispatchRowAction(value, checked);
+});
+```
+
+A plain action emits its value and closes the popup. A checkbox also emits its
+new checked state and keeps the popup open. A radio selection emits
+`checked: true`, clears its peer radios and closes the popup. Place independent
+radio sets in distinct groups.
+
+## Account menu
+
+```html
+<button id="account" type="button" aria-label="Account for Ana García">AG</button>
+<ki-menu anchor="account" placement="bottom-end">
+  <p slot="header">Ana García<br />ana@example.com</p>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="profile">Profile</ki-menu-item>
+  <ki-menu-item value="sign-out">Sign out</ki-menu-item>
+</ki-menu>
+```
+
+Give a glyph-only trigger an accessible name. Keep header content informational
+and put actions in `ki-menu-item`. A `start` slot can hold a decorative SVG or
+avatar. The application owns the shortcuts displayed by `shortcut`.
+
+With a filter, supply `filter-label` and optionally localize
+`filter-results-label`, retaining `{count}` where the number should appear.
+
+# When to use Menu
+
+Use Menu for commands on the same object, account actions, split buttons and
+overflow actions. Keep destructive actions at the end after a divider. Pick
+a select for a form value, links for navigation, or a dialog or page for
+long action lists.
+
+Supply a host-authored trigger with an ID in the same DOM tree. Bind the
+catalog action on the menu's declared `ki-select` event. Application DOM
+listeners can read the selected item's `value` and optional `checked` from
+the event detail.
+
+Attributes:
+- `anchor` (string, default ''): Literal ID of the menu button in the same document or containing shadow root.
+- `filter-label` (string, default ''): Accessible name and placeholder of the filter. Omit to hide the field.
+- `filter-results-label` (string, default 'Matching actions: {count}'): Polite results message. The menu substitutes the number of matches for `{count}`.
+- `open` (boolean, default false): Whether the popup is open. Reflected when the user opens or dismisses it.
+- `placement` ("bottom-end" | "bottom-start" | "top-end" | "top-start", default 'bottom-start'): Preferred side and logical alignment. Flips when the opposite side has more room.
+
+Slots:
+- (default): Place ki-menu-item, ki-menu-group, and ki-divider here.
+- `header`: Informational content above the actions, such as account details.
+
+Parts:
+- `filter`: The filter field.
+- `header`: The informational header.
+- `menu`: The named menu containing the actions.
+- `popup`: The anchored surface.
+
+Events:
+- `ki-select` (CustomEvent<KiMenuSelectDetail>): Reports the selected action and, for a checkbox or radio, its new checked state.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-menu-backdrop-filter`: Complete backdrop filter applied to the popup.
+- `--ki-menu-bg`: Base fill of the popup surface.
+- `--ki-menu-bg-image`: Optional image composited over the popup fill.
+- `--ki-menu-border`: Popup edge and the filter divider.
+- `--ki-menu-border-width`: Thickness of menu border and dividers.
+- `--ki-menu-fg`: Text over the popup surface.
+- `--ki-menu-filter-icon-size`: Size of the search icon.
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-font-size`: Text size for action labels and the filter.
+- `--ki-menu-gap`: Inline space between the parts of a row.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-height`: Default action row minimum height.
+- `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-line-height`: Line height for action labels and the filter.
+- `--ki-menu-max-block-size`: Maximum popup height, bounded by the viewport.
+- `--ki-menu-max-inline-size`: Maximum popup width, bounded by the viewport.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
+- `--ki-menu-min-inline-size`: Default minimum popup width, bounded by the viewport.
+- `--ki-menu-padding`: Space inside the popup.
+- `--ki-menu-radius`: Popup corner radius.
+- `--ki-menu-shadow`: Popup elevation shadow.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
+
+### ki-menu-group
+
+A named group of related actions in a ki-menu.
+
+When to use: name a set of related actions or scope exclusive radio items in a menu.
+When NOT to use: standalone sections or nested menus.
+
+Examples:
+
+# Menu group
+
+Provide a group label and place menu items or dividers in its default slot. A group scopes its own exclusive radio selection.
+
+```html
+<ki-menu anchor="actions">
+  <ki-menu-group label="Edit"><ki-menu-item value="rename">Rename</ki-menu-item></ki-menu-group>
+</ki-menu>
+```
+
+Attributes:
+- `label` (string, default ''): Visible and accessible group name.
+
+Slots:
+- (default): The ki-menu-item and ki-divider children of the group.
+
+Parts:
+- `label`: The visible group name.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-group-fg`: Foreground for group labels.
+- `--ki-menu-group-label-weight`: Weight of group labels.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-line-height`: Line height of metadata and group labels.
+- `--ki-menu-padding`: Space inside the popup.
+
+### ki-menu-item
+
+A pointer and keyboard action within a ki-menu.
+
+When to use: a command, independent checkbox action, or exclusive radio action in a menu.
+When NOT to use: standalone controls, navigational links, or form options.
+
+Examples:
+
+# Menu item
+
+Give each item a value and a visible label. Use `type="checkbox"` for independent toggles or `type="radio"` for exclusive choices. Set `disabled` to keep an unavailable action discoverable by keyboard.
+
+```html
+<ki-menu anchor="actions">
+  <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+</ki-menu>
+```
+
+Attributes:
+- `checked` (boolean, default false): Checked state for checkbox and radio actions.
+- `disabled` (boolean, default false): Disabled actions remain discoverable via menu navigation.
+- `shortcut` (string, default ''): Display-only keyboard shortcut. Applications own shortcut registration.
+- `tone` ("danger" | "neutral", default 'neutral'): Apply the danger tone to a destructive action.
+- `type` ("checkbox" | "item" | "radio", default 'item'): Action role. A checkbox stays open. A radio selects one action within its group.
+- `value` (string, default ''): Action identifier reported by the parent menu.
+
+Slots:
+- (default): The action's visible label.
+- `start`: One decorative icon or avatar before the label.
+
+Parts:
+- `check`: The indicator of a checked action.
+- `item`: The focusable action row.
+- `shortcut`: The display-only shortcut hint.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-gap`: Inline space between the parts of a row.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-danger-fg`: Foreground for destructive actions.
+- `--ki-menu-item-danger-hover-fg`: Foreground for hovered or keyboard-focused destructive actions.
+- `--ki-menu-item-disabled-fg`: Muted ink of disabled actions.
+- `--ki-menu-item-fg`: Foreground for resting actions.
+- `--ki-menu-item-height`: Default action row minimum height.
+- `--ki-menu-item-hover-bg`: Background behind hovered or keyboard-focused actions.
+- `--ki-menu-item-hover-fg`: Foreground for hovered or keyboard-focused actions.
+- `--ki-menu-item-icon-size`: Size of an action glyph and the check indicator.
+- `--ki-menu-item-padding`: Vertical inset used when an action wraps.
+- `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-hover-fg`: Foreground for shortcut hints on a hovered or focused action.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
+
+### ki-note
+
+A compact, static explanation beside a control or inside a card.
+
+When to use: Add a short constraint, tip or consequence next to the content
+it explains. Put the consequence first when warning the reader.
+When NOT to use: For updates that must be announced, use ki-alert. Use Toast
+for transient confirmations and the field's help-text for field guidance.
+
+Examples:
+
+# ki-note usage
+
+Place one or two lines of static context beside a control or inside a card.
+Use `ki-alert` for results that need announcing, Toast for transient
+confirmations and the field's `help-text` for field guidance.
+
+```html
+<ki-note>Only workspace owners can change billing details.</ki-note>
+<ki-note tone="warning" size="sm">Changing the slug breaks existing links.</ki-note>
+<ki-note tone="info" icon="false">This link is visible to everyone in the workspace.</ki-note>
+```
+
+## Decorative icon replacement
+
+```html
+<ki-note tone="info">
+  <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 3v18M3 12h18"></path>
+  </svg>
+  Adding a billing contact gives them access to invoices.
+</ki-note>
+```
+
+The words convey the message by themselves. The decorative icon is hidden
+from assistive technology and adds no tab stop. Start warnings with the
+consequence.
+
+Attributes:
+- `icon` (boolean, default true): Shows the decorative icon. Set icon="false" in HTML to hide it.
+- `size` ("md" | "sm", default 'md'): Uses caption text at sm and body text at md. Unknown values use md.
+- `tone` ("danger" | "info" | "neutral" | "primary" | "success" | "warning", default 'neutral'): Selects the background tint and decorative icon. Unknown values use neutral.
+
+Slots:
+- (default): Short explanatory text that carries the full meaning.
+- `icon`: A decorative glyph that replaces the tone's built-in icon.
+
+Parts:
+- `icon`: The decorative icon frame.
+- `message`: The explanatory text.
+- `note`: The surface, including the tint, typography and spacing.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-note-backdrop-filter`: Complete filter behind the note.
+- `--ki-note-bg`: Background of a neutral note.
+- `--ki-note-bg-image`: Optional image over the note's solid background.
+- `--ki-note-danger-bg`: Background of a danger note.
+- `--ki-note-danger-fg`: Text ink of a danger note.
+- `--ki-note-danger-icon`: Decorative icon ink of a danger note.
+- `--ki-note-fg`: Text ink of a neutral note.
+- `--ki-note-font-family`: Note text font family.
+- `--ki-note-font-size`: Medium note text size.
+- `--ki-note-gap`: Space between the icon and the text.
+- `--ki-note-icon`: Decorative icon ink of a neutral note.
+- `--ki-note-icon-offset`: Medium icon offset from the first line's block start.
+- `--ki-note-icon-size`: Medium note icon size.
+- `--ki-note-info-bg`: Background of an info note.
+- `--ki-note-info-fg`: Text ink of an info note.
+- `--ki-note-info-icon`: Decorative icon ink of an info note.
+- `--ki-note-line-height`: Medium note text line height.
+- `--ki-note-padding-block`: Medium note block padding.
+- `--ki-note-padding-inline`: Medium note inline padding.
+- `--ki-note-primary-bg`: Background of a primary note.
+- `--ki-note-primary-fg`: Text ink of a primary note.
+- `--ki-note-primary-icon`: Decorative icon ink of a primary note.
+- `--ki-note-radius`: Note surface corner radius.
+- `--ki-note-sm-font-size`: Small note caption size.
+- `--ki-note-sm-icon-offset`: Small icon offset from the first line's block start.
+- `--ki-note-sm-icon-size`: Small note icon size.
+- `--ki-note-sm-line-height`: Small note caption line height.
+- `--ki-note-sm-padding-block`: Small note block padding.
+- `--ki-note-sm-padding-inline`: Small note inline padding.
+- `--ki-note-success-bg`: Background of a success note.
+- `--ki-note-success-fg`: Text ink of a success note.
+- `--ki-note-success-icon`: Decorative icon ink of a success note.
+- `--ki-note-warning-bg`: Background of a warning note.
+- `--ki-note-warning-fg`: Text ink of a warning note.
+- `--ki-note-warning-icon`: Decorative icon ink of a warning note.
 
 ### ki-option
 
@@ -2503,6 +3726,42 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-relative-time
+
+Displays the elapsed or remaining time for a timestamp in the reader's language.
+
+When to use: For timestamps whose distance from the present matters, such as timeline entries or recent changes.
+When NOT to use: For an interactive countdown or a date that should always show an absolute value.
+
+Examples:
+
+# Format a relative timestamp
+
+Use `sync` to update the visible wording as time passes. A threshold of
+86,400 seconds switches to the formatted timestamp at one day's distance.
+Assistive technology and the tooltip expose the absolute timestamp throughout.
+
+```html
+<ki-relative-time date="2026-11-19T08:41:00Z" sync threshold="86400"></ki-relative-time>
+```
+
+Attributes:
+- `date` (string | undefined): ISO calendar date or date-time. A timestamp without an offset uses local time.
+- `numeric` ("always" | "auto", default 'auto'): Auto can show words such as yesterday. Always uses a number.
+- `sync` (boolean, default false): Refresh the visible wording as the clock crosses a formatting boundary.
+- `threshold` (number | undefined, minimum 0): Display an absolute timestamp when the distance reaches this many seconds. Omit to keep relative wording at any distance.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-relative-time-font-family`: Default body font family for ki-relative-time on a bare page.
+
 ### ki-scroller
 
 A bounded scroll container that clips its content along one declared axis and replaces platform scrollbar chrome with a token-resolved indicator.
@@ -2583,6 +3842,171 @@ CSS custom properties:
 - `--ki-scroller-thumb-thickness`: dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17).
 - `--ki-scroller-track-color`: color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute.
 - `--ki-scroller-track-inset`: dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-segment
+
+A single choice in a ki-segmented-control.
+
+When to use: offer one mutually exclusive choice with text or a named icon.
+When NOT to use: standalone, for navigation, or for form submission.
+
+Examples:
+
+# ki-segment examples
+
+Place each choice directly in a `ki-segmented-control`. Give every choice a
+distinct value, and set the selected value on the group.
+
+```html
+<ki-segmented-control label="Date range" value="week">
+  <ki-segment value="day">Day</ki-segment>
+  <ki-segment value="week">Week</ki-segment>
+  <ki-segment value="year" disabled>Year</ki-segment>
+</ki-segmented-control>
+```
+
+Use the `start` slot for a decorative icon. An icon-only option needs
+`aria-label`, which also supplies its hover and focus tooltip when enabled.
+
+The all-elements loader registers `ki-tooltip`. When using direct imports or
+framework wrappers, register it separately for icon-only options.
+
+Attributes:
+- `aria-label` (string | undefined): Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.
+- `disabled` (boolean, default false): Excludes the option from selection and keyboard navigation.
+- `value` (string, required): Required nonempty option identifier. Each value must be unique in its group.
+
+Slots:
+- (default): Noninteractive visible option label.
+- `start`: Decorative leading icon. Supply aria-label for an icon-only option.
+
+Parts:
+- `button`: The native option surface with radio semantics.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-segment-font-size`: Text size of medium and small segments.
+- `--ki-segment-font-weight`: Font weight of segment labels.
+- `--ki-segment-gap`: Gap between the leading icon and label.
+- `--ki-segment-icon-size`: Size of leading artwork.
+- `--ki-segment-line-height`: Line height of medium and small segments.
+- `--ki-segment-padding-inline`: Inline padding of a medium or small segment.
+- `--ki-segmented-control-track-size-md`: Medium track height before density adjustment.
+- `--ki-segmented-item-backdrop-filter`: Complete CSS backdrop filter behind an unselected segment.
+- `--ki-segmented-item-bg`: Resting surface of an unselected segment, matching the track by default.
+- `--ki-segmented-item-bg-image`: Optional image layered over an unselected segment surface.
+- `--ki-segmented-item-disabled-fg`: Ink of an unavailable segment.
+- `--ki-segmented-item-fg`: Resting ink of an unselected segment, strengthened in contrast-more.
+- `--ki-segmented-item-radius`: Corner radius of each segment.
+- `--ki-segmented-selected-backdrop-filter`: Complete CSS backdrop filter behind the selected segment.
+- `--ki-segmented-selected-bg`: Raised selected surface, lighter than the track in both schemes.
+- `--ki-segmented-selected-bg-image`: Optional image layered over the selected segment.
+- `--ki-segmented-selected-border-color`: High-contrast selection boundary when elevation or surface differences are subtle.
+- `--ki-segmented-selected-border-width`: Width of the selection boundary.
+- `--ki-segmented-selected-fg`: Ink of the selected segment.
+- `--ki-segmented-selected-shadow`: Elevation of the selected segment.
+- `--ki-segmented-track-padding`: Inset between the track and its segments.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-segmented-control
+
+A compact control for one in-place choice among two to five options.
+
+When to use: apply a chart range, view mode, or another immediate setting.
+When NOT to use: switching between panels (ki-tabs), submitted form choices
+(ki-radio-group), or more than five options (ki-select).
+
+Examples:
+
+# ki-segmented-control examples
+
+## Change a chart range
+
+```html
+<ki-segmented-control id="range" label="Chart range" value="week">
+  <ki-segment value="day">Day</ki-segment>
+  <ki-segment value="week">Week</ki-segment>
+  <ki-segment value="month">Month</ki-segment>
+</ki-segmented-control>
+```
+
+```js
+import { defineCustomElement as defineControl } from '@kimen/elements/ki-segmented-control';
+import { defineCustomElement as defineSegment } from '@kimen/elements/ki-segment';
+
+defineControl();
+defineSegment();
+
+document.querySelector('#range').addEventListener('ki-change', ({ detail }) => {
+  updateChartRange(detail.value);
+});
+```
+
+## Give an icon-only option a name
+
+```html
+<ki-segmented-control label="View" size="sm" full-width>
+  <ki-segment value="list">List</ki-segment>
+  <ki-segment value="board" aria-label="Board">
+    <svg slot="start" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 2h4v12H2zm6 0h6v7H8z" fill="currentColor"></path>
+    </svg>
+  </ki-segment>
+</ki-segmented-control>
+```
+
+The all-elements loader already registers the tooltip. With direct imports
+or framework wrappers, register it before mounting an icon-only option.
+
+```js
+import { defineCustomElement as defineTooltip } from '@kimen/elements/ki-tooltip';
+
+defineTooltip();
+```
+
+Supply a visible label when space permits. The icon-only option takes its
+accessible name and hover or focus tooltip from `aria-label`. Keep slotted
+content noninteractive.
+
+Attributes:
+- `full-width` (boolean, default false): Distribute the available inline space evenly among all segments.
+- `label` (string, required): Required accessible name of the group. Use a short name for the setting.
+- `size` ("md" | "sm" | "xs", default 'md'): Track size. The default heights are 28, 32 and 40 CSS px respectively; surrounding density settings can increase or decrease targets.
+- `value` (string, default ''): Resolved selected value. Set it to choose an option programmatically. Omit it to select the first available option. The value is empty when there are no available options. Programmatic changes are silent.
+
+Slots:
+- (default): Two to five direct ki-segment children with distinct nonempty values.
+
+Parts:
+- `track`: Surface containing the radiogroup and its options.
+
+Events:
+- `ki-change` (CustomEvent<{ value: string }>): Emitted once per changed user choice with the new resolved value.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-segment-font-size-xs`: Text size of extra-small segments.
+- `--ki-segment-line-height-xs`: Line height of extra-small segments.
+- `--ki-segment-padding-inline-xs`: Inline padding of an extra-small segment.
+- `--ki-segmented-control-track-size-md`: Medium track height before density adjustment.
+- `--ki-segmented-control-track-size-sm`: Small track height before density adjustment.
+- `--ki-segmented-control-track-size-xs`: Extra-small track height before density adjustment.
+- `--ki-segmented-radius`: Corner radius of the control track.
+- `--ki-segmented-track-backdrop-filter`: Complete CSS backdrop filter behind the track.
+- `--ki-segmented-track-bg`: Solid surface for the segment track.
+- `--ki-segmented-track-bg-image`: Optional image layered over the track surface.
+- `--ki-segmented-track-gap`: Gap between adjacent segments.
+- `--ki-segmented-track-padding`: Inset between the track and its segments.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-select
@@ -2772,6 +4196,108 @@ CSS custom properties:
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
+### ki-skeleton
+
+Decorative placeholder shapes that reserve space for loading content.
+
+When to use: Reserve the expected layout of a card, list, or assistant reply
+while it loads. Give the surrounding region an accessible name and set
+its aria-busy state. Show the skeleton after about 300 ms of waiting.
+When NOT to use: For a standalone loading announcement, progress measurement,
+or interactive control. Put content and loading feedback in the caller's region.
+
+Examples:
+
+# Using ki-skeleton
+
+Define the component when using direct imports.
+
+```js
+import { defineCustomElement } from '@kimen/elements/ki-skeleton';
+defineCustomElement();
+```
+
+## Match the expected layout
+
+```html
+<section aria-label="Assistant is writing" aria-busy="true">
+  <ki-skeleton lines="3"></ki-skeleton>
+</section>
+
+<section aria-label="Loading project" aria-busy="true">
+  <ki-skeleton shape="circle" size="2.5rem"></ki-skeleton>
+  <ki-skeleton shape="rect" block-size="6rem"></ki-skeleton>
+</section>
+```
+
+The last of multiple text lines is shorter. Use `inline-size` and `block-size` to match the dimensions of the incoming content. Set `animated="false"` to use a static fill.
+
+## Skip the flash on fast loads
+
+Reserve the expected block size immediately. Use `hidden` until the request has been pending for about 300 ms.
+
+```html
+<section id="project" aria-label="Loading project" aria-busy="true" style="min-block-size:6rem">
+  <ki-skeleton hidden shape="rect" block-size="6rem"></ki-skeleton>
+</section>
+```
+
+```js
+const region = document.querySelector('#project');
+const placeholder = region.querySelector('ki-skeleton');
+const reveal = setTimeout(() => {
+  placeholder.hidden = false;
+}, 300);
+
+try {
+  const project = await new Promise((resolve) => {
+    setTimeout(() => resolve({ name: 'Roadmap' }), 900);
+  });
+  region.textContent = project.name;
+} finally {
+  clearTimeout(reveal);
+  placeholder.remove();
+  region.setAttribute('aria-busy', 'false');
+  region.setAttribute('aria-label', 'Project');
+}
+```
+
+Use this script in a module after the section is mounted. Change the simulated request to 150 ms to see the fast path. In an application, use the real request and show its error state in the same region.
+
+Attributes:
+- `animated` (boolean, default true): Sweep a highlight while the user permits motion. Set false to use a static placeholder. Shimmer also stops under reduced motion and forced colours.
+- `block-size` (string | undefined): CSS length for the block axis. For text, this is the height of each line. Use it to reserve the height of the content that will replace the shape.
+- `inline-size` (string | undefined): CSS length for the inline axis. Use it to match a fixed content width. Text and rectangles otherwise fill available inline space.
+- `lines` (number, default 1, minimum 1, maximum 20): Number of text lines. Use a whole number from 1 to 20 for the expected paragraph length. Extra lines are ignored for circles and rectangles.
+- `shape` ("circle" | "rect" | "text", default 'text'): Match the placeholder to the expected text, avatar, or rectangular content.
+- `size` (string | undefined): CSS length shared by both axes. Use it for circles or square blocks. An axis-specific override takes precedence.
+
+Slots: none
+
+Parts:
+- `shape`: Each painted text line, circle or rectangle.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-skeleton-backdrop-filter`: Complete backdrop filter behind a loading shape. Defaults to none.
+- `--ki-skeleton-bg`: Base fill of the decorative loading shapes.
+- `--ki-skeleton-bg-image`: Optional image layered over the static fill. Defaults to none.
+- `--ki-skeleton-circle-radius`: Proportional corner radius of the circular shape.
+- `--ki-skeleton-circle-size`: Default diameter of the circle.
+- `--ki-skeleton-highlight`: Peak colour of the animated loading highlight.
+- `--ki-skeleton-last-line-scale`: Fraction of the usual line width occupied by the final line in multiline text.
+- `--ki-skeleton-line-gap`: Block-axis space between text lines.
+- `--ki-skeleton-line-size`: Default height of each text line.
+- `--ki-skeleton-radius`: Corner radius of text lines and rectangles.
+- `--ki-skeleton-rect-size`: Default block size of the rectangle.
+- `--ki-skeleton-shimmer-duration`: Duration of a shimmer sweep.
+- `--ki-skeleton-shimmer-easing`: Easing of the shimmer sweep.
+- `--ki-skeleton-shimmer-image`: Image of the moving highlight. Use currentColor to inherit the highlight colour.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
 ### ki-spinner
 
 A compact status for an indeterminate wait.
@@ -2908,6 +4434,111 @@ Methods: none
 CSS custom properties:
 - `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
 - `--ki-stack-gap`: Default gap of a stack.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-stat
+
+A key metric with an optional comparison against a reference period.
+
+When to use: Summarize one numeric metric in a dashboard or report. Set
+direction to lower-is-better for metrics such as latency and neutral for
+changes that carry no favorable or unfavorable meaning.
+When NOT to use: Present a sequence of readings or inspect multiple data
+points. Use a chart or table with a text equivalent for that data.
+
+Examples:
+
+# Stat
+
+Use one stat for one key number. Choose the preference for the metric. Here,
+the render time went down and the change is favorable.
+
+```html
+<ki-stat
+  label="Median render time"
+  value="84"
+  unit="ms"
+  delta="-9"
+  delta-label="vs last week"
+  direction="lower-is-better"
+></ki-stat>
+```
+
+For a percentage comparison beside a count, set `deltaFormat` as a property.
+Percent formatting takes a fraction, so 0.12 reads as 12%.
+
+```html
+<ki-stat id="active-surfaces" label="Active surfaces" value="1284" delta="0.12" delta-label="vs last week"></ki-stat>
+```
+
+```js
+document.querySelector('#active-surfaces').deltaFormat = { style: 'percent' };
+```
+
+With no `delta`, the card shows the current value alone. For a trend that carries
+no judgment, use `direction="neutral"`. For an informative sparkline, give the
+chart a text equivalent through its own HTML semantics.
+
+```html
+<ki-stat label="Sales" value="750">
+  <svg slot="chart" role="img" aria-label="Sales rose from 680 to 750 this week" viewBox="0 0 80 20" width="80" height="20">
+    <path d="M1 17 L13 11 L27 14 L39 4 L52 8 L67 5 L79 1" fill="none" stroke="currentColor"></path>
+  </svg>
+</ki-stat>
+```
+
+Attributes:
+- `delta` (number | undefined): Optional finite change. Its sign determines the trend and its magnitude is displayed.
+- `delta-label` (string | undefined): Localized comparison period, such as "vs last week".
+- `direction` ("higher-is-better" | "lower-is-better" | "neutral", default 'higher-is-better'): Which direction is favorable for this metric. Use neutral to avoid a judgment.
+- `down-label` (string, default 'down'): Localized spoken direction for a negative delta.
+- `label` (string, required): Localized name of the metric, such as "Median render time".
+- `unit` (string | undefined): Literal suffix for decimal readings, such as "ms".
+- `up-label` (string, default 'up'): Localized spoken direction for a positive delta.
+- `value` (number, required): Current finite reading.
+
+Slots:
+- `chart`: An optional sparkline after the summary. Give informative charts a textual equivalent, and hide charts that repeat the summary.
+
+Parts:
+- `card`: The surface containing the metric and chart.
+- `comparison`: The optional row with delta and reference period.
+- `delta`: The trend glyph and formatted comparison magnitude.
+- `label`: The visible metric label.
+- `reference`: The visible comparison period.
+- `trend`: The decorative rising or falling trend glyph.
+- `value`: The formatted current reading and its unit.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-stat-backdrop-filter`: Complete optional filter behind the metric surface.
+- `--ki-stat-bg`: Raised surface of the metric card.
+- `--ki-stat-bg-image`: Optional image layered over the metric surface.
+- `--ki-stat-border`: Subtle metric card outline.
+- `--ki-stat-border-width`: Width of the metric card outline.
+- `--ki-stat-delta-danger-fg`: Ink of an unfavorable comparison.
+- `--ki-stat-delta-line-height`: Line height of the comparison.
+- `--ki-stat-delta-neutral-fg`: Ink of an unchanged or ungraded comparison.
+- `--ki-stat-delta-size`: Text size of the comparison.
+- `--ki-stat-delta-success-fg`: Ink of a favorable comparison.
+- `--ki-stat-emphasis-weight`: Weight of the main reading and comparison magnitude.
+- `--ki-stat-gap`: Space between the reading and comparison or chart.
+- `--ki-stat-label-fg`: Ink of the metric label and comparison period.
+- `--ki-stat-label-line-height`: Line height of the metric label.
+- `--ki-stat-label-size`: Text size of the metric label.
+- `--ki-stat-padding`: Insets around the metric and chart.
+- `--ki-stat-radius`: Corner radius of the metric card.
+- `--ki-stat-trend-gap`: Space between the trend glyph and comparison magnitude.
+- `--ki-stat-trend-size`: Size of the rising or falling trend glyph.
+- `--ki-stat-value-fg`: Ink of the main reading.
+- `--ki-stat-value-font-family`: Typeface of the main reading.
+- `--ki-stat-value-letter-spacing`: Spacing between digits in the main reading.
+- `--ki-stat-value-line-height`: Line height of the main reading.
+- `--ki-stat-value-size`: Size of the main reading.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-status

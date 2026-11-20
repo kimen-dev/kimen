@@ -1,0 +1,43 @@
+---
+title: ki-menu
+description: Show grouped row, overflow, or account actions from a named button.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Pair `ki-menu` with a named button in the same document or shadow root. The
+button ID goes in `anchor`. Use `type="button"` when the trigger is in a form.
+
+<Demo code={`<ki-button id="row-actions" type="button">Actions</ki-button>
+<ki-menu anchor="row-actions" filter-label="Filter actions">
+  <ki-menu-group label="Edit">
+    <ki-menu-item value="rename" shortcut="F2">Rename</ki-menu-item>
+    <ki-menu-item value="move" disabled>Move to…</ki-menu-item>
+    <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+  </ki-menu-group>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="delete" tone="danger">Delete</ki-menu-item>
+</ki-menu>`} />
+
+Enter, Space and Down open at the first item. Up opens at the last. A
+filterable menu starts in the filter, and Down enters the results. Use Up,
+Down, Home, End, and type-ahead to move between actions. Disabled actions can
+receive focus. Escape returns to the trigger. Tab continues from the trigger
+in the page's tab order.
+
+Listen for `ki-select` on the menu to receive `{ value, checked? }`. Checkboxes
+keep the menu open. Plain and radio actions dismiss it. The radio group is
+scoped to its `ki-menu-group`, with ungrouped radios forming their own set.
+
+Use the `header` slot for informational content and the `start` slot of an
+item for an icon or avatar. A `shortcut` displays the application's shortcut
+hint.
+
+## API reference
+
+<CemApi tag="ki-menu" />
+
+## Workshop
+
+[Open ki-menu in Storybook](/storybook/?path=/docs/docs-components-ki-menu--docs)

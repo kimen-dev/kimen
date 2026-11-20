@@ -13,24 +13,23 @@ const logCloseReason = (event: CustomEvent<KiDialogCloseDetail>) => {
   window.dispatchEvent(new CustomEvent('ki-dialog-story-close', { detail: event.detail }));
 };
 
-// Opens the dialog through its trigger, exercising the real modal focus flow
-// (show() -> showModal() -> entry-focus assist). Runs in the story view only:
-// docs pages skip play functions, so autodocs never traps itself behind a
-// stack of open modals.
+// Activate the real button after Stencil renders it. The docs page skips play
+// functions so autodocs remains usable with multiple dialog stories mounted.
 const openViaTrigger = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-  // One frame lets the upfront-registered elements finish their first render.
-  await new Promise((resolve) => requestAnimationFrame(resolve));
-  canvasElement.querySelector('ki-button')?.click();
+  const trigger = canvasElement.querySelector('ki-button[command="show-modal"]');
+  const button = () => trigger?.shadowRoot?.querySelector<HTMLElement>('[part="button"]');
+  for (let frame = 0; frame < 20 && !button(); frame += 1) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  button()?.click();
 };
 
 const renderDialog = (
   args: DialogStoryArgs,
+  id: string,
   options: { dir?: 'rtl'; scrolling?: boolean; equalActions?: boolean } = {},
 ) => {
-  const dialogId = `story-${options.dir ?? 'ltr'}-${options.scrolling ? 'scrolling' : 'standard'}-dialog`;
-  const getDialog = () => document.getElementById(dialogId) as HTMLKiDialogElement | null;
-  const openDialog = () => void getDialog()?.show();
-  const closeDialog = () => void getDialog()?.close();
+  const dialogId = `${id}-dialog`;
   const mainProps = options.dir ? { dir: options.dir } : {};
   const heading = args.heading;
   const open = Boolean(args.open);
@@ -44,7 +43,7 @@ const renderDialog = (
 
   return (
     <main {...mainProps}>
-      <ki-button type="button" onClick={openDialog}>
+      <ki-button commandfor={dialogId} command="show-modal">
         Open dialog
       </ki-button>
       <ki-dialog
@@ -63,15 +62,21 @@ const renderDialog = (
         ) : (
           <p>{args.body}</p>
         )}
-        <ki-button slot="footer" type="button" autofocus style={actionStyle} onClick={closeDialog}>
+        <ki-button
+          slot="footer"
+          commandfor={dialogId}
+          command="request-close"
+          autofocus
+          style={actionStyle}
+        >
           {args.cancelLabel}
         </ki-button>
         <ki-button
           slot="footer"
-          type="button"
+          commandfor={dialogId}
+          command="close"
           tone="danger"
           style={actionStyle}
-          onClick={closeDialog}
         >
           {args.deleteLabel}
         </ki-button>
@@ -106,30 +111,30 @@ type Story = StoryObj<DialogStoryArgs>;
 
 /** Interactive playground: every prop exposed as a control. */
 export const Playground: Story = {
-  render: (args) => renderDialog(args),
+  render: (args, { id }) => renderDialog(args, id),
 };
 
 /** Destructive confirmation with least-destructive autofocus, shown open. */
 export const Confirmation: Story = {
-  render: (args) => renderDialog(args, { equalActions: true }),
+  render: (args, { id }) => renderDialog(args, id, { equalActions: true }),
   play: openViaTrigger,
 };
 
 /** Low-risk dialog with opt-in backdrop dismissal, shown open. */
 export const BackdropOptIn: Story = {
   args: { closeOnBackdrop: true },
-  render: (args) => renderDialog(args),
+  render: (args, { id }) => renderDialog(args, id),
   play: openViaTrigger,
 };
 
 /** Long body content scrolls within the dialog surface, shown open. */
 export const ScrollingBody: Story = {
-  render: (args) => renderDialog(args, { scrolling: true }),
+  render: (args, { id }) => renderDialog(args, id, { scrolling: true }),
   play: openViaTrigger,
 };
 
 /** Footer actions follow right-to-left document direction, shown open. */
 export const RTL: Story = {
-  render: (args) => renderDialog(args, { dir: 'rtl' }),
+  render: (args, { id }) => renderDialog(args, id, { dir: 'rtl' }),
   play: openViaTrigger,
 };

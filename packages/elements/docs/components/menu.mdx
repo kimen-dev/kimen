@@ -1,0 +1,25 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as MenuStories from '../../src/components/ki-menu/ki-menu.stories';
+
+<Meta title="Docs/Recipes/Menu" />
+
+# Menu
+
+Use a menu for short lists of actions on one object, an account, or a
+toolbar. Give the button an ID and pass that ID to `anchor`. Keep related
+actions together in a `ki-menu-group` and place destructive actions after a
+divider.
+
+<Canvas of={MenuStories.Playground} />
+
+The trigger responds to Enter, Space and the vertical arrow keys. Arrow
+keys, Home, End and type-ahead move through the actions. Escape returns focus
+to the trigger. Tab continues through the page. Adding `filter-label` gives
+focus to a search field on open, and the live status then reports the count.
+
+Handle `ki-select` on the menu. The event detail holds the item value and the
+new checked state for checkable items. A checkbox leaves the popup open.
+Plain and radio actions close it. Radio choices are exclusive within each
+named group or within the set of ungrouped radios.
+
+<Canvas of={MenuStories.Account} />

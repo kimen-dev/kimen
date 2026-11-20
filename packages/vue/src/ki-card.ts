@@ -9,5 +9,12 @@ import { defineCustomElement as defineKiCard } from '@kimen/elements/components/
 
 
 
-export const KiCard: StencilVueComponent<JSX.KiCard> = /*@__PURE__*/ defineContainer<JSX.KiCard>('ki-card', defineKiCard);
+export const KiCard: StencilVueComponent<JSX.KiCard> = /*@__PURE__*/ defineContainer<JSX.KiCard>('ki-card', defineKiCard, [
+  'variant',
+  'href',
+  'interactive',
+  'ki-activate'
+], [
+  'ki-activate'
+]);
 
