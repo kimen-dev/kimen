@@ -2255,6 +2255,29 @@
         "$value": "{ki.space.12xl}",
         "$description": "Size of the decorative tile in a compact empty view."
       }
+    },
+    "scale-control": {
+      "$type": "dimension",
+      "track-height": {
+        "$value": "{ki.space.xs}",
+        "$description": "Thickness of the inactive rail of a value scale."
+      },
+      "thumb-border-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Outline thickness of the visible grip."
+      },
+      "mark-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Thickness of a tick marking an interval."
+      },
+      "vertical-length": {
+        "$value": "{ki.size.slider-vertical}",
+        "$description": "Length of a vertical value scale."
+      },
+      "coarse-target": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum grip target when a value scale has a coarse primary pointer."
+      }
     }
   }
 }
