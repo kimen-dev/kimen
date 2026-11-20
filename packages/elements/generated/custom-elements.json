@@ -6793,6 +6793,513 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-pagination.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiPagination",
+          "customElement": true,
+          "tagName": "ki-pagination",
+          "description": "Controls for moving among pages of results or appending the next batch.",
+          "whenToUse": "paged tables, search results or long lists. Use compact for\na previous/next stepper and load-more to append results in place.",
+          "whenNotToUse": "short lists that fit in one view or the steps of a task.",
+          "attributes": [
+            {
+              "name": "boundaries",
+              "fieldName": "boundaries",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of pages to display at each end of the numbered list.",
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "name": "compact-label",
+              "fieldName": "compactLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Page {page} of {pages}'",
+              "description": "Localized stepper label template. Include {page} and {pages}."
+            },
+            {
+              "name": "href-template",
+              "fieldName": "hrefTemplate",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+              "format": "url"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Pagination'",
+              "description": "Accessible name of the navigation landmark. Distinguish multiple result sets."
+            },
+            {
+              "name": "load-more-label",
+              "fieldName": "loadMoreLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Load more'",
+              "description": "Localized visible label for the button that appends results."
+            },
+            {
+              "name": "next-label",
+              "fieldName": "nextLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Next page'",
+              "description": "Localized accessible name of the control that requests the next page."
+            },
+            {
+              "name": "page",
+              "fieldName": "page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Current 1-based page. Update it when the requested results are ready.",
+              "minimum": 1
+            },
+            {
+              "name": "page-label",
+              "fieldName": "pageLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Page {page}'",
+              "description": "Localized accessible name template for numbered controls. Include {page}."
+            },
+            {
+              "name": "pages",
+              "fieldName": "pages",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Total number of result pages. Omit it until a page count is available.",
+              "minimum": 0
+            },
+            {
+              "name": "previous-label",
+              "fieldName": "previousLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Previous page'",
+              "description": "Localized accessible name of the control that requests the previous page."
+            },
+            {
+              "name": "shown",
+              "fieldName": "shown",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Displayed result count in load-more mode. Update it after appending results.",
+              "minimum": 0
+            },
+            {
+              "name": "siblings",
+              "fieldName": "siblings",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of pages to display on each side of the current page.",
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "name": "status-label",
+              "fieldName": "statusLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Showing {shown} of {total} results'",
+              "description": "Localized polite count template. Include {shown} and {total}."
+            },
+            {
+              "name": "total",
+              "fieldName": "total",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Total result count in load-more mode. Required with shown for the count.",
+              "minimum": 0
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"compact\" | \"load-more\" | \"pages\""
+              },
+              "default": "'pages'",
+              "description": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "boundaries",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of pages to display at each end of the numbered list.",
+              "attribute": "boundaries",
+              "reflects": false,
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "kind": "field",
+              "name": "compactLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Page {page} of {pages}'",
+              "description": "Localized stepper label template. Include {page} and {pages}.",
+              "attribute": "compact-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "hrefTemplate",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+              "attribute": "href-template",
+              "reflects": false,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Pagination'",
+              "description": "Accessible name of the navigation landmark. Distinguish multiple result sets.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "loadMoreLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Load more'",
+              "description": "Localized visible label for the button that appends results.",
+              "attribute": "load-more-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "nextLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Next page'",
+              "description": "Localized accessible name of the control that requests the next page.",
+              "attribute": "next-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "page",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Current 1-based page. Update it when the requested results are ready.",
+              "attribute": "page",
+              "reflects": false,
+              "minimum": 1
+            },
+            {
+              "kind": "field",
+              "name": "pageLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Page {page}'",
+              "description": "Localized accessible name template for numbered controls. Include {page}.",
+              "attribute": "page-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "pages",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Total number of result pages. Omit it until a page count is available.",
+              "attribute": "pages",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "previousLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Previous page'",
+              "description": "Localized accessible name of the control that requests the previous page.",
+              "attribute": "previous-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "shown",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Displayed result count in load-more mode. Update it after appending results.",
+              "attribute": "shown",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "siblings",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of pages to display on each side of the current page.",
+              "attribute": "siblings",
+              "reflects": false,
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "kind": "field",
+              "name": "statusLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Showing {shown} of {total} results'",
+              "description": "Localized polite count template. Include {shown} and {total}.",
+              "attribute": "status-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "total",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Total result count in load-more mode. Required with shown for the count.",
+              "attribute": "total",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"compact\" | \"load-more\" | \"pages\""
+              },
+              "default": "'pages'",
+              "description": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width.",
+              "attribute": "variant",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-load-more",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Requests another batch. Append results in place and update shown."
+            },
+            {
+              "name": "ki-page-change",
+              "type": {
+                "text": "CustomEvent<{\n    page: number;\n  }>"
+              },
+              "description": "Requests a different page. Update results and move focus to their heading\nwhen they are ready. Cancelling the event also cancels a plain link click."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "compact",
+              "description": "Current page and page count in the stepper."
+            },
+            {
+              "name": "gap",
+              "description": "Decorative marker for omitted pages."
+            },
+            {
+              "name": "list",
+              "description": "Ordered list of pages in the numbered variant."
+            },
+            {
+              "name": "load-more",
+              "description": "Button that requests another batch."
+            },
+            {
+              "name": "navigation",
+              "description": "Named navigation landmark."
+            },
+            {
+              "name": "next",
+              "description": "Next-page control."
+            },
+            {
+              "name": "page",
+              "description": "Numbered button or link."
+            },
+            {
+              "name": "previous",
+              "description": "Previous-page control."
+            },
+            {
+              "name": "status",
+              "description": "Polite result-count announcement."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-pagination-compact-gap",
+              "description": "Gap between the compact count and direction controls."
+            },
+            {
+              "name": "--ki-pagination-current-bg",
+              "description": "Background of the current page control."
+            },
+            {
+              "name": "--ki-pagination-current-fg",
+              "description": "Ink for the current page control."
+            },
+            {
+              "name": "--ki-pagination-gap",
+              "description": "Gap between numbered page controls."
+            },
+            {
+              "name": "--ki-pagination-item-backdrop-filter",
+              "description": "Complete backdrop filter for the page control."
+            },
+            {
+              "name": "--ki-pagination-item-bg",
+              "description": "Resting background of a numbered page control."
+            },
+            {
+              "name": "--ki-pagination-item-bg-image",
+              "description": "Optional image above the page control background color."
+            },
+            {
+              "name": "--ki-pagination-item-fg",
+              "description": "Resting ink for page labels and status text."
+            },
+            {
+              "name": "--ki-pagination-item-hover-bg",
+              "description": "Background of a hovered page control."
+            },
+            {
+              "name": "--ki-pagination-item-hover-fg",
+              "description": "Ink for a hovered page control."
+            },
+            {
+              "name": "--ki-pagination-item-radius",
+              "description": "Corner radius of numbered page controls and direction links."
+            },
+            {
+              "name": "--ki-pagination-item-size",
+              "description": "Minimum size of a numbered page control at standard density."
+            },
+            {
+              "name": "--ki-pagination-more-gap",
+              "description": "Gap between the load-more button and the count."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiPagination",
+          "declaration": {
+            "name": "KiPagination",
+            "module": "dist/components/ki-pagination.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-pagination",
+          "declaration": {
+            "name": "KiPagination",
+            "module": "dist/components/ki-pagination.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-progress.js",
       "declarations": [
         {

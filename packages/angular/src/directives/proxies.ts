@@ -26,6 +26,7 @@ import { defineCustomElement as defineKiList } from '@kimen/elements/components/
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
+import { defineCustomElement as defineKiPagination } from '@kimen/elements/components/ki-pagination.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
@@ -523,6 +524,38 @@ export class KiOption {
 
 
 export declare interface KiOption extends Components.KiOption {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiPagination,
+  inputs: ['boundaries', 'compactLabel', 'hrefTemplate', 'label', 'loadMoreLabel', 'nextLabel', 'page', 'pageLabel', 'pages', 'previousLabel', 'shown', 'siblings', 'statusLabel', 'total', 'variant']
+})
+@Component({
+  selector: 'ki-pagination',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['boundaries', 'compactLabel', 'hrefTemplate', 'label', 'loadMoreLabel', 'nextLabel', 'page', 'pageLabel', 'pages', 'previousLabel', 'shown', 'siblings', 'statusLabel', 'total', 'variant'],
+})
+export class KiPagination {
+  protected el: HTMLKiPaginationElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiPagination extends Components.KiPagination {
+  /**
+   * Requests a different page. Update results and move focus to their heading
+when they are ready. Cancelling the event also cancels a plain link click.
+   */
+  /**
+   * Requests another batch. Append results in place and update shown.
+   */
+}
 
 
 @ProxyCmp({

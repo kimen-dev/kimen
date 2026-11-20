@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 398 semantic
-and 1260 component tokens. Values are the resolved **onmars light**
+and 1273 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1409,6 +1409,24 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-option-rest-fg` | `#181613` | color used by the option component for rest foreground. |
 | `--ki-option-selected-bg` | `#ffebe5` | color used by the option component for selected background. |
 | `--ki-option-selected-fg` | `#181613` | color used by the option component for selected foreground. |
+
+### `ki-pagination`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-pagination-compact-gap` | `0.75rem` | Gap between the compact count and direction controls. |
+| `--ki-pagination-current-bg` | `#1d1a16` | Background of the current page control. |
+| `--ki-pagination-current-fg` | `#ffffff` | Ink for the current page control. |
+| `--ki-pagination-gap` | `0.25rem` | Gap between numbered page controls. |
+| `--ki-pagination-item-backdrop-filter` | `none` | Complete backdrop filter for the page control. |
+| `--ki-pagination-item-bg` | `rgba(0, 0, 0, 0)` | Resting background of a numbered page control. |
+| `--ki-pagination-item-bg-image` | `none` | Optional image above the page control background color. |
+| `--ki-pagination-item-fg` | `#5e5953` | Resting ink for page labels and status text. |
+| `--ki-pagination-item-hover-bg` | `#f3f0eb` | Background of a hovered page control. |
+| `--ki-pagination-item-hover-fg` | `#181613` | Ink for a hovered page control. |
+| `--ki-pagination-item-radius` | `8px` | Corner radius of numbered page controls and direction links. |
+| `--ki-pagination-item-size` | `2.5rem` | Minimum size of a numbered page control at standard density. |
+| `--ki-pagination-more-gap` | `0.5rem` | Gap between the load-more button and the count. |
 
 ### `ki-progress`
 

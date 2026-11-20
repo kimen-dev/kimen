@@ -739,6 +739,94 @@ export namespace Components {
         "value"?: string;
     }
     /**
+     * Controls for moving among pages of results or appending the next batch.
+     * @whenToUse paged tables, search results or long lists. Use compact for
+     * a previous/next stepper and load-more to append results in place.
+     * @whenNotToUse short lists that fit in one view or the steps of a task.
+     */
+    interface KiPagination {
+        /**
+          * Number of pages to display at each end of the numbered list.
+          * @default 1
+          * @minimum 0
+          * @maximum 10
+         */
+        "boundaries": number;
+        /**
+          * Localized stepper label template. Include {page} and {pages}.
+          * @default 'Page {page} of {pages}'
+         */
+        "compactLabel": string;
+        /**
+          * Relative or HTTP(S) URL template for native navigation. Place {page} in the path, query or fragment, for example "?page={page}".
+          * @format url
+         */
+        "hrefTemplate"?: string;
+        /**
+          * Accessible name of the navigation landmark. Distinguish multiple result sets.
+          * @default 'Pagination'
+         */
+        "label": string;
+        /**
+          * Localized visible label for the button that appends results.
+          * @default 'Load more'
+         */
+        "loadMoreLabel": string;
+        /**
+          * Localized accessible name of the control that requests the next page.
+          * @default 'Next page'
+         */
+        "nextLabel": string;
+        /**
+          * Current 1-based page. Update it when the requested results are ready.
+          * @default 1
+          * @minimum 1
+         */
+        "page": number;
+        /**
+          * Localized accessible name template for numbered controls. Include {page}.
+          * @default 'Page {page}'
+         */
+        "pageLabel": string;
+        /**
+          * Total number of result pages. Omit it until a page count is available.
+          * @minimum 0
+         */
+        "pages"?: number;
+        /**
+          * Localized accessible name of the control that requests the previous page.
+          * @default 'Previous page'
+         */
+        "previousLabel": string;
+        /**
+          * Displayed result count in load-more mode. Update it after appending results.
+          * @minimum 0
+         */
+        "shown"?: number;
+        /**
+          * Number of pages to display on each side of the current page.
+          * @default 1
+          * @minimum 0
+          * @maximum 10
+         */
+        "siblings": number;
+        /**
+          * Localized polite count template. Include {shown} and {total}.
+          * @default 'Showing {shown} of {total} results'
+         */
+        "statusLabel": string;
+        /**
+          * Total result count in load-more mode. Required with shown for the count.
+          * @minimum 0
+         */
+        "total"?: number;
+        /**
+          * Numbered pages, a previous/next stepper, or a button to append results. Numbered pages switch to the stepper below 480 CSS pixels of available width.
+          * @default 'pages'
+         */
+        "variant": 'pages' | 'compact' | 'load-more';
+    }
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
      * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -1415,6 +1503,10 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
 }
+export interface KiPaginationCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiPaginationElement;
+}
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiTabsElement;
@@ -1786,6 +1878,32 @@ declare global {
     var HTMLKiOptionElement: {
         prototype: HTMLKiOptionElement;
         new (): HTMLKiOptionElement;
+    };
+    interface HTMLKiPaginationElementEventMap {
+        "ki-page-change": {
+    page: number;
+  };
+        "ki-load-more": void;
+    }
+    /**
+     * Controls for moving among pages of results or appending the next batch.
+     * @whenToUse paged tables, search results or long lists. Use compact for
+     * a previous/next stepper and load-more to append results in place.
+     * @whenNotToUse short lists that fit in one view or the steps of a task.
+     */
+    interface HTMLKiPaginationElement extends Components.KiPagination, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiPaginationElementEventMap>(type: K, listener: (this: HTMLKiPaginationElement, ev: KiPaginationCustomEvent<HTMLKiPaginationElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiPaginationElementEventMap>(type: K, listener: (this: HTMLKiPaginationElement, ev: KiPaginationCustomEvent<HTMLKiPaginationElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiPaginationElement: {
+        prototype: HTMLKiPaginationElement;
+        new (): HTMLKiPaginationElement;
     };
     /**
      * A token-styled, non-interactive progress indicator for known or unknown
@@ -2183,6 +2301,7 @@ declare global {
         "ki-list-item": HTMLKiListItemElement;
         "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
+        "ki-pagination": HTMLKiPaginationElement;
         "ki-progress": HTMLKiProgressElement;
         "ki-qr": HTMLKiQrElement;
         "ki-radio": HTMLKiRadioElement;
@@ -2889,6 +3008,104 @@ declare namespace LocalJSX {
           * Submission and selection value for this option. When omitted, the value falls back to the trimmed option text, matching native `<option>` parity. When NOT to use: do not use this as selection state; set `ki-select.value`.
          */
         "value"?: string;
+    }
+    /**
+     * Controls for moving among pages of results or appending the next batch.
+     * @whenToUse paged tables, search results or long lists. Use compact for
+     * a previous/next stepper and load-more to append results in place.
+     * @whenNotToUse short lists that fit in one view or the steps of a task.
+     */
+    interface KiPagination {
+        /**
+          * Number of pages to display at each end of the numbered list.
+          * @default 1
+          * @minimum 0
+          * @maximum 10
+         */
+        "boundaries"?: number;
+        /**
+          * Localized stepper label template. Include {page} and {pages}.
+          * @default 'Page {page} of {pages}'
+         */
+        "compactLabel"?: string;
+        /**
+          * Relative or HTTP(S) URL template for native navigation. Place {page} in the path, query or fragment, for example "?page={page}".
+          * @format url
+         */
+        "hrefTemplate"?: string;
+        /**
+          * Accessible name of the navigation landmark. Distinguish multiple result sets.
+          * @default 'Pagination'
+         */
+        "label"?: string;
+        /**
+          * Localized visible label for the button that appends results.
+          * @default 'Load more'
+         */
+        "loadMoreLabel"?: string;
+        /**
+          * Localized accessible name of the control that requests the next page.
+          * @default 'Next page'
+         */
+        "nextLabel"?: string;
+        /**
+          * Requests another batch. Append results in place and update shown.
+         */
+        "onKi-load-more"?: (event: KiPaginationCustomEvent<void>) => void;
+        /**
+          * Requests a different page. Update results and move focus to their heading when they are ready. Cancelling the event also cancels a plain link click.
+         */
+        "onKi-page-change"?: (event: KiPaginationCustomEvent<{
+    page: number;
+  }>) => void;
+        /**
+          * Current 1-based page. Update it when the requested results are ready.
+          * @default 1
+          * @minimum 1
+         */
+        "page"?: number;
+        /**
+          * Localized accessible name template for numbered controls. Include {page}.
+          * @default 'Page {page}'
+         */
+        "pageLabel"?: string;
+        /**
+          * Total number of result pages. Omit it until a page count is available.
+          * @minimum 0
+         */
+        "pages"?: number;
+        /**
+          * Localized accessible name of the control that requests the previous page.
+          * @default 'Previous page'
+         */
+        "previousLabel"?: string;
+        /**
+          * Displayed result count in load-more mode. Update it after appending results.
+          * @minimum 0
+         */
+        "shown"?: number;
+        /**
+          * Number of pages to display on each side of the current page.
+          * @default 1
+          * @minimum 0
+          * @maximum 10
+         */
+        "siblings"?: number;
+        /**
+          * Localized polite count template. Include {shown} and {total}.
+          * @default 'Showing {shown} of {total} results'
+         */
+        "statusLabel"?: string;
+        /**
+          * Total result count in load-more mode. Required with shown for the count.
+          * @minimum 0
+         */
+        "total"?: number;
+        /**
+          * Numbered pages, a previous/next stepper, or a button to append results. Numbered pages switch to the stepper below 480 CSS pixels of available width.
+          * @default 'pages'
+         */
+        "variant"?: 'pages' | 'compact' | 'load-more';
     }
     /**
      * A token-styled, non-interactive progress indicator for known or unknown
@@ -3699,6 +3916,23 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface KiPaginationAttributes {
+        "page": number;
+        "pages": number;
+        "variant": 'pages' | 'compact' | 'load-more';
+        "siblings": number;
+        "boundaries": number;
+        "shown": number;
+        "total": number;
+        "label": string;
+        "hrefTemplate": string;
+        "previousLabel": string;
+        "nextLabel": string;
+        "pageLabel": string;
+        "compactLabel": string;
+        "loadMoreLabel": string;
+        "statusLabel": string;
+    }
     interface KiProgressAttributes {
         "value": number;
         "max": number;
@@ -3838,6 +4072,7 @@ declare namespace LocalJSX {
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
+        "ki-pagination": Omit<KiPagination, keyof KiPaginationAttributes> & { [K in keyof KiPagination & keyof KiPaginationAttributes]?: KiPagination[K] } & { [K in keyof KiPagination & keyof KiPaginationAttributes as `attr:${K}`]?: KiPaginationAttributes[K] } & { [K in keyof KiPagination & keyof KiPaginationAttributes as `prop:${K}`]?: KiPagination[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
@@ -4103,6 +4338,13 @@ declare module "@stencil/core" {
              * on an option, or expecting it to paint its own row.
              */
             "ki-option": LocalJSX.IntrinsicElements["ki-option"] & JSXBase.HTMLAttributes<HTMLKiOptionElement>;
+            /**
+             * Controls for moving among pages of results or appending the next batch.
+             * @whenToUse paged tables, search results or long lists. Use compact for
+             * a previous/next stepper and load-more to append results in place.
+             * @whenNotToUse short lists that fit in one view or the steps of a task.
+             */
+            "ki-pagination": LocalJSX.IntrinsicElements["ki-pagination"] & JSXBase.HTMLAttributes<HTMLKiPaginationElement>;
             /**
              * A token-styled, non-interactive progress indicator for known or unknown
              * duration work.

@@ -24,6 +24,7 @@ export { KiList } from './ki-list.js';
 export { KiListItem } from './ki-list-item.js';
 export { KiNote } from './ki-note.js';
 export { KiOption } from './ki-option.js';
+export { KiPagination } from './ki-pagination.js';
 export { KiProgress } from './ki-progress.js';
 export { KiQr } from './ki-qr.js';
 export { KiRadio } from './ki-radio.js';

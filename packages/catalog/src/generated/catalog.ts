@@ -975,6 +975,104 @@ export const catalogData = {
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
       "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
+    "ki-pagination": {
+      "description": "Controls for moving among pages of results or appending the next batch.",
+      "events": {
+        "ki-load-more": "Requests another batch. Append results in place and update shown.",
+        "ki-page-change": "Requests a different page. Update results and move focus to their heading\nwhen they are ready. Cancelling the event also cancels a plain link click."
+      },
+      "props": {
+        "boundaries": {
+          "type": "number",
+          "description": "Number of pages to display at each end of the numbered list.",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 10
+        },
+        "compact-label": {
+          "type": "string",
+          "description": "Localized stepper label template. Include {page} and {pages}.",
+          "default": "Page {page} of {pages}"
+        },
+        "href-template": {
+          "type": "string",
+          "description": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+          "format": "url"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the navigation landmark. Distinguish multiple result sets.",
+          "default": "Pagination"
+        },
+        "load-more-label": {
+          "type": "string",
+          "description": "Localized visible label for the button that appends results.",
+          "default": "Load more"
+        },
+        "next-label": {
+          "type": "string",
+          "description": "Localized accessible name of the control that requests the next page.",
+          "default": "Next page"
+        },
+        "page": {
+          "type": "number",
+          "description": "Current 1-based page. Update it when the requested results are ready.",
+          "default": 1,
+          "minimum": 1
+        },
+        "page-label": {
+          "type": "string",
+          "description": "Localized accessible name template for numbered controls. Include {page}.",
+          "default": "Page {page}"
+        },
+        "pages": {
+          "type": "number",
+          "description": "Total number of result pages. Omit it until a page count is available.",
+          "minimum": 0
+        },
+        "previous-label": {
+          "type": "string",
+          "description": "Localized accessible name of the control that requests the previous page.",
+          "default": "Previous page"
+        },
+        "shown": {
+          "type": "number",
+          "description": "Displayed result count in load-more mode. Update it after appending results.",
+          "minimum": 0
+        },
+        "siblings": {
+          "type": "number",
+          "description": "Number of pages to display on each side of the current page.",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 10
+        },
+        "status-label": {
+          "type": "string",
+          "description": "Localized polite count template. Include {shown} and {total}.",
+          "default": "Showing {shown} of {total} results"
+        },
+        "total": {
+          "type": "number",
+          "description": "Total result count in load-more mode. Required with shown for the count.",
+          "minimum": 0
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "compact",
+            "load-more",
+            "pages"
+          ],
+          "description": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width.",
+          "default": "pages"
+        }
+      },
+      "slots": {},
+      "tag": "ki-pagination",
+      "whenNotToUse": "short lists that fit in one view or the steps of a task.",
+      "whenToUse": "paged tables, search results or long lists. Use compact for\na previous/next stepper and load-more to append results in place."
+    },
     "ki-progress": {
       "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",
       "events": {},
