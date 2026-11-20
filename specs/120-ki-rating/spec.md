@@ -144,3 +144,5 @@ Feature: Rating displays a score or collects a choice on a small scale
 - **Agent's choice, pending founder confirmation.** Changes are instantaneous. Whole-star targets start at 32 CSS pixels, half-star targets start at 24 CSS pixels wide, and the Kimen touch density minimum applies to every choice. Glyph groups can wrap as space narrows.
 
 - **Agent's choice, pending founder confirmation.** Declare the API change as major because the protected API comparator classifies additions to the generated loader namespaces that way.
+
+- **Agent's choice, pending founder confirmation.** The same local build with and without Rating measured MCP server growth of 19,539 bytes raw and 4,261 bytes gzip. Record those two measured allowances in Rating metadata. The existing Brotli and MCP Apps limits cover the resulting bundles.

@@ -2,5 +2,8 @@
   "barePage": { "keyboardPressed": false },
   "pointer": { "hoverWitness": true },
   "visual": { "material3Dark": true },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpServer": { "raw": 19539, "gzip": 4261 }
+  }
 }
