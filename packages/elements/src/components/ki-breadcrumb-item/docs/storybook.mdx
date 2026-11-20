@@ -1,0 +1,11 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as BreadcrumbItemStories from '../ki-breadcrumb-item.stories';
+
+<Meta title="Docs/Components/ki-breadcrumb-item examples" />
+
+# Breadcrumb item examples
+
+Each item supplies one level to the surrounding breadcrumb. Ancestors with
+destinations become links. The final level is announced as the current page.
+
+<Canvas of={BreadcrumbItemStories.Playground} />

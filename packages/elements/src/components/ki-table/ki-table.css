@@ -1,0 +1,189 @@
+/* The table content lives in light DOM. Scope rules to this host and its own
+   table so neighboring and nested native tables keep their own styles. */
+ki-table {
+  --_ki-table-row-height: var(--ki-table-row-height);
+  --_ki-table-target-min: var(--ki-density-target-min);
+
+  display: block;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow: auto;
+  isolation: isolate;
+  color: var(--ki-table-fg);
+  background-color: var(--ki-table-bg);
+  background-image: var(--ki-table-bg-image);
+  backdrop-filter: var(--ki-table-backdrop-filter);
+  border: var(--ki-table-border-width) solid var(--ki-table-border);
+  border-radius: var(--ki-table-radius);
+  font-family: var(--ki-typography-family-body);
+}
+
+ki-table[hidden] {
+  display: none;
+}
+
+ki-table[density="compact"] {
+  --_ki-table-row-height: var(--ki-table-row-height-compact);
+}
+
+ki-table[sticky-header] {
+  scroll-padding-block-start: var(--_ki-table-sticky-offset, 0);
+}
+
+ki-table > table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-body-1);
+}
+
+ki-table > table > caption {
+  padding: var(--ki-table-cell-padding-inline);
+  font-family: var(--ki-table-caption-font-family);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  text-align: start;
+}
+
+ki-table > table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+  box-sizing: border-box;
+  block-size: max(
+    calc(var(--_ki-table-row-height) + var(--ki-density-control-offset)),
+    var(--_ki-table-target-min)
+  );
+  padding-block: 0;
+  padding-inline: var(--ki-table-cell-padding-inline);
+  border-block-start: var(--ki-table-border-width) solid var(--ki-table-border);
+  text-align: start;
+  white-space: nowrap;
+}
+
+ki-table > table > :is(tbody, tfoot) > tr > th[scope="row"] {
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+ki-table > table > thead {
+  color: var(--ki-table-header-fg);
+  background-color: var(--ki-table-header-bg);
+  background-image: var(--ki-table-header-bg-image);
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+}
+
+ki-table[sticky-header] > table > thead {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+}
+
+ki-table > table > thead > tr > :is(th, td) {
+  block-size: max(
+    calc(var(--ki-table-header-height) + var(--ki-density-control-offset)),
+    var(--_ki-table-target-min)
+  );
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+/* Hover follows the available primary pointer so touch taps cannot pin it. */
+@media (hover: hover) and (pointer: fine) {
+  ki-table > table > tbody > tr:hover:not([aria-hidden="true"], [aria-selected="true"]) {
+    --_ki-table-meta-fg: var(--ki-table-row-hover-fg);
+
+    color: var(--ki-table-row-hover-fg);
+    background-color: var(--ki-table-row-hover-bg);
+  }
+}
+
+ki-table > table > tbody > tr[aria-selected="true"] {
+  --_ki-table-meta-fg: var(--ki-table-row-selected-fg);
+
+  color: var(--ki-table-row-selected-fg);
+  background-color: var(--ki-table-row-selected-bg);
+}
+
+ki-table > table > :is(thead, tbody, tfoot) > tr > [data-numeric] {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+ki-table > table > :is(tbody, tfoot) > tr > :is([data-meta], [data-numeric]) {
+  color: var(--_ki-table-meta-fg, var(--ki-table-meta-fg));
+}
+
+ki-table > table > thead > tr > th[data-sort] > button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ki-table-sort-gap);
+  min-inline-size: var(--_ki-table-target-min);
+  min-block-size: var(--_ki-table-target-min);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ki-table-focus-radius);
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+ki-table > table > thead > tr > th[data-sort] > button > .ki-table-sort-glyph {
+  font-size: var(--ki-table-sort-glyph-size);
+  pointer-events: none;
+}
+
+ki-table:focus-visible,
+ki-table > table > thead > tr > th[data-sort] > button:focus-visible {
+  outline: var(--ki-table-focus-ring-width) solid var(--ki-table-focus-ring-color);
+  outline-offset: var(--ki-table-focus-ring-offset);
+}
+
+ki-table > table > :is(thead, tbody, tfoot) > tr > .ki-table-selection {
+  inline-size: var(--_ki-table-target-min);
+  padding-inline-end: 0;
+  text-align: center;
+}
+
+ki-table .ki-table-selection > ki-checkbox {
+  --ki-density-target-min: var(--_ki-table-target-min);
+
+  min-inline-size: var(--_ki-table-target-min);
+  vertical-align: middle;
+}
+
+ki-table .ki-table-selection-label {
+  position: absolute;
+  inline-size: var(--ki-typography-visually-hidden-size);
+  block-size: var(--ki-typography-visually-hidden-size);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+ki-table > table > tbody > .ki-table-placeholder > td > span {
+  display: block;
+  block-size: var(--ki-table-skeleton-height);
+  background-color: var(--ki-table-skeleton);
+  border-radius: var(--ki-table-skeleton-radius);
+}
+
+@media (pointer: coarse) {
+  ki-table {
+    --_ki-table-target-min: max(var(--ki-density-target-min), var(--ki-table-touch-target-min));
+  }
+}
+
+@media (forced-colors: active) {
+  ki-table:focus-visible,
+  ki-table > table > thead > tr > th[data-sort] > button:focus-visible {
+    outline-color: Highlight;
+  }
+
+  ki-table > table > tbody > tr[aria-selected="true"] {
+    outline: var(--ki-table-border-width) solid Highlight;
+    outline-offset: calc(-1 * var(--ki-table-border-width));
+  }
+
+  ki-table > table > tbody > .ki-table-placeholder > td > span {
+    border: var(--ki-table-border-width) solid GrayText;
+  }
+}

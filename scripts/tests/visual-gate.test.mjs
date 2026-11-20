@@ -90,16 +90,16 @@ test('the ARMED marker is exactly true or false', async () => {
 });
 
 test('the expected baseline names mirror the harness capture matrix', () => {
-  assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts'), [
-    'ki-button-onmars-light-gallery-chromium-linux.png',
-    'ki-button-material3-light-gallery-chromium-linux.png',
+  assert.deepEqual(expectedLinuxBaselines('ki-badge.visual.browser.spec.ts'), [
+    'ki-badge-onmars-light-gallery-chromium-linux.png',
+    'ki-badge-material3-light-gallery-chromium-linux.png',
   ]);
-  assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
-    'ki-button-onmars-dark-gallery-chromium-linux.png',
+  assert.deepEqual(expectedLinuxBaselines('ki-badge.visual.dark.browser.spec.ts'), [
+    'ki-badge-onmars-dark-gallery-chromium-linux.png',
   ]);
-  assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
-    'ki-button-onmars-light-gallery-webkit-linux.png',
-    'ki-button-material3-light-gallery-webkit-linux.png',
+  assert.deepEqual(expectedLinuxBaselines('ki-badge.visual.browser.spec.ts', 'webkit'), [
+    'ki-badge-onmars-light-gallery-webkit-linux.png',
+    'ki-badge-material3-light-gallery-webkit-linux.png',
   ]);
 });
 
@@ -114,8 +114,19 @@ test('S12 the icon gallery requires both themes in both schemes', () => {
   ]);
 });
 
+test('the code block gallery requires both themes in both schemes', () => {
+  assert.deepEqual(expectedLinuxBaselines('ki-code-block.visual.browser.spec.ts'), [
+    'ki-code-block-onmars-light-gallery-chromium-linux.png',
+    'ki-code-block-material3-light-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-code-block.visual.dark.browser.spec.ts'), [
+    'ki-code-block-onmars-dark-gallery-chromium-linux.png',
+    'ki-code-block-material3-dark-gallery-chromium-linux.png',
+  ]);
+});
+
 test('a deleted linux baseline is detected by the armed audit', () => {
-  const specs = ['ki-button.visual.browser.spec.ts', 'ki-button.visual.dark.browser.spec.ts'];
+  const specs = ['ki-badge.visual.browser.spec.ts', 'ki-badge.visual.dark.browser.spec.ts'];
   const complete = new Map([
     [specs[0], new Set(expectedLinuxBaselines(specs[0]))],
     [specs[1], new Set(expectedLinuxBaselines(specs[1]))],
@@ -125,17 +136,17 @@ test('a deleted linux baseline is detected by the armed audit', () => {
   const gutted = new Map(complete);
   gutted.set(specs[1], new Set());
   assert.deepEqual(missingLinuxBaselines(specs, gutted, ['chromium']), [
-    'ki-button.visual.dark.browser.spec.ts/ki-button-onmars-dark-gallery-chromium-linux.png',
+    'ki-badge.visual.dark.browser.spec.ts/ki-badge-onmars-dark-gallery-chromium-linux.png',
   ]);
 });
 
 test('a baseline set complete for one engine is still incomplete for the others', () => {
-  const spec = 'ki-button.visual.dark.browser.spec.ts';
+  const spec = 'ki-badge.visual.dark.browser.spec.ts';
   const chromiumOnly = new Map([[spec, new Set(expectedLinuxBaselines(spec))]]);
 
   assert.deepEqual(missingLinuxBaselines([spec], chromiumOnly), [
-    `${spec}/ki-button-onmars-dark-gallery-firefox-linux.png`,
-    `${spec}/ki-button-onmars-dark-gallery-webkit-linux.png`,
+    `${spec}/ki-badge-onmars-dark-gallery-firefox-linux.png`,
+    `${spec}/ki-badge-onmars-dark-gallery-webkit-linux.png`,
   ]);
 });
 

@@ -1,0 +1,13 @@
+:host {
+  font-family: var(--ki-relative-time-font-family, inherit);
+}
+
+/* Keep the absolute timestamp in the accessibility tree. */
+.absolute-time {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

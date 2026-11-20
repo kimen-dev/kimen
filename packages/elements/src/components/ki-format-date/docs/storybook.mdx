@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-format-date" />
+
+# Format a date
+
+Use a calendar date when the day is the value, and send an offset or `Z` when
+the value is a timestamp. Set `lang` on the surrounding document or section.
+
+```html
+<section lang="es-ES">
+  <ki-format-date date="2026-11-19" date-style="long"></ki-format-date>
+  <ki-format-date
+    date="2026-11-19T23:41:00Z"
+    date-style="long"
+    time-style="short"
+    time-zone="Europe/Madrid"
+  ></ki-format-date>
+</section>
+```

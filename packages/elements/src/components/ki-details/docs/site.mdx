@@ -1,0 +1,35 @@
+---
+title: ki-details
+description: Reveal supporting content with a native disclosure.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+
+Use a disclosure for a short explanation, an FAQ answer, a settings section
+or tool output. Supply a plain `summary` or slot a heading into the summary
+when the disclosure titles a section.
+
+```html
+<ki-details open>
+  <h2 slot="summary">Workspace settings</h2>
+  <p>Choose who can invite members to the workspace.</p>
+</ki-details>
+```
+
+The browser manages expansion and can reveal a match in a closed panel.
+Press Enter or Space on the focused summary to toggle it. When `disabled`
+is set, the summary skips the tab order and open body content stays usable.
+Listen to `ki-toggle` for browser-originated state changes and read
+`event.detail.open`. Direct writes to `open` are silent on that disclosure.
+
+Use [ki-accordion](../accordion/) for related disclosures. To share exclusivity
+without an accordion, give the disclosures the same nonempty `name` in one
+document or shadow root. For HTML served
+without JavaScript, use native `<details><summary>…</summary>…</details>`
+markup.
+
+## API reference
+
+<CemApi tag="ki-details" />
+
+[Open Details in Storybook](/storybook/?path=/docs/docs-components-ki-details--docs)

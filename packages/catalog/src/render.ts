@@ -12,6 +12,13 @@
  * layer (Art. I, one source of truth). It is client-side (touches `document`);
  * SSR/DSD is a deferred bet.
  */
+import {
+  allocateDialogId,
+  type DialogIdFor,
+  isDialogCommand,
+  isDialogInvoker,
+  writeDialogId,
+} from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
@@ -25,7 +32,13 @@ import type {
   UiSpecNode,
   ValidationContext,
 } from './validate.js';
-import { acceptsEnumValue, ownEntry, toPlainData, validatePlainData } from './validate.js';
+import {
+  acceptsEnumValue,
+  acceptsNumberOrString,
+  ownEntry,
+  toPlainData,
+  validatePlainData,
+} from './validate.js';
 
 const builtInCatalog: Catalog = catalogData;
 
@@ -140,12 +153,20 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
 
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
- * bound node activates on the only one (FR-003, S17) or, when there is none,
- * on the platform click. Multiple events require a source-owned discriminator
- * on a validated prop. Otherwise the guard rejects the binding (S19).
+ * bound node activates through a declared event or falls back to a platform
+ * click. Multiple events need an explicit activation or a source-owned mode
+ * discriminator on a validated prop (S19).
  */
 export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
+}
+
+/** These buttons use their declared change only when the spec enables toggle mode. */
+export function hasToggleActivation(entry: CatalogEntry | undefined): boolean {
+  return (
+    (entry?.tag === 'ki-button' || entry?.tag === 'ki-icon-button') &&
+    Object.hasOwn(entry.events, 'ki-change')
+  );
 }
 
 const CHIP_ACTIVATIONS = ['ki-change', 'ki-remove', 'ki-activate'] as const;
@@ -237,11 +258,20 @@ export function guardNode(
     }
   }
   // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
-  // activation event. Chip type supplies an explicit discriminator. Other
-  // ambiguous entries are rejected before the binding is built.
+  // activation event. Chips select it by type. Other multi-event entries
+  // must declare which of their events activates the action.
   if (node.action !== undefined) {
-    const events = declaredEvents(ownEntry(state.components, node.component));
-    if (chipActivations(node.component, events)) {
+    const entry = ownEntry(state.components, node.component);
+    const events = declaredEvents(entry);
+    const activation = entry?.activationEvent;
+    if (activation !== undefined && !events.includes(activation)) {
+      state.diagnostics.push({
+        message: `${node.component} activationEvent must name a declared event`,
+        path: `${path}.action`,
+        rule: 'invalid-activation-event',
+        value: node.action,
+      });
+    } else if (chipActivations(node.component, events)) {
       const kind =
         node.props?.['type'] ??
         (parent?.component === 'ki-chip-group' ? parent.props?.['type'] : undefined);
@@ -253,7 +283,7 @@ export function guardNode(
           value: node.action,
         });
       }
-    } else if (events.length > 1) {
+    } else if (activation === undefined && events.length > 1) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
@@ -307,7 +337,7 @@ export function payloadBytes(data: unknown): number {
  */
 const LIVE_STATE_PROPS = ['checked', 'selected', 'value'] as const;
 
-export function matchesConstraint(
+function matchesConstraint(
   value: unknown,
   constraint: CatalogPropConstraint,
 ): value is boolean | number | string {
@@ -316,11 +346,59 @@ export function matchesConstraint(
       return typeof value === 'boolean';
     case 'number':
       return typeof value === 'number' && Number.isFinite(value);
+    case 'number-or-string':
+      return acceptsNumberOrString(value);
     case 'enum':
       return acceptsEnumValue(value, constraint);
     default:
       return typeof value === 'string';
   }
+}
+
+function isMultipleChoiceValue(element: Element, name: string): boolean {
+  return (
+    name === 'value' && element.localName === 'ki-combobox' && element.hasAttribute('multiple')
+  );
+}
+
+/** Reads a catalog-declared value without letting non-scalar objects cross the guard. */
+export function readLiveScalar(
+  element: Element,
+  name: string,
+  constraint: CatalogPropConstraint,
+): Scalar | undefined {
+  const value: unknown = Reflect.get(element, name);
+  if (matchesConstraint(value, constraint)) return value;
+  if (
+    constraint.type === 'string' &&
+    isMultipleChoiceValue(element, name) &&
+    Array.isArray(value)
+  ) {
+    const choices: unknown[] = Array.from(value);
+    if (choices.every((choice) => typeof choice === 'string')) return JSON.stringify(choices);
+  }
+  return undefined;
+}
+
+/** Match the combobox's multiple-value attribute semantics in live conflict checks. */
+export function authoredLiveScalar(
+  element: Element,
+  name: string,
+  value: Scalar | undefined,
+): Scalar | undefined {
+  if (typeof value !== 'string' || !isMultipleChoiceValue(element, name)) return value;
+  if (value === '') return '[]';
+  if (value.trimStart().startsWith('[')) {
+    try {
+      const choices: unknown = JSON.parse(value);
+      if (Array.isArray(choices) && choices.every((choice) => typeof choice === 'string')) {
+        return JSON.stringify([...new Set(choices)]);
+      }
+    } catch {
+      // A bracket can also be part of a literal option value.
+    }
+  }
+  return JSON.stringify([value]);
 }
 
 function liveData(
@@ -329,14 +407,14 @@ function liveData(
   entry: CatalogEntry | undefined,
 ): Record<string, boolean | number | string> {
   const data: Record<string, boolean | number | string> = { ...props };
-  for (const name of LIVE_STATE_PROPS) {
+  const stateProps = hasToggleActivation(entry) ? ['selected'] : LIVE_STATE_PROPS;
+  for (const name of stateProps) {
     const constraint = ownEntry(entry?.props, name);
     if (constraint === undefined) {
       continue;
     }
-    // Reads the rendered component's own property (its code, never spec data).
-    const live: unknown = Reflect.get(element, name);
-    if (matchesConstraint(live, constraint)) {
+    const live = readLiveScalar(element, name, constraint);
+    if (live !== undefined) {
       data[name] = live;
     }
   }
@@ -389,10 +467,16 @@ export function writeProp(
   component: string,
   name: string,
   value: Scalar | undefined,
+  idFor?: DialogIdFor,
 ): void {
-  if (value === undefined) {
+  let attributeValue = value;
+  // Resolve neutral IDs only for catalog dialog invokers.
+  if (name === 'commandfor' && isDialogInvoker(component)) {
+    attributeValue = typeof value === 'string' ? idFor?.(value) : undefined;
+  }
+  if (attributeValue === undefined) {
     element.removeAttribute(name);
-  } else if (value === false) {
+  } else if (attributeValue === false) {
     // Built-in Stencil props that default to true require an explicit false.
     // Registered components continue to use boolean attribute presence.
     const entry = ownEntry(builtInCatalog.components, component);
@@ -402,7 +486,7 @@ export function writeProp(
       element.removeAttribute(name);
     }
   } else {
-    element.setAttribute(name, value === true ? '' : String(value));
+    element.setAttribute(name, attributeValue === true ? '' : String(attributeValue));
   }
 }
 
@@ -426,12 +510,13 @@ export function writeProps(
   element: Element,
   component: string,
   props: Readonly<Record<string, Scalar>>,
+  idFor: DialogIdFor,
 ): void {
   if (writeNativeLayout(element, component, props)) {
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, component, name, value);
+    writeProp(element, component, name, value, idFor);
   }
 }
 
@@ -459,18 +544,34 @@ export function pinButtonType(
  * Routes the bound node's activation event (FR-003) to a dispatch callback.
  * `currentProps` is read at activation time, so a caller
  * whose props change after build (the live surface) reports the current
- * ones; `renderUiSpec` passes the props it built with.
+ * ones; `renderUiSpec` passes the props it built with. Without a dispatch
+ * callback, a dialog invoker still claims its click so a validated local
+ * command cannot activate an enclosing bound node.
  */
 export function wireActivation(
   element: Element,
   entry: CatalogEntry | undefined,
   currentProps: () => Readonly<Record<string, Scalar>>,
-  dispatch: (data: Readonly<Record<string, Scalar>>) => void,
+  dispatch: ((data: Readonly<Record<string, Scalar>>) => void) | undefined,
 ): void {
+  const invoker = isDialogInvoker(element.localName);
+  const invokesDialog = (props: Readonly<Record<string, Scalar>>): boolean =>
+    invoker && typeof props['commandfor'] === 'string' && isDialogCommand(props['command']);
+  if (dispatch === undefined) {
+    if (invoker) {
+      element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event) => {
+        if (invokesDialog(currentProps())) {
+          claim(event);
+        }
+      });
+    }
+    return;
+  }
   const events = declaredEvents(entry);
   const variantActivation = chipActivations(element.localName, events);
-  const activation = events[0] ?? DEFAULT_ACTIVATION_EVENT;
+  const activation = entry?.activationEvent ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
   const clickActivated = !variantActivation && activation === DEFAULT_ACTIVATION_EVENT;
+  const toggleActivation = hasToggleActivation(entry);
   const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
   const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
     const href = props['href'];
@@ -480,20 +581,22 @@ export function wireActivation(
   element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
     // Declared-event controls claim their click so it cannot activate an
     // enclosing bound node. Their native interaction still runs.
-    if (!claim(event) || (!clickActivated && !hasOptInCardAction)) return;
+    if (!claim(event) || (!clickActivated && !hasOptInCardAction && !toggleActivation)) return;
     const props = currentProps();
     // Passive cards retain legacy click bindings. Linked cards keep native
     // navigation, and interactive cards dispatch through ki-activate.
-    if (!clickActivated && (props['interactive'] === true || cardHasLink(props))) return;
-    event.preventDefault();
+    if (hasOptInCardAction && (props['interactive'] === true || cardHasLink(props))) return;
+    if (toggleActivation && props['toggle'] === true) return;
+    // Validated local commands remain available alongside a declared action.
+    if (!invokesDialog(props)) {
+      event.preventDefault();
+    }
     event.stopPropagation();
     dispatch({ ...props });
   });
 
-  if (clickActivated) {
-    pinButtonType(element, entry, currentProps());
-    return;
-  }
+  if (clickActivated || toggleActivation) pinButtonType(element, entry, currentProps());
+  if (clickActivated) return;
 
   // Accept only the component's own event for its current mode (S17–S19).
   // The control's default behavior remains intact, and actions carry its live state.
@@ -503,6 +606,7 @@ export function wireActivation(
       const props = currentProps();
       if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
       if (variantActivation && chipActivation(element, props) !== name) return;
+      if (toggleActivation && props['toggle'] !== true) return;
       dispatch(liveData(element, props, entry));
     });
   }
@@ -520,21 +624,23 @@ function buildNode(
   doc: Document,
   onAction: ((event: ActionEvent) => void) | undefined,
   entries: Readonly<Record<string, CatalogEntry>>,
+  idFor: DialogIdFor,
 ): Element {
   const element = createNodeElement(doc, node.component);
   const props = node.props ?? {};
-  writeProps(element, node.component, props);
-  if (node.action !== undefined && onAction !== undefined) {
-    const action = node.action;
-    wireActivation(
-      element,
-      ownEntry(entries, node.component),
-      () => props,
-      (data) => {
-        onAction({ action, data, path });
-      },
-    );
-  }
+  writeProps(element, node.component, props, idFor);
+  writeDialogId(element, node.id, idFor);
+  const action = node.action;
+  wireActivation(
+    element,
+    ownEntry(entries, node.component),
+    () => props,
+    action !== undefined && onAction !== undefined
+      ? (data) => {
+          onAction({ action, data, path });
+        }
+      : undefined,
+  );
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
       if (typeof child === 'string') {
@@ -546,6 +652,7 @@ function buildNode(
           doc,
           onAction,
           entries,
+          idFor,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -561,6 +668,15 @@ function ownerDocument(surface: Element): Document {
   // An element always carries its owner document (the client-side surface
   // the host mounts; SSR/DSD is a deferred bet).
   return surface.ownerDocument;
+}
+
+function scopedDialogIds(surface: Element): DialogIdFor {
+  const ids = new Map<string, string>();
+  return (nodeId) => {
+    const id = ids.get(nodeId) ?? allocateDialogId(surface);
+    ids.set(nodeId, id);
+    return id;
+  };
 }
 
 interface PreparedSpec {
@@ -714,7 +830,14 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
   }
   const doc = ownerDocument(options.surface);
   options.surface.replaceChildren(
-    buildNode(prepared.spec.root, 'root', doc, options.onAction, catalog.components),
+    buildNode(
+      prepared.spec.root,
+      'root',
+      doc,
+      options.onAction,
+      catalog.components,
+      scopedDialogIds(options.surface),
+    ),
   );
   return { diagnostics: [], ok: true };
 }
@@ -829,7 +952,14 @@ export function createStreamingRenderer(
       const chunkPath = `stream[${String(attachedChunks)}]`;
       attachedChunks += 1;
       options.surface.appendChild(
-        buildNode(report.spec.root, chunkPath, doc, options.onAction, catalog.components),
+        buildNode(
+          report.spec.root,
+          chunkPath,
+          doc,
+          options.onAction,
+          catalog.components,
+          scopedDialogIds(options.surface),
+        ),
       );
       return { diagnostics: [], ok: true };
     },

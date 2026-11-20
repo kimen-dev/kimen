@@ -1,0 +1,14 @@
+{
+  "ki": {
+    "icon-button": {
+      "ghost": {
+        "selected": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Background of the selected ghost icon button toggle in Material 3."
+          }
+        }
+      }
+    }
+  }
+}

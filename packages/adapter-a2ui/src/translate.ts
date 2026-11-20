@@ -424,6 +424,15 @@ function layout(it: Instance, direction?: 'row'): UiSpecNode {
   );
 }
 
+/** Reads the label leaves while keeping the rendered Row and Column stacks intact. */
+function modalLabelContent(label: readonly Piece[]): Piece[] {
+  return label.flatMap((piece) =>
+    typeof piece !== 'string' && piece.component === 'ki-stack'
+      ? modalLabelContent(piece.slots?.[''] ?? [])
+      : [piece],
+  );
+}
+
 /** Basic-catalog Icon names whose Lucide names differ, in both A2UI versions. */
 const ICON_NAMES: Readonly<Record<string, string>> = {
   accountCircle: 'circle-user-round',
@@ -504,10 +513,11 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     if (!Array.isArray(options)) {
       throw it.malformed('options', 'ChoicePicker options must be a list');
     }
+    const searchable = options.length > 15;
     const selected = it.value('value');
     const first = Array.isArray(selected) ? toText(selected[0]) : toText(selected);
     const selectedValues = new Set(
-      multiple && Array.isArray(selected)
+      multiple && !searchable && Array.isArray(selected)
         ? selected.filter((value): value is string => typeof value === 'string')
         : [],
     );
@@ -522,7 +532,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         option['label'] === undefined ? '' : toText(resolveOption(it, option['label'], index));
       const value = option['value'];
       return node(
-        multiple ? 'ki-checkbox' : 'ki-radio',
+        searchable ? 'ki-option' : multiple ? 'ki-checkbox' : 'ki-radio',
         { value, ...(selectedValues.has(value) ? { checked: true } : {}) },
         label === '' ? [] : [label],
       );
@@ -531,12 +541,19 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     if (multiple && label.trim() === '') {
       throw new Degrade('unsupported-variant', 'multipleSelection requires a group label');
     }
+    const value =
+      searchable && multiple
+        ? JSON.stringify(
+            Array.isArray(selected) ? selected.map(toText) : first === '' ? [] : [first],
+          )
+        : first;
     return [
       node(
-        multiple ? 'ki-checkbox-group' : 'ki-radio-group',
+        searchable ? 'ki-combobox' : multiple ? 'ki-checkbox-group' : 'ki-radio-group',
         {
           ...(label === '' ? {} : { label }),
-          ...(!multiple && first !== '' ? { value: first } : {}),
+          ...(searchable && multiple ? { multiple: true } : {}),
+          ...((searchable || !multiple) && value !== '' ? { value } : {}),
         },
         choices,
       ),
@@ -611,7 +628,114 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         .map((group) => node('ki-list-item', {}, group)),
     ),
   ],
+  Modal: (it) => {
+    const triggerId = it.literal('trigger');
+    const contentId = it.literal('content');
+    if (!triggerId || !contentId) {
+      throw it.malformed(
+        triggerId ? 'content' : 'trigger',
+        'Modal requires trigger and content component ids',
+      );
+    }
+    const { actionNodes, components, nodes } = it.context;
+    const triggerType = components.get(triggerId)?.component;
+    if (triggerType === undefined || !components.has(contentId)) {
+      // Progressive updates can deliver either reference in a later message.
+      return [];
+    }
+    if (triggerType !== 'Button' && triggerType !== 'Text') {
+      throw new Degrade('unsupported-variant', `Modal trigger: ${triggerType}`);
+    }
+
+    const [trigger] = it.child('trigger');
+    if (typeof trigger === 'object' && trigger.component !== 'ki-button') {
+      return [trigger];
+    }
+    const button = typeof trigger === 'object' ? trigger : undefined;
+    const label = typeof trigger === 'string' ? [trigger] : (button?.slots?.[''] ?? []);
+    const content = modalLabelContent(label);
+    const text = content
+      .filter((piece): piece is string => typeof piece === 'string')
+      .join('')
+      .trim();
+    // The adapter's icons are decorative. Keep their glyphs and name the opener.
+    const needsFallback =
+      text === '' &&
+      content.every((piece) => typeof piece === 'string' || piece.component === 'ki-icon');
+    const openerLabel = needsFallback
+      ? [...label.filter((piece) => typeof piece !== 'string'), 'Open dialog']
+      : label;
+    // The visit number is unique even when a ChildList repeats the A2UI id.
+    const id = `a2ui-modal-${String(nodes)}`;
+    const opener = {
+      ...button,
+      ...node(
+        'ki-button',
+        { ...button?.props, command: 'show-modal', commandfor: id, type: 'button' },
+        openerLabel,
+      ),
+    };
+    const binding = button === undefined ? undefined : actionNodes.get(button);
+    if (binding !== undefined) {
+      actionNodes.set(opener, binding);
+    }
+    return [
+      opener,
+      {
+        component: 'ki-dialog',
+        id,
+        props: { heading: text || 'Dialog' },
+        slots: {
+          '': it.child('content'),
+          footer: [
+            node('ki-button', { command: 'close', commandfor: id, type: 'button' }, ['Close']),
+          ],
+        },
+      },
+    ];
+  },
   Row: (it) => [layout(it, 'row')],
+  Slider: (it) => {
+    const label = it.text('label');
+    const min = it.body['min'] === undefined ? 0 : it.body['min'];
+    const max = it.body['max'];
+    const steps = it.body['steps'];
+    if (it.body['value'] === undefined) {
+      throw it.malformed('value', 'Slider needs a value or a numeric data binding');
+    }
+    const value = it.value('value');
+    if (typeof min !== 'number' || !Number.isFinite(min)) {
+      throw it.malformed('min', 'Slider min must be a finite number');
+    }
+    if (typeof max !== 'number' || !Number.isFinite(max)) {
+      throw it.malformed('max', 'Slider max must be a finite number');
+    }
+    if (value !== undefined && (typeof value !== 'number' || !Number.isFinite(value))) {
+      throw it.malformed('value', 'Slider value must resolve to a finite number');
+    }
+    let step: number | undefined;
+    if (steps !== undefined) {
+      if (typeof steps !== 'number' || !Number.isInteger(steps) || steps < 1) {
+        throw it.malformed('steps', 'Slider steps must be a positive integer');
+      }
+      const span = max - min;
+      const increment = Number.isFinite(span) ? span / steps : max / steps - min / steps;
+      if (Number.isFinite(increment) && increment > 0) step = increment;
+    }
+    return [
+      node(
+        'ki-slider',
+        {
+          ...(label === '' ? {} : { label }),
+          min,
+          max,
+          ...(step === undefined ? {} : { step }),
+          ...(value === undefined ? {} : { value }),
+        },
+        [],
+      ),
+    ];
+  },
   Tabs: (it) => {
     const tabs = it.body['tabs'];
     if (!Array.isArray(tabs) || tabs.length === 0) {

@@ -268,7 +268,7 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // GENERIC by construction (was per-component and silently ignored every new
 // matrix — Codex review of 003/016): any `--ki-<component>-…-bg` whose name is
 // NOT a semantic/primitive layer, paired with its `-fg` sibling when one
-// exists. New components are swept automatically, with no regex to extend.
+// exists. New adjacent component pairs are swept automatically.
 // Disabled cells are excluded (exempt), as are `-bg` tokens with no `-fg`
 // counterpart (non-text affordances measured elsewhere, not a text pair).
 const SEMANTIC_LAYERS = new Set([
@@ -299,6 +299,28 @@ const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)(?:-[\w-]+)?-bg$/u;
 // guard is defeated once any other component contributes a pair).
 const CANARY_COMPONENT = 'button';
 
+// Several text roles share the same painted surfaces.
+const CODE_INKS = [
+  '--ki-code-keyword',
+  '--ki-code-string',
+  '--ki-code-number',
+  '--ki-code-function',
+  '--ki-code-comment',
+  '--ki-code-line-number',
+];
+
+const SHARED_SURFACE_FOREGROUNDS = {
+  '--ki-code-bg': ['--ki-code-header-fg', ...CODE_INKS],
+  '--ki-code-highlight-bg': ['--ki-code-fg', ...CODE_INKS],
+  '--ki-stat-bg': [
+    '--ki-stat-label-fg',
+    '--ki-stat-value-fg',
+    '--ki-stat-delta-neutral-fg',
+    '--ki-stat-delta-success-fg',
+    '--ki-stat-delta-danger-fg',
+  ],
+};
+
 export function componentPairs(declarations) {
   const pairs = [];
 
@@ -307,17 +329,19 @@ export function componentPairs(declarations) {
     if (!match || SEMANTIC_LAYERS.has(match[1]) || /-disabled-/u.test(name)) {
       continue;
     }
-    const fg = name.replace(/-bg$/u, '-fg');
-    if (declarations.has(fg)) {
-      pairs.push({
-        component: match[1],
-        text: fg,
-        surface: name,
-        minRatio:
-          NON_TEXT_COMPONENTS.has(match[1]) || NON_TEXT_RATING_INKS.has(fg)
-            ? NON_TEXT_MIN_RATIO
-            : MIN_RATIO,
-      });
+    const foregrounds = [name.replace(/-bg$/u, '-fg'), ...(SHARED_SURFACE_FOREGROUNDS[name] ?? [])];
+    for (const text of foregrounds) {
+      if (declarations.has(text)) {
+        pairs.push({
+          component: match[1],
+          text,
+          surface: name,
+          minRatio:
+            NON_TEXT_COMPONENTS.has(match[1]) || NON_TEXT_RATING_INKS.has(text)
+              ? NON_TEXT_MIN_RATIO
+              : MIN_RATIO,
+        });
+      }
     }
   }
 
@@ -916,6 +940,44 @@ function sweepControlBoundaries(theme, scheme, declarations, minRatio = NON_TEXT
   return failures;
 }
 
+const TOGGLE_BUTTON_SELECTED_FILL = /^(--ki-(?:icon-)?button-([a-z]+))-selected-bg$/u;
+const QUIET_TOGGLE_BUTTON_VARIANTS = new Set(['ghost', 'quaternary']);
+
+function sweepToggleButtonFills(theme, scheme, declarations) {
+  const failures = [];
+  const resolveColor = (name) => parseColor(resolveCustomProperty(name, declarations));
+  const pages = CONTROL_PAGE_SURFACES.map((surface) => [surface, resolveColor(surface)]);
+
+  // Spec 094 S9 requires 3:1 between states in addition to the shape cue.
+  // Paint each fill over the page first so a transparent state shows that page.
+  for (const selected of declarations.keys()) {
+    const match = TOGGLE_BUTTON_SELECTED_FILL.exec(selected);
+    if (match === null) continue;
+
+    const [, stem, variant] = match;
+    const sharedFill = QUIET_TOGGLE_BUTTON_VARIANTS.has(variant)
+      ? '--ki-button-toggle-quiet-bg'
+      : '--ki-button-toggle-unselected-bg';
+    const unselected = variant === 'outline' ? `${stem}-rest-bg` : sharedFill;
+    const selectedFill = resolveColor(selected);
+    const unselectedFill = resolveColor(unselected);
+
+    for (const [surface, page] of pages) {
+      const ratio = contrastRatio(
+        compositeOver(selectedFill, page),
+        compositeOver(unselectedFill, page),
+      );
+      if (ratio < NON_TEXT_MIN_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${selected} against ${unselected} over ${surface}: ${ratio} (min ${NON_TEXT_MIN_RATIO})`,
+        );
+      }
+    }
+  }
+
+  return failures;
+}
+
 function sweepSwitchGlyphs(theme, scheme, declarations) {
   const failures = [];
   const resolveColor = (name) => parseColor(resolveCustomProperty(name, declarations));
@@ -1143,6 +1205,7 @@ function evaluateContext(theme, scheme, declarations) {
   const failures = [];
   const swept = componentPairs(declarations);
   failures.push(...sweepControlBoundaries(theme, scheme, declarations));
+  failures.push(...sweepToggleButtonFills(theme, scheme, declarations));
   failures.push(...sweepSwitchGlyphs(theme, scheme, declarations));
   failures.push(...sweepRatioReadouts(theme, scheme, declarations));
   failures.push(...sweepOverlayRamps(theme, scheme, declarations));

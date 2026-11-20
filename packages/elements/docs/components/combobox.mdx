@@ -1,0 +1,21 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Forms/Combobox" />
+
+# Combobox
+
+Use `<ki-combobox>` to search through choices. Use `multiple` when choosing
+several values and `allow-custom` when people can add new choices.
+
+```html
+<ki-combobox label="Labels" multiple allow-custom placeholder="Add a label">
+  <ki-option>bug</ki-option>
+  <ki-option>search</ki-option>
+</ki-combobox>
+```
+
+Arrow keys move through the options, Enter chooses one, and Escape closes
+the list and then clears the field. A selected tag can be removed with its
+button or with Backspace at an empty query.
+
+[Component workshop and customization](?path=/docs/docs-components-ki-combobox--docs)

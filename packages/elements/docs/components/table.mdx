@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-table" />
+
+# ki-table
+
+Use a native table to compare records across shared fields. Include a
+caption, `scope="col"` on column headers and `scope="row"` on each record's name.
+
+```html
+<ki-table selectable sticky-header style="max-block-size: 12rem">
+  <table>
+    <caption>Services</caption>
+    <thead>
+      <tr>
+        <th scope="col" data-sort="name" aria-sort="ascending">Name</th>
+        <th scope="col" data-numeric>Runs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-key="billing"><th scope="row">Billing API</th><td data-numeric>64</td></tr>
+    </tbody>
+  </table>
+</ki-table>
+```
+
+Listen for `ki-sort` to sort the records and move `aria-sort` to the active
+header. `ki-selection-change` supplies the selected row keys. Register
+`ki-checkbox` separately for selection when using individual imports or a
+framework wrapper. Set
+`select-all-label` and `row-selection-label` to match the page language.
+
+Use `density="compact"` for denser rows, `loading` for a busy table with
+a placeholder, and `data-numeric` for inline-end numeric alignment.
+Bound the frame with `max-block-size` to scroll under a sticky header.
+For status, people and actions, compose a badge, avatar and labelled
+ghost icon button in the appropriate cells.
