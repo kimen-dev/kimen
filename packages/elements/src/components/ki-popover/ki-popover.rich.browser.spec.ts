@@ -34,12 +34,13 @@ async function mount(
   content = '<ki-button variant="ghost" size="sm">Learn more</ki-button>',
   placement = 'bottom-start',
 ) {
+  // Keep the outside-click target clear of the bottom-start panel at narrow widths.
   fixture.innerHTML = `
+    <div><input aria-label="Search" tabindex="0"></div>
     <button id="contrast" type="button" tabindex="0">Contrast</button>
     <ki-popover for="contrast" label="About contrast mode" kind="toggletip" appearance="rich" placement="${placement}">
       <strong>Contrast mode</strong><p>Kimen follows the system setting.</p>${content}
     </ki-popover>
-    <input aria-label="Search" tabindex="0">
   `;
   const trigger = page.getByRole('button', { name: 'Contrast', exact: true });
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -66,6 +67,7 @@ it('S3 click opens the rich toggletip and focuses the action', async () => {
 it('S4 outside click dismisses and leaves focus on the outside control', async () => {
   const { trigger, search, dialog } = await mount();
   await trigger.click();
+  await expect.element(dialog).toBeVisible();
 
   await search.click();
 

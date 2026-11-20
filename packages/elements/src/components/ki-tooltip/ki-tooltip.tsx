@@ -4,7 +4,7 @@ import {
   type OverlayPositioner,
   resolveOverlayAnchor,
 } from '../../utils/anchored-overlay.js';
-import { measureCssAnchor, trackOverlayPosition } from '../../utils/anchored-overlay-layout.js';
+import { measureCssAnchor } from '../../utils/anchored-overlay-layout.js';
 import { resolveOverlayPosition } from '../../utils/anchored-overlay-position.js';
 import { shadowFocusTarget } from '../../utils/shadow-focus.js';
 import { attachTooltipDescription, createTooltipDescription } from './ki-tooltip.description.js';
@@ -16,11 +16,6 @@ import {
   resolveTooltipPosition,
   type KiTooltipPlacement,
 } from './ki-tooltip.position.js';
-
-// Read the same computed gap that CSS uses, regardless of its authored unit.
-function tooltipOffset(panel: HTMLElement): number {
-  return Number.parseFloat(getComputedStyle(panel).scrollMarginBlockStart) || 0;
-}
 
 /**
  * A transient, text-only hint with an optional heading.
@@ -83,7 +78,8 @@ export class KiTooltip {
    * where anchor positioning placed it against another box (Firefox under a
    * transformed ancestor). Zero wherever the engine already gets it right.
    */
-  @State() private anchorTransform = '';
+  @State() private anchorShiftX = 0;
+  @State() private anchorShiftY = 0;
 
   private pointerWithin = false;
   private focusWithin = false;
@@ -102,6 +98,17 @@ export class KiTooltip {
     if (records.some(({ target }) => target === this.host || target.parentNode === this.host)) {
       this.syncRichContent();
     }
+    const trigger = this.richTrigger;
+    if (
+      this.visible &&
+      trigger &&
+      records.some(({ removedNodes }) =>
+        Array.from(removedNodes).some((node) => node.contains(trigger)),
+      )
+    ) {
+      // Rebind scrolling ancestors when an open trigger is reparented.
+      this.overlay.show(this.tooltipEl, trigger, { ...this.richOverlayOptions });
+    }
   });
   private readonly richControlObserver = new MutationObserver(() => {
     this.syncRichDescription();
@@ -118,24 +125,48 @@ export class KiTooltip {
 
   private readonly richOverlayOptions = {
     ...this.overlayOptions,
-    position: ((panel, trigger, view, move, detached) => ({
-      cleanup: trackOverlayPosition(panel, trigger, view, move, detached),
-      update: () => {
-        const dir = getComputedStyle(trigger).direction === 'rtl' ? 'rtl' : 'ltr';
-        const { x, y, effectivePlacement } = resolveOverlayPosition({
-          placement: normalizePlacement(this.placement),
-          offset: tooltipOffset(panel),
-          dir,
-          triggerRect: trigger.getBoundingClientRect(),
-          popupRect: panel.getBoundingClientRect(),
-          viewport: { width: view.innerWidth, height: view.innerHeight },
-        });
-        panel.dir = dir;
-        panel.style.left = `${String(x)}px`;
-        panel.style.top = `${String(y)}px`;
-        panel.setAttribute('data-side', effectivePlacement);
-      },
-    })) satisfies OverlayPositioner,
+    position: ((panel, trigger, view, move) => {
+      const events = new AbortController();
+      const options = { capture: true, passive: true, signal: events.signal };
+      // Scroll events stay within their shadow root, including when the
+      // trigger is projected through a slot in another component.
+      let ancestor: Node | null = trigger;
+      while (ancestor) {
+        if (ancestor instanceof ShadowRoot) {
+          ancestor.addEventListener('scroll', move, options);
+          ancestor = ancestor.host;
+        } else {
+          const node = ancestor as Node & { assignedSlot?: HTMLSlotElement | null };
+          ancestor = node.assignedSlot ?? node.parentNode;
+        }
+      }
+      view.addEventListener('scroll', move, options);
+      view.addEventListener('resize', move, options);
+      const sizes = new ResizeObserver(move);
+      sizes.observe(trigger);
+      sizes.observe(panel);
+      return {
+        cleanup: () => {
+          sizes.disconnect();
+          events.abort();
+        },
+        update: () => {
+          const dir = getComputedStyle(trigger).direction === 'rtl' ? 'rtl' : 'ltr';
+          const { x, y, effectivePlacement } = resolveOverlayPosition({
+            placement: normalizePlacement(this.placement),
+            offset: Number.parseFloat(getComputedStyle(panel).scrollMarginBlockStart) || 0,
+            dir,
+            triggerRect: trigger.getBoundingClientRect(),
+            popupRect: panel.getBoundingClientRect(),
+            viewport: { width: view.innerWidth, height: view.innerHeight },
+          });
+          panel.dir = dir;
+          panel.style.left = `${String(x)}px`;
+          panel.style.top = `${String(y)}px`;
+          panel.dataset.side = effectivePlacement;
+        },
+      };
+    }) satisfies OverlayPositioner,
   };
 
   private get normalizedLabel(): string {
@@ -520,19 +551,17 @@ export class KiTooltip {
       triggerRect,
       tooltipRect: this.measureTooltip(tooltip),
       viewport: { width: window.innerWidth, height: window.innerHeight },
-      offset: tooltipOffset(tooltip),
+      offset: this.measureOffset(),
     });
 
     this.effectivePlacement = position.effectivePlacement;
     this.crossAxisShift = position.crossAxisShift;
     const resolvedAnchor = measureCssAnchor(tooltip, '--ki-tooltip-anchor');
-    const correction =
-      resolvedAnchor &&
-      resolveAnchorCorrection(position.effectivePlacement, dir, resolvedAnchor, triggerRect);
-    this.anchorTransform =
-      correction && (correction.x || correction.y)
-        ? `translate(${String(correction.x)}px, ${String(correction.y)}px)`
-        : '';
+    const correction = resolvedAnchor
+      ? resolveAnchorCorrection(position.effectivePlacement, dir, resolvedAnchor, triggerRect)
+      : { x: 0, y: 0 };
+    this.anchorShiftX = correction.x;
+    this.anchorShiftY = correction.y;
   }
 
   // The closed bubble generates no box (it must not widen the page), so it is
@@ -545,6 +574,24 @@ export class KiTooltip {
     return rect;
   }
 
+  // Resolve `--ki-tooltip-offset` to px by laying it out on a hidden probe in
+  // the shadow root (which inherits the host custom properties). Layout returns
+  // px for any authored unit — rem, em, px — so the flip decision is correct
+  // regardless of the root font size, without hard-coding 16px/rem.
+  private measureOffset(): number {
+    const root = this.host.shadowRoot;
+    if (!root) {
+      return 0;
+    }
+    const probe = this.host.ownerDocument.createElement('div');
+    probe.style.cssText =
+      'position:absolute;visibility:hidden;pointer-events:none;inline-size:var(--_ki-tooltip-offset)';
+    root.appendChild(probe);
+    const px = probe.getBoundingClientRect().width;
+    probe.remove();
+    return Number.isFinite(px) ? px : 0;
+  }
+
   render() {
     const tooltipStyle: Record<string, string> = {
       '--_ki-tooltip-cross-shift': `${String(this.crossAxisShift)}px`,
@@ -553,7 +600,9 @@ export class KiTooltip {
     // is otherwise absent, and every engine that gets it right paints exactly
     // what it painted before. `transform` composes with the `translate` the
     // placement and the motion use, so neither has to know about it.
-    if (this.anchorTransform) tooltipStyle.transform = this.anchorTransform;
+    if (this.anchorShiftX !== 0 || this.anchorShiftY !== 0) {
+      tooltipStyle.transform = `translate(${String(this.anchorShiftX)}px, ${String(this.anchorShiftY)}px)`;
+    }
 
     const rich = this.isRich;
     const panelProps = rich

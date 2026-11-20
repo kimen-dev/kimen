@@ -74,11 +74,42 @@ it('S1 stays open when the pointer crosses from the external trigger onto the bu
   await tip.hover();
   await clock.fastForwardClock(550);
 
-  await expect.element(tip).toHaveTextContent('Grace period');
-  await expect.element(tip).toHaveTextContent(body);
+  await expect.element(tip.getByText('Grace period', { exact: true })).toBeVisible();
+  await expect.element(tip.getByText(body, { exact: true })).toBeVisible();
   await expect.element(tip).toBeVisible();
   await userEvent.keyboard('{Escape}');
   await expect.element(tip).not.toBeInTheDocument();
+});
+
+it('S1 follows its slotted trigger when a containing shadow scroller moves', async () => {
+  const shell = document.createElement('div');
+  const root = shell.attachShadow({ mode: 'open' });
+  root.innerHTML = `
+    <div style="block-size: 10rem; overflow: auto;">
+      <div style="block-size: 20rem; padding-block-start: 5rem;"><slot></slot></div>
+    </div>
+  `;
+  const scroller = root.firstElementChild;
+  if (!scroller) throw new Error('Missing shadow scroller');
+  shell.innerHTML = `
+    <button id="retention" type="button" tabindex="0">Retention</button>
+    <ki-tooltip for="retention" heading="Grace period" placement="top">${body}</ki-tooltip>
+  `;
+  fixture.append(shell);
+  const trigger = page.getByRole('button', { name: 'Retention' });
+  const tip = page.getByRole('tooltip');
+  await expect.element(trigger).toHaveAccessibleDescription(tooltipDescription);
+  trigger.element().focus();
+  await expect.element(tip).toBeVisible();
+
+  const triggerTop = () => trigger.element().getBoundingClientRect().top;
+  const gap = () => triggerTop() - tip.element().getBoundingClientRect().bottom;
+  const before = triggerTop();
+  const offset = gap();
+  scroller.scrollTop = 40;
+
+  await expect.poll(() => triggerTop()).toBeLessThan(before);
+  await expect.poll(() => Math.abs(gap() - offset)).toBeLessThan(0.5);
 });
 
 it('S2 presents direct body text and makes interactive children unavailable', async () => {
@@ -86,8 +117,8 @@ it('S2 presents direct body text and makes interactive children unavailable', as
   await expect.element(trigger).toHaveAccessibleDescription(tooltipDescription);
   trigger.element().focus();
 
-  await expect.element(tip).toHaveTextContent('Grace period');
-  await expect.element(tip).toHaveTextContent(body);
+  await expect.element(tip.getByText('Grace period', { exact: true })).toBeVisible();
+  await expect.element(tip.getByText(body, { exact: true })).toBeVisible();
   await expect.element(page.getByRole('link', { name: 'Learn more' })).not.toBeInTheDocument();
   await userEvent.tab();
   await expect.element(page.getByRole('button', { name: 'Next' })).toHaveFocus();
