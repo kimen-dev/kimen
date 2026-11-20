@@ -36,7 +36,12 @@ import type {
 import type { A2uiRendererFunctionResponse } from './protocol-v1.js';
 import type { GuardedRender } from './render-point.js';
 import { renderSurface } from './render-point.js';
-import type { A2uiDegradationReport, A2uiDiagnostic, ActionBinding } from './translate.js';
+import type {
+  A2uiDegradationReport,
+  A2uiDiagnostic,
+  ActionBinding,
+  WriteBackBinding,
+} from './translate.js';
 import { translateSurface, undeclaredProperty } from './translate.js';
 import { resolveDynamic, toText } from './values.js';
 
@@ -125,6 +130,35 @@ interface SurfaceState {
 }
 
 const OK: A2uiApplyResult = { degradations: [], diagnostics: [], ok: true };
+
+/**
+ * The data-model value a bound input reports (spec 039 FR-010): a string for
+ * a text field, a boolean for a checkbox, a finite number for a slider, and a
+ * one-item list (empty when cleared) for a single-selection choice picker.
+ */
+function committedValue(
+  kind: WriteBackBinding['kind'],
+  data: Readonly<Record<string, unknown>>,
+): unknown {
+  const value = data['value'];
+  switch (kind) {
+    case 'boolean':
+      return typeof data['checked'] === 'boolean' ? data['checked'] : undefined;
+    case 'list':
+      return typeof value === 'string' ? (value === '' ? [] : [value]) : undefined;
+    case 'number': {
+      const number =
+        typeof value === 'number'
+          ? value
+          : typeof value === 'string' && value.trim() !== ''
+            ? Number(value)
+            : Number.NaN;
+      return Number.isFinite(number) ? number : undefined;
+    }
+    case 'string':
+      return typeof value === 'string' ? value : undefined;
+  }
+}
 
 const failure = (diagnostic: A2uiDiagnostic): A2uiApplyResult => ({
   degradations: [],
@@ -283,6 +317,28 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
     }
   };
 
+  /**
+   * Two-way binding (spec 039 A1): writes the value the person committed in
+   * a bound input to its own path of the surface's data model, before any
+   * action that follows resolves its context. Never re-renders (FR-011) and
+   * never reaches the agent (FR-012); a value of the wrong shape writes
+   * nothing.
+   */
+  const writeBack = (
+    state: SurfaceState,
+    write: WriteBackBinding,
+    data: Readonly<Record<string, unknown>>,
+  ): void => {
+    const value = committedValue(write.kind, data);
+    if (value === undefined) {
+      return;
+    }
+    const written = writeAt(state.dataModel, write.segments, value);
+    if (written.ok) {
+      state.dataModel = written.model;
+    }
+  };
+
   /** Translates and renders a candidate state; commits it only after the render succeeds. */
   const commit = (
     surfaceId: string,
@@ -321,12 +377,17 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
       }
     }
     if (translation.spec !== undefined) {
-      const bindings = translation.bindings;
+      const { bindings, writes } = translation;
       const result = renderSurface(render, {
         budgets: options.budgets,
         catalogSchemaVersion: options.catalogSchemaVersion,
         element: state.element,
         onAction: (event: ActionEvent) => {
+          const write = writes.get(event.path);
+          if (write !== undefined) {
+            writeBack(state, write, event.data);
+            return;
+          }
           const binding = bindings.get(event.path);
           if (binding !== undefined) {
             dispatch(surfaceId, state, binding);
