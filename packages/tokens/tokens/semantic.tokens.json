@@ -2197,6 +2197,36 @@
           "$value": "{ki.size.conversation.caret-block-size}",
           "$description": "Block size of a streaming caret."
         }
+      },
+      "app-bar": {
+        "lg-height": {
+          "$value": "{ki.size.app-bar.lg}",
+          "$description": "Height of a large two-row screen bar."
+        },
+        "xl-height": {
+          "$value": "{ki.size.app-bar.xl}",
+          "$description": "Height of an extra-large two-row screen bar."
+        }
+      },
+      "menu-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of a floating navigation menu."
+      },
+      "menu-radius-sm": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Smaller corner radius of a floating navigation menu."
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Hairline edge on a structural surface."
+      },
+      "indicator-width": {
+        "$value": "{ki.size.border.thin}",
+        "$description": "Thickness of the line identifying a selected navigation destination."
+      },
+      "touch-target": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum target dimension for navigation controls on a coarse pointer."
       }
     },
     "control": {

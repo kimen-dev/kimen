@@ -1697,85 +1697,6 @@ export const catalogData = {
       "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
       "whenToUse": "free-form text longer than one line, such as comments,\ndescriptions, messages, delivery notes, or addresses when paired with a\nmatching `autocomplete` purpose."
     },
-    "ki-time-input": {
-      "description": "A time-of-day field with locale-aware typing and suggested slots. The shadow\nroot keeps the combobox and listbox in the same accessibility ID scope.\nThe host owns native form participation.",
-      "events": {
-        "change": "Native-style composed event for a changed user commit.",
-        "ki-change": "Emitted when a person commits a different canonical time or clears it."
-      },
-      "props": {
-        "disabled": {
-          "type": "boolean",
-          "description": "Disables typing, suggestions and form participation.",
-          "default": false
-        },
-        "error-text": {
-          "type": "string",
-          "description": "Validation message to show after blur or a blocked form submission."
-        },
-        "help-text": {
-          "type": "string",
-          "description": "Guidance read with the field until a validation error replaces it."
-        },
-        "invalid-time-text": {
-          "type": "string",
-          "description": "Fallback validation message for invalid time syntax or bounds.",
-          "default": "Enter a valid time within the allowed range."
-        },
-        "label": {
-          "type": "string",
-          "description": "Visible text naming the time field. Provide it for every use.",
-          "required": true
-        },
-        "list-label": {
-          "type": "string",
-          "description": "Accessible name of the suggestion listbox.",
-          "default": "Suggested times"
-        },
-        "max": {
-          "type": "string",
-          "description": "Latest allowed wall-clock time in HH:mm, inclusive."
-        },
-        "min": {
-          "type": "string",
-          "description": "Earliest allowed wall-clock time in HH:mm, inclusive."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name under which the canonical time is submitted."
-        },
-        "picker-label": {
-          "type": "string",
-          "description": "Accessible name of the button that opens suggestions.",
-          "default": "Choose time"
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Empty values block form submission when true.",
-          "default": false
-        },
-        "step": {
-          "type": "number",
-          "description": "Suggested slot interval in whole minutes. Typed times keep their exact minutes.",
-          "default": 30
-        },
-        "time-zone": {
-          "type": "string",
-          "description": "IANA timezone shown alongside help. Does not change wall-clock values."
-        },
-        "value": {
-          "type": "string",
-          "description": "Committed wall-clock time in HH:mm, or empty. The attribute sets the form reset value.",
-          "default": ""
-        }
-      },
-      "slots": {
-        "start": "Optional leading adornment, outside the input's accessible name."
-      },
-      "tag": "ki-time-input",
-      "whenNotToUse": "durations, dates or timestamps. Pair with a date field when\nthe day matters. Timezone conversion belongs to the application.",
-      "whenToUse": "collect an exact time of day or offer regular appointment slots.\nProvide a visible label and set bounding times when the schedule is limited."
-    },
     "ki-toast": {
       "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
       "events": {
@@ -1893,6 +1814,101 @@ export const catalogData = {
       "tag": "ki-tooltip",
       "whenNotToUse": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases.",
       "whenToUse": "add a brief clarifying hint for an icon-only, abbreviated, or\notherwise ambiguous control when the same information is discoverable\nelsewhere in the interface."
+    },
+    "ki-top-nav": {
+      "description": "Application navigation with responsive primary links, or a per-screen app\nbar with a real heading, optional search, and overflow actions.",
+      "events": {},
+      "props": {
+        "collapse-at": {
+          "type": "string",
+          "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
+          "default": "48rem"
+        },
+        "heading-level": {
+          "type": "number",
+          "description": "Native heading level for the screen title. Use 1 through 6 to fit the page outline.",
+          "default": 1
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the header's primary navigation landmark. Override for localization.",
+          "default": "Main"
+        },
+        "navigation-label": {
+          "type": "string",
+          "description": "Accessible name for the compact navigation button and menu. Override for localization.",
+          "default": "Open navigation"
+        },
+        "overflow-label": {
+          "type": "string",
+          "description": "Accessible name for the app-bar overflow button and menu. Override for localization.",
+          "default": "More actions"
+        },
+        "scroll-behavior": {
+          "type": "enum",
+          "values": [
+            "collapse",
+            "elevate",
+            "none"
+          ],
+          "description": "Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.",
+          "default": "elevate"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl"
+          ],
+          "description": "Bar size. Only app-bar mode has large and extra-large two-row sizes.",
+          "default": "md"
+        },
+        "sticky": {
+          "type": "boolean",
+          "description": "Keep the bar at the block start of the scroll container and draw a bottom border.",
+          "default": false
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "Supporting text displayed under the screen heading.",
+          "default": ""
+        },
+        "title": {
+          "type": "string",
+          "description": "Screen heading, set with the HTML title attribute or the screenTitle property.",
+          "default": ""
+        },
+        "title-align": {
+          "type": "enum",
+          "values": [
+            "center",
+            "start"
+          ],
+          "description": "Center a compact single-row title when the app bar has at most one action.",
+          "default": "start"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "app-bar",
+            "header"
+          ],
+          "description": "Header for primary navigation, or app-bar for the current screen. Defaults to header.",
+          "default": "header"
+        }
+      },
+      "slots": {
+        "": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\".",
+        "actions": "Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow.",
+        "brand": "Header mode: the brand link or wordmark.",
+        "leading": "App bar: a named Back or Open navigation control.",
+        "search": "App bar: an accessible search control that can shrink inside its row."
+      },
+      "tag": "ki-top-nav",
+      "whenNotToUse": "more than five sections or a deep navigation tree (use a\nsidebar), or switches between in-page views (use ki-tabs).",
+      "whenToUse": "group a brand, up to five primary sections and global controls,\nor set a screen title, leading control and screen actions in app-bar mode."
     },
     "ki-video": {
       "description": "A themed video surface: a calm poster facade with exactly one accessible\nplay control over a slotted native `<video>` element. From the first\nactivation on, playback, scrubbing, volume, captions and fullscreen belong\nto the native player — Kimen ships no custom chrome.",

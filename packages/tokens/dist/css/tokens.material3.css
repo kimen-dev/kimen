@@ -694,10 +694,6 @@
   --ki-textarea-sm-radius:var(--ki-radius-component-xs);
   --ki-textarea-lg-radius:var(--ki-radius-component-xs);
   --ki-textarea-xl-radius:var(--ki-radius-component-xs);
-  --ki-time-input-list-bg:var(--ki-surface-s2);
-  --ki-time-input-list-border-color:var(--ki-outline-none);
-  --ki-time-input-list-radius:var(--ki-corner-popup-tight);
-  --ki-time-input-list-shadow:var(--ki-elevation-e2);
   --ki-toast-bg:var(--ki-surface-s2);
   --ki-toast-border:var(--ki-outline-none);
   --ki-toast-shadow:var(--ki-elevation-e3);
@@ -716,6 +712,7 @@
   --ki-tooltip-font-size:var(--ki-font-size-caption-2);
   --ki-tooltip-line-height:var(--ki-font-line-height-caption-2);
   --ki-tooltip-shadow:0 0 0 0 var(--ki-color-transparent-black);
+  --ki-top-nav-menu-radius:var(--ki-layout-menu-radius-sm);
   --ki-video-frame-radius:var(--ki-radius-component-lg);
   --ki-video-scrim-color:var(--ki-transparent-inverse);
   --ki-video-scrim-padding:var(--ki-space-zero);

@@ -1,0 +1,47 @@
+---
+title: TopNav
+description: Group primary navigation in a site header or present the current screen in an app bar.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-top-nav` to group a brand, up to five primary destinations and global
+actions. Use a sidebar for deeper navigation and `ki-tabs` for in-page views.
+The navigation collapses into a menu when the header becomes narrower than
+`collapse-at`, which defaults to `48rem` of available width.
+
+<Demo layout="block" code={`<ki-top-nav label="Workspace" collapse-at="24rem">
+  <a slot="brand" href="#workspace">Kimen</a>
+  <a href="#overview" aria-current="page">Overview</a>
+  <a href="#projects">Projects</a>
+</ki-top-nav>`} />
+
+Keep a page-owned skip link first in the Tab order. Mark the current section
+with `aria-current="page"`. Name each icon button and include unread counts
+in the notification button name, such as “Notifications, 3 unread”. Place the
+visible `ki-counter` in the icon button's `counter` slot.
+
+## Screen app bar
+
+Use `variant="app-bar"` for a screen heading, a named leading control and
+screen-specific actions. Set `heading-level` when the heading sits inside an
+existing page outline. Use `lg` or `xl` for a separate title row, and
+`scroll-behavior="collapse"` to move the heading into the main row on scroll.
+Use `sticky` to keep the bar visible in its scroll container.
+
+<Demo layout="block" code={`<ki-top-nav variant="app-bar" title="Release notes" subtitle="Version 2.4" size="lg">
+  <ki-button slot="leading" variant="ghost" size="sm">Back</ki-button>
+  <ki-button slot="actions" variant="ghost" size="sm">Share</ki-button>
+</ki-top-nav>`} />
+
+Use named, directly slotted buttons or links for actions that can overflow.
+The first three actions stay inline and later actions are available through
+More actions. Supply a named control in the `search` slot to show the search
+field and keep the screen heading in the accessibility tree.
+
+## API reference
+
+<CemApi tag="ki-top-nav" />
+
+[Open TopNav in Storybook](/storybook/?path=/docs/docs-components-ki-top-nav--docs)

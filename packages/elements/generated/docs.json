@@ -2994,11 +2994,11 @@
       "parts": [],
       "states": [],
       "dependents": [
-        "ki-time-input"
+        "ki-top-nav"
       ],
       "dependencies": [],
       "dependencyGraph": {
-        "ki-time-input": [
+        "ki-top-nav": [
           "ki-icon"
         ]
       }
@@ -8341,536 +8341,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-time-input/ki-time-input.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-time-input",
-      "docs": "A time-of-day field with locale-aware typing and suggested slots. The shadow\nroot keeps the combobox and listbox in the same accessibility ID scope.\nThe host owns native form participation.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "collect an exact time of day or offer regular appointment slots.\nProvide a visible label and set bounding times when the schedule is limited."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "durations, dates or timestamps. Pair with a date field when\nthe day matters. Timezone conversion belongs to the application."
-        },
-        {
-          "name": "slot",
-          "text": "start - Optional leading adornment, outside the input's accessible name."
-        },
-        {
-          "name": "part",
-          "text": "label - Visible label naming the editable combobox."
-        },
-        {
-          "name": "part",
-          "text": "field - Field enclosure and anchor for the suggestions."
-        },
-        {
-          "name": "part",
-          "text": "input - Editable text combobox."
-        },
-        {
-          "name": "part",
-          "text": "trigger - Button that opens suggested times."
-        },
-        {
-          "name": "part",
-          "text": "listbox - Scrollable list of suggested times."
-        },
-        {
-          "name": "part",
-          "text": "option - Individual suggested time."
-        },
-        {
-          "name": "part",
-          "text": "help - Help and timezone describing the field."
-        },
-        {
-          "name": "part",
-          "text": "error - Polite validation message that replaces help."
-        },
-        {
-          "name": "event",
-          "text": "change - Native-style composed event for a changed user commit."
-        }
-      ],
-      "usage": {
-        "examples": "Display 12-hour time for a US English form and keep the value in canonical\n24-hour form. The person can type any time from 08:00 through 18:00, including\nminutes between the half-hour suggestions.\n\n```html\n<ki-time-input\n  lang=\"en-US\"\n  label=\"Pickup time\"\n  name=\"pickup\"\n  required\n  value=\"09:30\"\n  min=\"08:00\"\n  max=\"18:00\"\n  step=\"30\"\n  help-text=\"Store hours\"\n  time-zone=\"America/New_York\"\n  error-text=\"Choose a pickup time between 8:00 AM and 6:00 PM.\"\n></ki-time-input>\n```\n\nSet the language on a surrounding element to localize the time, and pass\ntranslated labels for the suggestion controls. Touch density increases the\nfield and suggestion hit areas.\n\n```html\n<div lang=\"es-ES\" data-ki-density=\"touch\">\n  <ki-time-input\n    label=\"Hora de la cita\"\n    picker-label=\"Elige una hora\"\n    list-label=\"Horas sugeridas\"\n    error-text=\"Introduce una hora válida.\"\n  ></ki-time-input>\n</div>\n```\n"
-      },
-      "props": [
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Disables typing, suggestions and form participation.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "errorText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "error-text",
-          "reflectToAttr": true,
-          "docs": "Validation message to show after blur or a blocked form submission.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "helpText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "help-text",
-          "reflectToAttr": true,
-          "docs": "Guidance read with the field until a validation error replaces it.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "invalidTimeText",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "invalid-time-text",
-          "reflectToAttr": true,
-          "docs": "Fallback validation message for invalid time syntax or bounds.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Enter a valid time within the allowed range.'"
-            }
-          ],
-          "default": "'Enter a valid time within the allowed range.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": true,
-          "docs": "Visible text naming the time field. Provide it for every use.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "listLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "list-label",
-          "reflectToAttr": true,
-          "docs": "Accessible name of the suggestion listbox.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Suggested times'"
-            }
-          ],
-          "default": "'Suggested times'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "max",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max",
-          "reflectToAttr": true,
-          "docs": "Latest allowed wall-clock time in HH:mm, inclusive.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "min",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "min",
-          "reflectToAttr": true,
-          "docs": "Earliest allowed wall-clock time in HH:mm, inclusive.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Name under which the canonical time is submitted.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "pickerLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "picker-label",
-          "reflectToAttr": true,
-          "docs": "Accessible name of the button that opens suggestions.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Choose time'"
-            }
-          ],
-          "default": "'Choose time'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required",
-          "reflectToAttr": true,
-          "docs": "Empty values block form submission when true.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "step",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "step",
-          "reflectToAttr": true,
-          "docs": "Suggested slot interval in whole minutes. Typed times keep their exact minutes.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "30"
-            }
-          ],
-          "default": "30",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "timeZone",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "time-zone",
-          "reflectToAttr": true,
-          "docs": "IANA timezone shown alongside help. Does not change wall-clock values.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Committed wall-clock time in HH:mm, or empty. The attribute sets the form reset value.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "''"
-            }
-          ],
-          "default": "''",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-change",
-          "detail": "KiTimeInputChangeDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiTimeInputChangeDetail",
-            "resolved": "KiTimeInputChangeDetail",
-            "references": {
-              "KiTimeInputChangeDetail": {
-                "location": "local",
-                "path": "src/components/ki-time-input/ki-time-input.tsx",
-                "id": "src/components/ki-time-input/ki-time-input.tsx::KiTimeInputChangeDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Emitted when a person commits a different canonical time or clears it.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [
-        {
-          "event": "invalid",
-          "capture": false,
-          "passive": false
-        },
-        {
-          "event": "pointerdown",
-          "target": "document",
-          "capture": false,
-          "passive": true
-        }
-      ],
-      "styles": [],
-      "slots": [
-        {
-          "name": "start",
-          "docs": "Optional leading adornment, outside the input's accessible name."
-        }
-      ],
-      "parts": [
-        {
-          "name": "error",
-          "docs": "Polite validation message that replaces help."
-        },
-        {
-          "name": "field",
-          "docs": "Field enclosure and anchor for the suggestions."
-        },
-        {
-          "name": "help",
-          "docs": "Help and timezone describing the field."
-        },
-        {
-          "name": "input",
-          "docs": "Editable text combobox."
-        },
-        {
-          "name": "label",
-          "docs": "Visible label naming the editable combobox."
-        },
-        {
-          "name": "listbox",
-          "docs": "Scrollable list of suggested times."
-        },
-        {
-          "name": "option",
-          "docs": "Individual suggested time."
-        },
-        {
-          "name": "trigger",
-          "docs": "Button that opens suggested times."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-time-input": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-toast/ki-toast.tsx",
       "encapsulation": "shadow",
       "tag": "ki-toast",
@@ -9560,6 +9030,583 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-top-nav/ki-top-nav.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-top-nav",
+      "docs": "Application navigation with responsive primary links, or a per-screen app\nbar with a real heading, optional search, and overflow actions.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "group a brand, up to five primary sections and global controls,\nor set a screen title, leading control and screen actions in app-bar mode."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "more than five sections or a deep navigation tree (use a\nsidebar), or switches between in-page views (use ki-tabs)."
+        },
+        {
+          "name": "slot",
+          "text": "- Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\"."
+        },
+        {
+          "name": "slot",
+          "text": "brand - Header mode: the brand link or wordmark."
+        },
+        {
+          "name": "slot",
+          "text": "actions - Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow."
+        },
+        {
+          "name": "slot",
+          "text": "leading - App bar: a named Back or Open navigation control."
+        },
+        {
+          "name": "slot",
+          "text": "search - App bar: an accessible search control that can shrink inside its row."
+        },
+        {
+          "name": "part",
+          "text": "bar - Painted header or app-bar surface."
+        },
+        {
+          "name": "part",
+          "text": "navigation - The named primary navigation landmark."
+        },
+        {
+          "name": "part",
+          "text": "brand - Wrapper for the header brand."
+        },
+        {
+          "name": "part",
+          "text": "links - Wrapper for the primary links, including when displayed as a menu."
+        },
+        {
+          "name": "part",
+          "text": "actions - Wrapper for the trailing actions."
+        },
+        {
+          "name": "part",
+          "text": "leading - Wrapper for the app-bar leading control."
+        },
+        {
+          "name": "part",
+          "text": "heading - The native screen heading."
+        },
+        {
+          "name": "part",
+          "text": "subtitle - Supporting text below the screen heading."
+        },
+        {
+          "name": "part",
+          "text": "search - Wrapper for the app-bar search control."
+        },
+        {
+          "name": "part",
+          "text": "menu-trigger - Native button opening collapsed navigation or overflow."
+        },
+        {
+          "name": "part",
+          "text": "menu - Anchored navigation or overflow menu surface."
+        },
+        {
+          "name": "part",
+          "text": "menu-item - Generated screen action in the overflow menu."
+        }
+      ],
+      "usage": {
+        "examples": "# Using TopNav\n\n## Application header\n\nUse direct anchors for primary sections and keep the page's skip link before\nthe header. Import `@kimen/elements/icons/bell` for the notification glyph.\n\n```html\n<a href=\"#content\" class=\"skip-link\">Skip to content</a>\n<ki-top-nav label=\"Primary\" collapse-at=\"48rem\" sticky>\n  <a slot=\"brand\" href=\"/\">Kimen</a>\n  <a href=\"/overview\" aria-current=\"page\">Overview</a>\n  <a href=\"/projects\">Projects</a>\n  <ki-icon-button slot=\"actions\" variant=\"ghost\" label=\"Notifications, 3 unread\">\n    <ki-icon name=\"bell\"></ki-icon>\n    <ki-counter slot=\"counter\" value=\"3\"></ki-counter>\n  </ki-icon-button>\n</ki-top-nav>\n<main id=\"content\" tabindex=\"-1\">Workspace</main>\n```\n\n## Per-screen bar with search\n\nUse the native `title` attribute in HTML and `screenTitle` for the framework\nprop. The leading button and search control keep their names and behavior.\nThe screen heading remains accessible when search occupies its visual space.\n\n```html\n<ki-top-nav variant=\"app-bar\" title=\"Projects\" heading-level=\"2\">\n  <button type=\"button\" slot=\"leading\">Back</button>\n  <input slot=\"search\" type=\"search\" aria-label=\"Search projects\">\n  <button type=\"button\" slot=\"actions\">Filters</button>\n</ki-top-nav>\n```\n\nWhen an app bar has more than three actions, slot the named controls directly.\nAttach handlers to those controls. TopNav uses their existing activation\nhandlers in the overflow menu. Keep application-specific account menus and\nnavigation destinations in the consuming app.\n"
+      },
+      "props": [
+        {
+          "name": "collapseAt",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "collapse-at",
+          "reflectToAttr": false,
+          "docs": "CSS length below which navigation collapses and single-row app bars can center their title.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'48rem'"
+            }
+          ],
+          "default": "'48rem'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "headingLevel",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading-level",
+          "reflectToAttr": false,
+          "docs": "Native heading level for the screen title. Use 1 through 6 to fit the page outline.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the header's primary navigation landmark. Override for localization.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Main'"
+            }
+          ],
+          "default": "'Main'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "navigationLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "navigation-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the compact navigation button and menu. Override for localization.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Open navigation'"
+            }
+          ],
+          "default": "'Open navigation'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "overflowLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "overflow-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the app-bar overflow button and menu. Override for localization.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'More actions'"
+            }
+          ],
+          "default": "'More actions'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "screenTitle",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "title",
+          "reflectToAttr": false,
+          "docs": "Screen heading, set with the HTML title attribute or the screenTitle property.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "scrollBehavior",
+          "type": "\"collapse\" | \"elevate\" | \"none\"",
+          "complexType": {
+            "original": "TopNavScrollBehavior",
+            "resolved": "\"collapse\" | \"elevate\" | \"none\"",
+            "references": {
+              "TopNavScrollBehavior": {
+                "location": "global",
+                "id": "global::TopNavScrollBehavior"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "scroll-behavior",
+          "reflectToAttr": false,
+          "docs": "Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'elevate'"
+            }
+          ],
+          "default": "'elevate'",
+          "values": [
+            {
+              "value": "collapse",
+              "type": "string"
+            },
+            {
+              "value": "elevate",
+              "type": "string"
+            },
+            {
+              "value": "none",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\"",
+          "complexType": {
+            "original": "TopNavSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\"",
+            "references": {
+              "TopNavSize": {
+                "location": "import",
+                "path": "./ki-top-nav.layout",
+                "id": "src/components/ki-top-nav/ki-top-nav.layout.ts::TopNavSize",
+                "referenceLocation": "TopNavSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": false,
+          "docs": "Bar size. Only app-bar mode has large and extra-large two-row sizes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sticky",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "sticky",
+          "reflectToAttr": true,
+          "docs": "Keep the bar at the block start of the scroll container and draw a bottom border.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "subtitle",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "subtitle",
+          "reflectToAttr": false,
+          "docs": "Supporting text displayed under the screen heading.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "titleAlign",
+          "type": "\"center\" | \"start\"",
+          "complexType": {
+            "original": "TopNavTitleAlign",
+            "resolved": "\"center\" | \"start\"",
+            "references": {
+              "TopNavTitleAlign": {
+                "location": "global",
+                "id": "global::TopNavTitleAlign"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "title-align",
+          "reflectToAttr": false,
+          "docs": "Center a compact single-row title when the app bar has at most one action.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'start'"
+            }
+          ],
+          "default": "'start'",
+          "values": [
+            {
+              "value": "center",
+              "type": "string"
+            },
+            {
+              "value": "start",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"app-bar\" | \"header\"",
+          "complexType": {
+            "original": "TopNavVariant",
+            "resolved": "\"app-bar\" | \"header\"",
+            "references": {
+              "TopNavVariant": {
+                "location": "global",
+                "id": "global::TopNavVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": false,
+          "docs": "Header for primary navigation, or app-bar for the current screen. Defaults to header.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'header'"
+            }
+          ],
+          "default": "'header'",
+          "values": [
+            {
+              "value": "app-bar",
+              "type": "string"
+            },
+            {
+              "value": "header",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\"."
+        },
+        {
+          "name": "actions",
+          "docs": "Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow."
+        },
+        {
+          "name": "brand",
+          "docs": "Header mode: the brand link or wordmark."
+        },
+        {
+          "name": "leading",
+          "docs": "App bar: a named Back or Open navigation control."
+        },
+        {
+          "name": "search",
+          "docs": "App bar: an accessible search control that can shrink inside its row."
+        }
+      ],
+      "parts": [
+        {
+          "name": "actions",
+          "docs": "Wrapper for the trailing actions."
+        },
+        {
+          "name": "bar",
+          "docs": "Painted header or app-bar surface."
+        },
+        {
+          "name": "brand",
+          "docs": "Wrapper for the header brand."
+        },
+        {
+          "name": "heading",
+          "docs": "The native screen heading."
+        },
+        {
+          "name": "leading",
+          "docs": "Wrapper for the app-bar leading control."
+        },
+        {
+          "name": "links",
+          "docs": "Wrapper for the primary links, including when displayed as a menu."
+        },
+        {
+          "name": "menu",
+          "docs": "Anchored navigation or overflow menu surface."
+        },
+        {
+          "name": "menu-item",
+          "docs": "Generated screen action in the overflow menu."
+        },
+        {
+          "name": "menu-trigger",
+          "docs": "Native button opening collapsed navigation or overflow."
+        },
+        {
+          "name": "navigation",
+          "docs": "The named primary navigation landmark."
+        },
+        {
+          "name": "search",
+          "docs": "Wrapper for the app-bar search control."
+        },
+        {
+          "name": "subtitle",
+          "docs": "Supporting text below the screen heading."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-top-nav": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-video/ki-video.tsx",
       "encapsulation": "shadow",
       "tag": "ki-video",
@@ -9841,11 +9888,6 @@
       "docstring": "",
       "path": "src/components/ki-textarea/ki-textarea.tsx"
     },
-    "src/components/ki-time-input/ki-time-input.tsx::KiTimeInputChangeDetail": {
-      "declaration": "export interface KiTimeInputChangeDetail {\n  value: string;\n}",
-      "docstring": "",
-      "path": "src/components/ki-time-input/ki-time-input.tsx"
-    },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
@@ -9875,6 +9917,11 @@
       "declaration": "export interface KiToastShowOptions {\n  /** One action, rendered as a ghost `ki-button size=\"sm\"`; its click calls `onClick`. */\n  action?: { label: string; onClick?: (event: MouseEvent) => void };\n  /** Shows the dismiss button; `true` by default. */\n  dismissible?: boolean;\n  /** Milliseconds before the toast leaves on its own; see `ki-toast`'s `duration`. */\n  duration?: number;\n  /** The message text. */\n  message: string;\n  /** The optional bold first line. */\n  title?: string;\n  /** `neutral` (default), `info`, `success`, `warning` or `danger`. */\n  tone?: string;\n}",
       "docstring": "What `show()` turns into a toast (spec 049 FR-018).",
       "path": "src/components/ki-toaster/ki-toaster.show.ts"
+    },
+    "src/components/ki-top-nav/ki-top-nav.layout.ts::TopNavSize": {
+      "declaration": "export type TopNavSize = 'sm' | 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-top-nav/ki-top-nav.layout.ts"
     }
   }
 }

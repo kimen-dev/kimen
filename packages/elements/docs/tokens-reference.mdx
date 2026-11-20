@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 405 semantic
-and 1293 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 407 semantic
+and 1306 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -47,9 +47,6 @@ every component at once.
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
-| `--ki-corner-popup` | `12px` | Corner radius of a floating menu or suggestions panel. |
-| `--ki-corner-popup-option` | `8px` | Corner radius of an option inside a floating panel. |
-| `--ki-corner-popup-tight` | `6px` | Extra-small corner radius for a tightly shaped popup. |
 
 ### `ki.density`
 
@@ -89,13 +86,6 @@ every component at once.
 | `--ki-elevation-shadow` | `rgba(0, 0, 0, 0.03)` | semantic color for elevation shadow. |
 | `--ki-elevation-shadow-dark` | `rgba(0, 0, 0, 0.32)` | semantic color for elevation shadow dark. |
 | `--ki-elevation-shadow-med` | `rgba(0, 0, 0, 0.05)` | semantic color for elevation shadow med. |
-
-### `ki.floating-list`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-floating-list-compact-max-block-size` | `12rem` | Maximum block size for compact scrolling suggestions. |
-| `--ki-floating-list-option-min-block-size` | `2rem` | Minimum block size for a row in a floating list, before density adjustments. |
 
 ### `ki.focus`
 
@@ -161,8 +151,14 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-layout-app-bar-lg-height` | `7rem` | Height of a large two-row screen bar. |
+| `--ki-layout-app-bar-xl-height` | `9.5rem` | Height of an extra-large two-row screen bar. |
+| `--ki-layout-border-width` | `1px` | Hairline edge on a structural surface. |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
+| `--ki-layout-indicator-width` | `2px` | Thickness of the line identifying a selected navigation destination. |
+| `--ki-layout-menu-radius` | `12px` | Corner radius of a floating navigation menu. |
+| `--ki-layout-menu-radius-sm` | `10px` | Smaller corner radius of a floating navigation menu. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
@@ -195,6 +191,7 @@ every component at once.
 | `--ki-layout-spacing-xs` | `0.25rem` | The xs spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-xxs` | `0.125rem` | The xxs spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-zero` | `0rem` | The zero spacing step for a stack or grid gap. |
+| `--ki-layout-touch-target` | `44px` | Minimum target dimension for navigation controls on a coarse pointer. |
 
 ### `ki.motion`
 
@@ -1931,30 +1928,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-xs-padding-inline` | `0.375rem` | dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px). |
 | `--ki-textarea-xs-radius` | `6px` | dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs). |
 
-### `ki-time-input`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-time-input-field-backdrop-filter` | `none` | Complete filter applied behind the surface. |
-| `--ki-time-input-field-bg-image` | `none` | Image painted over the surface background. |
-| `--ki-time-input-list-backdrop-filter` | `none` | Complete filter applied behind the surface. |
-| `--ki-time-input-list-bg` | `#f9f7f4` | Background of the suggested times list. |
-| `--ki-time-input-list-bg-image` | `none` | Image painted over the surface background. |
-| `--ki-time-input-list-border-color` | `rgba(24, 22, 19, 0.1)` | Border colour of the suggested times list. |
-| `--ki-time-input-list-border-width` | `2` | Border width of the suggested times list. |
-| `--ki-time-input-list-fg` | `#181613` | Text colour of the suggested times list. |
-| `--ki-time-input-list-max-height` | `12rem` | Maximum block size of the scrolling suggestions. |
-| `--ki-time-input-list-padding` | `0.25rem` | Padding on the inside edge of the suggested times list. |
-| `--ki-time-input-list-radius` | `12px` | Corner radius of the suggested times list. |
-| `--ki-time-input-list-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the suggested times list. |
-| `--ki-time-input-option-height` | `2rem` | Minimum block size of a suggestion at standard density. |
-| `--ki-time-input-option-hover-bg` | `#ebe7e1` | Background of a hovered suggestion. |
-| `--ki-time-input-option-hover-fg` | `#181613` | Text colour of a hovered suggestion. |
-| `--ki-time-input-option-padding-inline` | `0.5rem` | Inline padding of a suggestion. |
-| `--ki-time-input-option-radius` | `8px` | Corner radius of a suggestion. |
-| `--ki-time-input-selected-bg` | `#ffebe5` | Background of the committed suggestion. |
-| `--ki-time-input-selected-fg` | `#9a3715` | Text and check mark of the committed suggestion. |
-
 ### `ki-toast`
 
 | Token | Value (onmars light) | Description |
@@ -2013,6 +1986,43 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tooltip-radius` | `8px` | dimension used by the tooltip component for radius (MarsUI Tooltip master 12089:7621 List_wrap: Radius/big_component/radius_xs 16px). |
 | `--ki-tooltip-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap). |
 | `--ki-tooltip-show-delay` | `500ms` | duration used by the tooltip component for tooltip show delay. |
+
+### `ki-top-nav`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-app-bar-backdrop-filter` | `none` | Filter applied to the entire app-bar backdrop. |
+| `--ki-app-bar-bg` | `#ffffff` | Resting app-bar fill. |
+| `--ki-app-bar-bg-image` | `none` | Optional image above the app-bar fill. |
+| `--ki-app-bar-fg` | `#181613` | Resting app-bar title and control ink. |
+| `--ki-app-bar-height` | `4rem` | Height of a normal or collapsed app bar. |
+| `--ki-app-bar-lg-height` | `7rem` | Expanded height of a large app bar. |
+| `--ki-app-bar-lg-title-size` | `1.5625rem` | Expanded two-row app-bar title size. |
+| `--ki-app-bar-scrolled-bg` | `#f3f0eb` | App-bar fill when its container scrolls. |
+| `--ki-app-bar-scrolled-fg` | `#181613` | App-bar title and control ink when its container scrolls. |
+| `--ki-app-bar-scrolled-subtitle-bg` | `#f3f0eb` | Scrolled surface behind the app-bar subtitle. |
+| `--ki-app-bar-scrolled-subtitle-fg` | `#5e5953` | App-bar subtitle ink when its container scrolls. |
+| `--ki-app-bar-subtitle-bg` | `#ffffff` | Resting surface behind the app-bar subtitle. |
+| `--ki-app-bar-subtitle-fg` | `#5e5953` | Resting app-bar subtitle ink. |
+| `--ki-app-bar-title-font-family` | `'Instrument Sans', system-ui, sans-serif` | Screen heading typeface. |
+| `--ki-app-bar-title-size` | `1.125rem` | One-row app-bar title size. |
+| `--ki-app-bar-xl-height` | `9.5rem` | Expanded height of an extra-large app bar. |
+| `--ki-top-nav-backdrop-filter` | `none` | Filter applied to the entire header backdrop. |
+| `--ki-top-nav-bg` | `#ffffff` | Application header fill. |
+| `--ki-top-nav-bg-image` | `none` | Optional image above the header fill. |
+| `--ki-top-nav-border` | `rgba(24, 22, 19, 0.1)` | Edge color for sticky bars and menus. |
+| `--ki-top-nav-fg` | `#181613` | Application header brand and control ink. |
+| `--ki-top-nav-height` | `4rem` | Height of a normal application header. |
+| `--ki-top-nav-height-compact` | `3.5rem` | Height of a small application header. |
+| `--ki-top-nav-indicator` | `#1d1a16` | Bar marking the current primary destination. |
+| `--ki-top-nav-item-bg` | `#ffffff` | Primary navigation item resting surface. |
+| `--ki-top-nav-item-current-bg` | `#ffffff` | Current navigation destination surface. |
+| `--ki-top-nav-item-current-fg` | `#181613` | Current navigation destination ink. |
+| `--ki-top-nav-item-fg` | `#5e5953` | Primary navigation item resting ink. |
+| `--ki-top-nav-item-hover-bg` | `#f3f0eb` | Hovered control or highlighted menu item surface. |
+| `--ki-top-nav-item-hover-fg` | `#181613` | Hovered control or highlighted menu item ink. |
+| `--ki-top-nav-menu-radius` | `12px` | Menu and trigger corner radius. |
+| `--ki-top-nav-padding-inline` | `1rem` | Padding at the inline edges of both bars. |
 
 ### `ki-video`
 
