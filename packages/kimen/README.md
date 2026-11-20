@@ -27,7 +27,6 @@ Apache-2.0 · Copyright 2026 Marcela Gotta
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer
 - **available** — MCP Apps adapter: Kimen surfaces reach MCP Apps hosts as self-contained ui:// resources rendered through the guarded renderer
-- **planned** — AG-UI and json-render protocol adapters planned
 - **available** — Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary
 - **available** — Machine-readable Web Components foundation with token-driven theming
 <!-- kimen:capabilities:kimen-readme-status:end -->

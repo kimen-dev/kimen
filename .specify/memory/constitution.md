@@ -1,6 +1,6 @@
 <!--
 Sync Impact Report
-- Version change: 1.4.2 → 2.0.0 (mirrors constitution master v2.0.0)
+- Version change: 2.0.0 → 2.0.1 (mirrors constitution master v2.0.1)
 - Nature: DERIVED ARTIFACT. This file is the operational digest that Spec Kit
   commands load, and the operative governance text of this repository. The
   normative source is the constitution master, maintained by the founder
@@ -9,20 +9,13 @@ Sync Impact Report
   Art. I applied to governance). A version-stamp mismatch against the master
   means this digest is stale and MUST be regenerated before running any
   /speckit.* command.
-- Modified principles: Art. II risk-proportionate contracts; Art. III fast PR
-  quality plus daily mutation; Art. X deterministic 20/80 automation; workflow
-  and incident response simplified.
-- Added sections: Technology Standards & Declared Bets; Development Workflow,
-  Human Gates & Emergency Procedure
+- Modified principles: Art. VIII protocol list clarified (PATCH). The adapters
+  are A2UI and MCP Apps; AG-UI streams reach the A2UI adapter, and no
+  json-render adapter is planned. The principle is unchanged.
+- Added sections: none
 - Removed sections: none
-- Templates requiring updates:
-  ✅ resolved: plan-template.md via .specify/templates/overrides/plan-template.md
-    (risk-focused Constitution Check and fast quality definition of done)
-  ✅ resolved: spec-template.md via .specify/templates/overrides/spec-template.md
-    (mandatory Gherkin section with stable S-IDs and the five scenario
-    families table for UI components, Art. II)
-  ✅ resolved: tasks-template.md via .specify/templates/overrides/tasks-template.md
-    (RED→GREEN→quality structure without per-PR mutation tasks)
+- Templates requiring updates: none. The plan, spec and tasks overrides under
+  .specify/templates/overrides/ do not name protocols.
 - Follow-up TODOs: none
 -->
 
@@ -30,14 +23,15 @@ Sync Impact Report
 
 Kimen is an open-source, AI-First generative UI component library: StencilJS
 web components, a neutral schema-constrained catalog, and disposable protocol
-adapters (A2UI, MCP Apps, AG-UI, json-render). It is built and run as a
+adapters (A2UI and MCP Apps; AG-UI streams reach the A2UI adapter). It is
+built and run as a
 one-person, AI-First operation: agents do most implementation; a single
 founder is the only human reviewer. Automated gates substitute for a team and
 form a small, risk-focused quality core. Controls stay only while their signal
 justifies their runtime and maintenance; the founder's attention is spent only
 where leverage is highest.
 
-**Normative source**: the constitution master (v2.0.0), maintained by the
+**Normative source**: the constitution master (v2.0.1), maintained by the
 founder outside this repository. This digest is the operative in-repo text:
 Spec Kit commands load it, gates check it, and contributions are reviewed
 against it. Full rationales and the amendment log live in the master, which
@@ -204,4 +198,4 @@ PATCH = clarification. Two version lines must never be confused: this
 constitution's version and the library's public API SemVer. The founder's merge
 decision verifies compliance. Complexity must always justify itself.
 
-**Version**: 2.0.0 | **Ratified**: 2026-06-12 | **Last Amended**: 2026-07-13
+**Version**: 2.0.1 | **Ratified**: 2026-06-12 | **Last Amended**: 2026-11-20

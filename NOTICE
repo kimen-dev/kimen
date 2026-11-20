@@ -77,11 +77,10 @@ Apache-2.0 as recorded per directory.
 Third-party notices: Inter font (SIL OFL 1.1)
 ================================================================================
 
-The visual-regression harness and site compatibility fixtures vendor the Inter
-variable font so screenshot baselines never depend on installed fonts:
+The visual-regression harness vendors the Inter variable font so screenshot
+baselines never depend on installed fonts:
 
   - packages/elements/browser-tests/visual/fonts/InterVariable.woff2
-  - site/assets/fonts/InterVariable.woff2
     Inter — https://rsms.me/inter/ (https://github.com/rsms/inter)
     Fetched from: https://rsms.me/inter/font-files/InterVariable.woff2
     Font revision: 4.66 (WOFF2 metadata)
