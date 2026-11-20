@@ -1,4 +1,6 @@
 // @spec:062-solid-surface-background
+// @spec:104-ki-fab
+// @spec:092-ki-stepper
 // Forced-colors contract (Art. III: the reproduction IS a failing test).
 //
 // A forced palette — Windows Contrast themes, `forced-colors: active` — is the
@@ -276,6 +278,29 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();
   });
 
+  it('S16 ki-fab keeps its edge, ink and focus ring in the forced palette', async (test) => {
+    const fixture = await mount(
+      '<input aria-label="Before"><ki-fab label="Compose" extended>' +
+        '<svg slot="icon" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" ' +
+        'fill="none" stroke="currentColor"/></svg></ki-fab>',
+    );
+    const control = await partOf(fixture, 'ki-fab', '[part="control"]');
+    const label = await partOf(fixture, 'ki-fab', '[part="label"]');
+    control.tabIndex = 0;
+    fixture.querySelector('input')?.focus();
+    await userEvent.keyboard('{Tab}');
+
+    await underForcedColors(test);
+
+    expect(edgeOf(control)).not.toBeNull();
+    expect(parseColor(getComputedStyle(label).color).ink).not.toBe(textBackdropOf(control));
+    expect(control.matches(':focus-visible')).toBe(true);
+    const focused = getComputedStyle(control);
+    expect(focused.outlineStyle).toBe('solid');
+    expect(Number.parseFloat(focused.outlineWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(focused.outlineColor)).not.toBeNull();
+  });
+
   it('leaves layout surfaces transparent and keeps slotted controls in order', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
@@ -504,6 +529,30 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(edgeOf(surface), 'the dialog has no edge against the page').not.toBeNull();
   });
 
+  it('ki-menu preserves its popup boundary, focus ring and checkmark', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(`
+      <button id="menu-actions" type="button">Actions</button>
+      <ki-menu anchor="menu-actions">
+        <ki-menu-item type="checkbox" value="pin" checked>Pin to sidebar</ki-menu-item>
+      </ki-menu>
+    `);
+    const trigger = fixture.querySelector('button');
+    if (!trigger) throw new Error('Missing trigger');
+    await expect.poll(() => trigger.getAttribute('aria-expanded')).toBe('false');
+    trigger.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const surface = await partOf(fixture, 'ki-menu', '[part="popup"]');
+    const row = await partOf(fixture, 'ki-menu-item', '[part="item"]');
+    const check = await partOf(fixture, 'ki-menu-item', '[part="check"]');
+
+    expect(isOpaqueCanvas(surface)).toBe(true);
+    expect(edgeOf(surface)).not.toBeNull();
+    expect(getComputedStyle(row).outlineStyle).toBe('solid');
+    expect(getComputedStyle(check).visibility).toBe('visible');
+    expect(inkOnCanvas(getComputedStyle(check).stroke)).not.toBeNull();
+  });
+
   it('S5 ki-tooltip is an opaque surface with an edge', async (test) => {
     await underForcedColors(test);
     const fixture = await mount(
@@ -566,6 +615,34 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     ).not.toBeNull();
     expect(paintOf(current), 'the current dot paints like a resting one').not.toBe(
       paintOf(resting),
+    );
+  });
+
+  it('S10 preserves Stepper glyphs and distinct current and upcoming edges', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-stepper label="Setup progress" orientation="vertical">' +
+        '<ki-step state="done">Account</ki-step><ki-step state="current">Invite</ki-step>' +
+        '<ki-step>Review</ki-step><ki-step state="error">Publish</ki-step></ki-stepper>',
+    );
+    const done = await partOf(fixture, 'ki-stepper', '[data-state="done"] [part="marker"]');
+    const current = await partOf(fixture, 'ki-stepper', '[data-state="current"] [part="marker"]');
+    const upcoming = await partOf(fixture, 'ki-stepper', '[data-state="upcoming"] [part="marker"]');
+    const error = await partOf(fixture, 'ki-stepper', '[data-state="error"] [part="marker"]');
+    const glyph = (marker: HTMLElement): SVGElement | null | undefined =>
+      marker.querySelector('ki-icon')?.shadowRoot?.querySelector('svg');
+
+    await expect.poll(() => glyph(done)?.getBoundingClientRect().width ?? 0).toBeGreaterThan(0);
+    await expect.poll(() => glyph(error)?.getBoundingClientRect().width ?? 0).toBeGreaterThan(0);
+    const checkMark = glyph(done);
+    const errorMark = glyph(error);
+    if (!checkMark || !errorMark) throw new Error('The Stepper glyphs did not render');
+    expect(getComputedStyle(checkMark).stroke).not.toBe(getComputedStyle(done).backgroundColor);
+    expect(inkOnCanvas(getComputedStyle(errorMark).stroke)).not.toBeNull();
+    expect(edgeOf(current)).not.toBeNull();
+    expect(edgeOf(upcoming)).not.toBeNull();
+    expect(getComputedStyle(current).borderBlockStartStyle).not.toBe(
+      getComputedStyle(upcoming).borderBlockStartStyle,
     );
   });
 

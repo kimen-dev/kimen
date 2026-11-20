@@ -54,6 +54,16 @@ describe('renderUiSpec — only catalog components render', () => {
     expect(button?.textContent).toBe('Pay now');
   });
 
+  it.each([
+    [{}, '<ki-popover></ki-popover>'],
+    [{ arrow: false }, '<ki-popover arrow="false"></ki-popover>'],
+  ])('renders the Popover host for props %j', (props, markup) => {
+    expect(
+      renderUiSpec({ version: 1, root: { component: 'ki-popover', props } }, { surface }).ok,
+    ).toBe(true);
+    expect(surface.innerHTML).toBe(markup);
+  });
+
   it.each(['script', 'iframe', 'ki-not-in-catalog'])(
     'S2 never renders a component type "%s" outside the catalog',
     (type) => {

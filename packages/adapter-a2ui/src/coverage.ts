@@ -210,10 +210,15 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     reason: 'no audio component in the catalog',
   },
   Modal: {
-    kind: 'unmapped',
-    reason: 'opening ki-dialog from a trigger needs host code',
+    catalog: ['ki-button', 'ki-dialog'],
+    kind: 'mapped',
+    properties: ['trigger', 'content'],
   },
-  Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
+  Slider: {
+    catalog: ['ki-slider'],
+    kind: 'mapped',
+    properties: ['label', 'min', 'max', 'value', CHECKS],
+  },
   DateTimeInput: {
     kind: 'unmapped',
     reason: 'no date or time input in the catalog',
@@ -365,10 +370,15 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     reason: 'no audio component in the catalog',
   },
   Modal: {
-    kind: 'unmapped',
-    reason: 'opening ki-dialog from a trigger needs host code',
+    catalog: ['ki-button', 'ki-dialog'],
+    kind: 'mapped',
+    properties: ['trigger', 'content'],
   },
-  Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
+  Slider: {
+    catalog: ['ki-slider'],
+    kind: 'mapped',
+    properties: ['label', 'min', 'max', 'steps', 'value', V1_CHECKS],
+  },
   DateTimeInput: {
     kind: 'unmapped',
     reason: 'no date or time input in the catalog',
