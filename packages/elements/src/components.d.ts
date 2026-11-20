@@ -13,6 +13,7 @@ import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiDialogCommand } from "./utils/dialog-invoker";
 import { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
+import { CarouselLayout, CarouselSlideChangeDetail } from "./components/ki-carousel/ki-carousel";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
@@ -87,6 +88,7 @@ export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiDialogCommand } from "./utils/dialog-invoker";
 export { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
+export { CarouselLayout, CarouselSlideChangeDetail } from "./components/ki-carousel/ki-carousel";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
@@ -597,6 +599,123 @@ export namespace Components {
         "variant"?: 'default' | 'elevated' | 'filled' | 'outlined';
     }
     /**
+     * An ordered, swipeable sequence with previous and next controls and position feedback.
+     * @whenToUse show a short set of related highlights, onboarding steps or media panels.
+     * Give the carousel a meaningful label and supply one ki-carousel-item per slide.
+     * @whenNotToUse hide essential content behind rotation, replace ordinary page navigation,
+     * or present slides that readers need to compare side by side at the same time.
+     */
+    interface KiCarousel {
+        /**
+          * Rotation interval in milliseconds. Omitting it leaves rotation off.
+          * @minimum 1
+          * @maximum 2147483647
+         */
+        "autoplay"?: number;
+        /**
+          * Accessible role description of the region.
+          * @default 'carousel'
+         */
+        "carouselRoleDescription": string;
+        /**
+          * One-based leading slide. Setting it moves the carousel and clamps the index to the available leading positions.
+          * @minimum 1
+          * @default 1
+         */
+        "current": number;
+        /**
+          * Moves to the requested one-based leading position within the available range.
+         */
+        "goTo": (index: number) => Promise<void>;
+        /**
+          * Required accessible name of the carousel region.
+         */
+        "label": string;
+        /**
+          * Item arrangement. Full-screen uses a vertical, full-viewport slide.
+          * @default 'single'
+         */
+        "layout": CarouselLayout;
+        /**
+          * Whether navigating past one endpoint wraps to the other.
+          * @default false
+         */
+        "loop": boolean;
+        /**
+          * Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.
+          * @default true
+         */
+        "navigation": boolean;
+        /**
+          * Advances by slidesPerMove.
+         */
+        "next": () => Promise<void>;
+        /**
+          * Accessible label of the Next button.
+          * @default 'Next slide'
+         */
+        "nextLabel": string;
+        /**
+          * Whether to show the noninteractive slide position indicator.
+          * @default true
+         */
+        "pagination": boolean;
+        /**
+          * Visible and accessible label of the Pause button.
+          * @default 'Pause'
+         */
+        "pauseLabel": string;
+        /**
+          * Visible and accessible label of the Play button.
+          * @default 'Play'
+         */
+        "playLabel": string;
+        /**
+          * Accessible label of the position indicator.
+          * @default 'Slide position'
+         */
+        "positionLabel": string;
+        /**
+          * Moves back by slidesPerMove.
+         */
+        "previous": () => Promise<void>;
+        /**
+          * Accessible label of the Previous button.
+          * @default 'Previous slide'
+         */
+        "previousLabel": string;
+        /**
+          * Spoken slide name and announcement. Use {index} and {count} as placeholders.
+          * @default '{index} of {count}'
+         */
+        "slideLabel": string;
+        /**
+          * Accessible role description of each slide group.
+          * @default 'slide'
+         */
+        "slideRoleDescription": string;
+        /**
+          * Number of positions advanced by Previous, Next and automatic rotation.
+          * @minimum 1
+          * @default 1
+         */
+        "slidesPerMove": number;
+        /**
+          * Number of slides visible together in the single layout. Material 3 layouts determine their own item widths.
+          * @minimum 1
+          * @default 1
+         */
+        "slidesPerView": number;
+    }
+    /**
+     * A slide in an ordered ki-carousel sequence.
+     * @whenToUse supply a single slide to a ki-carousel. Put the full slide in the
+     * default slot and optional decorative preview media in the preview slot.
+     * @whenNotToUse present a standalone card or a layout container outside a carousel.
+     */
+    interface KiCarouselItem {
+    }
+    /**
      * A form-associated checkbox for selecting independent options.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
      * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -783,6 +902,24 @@ export namespace Components {
           * @default 'filter'
          */
         "type": KiChipType;
+    }
+    /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface KiCitation {
+        /**
+          * ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.
+         */
+        "citationRef": string;
+        /**
+          * Localized link name with `{number}` and `{title}` placeholders.
+          * @default 'Source {number}: {title}'
+         */
+        "labelTemplate": string;
     }
     /**
      * Presents source code with a named header, syntax colors, line controls and
@@ -1315,15 +1452,16 @@ export namespace Components {
         "summary"?: string;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface KiDialog {
         /**
@@ -1331,10 +1469,24 @@ export namespace Components {
          */
         "close": () => Promise<void>;
         /**
+          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
+          * @default 'Close'
+         */
+        "closeLabel": string;
+        /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop": boolean;
+        /**
+          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+         */
+        "confirmLabel"?: string;
+        /**
+          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
+          * @default 'never'
+         */
+        "fullscreen": 'never' | 'compact' | 'always';
         /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
@@ -2031,6 +2183,11 @@ export namespace Components {
          */
         "aiSuggestionText": string;
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
         "autocomplete"?: string;
@@ -2040,7 +2197,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -2055,6 +2212,18 @@ export namespace Components {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
@@ -2073,6 +2242,11 @@ export namespace Components {
           * @default false
          */
         "required": boolean;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -3544,6 +3718,57 @@ export namespace Components {
         "value": number | string | undefined;
     }
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface KiSource {
+        /**
+          * Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Optional plain-text excerpt displayed in the source card.
+          * @default undefined
+         */
+        "snippet"?: string;
+        /**
+          * Source identifier in this document or shadow root. Overrides the native HTML `id` when set. Use this value in guarded specs and in citation refs.
+          * @default undefined
+         */
+        "sourceId"?: string;
+        /**
+          * Required plain-text source title. In HTML use the `title` attribute.
+         */
+        "sourceTitle": string;
+    }
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface KiSources {
+        /**
+          * Whether the disclosure is expanded. Set to show the list initially.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Localized summary when there is one source. Use `{count}` for its number.
+          * @default '{count} source'
+         */
+        "sourceCountLabel": string;
+        /**
+          * Localized summary for multiple sources. Use `{count}` for their number.
+          * @default '{count} sources'
+         */
+        "sourcesCountLabel": string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -4005,6 +4230,11 @@ export namespace Components {
      */
     interface KiTextarea {
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
          */
         "autocomplete"?: string;
@@ -4014,7 +4244,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -4029,6 +4259,23 @@ export namespace Components {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
+          * @default 'Shorten the text to fit the character limit.'
+         */
+        "maxlengthErrorText"?: string;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
@@ -4052,6 +4299,11 @@ export namespace Components {
           * @default 2
          */
         "rows": number;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -4613,6 +4865,10 @@ export interface KiCardCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCardElement;
 }
+export interface KiCarouselCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCarouselElement;
+}
 export interface KiCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCheckboxGroupElement;
@@ -4998,6 +5254,42 @@ declare global {
         prototype: HTMLKiCardElement;
         new (): HTMLKiCardElement;
     };
+    interface HTMLKiCarouselElementEventMap {
+        "ki-slide-change": CarouselSlideChangeDetail;
+    }
+    /**
+     * An ordered, swipeable sequence with previous and next controls and position feedback.
+     * @whenToUse show a short set of related highlights, onboarding steps or media panels.
+     * Give the carousel a meaningful label and supply one ki-carousel-item per slide.
+     * @whenNotToUse hide essential content behind rotation, replace ordinary page navigation,
+     * or present slides that readers need to compare side by side at the same time.
+     */
+    interface HTMLKiCarouselElement extends Components.KiCarousel, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCarouselElementEventMap>(type: K, listener: (this: HTMLKiCarouselElement, ev: KiCarouselCustomEvent<HTMLKiCarouselElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCarouselElementEventMap>(type: K, listener: (this: HTMLKiCarouselElement, ev: KiCarouselCustomEvent<HTMLKiCarouselElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCarouselElement: {
+        prototype: HTMLKiCarouselElement;
+        new (): HTMLKiCarouselElement;
+    };
+    /**
+     * A slide in an ordered ki-carousel sequence.
+     * @whenToUse supply a single slide to a ki-carousel. Put the full slide in the
+     * default slot and optional decorative preview media in the preview slot.
+     * @whenNotToUse present a standalone card or a layout container outside a carousel.
+     */
+    interface HTMLKiCarouselItemElement extends Components.KiCarouselItem, HTMLStencilElement {
+    }
+    var HTMLKiCarouselItemElement: {
+        prototype: HTMLKiCarouselItemElement;
+        new (): HTMLKiCarouselItemElement;
+    };
     /**
      * A form-associated checkbox for selecting independent options.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -5098,6 +5390,19 @@ declare global {
     var HTMLKiChipGroupElement: {
         prototype: HTMLKiChipGroupElement;
         new (): HTMLKiChipGroupElement;
+    };
+    /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface HTMLKiCitationElement extends Components.KiCitation, HTMLStencilElement {
+    }
+    var HTMLKiCitationElement: {
+        prototype: HTMLKiCitationElement;
+        new (): HTMLKiCitationElement;
     };
     interface HTMLKiCodeBlockElementEventMap {
         "ki-copy": { value: string };
@@ -5304,17 +5609,19 @@ declare global {
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
+        "ki-confirm": void;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface HTMLKiDialogElement extends Components.KiDialog, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -6253,6 +6560,31 @@ declare global {
         new (): HTMLKiSliderElement;
     };
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface HTMLKiSourceElement extends Components.KiSource, HTMLStencilElement {
+    }
+    var HTMLKiSourceElement: {
+        prototype: HTMLKiSourceElement;
+        new (): HTMLKiSourceElement;
+    };
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface HTMLKiSourcesElement extends Components.KiSources, HTMLStencilElement {
+    }
+    var HTMLKiSourcesElement: {
+        prototype: HTMLKiSourcesElement;
+        new (): HTMLKiSourcesElement;
+    };
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -6801,10 +7133,13 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-button-group": HTMLKiButtonGroupElement;
         "ki-card": HTMLKiCardElement;
+        "ki-carousel": HTMLKiCarouselElement;
+        "ki-carousel-item": HTMLKiCarouselItemElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-citation": HTMLKiCitationElement;
         "ki-code-block": HTMLKiCodeBlockElement;
         "ki-code-input": HTMLKiCodeInputElement;
         "ki-combobox": HTMLKiComboboxElement;
@@ -6865,6 +7200,8 @@ declare global {
         "ki-sidebar-item": HTMLKiSidebarItemElement;
         "ki-skeleton": HTMLKiSkeletonElement;
         "ki-slider": HTMLKiSliderElement;
+        "ki-source": HTMLKiSourceElement;
+        "ki-sources": HTMLKiSourcesElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-stat": HTMLKiStatElement;
@@ -7375,6 +7712,115 @@ declare namespace LocalJSX {
         "variant"?: 'default' | 'elevated' | 'filled' | 'outlined';
     }
     /**
+     * An ordered, swipeable sequence with previous and next controls and position feedback.
+     * @whenToUse show a short set of related highlights, onboarding steps or media panels.
+     * Give the carousel a meaningful label and supply one ki-carousel-item per slide.
+     * @whenNotToUse hide essential content behind rotation, replace ordinary page navigation,
+     * or present slides that readers need to compare side by side at the same time.
+     */
+    interface KiCarousel {
+        /**
+          * Rotation interval in milliseconds. Omitting it leaves rotation off.
+          * @minimum 1
+          * @maximum 2147483647
+         */
+        "autoplay"?: number;
+        /**
+          * Accessible role description of the region.
+          * @default 'carousel'
+         */
+        "carouselRoleDescription"?: string;
+        /**
+          * One-based leading slide. Setting it moves the carousel and clamps the index to the available leading positions.
+          * @minimum 1
+          * @default 1
+         */
+        "current"?: number;
+        /**
+          * Required accessible name of the carousel region.
+         */
+        "label": string;
+        /**
+          * Item arrangement. Full-screen uses a vertical, full-viewport slide.
+          * @default 'single'
+         */
+        "layout"?: CarouselLayout;
+        /**
+          * Whether navigating past one endpoint wraps to the other.
+          * @default false
+         */
+        "loop"?: boolean;
+        /**
+          * Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.
+          * @default true
+         */
+        "navigation"?: boolean;
+        /**
+          * Accessible label of the Next button.
+          * @default 'Next slide'
+         */
+        "nextLabel"?: string;
+        /**
+          * Reports the one-based index when the leading slide changes.
+         */
+        "onKi-slide-change"?: (event: KiCarouselCustomEvent<CarouselSlideChangeDetail>) => void;
+        /**
+          * Whether to show the noninteractive slide position indicator.
+          * @default true
+         */
+        "pagination"?: boolean;
+        /**
+          * Visible and accessible label of the Pause button.
+          * @default 'Pause'
+         */
+        "pauseLabel"?: string;
+        /**
+          * Visible and accessible label of the Play button.
+          * @default 'Play'
+         */
+        "playLabel"?: string;
+        /**
+          * Accessible label of the position indicator.
+          * @default 'Slide position'
+         */
+        "positionLabel"?: string;
+        /**
+          * Accessible label of the Previous button.
+          * @default 'Previous slide'
+         */
+        "previousLabel"?: string;
+        /**
+          * Spoken slide name and announcement. Use {index} and {count} as placeholders.
+          * @default '{index} of {count}'
+         */
+        "slideLabel"?: string;
+        /**
+          * Accessible role description of each slide group.
+          * @default 'slide'
+         */
+        "slideRoleDescription"?: string;
+        /**
+          * Number of positions advanced by Previous, Next and automatic rotation.
+          * @minimum 1
+          * @default 1
+         */
+        "slidesPerMove"?: number;
+        /**
+          * Number of slides visible together in the single layout. Material 3 layouts determine their own item widths.
+          * @minimum 1
+          * @default 1
+         */
+        "slidesPerView"?: number;
+    }
+    /**
+     * A slide in an ordered ki-carousel sequence.
+     * @whenToUse supply a single slide to a ki-carousel. Put the full slide in the
+     * default slot and optional decorative preview media in the preview slot.
+     * @whenNotToUse present a standalone card or a layout container outside a carousel.
+     */
+    interface KiCarouselItem {
+    }
+    /**
      * A form-associated checkbox for selecting independent options.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
      * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -7593,6 +8039,24 @@ declare namespace LocalJSX {
           * @default 'filter'
          */
         "type"?: KiChipType;
+    }
+    /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface KiCitation {
+        /**
+          * ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.
+         */
+        "citationRef": string;
+        /**
+          * Localized link name with `{number}` and `{title}` placeholders.
+          * @default 'Source {number}: {title}'
+         */
+        "labelTemplate"?: string;
     }
     /**
      * Presents source code with a named header, syntax colors, line controls and
@@ -8177,30 +8641,49 @@ declare namespace LocalJSX {
         "summary"?: string;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface KiDialog {
+        /**
+          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
+          * @default 'Close'
+         */
+        "closeLabel"?: string;
         /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop"?: boolean;
         /**
+          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+         */
+        "confirmLabel"?: string;
+        /**
+          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
+          * @default 'never'
+         */
+        "fullscreen"?: 'never' | 'compact' | 'always';
+        /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
         "heading": string;
         /**
-          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+          * Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
          */
         "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
+        /**
+          * The user activated the confirmation button. Handle validation, submission and dismissal in the application.
+         */
+        "onKi-confirm"?: (event: KiDialogCustomEvent<void>) => void;
         /**
           * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
           * @default false
@@ -8925,6 +9408,11 @@ declare namespace LocalJSX {
          */
         "aiSuggestionText"?: string;
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
         "autocomplete"?: string;
@@ -8934,7 +9422,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -8954,6 +9442,18 @@ declare namespace LocalJSX {
          */
         "labelHint"?: string;
         /**
+          * Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
+        /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
         "name"?: string;
@@ -8971,6 +9471,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "required"?: boolean;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -10560,6 +11065,57 @@ declare namespace LocalJSX {
         "value"?: number | string | undefined;
     }
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface KiSource {
+        /**
+          * Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Optional plain-text excerpt displayed in the source card.
+          * @default undefined
+         */
+        "snippet"?: string;
+        /**
+          * Source identifier in this document or shadow root. Overrides the native HTML `id` when set. Use this value in guarded specs and in citation refs.
+          * @default undefined
+         */
+        "sourceId"?: string;
+        /**
+          * Required plain-text source title. In HTML use the `title` attribute.
+         */
+        "sourceTitle": string;
+    }
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface KiSources {
+        /**
+          * Whether the disclosure is expanded. Set to show the list initially.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Localized summary when there is one source. Use `{count}` for its number.
+          * @default '{count} source'
+         */
+        "sourceCountLabel"?: string;
+        /**
+          * Localized summary for multiple sources. Use `{count}` for their number.
+          * @default '{count} sources'
+         */
+        "sourcesCountLabel"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -11041,6 +11597,11 @@ declare namespace LocalJSX {
      */
     interface KiTextarea {
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
          */
         "autocomplete"?: string;
@@ -11050,7 +11611,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -11069,6 +11630,23 @@ declare namespace LocalJSX {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
+          * @default 'Shorten the text to fit the character limit.'
+         */
+        "maxlengthErrorText"?: string;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
@@ -11092,6 +11670,11 @@ declare namespace LocalJSX {
           * @default 2
          */
         "rows"?: number;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -11752,6 +12335,25 @@ declare namespace LocalJSX {
         "href": string;
         "interactive": boolean;
     }
+    interface KiCarouselAttributes {
+        "label": string;
+        "slidesPerView": number;
+        "slidesPerMove": number;
+        "loop": boolean;
+        "autoplay": number;
+        "navigation": boolean;
+        "pagination": boolean;
+        "current": number;
+        "layout": CarouselLayout;
+        "previousLabel": string;
+        "nextLabel": string;
+        "pauseLabel": string;
+        "playLabel": string;
+        "positionLabel": string;
+        "slideLabel": string;
+        "carouselRoleDescription": string;
+        "slideRoleDescription": string;
+    }
     interface KiCheckboxAttributes {
         "checked": boolean;
         "indeterminate": boolean;
@@ -11789,6 +12391,10 @@ declare namespace LocalJSX {
         "reorderable": boolean;
         "focusTarget": string;
         "reorderAnnouncement": string;
+    }
+    interface KiCitationAttributes {
+        "citationRef": string;
+        "labelTemplate": string;
     }
     interface KiCodeBlockAttributes {
         "language": string;
@@ -11905,6 +12511,9 @@ declare namespace LocalJSX {
         "open": boolean;
         "heading": string;
         "closeOnBackdrop": boolean;
+        "fullscreen": 'never' | 'compact' | 'always';
+        "confirmLabel": string;
+        "closeLabel": string;
     }
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
@@ -12045,6 +12654,10 @@ declare namespace LocalJSX {
     interface KiInputAttributes {
         "type": KiInputType;
         "size": KiInputSize;
+        "appearance": 'default' | 'outlined' | 'filled';
+        "maxlength": number;
+        "minlength": number;
+        "showCount": boolean;
         "label": string;
         "labelHint": string;
         "placeholder": string;
@@ -12356,6 +12969,17 @@ declare namespace LocalJSX {
         "centered": boolean;
         "orientation": KiSliderOrientation;
     }
+    interface KiSourceAttributes {
+        "sourceId": string;
+        "href": string;
+        "sourceTitle": string;
+        "snippet": string;
+    }
+    interface KiSourcesAttributes {
+        "open": boolean;
+        "sourceCountLabel": string;
+        "sourcesCountLabel": string;
+    }
     interface KiSpinnerAttributes {
         "label": string;
         "variant": 'ring' | 'dots';
@@ -12439,6 +13063,11 @@ declare namespace LocalJSX {
         "iconLayout": KiTabsIconLayout;
     }
     interface KiTextareaAttributes {
+        "appearance": 'default' | 'outlined' | 'filled';
+        "maxlength": number;
+        "minlength": number;
+        "showCount": boolean;
+        "maxlengthErrorText": string;
         "label": string;
         "labelHint": string;
         "placeholder": string;
@@ -12568,10 +13197,13 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-button-group": Omit<KiButtonGroup, keyof KiButtonGroupAttributes> & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes]?: KiButtonGroup[K] } & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes as `attr:${K}`]?: KiButtonGroupAttributes[K] } & { [K in keyof KiButtonGroup & keyof KiButtonGroupAttributes as `prop:${K}`]?: KiButtonGroup[K] } & OneOf<"label", KiButtonGroup["label"], KiButtonGroupAttributes["label"]>;
         "ki-card": Omit<KiCard, keyof KiCardAttributes> & { [K in keyof KiCard & keyof KiCardAttributes]?: KiCard[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `attr:${K}`]?: KiCardAttributes[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `prop:${K}`]?: KiCard[K] };
+        "ki-carousel": Omit<KiCarousel, keyof KiCarouselAttributes> & { [K in keyof KiCarousel & keyof KiCarouselAttributes]?: KiCarousel[K] } & { [K in keyof KiCarousel & keyof KiCarouselAttributes as `attr:${K}`]?: KiCarouselAttributes[K] } & { [K in keyof KiCarousel & keyof KiCarouselAttributes as `prop:${K}`]?: KiCarousel[K] } & OneOf<"label", KiCarousel["label"], KiCarouselAttributes["label"]>;
+        "ki-carousel-item": KiCarouselItem;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-citation": Omit<KiCitation, keyof KiCitationAttributes> & { [K in keyof KiCitation & keyof KiCitationAttributes]?: KiCitation[K] } & { [K in keyof KiCitation & keyof KiCitationAttributes as `attr:${K}`]?: KiCitationAttributes[K] } & { [K in keyof KiCitation & keyof KiCitationAttributes as `prop:${K}`]?: KiCitation[K] } & OneOf<"citationRef", KiCitation["citationRef"], KiCitationAttributes["citationRef"]>;
         "ki-code-block": Omit<KiCodeBlock, keyof KiCodeBlockAttributes> & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes]?: KiCodeBlock[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `attr:${K}`]?: KiCodeBlockAttributes[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `prop:${K}`]?: KiCodeBlock[K] };
         "ki-code-input": Omit<KiCodeInput, keyof KiCodeInputAttributes> & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes]?: KiCodeInput[K] } & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes as `attr:${K}`]?: KiCodeInputAttributes[K] } & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes as `prop:${K}`]?: KiCodeInput[K] } & OneOf<"label", KiCodeInput["label"], KiCodeInputAttributes["label"]>;
         "ki-combobox": Omit<KiCombobox, keyof KiComboboxAttributes> & { [K in keyof KiCombobox & keyof KiComboboxAttributes]?: KiCombobox[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `attr:${K}`]?: KiComboboxAttributes[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `prop:${K}`]?: KiCombobox[K] } & OneOf<"label", KiCombobox["label"], KiComboboxAttributes["label"]>;
@@ -12632,6 +13264,8 @@ declare namespace LocalJSX {
         "ki-sidebar-item": Omit<KiSidebarItem, keyof KiSidebarItemAttributes> & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes]?: KiSidebarItem[K] } & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes as `attr:${K}`]?: KiSidebarItemAttributes[K] } & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes as `prop:${K}`]?: KiSidebarItem[K] };
         "ki-skeleton": Omit<KiSkeleton, keyof KiSkeletonAttributes> & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes]?: KiSkeleton[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `attr:${K}`]?: KiSkeletonAttributes[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `prop:${K}`]?: KiSkeleton[K] };
         "ki-slider": Omit<KiSlider, keyof KiSliderAttributes> & { [K in keyof KiSlider & keyof KiSliderAttributes]?: KiSlider[K] } & { [K in keyof KiSlider & keyof KiSliderAttributes as `attr:${K}`]?: KiSliderAttributes[K] } & { [K in keyof KiSlider & keyof KiSliderAttributes as `prop:${K}`]?: KiSlider[K] };
+        "ki-source": Omit<KiSource, keyof KiSourceAttributes> & { [K in keyof KiSource & keyof KiSourceAttributes]?: KiSource[K] } & { [K in keyof KiSource & keyof KiSourceAttributes as `attr:${K}`]?: KiSourceAttributes[K] } & { [K in keyof KiSource & keyof KiSourceAttributes as `prop:${K}`]?: KiSource[K] } & OneOf<"href", KiSource["href"], KiSourceAttributes["href"]> & OneOf<"sourceTitle", KiSource["sourceTitle"], KiSourceAttributes["sourceTitle"]>;
+        "ki-sources": Omit<KiSources, keyof KiSourcesAttributes> & { [K in keyof KiSources & keyof KiSourcesAttributes]?: KiSources[K] } & { [K in keyof KiSources & keyof KiSourcesAttributes as `attr:${K}`]?: KiSourcesAttributes[K] } & { [K in keyof KiSources & keyof KiSourcesAttributes as `prop:${K}`]?: KiSources[K] };
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-stat": Omit<KiStat, keyof KiStatAttributes> & { [K in keyof KiStat & keyof KiStatAttributes]?: KiStat[K] } & { [K in keyof KiStat & keyof KiStatAttributes as `attr:${K}`]?: KiStatAttributes[K] } & { [K in keyof KiStat & keyof KiStatAttributes as `prop:${K}`]?: KiStat[K] } & OneOf<"label", KiStat["label"], KiStatAttributes["label"]> & OneOf<"value", KiStat["value"], KiStatAttributes["value"]>;
@@ -12787,6 +13421,21 @@ declare module "@stencil/core" {
              */
             "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
             /**
+             * An ordered, swipeable sequence with previous and next controls and position feedback.
+             * @whenToUse show a short set of related highlights, onboarding steps or media panels.
+             * Give the carousel a meaningful label and supply one ki-carousel-item per slide.
+             * @whenNotToUse hide essential content behind rotation, replace ordinary page navigation,
+             * or present slides that readers need to compare side by side at the same time.
+             */
+            "ki-carousel": LocalJSX.IntrinsicElements["ki-carousel"] & JSXBase.HTMLAttributes<HTMLKiCarouselElement>;
+            /**
+             * A slide in an ordered ki-carousel sequence.
+             * @whenToUse supply a single slide to a ki-carousel. Put the full slide in the
+             * default slot and optional decorative preview media in the preview slot.
+             * @whenNotToUse present a standalone card or a layout container outside a carousel.
+             */
+            "ki-carousel-item": LocalJSX.IntrinsicElements["ki-carousel-item"] & JSXBase.HTMLAttributes<HTMLKiCarouselItemElement>;
+            /**
              * A form-associated checkbox for selecting independent options.
              * Like a native field, it answers `checkValidity()`, `reportValidity()`,
              * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -12828,6 +13477,14 @@ declare module "@stencil/core" {
              * @whenNotToUse choose exactly one option or submit a form value.
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
+            /**
+             * A numbered inline link from an answer to a source card.
+             * @whenToUse Next to a claim supported by a `ki-source` in the same document
+             * or shadow root. Repeat the same reference for subsequent mentions.
+             * @whenNotToUse To cite a source outside this tree or replace a standalone
+             * link. Use `ki-link` for direct navigation.
+             */
+            "ki-citation": LocalJSX.IntrinsicElements["ki-citation"] & JSXBase.HTMLAttributes<HTMLKiCitationElement>;
             /**
              * Presents source code with a named header, syntax colors, line controls and
              * clipboard feedback.
@@ -12906,15 +13563,16 @@ declare module "@stencil/core" {
              */
             "ki-details": LocalJSX.IntrinsicElements["ki-details"] & JSXBase.HTMLAttributes<HTMLKiDetailsElement>;
             /**
-             * A modal dialog for one interrupting decision or short focused task.
+             * A modal dialog for an interrupting decision or a focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
              * provide a `heading`, place actions in the `footer` slot, wire each
              * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-             * the least destructive action.
+             * the least destructive action. Use `fullscreen="compact"` for longer tasks
+             * that need the whole window on compact screens.
              * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-             * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-             * (navigate or use a future full-screen variant), menus, or pickers.
+             * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+             * page, menus, or pickers.
              */
             "ki-dialog": LocalJSX.IntrinsicElements["ki-dialog"] & JSXBase.HTMLAttributes<HTMLKiDialogElement>;
             /**
@@ -13388,6 +14046,21 @@ declare module "@stencil/core" {
              * Programmatic updates and form resets are silent.
              */
             "ki-slider": LocalJSX.IntrinsicElements["ki-slider"] & JSXBase.HTMLAttributes<HTMLKiSliderElement>;
+            /**
+             * Declares one named web source for a `ki-sources` list.
+             * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+             * `href` and `title`; in guarded specs provide `source-id`, `href` and
+             * `title`. Use the same identifier on any citation of the source.
+             * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+             */
+            "ki-source": LocalJSX.IntrinsicElements["ki-source"] & JSXBase.HTMLAttributes<HTMLKiSourceElement>;
+            /**
+             * A disclosure with the ordered sources behind an answer.
+             * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+             * children and place `ki-citation` markers next to the claims they support.
+             * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+             */
+            "ki-sources": LocalJSX.IntrinsicElements["ki-sources"] & JSXBase.HTMLAttributes<HTMLKiSourcesElement>;
             /**
              * A compact status for an indeterminate wait.
              * @whenToUse show brief inline activity such as saving a change or running a

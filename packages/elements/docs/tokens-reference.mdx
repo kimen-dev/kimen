@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 541 semantic
-and 2331 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 550 semantic
+and 2412 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -473,6 +473,20 @@ every component at once.
 | `--ki-size-feature-tile-sm` | `2rem` | Small feature tile edge, 32px at the default root size. |
 | `--ki-size-feature-tile-xl` | `4rem` | Extra-large feature tile edge, 64px at the default root size. |
 | `--ki-size-feature-tile-xs` | `1.5rem` | Extra-small feature tile edge, 24px at the default root size. |
+
+### `ki.source-reference`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-source-reference-card-padding` | `0.5rem` | Inset between a source reference card edge and its content. |
+| `--ki-source-reference-card-radius` | `10px` | Corner of a source reference card. |
+| `--ki-source-reference-hairline` | `1px` | Stroke width on reference surfaces. |
+| `--ki-source-reference-list-gap` | `0.25rem` | Spacing between source reference cards. |
+| `--ki-source-reference-list-width` | `32rem` | Comfortable maximum width of an answer source list. |
+| `--ki-source-reference-marker-padding` | `0.25rem` | Inline padding of a short reference marker. |
+| `--ki-source-reference-marker-radius` | `6px` | Corner of a numbered reference marker. |
+| `--ki-source-reference-marker-size` | `1.125rem` | Painted edge of an inline reference number. |
+| `--ki-source-reference-preview-width` | `18rem` | Maximum width of a source citation preview. |
 
 ### `ki.spacing`
 
@@ -1329,6 +1343,36 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-card-radius` | `14px` | dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px). |
 | `--ki-card-title-family` | `'Instrument Sans', system-ui, sans-serif` | Family used for a clickable card title. |
 
+### `ki-carousel`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-carousel-control-backdrop-filter` | `none` | Complete optional backdrop filter for the carousel controls. |
+| `--ki-carousel-control-bg` | `#f9f7f4` | Surface of the carousel navigation and rotation controls. |
+| `--ki-carousel-control-bg-image` | `none` | Optional image layered over the carousel control background color. |
+| `--ki-carousel-control-border` | `#86827b` | Visible control boundary against the surrounding surface. |
+| `--ki-carousel-control-fg` | `#181613` | Text and glyph ink against the carousel control surface. |
+| `--ki-carousel-control-gap` | `0.25rem` | Spacing between carousel controls. |
+| `--ki-carousel-control-icon-size` | `1.25rem` | Glyph size in the carousel navigation controls. |
+| `--ki-carousel-control-radius` | `1000px` | Corner radius of the carousel controls. |
+| `--ki-carousel-control-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Resting elevation of the carousel controls. |
+| `--ki-carousel-control-size` | `2rem` | Resting carousel control size before applying the density target floor. |
+| `--ki-carousel-full-screen-block-size` | `20rem` | Block size of the vertical carousel viewport. |
+| `--ki-carousel-gap` | `0.75rem` | Gap between carousel slides and between the viewport and the controls. |
+| `--ki-carousel-preview-min-inline-size` | `2rem` | Minimum inline size of a decorative carousel preview when space permits. |
+| `--ki-carousel-radius` | `16px` | Corner radius shared by the carousel viewport and slide surfaces. |
+
+### `ki-carousel-item`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-carousel-item-backdrop-filter` | `none` | Complete optional backdrop filter for the slide surface. |
+| `--ki-carousel-item-bg` | `#f3f0eb` | Surface for carousel slide content and its decorative preview. |
+| `--ki-carousel-item-bg-image` | `none` | Optional image layered over the slide background color. |
+| `--ki-carousel-item-fg` | `#181613` | Text on the carousel slide surface. |
+| `--ki-carousel-item-min-block-size` | `6rem` | Minimum block size of a full slide. |
+| `--ki-carousel-item-padding` | `1rem` | Inset of full slide content. |
+
 ### `ki-checkbox`
 
 | Token | Value (onmars light) | Description |
@@ -1664,6 +1708,12 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-dialog-footer-padding-block-end` | `1.5rem` | dimension used by the dialog component for footer section padding block end (Modal-actions/CTAs: Space/7xl 24px.) |
 | `--ki-dialog-footer-padding-block-start` | `1.5rem` | dimension used by the dialog component for footer section padding block start (Modal-actions/CTAs 14158:28302: Space/7xl 24px, below the divider.) |
 | `--ki-dialog-footer-padding-inline` | `1.25rem` | dimension used by the dialog component for footer section padding inline (Modal-actions/CTAs: Space/5xl 20px.) |
+| `--ki-dialog-fullscreen-backdrop-filter` | `none` | Complete backdrop filter for the fullscreen surface. |
+| `--ki-dialog-fullscreen-bg` | `#f9f7f4` | Solid raised surface for the fullscreen dialog. |
+| `--ki-dialog-fullscreen-bg-image` | `none` | Optional image over the fullscreen fill. |
+| `--ki-dialog-fullscreen-fg` | `#181613` | Foreground for the fullscreen dialog. |
+| `--ki-dialog-fullscreen-header-border` | `rgba(24, 22, 19, 0.1)` | Divider beneath the fullscreen header. |
+| `--ki-dialog-fullscreen-header-height` | `3.5rem` | Minimum block size of the fullscreen header. |
 | `--ki-dialog-gap` | `0.75rem` | dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px). |
 | `--ki-dialog-heading-font-family` | `'Newsreader', Georgia, serif` | Font family for the dialog heading. Override it to give dialogs their own heading typeface. |
 | `--ki-dialog-heading-font-size` | `1.125rem` | dimension used by the dialog component for heading font size. |
@@ -1964,16 +2014,29 @@ theme-wide change or on any subtree for a scoped one.
 | --- | --- | --- |
 | `--ki-input-action-gap` | `0.25rem` | Gap between the input action and the preceding control or adornment. |
 | `--ki-input-action-padding-end` | `0.25rem` | Inline-end inset between the input action and the inside edge of the field border. |
+| `--ki-input-appearance-border-width` | `1px` | Resting stroke width of both explicit text field appearances. |
 | `--ki-input-border-block-end-width` | `1px` | dimension used by the input component for border block end width. |
 | `--ki-input-border-block-start-width` | `1px` | dimension used by the input component for border block start width. |
 | `--ki-input-border-inline-end-width` | `1px` | dimension used by the input component for border inline end width. |
 | `--ki-input-border-inline-start-width` | `1px` | dimension used by the input component for border inline start width. |
 | `--ki-input-border-width` | `1px` | dimension used by the input component for border width (MarsUI Input_cell stroke: 1px hairline; the border color stays ki.outline.control per the 2026-07-25 declared a11y deviation). |
+| `--ki-input-count-bg` | `rgba(0, 0, 0, 0)` | Resting character count surface over the surrounding page. |
+| `--ki-input-count-fg` | `#5e5953` | Character count when the value fits the maximum. |
+| `--ki-input-count-over-bg` | `rgba(0, 0, 0, 0)` | Over-limit character count surface over the surrounding page. |
+| `--ki-input-count-over-fg` | `#c21a45` | Character count when the value exceeds the maximum. |
 | `--ki-input-disabled-bg` | `#f3f0eb` | color used by the input component for disabled background. |
 | `--ki-input-disabled-border` | `rgba(24, 22, 19, 0.1)` | color used by the input component for disabled border. |
 | `--ki-input-disabled-fg` | `#cbc7bf` | color used by the input component for disabled foreground (MarsUI disabled text Text/base_em; disabled cells are exempt from the contrast sweep). |
 | `--ki-input-disabled-label-fg` | `#cbc7bf` | color used by the input component for disabled label foreground. |
 | `--ki-input-disabled-placeholder-fg` | `#cbc7bf` | color used by the input component for disabled placeholder foreground. |
+| `--ki-input-filled-backdrop-filter` | `none` | Optional backdrop filter of a filled field. |
+| `--ki-input-filled-bg` | `#f3f0eb` | Surface of a filled text field. |
+| `--ki-input-filled-bg-image` | `none` | Optional background image of a filled field. |
+| `--ki-input-filled-fg` | `#181613` | Entered text on a filled field. |
+| `--ki-input-filled-focus-width` | `0.125rem` | Stroke width of the block-end indicator while focused. |
+| `--ki-input-filled-indicator` | `#86827b` | Continuous block-end edge of an enabled filled text field. |
+| `--ki-input-filled-placeholder-fg` | `#5e5953` | Placeholder on a filled field. |
+| `--ki-input-filled-radius` | `8px` | Block-start corner radius of a filled text field. |
 | `--ki-input-focus-bg` | `#ffffff` | color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0). |
 | `--ki-input-focus-border` | `#bc4c26` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-input-focus-ring-color. color used by the input component for focus border. |
 | `--ki-input-focus-fg` | `#181613` | color used by the input component for focus foreground. |
@@ -2018,6 +2081,11 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-lg-text-padding-inline` | `0.25rem` | dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token). |
 | `--ki-input-line-height` | `1.5rem` | dimension used by the input component for line height. |
 | `--ki-input-min-target` | `1.5rem` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-input-height. dimension used by the input component for min target. |
+| `--ki-input-outlined-bg` | `rgba(0, 0, 0, 0)` | Surface of an outlined text field. |
+| `--ki-input-outlined-border` | `#86827b` | Full outline of an enabled outlined text field. |
+| `--ki-input-outlined-fg` | `#181613` | Entered text on an outlined field. |
+| `--ki-input-outlined-placeholder-fg` | `#5e5953` | Placeholder on an outlined field. |
+| `--ki-input-outlined-radius` | `8px` | Corner radius of an outlined text field. |
 | `--ki-input-padding-inline` | `0.625rem` | dimension used by the input component for padding inline. |
 | `--ki-input-radius` | `10px` | dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it). |
 | `--ki-input-readonly-bg` | `#f9f7f4` | color used by the input component for readonly background (retires the deprecated ki.surface.raised alias; same resolved value). |
@@ -2801,6 +2869,48 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-slider-track-bg-image` | `none` | Optional image painted on the inactive rail. |
 | `--ki-slider-track-height` | `0.25rem` | Inactive rail thickness. |
 | `--ki-slider-vertical-length` | `8rem` | Length of the vertical rail. |
+
+### `ki-sources`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-citation-backdrop-filter` | `none` | Complete backdrop filter for a citation marker. |
+| `--ki-citation-bg` | `#f3f0eb` | Background of a citation marker. |
+| `--ki-citation-bg-image` | `none` | Optional decorative image over a citation marker. |
+| `--ki-citation-fg` | `#181613` | Text on a citation marker. |
+| `--ki-citation-hover-bg` | `#ebe7e1` | Background of a hovered citation marker. |
+| `--ki-citation-hover-fg` | `#181613` | Text on a hovered citation marker. |
+| `--ki-citation-padding` | `0.25rem` | Inline padding of the citation number. |
+| `--ki-citation-preview-backdrop-filter` | `none` | Complete backdrop filter for the citation preview. |
+| `--ki-citation-preview-bg` | `#ffffff` | Background of the title and hostname preview. |
+| `--ki-citation-preview-bg-image` | `none` | Optional decorative image over the citation preview. |
+| `--ki-citation-preview-border` | `rgba(24, 22, 19, 0.1)` | Edge color of the citation preview. |
+| `--ki-citation-preview-border-width` | `1px` | Edge width of the citation preview. |
+| `--ki-citation-preview-fg` | `#181613` | Text on the citation preview. |
+| `--ki-citation-preview-max-inline-size` | `18rem` | Maximum width of the citation preview. |
+| `--ki-citation-preview-padding` | `0.5rem` | Inset around the preview content. |
+| `--ki-citation-preview-radius` | `10px` | Corner radius of the citation preview. |
+| `--ki-citation-preview-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Elevation of the citation preview. |
+| `--ki-citation-radius` | `6px` | Corner radius of a citation marker. |
+| `--ki-citation-size` | `1.125rem` | Minimum painted edge of a citation marker. |
+| `--ki-source-card-backdrop-filter` | `none` | Complete backdrop filter for a source card. |
+| `--ki-source-card-bg` | `#ffffff` | Resting background of a source card. |
+| `--ki-source-card-bg-image` | `none` | Optional decorative image over a source card. |
+| `--ki-source-card-border` | `rgba(24, 22, 19, 0.1)` | Border color of a source card. |
+| `--ki-source-card-border-width` | `1px` | Border width of a source card. |
+| `--ki-source-card-fg` | `#181613` | Text on a resting source card. |
+| `--ki-source-card-hover-bg` | `#f9f7f4` | Background of a hovered source card. |
+| `--ki-source-card-hover-fg` | `#181613` | Text on a hovered source card. |
+| `--ki-source-card-padding` | `0.5rem` | Inset around source card content. |
+| `--ki-source-card-radius` | `10px` | Corner radius of a source card. |
+| `--ki-source-number-bg` | `#f3f0eb` | Background of the number in a source card. |
+| `--ki-source-number-fg` | `#181613` | Text color of the number in a source card. |
+| `--ki-source-number-radius` | `6px` | Corner radius of the number in a source card. |
+| `--ki-source-number-size` | `1.5rem` | Minimum size of the number in a source card. |
+| `--ki-sources-list-gap` | `0.25rem` | Gap between source cards. |
+| `--ki-sources-max-inline-size` | `32rem` | Maximum line length of the source disclosure. |
+| `--ki-sources-summary-bg` | `#ffffff` | Background of the source-count control. |
+| `--ki-sources-summary-fg` | `#181613` | Text on the source-count control. |
 
 ### `ki-spinner`
 
