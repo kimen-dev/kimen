@@ -15,6 +15,11 @@ const browser = commands as unknown as {
 
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
+const overriddenTokens = [
+  '--ki-surface-s2',
+  '--ki-surface-primary-low-em',
+  '--ki-text-primary-on-primary-light',
+];
 const fileItems = `
   <ki-tree-item id="source" expanded>Source
     <ki-tree-item id="dialog" selected>Dialog</ki-tree-item>
@@ -62,6 +67,7 @@ function spinnerVisible(): boolean {
 }
 
 async function focusItem(id: string): Promise<void> {
+  await expect.poll(() => part(id, 'row')).toBeInstanceOf(HTMLElement);
   await expect.element(item(id)).toHaveAttribute('role', 'treeitem');
   item(id).focus();
   await expect.element(item(id)).toHaveFocus();
@@ -102,6 +108,7 @@ afterEach(async () => {
   fixture.replaceChildren();
   fixture.removeAttribute('dir');
   fixture.removeAttribute('style');
+  for (const token of overriddenTokens) document.documentElement.style.removeProperty(token);
   await parkPointer();
 });
 
@@ -411,15 +418,18 @@ it('S15 passes axe with selectable, mixed, disabled and loading rows', async () 
 
 it('S16 follows surface and selected foreground overrides on painted rows', async () => {
   mount();
-  fixture.style.setProperty('--ki-surface-s2', 'rgb(230, 240, 250)');
-  fixture.style.setProperty('--ki-surface-primary-low-em', 'rgb(208, 224, 240)');
-  fixture.style.setProperty('--ki-text-primary-on-primary-light', 'rgb(20, 40, 60)');
+  const { style } = document.documentElement;
+  style.setProperty('--ki-surface-s2', 'rgb(230, 240, 250)');
+  style.setProperty('--ki-surface-primary-low-em', 'rgb(208, 224, 240)');
+  style.setProperty('--ki-text-primary-on-primary-light', 'rgb(20, 40, 60)');
   await clickPart('package', 'row');
-  await userEvent.hover(paintedPart('styles', 'row'));
 
-  await expect
-    .poll(() => getComputedStyle(paintedPart('styles', 'row')).backgroundColor)
-    .toBe('rgb(230, 240, 250)');
+  if (matchMedia('(hover: hover)').matches) {
+    await userEvent.hover(paintedPart('styles', 'row'));
+    await expect
+      .poll(() => getComputedStyle(paintedPart('styles', 'row')).backgroundColor)
+      .toBe('rgb(230, 240, 250)');
+  }
   expect(getComputedStyle(paintedPart('package', 'row')).backgroundColor).toBe(
     'rgb(208, 224, 240)',
   );
@@ -427,6 +437,8 @@ it('S16 follows surface and selected foreground overrides on painted rows', asyn
 });
 
 it('S17 keeps selection and keyboard focus visible in forced colors', async ({ skip }) => {
+  mount();
+  await focusItem('source');
   fixture.style.backgroundColor = 'rgb(1, 2, 3)';
   await browser.emulateForcedColors('active');
   try {
@@ -438,9 +450,6 @@ it('S17 keeps selection and keyboard focus visible in forced colors', async ({ s
     } else if (!applies()) {
       skip('This engine does not repaint author colors with a forced palette');
     }
-    mount();
-    await focusItem('source');
-
     await userEvent.keyboard('{ArrowDown}');
 
     await expect.element(item('dialog')).toHaveFocus();
@@ -459,14 +468,14 @@ it('S17 keeps selection and keyboard focus visible in forced colors', async ({ s
 });
 
 it('S18 expands instantly under reduced motion', async () => {
+  mount();
+  await focusItem('tokens');
+  const disclosure = paintedPart('tokens', 'disclosure');
+  const glyph = disclosure.querySelector('ki-icon');
+  if (!glyph) throw new Error('Missing disclosure glyph');
   await browser.emulateReducedMotion('reduce');
   try {
-    mount();
-    expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
-    await focusItem('tokens');
-    const disclosure = paintedPart('tokens', 'disclosure');
-    const glyph = disclosure.querySelector('ki-icon');
-    if (!glyph) throw new Error('Missing disclosure glyph');
+    await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
     const closed = [getComputedStyle(glyph).transform, getComputedStyle(glyph).rotate];
 
     await userEvent.keyboard('{ArrowRight}');

@@ -1,0 +1,182 @@
+:host {
+  --_ki-tree-row-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-tree-row-height) + var(--ki-density-control-offset))
+  );
+
+  display: block;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]),
+:host(:not([aria-expanded="true"])) [part="group"] {
+  display: none;
+}
+
+[part="row"],
+.loading {
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  min-block-size: var(--_ki-tree-row-size);
+  padding-inline: calc(var(--_ki-tree-depth, 0) * var(--ki-tree-indent)) var(--ki-tree-item-padding);
+  border-radius: var(--ki-tree-item-radius);
+}
+
+.loading {
+  align-items: center;
+  padding-inline-start: calc((var(--_ki-tree-depth, 0) + 1) * var(--ki-tree-indent));
+}
+
+[part="label"],
+[part="disclosure"],
+[part="checkbox"] {
+  display: flex;
+  align-items: center;
+  color: inherit;
+}
+
+[part="label"] {
+  flex: auto;
+  min-inline-size: 0;
+  gap: var(--ki-tree-item-gap);
+  overflow-wrap: anywhere;
+}
+
+[part="disclosure"],
+[part="checkbox"] {
+  flex: none;
+  justify-content: center;
+  min-inline-size: var(--ki-tree-item-target);
+}
+
+[part="disclosure"],
+.item-icon {
+  color: var(--ki-tree-icon-fg);
+}
+
+:host(:not([aria-expanded])) [part="disclosure"] {
+  visibility: hidden;
+}
+
+:host(:not([aria-checked])) [part="checkbox"],
+.box ki-icon {
+  display: none;
+}
+
+:host([aria-checked="true"]) .checked,
+:host([aria-checked="mixed"]) .mixed {
+  display: block;
+}
+
+.box {
+  display: grid;
+  box-sizing: border-box;
+  place-items: center;
+  inline-size: var(--ki-tree-item-box-size);
+  block-size: var(--ki-tree-item-box-size);
+  border: var(--ki-tree-edge-width) solid currentcolor;
+  border-radius: var(--ki-tree-item-box-radius);
+}
+
+:host([aria-expanded]) [part="row"],
+:host([aria-selected]) [part="row"],
+:host([aria-checked]) [part="row"] {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  :host(:not([disabled], [aria-selected="true"], [aria-checked="true"])) [part="row"]:hover {
+    background-color: var(--ki-tree-hover-bg);
+    color: var(--ki-tree-hover-fg);
+  }
+}
+
+:host([aria-selected="true"]) [part="row"],
+:host([aria-checked="true"]) [part="row"] {
+  background-color: var(--ki-tree-selected-bg);
+  color: var(--ki-tree-selected-fg);
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+:host([aria-selected="true"]) [part="disclosure"],
+:host([aria-checked="true"]) [part="disclosure"],
+:host([aria-selected="true"]) .item-icon,
+:host([aria-checked="true"]) .item-icon {
+  color: inherit;
+}
+
+:host([disabled]) [part="row"] {
+  cursor: default;
+  color: var(--ki-tree-icon-fg);
+}
+
+:host(:focus-visible) {
+  outline: none;
+}
+
+:host(:focus-visible) [part="row"] {
+  outline: var(--ki-tree-focus-ring-width) solid var(--ki-tree-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-tree-focus-ring-width));
+}
+
+:host(:dir(rtl)) [part="disclosure"] ki-icon {
+  transform: scaleX(-1);
+}
+
+:host([aria-expanded="true"]) [part="disclosure"] ki-icon {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [part="disclosure"] ki-icon {
+    transition: transform var(--ki-tree-disclosure-duration) var(--ki-tree-disclosure-easing);
+  }
+}
+
+@media (pointer: coarse) {
+  :host {
+    --_ki-tree-row-size: max(
+      var(--ki-tree-touch-row-min),
+      var(--ki-density-target-min),
+      calc(var(--ki-tree-row-height) + var(--ki-density-control-offset))
+    );
+  }
+}
+
+@media (forced-colors: active) {
+  [part="row"] {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  [part="disclosure"],
+  .item-icon {
+    color: inherit;
+  }
+
+  :host([aria-selected="true"]) [part="row"],
+  :host([aria-checked="true"]) [part="row"] {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
+  :host([disabled]) [part="row"] {
+    color: GrayText;
+  }
+
+  :host(:focus-visible) [part="row"] {
+    outline-color: CanvasText;
+  }
+
+  :host([aria-selected="true"]:focus-visible) [part="row"],
+  :host([aria-checked="true"]:focus-visible) [part="row"] {
+    outline-color: HighlightText;
+  }
+
+  :host(:not([disabled], [aria-selected="true"], [aria-checked="true"])) [part="row"]:hover {
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}

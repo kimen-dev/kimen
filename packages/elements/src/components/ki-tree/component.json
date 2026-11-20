@@ -1,0 +1,10 @@
+{
+  "barePage": { "keyboardPressed": false },
+  "pointer": { "hoverWitness": false },
+  "catalog": true,
+  "budgetGroup": { "members": ["ki-tree", "ki-tree-item"] },
+  "sizeBudget": {
+    "mcpApps": { "raw": 17900, "gzip": 4532, "brotli": 3638 },
+    "mcpServer": { "raw": 26850, "gzip": 6356, "brotli": 4212 }
+  }
+}

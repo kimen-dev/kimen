@@ -3,7 +3,7 @@
 | Element | Properties | Default content |
 | --- | --- | --- |
 | `ki-tree` | `label`, `selection` (`none`, `single`, `multiple`; defaults to `single`) | Direct `ki-tree-item` children. |
-| `ki-tree-item` | `expanded`, `selected`, `disabled`, `lazy` (all default to false), `href`, `icon-name` | The item label and direct child `ki-tree-item` elements. |
+| `ki-tree-item` | `expanded`, `selected`, `disabled`, `lazy` (all default to false), `href`, `icon-name`, `loading-label` | The item label and direct child `ki-tree-item` elements. |
 
 A tree with an explicit `label` exposes that name to assistive technology.
 Provide unique, concise labels where a page contains more than one tree. Use

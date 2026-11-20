@@ -35,7 +35,8 @@ a nested navigation view. Use `ki-list` for a flat list.
 - **Agent's choice, pending founder confirmation.** In navigation mode
   (`selection="none"`), rows with `href` provide native link navigation and
   selection semantics are absent. A branch's disclosure can operate separately
-  from its destination.
+  from its destination. A linked row in a selectable tree selects on Space and
+  can also navigate on Enter or pointer activation.
 - **Agent's choice, pending founder confirmation.** The first expansion of an
   empty lazy branch emits `ki-load`. Adding children or clearing `lazy` ends
   the pending state. A collapsed branch hides its pending indicator and
@@ -43,7 +44,8 @@ a nested navigation view. Use `ki-list` for a flat list.
 - **Agent's choice, pending founder confirmation.** Expansion, collapse and
   loading events identify the affected item. The selection change reports the
   current selected items. Application code owns loading and any follow-on
-  commands.
+  commands. A guarded catalog action on the tree binds its selection change.
+  The host application handles the three item lifecycle notifications.
 - **Agent's choice, pending founder confirmation.** Fine-pointer rows and
   indentation use the reference's 2rem and 1.25rem defaults. Rows grow to
   Kimen's touch density minimum on coarse pointers.

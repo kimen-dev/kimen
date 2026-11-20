@@ -2218,6 +2218,32 @@
         "$value": "{ki.space.xxs}",
         "$description": "Minimum edge space for a wrapped action label."
       }
+    },
+    "tree-layout": {
+      "indent": {
+        "$value": "{ki.space.5xl}",
+        "$description": "Inline step between hierarchy levels."
+      },
+      "row-min": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Default minimum block size of a tree row."
+      },
+      "touch-row-min": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum block size of a row on a coarse pointer."
+      },
+      "item-target": {
+        "$value": "{ki.size.target-min}",
+        "$description": "Minimum inline target of a tree disclosure or checkbox."
+      },
+      "surface-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Default rounding of a tree surface."
+      },
+      "row-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Default rounding of a highlighted tree row."
+      }
     }
   }
 }
