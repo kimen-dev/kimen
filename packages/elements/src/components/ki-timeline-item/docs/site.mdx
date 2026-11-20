@@ -1,0 +1,40 @@
+---
+title: ki-timeline-item
+description: Show an event, a timestamp and optional details in a timeline.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-timeline-item` as a direct child of
+[`ki-timeline`](/docs/components/timeline/). Describe the event in the default
+slot. Use text like “Preview deploy failed” to communicate status.
+
+<Demo layout="block" code={`<ki-timeline label="Deployment activity">
+  <ki-timeline-item tone="danger" datetime="2024-11-19T10:20:00Z" details-label="Build log">
+    Preview deploy failed
+    <div slot="details">The runner timed out while compiling the web app.</div>
+  </ki-timeline-item>
+</ki-timeline>`} />
+
+Use an ISO date or date-time for `datetime`. Date-times from the past 24 hours
+display relative minutes or hours. Older and future date-times display an
+absolute date and time. A date-only value displays a calendar date.
+
+Set `tone` to style the marker and `icon-name` to use a registered Lucide
+glyph. Import each glyph you name. A decorative avatar in the `start` slot
+replaces the icon and can repeat the identity in the event text.
+
+```js
+import '@kimen/elements/icons/circle-alert';
+```
+
+Put supplementary information in the `details` slot to show a collapsed
+disclosure. Tab focuses its control, and Enter or Space opens or closes it.
+Set `details-label` to describe the content or translate the default “Details”.
+
+## API reference
+
+<CemApi tag="ki-timeline-item" />
+
+[Open ki-timeline-item in Storybook](/storybook/?path=/docs/docs-components-ki-timeline-item--docs)

@@ -85,6 +85,25 @@
         }
       }
     },
+    "timeline": {
+      "dot": {
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.supporting}",
+          "$description": "Strengthened neutral ink over the timeline marker fill."
+        }
+      },
+      "line": {
+        "$type": "color",
+        "$value": "{ki.outline.strong}",
+        "$description": "Strengthened contrast of the timeline connector."
+      },
+      "time-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Strengthened supporting text for the timestamp."
+      }
+    },
     "alert": {
       "border-width": {
         "$type": "dimension",
