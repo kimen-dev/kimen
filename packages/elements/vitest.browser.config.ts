@@ -186,6 +186,25 @@ export default defineConfig({
           }
           throw new Error(`Touch target not found: ${selector}`);
         }),
+        swipeWithCoarsePointer: defineBrowserCommand(async ({ page }, selector: string) => {
+          const session = await cdpSessions.get(page);
+          if (!session) throw new Error('Touch emulation must be enabled before swiping');
+          for (const frame of page.frames()) {
+            const target = frame.locator(selector);
+            if ((await target.count()) === 0) continue;
+            const bounds = await target.first().boundingBox();
+            if (!bounds) throw new Error(`Swipe target is not visible: ${selector}`);
+            await session.send('Input.synthesizeScrollGesture', {
+              x: bounds.x + bounds.width * 0.9,
+              y: bounds.y + bounds.height / 2,
+              xDistance: -bounds.width * 0.8,
+              preventFling: true,
+              gestureSourceType: 'touch',
+            });
+            return;
+          }
+          throw new Error(`Swipe target not found: ${selector}`);
+        }),
         // The real computed accessibility tree (Playwright's ariaSnapshot,
         // returned as a YAML role/name outline). Needed for roles set via
         // ElementInternals.role, which dom-accessibility-api (getByRole) and

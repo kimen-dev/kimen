@@ -101,10 +101,10 @@ describe('Kimen MCP server: validation (038 S5-S8, S15)', () => {
   it.each([
     {
       code: 'unknown-component',
-      defect: 'the component "ki-carousel"',
-      offender: 'ki-carousel',
+      defect: 'the component "ki-unlisted"',
+      offender: 'ki-unlisted',
       path: 'root.component',
-      spec: { root: { component: 'ki-carousel' }, version: 1 },
+      spec: { root: { component: 'ki-unlisted' }, version: 1 },
     },
     {
       code: 'undeclared-action',
@@ -168,7 +168,7 @@ describe('Kimen MCP server: validation (038 S5-S8, S15)', () => {
     // Over budget AND outside the catalog: only the budget is reported, so
     // the catalog checks never ran.
     const spec = {
-      root: { component: 'ki-carousel', slots: { '': ['x'.repeat(300 * 1024)] } },
+      root: { component: 'ki-unlisted', slots: { '': ['x'.repeat(300 * 1024)] } },
       version: 1,
     };
     const { report } = await validate(spec);

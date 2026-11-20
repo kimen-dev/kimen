@@ -1,0 +1,206 @@
+# Feature specification for Carousel
+
+- **Branch** `feat/413-ki-carousel`
+- **Issue** #413
+- **Design source** Kimen design system, Components → Proposed → Carousel
+
+A carousel presents ordered highlights, onboarding or media. The reader can
+move through slides with buttons or native scrolling and see their current
+position. Rotation requires an explicit interval.
+
+## Requirements
+
+- Provide the region name, slide count and movement controls described in the
+  [public contract](contracts/api.md). Synchronize the current position,
+  indicator and event across buttons, scrolling and scripts.
+- Support the single layout and the four Material 3 layouts. Keep the visible
+  slide readable and keep reduced-size preview copy out of the accessibility
+  tree. Keep the controls available across layouts when enabled.
+- Follow the APG carousel pattern. Keep offscreen slide content inert, announce
+  manual changes politely and silence announcements during rotation. Allow a
+  person to pause rotation with a visible control and respect motion preferences.
+- Keep direction, colors, density and motion theme-controlled. Ship the two tags
+  in the neutral catalog and framework wrappers.
+
+## Interpretations
+
+- **Agent's choice, pending founder confirmation.** Indices are one-based.
+  `current` represents the leading slide. Uniform multi-slide views stop at
+  the last full view, and loop wraps between range endpoints. Movement counts
+  apply to navigation, while a swipe can land on any snap point. An invalid
+  requested position is normalized and an unchanged position emits no event.
+- **Agent's choice, pending founder confirmation.** Material 3 layouts own
+  their sizing. Multi-browse and hero show smaller previews, uncontained
+  lets the next item run to the edge, and full-screen snaps vertically inside
+  a configurable-height viewport. Preview surfaces can take an optional
+  decorative `preview` slot. Reduced preview copy is hidden until active,
+  and offscreen or partly shown content is inert. Width changes take effect
+  at the selected snap point.
+- **Agent's choice, pending founder confirmation.** Rotation stops at the end
+  without loop. Hover suspends it temporarily, focus stops it until explicit
+  Play, and reduced motion suppresses it. Controls, position labels and slide
+  naming defaults are overridable for localization.
+- **Agent's choice, pending founder confirmation.** Indicators use the shipped
+  20-position limit. Longer carousels keep the dots in a window and expose the
+  actual slide number in a numeric position label.
+- **Agent's choice, pending founder confirmation.** The discovery registry
+  generates the slide tag from a sibling folder. Catalog authors place slide
+  items in the carousel's default slot and can bind `ki-slide-change` as its
+  sole action.
+- **Agent's choice, pending founder confirmation.** Use the repository's explicit
+  touch-density setting for 44 px targets and the API gate's classification
+  for additions to the existing Stencil type namespaces.
+
+## Scenario family coverage
+
+| Family | Scenarios | Justification when N/A |
+| --- | --- | --- |
+| Core behavior | S1–S4, S9–S12, S18, S20 | |
+| Keyboard path | S5, S19 | |
+| Assistive-tech outcome | S6–S8, S12 | |
+| Form participation | | N/A. The carousel presents content and has no form value. |
+| Theming | S13–S17 | |
+
+## Gherkin scenarios
+
+```gherkin
+Feature: ki-carousel presents a sequence of slides
+  People can move through slide content and keep their place.
+
+  # S1
+  Scenario: Navigation advances by the configured step
+    Given five highlights showing two at a time and moving two at a time
+    When the reader activates Next slide from position one
+    Then position three leads the visible slides
+    And a slide change reports index 3
+
+  # S2
+  Scenario: Looping wraps the sequence
+    Given a looping carousel at the last of three highlights
+    When the reader activates Next slide
+    Then the first highlight becomes current
+
+  # S3
+  Scenario: A swipe updates the position
+    Given a carousel showing the first of three highlights
+    When the reader swipes toward the next slide
+    Then the viewport snaps to the second highlight
+    And the position indicator highlights two
+
+  # S4
+  Scenario: The public API selects a slide
+    Given a carousel showing the first of three highlights
+    When its consumer requests position three
+    Then position three becomes current
+    And a slide change reports index 3
+
+  # S5
+  Scenario: The reader navigates without a pointer
+    Given the Next slide control has keyboard focus
+    When the reader presses Space
+    Then the second highlight becomes current
+    And focus remains on Next slide
+
+  # S6
+  Scenario: Slide names and visibility follow the visible range
+    Given a carousel named "Highlights" showing the first of three slides
+    When assistive technology reads the carousel
+    Then it exposes a region named "Highlights" described as a carousel
+    And only the slide group named "1 of 3" is available
+
+  # S7
+  Scenario: A manual slide change is announced
+    Given a three-slide carousel with rotation off
+    When the reader moves to the second highlight
+    Then a polite announcement reports "2 of 3"
+
+  # S8
+  Scenario: Focus stops automatic rotation
+    Given three highlights rotating automatically without announcements
+    When keyboard focus enters the carousel
+    Then rotation stops until the reader activates Play
+    And slide changes can be announced politely
+
+  # S9
+  Scenario: The reader pauses automatic rotation
+    Given three highlights rotate automatically
+    When the reader activates Pause
+    Then the current slide stays in place
+    And a Play control is available
+
+  # S10
+  Scenario: Hover temporarily pauses rotation
+    Given a three-slide carousel rotates automatically
+    When the pointer hovers over the carousel
+    Then the current slide stays in place while the pointer remains there
+
+  # S11
+  Scenario Outline: The layout keeps its controls and slides readable
+    Given a carousel with five highlights using the <layout> layout
+    When the reader moves one position forward
+    Then the second highlight is readable in full
+    And navigation and the position indicator remain available
+
+    Examples:
+      | layout       |
+      | multi-browse |
+      | uncontained  |
+      | hero         |
+      | full-screen  |
+
+  # S12
+  Scenario: A narrow preview keeps its text hidden until it leads
+    Given a multi-browse carousel with a small preview
+    When the reader reaches the small preview
+    Then its full text is visible and available to assistive technology
+
+  # S13
+  Scenario: A theme supplies the navigation surface
+    Given a carousel theme with a yellow navigation surface
+    When the carousel appears
+    Then its navigation buttons paint yellow
+
+  # S14
+  Scenario: Forced colors preserve navigation
+    Given a user-selected forced-color palette
+    When the carousel appears
+    Then its navigation controls retain visible outlines and glyphs
+
+  # S15
+  Scenario: Reduced motion keeps the carousel still until navigated
+    Given a multi-browse carousel configured to rotate and a reader who requests reduced motion
+    When the reader activates Next slide
+    Then the next slide reaches its full size and position immediately
+    And automatic rotation remains off
+
+  # S16
+  Scenario: Right-to-left navigation follows reading order
+    Given a right-to-left carousel showing the first of three slides
+    When the reader activates Next slide
+    Then the next slide approaches from the left and becomes current
+
+  # S17
+  Scenario: Coarse pointers have comfortable targets
+    Given a carousel with touch density on a coarse-pointer device
+    When the carousel appears
+    Then both navigation controls have at least 44 by 44 CSS pixel targets
+
+  # S18
+  Scenario: Navigation and pagination can be independently hidden
+    Given a carousel configured with no navigation controls
+    When the carousel appears
+    Then its indicator remains visible
+    And the slide viewport can receive keyboard focus
+
+  # S19
+  Scenario: Offscreen slide links are skipped
+    Given the first two slides each contain a link and only the first slide is visible
+    When the reader presses Tab from the first slide link
+    Then focus moves to the carousel navigation
+
+  # S20
+  Scenario: An item projects its own slide content
+    Given a carousel item with a link titled "Learn more"
+    When that item is the visible slide
+    Then the link is available to the reader
+```

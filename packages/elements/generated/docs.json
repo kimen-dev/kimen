@@ -1235,6 +1235,186 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-button-group/ki-button-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-button-group",
+      "docs": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation."
+        },
+        {
+          "name": "slot",
+          "text": "- Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+        },
+        {
+          "name": "part",
+          "text": "group - The named group or toolbar surface."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-button-group\n\n## Spaced and attached groups\n\nUse a label that describes what the actions do together. In attached mode the\nfirst button provides the common variant and size. An explicit group size\napplies in both modes.\n\n```html\n<ki-button-group label=\"History\">\n  <ki-button type=\"button\">Undo</ki-button>\n  <ki-button type=\"button\">Redo</ki-button>\n</ki-button-group>\n\n<ki-button-group label=\"Clipboard\" attached size=\"sm\">\n  <ki-button type=\"button\">Copy</ki-button>\n  <ki-button type=\"button\">Paste</ki-button>\n</ki-button-group>\n```\n\n## Formatting toolbar\n\nImport the glyphs used by your page. Give each icon button a tooltip using the\nsame label. The application sets `pressed` as the formatting state changes. The native button exposes it as `aria-pressed`.\n\n```js\nimport '@kimen/elements/icons/bold';\nimport '@kimen/elements/icons/list';\n```\n\n```html\n<ki-button-group label=\"Formatting\" toolbar size=\"sm\">\n  <ki-tooltip label=\"Bold\">\n    <ki-icon-button label=\"Bold\" variant=\"ghost\" pressed=\"true\">\n      <ki-icon name=\"bold\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n  <span role=\"separator\" aria-orientation=\"vertical\"></span>\n  <ki-tooltip label=\"Bulleted list\">\n    <ki-icon-button label=\"Bulleted list\" variant=\"ghost\">\n      <ki-icon name=\"list\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n</ki-button-group>\n```\n\n## Split button\n\nWith a build that includes `ki-menu`, anchor the menu to the chevron action.\nImport `@kimen/elements/icons/chevron-down` before mounting the group. Handle the\nmain button's click and menu selection as separate actions.\n\n```html\n<ki-button-group label=\"Save actions\" attached>\n  <ki-button type=\"button\" variant=\"primary\">Save</ki-button>\n  <ki-tooltip label=\"More save options\">\n    <ki-icon-button id=\"save-options\" label=\"More save options\" aria-haspopup=\"menu\" expanded=\"false\">\n      <ki-icon name=\"chevron-down\"></ki-icon>\n    </ki-icon-button>\n  </ki-tooltip>\n</ki-button-group>\n\n<ki-menu anchor=\"save-options\">\n  <ki-menu-item value=\"draft\">Save as draft</ki-menu-item>\n  <ki-menu-item value=\"copy\">Save a copy</ki-menu-item>\n</ki-menu>\n```\n\nKeep the icon button's `expanded` property in sync with the menu's `open`\nstate. Its native button exposes that state as `aria-expanded`.\n"
+      },
+      "props": [
+        {
+          "name": "attached",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "attached",
+          "reflectToAttr": true,
+          "docs": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined",
+          "complexType": {
+            "original": "KiButtonSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | undefined",
+            "references": {
+              "KiButtonSize": {
+                "location": "import",
+                "path": "../ki-button/ki-button",
+                "id": "src/components/ki-button/ki-button.tsx::KiButtonSize",
+                "referenceLocation": "KiButtonSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "toolbar",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "toolbar",
+          "reflectToAttr": true,
+          "docs": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The named group or toolbar surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-card/ki-card.tsx",
       "encapsulation": "shadow",
       "tag": "ki-card",
@@ -1463,6 +1643,803 @@
         {
           "name": "trigger",
           "docs": "Native link or action button in a clickable card’s heading."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-carousel/ki-carousel.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-carousel",
+      "docs": "An ordered, swipeable sequence with previous and next controls and position feedback.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show a short set of related highlights, onboarding steps or media panels.\nGive the carousel a meaningful label and supply one ki-carousel-item per slide."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "hide essential content behind rotation, replace ordinary page navigation,\nor present slides that readers need to compare side by side at the same time."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-carousel-item children in reading order."
+        },
+        {
+          "name": "part",
+          "text": "viewport - Scroll-snap viewport and its keyboard focus outline."
+        },
+        {
+          "name": "part",
+          "text": "controls - Row containing slide position and navigation."
+        },
+        {
+          "name": "part",
+          "text": "previous - Previous slide button."
+        },
+        {
+          "name": "part",
+          "text": "next - Next slide button."
+        },
+        {
+          "name": "part",
+          "text": "rotation - Play or Pause button when automatic rotation is configured."
+        },
+        {
+          "name": "part",
+          "text": "position - Position indicator and optional numeric position."
+        },
+        {
+          "name": "part",
+          "text": "announcement - Visually hidden live region for manual changes."
+        }
+      ],
+      "usage": {
+        "examples": "# Carousel examples\n\n```html\n<ki-carousel label=\"Product tour\" slides-per-view=\"2\" slides-per-move=\"2\">\n  <ki-carousel-item>Discover the tools</ki-carousel-item>\n  <ki-carousel-item>Pick a theme</ki-carousel-item>\n  <ki-carousel-item>Set up your workspace</ki-carousel-item>\n  <ki-carousel-item>Share your first surface</ki-carousel-item>\n</ki-carousel>\n```\n\n```js\nconst carousel = document.querySelector('ki-carousel');\ncarousel.addEventListener('ki-slide-change', ({ detail }) => {\n  console.log(detail.index);\n});\nawait carousel.goTo(3);\n```\n\nWith per-tag imports, define both `ki-carousel` and `ki-carousel-item`.\n"
+      },
+      "props": [
+        {
+          "name": "autoplay",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "autoplay",
+          "reflectToAttr": false,
+          "docs": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "carouselRoleDescription",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "carousel-role-description",
+          "reflectToAttr": false,
+          "docs": "Accessible role description of the region.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'carousel'"
+            }
+          ],
+          "default": "'carousel'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "current",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "current",
+          "reflectToAttr": true,
+          "docs": "One-based leading slide. Setting it moves the carousel and clamps the index to\nthe available leading positions.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Required accessible name of the carousel region.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "layout",
+          "type": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\"",
+          "complexType": {
+            "original": "CarouselLayout",
+            "resolved": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\"",
+            "references": {
+              "CarouselLayout": {
+                "location": "local",
+                "path": "src/components/ki-carousel/ki-carousel.tsx",
+                "id": "src/components/ki-carousel/ki-carousel.tsx::CarouselLayout"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "layout",
+          "reflectToAttr": false,
+          "docs": "Item arrangement. Full-screen uses a vertical, full-viewport slide.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'single'"
+            }
+          ],
+          "default": "'single'",
+          "values": [
+            {
+              "value": "full-screen",
+              "type": "string"
+            },
+            {
+              "value": "hero",
+              "type": "string"
+            },
+            {
+              "value": "multi-browse",
+              "type": "string"
+            },
+            {
+              "value": "single",
+              "type": "string"
+            },
+            {
+              "value": "uncontained",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loop",
+          "reflectToAttr": false,
+          "docs": "Whether navigating past one endpoint wraps to the other.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "navigation",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "navigation",
+          "reflectToAttr": false,
+          "docs": "Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "nextLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "next-label",
+          "reflectToAttr": false,
+          "docs": "Accessible label of the Next button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Next slide'"
+            }
+          ],
+          "default": "'Next slide'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pagination",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pagination",
+          "reflectToAttr": false,
+          "docs": "Whether to show the noninteractive slide position indicator.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pauseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pause-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible label of the Pause button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Pause'"
+            }
+          ],
+          "default": "'Pause'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "playLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "play-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible label of the Play button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Play'"
+            }
+          ],
+          "default": "'Play'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "positionLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "position-label",
+          "reflectToAttr": false,
+          "docs": "Accessible label of the position indicator.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Slide position'"
+            }
+          ],
+          "default": "'Slide position'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "previousLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "previous-label",
+          "reflectToAttr": false,
+          "docs": "Accessible label of the Previous button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Previous slide'"
+            }
+          ],
+          "default": "'Previous slide'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "slideLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "slide-label",
+          "reflectToAttr": false,
+          "docs": "Spoken slide name and announcement. Use {index} and {count} as placeholders.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{index} of {count}'"
+            }
+          ],
+          "default": "'{index} of {count}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "slideRoleDescription",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "slide-role-description",
+          "reflectToAttr": false,
+          "docs": "Accessible role description of each slide group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'slide'"
+            }
+          ],
+          "default": "'slide'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "slidesPerMove",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "slides-per-move",
+          "reflectToAttr": false,
+          "docs": "Number of positions advanced by Previous, Next and automatic rotation.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "slidesPerView",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "slides-per-view",
+          "reflectToAttr": false,
+          "docs": "Number of slides visible together in the single layout. Material 3 layouts\ndetermine their own item widths.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "goTo",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "(index: number) => Promise<void>",
+            "parameters": [
+              {
+                "name": "index",
+                "type": "number",
+                "docs": ""
+              }
+            ],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "goTo(index: number) => Promise<void>",
+          "parameters": [
+            {
+              "name": "index",
+              "type": "number",
+              "docs": ""
+            }
+          ],
+          "docs": "Moves to the requested one-based leading position within the available range.",
+          "docsTags": []
+        },
+        {
+          "name": "next",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<void>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "next() => Promise<void>",
+          "parameters": [],
+          "docs": "Advances by slidesPerMove.",
+          "docsTags": []
+        },
+        {
+          "name": "previous",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<void>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "previous() => Promise<void>",
+          "parameters": [],
+          "docs": "Moves back by slidesPerMove.",
+          "docsTags": []
+        }
+      ],
+      "events": [
+        {
+          "event": "ki-slide-change",
+          "detail": "CarouselSlideChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "CarouselSlideChangeDetail",
+            "resolved": "CarouselSlideChangeDetail",
+            "references": {
+              "CarouselSlideChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-carousel/ki-carousel.tsx",
+                "id": "src/components/ki-carousel/ki-carousel.tsx::CarouselSlideChangeDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports the one-based index when the leading slide changes.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-carousel-item children in reading order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "announcement",
+          "docs": "Visually hidden live region for manual changes."
+        },
+        {
+          "name": "controls",
+          "docs": "Row containing slide position and navigation."
+        },
+        {
+          "name": "next",
+          "docs": "Next slide button."
+        },
+        {
+          "name": "position",
+          "docs": "Position indicator and optional numeric position."
+        },
+        {
+          "name": "previous",
+          "docs": "Previous slide button."
+        },
+        {
+          "name": "rotation",
+          "docs": "Play or Pause button when automatic rotation is configured."
+        },
+        {
+          "name": "viewport",
+          "docs": "Scroll-snap viewport and its keyboard focus outline."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-indicator",
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-carousel": [
+          "ki-indicator",
+          "ki-icon"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-carousel-item/ki-carousel-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-carousel-item",
+      "docs": "A slide in an ordered ki-carousel sequence.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "supply a single slide to a ki-carousel. Put the full slide in the\ndefault slot and optional decorative preview media in the preview slot."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "present a standalone card or a layout container outside a carousel."
+        },
+        {
+          "name": "slot",
+          "text": "- The full slide content, including any links and controls."
+        },
+        {
+          "name": "slot",
+          "text": "preview - Decorative, noninteractive media shown when the item is a reduced preview."
+        },
+        {
+          "name": "part",
+          "text": "content - Surface that holds the full slide."
+        },
+        {
+          "name": "part",
+          "text": "preview - Decorative surface used in small or partly shown previews."
+        }
+      ],
+      "usage": {
+        "examples": "# Carousel item example\n\n```html\n<ki-carousel label=\"Getting started\" layout=\"hero\">\n  <ki-carousel-item><a href=\"/guide\">Read the guide</a></ki-carousel-item>\n  <ki-carousel-item>\n    <img slot=\"preview\" src=\"/cover.jpg\" alt=\"\">\n    <a href=\"/themes\">Explore themes</a>\n  </ki-carousel-item>\n</ki-carousel>\n```\n"
+      },
+      "props": [],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The full slide content, including any links and controls."
+        },
+        {
+          "name": "preview",
+          "docs": "Decorative, noninteractive media shown when the item is a reduced preview."
+        }
+      ],
+      "parts": [
+        {
+          "name": "content",
+          "docs": "Surface that holds the full slide."
+        },
+        {
+          "name": "preview",
+          "docs": "Decorative surface used in small or partly shown previews."
         }
       ],
       "states": [],
@@ -2200,6 +3177,632 @@
         {
           "name": "label",
           "docs": "Legend that names the group."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-chip/ki-chip.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-chip",
+      "docs": "A compact filter toggle, removable picked value, or contextual action.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "apply independent filters, represent values selected in an entry\nfield, or offer a small contextual action alongside content."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "static status (ki-badge), primary actions (ki-button), suggested\nprompts, or mutually exclusive choices (ki-radio-group)."
+        },
+        {
+          "name": "slot",
+          "text": "- The visible text label. Use text or non-interactive markup."
+        },
+        {
+          "name": "slot",
+          "text": "start - One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+        },
+        {
+          "name": "part",
+          "text": "chip - The painted pill."
+        },
+        {
+          "name": "part",
+          "text": "label - The text wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "start - The decorative leading content."
+        },
+        {
+          "name": "part",
+          "text": "selection-icon - The selected filter check."
+        },
+        {
+          "name": "part",
+          "text": "remove - The native remove button on a removable input chip."
+        },
+        {
+          "name": "part",
+          "text": "drag-handle - The grip enabled by a reorderable parent group."
+        }
+      ],
+      "usage": {
+        "examples": "# Chip examples\n\nUse a filter group for independent toggles. Read `ki-change.detail.selected` to\nupdate the results. The chip's `value` identifies the filter.\n\n```html\n<ki-chip-group label=\"Team\" type=\"filter\">\n  <ki-chip value=\"design\" selected>Design</ki-chip>\n  <ki-chip value=\"eng\">Engineering</ki-chip>\n</ki-chip-group>\n```\n\nUse an input group for picked values. Link the entry field by ID so focus\nreturns to it after the last chip. Listen to `ki-remove` to update your\ncollection. If a framework owns these nodes, cancel the event and let it\napply the DOM change, then focus the next chip or the linked field.\n\n```html\n<ki-chip-group label=\"Recipients\" type=\"input\" focus-target=\"recipient\">\n  <ki-chip value=\"ana\" removable>\n    <ki-avatar slot=\"start\" size=\"xxs\" initials=\"AG\" label=\"Ana García\"></ki-avatar>\n    Ana García\n  </ki-chip>\n  <ki-chip value=\"luis\" removable>Luis</ki-chip>\n</ki-chip-group>\n<input id=\"recipient\" aria-label=\"Add recipient\">\n```\n\nUse assist for a contextual action. Handle `ki-activate` in application code.\n\n```html\n<ki-chip type=\"assist\" value=\"calendar\">\n  <svg slot=\"start\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\">\n    <rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/>\n    <path d=\"M3 10h18M8 2v6m8-6v6\"/>\n  </svg>\n  Add to calendar\n</ki-chip>\n```\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Prevents activation, removal and moving the chip.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removable",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "removable",
+          "reflectToAttr": true,
+          "docs": "Gives an input chip a trailing remove button and keyboard deletion.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remove-label",
+          "reflectToAttr": true,
+          "docs": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Remove'"
+            }
+          ],
+          "default": "'Remove'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "selected",
+          "reflectToAttr": true,
+          "docs": "The pressed state of a filter chip. The user can toggle it in place.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiChipSize",
+            "resolved": "\"md\" | \"sm\"",
+            "references": {
+              "KiChipSize": {
+                "location": "local",
+                "path": "src/components/ki-chip/ki-chip.tsx",
+                "id": "src/components/ki-chip/ki-chip.tsx::KiChipSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "type",
+          "type": "\"assist\" | \"filter\" | \"input\" | undefined",
+          "complexType": {
+            "original": "KiChipType",
+            "resolved": "\"assist\" | \"filter\" | \"input\" | undefined",
+            "references": {
+              "KiChipType": {
+                "location": "import",
+                "path": "./ki-chip.dom.js",
+                "id": "src/components/ki-chip/ki-chip.dom.ts::KiChipType",
+                "referenceLocation": "KiChipType"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "type",
+          "reflectToAttr": true,
+          "docs": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "assist",
+              "type": "string"
+            },
+            {
+              "value": "filter",
+              "type": "string"
+            },
+            {
+              "value": "input",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Value sent with removal, contextual activation and reorder events.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-activate",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{\n    value: string;\n  }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted by an assist chip when its native button is activated.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-change",
+          "detail": "{ selected: boolean; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{\n    selected: boolean;\n  }",
+            "resolved": "{ selected: boolean; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted after a filter chip changes its pressed state.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-remove",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: string }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Remove request for an input chip. Cancel it to keep application ownership of the chip.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The visible text label. Use text or non-interactive markup."
+        },
+        {
+          "name": "start",
+          "docs": "One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+        }
+      ],
+      "parts": [
+        {
+          "name": "chip",
+          "docs": "The painted pill."
+        },
+        {
+          "name": "drag-handle",
+          "docs": "The grip enabled by a reorderable parent group."
+        },
+        {
+          "name": "label",
+          "docs": "The text wrapper around the default slot."
+        },
+        {
+          "name": "remove",
+          "docs": "The native remove button on a removable input chip."
+        },
+        {
+          "name": "selection-icon",
+          "docs": "The selected filter check."
+        },
+        {
+          "name": "start",
+          "docs": "The decorative leading content."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-chip-group/ki-chip-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-chip-group",
+      "docs": "A named collection of filter, input or assist chips, with optional ordering.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "label related chips or let people change their reading order."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "choose exactly one option or submit a form value."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-chip children in reading order."
+        },
+        {
+          "name": "part",
+          "text": "group - The wrapping chip layout."
+        }
+      ],
+      "usage": {
+        "examples": "# Chip group examples\n\nA labelled group lets the user reorder direct chips with a drag handle,\ntwo pointer activations on the handles, or Alt+Left/Right. The order is\nannounced on each move. Listen for `ki-reorder` to persist the new order.\n\n```html\n<ki-chip-group label=\"Recipients\" type=\"input\" reorderable focus-target=\"recipient\">\n  <ki-chip value=\"ana\" removable>Ana García</ki-chip>\n  <ki-chip value=\"luis\" removable>Luis</ki-chip>\n</ki-chip-group>\n<input id=\"recipient\" aria-label=\"Add recipient\">\n```\n"
+      },
+      "props": [
+        {
+          "name": "focusTarget",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "focus-target",
+          "reflectToAttr": true,
+          "docs": "ID of the entry field in the same document or shadow root for focus after the last chip.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the group or list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "reorderAnnouncement",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "reorder-announcement",
+          "reflectToAttr": true,
+          "docs": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{label} moved to position {position} of {total}.'"
+            }
+          ],
+          "default": "'{label} moved to position {position} of {total}.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "reorderable",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "reorderable",
+          "reflectToAttr": true,
+          "docs": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "type",
+          "type": "\"assist\" | \"filter\" | \"input\"",
+          "complexType": {
+            "original": "KiChipType",
+            "resolved": "\"assist\" | \"filter\" | \"input\"",
+            "references": {
+              "KiChipType": {
+                "location": "import",
+                "path": "../ki-chip/ki-chip.dom.js",
+                "id": "src/components/ki-chip/ki-chip.dom.ts::KiChipType",
+                "referenceLocation": "KiChipType"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "type",
+          "reflectToAttr": true,
+          "docs": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'filter'"
+            }
+          ],
+          "default": "'filter'",
+          "values": [
+            {
+              "value": "assist",
+              "type": "string"
+            },
+            {
+              "value": "filter",
+              "type": "string"
+            },
+            {
+              "value": "input",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-reorder",
+          "detail": "KiChipReorderDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiChipReorderDetail",
+            "resolved": "KiChipReorderDetail",
+            "references": {
+              "KiChipReorderDetail": {
+                "location": "local",
+                "path": "src/components/ki-chip-group/ki-chip-group.tsx",
+                "id": "src/components/ki-chip-group/ki-chip-group.tsx::KiChipReorderDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "dragstart",
+          "capture": false,
+          "passive": true
+        },
+        {
+          "event": "dragover",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "drop",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "dragend",
+          "capture": false,
+          "passive": true
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-chip children in reading order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The wrapping chip layout."
         }
       ],
       "states": [],
@@ -3126,11 +4729,15 @@
       "parts": [],
       "states": [],
       "dependents": [
-        "ki-timeline-item"
+        "ki-carousel",
+        "ki-stat"
       ],
       "dependencies": [],
       "dependencyGraph": {
-        "ki-timeline-item": [
+        "ki-carousel": [
+          "ki-icon"
+        ],
+        "ki-stat": [
           "ki-icon"
         ]
       }
@@ -3147,7 +4754,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
+          "text": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
         },
         {
           "name": "slot",
@@ -3199,6 +4806,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "expanded",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "expanded",
+          "reflectToAttr": false,
+          "docs": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -3280,6 +4913,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pressed",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pressed",
+          "reflectToAttr": false,
+          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -4018,9 +5677,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-carousel"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-carousel": [
+          "ki-indicator"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-input/ki-input.tsx",
@@ -5011,6 +6676,641 @@
         {
           "name": "start",
           "docs": "Leading region wrapper."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-menu/ki-menu.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-menu",
+      "docs": "A popup of actions opened by a button in the same document or shadow root.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "row actions, account commands, split buttons, and overflow actions."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "form values, navigation destinations, or long action lists."
+        },
+        {
+          "name": "slot",
+          "text": "- Place ki-menu-item, ki-menu-group, and ki-divider here."
+        },
+        {
+          "name": "slot",
+          "text": "header - Informational content above the actions, such as account details."
+        },
+        {
+          "name": "part",
+          "text": "popup - The anchored surface."
+        },
+        {
+          "name": "part",
+          "text": "menu - The named menu containing the actions."
+        },
+        {
+          "name": "part",
+          "text": "header - The informational header."
+        },
+        {
+          "name": "part",
+          "text": "filter - The filter field."
+        }
+      ],
+      "usage": {
+        "examples": "# Menu examples\n\n## Row actions\n\nRegister `ki-button`, `ki-menu`, `ki-menu-item`, `ki-menu-group`, and\n`ki-divider` when using the elements individually.\n\n```html\n<ki-button id=\"row-actions\" type=\"button\">Actions</ki-button>\n<ki-menu id=\"row-menu\" anchor=\"row-actions\" filter-label=\"Filter actions\">\n  <ki-menu-group label=\"Edit\">\n    <ki-menu-item value=\"rename\" shortcut=\"F2\">Rename</ki-menu-item>\n    <ki-menu-item value=\"duplicate\">Duplicate</ki-menu-item>\n    <ki-menu-item value=\"move\" disabled>Move to…</ki-menu-item>\n    <ki-menu-item value=\"pin\" type=\"checkbox\" checked>Pin to sidebar</ki-menu-item>\n  </ki-menu-group>\n  <ki-divider></ki-divider>\n  <ki-menu-item value=\"delete\" tone=\"danger\">Delete</ki-menu-item>\n</ki-menu>\n```\n\n```js\nconst menu = document.getElementById('row-menu');\nmenu.addEventListener('ki-select', ({ detail: { value, checked } }) => {\n  dispatchRowAction(value, checked);\n});\n```\n\nA plain action emits its value and closes the popup. A checkbox also emits its\nnew checked state and keeps the popup open. A radio selection emits\n`checked: true`, clears its peer radios and closes the popup. Place independent\nradio sets in distinct groups.\n\n## Account menu\n\n```html\n<button id=\"account\" type=\"button\" aria-label=\"Account for Ana García\">AG</button>\n<ki-menu anchor=\"account\" placement=\"bottom-end\">\n  <p slot=\"header\">Ana García<br />ana@example.com</p>\n  <ki-divider></ki-divider>\n  <ki-menu-item value=\"profile\">Profile</ki-menu-item>\n  <ki-menu-item value=\"sign-out\">Sign out</ki-menu-item>\n</ki-menu>\n```\n\nGive a glyph-only trigger an accessible name. Keep header content informational\nand put actions in `ki-menu-item`. A `start` slot can hold a decorative SVG or\navatar. The application owns the shortcuts displayed by `shortcut`.\n\nWith a filter, supply `filter-label` and optionally localize\n`filter-results-label`, retaining `{count}` where the number should appear.\n",
+        "when-to-use": "# When to use Menu\n\nUse Menu for commands on the same object, account actions, split buttons and\noverflow actions. Keep destructive actions at the end after a divider. Pick\na select for a form value, links for navigation, or a dialog or page for\nlong action lists.\n\nSupply a host-authored trigger with an ID in the same DOM tree. Bind the\ncatalog action on the menu's declared `ki-select` event. Application DOM\nlisteners can read the selected item's `value` and optional `checked` from\nthe event detail.\n"
+      },
+      "props": [
+        {
+          "name": "anchor",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "anchor",
+          "reflectToAttr": false,
+          "docs": "Literal ID of the menu button in the same document or containing shadow root.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "filterLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "filter-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name and placeholder of the filter. Omit to hide the field.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "filterResultsLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "filter-results-label",
+          "reflectToAttr": false,
+          "docs": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Matching actions: {count}'"
+            }
+          ],
+          "default": "'Matching actions: {count}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placement",
+          "type": "\"bottom-end\" | \"bottom-start\" | \"top-end\" | \"top-start\"",
+          "complexType": {
+            "original": "KiMenuPlacement",
+            "resolved": "\"bottom-end\" | \"bottom-start\" | \"top-end\" | \"top-start\"",
+            "references": {
+              "KiMenuPlacement": {
+                "location": "local",
+                "path": "src/components/ki-menu/ki-menu.tsx",
+                "id": "src/components/ki-menu/ki-menu.tsx::KiMenuPlacement"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "placement",
+          "reflectToAttr": false,
+          "docs": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'bottom-start'"
+            }
+          ],
+          "default": "'bottom-start'",
+          "values": [
+            {
+              "value": "bottom-end",
+              "type": "string"
+            },
+            {
+              "value": "bottom-start",
+              "type": "string"
+            },
+            {
+              "value": "top-end",
+              "type": "string"
+            },
+            {
+              "value": "top-start",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-select",
+          "detail": "KiMenuSelectDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiMenuSelectDetail",
+            "resolved": "KiMenuSelectDetail",
+            "references": {
+              "KiMenuSelectDetail": {
+                "location": "local",
+                "path": "src/components/ki-menu/ki-menu.tsx",
+                "id": "src/components/ki-menu/ki-menu.tsx::KiMenuSelectDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Reports the selected action and, for a checkbox or radio, its new checked state.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Place ki-menu-item, ki-menu-group, and ki-divider here."
+        },
+        {
+          "name": "header",
+          "docs": "Informational content above the actions, such as account details."
+        }
+      ],
+      "parts": [
+        {
+          "name": "filter",
+          "docs": "The filter field."
+        },
+        {
+          "name": "header",
+          "docs": "The informational header."
+        },
+        {
+          "name": "menu",
+          "docs": "The named menu containing the actions."
+        },
+        {
+          "name": "popup",
+          "docs": "The anchored surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-menu-group/ki-menu-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-menu-group",
+      "docs": "A named group of related actions in a ki-menu.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "name a set of related actions or scope exclusive radio items in a menu."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "standalone sections or nested menus."
+        },
+        {
+          "name": "slot",
+          "text": "- The ki-menu-item and ki-divider children of the group."
+        },
+        {
+          "name": "part",
+          "text": "label - The visible group name."
+        }
+      ],
+      "usage": {
+        "examples": "# Menu group\n\nProvide a group label and place menu items or dividers in its default slot. A group scopes its own exclusive radio selection.\n\n```html\n<ki-menu anchor=\"actions\">\n  <ki-menu-group label=\"Edit\"><ki-menu-item value=\"rename\">Rename</ki-menu-item></ki-menu-group>\n</ki-menu>\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible group name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The ki-menu-item and ki-divider children of the group."
+        }
+      ],
+      "parts": [
+        {
+          "name": "label",
+          "docs": "The visible group name."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-menu-item/ki-menu-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-menu-item",
+      "docs": "A pointer and keyboard action within a ki-menu.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "a command, independent checkbox action, or exclusive radio action in a menu."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "standalone controls, navigational links, or form options."
+        },
+        {
+          "name": "slot",
+          "text": "- The action's visible label."
+        },
+        {
+          "name": "slot",
+          "text": "start - One decorative icon or avatar before the label."
+        },
+        {
+          "name": "part",
+          "text": "item - The focusable action row."
+        },
+        {
+          "name": "part",
+          "text": "shortcut - The display-only shortcut hint."
+        },
+        {
+          "name": "part",
+          "text": "check - The indicator of a checked action."
+        }
+      ],
+      "usage": {
+        "examples": "# Menu item\n\nGive each item a value and a visible label. Use `type=\"checkbox\"` for independent toggles or `type=\"radio\"` for exclusive choices. Set `disabled` to keep an unavailable action discoverable by keyboard.\n\n```html\n<ki-menu anchor=\"actions\">\n  <ki-menu-item value=\"pin\" type=\"checkbox\" checked>Pin to sidebar</ki-menu-item>\n</ki-menu>\n```\n"
+      },
+      "props": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "checked",
+          "reflectToAttr": true,
+          "docs": "Checked state for checkbox and radio actions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disabled actions remain discoverable via menu navigation.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "shortcut",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "shortcut",
+          "reflectToAttr": false,
+          "docs": "Display-only keyboard shortcut. Applications own shortcut registration.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"neutral\"",
+          "complexType": {
+            "original": "KiMenuItemTone",
+            "resolved": "\"danger\" | \"neutral\"",
+            "references": {
+              "KiMenuItemTone": {
+                "location": "local",
+                "path": "src/components/ki-menu-item/ki-menu-item.tsx",
+                "id": "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Apply the danger tone to a destructive action.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "type",
+          "type": "\"checkbox\" | \"item\" | \"radio\"",
+          "complexType": {
+            "original": "KiMenuItemType",
+            "resolved": "\"checkbox\" | \"item\" | \"radio\"",
+            "references": {
+              "KiMenuItemType": {
+                "location": "local",
+                "path": "src/components/ki-menu-item/ki-menu-item.tsx",
+                "id": "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemType"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "type",
+          "reflectToAttr": false,
+          "docs": "Action role. A checkbox stays open. A radio selects one action within its group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'item'"
+            }
+          ],
+          "default": "'item'",
+          "values": [
+            {
+              "value": "checkbox",
+              "type": "string"
+            },
+            {
+              "value": "item",
+              "type": "string"
+            },
+            {
+              "value": "radio",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Action identifier reported by the parent menu.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [
+        {
+          "event": "click",
+          "capture": true,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The action's visible label."
+        },
+        {
+          "name": "start",
+          "docs": "One decorative icon or avatar before the label."
+        }
+      ],
+      "parts": [
+        {
+          "name": "check",
+          "docs": "The indicator of a checked action."
+        },
+        {
+          "name": "item",
+          "docs": "The focusable action row."
+        },
+        {
+          "name": "shortcut",
+          "docs": "The display-only shortcut hint."
         }
       ],
       "states": [],
@@ -6913,6 +9213,228 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-skeleton/ki-skeleton.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-skeleton",
+      "docs": "Decorative placeholder shapes that reserve space for loading content.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region."
+        },
+        {
+          "name": "part",
+          "text": "shape - Each painted text line, circle or rectangle."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-skeleton\n\nDefine the component when using direct imports.\n\n```js\nimport { defineCustomElement } from '@kimen/elements/ki-skeleton';\ndefineCustomElement();\n```\n\n## Match the expected layout\n\n```html\n<section aria-label=\"Assistant is writing\" aria-busy=\"true\">\n  <ki-skeleton lines=\"3\"></ki-skeleton>\n</section>\n\n<section aria-label=\"Loading project\" aria-busy=\"true\">\n  <ki-skeleton shape=\"circle\" size=\"2.5rem\"></ki-skeleton>\n  <ki-skeleton shape=\"rect\" block-size=\"6rem\"></ki-skeleton>\n</section>\n```\n\nThe last of multiple text lines is shorter. Use `inline-size` and `block-size` to match the dimensions of the incoming content. Set `animated=\"false\"` to use a static fill.\n\n## Skip the flash on fast loads\n\nReserve the expected block size immediately. Use `hidden` until the request has been pending for about 300 ms.\n\n```html\n<section id=\"project\" aria-label=\"Loading project\" aria-busy=\"true\" style=\"min-block-size:6rem\">\n  <ki-skeleton hidden shape=\"rect\" block-size=\"6rem\"></ki-skeleton>\n</section>\n```\n\n```js\nconst region = document.querySelector('#project');\nconst placeholder = region.querySelector('ki-skeleton');\nconst reveal = setTimeout(() => {\n  placeholder.hidden = false;\n}, 300);\n\ntry {\n  const project = await new Promise((resolve) => {\n    setTimeout(() => resolve({ name: 'Roadmap' }), 900);\n  });\n  region.textContent = project.name;\n} finally {\n  clearTimeout(reveal);\n  placeholder.remove();\n  region.setAttribute('aria-busy', 'false');\n  region.setAttribute('aria-label', 'Project');\n}\n```\n\nUse this script in a module after the section is mounted. Change the simulated request to 150 ms to see the fast path. In an application, use the real request and show its error state in the same region.\n"
+      },
+      "props": [
+        {
+          "name": "animated",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "animated",
+          "reflectToAttr": false,
+          "docs": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "blockSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "block-size",
+          "reflectToAttr": false,
+          "docs": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "inlineSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "inline-size",
+          "reflectToAttr": false,
+          "docs": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "lines",
+          "reflectToAttr": false,
+          "docs": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            },
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "maximum",
+              "text": "20"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "shape",
+          "type": "\"circle\" | \"rect\" | \"text\"",
+          "complexType": {
+            "original": "'text' | 'circle' | 'rect'",
+            "resolved": "\"circle\" | \"rect\" | \"text\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "shape",
+          "reflectToAttr": false,
+          "docs": "Match the placeholder to the expected text, avatar, or rectangular content.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'text'"
+            }
+          ],
+          "default": "'text'",
+          "values": [
+            {
+              "value": "circle",
+              "type": "string"
+            },
+            {
+              "value": "rect",
+              "type": "string"
+            },
+            {
+              "value": "text",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": false,
+          "docs": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "shape",
+          "docs": "Each painted text line, circle or rectangle."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",
       "encapsulation": "shadow",
       "tag": "ki-spinner",
@@ -7474,6 +9996,389 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-stat/ki-stat.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-stat",
+      "docs": "A key metric with an optional comparison against a reference period.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Summarize one numeric metric in a dashboard or report. Set\ndirection to lower-is-better for metrics such as latency and neutral for\nchanges that carry no favorable or unfavorable meaning."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Present a sequence of readings or inspect multiple data\npoints. Use a chart or table with a text equivalent for that data."
+        },
+        {
+          "name": "slot",
+          "text": "chart - An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+        },
+        {
+          "name": "part",
+          "text": "card - The surface containing the metric and chart."
+        },
+        {
+          "name": "part",
+          "text": "label - The visible metric label."
+        },
+        {
+          "name": "part",
+          "text": "value - The formatted current reading and its unit."
+        },
+        {
+          "name": "part",
+          "text": "comparison - The optional row with delta and reference period."
+        },
+        {
+          "name": "part",
+          "text": "delta - The trend glyph and formatted comparison magnitude."
+        },
+        {
+          "name": "part",
+          "text": "trend - The decorative rising or falling trend glyph."
+        },
+        {
+          "name": "part",
+          "text": "reference - The visible comparison period."
+        }
+      ],
+      "usage": {
+        "examples": "# Stat\n\nUse one stat for one key number. Choose the preference for the metric. Here,\nthe render time went down and the change is favorable.\n\n```html\n<ki-stat\n  label=\"Median render time\"\n  value=\"84\"\n  unit=\"ms\"\n  delta=\"-9\"\n  delta-label=\"vs last week\"\n  direction=\"lower-is-better\"\n></ki-stat>\n```\n\nFor a percentage comparison beside a count, set `deltaFormat` as a property.\nPercent formatting takes a fraction, so 0.12 reads as 12%.\n\n```html\n<ki-stat id=\"active-surfaces\" label=\"Active surfaces\" value=\"1284\" delta=\"0.12\" delta-label=\"vs last week\"></ki-stat>\n```\n\n```js\ndocument.querySelector('#active-surfaces').deltaFormat = { style: 'percent' };\n```\n\nWith no `delta`, the card shows the current value alone. For a trend that carries\nno judgment, use `direction=\"neutral\"`. For an informative sparkline, give the\nchart a text equivalent through its own HTML semantics.\n\n```html\n<ki-stat label=\"Sales\" value=\"750\">\n  <svg slot=\"chart\" role=\"img\" aria-label=\"Sales rose from 680 to 750 this week\" viewBox=\"0 0 80 20\" width=\"80\" height=\"20\">\n    <path d=\"M1 17 L13 11 L27 14 L39 4 L52 8 L67 5 L79 1\" fill=\"none\" stroke=\"currentColor\"></path>\n  </svg>\n</ki-stat>\n```\n"
+      },
+      "props": [
+        {
+          "name": "delta",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "delta",
+          "reflectToAttr": false,
+          "docs": "Optional finite change. Its sign determines the trend and its magnitude is displayed.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "deltaFormat",
+          "type": "NumberFormatOptions | undefined",
+          "complexType": {
+            "original": "Intl.NumberFormatOptions",
+            "resolved": "NumberFormatOptions | undefined",
+            "references": {
+              "Intl": {
+                "location": "global",
+                "id": "global::Intl"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Number-format options for the change. Defaults to format. Set this property to an Intl options object.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "NumberFormatOptions"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "deltaLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "delta-label",
+          "reflectToAttr": false,
+          "docs": "Localized comparison period, such as \"vs last week\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "direction",
+          "type": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\"",
+          "complexType": {
+            "original": "'higher-is-better' | 'lower-is-better' | 'neutral'",
+            "resolved": "\"higher-is-better\" | \"lower-is-better\" | \"neutral\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "direction",
+          "reflectToAttr": false,
+          "docs": "Which direction is favorable for this metric. Use neutral to avoid a judgment.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'higher-is-better'"
+            }
+          ],
+          "default": "'higher-is-better'",
+          "values": [
+            {
+              "value": "higher-is-better",
+              "type": "string"
+            },
+            {
+              "value": "lower-is-better",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "downLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "down-label",
+          "reflectToAttr": false,
+          "docs": "Localized spoken direction for a negative delta.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'down'"
+            }
+          ],
+          "default": "'down'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "format",
+          "type": "NumberFormatOptions | undefined",
+          "complexType": {
+            "original": "Intl.NumberFormatOptions",
+            "resolved": "NumberFormatOptions | undefined",
+            "references": {
+              "Intl": {
+                "location": "global",
+                "id": "global::Intl"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Number-format options for the reading. Set this JavaScript property to an Intl options object.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "NumberFormatOptions"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the metric, such as \"Median render time\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "unit",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "unit",
+          "reflectToAttr": false,
+          "docs": "Literal suffix for decimal readings, such as \"ms\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "upLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "up-label",
+          "reflectToAttr": false,
+          "docs": "Localized spoken direction for a positive delta.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'up'"
+            }
+          ],
+          "default": "'up'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current finite reading.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "chart",
+          "docs": "An optional sparkline after the summary. Give informative\ncharts a textual equivalent, and hide charts that repeat the summary."
+        }
+      ],
+      "parts": [
+        {
+          "name": "card",
+          "docs": "The surface containing the metric and chart."
+        },
+        {
+          "name": "comparison",
+          "docs": "The optional row with delta and reference period."
+        },
+        {
+          "name": "delta",
+          "docs": "The trend glyph and formatted comparison magnitude."
+        },
+        {
+          "name": "label",
+          "docs": "The visible metric label."
+        },
+        {
+          "name": "reference",
+          "docs": "The visible comparison period."
+        },
+        {
+          "name": "trend",
+          "docs": "The decorative rising or falling trend glyph."
+        },
+        {
+          "name": "value",
+          "docs": "The formatted current reading and its unit."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-stat": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-status/ki-status.tsx",
@@ -8797,421 +11702,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-timeline/ki-timeline.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-timeline",
-      "docs": "A chronological list of activity, audit records, or steps from a run.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "present chronological events with independently readable summaries,\noptional times and details, including new entries in a live feed."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "offer a selectable command list, control the current step of a\ntask, or represent progress toward completion."
-        },
-        {
-          "name": "slot",
-          "text": "- Direct ki-timeline-item children."
-        },
-        {
-          "name": "part",
-          "text": "list - Named native ordered list."
-        },
-        {
-          "name": "part",
-          "text": "item - Native list entry including the connector to the next event."
-        },
-        {
-          "name": "part",
-          "text": "announcements - Polite region for batches of new event summaries."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-line - Connector colour."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-line-width - Connector width."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-size - Marker diameter, used to position the connector."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-gap - Gap between rows and between each marker and summary."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-timeline examples\n\n## Show deployment activity\n\n```html\n<ki-timeline id=\"activity\" label=\"Deployment activity\">\n  <ki-timeline-item icon-name=\"git-merge\" tone=\"primary\" datetime=\"2024-11-19T10:41:00Z\">\n    Luis Perez merged fix/search-index\n  </ki-timeline-item>\n  <ki-timeline-item icon-name=\"circle-alert\" tone=\"danger\" datetime=\"2024-11-19T10:20:00Z\">\n    Preview deploy failed\n  </ki-timeline-item>\n</ki-timeline>\n```\n\n```js\nimport '@kimen/elements/icons/circle-alert';\nimport '@kimen/elements/icons/git-merge';\nimport { defineCustomElement as defineTimeline } from '@kimen/elements/ki-timeline';\nimport { defineCustomElement as defineTimelineItem } from '@kimen/elements/ki-timeline-item';\n\ndefineTimeline();\ndefineTimelineItem();\n```\n\nGive the list a short name, and describe each event in words. The timeline\nsorts its direct items by `datetime`. The default is newest first. Set\n`order=\"oldest-first\"` for a history that starts at the beginning.\n\n## Add an event to a live feed\n\n```js\nconst activity = document.querySelector('#activity');\nconst item = document.createElement('ki-timeline-item');\nitem.setAttribute('datetime', new Date().toISOString());\nitem.textContent = 'Preview deployment completed';\nactivity.append(item);\n```\n\nThe list updates its order and announces nearby additions together. The\nmessage comes from the event's default slot.\n"
-      },
-      "props": [
-        {
-          "name": "label",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the ordered list.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "order",
-          "type": "\"newest-first\" | \"oldest-first\"",
-          "complexType": {
-            "original": "TimelineOrder",
-            "resolved": "\"newest-first\" | \"oldest-first\"",
-            "references": {
-              "TimelineOrder": {
-                "location": "import",
-                "path": "./ki-timeline.time",
-                "id": "src/components/ki-timeline/ki-timeline.time.ts::TimelineOrder",
-                "referenceLocation": "TimelineOrder"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "order",
-          "reflectToAttr": false,
-          "docs": "Chronological order of valid dates. Ties and undated entries retain source\norder. Undated entries follow valid dates in either direction.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'newest-first'"
-            }
-          ],
-          "default": "'newest-first'",
-          "values": [
-            {
-              "value": "newest-first",
-              "type": "string"
-            },
-            {
-              "value": "oldest-first",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Direct ki-timeline-item children."
-        }
-      ],
-      "parts": [
-        {
-          "name": "announcements",
-          "docs": "Polite region for batches of new event summaries."
-        },
-        {
-          "name": "item",
-          "docs": "Native list entry including the connector to the next event."
-        },
-        {
-          "name": "list",
-          "docs": "Named native ordered list."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-timeline-item/ki-timeline-item.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-timeline-item",
-      "docs": "One event in a timeline, with an optional time and details disclosure.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "describe an activity, audit, or run event inside a ki-timeline."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "convey the outcome only through marker colour, or use the marker\nas a control. Put actions in the event content or details."
-        },
-        {
-          "name": "slot",
-          "text": "- Event summary. Include important status information in the text."
-        },
-        {
-          "name": "slot",
-          "text": "start - Decorative avatar or other noninteractive marker in place of the icon."
-        },
-        {
-          "name": "slot",
-          "text": "details - Additional event information in a native details disclosure."
-        },
-        {
-          "name": "part",
-          "text": "dot - Decorative event marker."
-        },
-        {
-          "name": "part",
-          "text": "content - Event summary, time and disclosure container."
-        },
-        {
-          "name": "part",
-          "text": "time - Native time element for a valid ISO date."
-        },
-        {
-          "name": "part",
-          "text": "summary - Keyboard-accessible details control."
-        },
-        {
-          "name": "part",
-          "text": "details - Native details disclosure."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-bg - Neutral marker fill."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-fg - Neutral marker ink."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-bg-image - Optional marker background image."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-dot-backdrop-filter - Optional filter behind the marker."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-time-bg - Timestamp fill."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-time-fg - Timestamp ink."
-        },
-        {
-          "name": "cssprop",
-          "text": "--ki-timeline-item-fg - Event summary and details ink."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-timeline-item examples\n\n## Add an avatar and expandable details\n\n```html\n<ki-timeline label=\"Order updates\" order=\"oldest-first\">\n  <ki-timeline-item datetime=\"2024-11-19\">\n    <ki-avatar slot=\"start\" initials=\"ML\" size=\"xs\"></ki-avatar>\n    Mina Lee packed the order\n  </ki-timeline-item>\n  <ki-timeline-item datetime=\"2024-11-20T11:45:00Z\" details-label=\"Carrier details\">\n    Dispatch confirmed\n    <div slot=\"details\">The parcel is with the carrier.</div>\n  </ki-timeline-item>\n</ki-timeline>\n```\n\nKeep identity and status in the event text. Use the decorative `start`\nslot for an avatar or use `icon-name` with an imported Lucide glyph. If you\nuse direct imports, register `ki-avatar` when you use it in the slot.\n\nUse `details-label` to localize or describe the disclosure. The control\nappears only when the event supplies details. The main event text stays\nvisible while details are collapsed.\n"
-      },
-      "props": [
-        {
-          "name": "datetime",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "datetime",
-          "reflectToAttr": true,
-          "docs": "ISO date or date-time. Invalid or missing dates have no time label.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "detailsLabel",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "details-label",
-          "reflectToAttr": false,
-          "docs": "Label of the details control when the details slot is populated.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Details'"
-            }
-          ],
-          "default": "'Details'",
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Decorative Lucide icon name, registered by the caller's per-icon import.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "tone",
-          "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
-          "complexType": {
-            "original": "TimelineTone",
-            "resolved": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\"",
-            "references": {
-              "TimelineTone": {
-                "location": "local",
-                "path": "src/components/ki-timeline-item/ki-timeline-item.tsx",
-                "id": "src/components/ki-timeline-item/ki-timeline-item.tsx::TimelineTone"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "tone",
-          "reflectToAttr": false,
-          "docs": "Marker tone. The event text carries the meaning.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'neutral'"
-            }
-          ],
-          "default": "'neutral'",
-          "values": [
-            {
-              "value": "danger",
-              "type": "string"
-            },
-            {
-              "value": "neutral",
-              "type": "string"
-            },
-            {
-              "value": "primary",
-              "type": "string"
-            },
-            {
-              "value": "success",
-              "type": "string"
-            },
-            {
-              "value": "warning",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Event summary. Include important status information in the text."
-        },
-        {
-          "name": "details",
-          "docs": "Additional event information in a native details disclosure."
-        },
-        {
-          "name": "start",
-          "docs": "Decorative avatar or other noninteractive marker in place of the icon."
-        }
-      ],
-      "parts": [
-        {
-          "name": "content",
-          "docs": "Event summary, time and disclosure container."
-        },
-        {
-          "name": "details",
-          "docs": "Native details disclosure."
-        },
-        {
-          "name": "dot",
-          "docs": "Decorative event marker."
-        },
-        {
-          "name": "summary",
-          "docs": "Keyboard-accessible details control."
-        },
-        {
-          "name": "time",
-          "docs": "Native time element for a valid ISO date."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-timeline-item": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-toast/ki-toast.tsx",
       "encapsulation": "shadow",
       "tag": "ki-toast",
@@ -10017,6 +12507,16 @@
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
     },
+    "src/components/ki-carousel/ki-carousel.tsx::CarouselLayout": {
+      "declaration": "export type CarouselLayout = 'single' | 'multi-browse' | 'uncontained' | 'hero' | 'full-screen';",
+      "docstring": "",
+      "path": "src/components/ki-carousel/ki-carousel.tsx"
+    },
+    "src/components/ki-carousel/ki-carousel.tsx::CarouselSlideChangeDetail": {
+      "declaration": "export interface CarouselSlideChangeDetail {\n  index: number;\n}",
+      "docstring": "",
+      "path": "src/components/ki-carousel/ki-carousel.tsx"
+    },
     "src/components/ki-checkbox/ki-checkbox.tsx::KiCheckboxSize": {
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
       "docstring": "",
@@ -10031,6 +12531,21 @@
       "declaration": "export interface KiCheckboxGroupChangeDetail {\n  value: string[];\n}",
       "docstring": "",
       "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx"
+    },
+    "src/components/ki-chip/ki-chip.dom.ts::KiChipType": {
+      "declaration": "export type KiChipType = 'filter' | 'input' | 'assist';",
+      "docstring": "",
+      "path": "src/components/ki-chip/ki-chip.dom.ts"
+    },
+    "src/components/ki-chip/ki-chip.tsx::KiChipSize": {
+      "declaration": "export type KiChipSize = 'sm' | 'md';",
+      "docstring": "",
+      "path": "src/components/ki-chip/ki-chip.tsx"
+    },
+    "src/components/ki-chip-group/ki-chip-group.tsx::KiChipReorderDetail": {
+      "declaration": "export interface KiChipReorderDetail {\n  value: string;\n  fromIndex: number;\n  toIndex: number;\n}",
+      "docstring": "",
+      "path": "src/components/ki-chip-group/ki-chip-group.tsx"
     },
     "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
@@ -10112,6 +12627,26 @@
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
     },
+    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemType": {
+      "declaration": "export type KiMenuItemType = 'item' | 'checkbox' | 'radio';",
+      "docstring": "",
+      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
+    },
+    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemTone": {
+      "declaration": "export type KiMenuItemTone = 'neutral' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
+    },
+    "src/components/ki-menu/ki-menu.tsx::KiMenuPlacement": {
+      "declaration": "export type KiMenuPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';",
+      "docstring": "",
+      "path": "src/components/ki-menu/ki-menu.tsx"
+    },
+    "src/components/ki-menu/ki-menu.tsx::KiMenuSelectDetail": {
+      "declaration": "export interface KiMenuSelectDetail {\n  value: string;\n  checked?: boolean;\n}",
+      "docstring": "",
+      "path": "src/components/ki-menu/ki-menu.tsx"
+    },
     "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
       "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",
       "docstring": "",
@@ -10187,11 +12722,6 @@
       "docstring": "",
       "path": "src/components/ki-textarea/ki-textarea.tsx"
     },
-    "src/components/ki-timeline-item/ki-timeline-item.tsx::TimelineTone": {
-      "declaration": "export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger';",
-      "docstring": "",
-      "path": "src/components/ki-timeline-item/ki-timeline-item.tsx"
-    },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
@@ -10201,11 +12731,6 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
-    },
-    "src/components/ki-timeline/ki-timeline.time.ts::TimelineOrder": {
-      "declaration": "export type TimelineOrder = 'newest-first' | 'oldest-first';",
-      "docstring": "",
-      "path": "src/components/ki-timeline/ki-timeline.time.ts"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",

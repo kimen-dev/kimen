@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta isTemplate />
+
+# Carousel
+
+Use `ki-carousel` for a short sequence of related slides. Give the region an
+accessible name and place one `ki-carousel-item` in the default slot for each
+slide.
+
+```html
+<ki-carousel label="Kimen highlights" layout="multi-browse" loop>
+  <ki-carousel-item><strong>Guarded catalog</strong></ki-carousel-item>
+  <ki-carousel-item><strong>Themes</strong></ki-carousel-item>
+  <ki-carousel-item><strong>Adapters</strong></ki-carousel-item>
+</ki-carousel>
+```
+
+The default `single` layout uses `slides-per-view` and `slides-per-move`.
+`multi-browse` shows large, medium and small items. `hero` keeps one large
+item and a small preview. `uncontained` clips the next preview at the
+viewport edge. `full-screen` gives each slide the viewport height and scrolls
+vertically. In the preview slot, use decorative media. Keep headings, links
+and other content in the item's default slot.
+
+Set `current` or use `next()`, `previous()` and `goTo(index)`. Positions
+are one-based. `ki-slide-change` bubbles with `{ index }` when the leading
+position changes. The noninteractive indicator follows it. The neutral
+catalog exposes the event so a surface can bind a declared action.
+
+When `autoplay` is set in milliseconds, a reader can pause and restart
+rotation. Hover suspends rotation, focus stops it until Play, and reduced
+motion keeps it off. Localize the region label, control labels, role
+descriptions and the slide naming template. The viewport supports arrows,
+Home and End. The buttons retain focus while moving slides.
+
+Use `--ki-carousel-gap` and `--ki-carousel-radius` to tune the layout, and
+`--ki-carousel-control-bg` and `--ki-carousel-control-shadow` to style the
+controls. The slide's surface tokens start with `--ki-carousel-item-`. For
+pagination styling, use the shipped `ki-indicator` tokens.
