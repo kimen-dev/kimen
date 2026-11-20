@@ -1,0 +1,820 @@
+{
+  "component": {
+    "attributes": {
+      "accept": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Comma-separated extensions or MIME types. Empty hides the attachment surface.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "attach-label": {
+        "default": "'Attach files'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the file picker button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "attachments-label": {
+        "default": "'Attachments'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the attachment list.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Excludes the composer from interaction and native form data.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "file-count-message": {
+        "default": "'{name} exceeds the maximum number of attachments.'",
+        "deprecatedSince": null,
+        "description": "Localized count rejection. The {name} marker is replaced with the file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "file-size-message": {
+        "default": "'{name} exceeds the file size limit.'",
+        "deprecatedSince": null,
+        "description": "Localized size rejection. The {name} marker is replaced with the file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "file-type-message": {
+        "default": "'{name} has an unsupported file type.'",
+        "deprecatedSince": null,
+        "description": "Localized type rejection. The {name} marker is replaced with the file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required accessible name of the text field. Supply it even with a placeholder.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max-files": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum count of attached files. Omit for no count limit.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "max-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum attachment size in bytes per file. Omit for no size limit.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional key for the text in native form data. Files are carried by ki-submit.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "placeholder": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hint displayed while the text field is empty.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "remove-label": {
+        "default": "'Remove'",
+        "deprecatedSince": null,
+        "description": "Prefix of an attachment's remove button name, followed by the file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "send-label": {
+        "default": "'Send'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the Send button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "status": {
+        "default": "'idle'",
+        "deprecatedSince": null,
+        "description": "Application-owned request state. Only idle can send; streaming exposes Stop.",
+        "replacement": null,
+        "required": false,
+        "type": "\"idle\" | \"streaming\" | \"submitted\" | undefined"
+      },
+      "stop-label": {
+        "default": "'Stop generating'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the Stop button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "submit-on": {
+        "default": "'enter'",
+        "deprecatedSince": null,
+        "description": "Send with Enter or with Control/Command+Enter. Shift+Enter always adds a line.",
+        "replacement": null,
+        "required": false,
+        "type": "\"enter\" | \"mod-enter\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Current draft text; the value attribute provides the form reset default.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "writing-message": {
+        "default": "'Writing…'",
+        "deprecatedSince": null,
+        "description": "Visible polite status while the assistant streams.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-button-ghost-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-sm-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small control track height, 32 CSS px at the default root size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-sm-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-action-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default spacing between attachments and toolbar controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional whole backdrop filter behind the composer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised surface behind the prompt composer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional background image painted above the composer surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline around the composer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline thickness around the composer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-editor-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block inset for the native text field and its sizer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-editor-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline inset for the native text field and its sizer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-feedback-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface immediately behind attachment rejection text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-feedback-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Attachment rejection text on the composer surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Draft text on the composer surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-max-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum height of the draft before the textarea scrolls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-min-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum height of the editable draft.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset and spacing between rows in the composer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Placeholder and writing status on the composer surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-prompt-input-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the composer surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A multiline assistant composer with local file attachments and send and stop requests.",
+    "events": {
+      "ki-stop": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Requests that the application stop its streaming response.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      },
+      "ki-submit": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Requests a send with original text and a snapshot of accepted local files.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiPromptInputSubmitDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The toolbar with attachment, tool and message actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "attach": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native file-picker button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "attachments": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The labelled attachment list.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "feedback": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The polite announcement for rejected attachments.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "field": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The painted composer enclosure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "send": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native Send button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "status": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The polite announcement for the streaming state.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "stop": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native Stop button, visible while streaming.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "textarea": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native growing text control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "tools": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The container for the tools slot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "accept": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Comma-separated extensions or MIME types. Empty hides the attachment surface.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "attachLabel": {
+        "default": "'Attach files'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the file picker button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "attachmentsLabel": {
+        "default": "'Attachments'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the attachment list.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Excludes the composer from interaction and native form data.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "fileCountMessage": {
+        "default": "'{name} exceeds the maximum number of attachments.'",
+        "deprecatedSince": null,
+        "description": "Localized count rejection. The {name} marker is replaced with the file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "fileSizeMessage": {
+        "default": "'{name} exceeds the file size limit.'",
+        "deprecatedSince": null,
+        "description": "Localized size rejection. The {name} marker is replaced with the file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "fileTypeMessage": {
+        "default": "'{name} has an unsupported file type.'",
+        "deprecatedSince": null,
+        "description": "Localized type rejection. The {name} marker is replaced with the file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required accessible name of the text field. Supply it even with a placeholder.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "maxFiles": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum count of attached files. Omit for no count limit.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "maxSize": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum attachment size in bytes per file. Omit for no size limit.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional key for the text in native form data. Files are carried by ki-submit.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "placeholder": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hint displayed while the text field is empty.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "removeLabel": {
+        "default": "'Remove'",
+        "deprecatedSince": null,
+        "description": "Prefix of an attachment's remove button name, followed by the file name.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "sendLabel": {
+        "default": "'Send'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the Send button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "status": {
+        "default": "'idle'",
+        "deprecatedSince": null,
+        "description": "Application-owned request state. Only idle can send; streaming exposes Stop.",
+        "replacement": null,
+        "required": false,
+        "type": "\"idle\" | \"streaming\" | \"submitted\" | undefined"
+      },
+      "stopLabel": {
+        "default": "'Stop generating'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the Stop button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "submitOn": {
+        "default": "'enter'",
+        "deprecatedSince": null,
+        "description": "Send with Enter or with Control/Command+Enter. Shift+Enter always adds a line.",
+        "replacement": null,
+        "required": false,
+        "type": "\"enter\" | \"mod-enter\""
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Current draft text; the value attribute provides the form reset default.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "writingMessage": {
+        "default": "'Writing…'",
+        "deprecatedSince": null,
+        "description": "Visible polite status while the assistant streams.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "attachments": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supplemental list items, visible when accept is set. Composer-managed files appear in the same list and alone contribute to ki-submit.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "tools": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Application-owned toolbar controls, such as a model-picker trigger. Use non-submitting controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-prompt-input.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-prompt-input.d.ts",
+    "symbols": {
+      "KiPromptInput": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiPromptInput extends Components.KiPromptInput, HTMLElement {\n}\nexport const KiPromptInput: {\n    prototype: KiPromptInput;\n    new (): KiPromptInput;\n};"
+      },
+      "KiPromptInputStatus": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiPromptInputStatus = 'idle' | 'submitted' | 'streaming';"
+      },
+      "KiPromptInputSubmitDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiPromptInputSubmitDetail {\n    text: string;\n    files: File[];\n}"
+      },
+      "KiPromptInputSubmitOn": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiPromptInputSubmitOn = 'enter' | 'mod-enter';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-prompt-input.js"
+  }
+}

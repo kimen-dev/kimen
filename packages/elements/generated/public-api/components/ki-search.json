@@ -1,0 +1,742 @@
+{
+  "component": {
+    "attributes": {
+      "back-label": {
+        "default": "'Back'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the full-screen Back button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "clear-label": {
+        "default": "'Clear search'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the query clear button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "highlight": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Emphasize literal, case-insensitive matches in suggestion titles.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": "'Search'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the search landmark, input and full-screen dialog.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "loading": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show a loading indicator while the host fetches suggestions.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "loading-label": {
+        "default": "'Loading suggestions'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the loading indicator.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "mode": {
+        "default": "'auto'",
+        "deprecatedSince": null,
+        "description": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels.",
+        "replacement": null,
+        "required": false,
+        "type": "\"auto\" | \"docked\" | \"fullscreen\""
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Name under which the current query is included in form data.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the search view is open. The field opens it on focus, click or input.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "placeholder": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Optional hint displayed inside the empty search field.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "recent-label": {
+        "default": "'Recent searches'",
+        "deprecatedSince": null,
+        "description": "Visible and accessible name of the recent-search group.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "remove-recent-label": {
+        "default": "'Remove {value}'",
+        "deprecatedSince": null,
+        "description": "Accessible name template for recent-query removal. Use {value} for the query title.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "suggestion-count-plural": {
+        "default": "'{count} suggestions'",
+        "deprecatedSince": null,
+        "description": "Polite announcement for zero or multiple suggestions. Use {count} for the number.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "suggestion-count-singular": {
+        "default": "'1 suggestion'",
+        "deprecatedSince": null,
+        "description": "Polite announcement when the list contains one suggestion.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "suggestions-label": {
+        "default": "'Suggestions'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the suggestion listbox.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Current query. Edits and selected suggestions update this property.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-glyph-size-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium glyph for body content (20px at the default root size).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-3xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 3xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The md spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The sm spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-bar-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-bar-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the collapsed and docked bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-bar-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted over the bar fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-bar-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Query ink over the search bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-bar-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum height of the search bar, 56px at the default root size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-bar-placeholder": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Placeholder ink exposed by the Search API.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-bar-placeholder-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default contrast pair for placeholder text over the search bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-bar-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Pill corner of the collapsed and docked bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-control-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Base size of actions and minimum height of search rows.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-group-heading-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font family for the recent-query group heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-input-touch-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum input font size on coarse pointers to avoid focus zoom.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-option-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the focused or hovered suggestion.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-option-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the focused or hovered suggestion.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-option-active-supporting-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Description ink on the focused or hovered suggestion.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-view-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the search view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-view-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised fill of the docked and full-screen view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-view-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted over the view fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-view-divider": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Divider separating the active field and full-screen results.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-view-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink over the search view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-view-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner for the docked view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-view-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting elevation of the docked view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-search-view-supporting-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink for descriptions and the recent-search group label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-bold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body bold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A query field with a responsive view for suggestions, recent searches and results.",
+    "events": {
+      "ki-clear": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The user cleared the query with the clear control or with Escape.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      },
+      "ki-input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The current query after 200 ms of inactivity following an edit.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiSearchValueDetail>"
+      },
+      "ki-remove-recent": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The removed recent query. Hosts can use this to persist the updated history.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiSearchValueDetail>"
+      },
+      "ki-search": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The query to run, emitted on Enter or activation of a suggestion or recent search.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiSearchValueDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "bar": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Collapsed and docked search bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "dialog-bar": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Search bar inside the full-screen view.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native query input in each presentation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "option": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A selectable suggestion in the listbox.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "recent": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Labelled group of recent searches.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "results": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Container around host-rendered results.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "view": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Docked popover or full-screen dialog surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "backLabel": {
+        "default": "'Back'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the full-screen Back button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "clearLabel": {
+        "default": "'Clear search'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the query clear button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "highlight": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Emphasize literal, case-insensitive matches in suggestion titles.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": "'Search'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the search landmark, input and full-screen dialog.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "loading": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show a loading indicator while the host fetches suggestions.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "loadingLabel": {
+        "default": "'Loading suggestions'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the loading indicator.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "mode": {
+        "default": "'auto'",
+        "deprecatedSince": null,
+        "description": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels.",
+        "replacement": null,
+        "required": false,
+        "type": "\"auto\" | \"docked\" | \"fullscreen\""
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Name under which the current query is included in form data.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the search view is open. The field opens it on focus, click or input.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "placeholder": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Optional hint displayed inside the empty search field.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "recentLabel": {
+        "default": "'Recent searches'",
+        "deprecatedSince": null,
+        "description": "Visible and accessible name of the recent-search group.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "removeRecentLabel": {
+        "default": "'Remove {value}'",
+        "deprecatedSince": null,
+        "description": "Accessible name template for recent-query removal. Use {value} for the query title.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "suggestionCountPlural": {
+        "default": "'{count} suggestions'",
+        "deprecatedSince": null,
+        "description": "Polite announcement for zero or multiple suggestions. Use {count} for the number.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "suggestionCountSingular": {
+        "default": "'1 suggestion'",
+        "deprecatedSince": null,
+        "description": "Polite announcement when the list contains one suggestion.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "suggestionsLabel": {
+        "default": "'Suggestions'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the suggestion listbox.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Current query. Edits and selected suggestions update this property.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct ki-search-suggestion children supply suggestion and recent-query data.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "leading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A control or decorative icon at the start of the collapsed or docked bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "results": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Host-rendered results beneath suggestions and recent searches.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "trailing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-search.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-search.d.ts",
+    "symbols": {
+      "KiSearch": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSearch extends Components.KiSearch, HTMLElement {\n}\nexport const KiSearch: {\n    prototype: KiSearch;\n    new (): KiSearch;\n};"
+      },
+      "KiSearchMode": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiSearchMode = 'auto' | 'docked' | 'fullscreen';"
+      },
+      "KiSearchValueDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiSearchValueDetail {\n    value: string;\n}"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-search.js"
+  }
+}

@@ -1,0 +1,127 @@
+:host {
+  display: inline-flex;
+  align-items: var(--_ki-suggestion-align, center);
+  min-inline-size: min(100%, var(--ki-density-target-min));
+  max-inline-size: 100%;
+  min-block-size: var(--ki-density-target-min);
+  font-family: var(--ki-suggestion-font-family);
+}
+
+:host([hidden]),
+:host([data-ki-suggestion-empty]) {
+  display: none;
+}
+
+.surface,
+button {
+  box-sizing: border-box;
+  flex: 1;
+  align-content: center;
+  min-inline-size: 0;
+  border: var(--ki-suggestion-border-width) solid
+    var(--_ki-suggestion-border, var(--ki-suggestion-border));
+  border-radius: var(--_ki-suggestion-radius, var(--ki-suggestion-radius));
+  background-color: var(
+    --_ki-suggestion-state-bg,
+    var(--_ki-suggestion-bg, var(--ki-suggestion-bg))
+  );
+  background-image: var(--_ki-suggestion-bg-image, var(--ki-suggestion-bg-image));
+  backdrop-filter: var(--_ki-suggestion-backdrop-filter, var(--ki-suggestion-backdrop-filter));
+  color: var(--_ki-suggestion-state-fg, var(--_ki-suggestion-fg, var(--ki-suggestion-fg)));
+}
+
+/* In cards this paints behind both text rows. In chips the button paints. */
+.surface {
+  display: var(--_ki-suggestion-surface-display, contents);
+  position: relative;
+  isolation: isolate;
+  gap: var(--ki-suggestion-card-gap);
+  padding-block-end: var(--_ki-suggestion-block-inset, 0);
+}
+
+button {
+  display: grid;
+  position: var(--_ki-suggestion-button-position, relative);
+  min-block-size: var(--ki-suggestion-height);
+  padding-block: var(--_ki-suggestion-block-inset, 0) 0;
+  padding-inline: var(--ki-suggestion-inset);
+  margin: 0;
+  border-width: var(--_ki-suggestion-button-line-width, var(--ki-suggestion-border-width));
+  appearance: none;
+  background-color: var(
+    --_ki-suggestion-button-bg,
+    var(--_ki-suggestion-state-bg, var(--_ki-suggestion-bg, var(--ki-suggestion-bg)))
+  );
+  background-image: var(
+    --_ki-suggestion-button-effect,
+    var(--_ki-suggestion-bg-image, var(--ki-suggestion-bg-image))
+  );
+  backdrop-filter: var(
+    --_ki-suggestion-button-effect,
+    var(--_ki-suggestion-backdrop-filter, var(--ki-suggestion-backdrop-filter))
+  );
+  font-family: inherit;
+  font-size: var(--ki-suggestion-font-size);
+  font-weight: var(--_ki-suggestion-weight, var(--ki-suggestion-weight));
+  line-height: var(--ki-suggestion-line-height);
+  overflow-wrap: anywhere;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* The card surface contains the hit area. The chip expands its own hit area. */
+button::after {
+  position: absolute;
+  z-index: var(--_ki-suggestion-hit-layer, auto);
+  inset-block: min(0px, calc((100% - var(--ki-density-target-min)) / 2));
+  inset-inline: min(0px, calc((100% - var(--ki-density-target-min)) / 2));
+  border-radius: inherit;
+  content: "";
+}
+
+[part="description"] {
+  display: var(--_ki-suggestion-description-display, none);
+  padding-inline: var(--ki-suggestion-inset);
+  color: var(--_ki-suggestion-description-fg, var(--ki-suggestion-card-description-fg));
+  font-size: var(--ki-suggestion-description-size);
+  font-weight: var(--ki-suggestion-weight);
+  line-height: var(--ki-suggestion-description-line-height);
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  :host(:hover) :where(.surface) {
+    --_ki-suggestion-state-bg: var(--_ki-suggestion-hover-bg, var(--ki-suggestion-hover-bg));
+    --_ki-suggestion-state-fg: var(--_ki-suggestion-hover-fg, var(--ki-suggestion-hover-fg));
+    --_ki-suggestion-description-fg: var(--ki-suggestion-card-hover-description-fg);
+  }
+}
+
+.surface:has(> button:is(:active, [data-ki-pressed])) {
+  --_ki-suggestion-state-bg: var(--_ki-suggestion-pressed-bg, var(--ki-suggestion-pressed-bg));
+  --_ki-suggestion-state-fg: var(--_ki-suggestion-pressed-fg, var(--ki-suggestion-pressed-fg));
+  --_ki-suggestion-description-fg: var(--ki-suggestion-card-pressed-description-fg);
+}
+
+.surface:has(> button:focus-visible),
+button:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+button:focus-visible {
+  outline-width: var(--_ki-suggestion-button-line-width, var(--ki-focus-ring-width));
+}
+
+@media (forced-colors: active) {
+  .surface,
+  button {
+    border-color: ButtonText;
+  }
+
+  .surface:has(> button:focus-visible),
+  button:focus-visible {
+    outline-color: Highlight;
+  }
+}

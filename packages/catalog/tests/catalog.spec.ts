@@ -37,15 +37,20 @@ const manifest = JSON.parse(
 ) as { modules: { declarations?: ManifestDeclaration[] }[] };
 
 const componentsRoot = join(packageRoot, '..', 'elements', 'src', 'components');
-const optedInTags = readdirSync(componentsRoot, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory())
-  .map(({ name }) => name)
-  .filter((tag) => {
-    const metadata = JSON.parse(
-      readFileSync(join(componentsRoot, tag, 'component.json'), 'utf8'),
-    ) as { catalog?: boolean };
-    return metadata.catalog === true;
-  })
+const componentMetadata = new Map(
+  readdirSync(componentsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map(({ name }) => [
+      name,
+      JSON.parse(readFileSync(join(componentsRoot, name, 'component.json'), 'utf8')) as {
+        catalog?: boolean;
+        catalogAction?: string;
+      },
+    ]),
+);
+const optedInTags = [...componentMetadata]
+  .filter(([, metadata]) => metadata.catalog === true)
+  .map(([tag]) => tag)
   .sort();
 
 const manifestElements = manifest.modules
@@ -76,11 +81,16 @@ describe('catalog derivation', () => {
       expect(Object.keys(entry.slots).sort()).toEqual(
         (declaration.slots ?? []).map((slot) => slot.name ?? '').sort(),
       );
+      const publicEvents = (declaration.events ?? []).map((event) => event.name).sort();
+      const catalogAction = componentMetadata.get(declaration.tagName)?.catalogAction;
+      if (catalogAction !== undefined) expect(publicEvents).toContain(catalogAction);
       expect(Object.keys(entry.events).sort()).toEqual(
-        (declaration.events ?? []).map((event) => event.name).sort(),
+        catalogAction === undefined ? publicEvents : [catalogAction],
       );
       for (const constraint of Object.values<{ type: string }>(entry.props)) {
-        expect(['boolean', 'number', 'string', 'enum']).toContain(constraint.type);
+        expect(['boolean', 'number', 'number-or-string', 'string', 'enum']).toContain(
+          constraint.type,
+        );
       }
     }
   });
@@ -94,10 +104,16 @@ describe('catalog derivation', () => {
   it.each([
     ['ki-button', 'S18'],
     ['ki-icon-button', 'S17'],
-  ] as const)('S23 %s %s offers four variants and preserves specs using tertiary', (component) => {
+  ] as const)('S23 %s %s offers outline and preserves specs using tertiary', (component) => {
     const variant = catalogData.components[component].props.variant;
     expect(variant.type).toBe('enum');
-    expect([...variant.values].sort()).toEqual(['ghost', 'primary', 'quaternary', 'secondary']);
+    expect([...variant.values].sort()).toEqual([
+      'ghost',
+      'outline',
+      'primary',
+      'quaternary',
+      'secondary',
+    ]);
 
     const props =
       component === 'ki-icon-button'

@@ -1,0 +1,315 @@
+{
+  "component": {
+    "attributes": {
+      "hide-on-scroll": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Hides on downward page scroll and reveals on upward scroll or when an\naction receives focus. Use for secondary actions where content needs room.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for the group, such as \"Formatting\". Supply it in the page's language.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "orientation": {
+        "default": "'horizontal'",
+        "deprecatedSince": null,
+        "description": "Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      "tone": {
+        "default": "'standard'",
+        "deprecatedSince": null,
+        "description": "Surface palette. Use vibrant to emphasize the toolbar with an accent tint.",
+        "replacement": null,
+        "required": false,
+        "type": "\"standard\" | \"vibrant\""
+      },
+      "variant": {
+        "default": "'floating'",
+        "deprecatedSince": null,
+        "description": "Floating leaves placement to the page. Docked fixes the surface to the\nviewport's bottom edge. Reserve space below the content when docking.",
+        "replacement": null,
+        "required": false,
+        "type": "\"docked\" | \"floating\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the standard toolbar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image above the solid surface color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-docked-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline insets for docked actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-docked-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the docked toolbar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-fab-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a floating pill and its companion FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the standard toolbar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between toolbar actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum height of the docked toolbar before its safe area.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Toolbar surface padding.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Radius of the floating pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-scroll-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Duration of the scroll visibility transition.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-scroll-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Easing of the scroll visibility transition.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting elevation of the floating pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-vibrant-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accent background of the vibrant toolbar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-toolbar-vibrant-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground on the vibrant toolbar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Brings frequent page actions together in a floating pill or docked surface.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "toolbar": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named surface containing the grouped actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "hideOnScroll": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Hides on downward page scroll and reveals on upward scroll or when an\naction receives focus. Use for secondary actions where content needs room.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for the group, such as \"Formatting\". Supply it in the page's language.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "orientation": {
+        "default": "'horizontal'",
+        "deprecatedSince": null,
+        "description": "Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      "tone": {
+        "default": "'standard'",
+        "deprecatedSince": null,
+        "description": "Surface palette. Use vibrant to emphasize the toolbar with an accent tint.",
+        "replacement": null,
+        "required": false,
+        "type": "\"standard\" | \"vibrant\""
+      },
+      "variant": {
+        "default": "'floating'",
+        "deprecatedSince": null,
+        "description": "Floating leaves placement to the page. Docked fixes the surface to the\nviewport's bottom edge. Reserve space below the content when docking.",
+        "replacement": null,
+        "required": false,
+        "type": "\"docked\" | \"floating\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct ki-button, ki-icon-button (including toggles), native button\nand ki-divider children. Give every icon-only action an accessible name.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "fab": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A companion ki-fab for the floating variant. It follows the\ntoolbar and has its own Tab stop.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-toolbar.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-toolbar.d.ts",
+    "symbols": {
+      "KiToolbar": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiToolbar extends Components.KiToolbar, HTMLElement {\n}\nexport const KiToolbar: {\n    prototype: KiToolbar;\n    new (): KiToolbar;\n};"
+      },
+      "KiToolbarOrientation": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiToolbarOrientation = 'horizontal' | 'vertical';"
+      },
+      "KiToolbarTone": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiToolbarTone = 'standard' | 'vibrant';"
+      },
+      "KiToolbarVariant": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiToolbarVariant = 'floating' | 'docked';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-toolbar.js"
+  }
+}

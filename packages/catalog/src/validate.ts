@@ -16,13 +16,14 @@
  *
  * What this boundary does NOT protect against (FR-015): markup inertness is
  * a render-path invariant owned by the guarded renderer (spec 028), and a
- * string prop that is not URL-typed is opaque data here — `ki-qr`'s `value`
- * is encoded, never loaded. Catalog validation is a schema boundary, never
+ * plain text prop has no meaning beyond its constraints here — `ki-qr`'s
+ * `value` is encoded, never loaded. Catalog validation is a schema boundary, never
  * content sanitization; a host that renders outside the guarded renderer is
  * outside the guardrail.
  */
 import { z } from 'zod';
 
+import { DIALOG_TAG, isDialogCommand, isDialogInvoker } from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
 import { contentModelViolation, isNativePrimitive } from './primitives.js';
 import { sourceTags } from './source-reference.js';
@@ -30,7 +31,7 @@ import { isUrlProp, urlViolation } from './url-policy.js';
 
 /** One prop constraint, exactly as narrow as the manifest documents. */
 export interface CatalogPropConstraint {
-  readonly type: 'boolean' | 'enum' | 'number' | 'string';
+  readonly type: 'boolean' | 'enum' | 'number' | 'number-or-string' | 'string';
   /** Closed value set offered to authors (present exactly when `type` is `enum`). */
   readonly values?: readonly string[];
   /** Deprecated enum values accepted when validating existing specs. */
@@ -80,6 +81,8 @@ export interface CatalogEntry {
   readonly props: Readonly<Record<string, CatalogPropConstraint>>;
   readonly slots: Readonly<Record<string, string>>;
   readonly events: Readonly<Record<string, string>>;
+  /** Which declared event dispatches an action when the component has several events. */
+  readonly activationEvent?: string;
 }
 
 /**
@@ -108,7 +111,8 @@ export interface UiSpecNode {
   /**
    * Optional stable identity (spec 035, D2): matches `NODE_ID_GRAMMAR`, is
    * unique within its document (and within a live surface), and is the only
-   * address a live-surface operation can target. Never written to the DOM.
+   * address a live-surface operation can target. A dialog invoker may also
+   * reference it using `commandfor`. The logical id stays in the spec.
    */
   readonly id?: string | undefined;
   readonly component: string;
@@ -134,6 +138,8 @@ export interface ValidationIssue {
     | 'duplicate-id'
     | 'forbidden-key'
     | 'invalid-child'
+    | 'invalid-command'
+    | 'invalid-command-target'
     | 'invalid-id'
     | 'invalid-prop-type'
     | 'malformed-spec'
@@ -176,7 +182,7 @@ export const FORBIDDEN_KEYS: ReadonlySet<string> = new Set([
 /**
  * The node id grammar (spec 035 FR-001): lowercase ASCII letters and digits,
  * then up to 63 of those, `-` or `_`. Narrow on purpose — ids are agent
- * data used only as map keys, never as DOM ids or selectors.
+ * data used for lookups in the neutral UI spec, never as DOM ids or selectors.
  */
 export const NODE_ID_GRAMMAR = /^[a-z0-9][a-z0-9_-]{0,63}$/u;
 
@@ -443,8 +449,8 @@ function rangeViolation(value: number, constraint: CatalogPropConstraint): strin
 interface CheckContext {
   readonly declaredActions: ReadonlySet<string>;
   readonly entries: Readonly<Record<string, CatalogEntry>>;
-  readonly ids: Set<string>;
   readonly issues: ValidationIssue[];
+  readonly scope: NodeValidationScope;
   readonly allowedUrlOrigins: readonly string[] | undefined;
 }
 
@@ -472,6 +478,10 @@ function checkUrl(
       value,
     });
   }
+}
+
+export function acceptsNumberOrString(value: unknown): value is number | string {
+  return typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value));
 }
 
 export function acceptsEnumValue(value: unknown, constraint: CatalogPropConstraint): boolean {
@@ -508,6 +518,17 @@ function checkProp(
         issues.push({
           code: 'prop-out-of-range',
           message: `${component} prop "${name}" must be ${range}`,
+          path,
+          value: String(value),
+        });
+      }
+      return;
+    }
+    case 'number-or-string': {
+      if (!acceptsNumberOrString(value)) {
+        issues.push({
+          code: 'invalid-prop-type',
+          message: `${component} prop "${name}" expects a number or string value`,
           path,
           value: String(value),
         });
@@ -573,7 +594,7 @@ function checkRequiredProps(
 function checkId(
   node: UiSpecNode,
   path: string,
-  ids: Set<string>,
+  ids: Map<string, string>,
   issues: ValidationIssue[],
 ): void {
   if (node.id === undefined) {
@@ -597,7 +618,52 @@ function checkId(
     });
     return;
   }
-  ids.add(node.id);
+  ids.set(node.id, node.component);
+}
+
+/** One validated tree, or the set of roots that make up a live surface. */
+export interface NodeValidationScope {
+  readonly ids: Map<string, string>;
+  readonly commandTargets: { readonly id: string; readonly path: string }[];
+}
+
+function checkDialogCommand(node: UiSpecNode, path: string, context: CheckContext): void {
+  const command = node.props?.['command'];
+  const target = node.props?.['commandfor'];
+  if (!isDialogInvoker(node.component) || (command === undefined && target === undefined)) {
+    return;
+  }
+  if (!isDialogCommand(command)) {
+    context.issues.push({
+      code: 'invalid-command',
+      message: 'a dialog invoker requires show-modal, close or request-close',
+      path: `${path}.props.command`,
+    });
+  } else if (typeof target !== 'string' || !NODE_ID_GRAMMAR.test(target)) {
+    context.issues.push({
+      code: 'invalid-command-target',
+      message: 'a dialog invoker requires a valid node id in commandfor',
+      path: `${path}.props.commandfor`,
+    });
+  } else {
+    context.scope.commandTargets.push({ id: target, path: `${path}.props.commandfor` });
+  }
+}
+
+/** Resolves references only after every node in the scope has been checked. */
+export function checkCommandTargets(scope: NodeValidationScope): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+  for (const { id, path } of scope.commandTargets) {
+    if (scope.ids.get(id) !== DIALOG_TAG) {
+      issues.push({
+        code: 'invalid-command-target',
+        message: `commandfor "${id}" must refer to a ${DIALOG_TAG} in the same surface`,
+        path,
+        value: id,
+      });
+    }
+  }
+  return issues;
 }
 
 /**
@@ -615,8 +681,8 @@ export function ownEntry<T>(
 }
 
 function checkNode(node: UiSpecNode, path: string, context: CheckContext): void {
-  const { declaredActions, entries, ids, issues } = context;
-  checkId(node, path, ids, issues);
+  const { declaredActions, entries, issues, scope } = context;
+  checkId(node, path, scope.ids, issues);
   const entry = ownEntry(entries, node.component);
   if (entry === undefined) {
     issues.push({
@@ -626,6 +692,7 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
       value: node.component,
     });
   }
+  const priorIssues = issues.length;
   for (const [name, value] of Object.entries(node.props ?? {})) {
     const constraint = ownEntry(entry?.props, name);
     if (entry !== undefined && constraint === undefined) {
@@ -645,6 +712,9 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   }
   if (entry !== undefined) {
     checkRequiredProps(node, entry, path, issues);
+    if (issues.length === priorIssues) {
+      checkDialogCommand(node, path, context);
+    }
     // The image contract requires a description only for informative media.
     if (node.component === 'ki-image' && ownEntry(node.props, 'decorative') !== true) {
       const alt = ownEntry(node.props, 'alt');
@@ -660,9 +730,16 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   }
   if (node.action !== undefined) {
     const native = isNativePrimitive(node.component);
-    if (native || node.component === 'ki-icon' || sourceTags.has(node.component)) {
-      // A primitive (037 D7) or icon (069 S11) composes inside an activator
-      // when it accompanies an action. Source links navigate natively.
+    if (
+      native ||
+      node.component === 'ki-icon' ||
+      node.component === 'ki-feature-icon' ||
+      node.component === 'ki-markdown' ||
+      sourceTags.has(node.component)
+    ) {
+      // Primitives and decorative glyphs never bind their own actions.
+      // Markdown delegates native interaction to its links and copy buttons.
+      // Source links navigate natively.
       issues.push({
         code: 'action-not-allowed',
         message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,
@@ -766,13 +843,15 @@ export interface ValidationContext {
  * in use: neutral-format shape, catalog membership, prop types, required
  * props, numeric bounds, the URL policy, declared actions and slots. Returns
  * the typed spec alongside the report so a caller that will render (spec
- * 028) never re-parses. Never touches untrusted input directly. `ids`
- * carries the node ids already seen when several roots share one surface.
+ * 028) never re-parses. Never touches untrusted input directly. A caller
+ * providing a scope resolves its command references after validating all
+ * participating roots.
  */
 export function validatePlainData(
   data: unknown,
   context: ValidationContext = {},
-  ids = new Set<string>(),
+  scope?: NodeValidationScope,
+  rootPath = 'root',
 ): ValidationReport & { spec?: UiSpec } {
   const parsed = uiSpecSchema.safeParse(data);
   if (!parsed.success) {
@@ -787,13 +866,17 @@ export function validatePlainData(
   }
 
   const issues: ValidationIssue[] = [];
-  checkNode(parsed.data.root, 'root', {
+  const nodeScope = scope ?? { commandTargets: [], ids: new Map<string, string>() };
+  checkNode(parsed.data.root, rootPath, {
     allowedUrlOrigins: context.allowedUrlOrigins,
     declaredActions: new Set(parsed.data.actions ?? []),
     entries: (context.catalog ?? builtInCatalog).components,
-    ids,
     issues,
+    scope: nodeScope,
   });
+  if (scope === undefined) {
+    issues.push(...checkCommandTargets(nodeScope));
+  }
   return { issues, ok: issues.length === 0, spec: parsed.data };
 }
 

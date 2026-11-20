@@ -1,6 +1,14 @@
 {
   "component": {
     "attributes": {
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Secondary text shown below the label in a combobox choice row.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
@@ -19,11 +27,19 @@
       }
     },
     "cssProperties": {},
-    "description": "A declarative data option rendered by its owning `ki-select`.",
+    "description": "A declarative data option rendered by its owning `ki-select` or `ki-combobox`.",
     "events": {},
     "methods": {},
     "parts": {},
     "properties": {
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Secondary text shown below the label in a combobox choice row.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
@@ -45,7 +61,15 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Text label mirrored by the owning select.",
+        "description": "Text label mirrored by the owning choice field.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative content shown before the label in a combobox row.",
         "replacement": null,
         "required": false,
         "type": null

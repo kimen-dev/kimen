@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "markdown": {
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Markdown prose ink uses the Material 3 semantic palette."
+      }
+    }
+  }
+}

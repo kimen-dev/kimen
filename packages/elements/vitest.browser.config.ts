@@ -7,6 +7,7 @@ import { defineConfig } from 'vitest/config';
 
 import { componentRegistrationPlugin } from './scripts/component-registration-plugin.mjs';
 import { measureThemeFonts } from './scripts/measure-theme-fonts.ts';
+import { siteAssetsPlugin } from './scripts/site-assets-plugin.mjs';
 
 // The explicit .ts extension keeps this config importable by plain Node type
 // stripping (scripts/tests/browser-gates.test.mjs loads it without a bundler).
@@ -88,7 +89,7 @@ const visualBaselinePath = (spec: string, name: string, engine: string, platform
 
 export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
-  plugins: [distSourceCoveragePlugin, componentRegistrationPlugin()],
+  plugins: [distSourceCoveragePlugin, componentRegistrationPlugin(), siteAssetsPlugin()],
   optimizeDeps: {
     // dist/components imports @stencil/core/internal/client at runtime.
     // Pre-bundling it up front prevents the mid-run dependency discovery
@@ -184,6 +185,39 @@ export default defineConfig({
             return;
           }
           throw new Error(`Touch target not found: ${selector}`);
+        }),
+        swipeWithCoarsePointer: defineBrowserCommand(async ({ page }, selector: string) => {
+          const session = await cdpSessions.get(page);
+          if (!session) throw new Error('Touch emulation must be enabled before swiping');
+          for (const frame of page.frames()) {
+            const target = frame.locator(selector);
+            if ((await target.count()) === 0) continue;
+            // A synthesized gesture that starts outside the visible viewport is
+            // dropped, so bring the target into view and keep the stroke inside
+            // the part of it the viewport shows (CI runs a smaller window).
+            const element = target.first();
+            await element.scrollIntoViewIfNeeded();
+            const bounds = await element.boundingBox();
+            if (!bounds) throw new Error(`Swipe target is not visible: ${selector}`);
+            const viewport = page.viewportSize();
+            const left = Math.max(bounds.x, 0);
+            const right = Math.min(bounds.x + bounds.width, viewport?.width ?? Infinity);
+            const top = Math.max(bounds.y, 0);
+            const bottom = Math.min(bounds.y + bounds.height, viewport?.height ?? Infinity);
+            const width = right - left;
+            if (width <= 0 || bottom <= top) {
+              throw new Error(`Swipe target is outside the viewport: ${selector}`);
+            }
+            await session.send('Input.synthesizeScrollGesture', {
+              x: left + width * 0.9,
+              y: (top + bottom) / 2,
+              xDistance: -width * 0.8,
+              preventFling: true,
+              gestureSourceType: 'touch',
+            });
+            return;
+          }
+          throw new Error(`Swipe target not found: ${selector}`);
         }),
         // The real computed accessibility tree (Playwright's ariaSnapshot,
         // returned as a YAML role/name outline). Needed for roles set via
@@ -307,6 +341,7 @@ export default defineConfig({
             )) as {
               nodes: {
                 nodeId: string;
+                parentId?: string;
                 childIds?: string[];
                 ignored: boolean;
                 role?: { value?: string };
@@ -330,9 +365,12 @@ export default defineConfig({
                 const property = (name: string): unknown =>
                   node.properties?.find((entry) => entry.name === name)?.value?.value;
                 const live = property('live') ?? null;
+                const parent = node.parentId === undefined ? undefined : byId.get(node.parentId);
                 return {
                   role: node.role?.value ?? '',
                   name: node.name?.value ?? '',
+                  parentRole: parent?.role?.value ?? '',
+                  parentName: parent?.name?.value ?? '',
                   description: node.description?.value ?? '',
                   invalid: property('invalid') ?? 'false',
                   live,

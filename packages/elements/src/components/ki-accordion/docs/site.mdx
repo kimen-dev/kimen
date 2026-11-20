@@ -1,0 +1,30 @@
+---
+title: ki-accordion
+description: Group related native disclosures.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+
+Place [ki-details](../details/) members directly inside the accordion.
+Use `exclusive` to close the open panel when another member opens. Each
+member manages its own focus and emits `ki-toggle` when its native state changes.
+
+```html
+<ki-accordion exclusive>
+  <ki-details open summary="Who can see my workspace?">
+    Only people you invite can see it.
+  </ki-details>
+  <ki-details summary="Can I export my data?">
+    Open Settings, then select Data and Export.
+  </ki-details>
+</ki-accordion>
+```
+
+For a script-free group, serve native details markup and use a shared
+`name` for the group.
+
+## API reference
+
+<CemApi tag="ki-accordion" />
+
+[Open Details in Storybook](/storybook/?path=/docs/docs-components-ki-details--docs)

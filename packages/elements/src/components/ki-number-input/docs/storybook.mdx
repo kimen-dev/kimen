@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-number-input" />
+
+# ki-number-input
+
+NumberInput is a form field for a quantity, amount, or limit. Use a visible
+label and add steppers when nearby values are useful.
+
+```html
+<ki-number-input label="Seats" name="seats" value="3" min="1" max="50" steppers></ki-number-input>
+<ki-number-input label="Timeout" name="timeout" value="30" unit="seconds"></ki-number-input>
+```
+
+The input is the spinbutton and the Tab stop. Arrow keys move by one step.
+Shift with an arrow and Page Up or Page Down move by ten steps. Home and End
+move to a configured bound. Each stepper has its own accessible name.
+Blur clamps values outside the bounds and explains the adjustment.
+
+For HTML, serialize formatting options as JSON in `format`. JavaScript and
+framework bindings pass an `Intl.NumberFormatOptions` object. Form data
+carries the numeric value in plain text. Set `lang` for the display language
+and localize the stepper labels and feedback props with the rest of the form.
+
+Customize stepper fills with `--ki-number-input-stepper-bg` and
+`--ki-number-input-stepper-hover-bg`, and unit ink with
+`--ki-number-input-unit-fg`. The `field`, `input`, `unit`, `decrease`, and
+`increase` parts provide styling hooks.

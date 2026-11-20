@@ -40,7 +40,7 @@
         "$description": "Optional decorative image over a citation marker."
       },
       "backdrop-filter": {
-        "$value": "{ki.effect.no-backdrop-filter}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete backdrop filter for a citation marker."
       },
       "size": {
@@ -68,7 +68,7 @@
         "$description": "Optional decorative image over the citation preview."
       },
       "preview-backdrop-filter": {
-        "$value": "{ki.effect.no-backdrop-filter}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete backdrop filter for the citation preview."
       },
       "preview-border": {
@@ -118,7 +118,7 @@
         "$description": "Optional decorative image over a source card."
       },
       "card-backdrop-filter": {
-        "$value": "{ki.effect.no-backdrop-filter}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete backdrop filter for a source card."
       },
       "card-border": {

@@ -1,0 +1,171 @@
+:host {
+  display: inline-block;
+  max-inline-size: 100%;
+  font-family: var(--ki-typography-family-body);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-body-1);
+
+  --_ki-rating-on: var(--ki-rating-on-fg);
+  --_ki-rating-off: var(--ki-rating-off-fg);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="label"] {
+  display: block;
+  margin-block-end: var(--ki-rating-label-gap);
+  color: var(--ki-rating-label-fg);
+  background-color: var(--ki-rating-label-bg);
+  font-weight: var(--ki-typography-weight-body-medium);
+  overflow-wrap: anywhere;
+}
+
+[part="scale"],
+.marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+[part="scale"] {
+  gap: var(--ki-rating-score-gap);
+}
+
+.marks {
+  gap: var(--ki-rating-gap);
+}
+
+[part="score"] {
+  color: var(--ki-rating-score-fg);
+  background-color: var(--ki-rating-score-bg);
+  overflow-wrap: anywhere;
+}
+
+.stop {
+  display: grid;
+  grid-template-columns: auto;
+}
+
+.stop.half {
+  grid-template-columns: repeat(2, auto);
+}
+
+[part="glyph"] {
+  position: relative;
+  display: block;
+  grid-row: 1;
+  grid-column: 1 / -1;
+  place-self: center center;
+  inline-size: var(--ki-rating-size);
+  block-size: var(--ki-rating-size);
+  pointer-events: none;
+}
+
+[part="glyph"] ki-icon {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: var(--ki-rating-size);
+  block-size: var(--ki-rating-size);
+  font-size: var(--ki-rating-size);
+}
+
+.outline {
+  color: var(--_ki-rating-off);
+  background-color: var(--ki-rating-off-bg);
+}
+
+.fill {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+  background-color: var(--ki-rating-on-bg);
+
+  --_ki-icon-fill: currentcolor;
+}
+
+.fill ki-icon {
+  color: var(--_ki-rating-on);
+}
+
+.fill.half {
+  inline-size: 50%;
+}
+
+[part="choice"] {
+  appearance: none;
+  grid-row: 1;
+  grid-column: 1;
+  min-inline-size: max(
+    var(--ki-rating-target-size),
+    var(--ki-rating-size),
+    var(--ki-density-target-min)
+  );
+  min-block-size: max(
+    var(--ki-rating-target-size),
+    var(--ki-rating-size),
+    var(--ki-density-target-min)
+  );
+  margin: 0;
+  border: 0;
+  border-radius: var(--ki-rating-target-radius);
+  font: inherit;
+  background-color: var(--ki-rating-off-bg);
+  cursor: pointer;
+}
+
+.half [part="choice"] {
+  min-inline-size: max(calc(var(--ki-rating-size) / 2), var(--ki-density-target-min));
+}
+
+[part="choice"] + [part="choice"] {
+  grid-column: 2;
+}
+
+[part="choice"]:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: 0;
+}
+
+@media (hover: hover) {
+  [part="choice"]:hover:enabled {
+    background-color: var(--ki-rating-hover-bg);
+    background-image: var(--ki-rating-hover-bg-image);
+    backdrop-filter: var(--ki-rating-hover-backdrop-filter);
+  }
+}
+
+[part="choice"]:disabled {
+  cursor: not-allowed;
+}
+
+[aria-disabled="true"] {
+  --_ki-rating-on: var(--ki-rating-disabled-fg);
+  --_ki-rating-off: var(--ki-rating-disabled-fg);
+}
+
+@media (forced-colors: active) {
+  [part="scale"] {
+    /* The solid fill and outline both sit against Canvas. */
+    --_ki-rating-on: CanvasText;
+    --_ki-rating-off: CanvasText;
+  }
+
+  [part="scale"][aria-disabled="true"] {
+    --_ki-rating-on: GrayText;
+    --_ki-rating-off: GrayText;
+  }
+
+  [part="glyph"] ki-icon {
+    forced-color-adjust: none;
+  }
+
+  [part="choice"]:focus-visible {
+    outline-color: Highlight;
+  }
+}

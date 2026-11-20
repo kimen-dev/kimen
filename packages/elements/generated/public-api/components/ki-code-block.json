@@ -1,0 +1,482 @@
+{
+  "component": {
+    "attributes": {
+      "copied-label": {
+        "default": "'Copied'",
+        "deprecatedSince": null,
+        "description": "Polite announcement after a successful clipboard write.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "copy-error-label": {
+        "default": "\"Couldn't copy\"",
+        "deprecatedSince": null,
+        "description": "Polite announcement after a failed clipboard write.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "copy-label": {
+        "default": "'Copy code'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the copy button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "copyable": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "filename": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "File name shown in the header beside the language.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "highlight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "highlight-label": {
+        "default": "'Highlighted lines'",
+        "deprecatedSince": null,
+        "description": "Localizable prefix for the accessible description of highlighted lines.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": "'Code'",
+        "deprecatedSince": null,
+        "description": "Figure and scroll area label when there is no language or filename.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "language": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "line-numbers": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show decorative one-based line numbers.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "wrap": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Soft-wrap long lines within the available width.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-code-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Whole backdrop filter for the figure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Solid backing for the header and source.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layer above the solid backing.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Frame and header divider.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the frame and header divider.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-comment": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting syntax ink for comments.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default source ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-focus-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Keyboard focus ring of the scroll area.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-focus-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the scroll area's focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface for source and line numbers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Compact text size for caption and source.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-function": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Syntax ink for function names.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-header-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting language and filename ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-header-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Compact header inset and gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-highlight-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a highlighted line.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-highlight-marker": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline rule identifying a highlighted line.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-highlight-marker-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the highlighted line rule.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-keyword": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Syntax ink for keywords.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line box height for caption and source.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-line-number": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink for the decorative line numbers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-number": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Syntax ink for numbers.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset of the source and leading caption edge.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the figure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-code-string": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Syntax ink for strings.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Presents source code with a named header, syntax colors, line controls and\nclipboard feedback.",
+    "events": {
+      "ki-copy": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "CopyButton reports a successful write with the original source text.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ value: string }>"
+      },
+      "ki-copy-error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "CopyButton reports an unsuccessful clipboard write.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "code": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The monospaced source and its optional gutter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "figure": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Framed surface around the snippet.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "header": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Caption containing the language, filename and copy control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "scroll": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Focusable native code scroll area.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "copiedLabel": {
+        "default": "'Copied'",
+        "deprecatedSince": null,
+        "description": "Polite announcement after a successful clipboard write.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "copyErrorLabel": {
+        "default": "\"Couldn't copy\"",
+        "deprecatedSince": null,
+        "description": "Polite announcement after a failed clipboard write.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "copyLabel": {
+        "default": "'Copy code'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the copy button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "copyable": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "filename": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "File name shown in the header beside the language.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "highlight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "highlightLabel": {
+        "default": "'Highlighted lines'",
+        "deprecatedSince": null,
+        "description": "Localizable prefix for the accessible description of highlighted lines.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": "'Code'",
+        "deprecatedSince": null,
+        "description": "Figure and scroll area label when there is no language or filename.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "language": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "lineNumbers": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show decorative one-based line numbers.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "wrap": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Soft-wrap long lines within the available width.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Literal source text. Escape markup in HTML or supply a text node.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-code-block.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-code-block.d.ts",
+    "symbols": {
+      "KiCodeBlock": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiCodeBlock extends Components.KiCodeBlock, HTMLElement {\n}\nexport const KiCodeBlock: {\n    prototype: KiCodeBlock;\n    new (): KiCodeBlock;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-code-block.js"
+  }
+}

@@ -1,0 +1,117 @@
+:host {
+  display: block;
+  container-type: inline-size;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+  font-size: var(--ki-typography-size-body-1);
+  font-variant-numeric: tabular-nums;
+  color: var(--ki-pagination-item-fg);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+div,
+ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ki-pagination-gap);
+}
+
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.compact {
+  gap: var(--ki-pagination-compact-gap);
+}
+
+.narrow {
+  display: none;
+}
+
+@container (inline-size < 480px) {
+  .wide {
+    display: none;
+  }
+
+  .narrow {
+    display: flex;
+  }
+}
+
+.item {
+  all: unset;
+  box-sizing: border-box;
+  padding-inline: var(--ki-pagination-gap);
+  border-radius: var(--ki-pagination-item-radius);
+  background-color: var(--ki-pagination-item-bg);
+  background-image: var(--ki-pagination-item-bg-image);
+  backdrop-filter: var(--ki-pagination-item-backdrop-filter);
+  font-weight: var(--ki-typography-weight-body-medium);
+  cursor: pointer;
+}
+
+.item,
+[part="gap"] {
+  --_item-size: max(var(--ki-density-target-min), var(--ki-pagination-item-size));
+
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--_item-size);
+  min-block-size: var(--_item-size);
+}
+
+.compact a.item {
+  background-color: var(--ki-pagination-item-hover-bg);
+  color: var(--ki-pagination-item-hover-fg);
+}
+
+nav:dir(ltr) [part="previous"] ki-icon,
+nav:dir(rtl) [part="next"] ki-icon {
+  transform: scaleX(-1);
+}
+
+@media (hover: hover) {
+  .item:not([aria-current]):hover {
+    background-color: var(--ki-pagination-item-hover-bg);
+    color: var(--ki-pagination-item-hover-fg);
+  }
+}
+
+.item[aria-current="page"] {
+  background-color: var(--ki-pagination-current-bg);
+  color: var(--ki-pagination-current-fg);
+}
+
+.item:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+.more {
+  flex-direction: column;
+  gap: var(--ki-pagination-more-gap);
+}
+
+[part="status"] {
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+  text-align: center;
+}
+
+@media (forced-colors: active) {
+  .item[aria-current="page"] {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
+  .item:focus-visible {
+    outline-color: Highlight;
+  }
+}

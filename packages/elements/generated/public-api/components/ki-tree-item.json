@@ -1,0 +1,410 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Keep the row discoverable by keyboard while preventing user activation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "expanded": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether a branch reveals its children. Has no visible effect on a leaf.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native destination of the row. Prefer selection=\"none\" for navigation trees.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "icon-name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative icon. Import the named Kimen glyph before mounting the tree.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "lazy": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Request children on the first empty expansion. Clear it to finish an empty load.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "loading-label": {
+        "default": "'Loading'",
+        "deprecatedSince": null,
+        "description": "Localized text for the spinner status during an outstanding lazy request.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Selected state. The tree keeps it in sync with single selection or fully checked branches.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-disclosure-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Disclosure turn duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-disclosure-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Disclosure turn easing.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-edge-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the surface and checkbox outlines.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the focused row outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the focused row outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of an unselected row hovered by a fine pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text of an unselected row hovered by a fine pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-icon-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default ink of the decorative row icons.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-indent": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline indentation per hierarchy level.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-item-box-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Rounding of the visual checkbox indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-item-box-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the visual checkbox indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-item-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between an optional item icon and its label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-item-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline-end inset of an item row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Rounding of a highlighted item row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-item-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum inline target of a disclosure or checkbox.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-row-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum block size before density adjustment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a selected or checked row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text and glyph ink on a selected row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tree-touch-row-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum row block size on a coarse pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "An item or expandable branch inside a ki-tree.",
+    "events": {
+      "ki-collapse": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted when an existing branch collapses.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
+      },
+      "ki-expand": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted when an existing branch expands.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
+      },
+      "ki-load": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted once when an empty lazy branch first opens. The listener supplies the children.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "checkbox": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Check-state indicator and hit area in multiple selection.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "disclosure": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading hit area and direction indicator of a branch.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "group": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The region containing the expanded child items.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible row text or native destination link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "row": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The painted and focus-highlighted item row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Keep the row discoverable by keyboard while preventing user activation.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "expanded": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether a branch reveals its children. Has no visible effect on a leaf.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native destination of the row. Prefer selection=\"none\" for navigation trees.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "iconName": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional decorative icon. Import the named Kimen glyph before mounting the tree.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "lazy": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Request children on the first empty expansion. Clear it to finish an empty load.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "loadingLabel": {
+        "default": "'Loading'",
+        "deprecatedSince": null,
+        "description": "Localized text for the spinner status during an outstanding lazy request.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Selected state. The tree keeps it in sync with single selection or fully checked branches.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The row label and directly nested ki-tree-item children.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-tree-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-tree-item.d.ts",
+    "symbols": {
+      "KiTreeItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiTreeItem extends Components.KiTreeItem, HTMLElement {\n}\nexport const KiTreeItem: {\n    prototype: KiTreeItem;\n    new (): KiTreeItem;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-tree-item.js"
+  }
+}

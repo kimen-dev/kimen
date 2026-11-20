@@ -181,5 +181,5 @@ Feature: Neutral runtime catalog
   Scenario: A deprecated enum value is not offered to agents but still validates
     Given the manifest documents "tertiary" as a deprecated button variant
     When the catalog is generated
-    Then the catalog offers exactly "primary", "secondary", "quaternary" and "ghost" for both button variants
+    Then the catalog offers exactly "primary", "secondary", "quaternary", "ghost" and "outline" for both button components
     And existing UI specs using "tertiary" still validate and render

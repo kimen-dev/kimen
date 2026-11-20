@@ -1,0 +1,159 @@
+{
+  "component": {
+    "attributes": {
+      "currency": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "format-style": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.",
+        "replacement": null,
+        "required": false,
+        "type": "\"decimal\" | \"percent\" | \"unit\" | undefined"
+      },
+      "maximum-fraction-digits": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum number of fraction digits.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "minimum-fraction-digits": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum number of fraction digits.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "notation": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Use compact notation for abbreviated large numbers. Omit for standard notation.",
+        "replacement": null,
+        "required": false,
+        "type": "\"compact\" | undefined"
+      },
+      "unit": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\".",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-format-number-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default body font family for ki-format-number on a bare page.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Displays a raw number using local number conventions and tabular figures.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "currency": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "formatStyle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.",
+        "replacement": null,
+        "required": false,
+        "type": "\"decimal\" | \"percent\" | \"unit\" | undefined"
+      },
+      "maximumFractionDigits": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum number of fraction digits.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "minimumFractionDigits": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum number of fraction digits.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "notation": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Use compact notation for abbreviated large numbers. Omit for standard notation.",
+        "replacement": null,
+        "required": false,
+        "type": "\"compact\" | undefined"
+      },
+      "unit": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\".",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-format-number.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-format-number.d.ts",
+    "symbols": {
+      "KiFormatNumber": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiFormatNumber extends Components.KiFormatNumber, HTMLElement {\n}\nexport const KiFormatNumber: {\n    prototype: KiFormatNumber;\n    new (): KiFormatNumber;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-format-number.js"
+  }
+}

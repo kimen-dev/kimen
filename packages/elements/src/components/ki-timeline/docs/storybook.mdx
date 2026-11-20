@@ -1,0 +1,14 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as Stories from '../ki-timeline.stories';
+
+<Meta title="Docs/Components/ki-timeline" />
+
+# ki-timeline
+
+Give the list a name and place dated events in direct `ki-timeline-item`
+children. Change `order` to switch the reading and keyboard order. The
+same list and timestamp semantics apply in right-to-left content.
+
+<Canvas of={Stories.Playground} />
+<Canvas of={Stories.OldestFirst} />
+<Canvas of={Stories.RightToLeft} />

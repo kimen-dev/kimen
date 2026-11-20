@@ -196,7 +196,7 @@ describe('hand-built catalog values', () => {
 describe('hand-built catalog values and reserved attribute names (FR-015)', () => {
   // A hand-built catalog may declare a reserved name that createCatalog
   // rejects (S19). The renderers and the live surface re-check every prop
-  // name, so spec data never writes style, class, slot or id onto an element.
+  // name, so spec data cannot write renderer-owned attributes.
   function handBuiltWith(name: string): Catalog {
     return {
       catalogSchemaVersion: catalogData.catalogSchemaVersion,
@@ -221,6 +221,7 @@ describe('hand-built catalog values and reserved attribute names (FR-015)', () =
     ['id', 'checkout'],
     ['Class', 'ki-overlay'],
     ['STYLE', 'position:fixed;inset:0'],
+    ['data-ki-markdown-origins', '["https://outside.example"]'],
   ] as const;
 
   for (const [name, value] of reserved) {

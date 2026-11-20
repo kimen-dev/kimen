@@ -4,6 +4,7 @@ import type { Config } from '@stencil/core';
 import { reactOutputTarget } from '@stencil/react-output-target';
 import { vueOutputTarget } from '@stencil/vue-output-target';
 
+import { compactButtonPalette } from './scripts/compact-button-palette';
 import { readComponentFormBindings } from './scripts/component-metadata.mjs';
 
 // Form controls re-dispatch native input/change events across the shadow
@@ -21,6 +22,7 @@ export const config: Config = {
   // cold build. The regular TypeScript gate still checks those specs and the
   // gallery fixtures after the build has produced the public types.
   tsconfig: 'tsconfig.stencil.json',
+  rollupPlugins: { after: [compactButtonPalette] },
   outputTargets: [
     { type: 'dist', esmLoaderPath: '../loader' },
     { type: 'dist-custom-elements', customElementsExportBehavior: 'single-export-module' },

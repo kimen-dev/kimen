@@ -354,8 +354,7 @@ function galleryAnimations(gallery: HTMLElement): Animation[] {
  * hovered would be blamed for the frame the animation moved on its own — and
  * a host still translating is one Playwright refuses to hover at all.
  * `running` covers the delay phase too, so staggered entrances (avatar-group)
- * are waited out, not raced. Indeterminate loops never finish and are left
- * out: none of the measured galleries pairs one with a hover rule.
+ * have time to settle.
  */
 async function settleEntryMotion(gallery: HTMLElement): Promise<void> {
   const deadline = Date.now() + ENTRY_MOTION_SETTLE_DEADLINE_MS;
@@ -414,26 +413,41 @@ async function repaintingSubjects(
 ): Promise<{ repainting: string[]; unreached: string[] }> {
   await park();
   await settleEntryMotion(gallery);
-  const resting = paintSignature(gallery);
-  const repainting: string[] = [];
-  const unreached: string[] = [];
-  for (const [subject, label] of subjects) {
-    try {
-      await userEvent.hover(subject);
-    } catch {
-      // Visible but not reachable by a pointer (covered, or moving). Recorded
-      // rather than dropped: a measurement that quietly shrinks is a green
-      // result about nothing.
-      unreached.push(label);
-      continue;
+  // Freeze existing loops such as the streaming caret before sampling paint.
+  // Animations started by hover still run and contribute to the comparison.
+  const runningLoops = galleryAnimations(gallery).filter(
+    (animation) =>
+      animation.playState === 'running' && animation.effect?.getTiming().iterations === Infinity,
+  );
+  try {
+    for (const animation of runningLoops) animation.pause();
+    await Promise.all(runningLoops.map((animation) => animation.ready));
+    const resting = paintSignature(gallery);
+    const repainting: string[] = [];
+    const unreached: string[] = [];
+    for (const [subject, label] of subjects) {
+      try {
+        await userEvent.hover(subject);
+      } catch {
+        // A covered or moving subject can be visible and still unreachable.
+        unreached.push(label);
+        continue;
+      }
+      await nextFrame();
+      if (paintSignature(gallery) !== resting) {
+        repainting.push(label);
+      }
     }
-    await nextFrame();
-    if (paintSignature(gallery) !== resting) {
-      repainting.push(label);
+    await park();
+    return {
+      repainting: [...new Set(repainting)].sort(),
+      unreached: [...new Set(unreached)].sort(),
+    };
+  } finally {
+    for (const animation of runningLoops) {
+      if (animation.playState === 'paused') animation.play();
     }
   }
-  await park();
-  return { repainting: [...new Set(repainting)].sort(), unreached: [...new Set(unreached)].sort() };
 }
 
 /**

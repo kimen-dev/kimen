@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="base"] {
+  padding: calc(var(--ki-tree-padding) * var(--ki-density-space-scale));
+  border: var(--ki-tree-edge-width) solid var(--ki-tree-edge);
+  border-radius: var(--ki-tree-radius);
+  background-color: var(--ki-tree-bg);
+  background-image: var(--ki-tree-bg-image);
+  backdrop-filter: var(--ki-tree-backdrop-filter);
+  color: var(--ki-tree-fg);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-body-1);
+}
+
+@media (forced-colors: active) {
+  [part="base"] {
+    border-color: CanvasText;
+    background-image: none;
+    backdrop-filter: none;
+  }
+}

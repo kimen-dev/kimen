@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "accordion": {
+      "divider-width": {
+        "$value": "{ki.outline.hairline-width}",
+        "$description": "Width of the separator between accordion rows."
+      }
+    }
+  }
+}

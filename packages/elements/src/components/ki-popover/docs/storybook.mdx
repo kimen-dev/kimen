@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-popover" />
+
+# ki-popover
+
+Anchor non-modal filters, details, or a small form to a native or Kimen button. The default slot holds the content, and `label` gives a dialog popover its accessible name.
+
+```html
+<ki-button id="project-filters" type="button" variant="secondary">Filters</ki-button>
+<ki-popover for="project-filters" label="Project filters">
+  <ki-checkbox checked>Active projects</ki-checkbox>
+</ki-popover>
+```
+
+The trigger exposes the expanded state. Escape closes the popover and restores trigger focus. Tab can reach the surrounding page. Use `kind="toggletip"` for a polite text announcement that keeps focus on the trigger.
+
+The default placement is `bottom-start`. Change it with `placement` and hide the arrow with `arrow="false"`. Use `open` to update visibility from application state. Listen for `ki-open` and `ki-close` to observe the result.
+
+## Rich toggletip
+
+Use `appearance="rich"` with `kind="toggletip"` for an explanation with
+actions. The trigger opens a named non-modal dialog and moves focus to its
+first action or the panel. Escape returns focus to the trigger.
+
+```html
+<ki-button id="contrast-info" type="button" variant="ghost">Contrast mode</ki-button>
+<ki-popover for="contrast-info" kind="toggletip" appearance="rich" label="About contrast mode" arrow="false">
+  <strong>Contrast mode</strong>
+  <p>Kimen follows the system setting.</p>
+  <ki-button type="button" size="sm" variant="ghost">Learn more</ki-button>
+</ki-popover>
+```
+
+Customize both rich surfaces with the `--ki-tooltip-rich-*` tokens.

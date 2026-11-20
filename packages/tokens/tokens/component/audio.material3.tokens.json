@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "audio": {
+      "speed-radius": {
+        "$value": "{ki.control.compact-pill.radius}",
+        "$description": "Material 3 rounded corner shape for the speed control."
+      }
+    }
+  }
+}

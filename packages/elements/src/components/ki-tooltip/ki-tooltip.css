@@ -263,12 +263,93 @@
   display: none;
 }
 
+.tooltip:where(.rich) {
+  position-anchor: auto;
+  scroll-margin-block: var(--_ki-tooltip-offset);
+  max-inline-size: min(var(--ki-tooltip-rich-max-width), 100dvi);
+  padding-block: calc(var(--ki-tooltip-rich-padding-block) * var(--ki-density-space-scale));
+  padding-inline: calc(var(--ki-tooltip-rich-padding-inline) * var(--ki-density-space-scale));
+  border: var(--ki-tooltip-rich-border-width) solid var(--ki-tooltip-rich-border-color);
+  border-radius: var(--ki-tooltip-rich-radius);
+  background-color: var(--ki-tooltip-rich-bg);
+  background-image: var(--ki-tooltip-rich-bg-image);
+  backdrop-filter: var(--ki-tooltip-rich-backdrop-filter);
+  box-shadow: var(--ki-tooltip-rich-shadow);
+  color: var(--ki-tooltip-rich-fg);
+  font-size: var(--ki-tooltip-rich-font-size);
+  font-weight: var(--ki-tooltip-rich-font-weight);
+  line-height: var(--ki-tooltip-rich-line-height);
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
+.tooltip.rich:popover-open {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
+.tooltip.rich::before {
+  content: none;
+}
+
+.rich-heading {
+  display: block;
+  color: var(--ki-tooltip-rich-heading-fg);
+  font-family: var(--ki-tooltip-rich-heading-family);
+  font-size: var(--ki-tooltip-rich-heading-size);
+  font-weight: var(--ki-tooltip-rich-heading-weight);
+}
+
+.rich-body {
+  margin: 0;
+}
+
+.rich-heading:not(:last-child) {
+  margin-block-end: var(--ki-tooltip-rich-heading-gap);
+}
+
+/* Extend the invisible hit area across the gap facing the trigger. */
+.tooltip.rich::after {
+  --_ki-tooltip-bridge: calc(-1 * (var(--ki-tooltip-offset) + var(--ki-tooltip-rich-border-width)));
+
+  position: absolute;
+  inset: 0;
+  content: "";
+  z-index: -1;
+}
+
+.rich[data-side="top"]::after {
+  inset-block-end: var(--_ki-tooltip-bridge);
+}
+
+.rich[data-side="bottom"]::after {
+  inset-block-start: var(--_ki-tooltip-bridge);
+}
+
+.rich[data-side="start"]::after {
+  inset-inline-end: var(--_ki-tooltip-bridge);
+}
+
+.rich[data-side="end"]::after {
+  inset-inline-start: var(--_ki-tooltip-bridge);
+}
+
 /* The forced palette replaces the image with an opaque Canvas fill.
  * The browser's thin border keeps the surface edge visible in that palette. */
 @media (forced-colors: active) {
   .tooltip {
     background: Canvas;
     border: thin solid CanvasText;
+  }
+
+  .tooltip:where(.rich) {
+    backdrop-filter: none;
+    color: CanvasText;
+  }
+
+  .rich-heading {
+    color: inherit;
   }
 
   /* On Canvas, the arrow is drawn in the text colour or it is not drawn. */

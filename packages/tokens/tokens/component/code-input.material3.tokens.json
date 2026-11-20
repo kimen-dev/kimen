@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "code-input": {
+      "radius": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Code cell corner radius on the Material 3 shape scale."
+      }
+    }
+  }
+}

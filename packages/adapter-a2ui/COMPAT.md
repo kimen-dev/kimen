@@ -91,18 +91,16 @@ basic ids] } }`. The A2UI MIME type is a transport concern: 1.0 names it
 This table is the **A2UI 0.9.1** matrix (spec 029); the 1.0 matrix is under
 [A2UI 1.0](#a2ui-10) below.
 
-`mapped` types render as the listed `ki-*` components. `inline` types carry no
-element of their own. Their resolved string becomes inert text in the parent
-slot. A direct Text child of Row or Column gets a neutral stack to occupy its
-own layout item. `unmapped` types degrade per node to a fixed fallback that carries no
-agent-supplied content (scenarios S4/S11); a type outside the basic catalog
-degrades the same way. `forbidden` types reject the whole message on security
-grounds (scenario S7). A property the basic catalog does not declare for the
-type rejects the message (`unknown-property`, scenario S9).
+`mapped` types render as the listed `ki-*` components. `unmapped` types degrade
+per node to a fixed fallback that carries no agent-supplied content
+(scenarios S4/S11). A type outside the basic catalog degrades the same way.
+`forbidden` types reject the whole message on security grounds (scenario S7).
+A property the basic catalog does not declare for the type rejects the
+message (`unknown-property`, scenario S9).
 
 | A2UI type     | Coverage  | Catalog counterpart           |
 | ------------- | --------- | ----------------------------- |
-| Text          | inline    | —                             |
+| Text          | mapped    | ki-markdown                   |
 | Row           | mapped    | ki-stack                      |
 | Column        | mapped    | ki-stack                      |
 | List          | mapped    | ki-list, ki-list-item         |
@@ -112,23 +110,29 @@ type rejects the message (`unknown-property`, scenario S9).
 | Button        | mapped    | ki-button                     |
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
-| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-checkbox-group, ki-checkbox |
+| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-checkbox-group, ki-checkbox, ki-combobox, ki-option |
 | Image         | mapped    | ki-image                      |
 | Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
-| AudioPlayer   | unmapped  | —                             |
-| Modal         | unmapped  | —                             |
-| Slider        | unmapped  | —                             |
-| DateTimeInput | unmapped  | —                             |
+| AudioPlayer   | mapped    | ki-audio                      |
+| Modal         | mapped    | ki-button, ki-dialog          |
+| Slider        | mapped    | ki-slider                     |
+| DateTimeInput | mapped    | ki-time-input                 |
 | html          | forbidden | —                             |
 | RawHtml       | forbidden | —                             |
 | script        | forbidden | —                             |
 | iframe        | forbidden | —                             |
 
 Row maps to `ki-stack direction="row"` and Column uses the default column
-stack. Both retain their children in order at every depth. An inline or
-empty root still uses the `ki-card` fallback to satisfy the guarded renderer's
-single root requirement.
+stack. Both retain their children in order at every depth. An empty root
+uses the `ki-card` fallback to satisfy the guarded renderer's single root
+requirement.
+
+Content `Text` in both dialects passes its resolved source as a text node
+to `ki-markdown`. Markdown links use Kimen's URL policy, images are disabled,
+and raw HTML inside the source appears as literal text. Text used in button
+and modal trigger labels stays literal. The `html` and `RawHtml` component
+types still reject the whole message.
 
 ## Client functions
 
@@ -186,17 +190,40 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
   image with a missing or blank label uses the per-node fallback and reports
   `missing-image-alt`. `cover` and `contain` pass through to `fit`. Other fit
   values and the `variant` size hint use the `ki-image` defaults.
+- `AudioPlayer.url` becomes `ki-audio` `src` and passes through Kimen's
+  guarded URL policy, which accepts HTTP(S) and relative URLs. An unresolved
+  URL binding defers the player until the data arrives. The optional
+  `description` supplies the title and group name. Playback controls stay
+  local, and the basic catalog leaves transcript links and speed presets to
+  direct `ki-audio` consumers. This mapping applies to both version families.
 - `Button.variant`: `primary` becomes `variant="primary"`, `borderless`
   becomes `variant="ghost"`, `default` keeps the catalog default.
+- `Modal`: a `Button` or `Text` trigger opens a `ki-dialog` using
+  `show-modal`. The referenced content becomes the dialog body and a
+  `Close` button in the footer dismisses it. The heading uses the trigger's
+  resolved text or defaults to `Dialog`. An empty trigger label defaults to
+  `Open dialog`. Other trigger types degrade (`unsupported-variant`).
+  An explicitly declared Button action is still relayed.
 - `TextField.variant`: `longText` becomes `ki-textarea`, `obscured` becomes
   `ki-input type="password"`, `number` and `shortText` become `ki-input`;
   `validationRegexp` is not evaluated.
-- `ChoicePicker`: `mutuallyExclusive` becomes `ki-radio-group` with the first
-  selected value. `multipleSelection` becomes a `ki-checkbox-group` with
-  a checkbox per option and checked states from the selected value list.
-  Provide a label to name either group. An unlabeled multiple-selection
-  picker uses the accessible fallback. `displayStyle` and `filterable`
-  are not rendered.
+- `DateTimeInput` renders `ki-time-input` when `enableTime` is `true` and
+  `enableDate` is `false` or omitted. Its `label` and `value` can come from
+  bindings. The field keeps the hour and minute from `HH:mm` or `HH:mm:ss`.
+  An absent or empty value leaves the field empty. An invalid time
+  rejects the update. Date-enabled inputs, inputs with neither flag enabled,
+  and time-only inputs without a label use the `unsupported-variant` fallback.
+  Date and date-time support depends on DatePicker entering the catalog.
+- `Slider` maps the label, limits and current value to `ki-slider` and uses
+  the component's default step.
+- `ChoicePicker` with 16 or more options becomes `ki-combobox` with
+  `ki-option` children in both supported versions. Single selection uses the
+  first supplied value and multiple selection preserves the ordered values.
+  Shorter mutually exclusive lists use `ki-radio-group`. Shorter multiple
+  selection lists use `ki-checkbox-group` with checked states from the
+  selected value list. Provide a label for each picker. An unlabeled
+  multiple-selection picker uses the accessible fallback. The adapter
+  ignores `displayStyle` and `filterable`.
 - `Image` consumes the accessibility label and hidden flag. All types
   accept the remaining accessibility metadata. `createSurface.theme` is
   accepted and appearance stays token-driven (Art. VI).
@@ -223,7 +250,7 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 
 | A2UI type     | Coverage  | Catalog counterpart           |
 | ------------- | --------- | ----------------------------- |
-| Text          | inline    | —                             |
+| Text          | mapped    | ki-markdown                   |
 | Row           | mapped    | ki-stack                      |
 | Column        | mapped    | ki-stack                      |
 | List          | mapped    | ki-list, ki-list-item         |
@@ -233,14 +260,14 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | Button        | mapped    | ki-button                     |
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
-| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-checkbox-group, ki-checkbox |
+| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-checkbox-group, ki-checkbox, ki-combobox, ki-option |
 | Image         | mapped    | ki-image                      |
 | Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
-| AudioPlayer   | unmapped  | —                             |
-| Modal         | unmapped  | —                             |
-| Slider        | unmapped  | —                             |
-| DateTimeInput | unmapped  | —                             |
+| AudioPlayer   | mapped    | ki-audio                      |
+| Modal         | mapped    | ki-button, ki-dialog          |
+| Slider        | mapped    | ki-slider                     |
+| DateTimeInput | mapped    | ki-time-input                 |
 | html          | forbidden | —                             |
 | RawHtml       | forbidden | —                             |
 | script        | forbidden | —                             |
@@ -308,21 +335,24 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
   remaining `@accessibility` attributes and `@metadata` are accepted as
   metadata. The adapter accepts `@checks` without evaluating them.
 - `Text.variant` (`caption`, `body`; 1.0 dropped the headings), `weight`,
-  `Video.posterUrl` and `Slider.steps`: not rendered.
+  `Video.posterUrl`: not rendered.
+- `Slider.steps` divides the span into the requested number of intervals.
+  Both versions map the label, limits and value. Slider edits stay local
+  to the rendered control.
 - `sendDataModel` metadata travels under `a2uiRendererDataModel` with
   `version: "1.0"`.
 - The remaining 0.9.1 lossy mappings apply unchanged.
 
 ## Declared gaps
 
-- **User input does not flow back into the data model.** The guarded renderer
-  exposes only click activations, so typing into a `TextField` or toggling a
-  `CheckBox` does not update the adapter's data model; an action's context and
-  the `sendDataModel` metadata carry the values the agent last set. Closing
-  this needs an input channel in `@kimen/catalog`.
+- **User input does not flow back into the data model.** The adapter keeps
+  edits to `TextField`, `CheckBox`, `ChoicePicker` and `Slider` local to the
+  rendered control. An A2UI action's context and the `sendDataModel` metadata
+  use the values the agent last set. Model writeback requires an adapter
+  input channel.
 - **Full re-render per update.** Every accepted `updateComponents` or
   `updateDataModel` re-renders the whole surface through `renderUiSpec`, so
-  scroll, focus and in-progress input are lost, and degradations are
+  scroll, focus, in-progress input and playback state reset, and degradations are
   reported on each render. The call lives in one module
   (`src/render-point.ts`) so an incremental renderer can replace it there.
 - **Declared action set.** Pass `actions` to declare it up front. Otherwise
@@ -331,9 +361,9 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
   rejected.
 - **Surface deletion.** `deleteSurface` drops the adapter's state; the host
   owns the teardown of the surface element.
-- **Text and layout primitives (spec 037).** `Text` renders inline, and
-  `Row` and `Column` flatten into their parent slot. Both matrices retain
-  these mappings pending the adapter's adoption of native primitives.
+- **Native primitives (spec 037).** The adapter uses Kimen components for
+  text content, layout and images. Hosts can use native primitives when
+  they author a surface directly through the neutral catalog.
 - **1.0 accessibility attributes.** 1.0 asks renderers to plumb
   `@accessibility` (label, description, live, hidden). The adapter maps
   `Image` label and hidden into the element's image-specific API. Wider

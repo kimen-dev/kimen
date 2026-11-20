@@ -1,14 +1,13 @@
 ---
 title: ki-tooltip
-description: A transient, text-only description bubble for one slotted trigger.
+description: A transient, text-only hint with an optional heading.
 ---
 
 import CemApi from '../../../components/CemApi.astro';
 import Demo from '../../../components/Demo.astro';
 
-A transient, text-only description bubble for one slotted trigger — a brief
-clarifying hint for an icon-only, abbreviated or otherwise ambiguous
-control, when the same information is discoverable elsewhere.
+Give a control a brief, text-only hint when the same information is
+discoverable elsewhere.
 
 <Demo
   code={`<ki-tooltip label="Closes the dialog">
@@ -39,6 +38,24 @@ that follow the writing direction in RTL:
   <ki-button type="button">end</ki-button>
 </ki-tooltip>`}
 />
+
+### Rich tooltip
+
+Pair `heading` with `for`, the ID of a trigger in the same document or
+shadow tree. Put the explanation directly in the default slot as text. The
+heading and body describe the trigger before the tooltip opens.
+
+<Demo
+  code={`<ki-button id="retention-info" type="button" variant="ghost">Retention</ki-button>
+<ki-tooltip for="retention-info" heading="Grace period">
+  Deleted projects stay restorable for 30 days.
+</ki-tooltip>`}
+/>
+
+Hover over the trigger or focus it to reveal the tooltip. You can move the
+pointer onto the tooltip or press Escape to dismiss it. For links and
+buttons, use `ki-popover` with `kind="toggletip"` and `appearance="rich"`.
+Both rich surfaces use the `--ki-tooltip-rich-*` tokens.
 
 ## API reference
 

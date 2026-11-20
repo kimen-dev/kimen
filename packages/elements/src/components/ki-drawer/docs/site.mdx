@@ -1,0 +1,36 @@
+---
+title: ki-drawer
+description: A modal or non-modal sheet for editing in context and showing short actions.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Place a drawer at `start` or `end` to edit details beside a list. Use
+`bottom` for a short action sheet. The built-in Close button is available
+for every placement. A bottom sheet also closes on a downward swipe from
+its handle.
+
+<Demo code={`<ki-button type="button" onclick="this.nextElementSibling.show()">Edit incident</ki-button>
+<ki-drawer heading="Edit incident">
+  <ki-input label="Title" value="Search index rebuild"></ki-input>
+  <ki-button slot="footer" variant="primary" type="button" onclick="this.closest('ki-drawer').close()">Done</ki-button>
+</ki-drawer>`} />
+
+Provide a heading to name the drawer. When a modal drawer closes, focus
+returns to the previously focused trigger. Use `modal="false"` to keep the
+rest of the page interactive, and `close-label` to translate the built-in
+button.
+
+The app can veto dismissal by calling `preventDefault()` on `ki-close`.
+Wire slotted actions to your app and call `close()` when their work is done.
+The `size` property overrides the themed 18rem side width or bottom height
+cap.
+
+## API reference
+
+<CemApi tag="ki-drawer" />
+
+## Workshop
+
+[Open ki-drawer in Storybook](/storybook/?path=/docs/docs-components-ki-drawer--docs)

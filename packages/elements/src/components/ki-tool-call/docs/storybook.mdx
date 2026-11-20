@@ -1,0 +1,24 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-tool-call" />
+
+# ki-tool-call
+
+Show a tool ID and its status in a native disclosure. Supply the input and
+output in named slots. Failed calls open automatically and can display an
+error message and an optional Retry control.
+
+```html
+<ki-tool-call name="search_docs" title="Search docs" status="done" duration="1200">
+  <ki-code-block slot="input" language="json" filename="search-input.json" wrap>{"query": "Forms"}</ki-code-block>
+  <ki-code-block slot="output" language="json" filename="search-output.json" wrap>["Field help"]</ki-code-block>
+</ki-tool-call>
+```
+
+Use Tab to reach the summary, then Enter or Space to expand or collapse it.
+The status is readable as text in every state. For conversation announcements,
+append one entry for each `ki-tool-status-change` received by the host app.
+
+Set `retryable` on a failed call and handle `ki-tool-retry`, or put your own
+control in the `error` slot. Use `--ki-tool-call-bg` to change the surface
+and `--ki-tool-call-code-bg` to change the payload fill.

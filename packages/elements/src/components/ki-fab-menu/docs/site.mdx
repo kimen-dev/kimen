@@ -1,0 +1,34 @@
+---
+title: ki-fab-menu
+description: A floating action button with two to six related actions.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a FAB menu when one screen has two to six related actions, such as
+creating a message or scheduling an event.
+
+<Demo code={`<div style="display:grid;align-items:end;justify-items:end;min-block-size:12rem">
+  <ki-fab-menu label="Create" scrim="false">
+    <ki-fab-menu-item value="message">New message</ki-fab-menu-item>
+    <ki-fab-menu-item href="#event">New event</ki-fab-menu-item>
+  </ki-fab-menu>
+</div>`} />
+
+Give each item a visible label. Set its `value` to a stable command identifier
+when your application handles `ki-select`. Without a value, the event reports
+the trimmed item label. Items with `href` navigate as native links.
+
+Enter, Space and ArrowDown open the menu at the first action. ArrowUp opens
+it at the last action. Up and Down wrap, Home and End go to the first and last
+actions, and Escape returns focus to the trigger. Tab continues through the
+page's focus order. Use `close-label` to localize the close button's name.
+
+Static menus need space above the trigger. For fixed placement, reserve
+clearance for the FAB after your content and set
+`--ki-fab-mobile-nav-block-size` when fixed navigation uses the same corner.
+Use `scrim="false"` for an embedded example or to keep the background undimmed.
+
+<CemApi tag="ki-fab-menu" />
+<CemApi tag="ki-fab-menu-item" />

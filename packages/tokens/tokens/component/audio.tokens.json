@@ -1,0 +1,46 @@
+{
+  "ki": {
+    "audio": {
+      "bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Background behind the player and transcript link."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on the player background."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image painted over the player background."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter applied to the player, off by default."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Boundary of the player panel."
+      },
+      "radius": {
+        "$value": "{ki.corner.media-panel}",
+        "$description": "Corner radius of the player panel."
+      },
+      "track-bg": {
+        "$value": "{ki.outline.control}",
+        "$description": "Colour of the inactive timeline."
+      },
+      "progress-bg": {
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Colour of the elapsed timeline and seek thumb."
+      },
+      "title-family": {
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Font family of the recording title."
+      },
+      "speed-radius": {
+        "$value": "{ki.control.radius.item}",
+        "$description": "Corner radius of the playback speed button."
+      }
+    }
+  }
+}

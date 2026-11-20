@@ -1,0 +1,458 @@
+{
+  "component": {
+    "attributes": {
+      "collapse-label": {
+        "default": "'Collapse sidebar'",
+        "deprecatedSince": null,
+        "description": "Accessible toggle name while the sidebar is expanded.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "collapsed": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Display the icon rail. May also be assigned by the application.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "collapsible": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show the expand and collapse control.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "expand-label": {
+        "default": "'Expand sidebar'",
+        "deprecatedSince": null,
+        "description": "Accessible toggle name while the sidebar is collapsed.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": "'Main'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Navigation panel background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the panel background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Navigation panel outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the panel outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-brand-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of the optional brand label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-collapsed-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Compact rail inline size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Navigation panel text and brand ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of sidebar controls and copy.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font size of navigation labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between panel regions and between row contents.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading and toggle icon edge.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the row or toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting row background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over navigation row and toggle backgrounds.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting row ink, with contrast-more support.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between rows.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Base row and toggle height before density adjustment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hovered navigation row background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hovered navigation row ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner of a row or toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of navigation labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset between the panel border and its content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Navigation panel corner.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Expanded navigation panel inline size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Side navigation with an expanded panel and an optional icon rail.",
+    "events": {
+      "ki-sidebar-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Reports the new collapsed state after a user toggle. Programmatic writes are silent.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ collapsed: boolean }>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "brand": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Expanded brand region.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "footer": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Region at the foot of the sidebar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "header": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Brand and toggle layout.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "list": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "List of top-level items and groups.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "nav": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Navigation landmark and surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "toggle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native expand and collapse button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "collapseLabel": {
+        "default": "'Collapse sidebar'",
+        "deprecatedSince": null,
+        "description": "Accessible toggle name while the sidebar is expanded.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "collapsed": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Display the icon rail. May also be assigned by the application.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "collapsible": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show the expand and collapse control.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "expandLabel": {
+        "default": "'Expand sidebar'",
+        "deprecatedSince": null,
+        "description": "Accessible toggle name while the sidebar is collapsed.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": "'Main'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "preference": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional local storage key scoped by the application to one profile and\nsidebar. The saved state is restored at initialization. User toggles write\nthe preference. Use a stable key for the lifetime of the element.",
+        "replacement": null,
+        "required": false,
+        "type": "undefined | { storageKey: string; }"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Navigation routes and groups, in reading order.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "brand": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Presentational brand content for the expanded panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "footer": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Account trigger or other app-owned content available in both modes.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-sidebar.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-sidebar.d.ts",
+    "symbols": {
+      "KiSidebar": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSidebar extends Components.KiSidebar, HTMLElement {\n}\nexport const KiSidebar: {\n    prototype: KiSidebar;\n    new (): KiSidebar;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-sidebar.js"
+  }
+}

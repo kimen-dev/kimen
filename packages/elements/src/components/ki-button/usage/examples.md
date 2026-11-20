@@ -4,13 +4,39 @@ A standalone primary action:
 <ki-button variant="primary">Save</ki-button>
 ```
 
-`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type="button"`:
+In momentary mode `type` defaults to `submit`. Use `type="button"` for an independent action inside a form.
 
 ```html
 <form>
   <ki-button type="button">Cancel</ki-button>
   <ki-button variant="primary">Save changes</ki-button>
 </form>
+```
+
+Use `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.
+
+```html
+<ki-button id="pin" variant="outline" toggle selected>Pin</ki-button>
+<script type="module">
+  const button = document.getElementById('pin');
+  button.addEventListener('ki-change', ({ detail: { selected } }) => {
+    console.log('Pinned', selected);
+  });
+</script>
+```
+
+Programmatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.
+
+Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
+dialog and invoker share a document or shadow root. The command takes
+precedence over form submission or reset.
+
+```html
+<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
+<ki-dialog id="draft-preview" heading="Draft preview">
+  This draft is visible only to you.
+  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
+</ki-dialog>
 ```
 
 Programmatic creation after registration; string attributes and properties are interchangeable:

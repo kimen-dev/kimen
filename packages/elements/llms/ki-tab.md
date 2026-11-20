@@ -5,7 +5,7 @@
 ## When to use
 
 label one peer content view inside `ki-tabs`, with optional
-`start` and `end` slot media.
+decorative `icon` and `start` or `end` slot media.
 
 ## When not to use
 
@@ -51,6 +51,11 @@ The `start` and `end` slots hold leading and trailing icons or media (they follo
 </ki-tabs>
 ```
 
+For a decorative SVG, use the `icon` slot and give the tab a visible text
+label in the default slot. The label names the tab and its linked panel.
+The group's `icon-layout` controls whether the icon is above the label or
+inline with it.
+
 ## Attributes
 
 - `disabled` (boolean, default false): Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
@@ -59,8 +64,9 @@ The `start` and `end` slots hold leading and trailing icons or media (they follo
 
 ## Slots
 
-- (default): Tab label; this is the accessible name source.
+- (default): Required visible text label and accessible name source.
 - `end`: Trailing icon or media. Follows writing direction.
+- `icon`: Decorative SVG. Supply visible text in the default slot.
 - `start`: Leading icon or media. Follows writing direction.
 
 ## Parts
@@ -84,6 +90,8 @@ None.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
+- `--ki-tab-backdrop-filter`: Complete backdrop filter for a tab surface.
+- `--ki-tab-bg-image`: Optional surface image for a tab.
 - `--ki-tab-focus-ring-color`: color used by the tab component for focus ring color.
 - `--ki-tab-focus-ring-offset`: dimension used by the tab component for focus ring offset.
 - `--ki-tab-focus-ring-shadow`: shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
@@ -91,6 +99,8 @@ None.
 - `--ki-tab-font-size`: dimension used by the tab component for font size.
 - `--ki-tab-font-weight`: font weight used by the tab component for font weight.
 - `--ki-tab-gap`: dimension used by the tab component for gap.
+- `--ki-tab-icon-inline-gap`: Gap from an inline tab icon to its label.
+- `--ki-tab-icon-size`: Inline and block size of a decorative tab icon.
 - `--ki-tab-indicator-color`: color used by the tab component for indicator color (MarsUI active underline is Outline/inverse_white: black in light, white in dark — the inverse neutral, not primary).
 - `--ki-tab-indicator-radius`: dimension used by the tab component for indicator radius (the master underline is a square-ended 2px bottom border).
 - `--ki-tab-indicator-size`: dimension used by the tab component for indicator size.

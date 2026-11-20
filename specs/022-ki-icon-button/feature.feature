@@ -110,7 +110,14 @@ Feature: Icon button
     Then the developer sees a deprecation warning recommending secondary
 
   # S17
-  Scenario: The catalog offers four recommended variants
+  Scenario: The catalog offers the current variants
     Given an agent choosing an icon button variant
     When the agent reads the catalog schema
-    Then the available variants are primary, secondary, quaternary and ghost
+    Then the available variants are primary, secondary, quaternary, ghost and outline
+
+  # S19
+  Scenario: An icon button can retain selection
+    Given an unselected icon button in toggle mode
+    When the person activates it
+    Then the icon button becomes selected and reports the new pressed state
+    And the icon button emits a change carrying the new state

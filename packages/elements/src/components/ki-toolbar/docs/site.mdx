@@ -1,0 +1,39 @@
+---
+title: ki-toolbar
+description: Keep frequent page actions within reach with a floating or docked toolbar.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a toolbar for a few related page actions. A floating toolbar is a pill
+that you place in your layout or over your content. Set
+`orientation="vertical"` when the actions run down the side of the content.
+
+<Demo code={`<ki-toolbar label="Formatting">
+  <ki-button variant="ghost" size="sm">Bold</ki-button>
+  <ki-divider orientation="vertical"></ki-divider>
+  <ki-button variant="ghost" size="sm">Insert link</ki-button>
+</ki-toolbar>`} />
+
+For a separate primary action, put a companion FAB in `slot="fab"`. It
+appears after the floating pill in reading order and has its own Tab stop.
+A docked toolbar uses the full bottom edge and includes the device's bottom
+safe area. Reserve that edge for its horizontal action group on compact
+screens and leave enough space below content for the bar. Use MobileNav
+on screens that need navigation at that edge.
+
+Supply a toolbar label, slot actions directly, and give every icon-only
+action a name. Tab enters on the most recently focused action. Arrow keys
+follow the layout and wrap at the ends. Home and End reach the first and last
+available action. Buttons own their activation and toggle state.
+
+Use `hide-on-scroll` to free space while scrolling down the page. Scrolling
+up or tabbing to an action brings the surface back. The toolbar stays visible
+while an action or the companion FAB has focus.
+
+## API reference
+
+<CemApi tag="ki-toolbar" />
+
+[Open ki-toolbar in Storybook](/storybook/?path=/docs/docs-components-ki-toolbar--docs)

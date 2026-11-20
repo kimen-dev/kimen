@@ -25,6 +25,10 @@
       "tooltip": {
         "$value": "{ki.foundation.onmars-v1.tooltip-bg-image}",
         "$description": "Theme image layered over a tooltip surface."
+      },
+      "menu": {
+        "$value": "none",
+        "$description": "Optional image over a raised action menu."
       }
     },
     "surface": {
@@ -553,6 +557,11 @@
     },
     "outline": {
       "$type": "color",
+      "hairline-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of a hairline component surface edge."
+      },
       "high-em": {
         "$value": "{ki.color.black.12}",
         "$description": "semantic color for outline high em."
@@ -1233,6 +1242,11 @@
               "$description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with --ki-effect-component-backdrop-filter."
             }
           }
+        },
+        "menu-backdrop-filter": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "Optional complete backdrop filter for a raised action menu."
         }
       },
       "video-hover-opacity": {
@@ -1613,6 +1627,70 @@
       "activity-dot-gap": {
         "$value": "{ki.space.xs}",
         "$description": "Gap between typing dots."
+      },
+      "action-gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Gap between distinct actions in a horizontal group."
+      },
+      "action-compact-gap": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Compact gap between adjacent toolbar actions."
+      },
+      "action-inset": {
+        "$value": "{ki.space.xs}",
+        "$description": "Interior space at the edge of an action surface or divider."
+      },
+      "action-joined-gap": {
+        "$value": "{ki.space.zero}",
+        "$description": "Space between actions that share an edge."
+      },
+      "action-hairline": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of the frame and divider in an action surface.",
+        "$type": "dimension"
+      },
+      "floating-surface-max-block": {
+        "$value": "{ki.size.surface.xs}",
+        "$description": "Maximum block size of a compact floating surface before it scrolls."
+      },
+      "standard-inset": {
+        "$value": "{ki.space.xl}",
+        "$description": "Standard content inset."
+      },
+      "compact-inset": {
+        "$value": "{ki.space.lg}",
+        "$description": "Compact content inset."
+      }
+    },
+    "navigation-bar": {
+      "$type": "dimension",
+      "bar-height": {
+        "$value": "{ki.space.18xl}",
+        "$description": "Minimum baseline height of a bottom navigation bar."
+      },
+      "bar-inset": {
+        "$value": "{ki.space.3xl}",
+        "$description": "Space beside and below an inset bottom navigation bar."
+      },
+      "bar-padding": {
+        "$value": "{ki.space.md}",
+        "$description": "Inline padding inside a floating bottom navigation bar."
+      },
+      "destination-target": {
+        "$value": "{ki.size.target-mobile-nav}",
+        "$description": "Minimum block and inline size of a mobile navigation destination."
+      },
+      "destination-gap": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Space between a destination icon and its label."
+      },
+      "indicator-inline-size": {
+        "$value": "{ki.space.16xl}",
+        "$description": "Width of the current destination icon pill."
+      },
+      "indicator-block-size": {
+        "$value": "{ki.space.9xl}",
+        "$description": "Height of the current destination icon pill."
       }
     },
     "source-reference": {
@@ -1720,9 +1798,103 @@
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
       },
+      "sheet": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Inner corner radius of an edge-aligned sheet."
+      },
       "activity-mark": {
         "$value": "{ki.radius.round}",
         "$description": "Round corners for rings and typing dots."
+      },
+      "calendar-surface": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Outer corner radius of a raised calendar surface."
+      },
+      "action-frame": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Outside corner of an action surface."
+      },
+      "action-seam": {
+        "$value": "{ki.radius.0}",
+        "$description": "Square corner at an edge shared by two actions."
+      },
+      "feature-tile": {
+        "xs": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "Corner radius of an extra-small square feature tile."
+        },
+        "sm": {
+          "$value": "{ki.radius.component.sm}",
+          "$description": "Corner radius of a small square feature tile."
+        },
+        "md": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "Corner radius of a medium square feature tile."
+        },
+        "lg": {
+          "$value": "{ki.radius.component.lg}",
+          "$description": "Corner radius of a large square feature tile."
+        },
+        "xl": {
+          "$value": "{ki.radius.big-component.xs}",
+          "$description": "Corner radius of an extra-large square feature tile."
+        },
+        "circle": {
+          "$value": "{ki.radius.round}",
+          "$description": "Fully rounded corners of a circular feature tile."
+        }
+      },
+      "compact-mark": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Corner radius of a compact inline mark."
+      },
+      "anchored-panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of an anchored explanation panel."
+      },
+      "field-surface": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Corner radius for an editable field and its floating choice surface."
+      },
+      "field-item": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner radius for choices and tokens inside an editable field."
+      },
+      "panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius for an outlined content panel."
+      },
+      "search-bar": {
+        "$value": "{ki.radius.round}",
+        "$description": "Pill corner for a search bar."
+      },
+      "search-view": {
+        "$value": "{ki.radius.big-component.sm}",
+        "$description": "Corner for a docked search view."
+      },
+      "popup": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of a floating menu or suggestions panel."
+      },
+      "popup-tight": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Extra-small corner radius for a tightly shaped popup."
+      },
+      "popup-option": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner radius of an option inside a floating panel."
+      },
+      "navigation-panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner of a side navigation panel."
+      },
+      "navigation-row": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner of a side navigation row."
+      },
+      "media-panel": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Corner shape of a self-contained media control panel."
       }
     },
     "motion": {
@@ -1908,6 +2080,10 @@
     },
     "layout": {
       "$type": "dimension",
+      "sheet-size": {
+        "$value": "{ki.size.surface.xxs}",
+        "$description": "Default inline size or block-size cap of a compact sheet."
+      },
       "spacing": {
         "zero": {
           "$value": "{ki.space.zero}",
@@ -2045,9 +2221,116 @@
       "grid-fixed-breakpoint": {
         "$value": "{ki.size.layout.grid-fixed-breakpoint}",
         "$description": "Minimum available inline size for a fixed grid to use multiple tracks."
+      },
+      "floating-action": {
+        "md": {
+          "$value": "{ki.space.16xl}",
+          "$description": "Default floating action footprint (56px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.20xl}",
+          "$description": "Medium floating action footprint (80px at the default root size)."
+        },
+        "xl": {
+          "$value": "{ki.space.22xl}",
+          "$description": "Large floating action footprint (96px at the default root size)."
+        },
+        "lg-icon": {
+          "$value": "{ki.space.9xl}",
+          "$description": "Medium floating action glyph (28px at the default root size)."
+        },
+        "xl-icon": {
+          "$value": "{ki.space.11xl}",
+          "$description": "Large floating action glyph (36px at the default root size)."
+        }
+      },
+      "rule-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "The width of a hairline rule separating adjacent content."
+      },
+      "conversation": {
+        "max-width": {
+          "$value": "{ki.size.conversation.max-width}",
+          "$description": "Maximum inline size for a conversation transcript."
+        },
+        "user-max-width": {
+          "$type": "other",
+          "$value": "{ki.size.conversation.user-max-width}",
+          "$description": "Maximum width of a user bubble relative to the transcript."
+        },
+        "bubble-radius": {
+          "$value": "{ki.radius.big-component.xs}",
+          "$description": "Standard corner radius of a user bubble."
+        },
+        "bubble-end-radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "Smaller radius of the end corner of a user bubble."
+        },
+        "bubble-padding": {
+          "$type": "other",
+          "$value": "{ki.size.conversation.bubble-padding}",
+          "$description": "Block and inline insets for a user bubble."
+        },
+        "avatar-radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Round corner radius of the fallback assistant avatar."
+        },
+        "caret-inline-size": {
+          "$value": "{ki.size.conversation.caret-inline-size}",
+          "$description": "Inline size of a streaming caret."
+        },
+        "caret-block-size": {
+          "$value": "{ki.size.conversation.caret-block-size}",
+          "$description": "Block size of a streaming caret."
+        }
+      },
+      "app-bar": {
+        "lg-height": {
+          "$value": "{ki.size.app-bar.lg}",
+          "$description": "Height of a large two-row screen bar."
+        },
+        "xl-height": {
+          "$value": "{ki.size.app-bar.xl}",
+          "$description": "Height of an extra-large two-row screen bar."
+        }
+      },
+      "menu-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of a floating navigation menu."
+      },
+      "menu-radius-sm": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Smaller corner radius of a floating navigation menu."
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Hairline edge on a structural surface."
+      },
+      "indicator-width": {
+        "$value": "{ki.size.border.thin}",
+        "$description": "Thickness of the line identifying a selected navigation destination."
+      },
+      "touch-target": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum target dimension for navigation controls on a coarse pointer."
       }
     },
     "control": {
+      "multiline": {
+        "$type": "dimension",
+        "min-size": {
+          "$value": "{ki.space.14xl}",
+          "$description": "Minimum block size for a growing multiline draft."
+        },
+        "max-size": {
+          "$value": "{ki.size.prompt-input-max}",
+          "$description": "Block size at which a growing multiline draft scrolls."
+        },
+        "border-width": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "Outline thickness for a multiline draft enclosure."
+        }
+      },
       "size": {
         "$type": "dimension",
         "xs": {
@@ -2061,6 +2344,10 @@
         "md": {
           "$value": "{ki.space.12xl}",
           "$description": "Medium control track height, 40 CSS px at the default root size."
+        },
+        "touch": {
+          "$value": "{ki.size.target-touch}",
+          "$description": "Touch target size for controls on a coarse pointer."
         }
       },
       "radius": {
@@ -2138,6 +2425,262 @@
           "$value": "none",
           "$description": "Default compact pill surface leaves the backdrop unfiltered."
         }
+      },
+      "indicator-width": {
+        "$type": "dimension",
+        "thin": {
+          "$value": "{ki.size.border.thin}",
+          "$description": "Thin selection marker for navigation within content."
+        },
+        "medium": {
+          "$value": "{ki.size.border.medium}",
+          "$description": "Medium selection marker for primary navigation."
+        }
+      }
+    },
+    "placeholder": {
+      "radius": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Corner radius shared by loading text lines and rectangular placeholders."
+      },
+      "line-size": {
+        "$value": "{ki.foundation.placeholder.line-size}",
+        "$description": "Block size reserved by one loading text line."
+      },
+      "circle-size": {
+        "$value": "{ki.foundation.placeholder.circle-size}",
+        "$description": "Default diameter of a loading avatar placeholder."
+      },
+      "rect-size": {
+        "$value": "{ki.foundation.placeholder.rect-size}",
+        "$description": "Default block size of a loading media placeholder."
+      },
+      "circle-radius": {
+        "$value": "{ki.foundation.placeholder.circle-radius}",
+        "$description": "Proportional radius that preserves round loading shapes across sizes."
+      },
+      "last-line-scale": {
+        "$value": "{ki.foundation.placeholder.last-line-scale}",
+        "$description": "Fraction of available inline space reserved by the final loading text line."
+      },
+      "shimmer-image": {
+        "$value": "{ki.foundation.placeholder.shimmer-image}",
+        "$description": "A soft currentColor highlight that can sweep across a loading placeholder."
+      },
+      "shimmer-duration": {
+        "$value": "{ki.foundation.placeholder.shimmer-duration}",
+        "$description": "Duration of one loading highlight sweep."
+      }
+    },
+    "menu-layout": {
+      "inline-min": {
+        "$value": "{ki.size.menu-inline-min}",
+        "$description": "Lower inline bound for anchored action menus."
+      },
+      "edge-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of the menu perimeter and its internal separators."
+      },
+      "surface-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Rounding of the raised menu surface."
+      },
+      "row-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Rounding of action rows within a menu."
+      },
+      "inline-max": {
+        "$value": "{ki.size.surface.xs}",
+        "$description": "Inline limit of the menu before the viewport is considered."
+      },
+      "block-max": {
+        "$value": "{ki.size.surface.lg}",
+        "$description": "Block limit of a scrolling menu before the viewport is considered."
+      },
+      "touch-row-min": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Target size in a menu opened on a touch screen."
+      },
+      "row-min": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Minimum size of a default menu action row."
+      },
+      "inline-space": {
+        "$value": "{ki.space.md}",
+        "$description": "Horizontal breathing room within a menu action."
+      },
+      "surface-padding": {
+        "$value": "{ki.space.xs}",
+        "$description": "Inset from the perimeter of the action menu."
+      },
+      "row-block-padding": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Minimum edge space for a wrapped action label."
+      }
+    },
+    "empty-layout": {
+      "$type": "dimension",
+      "max-width": {
+        "$value": "{ki.size.surface.sm}",
+        "$description": "Readable maximum line length for a short message in an empty view."
+      },
+      "tile-regular": {
+        "$value": "{ki.space.14xl}",
+        "$description": "Size of the decorative tile in a regular empty view."
+      },
+      "tile-compact": {
+        "$value": "{ki.space.12xl}",
+        "$description": "Size of the decorative tile in a compact empty view."
+      }
+    },
+    "scale-control": {
+      "$type": "dimension",
+      "track-height": {
+        "$value": "{ki.space.xs}",
+        "$description": "Thickness of the inactive rail of a value scale."
+      },
+      "thumb-border-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Outline thickness of the visible grip."
+      },
+      "mark-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Thickness of a tick marking an interval."
+      },
+      "vertical-length": {
+        "$value": "{ki.size.slider-vertical}",
+        "$description": "Length of a vertical value scale."
+      },
+      "coarse-target": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum grip target when a value scale has a coarse primary pointer."
+      }
+    },
+    "size": {
+      "feature-tile": {
+        "$type": "dimension",
+        "xs": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Extra-small feature tile edge, 24px at the default root size."
+        },
+        "sm": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Small feature tile edge, 32px at the default root size."
+        },
+        "md": {
+          "$value": "{ki.space.12xl}",
+          "$description": "Medium feature tile edge, 40px at the default root size."
+        },
+        "lg": {
+          "$value": "{ki.space.14xl}",
+          "$description": "Large feature tile edge, 48px at the default root size."
+        },
+        "xl": {
+          "$value": "{ki.space.18xl}",
+          "$description": "Extra-large feature tile edge, 64px at the default root size."
+        }
+      }
+    },
+    "anchored-surface": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.space.md}",
+        "$description": "Space between a floating surface and its trigger."
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{ki.space.xl}",
+        "$description": "Interior padding for a small anchored surface."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius for a small anchored surface."
+      },
+      "arrow-size": {
+        "$type": "dimension",
+        "$value": "{ki.space.lg}",
+        "$description": "Side length of an anchored surface pointer before rotation."
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Outline thickness for a small anchored surface."
+      },
+      "rich-max-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.tooltip-rich}",
+        "$description": "Maximum inline size of an anchored help card."
+      },
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.surface.xs}",
+        "$description": "Maximum inline size of a small anchored surface."
+      }
+    },
+    "surface-size": {
+      "compact": {
+        "$value": "{ki.size.surface.xxs}",
+        "$description": "Inline size of a compact anchored surface."
+      }
+    },
+    "floating-list": {
+      "$type": "dimension",
+      "compact-max-block-size": {
+        "$value": "{ki.size.surface.compact-list}",
+        "$description": "Maximum block size for compact scrolling suggestions."
+      },
+      "option-min-block-size": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Minimum block size for a row in a floating list, before density adjustments."
+      }
+    },
+    "side-navigation": {
+      "$type": "dimension",
+      "width": {
+        "$value": "{ki.size.sidebar.width}",
+        "$description": "Inline size of the expanded side navigation."
+      },
+      "rail-width": {
+        "$value": "{ki.size.sidebar.rail-width}",
+        "$description": "Inline size of side navigation in its compact mode."
+      },
+      "row-height": {
+        "$value": "{ki.size.sidebar.row-height}",
+        "$description": "Base navigation target height before density adjustment."
+      }
+    },
+    "tree-layout": {
+      "indent": {
+        "$value": "{ki.space.5xl}",
+        "$description": "Inline step between hierarchy levels."
+      },
+      "row-min": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Default minimum block size of a tree row."
+      },
+      "touch-row-min": {
+        "$value": "{ki.size.target-touch}",
+        "$description": "Minimum block size of a row on a coarse pointer."
+      },
+      "item-target": {
+        "$value": "{ki.size.target-min}",
+        "$description": "Minimum inline target of a tree disclosure or checkbox."
+      },
+      "surface-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Default rounding of a tree surface."
+      },
+      "row-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Default rounding of a highlighted tree row."
+      }
+    },
+    "media-layout": {
+      "$type": "dimension",
+      "inline-max": {
+        "$value": "{ki.size.surface.md}",
+        "$description": "Maximum inline size of a self-contained media control panel."
       }
     }
   }
