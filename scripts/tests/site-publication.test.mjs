@@ -259,25 +259,30 @@ test('S8 every published documentation page can reach the privacy declaration', 
   );
 });
 
-test('S8 the privacy page declares every category the Umami schema actually stores', async () => {
-  // Verified against the running Umami instance's own `session` table schema
-  // (not its docs): browser, os, device, screen, language, country, region,
-  // city — and no IP address column anywhere. The declaration must name each
-  // of those categories so it cannot silently drift away from the schema.
+test('S8 the measured privacy declaration names every category it records, at country level', async () => {
+  // The categories come from the running Umami instance's own `session` table
+  // schema (not its docs): browser, os, device, screen, language and location
+  // — and no IP address column anywhere. The declaration must name each of
+  // them so it cannot silently drift away from the schema.
   //
-  // Scoped to the "What is measured" section, not the whole page: these are
-  // common English words ("screen", "browser", "country"…) that could appear
-  // incidentally elsewhere as the page grows (hosting notes, footer copy).
-  // Slicing to the declared sentence means gutting or corrupting it fails
-  // this test even if the words survive elsewhere on the page.
+  // Location is declared at country level only. The publishing workflow keeps
+  // analytics off until the instance meets its exemption conditions, the
+  // first of which is "country only"; a declaration that admits region or
+  // city would describe an instance the workflow refuses to turn on.
+  //
+  // Scoped to the measured declaration — the <template> the assembler swaps
+  // in when analytics is on — not the whole page: these are common English
+  // words ("screen", "browser", "country"…) that could appear incidentally
+  // elsewhere as the page grows (hosting notes, footer copy).
   const source = await readSiteFile('privacy/index.html');
   const declaration = between(
     source,
-    '<h2>What is measured</h2>',
-    '<h2>What is not done</h2>',
-    'the "What is measured" declaration',
+    '<template data-kimen-measured>',
+    '</template>',
+    'the measured declaration',
   );
 
+  assert.match(declaration, /umami/iu, 'the declaration must name the analytics in use');
   assert.match(
     declaration,
     /\bbrowser\b/iu,
@@ -304,20 +309,25 @@ test('S8 the privacy page declares every category the Umami schema actually stor
     /\bcountry\b/iu,
     'the declaration must name the country granularity it collects',
   );
-  assert.match(
+  assert.doesNotMatch(
     declaration,
-    /\bregion\b/iu,
-    'the declaration must name the region granularity it collects',
+    /\b(?:region|city)\b/iu,
+    'location is declared at country level only, the condition analytics is turned on under',
   );
   assert.match(
     declaration,
-    /\bcity\b/iu,
-    'the declaration must name the city granularity it collects',
+    /sets no cookies/iu,
+    'the declaration must state that no cookies are set',
   );
   assert.match(
     declaration,
-    /without storing the IP address/iu,
+    /without\s+storing the IP address/iu,
     'the declaration must keep the correct no-IP claim, verified against the schema',
+  );
+  assert.match(
+    declaration,
+    /local storage/iu,
+    'the declaration must name what the site does keep in the browser: the theme choice',
   );
 });
 
@@ -407,6 +417,104 @@ test('S9 the assembler emits the analytics tag only when the build marker is set
       !withMarker.includes('<!-- kimen:analytics -->'),
       `${page} must have its injection point replaced, not duplicated`,
     );
+  }
+
+  // The privacy page describes what each build ships: the unmeasured build
+  // claims no measurement, the measured one declares Umami. Neither may carry
+  // the other's text, or the template it was chosen from.
+  const unmeasuredPrivacy = await readFile(join(unmeasured, 'privacy/index.html'), 'utf8');
+  const measuredPrivacy = await readFile(join(measured, 'privacy/index.html'), 'utf8');
+  assert.match(unmeasuredPrivacy, /does not currently collect analytics/u);
+  assert.doesNotMatch(
+    unmeasuredPrivacy,
+    /umami|page views are counted|cookieless/iu,
+    'a build without analytics must not claim any measurement',
+  );
+  assert.match(measuredPrivacy, /Page views are counted with/u);
+  assert.match(measuredPrivacy, /umami\.onmars\.tech/u);
+  assert.doesNotMatch(
+    measuredPrivacy,
+    /does not currently collect analytics/u,
+    'a build with analytics must not claim it collects none',
+  );
+  for (const [label, markup] of [
+    ['unmeasured', unmeasuredPrivacy],
+    ['measured', measuredPrivacy],
+  ]) {
+    assert.doesNotMatch(
+      markup,
+      /kimen:measurement|data-kimen-measured/u,
+      `the ${label} privacy page must ship one declaration, not the markers or the template`,
+    );
+    assert.match(markup, /local storage/u, `the ${label} privacy page must name what it keeps`);
+  }
+});
+
+// Cloudflare Pages falls back to serving /index.html with a 200 for EVERY
+// unknown path when the deploy has no top-level 404.html: junk URLs get
+// indexed, and a broken script or stylesheet reference fails as a MIME-type
+// error instead of a 404 (issue #520, item 2). The page is served at whatever
+// depth the missing path had, so a relative URL in it would resolve against
+// that path and miss too.
+test('the site publishes a top-level 404 page whose links work at any depth', async (t) => {
+  const output = await assembleSite(undefined);
+  t.after(() => rm(output, { force: true, recursive: true }));
+
+  const markup = await readFile(join(output, '404.html'), 'utf8');
+  assert.match(markup, /<meta name="robots" content="noindex"/u);
+  assert.match(markup, /<main\b[^>]*\bid="main"/u);
+  for (const destination of ['/', '/docs/', '/playground/']) {
+    assert.ok(markup.includes(`href="${destination}"`), `the 404 page must link ${destination}`);
+  }
+
+  const references = [...markup.matchAll(/\b(?:href|src)="([^"]+)"/gu)].map(([, url]) => url);
+  assert.ok(references.length > 0, 'the 404 page must reference its stylesheets and links');
+  for (const url of references) {
+    if (url.startsWith('#') || url.startsWith('https://')) continue;
+    assert.ok(
+      url.startsWith('/'),
+      `${url} must be root-absolute: the 404 page is served at any depth`,
+    );
+    const published = url.endsWith('/') ? `${url}index.html` : url;
+    accessSync(join(output, published), constants.R_OK);
+  }
+});
+
+// Search engines find the site's pages through robots.txt and the root
+// sitemap index (issue #520, item 3). The index may not nest another sitemap
+// index, so it names the docs' sitemap file directly; that name comes from
+// @astrojs/sitemap, and this test is what notices if the docs build renames it.
+test('robots.txt and the root sitemaps list only pages the site publishes', async (t) => {
+  const output = await assembleSite(undefined);
+  t.after(() => rm(output, { force: true, recursive: true }));
+  const origin = 'https://kimen.dev/';
+  const locations = (xml) => [...xml.matchAll(/<loc>([^<]+)<\/loc>/gu)].map(([, url]) => url);
+  const publishedFile = (url) => {
+    assert.ok(url.startsWith(origin), `${url} must be on ${origin}`);
+    const path = url.slice(origin.length);
+    return join(output, path === '' || path.endsWith('/') ? `${path}index.html` : path);
+  };
+
+  const robots = await readFile(join(output, 'robots.txt'), 'utf8');
+  assert.match(robots, /^User-agent: \*$/mu);
+  assert.match(robots, /^Sitemap: https:\/\/kimen\.dev\/sitemap-index\.xml$/mu);
+
+  const index = await readFile(join(output, 'sitemap-index.xml'), 'utf8');
+  assert.match(index, /<sitemapindex\b/u);
+  const sitemaps = locations(index);
+  assert.deepEqual(sitemaps, [`${origin}sitemap-pages.xml`, `${origin}docs/sitemap-0.xml`]);
+
+  const pages = [];
+  for (const sitemap of sitemaps) {
+    const xml = await readFile(publishedFile(sitemap), 'utf8');
+    assert.match(xml, /<urlset\b/u, `${sitemap} must be a sitemap, not a nested sitemap index`);
+    pages.push(...locations(xml));
+  }
+  for (const page of [origin, `${origin}playground/`, `${origin}privacy/`, `${origin}docs/`]) {
+    assert.ok(pages.includes(page), `the sitemaps must list ${page}`);
+  }
+  for (const page of pages) {
+    accessSync(publishedFile(page), constants.R_OK);
   }
 });
 

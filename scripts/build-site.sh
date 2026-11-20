@@ -95,6 +95,24 @@ else
   echo "build-site: analytics disabled (KIMEN_ANALYTICS unset)"
 fi
 
+# The privacy page must describe what THIS build ships. Its source carries
+# both declarations: the unmeasured one between the kimen:measurement markers
+# and the Umami one in a <template data-kimen-measured>. Keep exactly one, and
+# fail loudly if either is missing rather than publish a page that claims
+# measurement the build does not do (or hides measurement it does).
+node -e '
+const { readFileSync, writeFileSync } = require("node:fs");
+const [page, measured] = process.argv.slice(1);
+const source = readFileSync(page, "utf8");
+const region = /[ \t]*<!-- kimen:measurement -->\n([\s\S]*?)[ \t]*<!-- \/kimen:measurement -->\n/u;
+const template = /[ \t]*<template data-kimen-measured>\n([\s\S]*?)[ \t]*<\/template>\n/u;
+const unmeasured = source.match(region);
+const declared = source.match(template);
+if (!unmeasured || !declared) throw new Error(`missing measurement declarations: ${page}`);
+const kept = measured === "1" ? declared[1].replace(/^ {2}/gmu, "") : unmeasured[1];
+writeFileSync(page, source.replace(template, "").replace(region, kept));
+' "$OUT/privacy/index.html" "${KIMEN_ANALYTICS:-}"
+
 if [ "$SKIP_STORYBOOK" != "--skip-storybook" ]; then
   if [ ! -f packages/elements/storybook-static/index.html ]; then
     echo "build-site: FAIL — storybook-static missing (run: pnpm --filter @kimen/elements build-storybook, or pass --skip-storybook)"

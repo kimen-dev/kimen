@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-ki-color-scheme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found — Kimen</title>
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#1b1916" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f9f7f4" media="(prefers-color-scheme: light)" />
+    <!-- Cloudflare Pages serves this page, with a 404 status, for every path
+         the deploy does not contain, at any depth. Every URL in it is
+         therefore root-absolute: a relative one would resolve against the
+         missing path (/docs/a/b/nope → /docs/a/b/landing.css) and 404 too. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/tokens/tokens.css" />
+    <link rel="stylesheet" href="/fonts.css" />
+    <link rel="stylesheet" href="/landing.css" />
+    <link rel="stylesheet" href="/pages.css" />
+    <script>
+      // Keep the initial paint in the saved palette when storage is available.
+      (() => {
+        try {
+          const root = document.documentElement;
+          const scheme = localStorage.getItem("kimen-scheme");
+          if (scheme === "auto") {
+            root.dataset.kiColorScheme = matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
+          } else if (scheme === "light" || scheme === "dark") {
+            root.dataset.kiColorScheme = scheme;
+          }
+          if (localStorage.getItem("kimen-theme") === "material3") {
+            root.dataset.kiTheme = "material3";
+            const link = document.createElement("link");
+            link.id = "material3-css";
+            link.rel = "stylesheet";
+            link.href = "/assets/tokens/tokens.material3.css";
+            link.addEventListener("error", () => link.remove(), { once: true });
+            document.head.append(link);
+          }
+        } catch {
+          // The default palette also works when storage is unavailable.
+        }
+      })();
+    </script>
+  </head>
+  <body data-kimen-page="not-found">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="brand" href="/">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9" />
+        </svg>
+        <span class="brand-name">Kimen</span>
+        <span class="brand-stage">pre-v1</span>
+        <span class="visually-hidden">home</span>
+      </a>
+    </header>
+
+    <main id="main" tabindex="-1" class="not-found">
+      <p class="not-found-code">404</p>
+      <h1>Page not found</h1>
+      <p class="not-found-lede">Nothing lives at this address; the link may be old or mistyped.</p>
+      <nav class="not-found-links" aria-label="Where to go instead">
+        <a href="/">Home</a>
+        <a href="/docs/">Docs</a>
+        <a href="/playground/">Playground</a>
+      </nav>
+    </main>
+  </body>
+</html>
