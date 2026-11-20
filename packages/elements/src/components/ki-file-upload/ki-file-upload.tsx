@@ -436,10 +436,10 @@ export class KiFileUpload {
             value={progress ?? 0}
             indeterminate={progress === undefined}
           />
-        )}
-        <span part="file-meta">
+        )}{' '}
+        <p part="file-meta">
           {error ? status : [sizes.format(file.size), status].filter(Boolean).join(' · ')}
-        </span>
+        </p>
       </li>
     );
   }

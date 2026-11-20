@@ -166,9 +166,16 @@ it('S2 lists each rejection reason and offers only accepted files to the host', 
 
   await expect.element(remove('video.mov')).toBeVisible();
   const rows = list().getByRole('listitem');
-  await expect.element(rows.nth(0)).toHaveTextContent('This file type is not allowed.');
-  await expect.element(rows.nth(1)).toHaveTextContent('This file is too large.');
-  await expect.element(rows.nth(3)).toHaveTextContent('Too many files.');
+  await expect.element(rows.nth(0).getByText('video.mov', { exact: true })).toBeVisible();
+  await expect
+    .element(rows.nth(0).getByRole('paragraph'))
+    .toHaveTextContent('This file type is not allowed.');
+  await expect.element(rows.nth(1).getByText('large.csv', { exact: true })).toBeVisible();
+  await expect
+    .element(rows.nth(1).getByRole('paragraph'))
+    .toHaveTextContent('This file is too large.');
+  await expect.element(rows.nth(3).getByText('extra.csv', { exact: true })).toBeVisible();
+  await expect.element(rows.nth(3).getByRole('paragraph')).toHaveTextContent('Too many files.');
   expect(upload.files.map(({ name, status }) => [name, status])).toEqual([
     ['video.mov', 'error'],
     ['large.csv', 'error'],
@@ -313,7 +320,8 @@ it.each(['onmars', 'material3'])(
     await expect
       .element(page.getByText('Upload failed. Try again.', { exact: true }))
       .toBeVisible();
-    await expectAccessible(upload);
+    // axe mistakes Stencil's host getter for a ShadowRoot when passed the element.
+    await expectAccessible('ki-file-upload');
   },
 );
 
