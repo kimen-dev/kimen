@@ -1,7 +1,7 @@
 # Implementation plan for Confirmation
 
 Scaffold the shadow-DOM element from this contract. Present the request in a
-labelled group, using Note for the consequence, Checkbox for the conversation
+labelled group, using Note for the consequence, a native checkbox for the conversation
 preference, and Button for the two decisions. Use a primed status region for the
 announcement and a host method for conditional focus. Keep the host in charge of
 resolution and guard against repeated decisions during the same request.

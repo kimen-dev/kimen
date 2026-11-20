@@ -44,7 +44,10 @@ it('S17: the two decisions have touch-sized targets on a coarse pointer', async 
     approve-label="Send email" deny-label="Keep draft" remember></ki-confirmation>`;
   const approve = page.getByRole('button', { name: 'Send email' });
   const deny = page.getByRole('button', { name: 'Keep draft' });
-  for (const decision of [approve, deny]) {
+  const preference = page.getByRole('checkbox', {
+    name: 'Allow this action for the rest of this conversation',
+  });
+  for (const decision of [approve, deny, preference]) {
     await expect.element(decision).toBeVisible();
     const { width, height } = decision.element().getBoundingClientRect();
     const target = getComputedStyle(decision.element(), '::before');

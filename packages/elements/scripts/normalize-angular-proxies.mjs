@@ -37,16 +37,28 @@ if (!source.includes('outputs: [') && !source.includes('@Output()')) {
   process.exit(0);
 }
 
-const outputLine = /^ {2}@Output\(\) \w+ = new EventEmitter<.+>\(\);\n/gmu;
-const metadataLine = /^ {2}outputs: \[[^\]]+\],?\n/gmu;
-const phantomField = /^ {2}'[a-z-]+': EventEmitter<.+>;\n/gmu;
+const outputLine = /^ {2}@Output\(\) (\w+) = new EventEmitter<.+>\(\);\n/gmu;
+const metadataLine = /^ {2}outputs: \[([^\]]+)\],?\n/gmu;
+const phantomField = /^ {2}'([a-z][a-z0-9-]*)': EventEmitter<.+>;\n/gmu;
+const metadataName = /^'([a-z][a-z0-9-]*)'$/u;
 
-const orphanCount = [...source.matchAll(outputLine)].length;
-const metadataCount = [...source.matchAll(metadataLine)].length;
-const phantomCount = [...source.matchAll(phantomField)].length;
-if (orphanCount === 0 || orphanCount !== metadataCount || orphanCount !== phantomCount) {
+const orphanNames = Array.from(source.matchAll(outputLine), ([, name]) => name);
+const metadataNames = Array.from(source.matchAll(metadataLine), ([, list]) => list)
+  .flatMap((list) => list.split(','))
+  .map((entry) => metadataName.exec(entry.trim())?.[1]);
+const phantomNames = Array.from(source.matchAll(phantomField), ([, name]) => name);
+const camelCase = (name) => name?.replace(/-([a-z])/gu, (_match, letter) => letter.toUpperCase());
+const namesMatch = (left, right) =>
+  left.length === right.length && left.toSorted().every((name, index) => name === right[index]);
+const orphanCount = orphanNames.length;
+if (
+  orphanCount === 0 ||
+  metadataNames.includes(undefined) ||
+  !namesMatch(metadataNames, phantomNames.toSorted()) ||
+  !namesMatch(metadataNames.map(camelCase), orphanNames.toSorted())
+) {
   throw new Error(
-    `angular proxies: inconsistent upstream event shape (${String(orphanCount)} @Output, ${String(metadataCount)} outputs metadata, ${String(phantomCount)} interface fields) — refusing to normalize`,
+    `angular proxies: inconsistent upstream event shape (${String(orphanCount)} @Output, ${String(metadataNames.length)} outputs metadata entries, ${String(phantomNames.length)} interface fields) — refusing to normalize`,
   );
 }
 

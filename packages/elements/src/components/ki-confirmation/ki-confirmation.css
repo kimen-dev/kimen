@@ -1,0 +1,101 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="group"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--ki-confirmation-gap) * var(--ki-density-space-scale));
+  padding: calc(var(--ki-confirmation-padding) * var(--ki-density-space-scale));
+  border: var(--ki-confirmation-border-width) solid var(--ki-confirmation-border);
+  border-radius: var(--ki-confirmation-radius);
+  background-color: var(--ki-confirmation-bg);
+  background-image: var(--ki-confirmation-bg-image);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: var(--ki-confirmation-backdrop-filter);
+  backdrop-filter: var(--ki-confirmation-backdrop-filter);
+  color: var(--ki-confirmation-fg);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-para);
+  overflow-wrap: anywhere;
+}
+
+[part="summary"],
+[part="decisions"] {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: calc(var(--ki-confirmation-inline-gap) * var(--ki-density-space-scale));
+}
+
+[part="heading"] {
+  margin: 0;
+  font-family: var(--ki-confirmation-heading-font-family);
+  font-size: var(--ki-typography-size-body-2);
+  line-height: var(--ki-typography-line-height-para);
+}
+
+code {
+  font-family: var(--ki-typography-family-mono);
+}
+
+[part="decisions"] {
+  justify-content: flex-end;
+}
+
+[part="decisions"] ki-button {
+  max-inline-size: 100%;
+}
+
+[part="remember"] {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  gap: calc(var(--ki-confirmation-inline-gap) * var(--ki-density-space-scale));
+}
+
+[part="remember"] input {
+  flex: none;
+  inline-size: var(--ki-density-target-min);
+  block-size: var(--ki-density-target-min);
+  margin: 0;
+  accent-color: var(--ki-surface-primary-med-em);
+}
+
+::slotted(dl) {
+  margin: 0;
+}
+
+.announcement {
+  position: absolute;
+  inline-size: var(--ki-typography-visually-hidden-size);
+  block-size: var(--ki-typography-visually-hidden-size);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[part="group"]:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+@media (forced-colors: active) {
+  [part="group"] {
+    border-color: CanvasText;
+    background-image: none;
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  [part="group"]:focus-visible {
+    outline-color: Highlight;
+  }
+}

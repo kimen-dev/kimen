@@ -42,9 +42,12 @@ identity, resolution, expiry and any conversation-scoped permission.
   is display data. A guarded host with an origin policy can set the identifier
   itself after validation.
 - **Agent's choice, pending founder confirmation.** The card follows the
-  available inline space. Kimen Button and Checkbox supply density and target
-  behavior. The default slot carries the request details and the status row
-  may wrap at a narrow width.
+  available inline space. Kimen Button and a labelled native checkbox follow
+  the density tokens. The default slot carries the details and the status
+  row can wrap. The warning Note supplies the decorative glyph. The question
+  and outcome use text to keep Button and Note in the stand-alone bundle.
+- **Agent's choice, pending founder confirmation.** Focus stays in the group
+  when a person's decision disables the currently focused control.
 
 ## Behavior contract
 

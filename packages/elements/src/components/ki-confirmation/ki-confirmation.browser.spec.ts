@@ -6,7 +6,7 @@ import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement } from '../../../dist/components/ki-confirmation.js';
 
 const browser = commands as unknown as {
-  accessibilityTree: () => Promise<{ role: string; live: unknown }[] | null>;
+  accessibilityTree: () => Promise<{ role: string; live: unknown; text: string }[] | null>;
   emulateForcedColors: (value: 'active' | null) => Promise<void>;
   emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
   installClock: () => Promise<void>;
@@ -76,7 +76,7 @@ it('S1: a destructive request presents its tool, details, warning and decisions'
   const request = page.getByRole('group', { name: 'Delete this report?' });
   await expect.element(request).toBeVisible();
   await expect.element(request.getByText('delete_report')).toBeVisible();
-  await expect.element(request.getByText('Weekly report')).toBeVisible();
+  await expect.element(page.getByText('Weekly report')).toBeVisible();
   await expect.element(request.getByText('This report will be permanently removed.')).toBeVisible();
   await expect.element(page.getByRole('button', { name: 'Delete report' })).toBeVisible();
   await expect.element(page.getByRole('button', { name: 'Keep report' })).toBeVisible();
@@ -121,7 +121,13 @@ it('S4: a conflicting reentrant decision is ignored while the host records appro
   const { approved, denied } = watchDecisions(host);
   await expect.element(deny()).toBeVisible();
   const refuse = deny().element() as HTMLButtonElement;
-  host.addEventListener('ki-approve', () => { refuse.click(); }, { once: true });
+  host.addEventListener(
+    'ki-approve',
+    () => {
+      refuse.click();
+    },
+    { once: true },
+  );
 
   await approve().click();
   expect(approved).toHaveBeenCalledOnce();
@@ -148,7 +154,7 @@ it.each([
     await expect.element(group().getByText('send_email')).toBeVisible();
     await expect.element(group().getByText('Mara')).toBeVisible();
     await expect.element(group().getByText('10:32')).toBeVisible();
-    await expect.element(group().getByText('Weekly report')).not.toBeVisible();
+    expect(host.querySelector('dd')?.getClientRects()).toHaveLength(0);
     await expect.element(approve()).not.toBeInTheDocument();
     await expect.element(deny()).not.toBeInTheDocument();
     await expect.element(remember()).not.toBeInTheDocument();
@@ -202,6 +208,7 @@ it('S7: the first decision reached from a destructive question is refusal', asyn
   await userEvent.keyboard('{Enter}');
   expect(denied).toHaveBeenCalledOnce();
   expect(approved).not.toHaveBeenCalled();
+  expect(host.shadowRoot?.activeElement).toBe(group().element());
 });
 
 it('S8: Escape leaves the request pending and reports no decision', async () => {
@@ -234,13 +241,21 @@ it('S8: one hour without a decision never approves the request', {
 });
 
 it('S9: the pending group is named, announced politely and passes axe', async () => {
-  mount({ remember: true, consequence: 'Recipients will get the message immediately.' });
+  const host = mount({
+    remember: true,
+    consequence: 'Recipients will get the message immediately.',
+  });
   await expect.element(group()).toBeVisible();
-  const status = page.getByRole('status');
-  await expect.element(status).toHaveTextContent(heading);
+  await expect
+    .poll(() => host.shadowRoot?.querySelector('[role="status"]')?.textContent)
+    .toBe(heading);
   const tree = await browser.accessibilityTree();
   if (navigator.userAgent.includes('Chrome/')) {
-    expect(tree?.some((node) => node.role === 'status' && node.live === 'polite')).toBe(true);
+    expect(
+      tree?.some(
+        (node) => node.role === 'status' && node.live === 'polite' && node.text === heading,
+      ),
+    ).toBe(true);
   }
   await expectAccessible(fixture);
 });
@@ -275,7 +290,9 @@ it('S11: arrival and a host focus request preserve an editor in a shadow tree', 
 it('S12: approval does not submit the enclosing form or contribute data', async () => {
   const form = document.createElement('form');
   fixture.append(form);
-  const submit = vi.fn((event: SubmitEvent) => { event.preventDefault(); });
+  const submit = vi.fn((event: SubmitEvent) => {
+    event.preventDefault();
+  });
   form.addEventListener('submit', submit);
   const host = mount({ remember: true }, form);
   const { approved } = watchDecisions(host);
@@ -325,14 +342,16 @@ it('S15: a forced palette preserves the prompt boundary and controls', async ({ 
     } else if (!paletteApplies()) {
       skip('This browser does not paint a forced palette under emulation');
     }
-    mount({ tone: 'danger' });
+    const host = mount({ tone: 'danger' });
+    const { denied } = watchDecisions(host);
     await expect.element(group()).toBeVisible();
     const surface = getComputedStyle(group().element());
     expect(Number.parseFloat(surface.borderBlockStartWidth)).toBeGreaterThan(0);
     expect(surface.borderBlockStartColor).not.toBe(surface.backgroundColor);
     expect(surface.color).not.toBe(surface.backgroundColor);
     await expect.element(approve()).toBeEnabled();
-    await expect.element(deny()).toBeEnabled();
+    await deny().click();
+    expect(denied).toHaveBeenCalledOnce();
   } finally {
     fixture.style.removeProperty('background-color');
     await browser.emulateForcedColors(null);
