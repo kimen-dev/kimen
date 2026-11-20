@@ -1,5 +1,6 @@
 {
   "name": "@kimen/mcp-server",
+  "mcpName": "io.github.kimen-dev/kimen",
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
