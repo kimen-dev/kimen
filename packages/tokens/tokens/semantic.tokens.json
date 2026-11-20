@@ -1652,6 +1652,14 @@
       "floating-surface-max-block": {
         "$value": "{ki.size.surface.xs}",
         "$description": "Maximum block size of a compact floating surface before it scrolls."
+      },
+      "standard-inset": {
+        "$value": "{ki.space.xl}",
+        "$description": "Standard content inset."
+      },
+      "compact-inset": {
+        "$value": "{ki.space.lg}",
+        "$description": "Compact content inset."
       }
     },
     "notification-marker": {
@@ -1773,6 +1781,10 @@
       "field-item": {
         "$value": "{ki.radius.component.sm}",
         "$description": "Corner radius for choices and tokens inside an editable field."
+      },
+      "panel": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius for an outlined content panel."
       }
     },
     "motion": {
