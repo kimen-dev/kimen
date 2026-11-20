@@ -36,6 +36,24 @@ is ignored:
   code={`<ki-textarea label="Bio" value="Design systems, gates, and coffee."></ki-textarea>`}
 />
 
+### Appearance and character limits
+
+Set `appearance` to `outlined` for a full border or `filled` for a
+tinted surface with a bottom indicator. Both keep the label above the field.
+The default appearance follows the theme.
+
+`minlength` uses native minimum-length validation. The textarea keeps edits
+past `maxlength` and blocks submission until the value fits. With a maximum,
+`show-count` adds the current length to the field description and announces
+when the user reaches or exceeds the limit. Use `maxlength-error-text` to
+localize the default length error.
+
+<Demo
+  layout="block"
+  code={`<ki-textarea label="Bio" appearance="outlined" minlength="3" maxlength="24" show-count help-text="Keep it short" value="Designer and front-end developer"></ki-textarea>
+<ki-textarea label="Short bio" appearance="filled" maxlength="12" show-count help-text="Keep it short" value="Designs generative interfaces."></ki-textarea>`}
+/>
+
 ## API reference
 
 <CemApi tag="ki-textarea" />

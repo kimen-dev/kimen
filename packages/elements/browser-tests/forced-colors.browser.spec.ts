@@ -1,3 +1,4 @@
+// @spec:112-input-variants
 // @spec:062-solid-surface-background
 // @spec:104-ki-fab
 // @spec:092-ki-stepper
@@ -632,6 +633,25 @@ describe.for(THEMES)('forced colors under the %s theme', (theme) => {
     expect(fillOf(dot)).not.toBeNull();
     expect(fillOf(count)).not.toBeNull();
     expect(parseColor(getComputedStyle(count).color).ink).not.toBe(textBackdropOf(count));
+  });
+
+  it('S7 preserves variant boundaries and focus in the forced palette', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(`
+      <ki-input label="Name" appearance="outlined"></ki-input>
+      <ki-textarea label="Notes" appearance="filled"></ki-textarea>
+    `);
+    const outlined = await partOf(fixture, 'ki-input', '[part="field"]');
+    const filled = await partOf(fixture, 'ki-textarea', '[part="field"]');
+    expect(edgeOf(outlined)).not.toBeNull();
+    const filledStyle = getComputedStyle(filled);
+    expect(parseFloat(filledStyle.borderBlockEndWidth)).toBeGreaterThan(0);
+    expect(inkOnCanvas(filledStyle.borderBlockEndColor)).not.toBeNull();
+
+    const textarea = await partOf(fixture, 'ki-textarea', '[part="textarea"]');
+    textarea.focus();
+    expect(filledStyle.outlineStyle).toBe('solid');
+    expect(inkOnCanvas(filledStyle.outlineColor)).not.toBeNull();
   });
 
   it('ki-divider paints its rule', async (test) => {

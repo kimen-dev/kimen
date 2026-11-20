@@ -5958,219 +5958,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-citation.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiCitation",
-          "customElement": true,
-          "tagName": "ki-citation",
-          "description": "A numbered inline link from an answer to a source card.",
-          "whenToUse": "Next to a claim supported by a `ki-source` in the same document\nor shadow root. Repeat the same reference for subsequent mentions.",
-          "whenNotToUse": "To cite a source outside this tree or replace a standalone\nlink. Use `ki-link` for direct navigation.",
-          "attributes": [
-            {
-              "name": "ref",
-              "fieldName": "citationRef",
-              "type": {
-                "text": "string"
-              },
-              "description": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
-              "required": true
-            },
-            {
-              "name": "label-template",
-              "fieldName": "labelTemplate",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Source {number}: {title}'",
-              "description": "Localized link name with `{number}` and `{title}` placeholders."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "citationRef",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
-              "attribute": "ref",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "labelTemplate",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Source {number}: {title}'",
-              "description": "Localized link name with `{number}` and `{title}` placeholders.",
-              "attribute": "label-template",
-              "reflects": false
-            }
-          ],
-          "events": [],
-          "slots": [],
-          "cssParts": [
-            {
-              "name": "link",
-              "description": "Focusable citation link."
-            },
-            {
-              "name": "marker",
-              "description": "Visible citation number."
-            },
-            {
-              "name": "preview",
-              "description": "Anchored title and hostname preview."
-            },
-            {
-              "name": "preview-domain",
-              "description": "Hostname in the preview."
-            },
-            {
-              "name": "preview-title",
-              "description": "Title in the preview."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-citation-backdrop-filter",
-              "description": "Complete backdrop filter for a citation marker."
-            },
-            {
-              "name": "--ki-citation-bg",
-              "description": "Background of a citation marker."
-            },
-            {
-              "name": "--ki-citation-bg-image",
-              "description": "Optional decorative image over a citation marker."
-            },
-            {
-              "name": "--ki-citation-fg",
-              "description": "Text on a citation marker."
-            },
-            {
-              "name": "--ki-citation-hover-bg",
-              "description": "Background of a hovered citation marker."
-            },
-            {
-              "name": "--ki-citation-hover-fg",
-              "description": "Text on a hovered citation marker."
-            },
-            {
-              "name": "--ki-citation-padding",
-              "description": "Inline padding of the citation number."
-            },
-            {
-              "name": "--ki-citation-preview-backdrop-filter",
-              "description": "Complete backdrop filter for the citation preview."
-            },
-            {
-              "name": "--ki-citation-preview-bg",
-              "description": "Background of the title and hostname preview."
-            },
-            {
-              "name": "--ki-citation-preview-bg-image",
-              "description": "Optional decorative image over the citation preview."
-            },
-            {
-              "name": "--ki-citation-preview-border",
-              "description": "Edge color of the citation preview."
-            },
-            {
-              "name": "--ki-citation-preview-border-width",
-              "description": "Edge width of the citation preview."
-            },
-            {
-              "name": "--ki-citation-preview-fg",
-              "description": "Text on the citation preview."
-            },
-            {
-              "name": "--ki-citation-preview-max-inline-size",
-              "description": "Maximum width of the citation preview."
-            },
-            {
-              "name": "--ki-citation-preview-padding",
-              "description": "Inset around the preview content."
-            },
-            {
-              "name": "--ki-citation-preview-radius",
-              "description": "Corner radius of the citation preview."
-            },
-            {
-              "name": "--ki-citation-preview-shadow",
-              "description": "Elevation of the citation preview."
-            },
-            {
-              "name": "--ki-citation-radius",
-              "description": "Corner radius of a citation marker."
-            },
-            {
-              "name": "--ki-citation-size",
-              "description": "Minimum painted edge of a citation marker."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-caption-2",
-              "description": "semantic dimension for typography line height caption 2."
-            },
-            {
-              "name": "--ki-typography-size-caption-2",
-              "description": "semantic dimension for typography size caption 2."
-            },
-            {
-              "name": "--ki-typography-weight-body-semibold",
-              "description": "semantic font weight for typography weight body semibold."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiCitation",
-          "declaration": {
-            "name": "KiCitation",
-            "module": "dist/components/ki-citation.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-citation",
-          "declaration": {
-            "name": "KiCitation",
-            "module": "dist/components/ki-citation.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-code-block.js",
       "declarations": [
         {
@@ -15770,6 +15557,15 @@
               "description": "Localized provenance description read alongside help or an error when\nthe end slot contains an AI label. Use this to translate the description."
             },
             {
+              "name": "appearance",
+              "fieldName": "appearance",
+              "type": {
+                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
+              },
+              "default": "'default'",
+              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes."
+            },
+            {
               "name": "autocomplete",
               "fieldName": "autocomplete",
               "type": {
@@ -15792,7 +15588,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
             },
             {
               "name": "help-text",
@@ -15818,6 +15614,26 @@
                 "text": "string | undefined"
               },
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+            },
+            {
+              "name": "maxlength",
+              "fieldName": "maxlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "name": "minlength",
+              "fieldName": "minlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+              "minimum": 0,
+              "maximum": 2147483647
             },
             {
               "name": "name",
@@ -15852,6 +15668,15 @@
               },
               "default": "false",
               "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields."
+            },
+            {
+              "name": "show-count",
+              "fieldName": "showCount",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit."
             },
             {
               "name": "size",
@@ -15896,6 +15721,18 @@
             },
             {
               "kind": "field",
+              "name": "appearance",
+              "privacy": "public",
+              "type": {
+                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
+              },
+              "default": "'default'",
+              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+              "attribute": "appearance",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "autocomplete",
               "privacy": "public",
               "type": {
@@ -15924,7 +15761,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
               "attribute": "error-text",
               "reflects": true
             },
@@ -15961,6 +15798,32 @@
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
               "attribute": "label-hint",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "maxlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+              "attribute": "maxlength",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "kind": "field",
+              "name": "minlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+              "attribute": "minlength",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 2147483647
             },
             {
               "kind": "field",
@@ -16006,6 +15869,18 @@
               "default": "false",
               "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
               "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showCount",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+              "attribute": "show-count",
               "reflects": true
             },
             {
@@ -16070,6 +15945,10 @@
           ],
           "cssParts": [
             {
+              "name": "count",
+              "description": "Current character count and maximum at the end of the field message row."
+            },
+            {
               "name": "error",
               "description": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
             },
@@ -16112,6 +15991,10 @@
               "description": "Inline-end inset between the input action and the inside edge of the field border."
             },
             {
+              "name": "--ki-input-appearance-border-width",
+              "description": "Resting stroke width of both explicit text field appearances."
+            },
+            {
               "name": "--ki-input-border-block-end-width",
               "description": "dimension used by the input component for border block end width."
             },
@@ -16126,6 +16009,22 @@
             {
               "name": "--ki-input-border-inline-start-width",
               "description": "dimension used by the input component for border inline start width."
+            },
+            {
+              "name": "--ki-input-count-bg",
+              "description": "Resting character count surface over the surrounding page."
+            },
+            {
+              "name": "--ki-input-count-fg",
+              "description": "Character count when the value fits the maximum."
+            },
+            {
+              "name": "--ki-input-count-over-bg",
+              "description": "Over-limit character count surface over the surrounding page."
+            },
+            {
+              "name": "--ki-input-count-over-fg",
+              "description": "Character count when the value exceeds the maximum."
             },
             {
               "name": "--ki-input-disabled-bg",
@@ -16146,6 +16045,38 @@
             {
               "name": "--ki-input-disabled-placeholder-fg",
               "description": "color used by the input component for disabled placeholder foreground."
+            },
+            {
+              "name": "--ki-input-filled-backdrop-filter",
+              "description": "Optional backdrop filter of a filled field."
+            },
+            {
+              "name": "--ki-input-filled-bg",
+              "description": "Surface of a filled text field."
+            },
+            {
+              "name": "--ki-input-filled-bg-image",
+              "description": "Optional background image of a filled field."
+            },
+            {
+              "name": "--ki-input-filled-fg",
+              "description": "Entered text on a filled field."
+            },
+            {
+              "name": "--ki-input-filled-focus-width",
+              "description": "Stroke width of the block-end indicator while focused."
+            },
+            {
+              "name": "--ki-input-filled-indicator",
+              "description": "Continuous block-end edge of an enabled filled text field."
+            },
+            {
+              "name": "--ki-input-filled-placeholder-fg",
+              "description": "Placeholder on a filled field."
+            },
+            {
+              "name": "--ki-input-filled-radius",
+              "description": "Block-start corner radius of a filled text field."
             },
             {
               "name": "--ki-input-focus-bg",
@@ -16314,6 +16245,26 @@
             {
               "name": "--ki-input-line-height",
               "description": "dimension used by the input component for line height."
+            },
+            {
+              "name": "--ki-input-outlined-bg",
+              "description": "Surface of an outlined text field."
+            },
+            {
+              "name": "--ki-input-outlined-border",
+              "description": "Full outline of an enabled outlined text field."
+            },
+            {
+              "name": "--ki-input-outlined-fg",
+              "description": "Entered text on an outlined field."
+            },
+            {
+              "name": "--ki-input-outlined-placeholder-fg",
+              "description": "Placeholder on an outlined field."
+            },
+            {
+              "name": "--ki-input-outlined-radius",
+              "description": "Corner radius of an outlined text field."
             },
             {
               "name": "--ki-input-padding-inline",
@@ -16512,8 +16463,16 @@
               "description": "semantic dimension for typography size caption 2."
             },
             {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
               "name": "--ki-typography-weight-body-normal",
               "description": "semantic font weight for typography weight body normal."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
             }
           ]
         }
@@ -27060,397 +27019,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-source.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiSource",
-          "customElement": true,
-          "tagName": "ki-source",
-          "description": "Declares one named web source for a `ki-sources` list.",
-          "whenToUse": "As a direct child of `ki-sources`. In HTML provide an `id`,\n`href` and `title`; in guarded specs provide `source-id`, `href` and\n`title`. Use the same identifier on any citation of the source.",
-          "whenNotToUse": "For standalone links outside a source list; use `ki-link`.",
-          "attributes": [
-            {
-              "name": "href",
-              "fieldName": "href",
-              "type": {
-                "text": "string"
-              },
-              "description": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
-              "required": true,
-              "format": "url"
-            },
-            {
-              "name": "snippet",
-              "fieldName": "snippet",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional plain-text excerpt displayed in the source card."
-            },
-            {
-              "name": "source-id",
-              "fieldName": "sourceId",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs."
-            },
-            {
-              "name": "title",
-              "fieldName": "sourceTitle",
-              "type": {
-                "text": "string"
-              },
-              "description": "Required plain-text source title. In HTML use the `title` attribute.",
-              "required": true
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "href",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
-              "attribute": "href",
-              "reflects": true,
-              "required": true,
-              "format": "url"
-            },
-            {
-              "kind": "field",
-              "name": "snippet",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Optional plain-text excerpt displayed in the source card.",
-              "attribute": "snippet",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "sourceId",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs.",
-              "attribute": "source-id",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "sourceTitle",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Required plain-text source title. In HTML use the `title` attribute.",
-              "attribute": "title",
-              "reflects": true,
-              "required": true
-            }
-          ],
-          "events": [],
-          "slots": [],
-          "cssParts": [],
-          "cssProperties": [
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiSource",
-          "declaration": {
-            "name": "KiSource",
-            "module": "dist/components/ki-source.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-source",
-          "declaration": {
-            "name": "KiSource",
-            "module": "dist/components/ki-source.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-sources.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiSources",
-          "customElement": true,
-          "tagName": "ki-sources",
-          "description": "A disclosure with the ordered sources behind an answer.",
-          "whenToUse": "To show the evidence behind an answer. Add direct `ki-source`\nchildren and place `ki-citation` markers next to the claims they support.",
-          "whenNotToUse": "For ordinary navigation, unrelated links, or form controls.",
-          "attributes": [
-            {
-              "name": "open",
-              "fieldName": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the disclosure is expanded. Set to show the list initially."
-            },
-            {
-              "name": "source-count-label",
-              "fieldName": "sourceCountLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{count} source'",
-              "description": "Localized summary when there is one source. Use `{count}` for its number."
-            },
-            {
-              "name": "sources-count-label",
-              "fieldName": "sourcesCountLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{count} sources'",
-              "description": "Localized summary for multiple sources. Use `{count}` for their number."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "open",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the disclosure is expanded. Set to show the list initially.",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "sourceCountLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{count} source'",
-              "description": "Localized summary when there is one source. Use `{count}` for its number.",
-              "attribute": "source-count-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "sourcesCountLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{count} sources'",
-              "description": "Localized summary for multiple sources. Use `{count}` for their number.",
-              "attribute": "sources-count-label",
-              "reflects": false
-            }
-          ],
-          "events": [],
-          "slots": [
-            {
-              "name": "",
-              "description": "Direct `ki-source` definitions for this answer."
-            }
-          ],
-          "cssParts": [
-            {
-              "name": "disclosure",
-              "description": "Native expandable section."
-            },
-            {
-              "name": "domain",
-              "description": "Hostname derived from the link destination."
-            },
-            {
-              "name": "list",
-              "description": "Ordered list of sources."
-            },
-            {
-              "name": "number",
-              "description": "Source order marker inside the card."
-            },
-            {
-              "name": "snippet",
-              "description": "Optional excerpt."
-            },
-            {
-              "name": "source",
-              "description": "Source card link."
-            },
-            {
-              "name": "summary",
-              "description": "Disclosure control with the localized source count."
-            },
-            {
-              "name": "title",
-              "description": "Visible title of the link."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-space-scale",
-              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-source-card-backdrop-filter",
-              "description": "Complete backdrop filter for a source card."
-            },
-            {
-              "name": "--ki-source-card-bg",
-              "description": "Resting background of a source card."
-            },
-            {
-              "name": "--ki-source-card-bg-image",
-              "description": "Optional decorative image over a source card."
-            },
-            {
-              "name": "--ki-source-card-border",
-              "description": "Border color of a source card."
-            },
-            {
-              "name": "--ki-source-card-border-width",
-              "description": "Border width of a source card."
-            },
-            {
-              "name": "--ki-source-card-fg",
-              "description": "Text on a resting source card."
-            },
-            {
-              "name": "--ki-source-card-hover-bg",
-              "description": "Background of a hovered source card."
-            },
-            {
-              "name": "--ki-source-card-hover-fg",
-              "description": "Text on a hovered source card."
-            },
-            {
-              "name": "--ki-source-card-padding",
-              "description": "Inset around source card content."
-            },
-            {
-              "name": "--ki-source-card-radius",
-              "description": "Corner radius of a source card."
-            },
-            {
-              "name": "--ki-source-number-bg",
-              "description": "Background of the number in a source card."
-            },
-            {
-              "name": "--ki-source-number-fg",
-              "description": "Text color of the number in a source card."
-            },
-            {
-              "name": "--ki-source-number-radius",
-              "description": "Corner radius of the number in a source card."
-            },
-            {
-              "name": "--ki-source-number-size",
-              "description": "Minimum size of the number in a source card."
-            },
-            {
-              "name": "--ki-sources-list-gap",
-              "description": "Gap between source cards."
-            },
-            {
-              "name": "--ki-sources-max-inline-size",
-              "description": "Maximum line length of the source disclosure."
-            },
-            {
-              "name": "--ki-sources-summary-bg",
-              "description": "Background of the source-count control."
-            },
-            {
-              "name": "--ki-sources-summary-fg",
-              "description": "Text on the source-count control."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-body-1",
-              "description": "semantic dimension for typography line height body 1."
-            },
-            {
-              "name": "--ki-typography-line-height-caption-2",
-              "description": "semantic dimension for typography line height caption 2."
-            },
-            {
-              "name": "--ki-typography-size-body-1",
-              "description": "semantic dimension for typography size body 1."
-            },
-            {
-              "name": "--ki-typography-size-caption-2",
-              "description": "semantic dimension for typography size caption 2."
-            },
-            {
-              "name": "--ki-typography-weight-body-medium",
-              "description": "semantic font weight for typography weight body medium."
-            },
-            {
-              "name": "--ki-typography-weight-body-semibold",
-              "description": "semantic font weight for typography weight body semibold."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiSources",
-          "declaration": {
-            "name": "KiSources",
-            "module": "dist/components/ki-sources.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-sources",
-          "declaration": {
-            "name": "KiSources",
-            "module": "dist/components/ki-sources.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-spinner.js",
       "declarations": [
         {
@@ -30922,6 +30490,15 @@
           "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
           "attributes": [
             {
+              "name": "appearance",
+              "fieldName": "appearance",
+              "type": {
+                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
+              },
+              "default": "'default'",
+              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes."
+            },
+            {
               "name": "autocomplete",
               "fieldName": "autocomplete",
               "type": {
@@ -30944,7 +30521,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
             },
             {
               "name": "help-text",
@@ -30970,6 +30547,35 @@
                 "text": "string | undefined"
               },
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+            },
+            {
+              "name": "maxlength",
+              "fieldName": "maxlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "name": "maxlength-error-text",
+              "fieldName": "maxlengthErrorText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Shorten the text to fit the character limit.'",
+              "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language."
+            },
+            {
+              "name": "minlength",
+              "fieldName": "minlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+              "minimum": 0,
+              "maximum": 2147483647
             },
             {
               "name": "name",
@@ -31015,6 +30621,15 @@
               "description": "Visible line count. Invalid, non-numeric, zero, or negative values fall\nback to 2; no auto-grow or user resize handle exists in v1.\nWhen to use: set the stable multiline height needed by the layout. When\nNOT to use: do not use rows as a responsive size axis."
             },
             {
+              "name": "show-count",
+              "fieldName": "showCount",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit."
+            },
+            {
               "name": "size",
               "fieldName": "size",
               "type": {
@@ -31034,6 +30649,18 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "appearance",
+              "privacy": "public",
+              "type": {
+                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
+              },
+              "default": "'default'",
+              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+              "attribute": "appearance",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "autocomplete",
@@ -31064,7 +30691,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
               "attribute": "error-text",
               "reflects": true
             },
@@ -31101,6 +30728,44 @@
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
               "attribute": "label-hint",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "maxlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+              "attribute": "maxlength",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "kind": "field",
+              "name": "maxlengthErrorText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Shorten the text to fit the character limit.'",
+              "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+              "attribute": "maxlength-error-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minlength",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+              "attribute": "minlength",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 2147483647
             },
             {
               "kind": "field",
@@ -31162,6 +30827,18 @@
             },
             {
               "kind": "field",
+              "name": "showCount",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "default": "false",
+              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+              "attribute": "show-count",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "size",
               "privacy": "public",
               "type": {
@@ -31197,6 +30874,10 @@
           "slots": [],
           "cssParts": [
             {
+              "name": "count",
+              "description": "Current character count and maximum at the end of the field message row."
+            },
+            {
               "name": "error",
               "description": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
             },
@@ -31229,6 +30910,82 @@
             {
               "name": "--ki-density-target-min",
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-input-appearance-border-width",
+              "description": "Resting stroke width of both explicit text field appearances."
+            },
+            {
+              "name": "--ki-input-count-bg",
+              "description": "Resting character count surface over the surrounding page."
+            },
+            {
+              "name": "--ki-input-count-fg",
+              "description": "Character count when the value fits the maximum."
+            },
+            {
+              "name": "--ki-input-count-over-bg",
+              "description": "Over-limit character count surface over the surrounding page."
+            },
+            {
+              "name": "--ki-input-count-over-fg",
+              "description": "Character count when the value exceeds the maximum."
+            },
+            {
+              "name": "--ki-input-filled-backdrop-filter",
+              "description": "Optional backdrop filter of a filled field."
+            },
+            {
+              "name": "--ki-input-filled-bg",
+              "description": "Surface of a filled text field."
+            },
+            {
+              "name": "--ki-input-filled-bg-image",
+              "description": "Optional background image of a filled field."
+            },
+            {
+              "name": "--ki-input-filled-fg",
+              "description": "Entered text on a filled field."
+            },
+            {
+              "name": "--ki-input-filled-focus-width",
+              "description": "Stroke width of the block-end indicator while focused."
+            },
+            {
+              "name": "--ki-input-filled-indicator",
+              "description": "Continuous block-end edge of an enabled filled text field."
+            },
+            {
+              "name": "--ki-input-filled-placeholder-fg",
+              "description": "Placeholder on a filled field."
+            },
+            {
+              "name": "--ki-input-filled-radius",
+              "description": "Block-start corner radius of a filled text field."
+            },
+            {
+              "name": "--ki-input-label-gap",
+              "description": "dimension used by the input component for label gap."
+            },
+            {
+              "name": "--ki-input-outlined-bg",
+              "description": "Surface of an outlined text field."
+            },
+            {
+              "name": "--ki-input-outlined-border",
+              "description": "Full outline of an enabled outlined text field."
+            },
+            {
+              "name": "--ki-input-outlined-fg",
+              "description": "Entered text on an outlined field."
+            },
+            {
+              "name": "--ki-input-outlined-placeholder-fg",
+              "description": "Placeholder on an outlined field."
+            },
+            {
+              "name": "--ki-input-outlined-radius",
+              "description": "Corner radius of an outlined text field."
             },
             {
               "name": "--ki-motion-duration-fast",
@@ -31591,8 +31348,16 @@
               "description": "semantic dimension for typography size caption 2."
             },
             {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
               "name": "--ki-typography-weight-body-normal",
               "description": "semantic font weight for typography weight body normal."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
             }
           ]
         }

@@ -4573,130 +4573,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-citation/ki-citation.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-citation",
-      "docs": "A numbered inline link from an answer to a source card.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Next to a claim supported by a `ki-source` in the same document\nor shadow root. Repeat the same reference for subsequent mentions."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "To cite a source outside this tree or replace a standalone\nlink. Use `ki-link` for direct navigation."
-        },
-        {
-          "name": "part",
-          "text": "link - Focusable citation link."
-        },
-        {
-          "name": "part",
-          "text": "marker - Visible citation number."
-        },
-        {
-          "name": "part",
-          "text": "preview - Anchored title and hostname preview."
-        },
-        {
-          "name": "part",
-          "text": "preview-title - Title in the preview."
-        },
-        {
-          "name": "part",
-          "text": "preview-domain - Hostname in the preview."
-        }
-      ],
-      "usage": {
-        "examples": "# Using ki-citation\n\nPlace a citation after its claim and set `ref` to the matching source identifier.\n\n```html\n<p>The methods account for the difference<ki-citation ref=\"methods\"></ki-citation>.</p>\n<ki-sources>\n  <ki-source id=\"methods\" title=\"Study design\" href=\"/methods\"></ki-source>\n</ki-sources>\n```\n\nUse `citationRef` in JSX. Tab to the link for a preview. Escape dismisses the\npreview, and Enter opens the list and moves focus to the source link.\n"
-      },
-      "props": [
-        {
-          "name": "citationRef",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "ref",
-          "reflectToAttr": false,
-          "docs": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "labelTemplate",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label-template",
-          "reflectToAttr": false,
-          "docs": "Localized link name with `{number}` and `{title}` placeholders.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Source {number}: {title}'"
-            }
-          ],
-          "default": "'Source {number}: {title}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [],
-      "parts": [
-        {
-          "name": "link",
-          "docs": "Focusable citation link."
-        },
-        {
-          "name": "marker",
-          "docs": "Visible citation number."
-        },
-        {
-          "name": "preview",
-          "docs": "Anchored title and hostname preview."
-        },
-        {
-          "name": "preview-domain",
-          "docs": "Hostname in the preview."
-        },
-        {
-          "name": "preview-title",
-          "docs": "Title in the preview."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
       "filePath": "src/components/ki-code-block/ki-code-block.tsx",
       "encapsulation": "shadow",
       "tag": "ki-code-block",
@@ -13539,6 +13415,10 @@
         },
         {
           "name": "part",
+          "text": "count - Current character count and maximum at the end of the field message row."
+        },
+        {
+          "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
         {
@@ -13567,7 +13447,7 @@
         }
       ],
       "usage": {
-        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nPlace a one-field form's only submit action inside the field.\n\n```html\n<form role=\"search\">\n  <ki-input type=\"search\" name=\"q\" label=\"Search docs\" placeholder=\"Components, tokens…\">\n    <ki-button slot=\"action\" size=\"sm\" variant=\"secondary\" type=\"submit\">Search</ki-button>\n  </ki-input>\n</form>\n```\n\nThe action has a separate tab stop. Enter in the entry also submits the form.\nFor an icon-only action, give `ki-icon-button size=\"sm\"` a `label` and call\n`form.requestSubmit()` from its click handler.\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
+        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nPlace a one-field form's only submit action inside the field.\n\n```html\n<form role=\"search\">\n  <ki-input type=\"search\" name=\"q\" label=\"Search docs\" placeholder=\"Components, tokens…\">\n    <ki-button slot=\"action\" size=\"sm\" variant=\"secondary\" type=\"submit\">Search</ki-button>\n  </ki-input>\n</form>\n```\n\nThe action has a separate tab stop. Enter in the entry also submits the form.\nFor an icon-only action, give `ki-icon-button size=\"sm\"` a `label` and call\n`form.requestSubmit()` from its click handler.\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n\n## Appearance and character limits\n\nSet `appearance` to `outlined` for a full border or `filled` for a\ntinted surface with a bottom indicator. Both keep the label above the field.\nThe default appearance follows the theme.\n\nSet `minlength` and `maxlength` to use the native input limits. With\na maximum, `show-count` adds the current length to the field description\nand announces when the user reaches the limit.\n\n```html\n<ki-input label=\"Workspace name\" appearance=\"outlined\" minlength=\"3\" maxlength=\"30\" show-count help-text=\"Shown to members\" value=\"Kimen design\"></ki-input>\n<ki-input label=\"Price\" appearance=\"filled\" value=\"49.00\"><span slot=\"start\">EUR</span><span slot=\"end\">/ month</span></ki-input>\n```\n"
       },
       "props": [
         {
@@ -13595,6 +13475,47 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "appearance",
+          "type": "\"default\" | \"filled\" | \"outlined\" | undefined",
+          "complexType": {
+            "original": "'default' | 'outlined' | 'filled'",
+            "resolved": "\"default\" | \"filled\" | \"outlined\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "appearance",
+          "reflectToAttr": true,
+          "docs": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "filled",
+              "type": "string"
+            },
+            {
+              "value": "outlined",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -13665,7 +13586,7 @@
           "mutable": false,
           "attr": "error-text",
           "reflectToAttr": true,
-          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
           "docsTags": [],
           "values": [
             {
@@ -13745,6 +13666,76 @@
           "values": [
             {
               "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength",
+          "reflectToAttr": true,
+          "docs": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minlength",
+          "reflectToAttr": true,
+          "docs": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
             },
             {
               "type": "undefined"
@@ -13861,6 +13852,38 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-count",
+          "reflectToAttr": true,
+          "docs": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -14028,6 +14051,10 @@
         }
       ],
       "parts": [
+        {
+          "name": "count",
+          "docs": "Current character count and maximum at the end of the field message row."
+        },
         {
           "name": "error",
           "docs": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
@@ -23687,342 +23714,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-source/ki-source.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-source",
-      "docs": "Declares one named web source for a `ki-sources` list.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "As a direct child of `ki-sources`. In HTML provide an `id`,\n`href` and `title`; in guarded specs provide `source-id`, `href` and\n`title`. Use the same identifier on any citation of the source."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "For standalone links outside a source list; use `ki-link`."
-        }
-      ],
-      "usage": {
-        "examples": "# Using ki-source\n\nDeclare a source directly inside the default slot of `ki-sources`.\n\n```html\n<ki-sources open>\n  <ki-source id=\"methods\" href=\"/methods\" title=\"Study design\" snippet=\"How the study ran.\"></ki-source>\n</ki-sources>\n```\n\nUse a unique identifier in the current document or shadow root. In a\nguarded spec, use the `source-id` prop instead of the native `id`. The\ndisclosure displays the hostname from the resolved URL.\n"
-      },
-      "props": [
-        {
-          "name": "href",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "href",
-          "reflectToAttr": true,
-          "docs": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
-          "docsTags": [
-            {
-              "name": "format",
-              "text": "url"
-            }
-          ],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "snippet",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "snippet",
-          "reflectToAttr": true,
-          "docs": "Optional plain-text excerpt displayed in the source card.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "sourceId",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "source-id",
-          "reflectToAttr": true,
-          "docs": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "sourceTitle",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "title",
-          "reflectToAttr": true,
-          "docs": "Required plain-text source title. In HTML use the `title` attribute.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [],
-      "parts": [],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-sources/ki-sources.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-sources",
-      "docs": "A disclosure with the ordered sources behind an answer.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "To show the evidence behind an answer. Add direct `ki-source`\nchildren and place `ki-citation` markers next to the claims they support."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "For ordinary navigation, unrelated links, or form controls."
-        },
-        {
-          "name": "slot",
-          "text": "- Direct `ki-source` definitions for this answer."
-        },
-        {
-          "name": "part",
-          "text": "disclosure - Native expandable section."
-        },
-        {
-          "name": "part",
-          "text": "summary - Disclosure control with the localized source count."
-        },
-        {
-          "name": "part",
-          "text": "list - Ordered list of sources."
-        },
-        {
-          "name": "part",
-          "text": "source - Source card link."
-        },
-        {
-          "name": "part",
-          "text": "number - Source order marker inside the card."
-        },
-        {
-          "name": "part",
-          "text": "title - Visible title of the link."
-        },
-        {
-          "name": "part",
-          "text": "domain - Hostname derived from the link destination."
-        },
-        {
-          "name": "part",
-          "text": "snippet - Optional excerpt."
-        }
-      ],
-      "usage": {
-        "examples": "# Using Sources\n\nPut a citation immediately after the clause it supports. Put the source\ndefinitions directly inside the corresponding disclosure. The list shows\nsources in order of first citation and adds uncited sources in declaration order.\n\n```html\n<p>The study design<ki-citation ref=\"methods\"></ki-citation> explains the results.</p>\n<ki-sources>\n  <ki-source\n    id=\"methods\"\n    href=\"https://example.org/methods\"\n    title=\"Study design\"\n    snippet=\"How the study ran.\"\n  ></ki-source>\n</ki-sources>\n```\n\nUse `open` to start with the list expanded. Use unique source identifiers\nwithin each document or shadow root. Hover or focus a citation to see its\ntitle and hostname. Activate it to expand the list and focus the title link.\nThe card links can be used independently of the inline markers.\n\nWhen importing individual elements, register all three tags with their\nrespective `defineCustomElement()` functions. Use `citationRef` and\n`sourceTitle` as component props in JSX. In a guarded spec, use keys\n`ref`, `source-id`, `title` and `href` on their respective nodes. Put\nthe citation in a `div` primitive if it shares a line with text.\n\nProvide the local language through `label-template`, `source-count-label`,\nand `sources-count-label`. Titles and snippets are plain text. HTTP(S) URLs\nand relative web references work in authored HTML. Guarded specs also follow\nthe application's allowed-origin policy.\n"
-      },
-      "props": [
-        {
-          "name": "open",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "open",
-          "reflectToAttr": true,
-          "docs": "Whether the disclosure is expanded. Set to show the list initially.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "sourceCountLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "source-count-label",
-          "reflectToAttr": false,
-          "docs": "Localized summary when there is one source. Use `{count}` for its number.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{count} source'"
-            }
-          ],
-          "default": "'{count} source'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "sourcesCountLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "sources-count-label",
-          "reflectToAttr": false,
-          "docs": "Localized summary for multiple sources. Use `{count}` for their number.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{count} sources'"
-            }
-          ],
-          "default": "'{count} sources'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Direct `ki-source` definitions for this answer."
-        }
-      ],
-      "parts": [
-        {
-          "name": "disclosure",
-          "docs": "Native expandable section."
-        },
-        {
-          "name": "domain",
-          "docs": "Hostname derived from the link destination."
-        },
-        {
-          "name": "list",
-          "docs": "Ordered list of sources."
-        },
-        {
-          "name": "number",
-          "docs": "Source order marker inside the card."
-        },
-        {
-          "name": "snippet",
-          "docs": "Optional excerpt."
-        },
-        {
-          "name": "source",
-          "docs": "Source card link."
-        },
-        {
-          "name": "summary",
-          "docs": "Disclosure control with the localized source count."
-        },
-        {
-          "name": "title",
-          "docs": "Visible title of the link."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",
       "encapsulation": "shadow",
       "tag": "ki-spinner",
@@ -27113,6 +26804,10 @@
         },
         {
           "name": "part",
+          "text": "count - Current character count and maximum at the end of the field message row."
+        },
+        {
+          "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
         {
@@ -27141,9 +26836,50 @@
         }
       ],
       "usage": {
-        "examples": "A labeled multiline field in a form (`label` is mandatory — the visible label and accessible name); `rows` sets the stable visible line count (default `2`, no auto-grow in v1):\n\n```html\n<form>\n  <ki-textarea label=\"Comments\" name=\"comments\" rows=\"4\"></ki-textarea>\n  <ki-button variant=\"primary\">Send</ki-button>\n</form>\n```\n\nInitial text is declared through the `value` attribute — element text content is ignored — and Enter inserts a line break, never submitting the enclosing form:\n\n```html\n<ki-textarea label=\"Bio\" name=\"bio\" value=\"Web components enthusiast.\"></ki-textarea>\n```\n\n`required` blocks submission while empty, and an `autocomplete` purpose such as `street-address` exposes the entry's meaning to autofill:\n\n```html\n<ki-textarea\n  label=\"Shipping address\"\n  name=\"address\"\n  rows=\"3\"\n  autocomplete=\"street-address\"\n  required\n></ki-textarea>\n```\n\nRead-only and disabled are distinct states — `readonly` stays focusable, selectable, submitted and validation-exempt; `disabled` is none of those:\n\n```html\n<ki-textarea label=\"Accepted policy\" value=\"Version 2.1, accepted 2026-05-02.\" readonly></ki-textarea>\n<ki-textarea label=\"Legacy notes\" value=\"Migrated from v1.\" disabled></ki-textarea>\n```\n"
+        "examples": "A labeled multiline field in a form (`label` is mandatory — the visible label and accessible name); `rows` sets the stable visible line count (default `2`, no auto-grow in v1):\n\n```html\n<form>\n  <ki-textarea label=\"Comments\" name=\"comments\" rows=\"4\"></ki-textarea>\n  <ki-button variant=\"primary\">Send</ki-button>\n</form>\n```\n\nInitial text is declared through the `value` attribute — element text content is ignored — and Enter inserts a line break, never submitting the enclosing form:\n\n```html\n<ki-textarea label=\"Bio\" name=\"bio\" value=\"Web components enthusiast.\"></ki-textarea>\n```\n\n`required` blocks submission while empty, and an `autocomplete` purpose such as `street-address` exposes the entry's meaning to autofill:\n\n```html\n<ki-textarea\n  label=\"Shipping address\"\n  name=\"address\"\n  rows=\"3\"\n  autocomplete=\"street-address\"\n  required\n></ki-textarea>\n```\n\nRead-only and disabled are distinct states — `readonly` stays focusable, selectable, submitted and validation-exempt; `disabled` is none of those:\n\n```html\n<ki-textarea label=\"Accepted policy\" value=\"Version 2.1, accepted 2026-05-02.\" readonly></ki-textarea>\n<ki-textarea label=\"Legacy notes\" value=\"Migrated from v1.\" disabled></ki-textarea>\n```\n\n## Appearance and character limits\n\nSet `appearance` to `outlined` for a full border or `filled` for a\ntinted surface with a bottom indicator. Both keep the label above the field.\nThe default appearance follows the theme.\n\n`minlength` uses native minimum-length validation. The textarea keeps edits\npast `maxlength` and blocks submission until the value fits. With a maximum,\n`show-count` adds the current length to the field description and announces\nwhen the user reaches or exceeds the limit. Use `maxlength-error-text` to\nlocalize the default length error.\n\n```html\n<ki-textarea label=\"Bio\" appearance=\"outlined\" minlength=\"3\" maxlength=\"24\" show-count help-text=\"Keep it short\" value=\"Designer and front-end developer\"></ki-textarea>\n<ki-textarea label=\"Short bio\" appearance=\"filled\" maxlength=\"12\" show-count help-text=\"Keep it short\" value=\"Designs generative interfaces.\"></ki-textarea>\n```\n"
       },
       "props": [
+        {
+          "name": "appearance",
+          "type": "\"default\" | \"filled\" | \"outlined\" | undefined",
+          "complexType": {
+            "original": "'default' | 'outlined' | 'filled'",
+            "resolved": "\"default\" | \"filled\" | \"outlined\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "appearance",
+          "reflectToAttr": true,
+          "docs": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "filled",
+              "type": "string"
+            },
+            {
+              "value": "outlined",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "autocomplete",
           "type": "string | undefined",
@@ -27210,7 +26946,7 @@
           "mutable": false,
           "attr": "error-text",
           "reflectToAttr": true,
-          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
           "docsTags": [],
           "values": [
             {
@@ -27290,6 +27026,108 @@
           "values": [
             {
               "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength",
+          "reflectToAttr": true,
+          "docs": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlengthErrorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength-error-text",
+          "reflectToAttr": true,
+          "docs": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Shorten the text to fit the character limit.'"
+            }
+          ],
+          "default": "'Shorten the text to fit the character limit.'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minlength",
+          "reflectToAttr": true,
+          "docs": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
             },
             {
               "type": "undefined"
@@ -27440,6 +27278,38 @@
           "setter": false
         },
         {
+          "name": "showCount",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-count",
+          "reflectToAttr": true,
+          "docs": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "size",
           "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
           "complexType": {
@@ -27533,6 +27403,10 @@
       "styles": [],
       "slots": [],
       "parts": [
+        {
+          "name": "count",
+          "docs": "Current character count and maximum at the end of the field message row."
+        },
         {
           "name": "error",
           "docs": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
