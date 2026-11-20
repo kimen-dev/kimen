@@ -24,7 +24,8 @@ button {
   padding-block: var(--_ki-suggestion-block-inset, 0);
   padding-inline: var(--ki-suggestion-inset);
   margin: 0;
-  border: var(--ki-suggestion-border-width) solid var(--_ki-suggestion-border, var(--ki-suggestion-border));
+  border: var(--ki-suggestion-border-width) solid
+    var(--_ki-suggestion-border, var(--ki-suggestion-border));
   border-radius: var(--_ki-suggestion-radius, var(--ki-suggestion-radius));
   appearance: none;
   background-color: var(--_ki-suggestion-bg, var(--ki-suggestion-bg));
