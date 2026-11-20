@@ -1622,6 +1622,27 @@
       "activity-dot-gap": {
         "$value": "{ki.space.xs}",
         "$description": "Gap between typing dots."
+      },
+      "action-gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Gap between distinct actions in a horizontal group."
+      },
+      "action-compact-gap": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Compact gap between adjacent toolbar actions."
+      },
+      "action-inset": {
+        "$value": "{ki.space.xs}",
+        "$description": "Interior space at the edge of an action surface or divider."
+      },
+      "action-joined-gap": {
+        "$value": "{ki.space.zero}",
+        "$description": "Space between actions that share an edge."
+      },
+      "action-hairline": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of the frame and divider in an action surface.",
+        "$type": "dimension"
       }
     },
     "notification-marker": {
@@ -1693,6 +1714,14 @@
       "activity-mark": {
         "$value": "{ki.radius.round}",
         "$description": "Round corners for rings and typing dots."
+      },
+      "action-frame": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Outside corner of an action surface."
+      },
+      "action-seam": {
+        "$value": "{ki.radius.0}",
+        "$description": "Square corner at an edge shared by two actions."
       }
     },
     "motion": {

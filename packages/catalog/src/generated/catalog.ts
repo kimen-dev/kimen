@@ -377,6 +377,44 @@ export const catalogData = {
       "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
       "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
+    "ki-button-group": {
+      "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
+      "events": {},
+      "props": {
+        "attached": {
+          "type": "boolean",
+          "description": "Joins neighboring actions at their inner edges. Buttons share the first\nbutton's variant and use its size when the group has no explicit size.\nUse for a closely related set of actions or for a split button.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Required accessible name for the group or toolbar (for example, \"Text formatting\").\nProvide a localized name that describes the actions' shared purpose.",
+          "required": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Applies one token-backed size to each button while it belongs to the group.\nOmit it to keep individual sizes in spaced mode."
+        },
+        "toolbar": {
+          "type": "boolean",
+          "description": "Gives the group toolbar semantics, a framed surface and one Tab stop.\nHorizontal arrows, Home and End move between the toolbar's actions.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Related ki-button and ki-icon-button controls, in reading order.\nWrap labeled icon actions in ki-tooltip with the same label to show the\nlabel on focus and hover. A toolbar can also include vertical separators."
+      },
+      "tag": "ki-button-group",
+      "whenNotToUse": "for a single-choice setting, unrelated actions, or navigation.\nUse a segmented control for a single-choice setting and links for navigation.",
+      "whenToUse": "place two to five related actions together, present a primary\naction with a menu of alternatives, or give formatting tools one Tab stop."
+    },
     "ki-card": {
       "description": "A card surface for grouping related content, with an optional primary link or action.",
       "events": {
@@ -823,6 +861,10 @@ export const catalogData = {
           "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
           "default": false
         },
+        "expanded": {
+          "type": "boolean",
+          "description": "Application-owned disclosure state for a trigger that opens a popup.\nThe native icon button exposes this as `aria-expanded`. Use with\n`aria-haspopup=\"menu\"` for a menu trigger. Omit for other actions."
+        },
         "label": {
           "type": "string",
           "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
@@ -837,6 +879,10 @@ export const catalogData = {
           "type": "string",
           "description": "Text of the polite status message announced while `loading` is set.\nOverride for localization; the default English string is the icon\nbutton's only built-in user-visible text.\nWhen to use: provide a localized message whenever the document language\nis not English, or a more specific one (\"Refreshing\").\nWhen NOT to use: do not repeat `label` here; the person already hears it\non focus.",
           "default": "Loading"
+        },
+        "pressed": {
+          "type": "boolean",
+          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
         },
         "size": {
           "type": "enum",
@@ -880,7 +926,7 @@ export const catalogData = {
         "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
       },
       "tag": "ki-icon-button",
-      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
       "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
     },
     "ki-image": {
@@ -1167,121 +1213,6 @@ export const catalogData = {
       "tag": "ki-list-item",
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
-    },
-    "ki-menu": {
-      "description": "A popup of actions opened by a button in the same document or shadow root.",
-      "events": {
-        "ki-select": "Reports the selected action and, for a checkbox or radio, its new checked state."
-      },
-      "props": {
-        "anchor": {
-          "type": "string",
-          "description": "Literal ID of the menu button in the same document or containing shadow root.",
-          "default": ""
-        },
-        "filter-label": {
-          "type": "string",
-          "description": "Accessible name and placeholder of the filter. Omit to hide the field.",
-          "default": ""
-        },
-        "filter-results-label": {
-          "type": "string",
-          "description": "Polite results message. The menu substitutes the number of matches for `{count}`.",
-          "default": "Matching actions: {count}"
-        },
-        "open": {
-          "type": "boolean",
-          "description": "Whether the popup is open. Reflected when the user opens or dismisses it.",
-          "default": false
-        },
-        "placement": {
-          "type": "enum",
-          "values": [
-            "bottom-end",
-            "bottom-start",
-            "top-end",
-            "top-start"
-          ],
-          "description": "Preferred side and logical alignment. Flips when the opposite side has more room.",
-          "default": "bottom-start"
-        }
-      },
-      "slots": {
-        "": "Place ki-menu-item, ki-menu-group, and ki-divider here.",
-        "header": "Informational content above the actions, such as account details."
-      },
-      "tag": "ki-menu",
-      "whenNotToUse": "form values, navigation destinations, or long action lists.",
-      "whenToUse": "row actions, account commands, split buttons, and overflow actions."
-    },
-    "ki-menu-group": {
-      "description": "A named group of related actions in a ki-menu.",
-      "events": {},
-      "props": {
-        "label": {
-          "type": "string",
-          "description": "Visible and accessible group name.",
-          "default": ""
-        }
-      },
-      "slots": {
-        "": "The ki-menu-item and ki-divider children of the group."
-      },
-      "tag": "ki-menu-group",
-      "whenNotToUse": "standalone sections or nested menus.",
-      "whenToUse": "name a set of related actions or scope exclusive radio items in a menu."
-    },
-    "ki-menu-item": {
-      "description": "A pointer and keyboard action within a ki-menu.",
-      "events": {},
-      "props": {
-        "checked": {
-          "type": "boolean",
-          "description": "Checked state for checkbox and radio actions.",
-          "default": false
-        },
-        "disabled": {
-          "type": "boolean",
-          "description": "Disabled actions remain discoverable via menu navigation.",
-          "default": false
-        },
-        "shortcut": {
-          "type": "string",
-          "description": "Display-only keyboard shortcut. Applications own shortcut registration.",
-          "default": ""
-        },
-        "tone": {
-          "type": "enum",
-          "values": [
-            "danger",
-            "neutral"
-          ],
-          "description": "Apply the danger tone to a destructive action.",
-          "default": "neutral"
-        },
-        "type": {
-          "type": "enum",
-          "values": [
-            "checkbox",
-            "item",
-            "radio"
-          ],
-          "description": "Action role. A checkbox stays open. A radio selects one action within its group.",
-          "default": "item"
-        },
-        "value": {
-          "type": "string",
-          "description": "Action identifier reported by the parent menu.",
-          "default": ""
-        }
-      },
-      "slots": {
-        "": "The action's visible label.",
-        "start": "One decorative icon or avatar before the label."
-      },
-      "tag": "ki-menu-item",
-      "whenNotToUse": "standalone controls, navigational links, or form options.",
-      "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu."
     },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",
