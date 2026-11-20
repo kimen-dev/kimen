@@ -337,19 +337,24 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
 - `Text.variant` (`caption`, `body`; 1.0 dropped the headings), `weight`,
   `Video.posterUrl`: not rendered.
 - `Slider.steps` divides the span into the requested number of intervals.
-  Both versions map the label, limits and value. Slider edits stay local
-  to the rendered control.
+  Both versions map the label, limits and value. A committed slider value
+  is written back to its bound path as a number (two-way binding, below).
 - `sendDataModel` metadata travels under `a2uiRendererDataModel` with
   `version: "1.0"`.
 - The remaining 0.9.1 lossy mappings apply unchanged.
 
 ## Declared gaps
 
-- **User input does not flow back into the data model.** The adapter keeps
-  edits to `TextField`, `CheckBox`, `ChoicePicker` and `Slider` local to the
-  rendered control. An A2UI action's context and the `sendDataModel` metadata
-  use the values the agent last set. Model writeback requires an adapter
-  input channel.
+- **Two-way binding covers single values only** (spec 039 A1). When the
+  person commits a value in a `TextField`, a `CheckBox`, a `Slider` or a
+  single-selection `ChoicePicker` whose `value` is a data binding, the
+  adapter writes it to that path of the data model (a string, a boolean, a
+  number, a one-item list) before any action that follows resolves its
+  context, and `sendDataModel` carries it. The write never re-renders the
+  surface: other components showing the same path refresh on the next agent
+  update. A multiple-selection `ChoicePicker` and `DateTimeInput` keep their
+  edits local to the rendered control until their catalog components report
+  one committed value. A control with a literal value writes nothing.
 - **Full re-render per update.** Every accepted `updateComponents` or
   `updateDataModel` re-renders the whole surface through `renderUiSpec`, so
   scroll, focus, in-progress input and playback state reset, and degradations are

@@ -210,9 +210,11 @@ adapter emits the A2UI v0.9.1 client message to your `onAction` callback:
 - When the surface was created with `sendDataModel: true`, the second argument
   carries `{ a2uiClientDataModel: { version, surfaces: { [surfaceId]: model } } }`
   for your transport's metadata.
-- User input does not flow back into the data model yet: the guarded renderer
-  only reports activations, so the context carries the values the agent last
-  set (declared gap in `COMPAT.md`).
+- What the person commits in a bound text field, checkbox, slider or
+  single-selection picker is written to its data-model path first (two-way
+  binding), so the context carries it. Multiple-selection pickers and date
+  and time inputs still keep their edits local (declared gap in
+  `COMPAT.md`).
 
 The surface's **declared action set** is fixed: pass `actions` to declare it,
 or the first successful render that binds an action freezes it. A later update

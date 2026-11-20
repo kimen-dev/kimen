@@ -27,7 +27,7 @@ import { isPlainObject, readAt, resolveScopedPointer } from './data-model.js';
 import type { Dialect } from './dialect.js';
 import type { A2uiComponent } from './protocol.js';
 import type { ValueContext, ValueOutcome } from './values.js';
-import { resolveDynamic, staticFailure, toText } from './values.js';
+import { bindingPath, resolveDynamic, staticFailure, toText } from './values.js';
 
 /** A machine-readable, inert rejection (spec 029 FR-003): named, never markup. */
 export interface A2uiDiagnostic {
@@ -64,6 +64,24 @@ export interface ActionBinding {
   readonly scope: readonly string[];
 }
 
+/**
+ * Where a bound input writes what the person commits (spec 039 A1): its own
+ * value binding, resolved against the template scope it was rendered in, and
+ * the shape A2UI expects there.
+ */
+export interface WriteBackBinding {
+  readonly componentId: string;
+  readonly segments: readonly string[];
+  readonly kind: 'boolean' | 'list' | 'number' | 'string';
+}
+
+/**
+ * The internal action a bound input carries in the neutral spec, so the
+ * guarded renderer reports its committed value (spec 039 FR-012). It never
+ * reaches the agent and never joins the surface's declared action set.
+ */
+export const WRITE_BACK_ACTION = 'kimen-a2ui-write-back';
+
 export interface TranslationResult {
   readonly ok: boolean;
   readonly diagnostics: readonly A2uiDiagnostic[];
@@ -73,6 +91,8 @@ export interface TranslationResult {
   readonly actions: readonly string[];
   /** Neutral node path (the guarded renderer's scheme) → the A2UI action behind it. */
   readonly bindings: ReadonlyMap<string, ActionBinding>;
+  /** Neutral node path → the data-model path a bound input writes back to. */
+  readonly writes: ReadonlyMap<string, WriteBackBinding>;
 }
 
 export interface TranslateInput {
@@ -110,6 +130,7 @@ interface WalkContext {
   readonly degradations: A2uiDegradationReport[];
   readonly encounteredActions: Set<string>;
   readonly actionNodes: WeakMap<UiSpecNode, ActionBinding>;
+  readonly writeNodes: WeakMap<UiSpecNode, WriteBackBinding>;
   /** Ids on the recursion stack — a repeat is a cycle (fail closed). */
   readonly ancestors: Set<string>;
   nodes: number;
@@ -330,6 +351,26 @@ class Instance {
     return pieces;
   }
 
+  /**
+   * Makes a bound input report what the person commits (spec 039 A1): when
+   * its `value` is a data binding, the node carries the internal write-back
+   * action and the binding is recorded; a literal or computed value writes
+   * nothing (FR-012).
+   */
+  writeBack(target: UiSpecNode, kind: WriteBackBinding['kind']): UiSpecNode {
+    const path = bindingPath(this.body['value'], this.context.dialect);
+    if (path === undefined) {
+      return target;
+    }
+    const pointer = resolveScopedPointer(path, this.scope);
+    if (!pointer.ok) {
+      return target;
+    }
+    const bound: UiSpecNode = { ...target, action: WRITE_BACK_ACTION };
+    this.context.writeNodes.set(bound, { componentId: this.id, kind, segments: pointer.segments });
+    return bound;
+  }
+
   /** Records a declared `Action.event`, or rejects a client function call. */
   action(target: UiSpecNode): UiSpecNode {
     const raw = this.body['action'];
@@ -521,10 +562,13 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
   CheckBox: (it) => {
     const label = it.text('label');
     return [
-      node(
-        'ki-checkbox',
-        it.value('value') === true ? { checked: true } : {},
-        label === '' ? [] : [label],
+      it.writeBack(
+        node(
+          'ki-checkbox',
+          it.value('value') === true ? { checked: true } : {},
+          label === '' ? [] : [label],
+        ),
+        'boolean',
       ),
     ];
   },
@@ -572,17 +616,18 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
             Array.isArray(selected) ? selected.map(toText) : first === '' ? [] : [first],
           )
         : first;
-    return [
-      node(
-        searchable ? 'ki-combobox' : multiple ? 'ki-checkbox-group' : 'ki-radio-group',
-        {
-          ...(label === '' ? {} : { label }),
-          ...(searchable && multiple ? { multiple: true } : {}),
-          ...((searchable || !multiple) && value !== '' ? { value } : {}),
-        },
-        choices,
-      ),
-    ];
+    const picker = node(
+      searchable ? 'ki-combobox' : multiple ? 'ki-checkbox-group' : 'ki-radio-group',
+      {
+        ...(label === '' ? {} : { label }),
+        ...(searchable && multiple ? { multiple: true } : {}),
+        ...((searchable || !multiple) && value !== '' ? { value } : {}),
+      },
+      choices,
+    );
+    // A multiple-selection picker reports no single committed value yet
+    // (spec 039 FR-013): its edits stay local.
+    return [multiple ? picker : it.writeBack(picker, 'list')];
   },
   Column: (it) => [layout(it)],
   DateTimeInput: (it) => {
@@ -773,16 +818,19 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       if (Number.isFinite(increment) && increment > 0) step = increment;
     }
     return [
-      node(
-        'ki-slider',
-        {
-          ...(label === '' ? {} : { label }),
-          min,
-          max,
-          ...(step === undefined ? {} : { step }),
-          ...(value === undefined ? {} : { value }),
-        },
-        [],
+      it.writeBack(
+        node(
+          'ki-slider',
+          {
+            ...(label === '' ? {} : { label }),
+            min,
+            max,
+            ...(step === undefined ? {} : { step }),
+            ...(value === undefined ? {} : { value }),
+          },
+          [],
+        ),
+        'number',
       ),
     ];
   },
@@ -835,9 +883,14 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     };
     const variant = it.literal('variant');
     if (variant === 'longText') {
-      return [node('ki-textarea', props, [])];
+      return [it.writeBack(node('ki-textarea', props, []), 'string')];
     }
-    return [node('ki-input', variant === 'obscured' ? { ...props, type: 'password' } : props, [])];
+    return [
+      it.writeBack(
+        node('ki-input', variant === 'obscured' ? { ...props, type: 'password' } : props, []),
+        'string',
+      ),
+    ];
   },
 };
 
@@ -1004,21 +1057,32 @@ function resolveComponent(
   }
 }
 
-/** Collects action bindings under the guarded renderer's node-path scheme. */
+/** Collects action and write-back bindings under the guarded renderer's node-path scheme. */
 function collectBindings(
   target: UiSpecNode,
   path: string,
-  actionNodes: WeakMap<UiSpecNode, ActionBinding>,
+  context: Pick<WalkContext, 'actionNodes' | 'writeNodes'>,
   into: Map<string, ActionBinding>,
+  writes: Map<string, WriteBackBinding>,
 ): void {
-  const binding = actionNodes.get(target);
+  const binding = context.actionNodes.get(target);
   if (binding !== undefined) {
     into.set(path, binding);
+  }
+  const write = context.writeNodes.get(target);
+  if (write !== undefined) {
+    writes.set(path, write);
   }
   for (const [slotName, children] of Object.entries(target.slots ?? {})) {
     children.forEach((child, index) => {
       if (typeof child !== 'string') {
-        collectBindings(child, `${path}.slots.${slotName}[${String(index)}]`, actionNodes, into);
+        collectBindings(
+          child,
+          `${path}.slots.${slotName}[${String(index)}]`,
+          context,
+          into,
+          writes,
+        );
       }
     });
   }
@@ -1030,6 +1094,7 @@ const failed = (diagnostic: A2uiDiagnostic): TranslationResult => ({
   degradations: [],
   diagnostics: [diagnostic],
   ok: false,
+  writes: new Map(),
 });
 
 /**
@@ -1050,6 +1115,7 @@ export function translateSurface(input: TranslateInput): TranslationResult {
     locale: input.locale,
     nodes: 0,
     surfaceId: input.surfaceId,
+    writeNodes: new WeakMap(),
   };
   if (!input.components.has(ROOT_ID)) {
     return {
@@ -1058,6 +1124,7 @@ export function translateSurface(input: TranslateInput): TranslationResult {
       degradations: [],
       diagnostics: [],
       ok: true,
+      writes: new Map(),
     };
   }
   const pieces = resolveComponent(ROOT_ID, [], 1, context);
@@ -1074,12 +1141,20 @@ export function translateSurface(input: TranslateInput): TranslationResult {
   const root: UiSpecNode =
     only !== undefined && typeof only !== 'string' ? only : node(ROOT_CONTAINER_TAG, {}, pieces);
   const bindings = new Map<string, ActionBinding>();
-  collectBindings(root, 'root', context.actionNodes, bindings);
+  const writes = new Map<string, WriteBackBinding>();
+  collectBindings(root, 'root', context, bindings, writes);
   const encountered = [...context.encounteredActions];
-  const actions = input.declaredActions ?? encountered;
+  // The write-back action is declared to the guarded renderer only: it is
+  // never part of the agent's action set (spec 039 FR-012).
+  const actions = [
+    ...new Set([
+      ...(input.declaredActions ?? encountered),
+      ...(writes.size > 0 ? [WRITE_BACK_ACTION] : []),
+    ]),
+  ];
   const spec: UiSpec = {
     version: 1,
-    ...(actions.length > 0 ? { actions: [...actions] } : {}),
+    ...(actions.length > 0 ? { actions } : {}),
     root,
   };
   return {
@@ -1089,5 +1164,6 @@ export function translateSurface(input: TranslateInput): TranslationResult {
     diagnostics: [],
     ok: true,
     spec,
+    writes,
   };
 }
