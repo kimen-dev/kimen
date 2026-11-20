@@ -204,6 +204,7 @@ it('S7 requests a retry once and leaves the status under caller control', async 
   await page.getByRole('button', { name: 'Retry' }).click();
 
   expect(requests).toEqual([{ name: 'deploy_preview' }]);
+  expect(host.status).toBe('failed');
   await expect.element(badge()).toHaveTextContent('Failed');
 });
 
@@ -286,6 +287,7 @@ it('S13 displays the approval badge without a duration', async () => {
   const host = await mount('name="publish_preview" status="approval" duration="3000"');
   expect(part(host, 'status').getAttribute('tone')).toBe('warning');
   await expect.element(badge()).toHaveTextContent('Needs approval');
+  await expect.element(summary()).toHaveTextContent('publish_preview Needs approval');
 });
 
 it('S14 opens an automatic disclosure when the status becomes Failed', async () => {
