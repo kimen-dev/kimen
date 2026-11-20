@@ -1,7 +1,7 @@
 import { shadowFocusTarget } from '../../utils/shadow-focus';
 
-export function resolveEntryFocusTarget(host: HTMLElement): HTMLElement | null {
-  const focusable = resolveFocusableTargets(host);
+export function resolveEntryFocusTarget(host: HTMLElement, bodyFirst = false): HTMLElement | null {
+  const focusable = resolveFocusableTargets(host, bodyFirst);
   const chosen = focusable.find(hasAutofocus) ?? focusable[0] ?? null;
   if (!chosen) {
     return null;
@@ -21,17 +21,19 @@ export function resolveEntryFocusTarget(host: HTMLElement): HTMLElement | null {
  * Native `<dialog>` traps Tab across these; this set is what the
  * boundary-wrap and the entry assist operate on.
  */
-export function resolveFocusableTargets(host: HTMLElement): HTMLElement[] {
+export function resolveFocusableTargets(host: HTMLElement, bodyFirst = false): HTMLElement[] {
   const targets: HTMLElement[] = [];
+  const footer: HTMLElement[] = [];
   for (const el of host.querySelectorAll<HTMLElement>('*')) {
     if (isDisabledOrHidden(el)) {
       continue;
     }
     if (isNativeFocusable(el) || shadowFocusTarget(el) !== null) {
-      targets.push(el);
+      const inFooter = bodyFirst && el.closest('[slot="footer"]')?.parentElement === host;
+      (inFooter ? footer : targets).push(el);
     }
   }
-  return targets;
+  return targets.concat(footer);
 }
 
 /**

@@ -21,6 +21,8 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-counter',
   'ki-date-picker',
   'ki-details',
+  'ki-dialog-fullscreen-compact',
+  'ki-dialog-fullscreen-wide',
   'ki-drawer',
   'ki-drawer-bottom',
   'ki-empty-state',

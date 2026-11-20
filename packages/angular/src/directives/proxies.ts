@@ -716,7 +716,7 @@ export declare interface KiDetails extends Components.KiDetails {
 
 @ProxyCmp({
   defineCustomElementFn: defineKiDialog,
-  inputs: ['closeOnBackdrop', 'heading', 'open'],
+  inputs: ['closeLabel', 'closeOnBackdrop', 'confirmLabel', 'fullscreen', 'heading', 'open'],
   methods: ['show', 'close']
 })
 @Component({
@@ -724,7 +724,7 @@ export declare interface KiDetails extends Components.KiDetails {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['closeOnBackdrop', { name: 'heading', required: true }, 'open'],
+  inputs: ['closeLabel', 'closeOnBackdrop', 'confirmLabel', 'fullscreen', { name: 'heading', required: true }, 'open'],
 })
 export class KiDialog {
   protected el: HTMLKiDialogElement;
@@ -1100,14 +1100,14 @@ export declare interface KiIndicator extends Components.KiIndicator {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiInput,
-  inputs: ['aiSuggestionText', 'appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'showCount', 'size', 'type', 'value']
+  inputs: ['aiSuggestionText', 'autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'size', 'type', 'value']
 })
 @Component({
   selector: 'ki-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['aiSuggestionText', 'appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'showCount', 'size', 'type', 'value'],
+  inputs: ['aiSuggestionText', 'autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'size', 'type', 'value'],
 })
 export class KiInput {
   protected el: HTMLKiInputElement;
@@ -2229,14 +2229,14 @@ export declare interface KiTabs extends Components.KiTabs {
 
 @ProxyCmp({
   defineCustomElementFn: defineKiTextarea,
-  inputs: ['appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'maxlength', 'maxlengthErrorText', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'showCount', 'size', 'value']
+  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'rows', 'size', 'value']
 })
 @Component({
   selector: 'ki-textarea',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'maxlength', 'maxlengthErrorText', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'showCount', 'size', 'value'],
+  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'rows', 'size', 'value'],
 })
 export class KiTextarea {
   protected el: HTMLKiTextareaElement;

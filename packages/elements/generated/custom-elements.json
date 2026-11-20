@@ -10311,10 +10311,19 @@
           "name": "KiDialog",
           "customElement": true,
           "tagName": "ki-dialog",
-          "description": "A modal dialog for one interrupting decision or short focused task.",
-          "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action.",
-          "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
+          "description": "A modal dialog for an interrupting decision or a focused task.",
+          "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action. Use `fullscreen=\"compact\"` for longer tasks\nthat need the whole window on compact screens.",
+          "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), multi-step flows that need their own\npage, menus, or pickers.",
           "attributes": [
+            {
+              "name": "close-label",
+              "fieldName": "closeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Close'",
+              "description": "Accessible name for the fullscreen close button. Localize it or describe\nthe effect of dismissing, for example \"Discard and close\"."
+            },
             {
               "name": "close-on-backdrop",
               "fieldName": "closeOnBackdrop",
@@ -10323,6 +10332,23 @@
               },
               "default": "false",
               "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`."
+            },
+            {
+              "name": "confirm-label",
+              "fieldName": "confirmLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Label for the optional confirmation button. Use an action verb such as\n\"Save\". The button is in the fullscreen header or the centered footer."
+            },
+            {
+              "name": "fullscreen",
+              "fieldName": "fullscreen",
+              "type": {
+                "text": "\"always\" | \"compact\" | \"never\""
+              },
+              "default": "'never'",
+              "description": "Layout for the native modal. Use `compact` to fill windows narrower than\n600 CSS pixels, or `always` to fill any window. Use `never` for a centered\ndialog at every width."
             },
             {
               "name": "heading",
@@ -10346,6 +10372,18 @@
           "members": [
             {
               "kind": "field",
+              "name": "closeLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Close'",
+              "description": "Accessible name for the fullscreen close button. Localize it or describe\nthe effect of dismissing, for example \"Discard and close\".",
+              "attribute": "close-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "closeOnBackdrop",
               "privacy": "public",
               "type": {
@@ -10354,6 +10392,29 @@
               "default": "false",
               "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
               "attribute": "close-on-backdrop",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "confirmLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Label for the optional confirmation button. Use an action verb such as\n\"Save\". The button is in the fullscreen header or the centered footer.",
+              "attribute": "confirm-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "fullscreen",
+              "privacy": "public",
+              "type": {
+                "text": "\"always\" | \"compact\" | \"never\""
+              },
+              "default": "'never'",
+              "description": "Layout for the native modal. Use `compact` to fill windows narrower than\n600 CSS pixels, or `always` to fill any window. Use `never` for a centered\ndialog at every width.",
+              "attribute": "fullscreen",
               "reflects": true
             },
             {
@@ -10413,7 +10474,14 @@
               "type": {
                 "text": "CustomEvent<KiDialogCloseDetail>"
               },
-              "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+              "description": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state."
+            },
+            {
+              "name": "ki-confirm",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application."
             }
           ],
           "slots": [
@@ -10440,14 +10508,38 @@
               "description": "Action row, collapsed when empty."
             },
             {
+              "name": "header",
+              "description": "Fullscreen bar with the title and its controls."
+            },
+            {
               "name": "heading",
               "description": "Visible h2 title, rendered only when `heading` is non-empty."
             }
           ],
           "cssProperties": [
             {
+              "name": "--ki-button-primary-neutral-rest-bg",
+              "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-fg",
+              "description": "color used by the button component for primary neutral rest foreground."
+            },
+            {
+              "name": "--ki-control-radius-item",
+              "description": "Corner radius of an individual control inside a track."
+            },
+            {
+              "name": "--ki-control-size-md",
+              "description": "Medium control track height, 40 CSS px at the default root size."
+            },
+            {
               "name": "--ki-density-space-scale",
               "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
               "name": "--ki-dialog-backdrop-bg",
@@ -10518,6 +10610,30 @@
               "description": "dimension used by the dialog component for footer section padding inline (Modal-actions/CTAs: Space/5xl 20px.)"
             },
             {
+              "name": "--ki-dialog-fullscreen-backdrop-filter",
+              "description": "Complete backdrop filter for the fullscreen surface."
+            },
+            {
+              "name": "--ki-dialog-fullscreen-bg",
+              "description": "Solid raised surface for the fullscreen dialog."
+            },
+            {
+              "name": "--ki-dialog-fullscreen-bg-image",
+              "description": "Optional image over the fullscreen fill."
+            },
+            {
+              "name": "--ki-dialog-fullscreen-fg",
+              "description": "Foreground for the fullscreen dialog."
+            },
+            {
+              "name": "--ki-dialog-fullscreen-header-border",
+              "description": "Divider beneath the fullscreen header."
+            },
+            {
+              "name": "--ki-dialog-fullscreen-header-height",
+              "description": "Minimum block size of the fullscreen header."
+            },
+            {
               "name": "--ki-dialog-gap",
               "description": "dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px)."
             },
@@ -10582,8 +10698,20 @@
               "description": "Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3)."
             },
             {
+              "name": "--ki-elevation-none",
+              "description": "Flat surfaces carry no resting shadow."
+            },
+            {
               "name": "--ki-focus-primary",
               "description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
             },
             {
               "name": "--ki-motion-distance-md",
@@ -10602,8 +10730,28 @@
               "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
             },
             {
+              "name": "--ki-spacing-action-hairline",
+              "description": "Width of the frame and divider in an action surface."
+            },
+            {
+              "name": "--ki-state-layer-hover",
+              "description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark)."
+            },
+            {
+              "name": "--ki-state-layer-pressed",
+              "description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark)."
+            },
+            {
+              "name": "--ki-surface-transparent",
+              "description": "Transparent surface backing for a background image that carries its own opacity."
+            },
+            {
               "name": "--ki-typography-family-body",
               "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-family-heading",
+              "description": "Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy."
             },
             {
               "name": "--ki-typography-line-height-para",
@@ -10616,6 +10764,10 @@
             {
               "name": "--ki-typography-weight-body-normal",
               "description": "semantic font weight for typography weight body normal."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
             }
           ]
         }
@@ -15557,15 +15709,6 @@
               "description": "Localized provenance description read alongside help or an error when\nthe end slot contains an AI label. Use this to translate the description."
             },
             {
-              "name": "appearance",
-              "fieldName": "appearance",
-              "type": {
-                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
-              },
-              "default": "'default'",
-              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes."
-            },
-            {
               "name": "autocomplete",
               "fieldName": "autocomplete",
               "type": {
@@ -15588,7 +15731,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
             },
             {
               "name": "help-text",
@@ -15614,26 +15757,6 @@
                 "text": "string | undefined"
               },
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
-            },
-            {
-              "name": "maxlength",
-              "fieldName": "maxlength",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
-              "minimum": 0,
-              "maximum": 2147483647
-            },
-            {
-              "name": "minlength",
-              "fieldName": "minlength",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
-              "minimum": 0,
-              "maximum": 2147483647
             },
             {
               "name": "name",
@@ -15668,15 +15791,6 @@
               },
               "default": "false",
               "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields."
-            },
-            {
-              "name": "show-count",
-              "fieldName": "showCount",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "default": "false",
-              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit."
             },
             {
               "name": "size",
@@ -15721,18 +15835,6 @@
             },
             {
               "kind": "field",
-              "name": "appearance",
-              "privacy": "public",
-              "type": {
-                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
-              },
-              "default": "'default'",
-              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
-              "attribute": "appearance",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "autocomplete",
               "privacy": "public",
               "type": {
@@ -15761,7 +15863,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
               "attribute": "error-text",
               "reflects": true
             },
@@ -15798,32 +15900,6 @@
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
               "attribute": "label-hint",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "maxlength",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
-              "attribute": "maxlength",
-              "reflects": true,
-              "minimum": 0,
-              "maximum": 2147483647
-            },
-            {
-              "kind": "field",
-              "name": "minlength",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
-              "attribute": "minlength",
-              "reflects": true,
-              "minimum": 0,
-              "maximum": 2147483647
             },
             {
               "kind": "field",
@@ -15869,18 +15945,6 @@
               "default": "false",
               "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
               "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "showCount",
-              "privacy": "public",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "default": "false",
-              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
-              "attribute": "show-count",
               "reflects": true
             },
             {
@@ -15945,10 +16009,6 @@
           ],
           "cssParts": [
             {
-              "name": "count",
-              "description": "Current character count and maximum at the end of the field message row."
-            },
-            {
               "name": "error",
               "description": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
             },
@@ -15991,10 +16051,6 @@
               "description": "Inline-end inset between the input action and the inside edge of the field border."
             },
             {
-              "name": "--ki-input-appearance-border-width",
-              "description": "Resting stroke width of both explicit text field appearances."
-            },
-            {
               "name": "--ki-input-border-block-end-width",
               "description": "dimension used by the input component for border block end width."
             },
@@ -16009,22 +16065,6 @@
             {
               "name": "--ki-input-border-inline-start-width",
               "description": "dimension used by the input component for border inline start width."
-            },
-            {
-              "name": "--ki-input-count-bg",
-              "description": "Resting character count surface over the surrounding page."
-            },
-            {
-              "name": "--ki-input-count-fg",
-              "description": "Character count when the value fits the maximum."
-            },
-            {
-              "name": "--ki-input-count-over-bg",
-              "description": "Over-limit character count surface over the surrounding page."
-            },
-            {
-              "name": "--ki-input-count-over-fg",
-              "description": "Character count when the value exceeds the maximum."
             },
             {
               "name": "--ki-input-disabled-bg",
@@ -16045,38 +16085,6 @@
             {
               "name": "--ki-input-disabled-placeholder-fg",
               "description": "color used by the input component for disabled placeholder foreground."
-            },
-            {
-              "name": "--ki-input-filled-backdrop-filter",
-              "description": "Optional backdrop filter of a filled field."
-            },
-            {
-              "name": "--ki-input-filled-bg",
-              "description": "Surface of a filled text field."
-            },
-            {
-              "name": "--ki-input-filled-bg-image",
-              "description": "Optional background image of a filled field."
-            },
-            {
-              "name": "--ki-input-filled-fg",
-              "description": "Entered text on a filled field."
-            },
-            {
-              "name": "--ki-input-filled-focus-width",
-              "description": "Stroke width of the block-end indicator while focused."
-            },
-            {
-              "name": "--ki-input-filled-indicator",
-              "description": "Continuous block-end edge of an enabled filled text field."
-            },
-            {
-              "name": "--ki-input-filled-placeholder-fg",
-              "description": "Placeholder on a filled field."
-            },
-            {
-              "name": "--ki-input-filled-radius",
-              "description": "Block-start corner radius of a filled text field."
             },
             {
               "name": "--ki-input-focus-bg",
@@ -16245,26 +16253,6 @@
             {
               "name": "--ki-input-line-height",
               "description": "dimension used by the input component for line height."
-            },
-            {
-              "name": "--ki-input-outlined-bg",
-              "description": "Surface of an outlined text field."
-            },
-            {
-              "name": "--ki-input-outlined-border",
-              "description": "Full outline of an enabled outlined text field."
-            },
-            {
-              "name": "--ki-input-outlined-fg",
-              "description": "Entered text on an outlined field."
-            },
-            {
-              "name": "--ki-input-outlined-placeholder-fg",
-              "description": "Placeholder on an outlined field."
-            },
-            {
-              "name": "--ki-input-outlined-radius",
-              "description": "Corner radius of an outlined text field."
             },
             {
               "name": "--ki-input-padding-inline",
@@ -16463,16 +16451,8 @@
               "description": "semantic dimension for typography size caption 2."
             },
             {
-              "name": "--ki-typography-visually-hidden-size",
-              "description": "Nonzero edge for clipped text available to assistive technology."
-            },
-            {
               "name": "--ki-typography-weight-body-normal",
               "description": "semantic font weight for typography weight body normal."
-            },
-            {
-              "name": "--ki-typography-weight-body-semibold",
-              "description": "semantic font weight for typography weight body semibold."
             }
           ]
         }
@@ -30490,15 +30470,6 @@
           "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
           "attributes": [
             {
-              "name": "appearance",
-              "fieldName": "appearance",
-              "type": {
-                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
-              },
-              "default": "'default'",
-              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes."
-            },
-            {
               "name": "autocomplete",
               "fieldName": "autocomplete",
               "type": {
@@ -30521,7 +30492,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
             },
             {
               "name": "help-text",
@@ -30547,35 +30518,6 @@
                 "text": "string | undefined"
               },
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
-            },
-            {
-              "name": "maxlength",
-              "fieldName": "maxlength",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
-              "minimum": 0,
-              "maximum": 2147483647
-            },
-            {
-              "name": "maxlength-error-text",
-              "fieldName": "maxlengthErrorText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "default": "'Shorten the text to fit the character limit.'",
-              "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language."
-            },
-            {
-              "name": "minlength",
-              "fieldName": "minlength",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
-              "minimum": 0,
-              "maximum": 2147483647
             },
             {
               "name": "name",
@@ -30621,15 +30563,6 @@
               "description": "Visible line count. Invalid, non-numeric, zero, or negative values fall\nback to 2; no auto-grow or user resize handle exists in v1.\nWhen to use: set the stable multiline height needed by the layout. When\nNOT to use: do not use rows as a responsive size axis."
             },
             {
-              "name": "show-count",
-              "fieldName": "showCount",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "default": "false",
-              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit."
-            },
-            {
               "name": "size",
               "fieldName": "size",
               "type": {
@@ -30649,18 +30582,6 @@
             }
           ],
           "members": [
-            {
-              "kind": "field",
-              "name": "appearance",
-              "privacy": "public",
-              "type": {
-                "text": "\"default\" | \"filled\" | \"outlined\" | undefined"
-              },
-              "default": "'default'",
-              "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
-              "attribute": "appearance",
-              "reflects": true
-            },
             {
               "kind": "field",
               "name": "autocomplete",
@@ -30691,7 +30612,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+              "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
               "attribute": "error-text",
               "reflects": true
             },
@@ -30728,44 +30649,6 @@
               "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label.",
               "attribute": "label-hint",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "maxlength",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
-              "attribute": "maxlength",
-              "reflects": true,
-              "minimum": 0,
-              "maximum": 2147483647
-            },
-            {
-              "kind": "field",
-              "name": "maxlengthErrorText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "default": "'Shorten the text to fit the character limit.'",
-              "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
-              "attribute": "maxlength-error-text",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "minlength",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
-              "attribute": "minlength",
-              "reflects": true,
-              "minimum": 0,
-              "maximum": 2147483647
             },
             {
               "kind": "field",
@@ -30827,18 +30710,6 @@
             },
             {
               "kind": "field",
-              "name": "showCount",
-              "privacy": "public",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "default": "false",
-              "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
-              "attribute": "show-count",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "size",
               "privacy": "public",
               "type": {
@@ -30874,10 +30745,6 @@
           "slots": [],
           "cssParts": [
             {
-              "name": "count",
-              "description": "Current character count and maximum at the end of the field message row."
-            },
-            {
               "name": "error",
               "description": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
             },
@@ -30910,82 +30777,6 @@
             {
               "name": "--ki-density-target-min",
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-input-appearance-border-width",
-              "description": "Resting stroke width of both explicit text field appearances."
-            },
-            {
-              "name": "--ki-input-count-bg",
-              "description": "Resting character count surface over the surrounding page."
-            },
-            {
-              "name": "--ki-input-count-fg",
-              "description": "Character count when the value fits the maximum."
-            },
-            {
-              "name": "--ki-input-count-over-bg",
-              "description": "Over-limit character count surface over the surrounding page."
-            },
-            {
-              "name": "--ki-input-count-over-fg",
-              "description": "Character count when the value exceeds the maximum."
-            },
-            {
-              "name": "--ki-input-filled-backdrop-filter",
-              "description": "Optional backdrop filter of a filled field."
-            },
-            {
-              "name": "--ki-input-filled-bg",
-              "description": "Surface of a filled text field."
-            },
-            {
-              "name": "--ki-input-filled-bg-image",
-              "description": "Optional background image of a filled field."
-            },
-            {
-              "name": "--ki-input-filled-fg",
-              "description": "Entered text on a filled field."
-            },
-            {
-              "name": "--ki-input-filled-focus-width",
-              "description": "Stroke width of the block-end indicator while focused."
-            },
-            {
-              "name": "--ki-input-filled-indicator",
-              "description": "Continuous block-end edge of an enabled filled text field."
-            },
-            {
-              "name": "--ki-input-filled-placeholder-fg",
-              "description": "Placeholder on a filled field."
-            },
-            {
-              "name": "--ki-input-filled-radius",
-              "description": "Block-start corner radius of a filled text field."
-            },
-            {
-              "name": "--ki-input-label-gap",
-              "description": "dimension used by the input component for label gap."
-            },
-            {
-              "name": "--ki-input-outlined-bg",
-              "description": "Surface of an outlined text field."
-            },
-            {
-              "name": "--ki-input-outlined-border",
-              "description": "Full outline of an enabled outlined text field."
-            },
-            {
-              "name": "--ki-input-outlined-fg",
-              "description": "Entered text on an outlined field."
-            },
-            {
-              "name": "--ki-input-outlined-placeholder-fg",
-              "description": "Placeholder on an outlined field."
-            },
-            {
-              "name": "--ki-input-outlined-radius",
-              "description": "Corner radius of an outlined text field."
             },
             {
               "name": "--ki-motion-duration-fast",
@@ -31348,16 +31139,8 @@
               "description": "semantic dimension for typography size caption 2."
             },
             {
-              "name": "--ki-typography-visually-hidden-size",
-              "description": "Nonzero edge for clipped text available to assistive technology."
-            },
-            {
               "name": "--ki-typography-weight-body-normal",
               "description": "semantic font weight for typography weight body normal."
-            },
-            {
-              "name": "--ki-typography-weight-body-semibold",
-              "description": "semantic font weight for typography weight body semibold."
             }
           ]
         }

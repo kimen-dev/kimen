@@ -1313,15 +1313,16 @@ export namespace Components {
         "summary"?: string;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface KiDialog {
         /**
@@ -1329,10 +1330,24 @@ export namespace Components {
          */
         "close": () => Promise<void>;
         /**
+          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
+          * @default 'Close'
+         */
+        "closeLabel": string;
+        /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop": boolean;
+        /**
+          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+         */
+        "confirmLabel"?: string;
+        /**
+          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
+          * @default 'never'
+         */
+        "fullscreen": 'never' | 'compact' | 'always';
         /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
@@ -2029,11 +2044,6 @@ export namespace Components {
          */
         "aiSuggestionText": string;
         /**
-          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
-          * @default 'default'
-         */
-        "appearance"?: 'default' | 'outlined' | 'filled';
-        /**
           * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
         "autocomplete"?: string;
@@ -2043,7 +2053,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -2058,18 +2068,6 @@ export namespace Components {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
-        /**
-          * Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
-          * @minimum 0
-          * @maximum 2147483647
-         */
-        "maxlength"?: number;
-        /**
-          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
-          * @minimum 0
-          * @maximum 2147483647
-         */
-        "minlength"?: number;
         /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
@@ -2088,11 +2086,6 @@ export namespace Components {
           * @default false
          */
         "required": boolean;
-        /**
-          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
-          * @default false
-         */
-        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -3979,11 +3972,6 @@ export namespace Components {
      */
     interface KiTextarea {
         /**
-          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
-          * @default 'default'
-         */
-        "appearance"?: 'default' | 'outlined' | 'filled';
-        /**
           * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
          */
         "autocomplete"?: string;
@@ -3993,7 +3981,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -4008,23 +3996,6 @@ export namespace Components {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
-        /**
-          * Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
-          * @minimum 0
-          * @maximum 2147483647
-         */
-        "maxlength"?: number;
-        /**
-          * Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
-          * @default 'Shorten the text to fit the character limit.'
-         */
-        "maxlengthErrorText"?: string;
-        /**
-          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
-          * @minimum 0
-          * @maximum 2147483647
-         */
-        "minlength"?: number;
         /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
@@ -4048,11 +4019,6 @@ export namespace Components {
           * @default 2
          */
         "rows": number;
-        /**
-          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
-          * @default false
-         */
-        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -5301,17 +5267,19 @@ declare global {
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
+        "ki-confirm": void;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface HTMLKiDialogElement extends Components.KiDialog, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -8159,30 +8127,49 @@ declare namespace LocalJSX {
         "summary"?: string;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface KiDialog {
+        /**
+          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
+          * @default 'Close'
+         */
+        "closeLabel"?: string;
         /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop"?: boolean;
         /**
+          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+         */
+        "confirmLabel"?: string;
+        /**
+          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
+          * @default 'never'
+         */
+        "fullscreen"?: 'never' | 'compact' | 'always';
+        /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
         "heading": string;
         /**
-          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+          * Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
          */
         "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
+        /**
+          * The user activated the confirmation button. Handle validation, submission and dismissal in the application.
+         */
+        "onKi-confirm"?: (event: KiDialogCustomEvent<void>) => void;
         /**
           * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
           * @default false
@@ -8907,11 +8894,6 @@ declare namespace LocalJSX {
          */
         "aiSuggestionText"?: string;
         /**
-          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
-          * @default 'default'
-         */
-        "appearance"?: 'default' | 'outlined' | 'filled';
-        /**
           * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
         "autocomplete"?: string;
@@ -8921,7 +8903,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -8941,18 +8923,6 @@ declare namespace LocalJSX {
          */
         "labelHint"?: string;
         /**
-          * Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
-          * @minimum 0
-          * @maximum 2147483647
-         */
-        "maxlength"?: number;
-        /**
-          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
-          * @minimum 0
-          * @maximum 2147483647
-         */
-        "minlength"?: number;
-        /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
         "name"?: string;
@@ -8970,11 +8940,6 @@ declare namespace LocalJSX {
           * @default false
          */
         "required"?: boolean;
-        /**
-          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
-          * @default false
-         */
-        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -10987,11 +10952,6 @@ declare namespace LocalJSX {
      */
     interface KiTextarea {
         /**
-          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
-          * @default 'default'
-         */
-        "appearance"?: 'default' | 'outlined' | 'filled';
-        /**
           * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
          */
         "autocomplete"?: string;
@@ -11001,7 +10961,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -11020,23 +10980,6 @@ declare namespace LocalJSX {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
-        /**
-          * Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
-          * @minimum 0
-          * @maximum 2147483647
-         */
-        "maxlength"?: number;
-        /**
-          * Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
-          * @default 'Shorten the text to fit the character limit.'
-         */
-        "maxlengthErrorText"?: string;
-        /**
-          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
-          * @minimum 0
-          * @maximum 2147483647
-         */
-        "minlength"?: number;
         /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
@@ -11060,11 +11003,6 @@ declare namespace LocalJSX {
           * @default 2
          */
         "rows"?: number;
-        /**
-          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
-          * @default false
-         */
-        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -11878,6 +11816,9 @@ declare namespace LocalJSX {
         "open": boolean;
         "heading": string;
         "closeOnBackdrop": boolean;
+        "fullscreen": 'never' | 'compact' | 'always';
+        "confirmLabel": string;
+        "closeLabel": string;
     }
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
@@ -12018,10 +11959,6 @@ declare namespace LocalJSX {
     interface KiInputAttributes {
         "type": KiInputType;
         "size": KiInputSize;
-        "appearance": 'default' | 'outlined' | 'filled';
-        "maxlength": number;
-        "minlength": number;
-        "showCount": boolean;
         "label": string;
         "labelHint": string;
         "placeholder": string;
@@ -12406,11 +12343,6 @@ declare namespace LocalJSX {
         "iconLayout": KiTabsIconLayout;
     }
     interface KiTextareaAttributes {
-        "appearance": 'default' | 'outlined' | 'filled';
-        "maxlength": number;
-        "minlength": number;
-        "showCount": boolean;
-        "maxlengthErrorText": string;
         "label": string;
         "labelHint": string;
         "placeholder": string;
@@ -12878,15 +12810,16 @@ declare module "@stencil/core" {
              */
             "ki-details": LocalJSX.IntrinsicElements["ki-details"] & JSXBase.HTMLAttributes<HTMLKiDetailsElement>;
             /**
-             * A modal dialog for one interrupting decision or short focused task.
+             * A modal dialog for an interrupting decision or a focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
              * provide a `heading`, place actions in the `footer` slot, wire each
              * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-             * the least destructive action.
+             * the least destructive action. Use `fullscreen="compact"` for longer tasks
+             * that need the whole window on compact screens.
              * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-             * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-             * (navigate or use a future full-screen variant), menus, or pickers.
+             * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+             * page, menus, or pickers.
              */
             "ki-dialog": LocalJSX.IntrinsicElements["ki-dialog"] & JSXBase.HTMLAttributes<HTMLKiDialogElement>;
             /**
