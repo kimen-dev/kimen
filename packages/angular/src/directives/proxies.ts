@@ -13,6 +13,7 @@ import { defineCustomElement as defineKiBadge } from '@kimen/elements/components
 import { defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
+import { defineCustomElement as defineKiConfirmation } from '@kimen/elements/components/ki-confirmation.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
@@ -213,6 +214,38 @@ export class KiCheckbox {
 
 
 export declare interface KiCheckbox extends Components.KiCheckbox {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiConfirmation,
+  inputs: ['action', 'approveLabel', 'approvedLabel', 'consequence', 'deniedLabel', 'denyLabel', 'expiredLabel', 'heading', 'remember', 'rememberLabel', 'resolvedAt', 'resolvedBy', 'state', 'tone'],
+  methods: ['focusPrompt']
+})
+@Component({
+  selector: 'ki-confirmation',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [{ name: 'action', required: true }, { name: 'approveLabel', required: true }, 'approvedLabel', 'consequence', 'deniedLabel', { name: 'denyLabel', required: true }, 'expiredLabel', { name: 'heading', required: true }, 'remember', 'rememberLabel', 'resolvedAt', 'resolvedBy', 'state', 'tone'],
+})
+export class KiConfirmation {
+  protected el: HTMLKiConfirmationElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiConfirmation extends Components.KiConfirmation {
+  /**
+   * Explicit approval, with the conversation preference at the time of the decision.
+   */
+  /**
+   * Explicit refusal of the pending request.
+   */
+}
 
 
 @ProxyCmp({

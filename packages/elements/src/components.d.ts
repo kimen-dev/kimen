@@ -11,6 +11,7 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+import { KiConfirmationState, KiConfirmationTone } from "./components/ki-confirmation/ki-confirmation";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -41,6 +42,7 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+export { KiConfirmationState, KiConfirmationTone } from "./components/ki-confirmation/ki-confirmation";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
@@ -323,6 +325,84 @@ export namespace Components {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface KiConfirmation {
+        /**
+          * Tool identifier shown to the person and available for reporting by the host.
+         */
+        "action": string;
+        /**
+          * Verb or short phrase that describes what approval does, such as "Send email".
+         */
+        "approveLabel": string;
+        /**
+          * Localized outcome text when the host marks the request approved.
+          * @default 'Approved'
+         */
+        "approvedLabel": string;
+        /**
+          * Cost or irreversible effect to read before deciding, displayed as a warning note.
+         */
+        "consequence"?: string;
+        /**
+          * Localized outcome text when the host marks the request denied.
+          * @default 'Denied'
+         */
+        "deniedLabel": string;
+        /**
+          * Verb or short phrase for refusal, such as "Keep draft".
+         */
+        "denyLabel": string;
+        /**
+          * Localized outcome text when the host marks the request expired.
+          * @default 'Expired'
+         */
+        "expiredLabel": string;
+        /**
+          * Moves focus to the pending group and reports success. Call only when the host knows the person was waiting for this request. A focused editor keeps its focus, including editors inside open shadow roots.
+         */
+        "focusPrompt": () => Promise<boolean>;
+        /**
+          * Question naming the proposed action. Provide it before asking for a decision.
+         */
+        "heading": string;
+        /**
+          * Offers an unchecked preference limited to this action in the current conversation.
+          * @default false
+         */
+        "remember": boolean;
+        /**
+          * Localized conversation permission label. Name the specific permission when possible.
+          * @default 'Allow this action for the rest of this conversation'
+         */
+        "rememberLabel": string;
+        /**
+          * Display-ready, localized resolution time from the host, if known.
+         */
+        "resolvedAt"?: string;
+        /**
+          * Display-ready name of the person or service that resolved the request, if known.
+         */
+        "resolvedBy"?: string;
+        /**
+          * Host-controlled outcome. Resolve after recording a decision or expiring the request.
+          * @default 'pending'
+         */
+        "state": KiConfirmationState;
+        /**
+          * Use danger when approval is destructive. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone": KiConfirmationTone;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -1411,6 +1491,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiConfirmationCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiConfirmationElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -1566,6 +1650,33 @@ declare global {
     var HTMLKiCheckboxElement: {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
+    };
+    interface HTMLKiConfirmationElementEventMap {
+        "ki-approve": { remember: boolean };
+        "ki-deny": void;
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface HTMLKiConfirmationElement extends Components.KiConfirmation, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiConfirmationElementEventMap>(type: K, listener: (this: HTMLKiConfirmationElement, ev: KiConfirmationCustomEvent<HTMLKiConfirmationElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiConfirmationElementEventMap>(type: K, listener: (this: HTMLKiConfirmationElement, ev: KiConfirmationCustomEvent<HTMLKiConfirmationElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiConfirmationElement: {
+        prototype: HTMLKiConfirmationElement;
+        new (): HTMLKiConfirmationElement;
     };
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -2170,6 +2281,7 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-confirmation": HTMLKiConfirmationElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
@@ -2475,6 +2587,88 @@ declare namespace LocalJSX {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface KiConfirmation {
+        /**
+          * Tool identifier shown to the person and available for reporting by the host.
+         */
+        "action": string;
+        /**
+          * Verb or short phrase that describes what approval does, such as "Send email".
+         */
+        "approveLabel": string;
+        /**
+          * Localized outcome text when the host marks the request approved.
+          * @default 'Approved'
+         */
+        "approvedLabel"?: string;
+        /**
+          * Cost or irreversible effect to read before deciding, displayed as a warning note.
+         */
+        "consequence"?: string;
+        /**
+          * Localized outcome text when the host marks the request denied.
+          * @default 'Denied'
+         */
+        "deniedLabel"?: string;
+        /**
+          * Verb or short phrase for refusal, such as "Keep draft".
+         */
+        "denyLabel": string;
+        /**
+          * Localized outcome text when the host marks the request expired.
+          * @default 'Expired'
+         */
+        "expiredLabel"?: string;
+        /**
+          * Question naming the proposed action. Provide it before asking for a decision.
+         */
+        "heading": string;
+        /**
+          * Explicit approval, with the conversation preference at the time of the decision.
+         */
+        "onKi-approve"?: (event: KiConfirmationCustomEvent<{ remember: boolean }>) => void;
+        /**
+          * Explicit refusal of the pending request.
+         */
+        "onKi-deny"?: (event: KiConfirmationCustomEvent<void>) => void;
+        /**
+          * Offers an unchecked preference limited to this action in the current conversation.
+          * @default false
+         */
+        "remember"?: boolean;
+        /**
+          * Localized conversation permission label. Name the specific permission when possible.
+          * @default 'Allow this action for the rest of this conversation'
+         */
+        "rememberLabel"?: string;
+        /**
+          * Display-ready, localized resolution time from the host, if known.
+         */
+        "resolvedAt"?: string;
+        /**
+          * Display-ready name of the person or service that resolved the request, if known.
+         */
+        "resolvedBy"?: string;
+        /**
+          * Host-controlled outcome. Resolve after recording a decision or expiring the request.
+          * @default 'pending'
+         */
+        "state"?: KiConfirmationState;
+        /**
+          * Use danger when approval is destructive. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone"?: KiConfirmationTone;
     }
     /**
      * A decorative count or dot over a trigger or avatar.
@@ -3623,6 +3817,22 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiConfirmationAttributes {
+        "heading": string;
+        "action": string;
+        "approveLabel": string;
+        "denyLabel": string;
+        "tone": KiConfirmationTone;
+        "consequence": string;
+        "remember": boolean;
+        "rememberLabel": string;
+        "state": KiConfirmationState;
+        "approvedLabel": string;
+        "deniedLabel": string;
+        "expiredLabel": string;
+        "resolvedBy": string;
+        "resolvedAt": string;
+    }
     interface KiCounterAttributes {
         "value": number;
         "max": number;
@@ -3825,6 +4035,7 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-confirmation": Omit<KiConfirmation, keyof KiConfirmationAttributes> & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes]?: KiConfirmation[K] } & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes as `attr:${K}`]?: KiConfirmationAttributes[K] } & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes as `prop:${K}`]?: KiConfirmation[K] } & OneOf<"heading", KiConfirmation["heading"], KiConfirmationAttributes["heading"]> & OneOf<"action", KiConfirmation["action"], KiConfirmationAttributes["action"]> & OneOf<"approveLabel", KiConfirmation["approveLabel"], KiConfirmationAttributes["approveLabel"]> & OneOf<"denyLabel", KiConfirmation["denyLabel"], KiConfirmationAttributes["denyLabel"]>;
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
@@ -3959,6 +4170,16 @@ declare module "@stencil/core" {
              * to use: do not expect it for programmatic `checked` writes, which are silent.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
+            /**
+             * An inline prompt for a decision about a proposed assistant action.
+             * @whenToUse Show the exact action and the details a person needs before
+             * granting permission. A trusted host maps the two decision events to its
+             * declared actions and records the outcome in state.
+             * @whenNotToUse Report a completed action without a preceding request, or
+             * block the rest of the interface with a modal decision (use ki-dialog).
+             * The displayed action identifier is text and carries no execution authority.
+             */
+            "ki-confirmation": LocalJSX.IntrinsicElements["ki-confirmation"] & JSXBase.HTMLAttributes<HTMLKiConfirmationElement>;
             /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an

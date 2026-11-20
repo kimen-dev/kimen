@@ -1496,6 +1496,17 @@
   --ki-checkbox-sm-label-line-height:var(--ki-typography-line-height-para);
   --ki-checkbox-lg-control-size:var(--ki-space-7xl);
   --ki-checkbox-lg-min-target:var(--ki-space-9xl);
+  --ki-confirmation-bg:var(--ki-surface-s1);
+  --ki-confirmation-fg:var(--ki-text-high-em);
+  --ki-confirmation-bg-image:var(--ki-surface-image-none);
+  --ki-confirmation-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-confirmation-border:var(--ki-outline-med-em);
+  --ki-confirmation-radius:var(--ki-radius-big-component-xs);
+  --ki-confirmation-padding:var(--ki-space-3xl);
+  --ki-confirmation-heading-font-family:var(--ki-typography-family-heading);
+  --ki-confirmation-border-width:var(--ki-size-border-hairline);
+  --ki-confirmation-gap:var(--ki-space-xl);
+  --ki-confirmation-inline-gap:var(--ki-space-md);
   --ki-counter-size:var(--ki-notification-marker-count-size);
   --ki-counter-dot-size:var(--ki-notification-marker-dot-size);
   --ki-counter-bg:var(--ki-surface-danger-high-em);
