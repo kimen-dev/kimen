@@ -1,0 +1,64 @@
+{
+  "ki": {
+    "pagination": {
+      "item-size": {
+        "$value": "{ki.layout.spacing.12xl}",
+        "$description": "Minimum size of a numbered page control at standard density."
+      },
+      "item-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner radius of numbered page controls and direction links."
+      },
+      "item-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Resting background of a numbered page control."
+      },
+      "item-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Resting ink for page labels and status text."
+      },
+      "item-hover-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "Background of a hovered page control."
+      },
+      "item-hover-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink for a hovered page control."
+      },
+      "item-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image above the page control background color."
+      },
+      "item-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for the page control."
+      },
+      "current-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Background of the current page control."
+      },
+      "current-fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-on-primary}",
+        "$description": "Ink for the current page control."
+      },
+      "gap": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Gap between numbered page controls."
+      },
+      "compact-gap": {
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Gap between the compact count and direction controls."
+      },
+      "more-gap": {
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Gap between the load-more button and the count."
+      }
+    }
+  }
+}

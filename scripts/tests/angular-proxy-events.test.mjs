@@ -31,6 +31,7 @@ test('a component with two generated events uses native Angular event bindings',
     `import { Component, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'ki-confirmation',
+  inputs: ['remember'],
   outputs: ['ki-approve', 'ki-deny'],
 })
 export class KiConfirmation {
@@ -48,6 +49,7 @@ export declare interface KiConfirmation extends Components.KiConfirmation {
   assert.equal(result.status, 0, result.stderr);
   assert.doesNotMatch(result.source, /outputs:|@Output|EventEmitter|KiConfirmationCustomEvent/u);
   assert.match(result.source, /selector: 'ki-confirmation'/u);
+  assert.match(result.source, /inputs: \['remember'\]/u);
 });
 
 test('normalization rejects inconsistent event names even when counts match', (context) => {

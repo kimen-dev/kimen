@@ -42,7 +42,7 @@ methods, CSS custom properties and examples.
 - [ki-badge](llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.
 - [ki-breadcrumb](llms/ki-breadcrumb.md): show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
 - [ki-breadcrumb-item](llms/ki-breadcrumb-item.md): declare a direct child of ki-breadcrumb in hierarchy order.
-- [ki-button](llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, or persistent actions such as Bold with `toggle`.
+- [ki-button](llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.
 - [ki-button-group](llms/ki-button-group.md): place two to five related actions together, present a primary action with a menu of alternatives, or give formatting tools one Tab stop.
 - [ki-card](llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
 - [ki-checkbox](llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
@@ -78,12 +78,12 @@ methods, CSS custom properties and examples.
 - [ki-message](llms/ki-message.md): Display a transcript entry inside ki-conversation.
 - [ki-note](llms/ki-note.md): Add a short constraint, tip or consequence next to the content it explains.
 - [ki-option](llms/ki-option.md): declare one choice inside a `ki-select` or `ki-combobox`; its text is the human-facing label and its `value` is the submitted value.
+- [ki-pagination](llms/ki-pagination.md): paged tables, search results or long lists.
 - [ki-popover](llms/ki-popover.md): Show filters, details, a small form, or a text toggletip.
 - [ki-progress](llms/ki-progress.md): communicate advancement of an ongoing task such as upload, download, installation or multi-step processing.
 - [ki-qr](llms/ki-qr.md): hand a URL or machine-readable payload from the screen to a nearby camera device: login pairing, tickets and passes, "continue on mobile" links, Wi-Fi sharing.
 - [ki-radio](llms/ki-radio.md): place inside `ki-radio-group` when a person must choose exactly one of a small visible set.
 - [ki-radio-group](llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
-- [ki-rating](llms/ki-rating.md): Show an average review score in readonly mode or ask people to rate an answer, experience, or product on a small scale.
 - [ki-relative-time](llms/ki-relative-time.md): For timestamps whose distance from the present matters, such as timeline entries or recent changes.
 - [ki-scroller](llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
 - [ki-segment](llms/ki-segment.md): offer one mutually exclusive choice with text or a named icon.

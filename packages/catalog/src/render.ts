@@ -264,7 +264,15 @@ export function guardNode(
     const entry = ownEntry(state.components, node.component);
     const events = declaredEvents(entry);
     const activation = entry?.activationEvent;
-    if (activation !== undefined && !events.includes(activation)) {
+    if (node.component === 'ki-pagination' && ownEntry(node.props, 'href-template') !== undefined) {
+      state.diagnostics.push({
+        message:
+          'ki-pagination uses native navigation when href-template is supplied; omit the URL template to bind an action',
+        path: `${path}.action`,
+        rule: 'ambiguous-activation-event',
+        value: node.action,
+      });
+    } else if (activation !== undefined && !events.includes(activation)) {
       state.diagnostics.push({
         message: `${node.component} activationEvent must name a declared event`,
         path: `${path}.action`,
@@ -405,8 +413,28 @@ function liveData(
   element: Element,
   props: Readonly<Record<string, Scalar>>,
   entry: CatalogEntry | undefined,
+  event: Event,
 ): Record<string, boolean | number | string> {
   const data: Record<string, boolean | number | string> = { ...props };
+  // An explicit activation can carry a requested number before the host
+  // commits it. Read only own data fields for declared numeric props.
+  if (entry?.activationEvent === event.type && 'detail' in event) {
+    const detail = event.detail;
+    if (typeof detail === 'object' && detail !== null) {
+      for (const [name, constraint] of Object.entries(entry.props)) {
+        if (constraint.type !== 'number') continue;
+        const value: unknown = Object.getOwnPropertyDescriptor(detail, name)?.value;
+        if (
+          typeof value === 'number' &&
+          Number.isSafeInteger(value) &&
+          value >= (constraint.minimum ?? -Infinity) &&
+          value <= (constraint.maximum ?? Infinity)
+        ) {
+          data[name] = value;
+        }
+      }
+    }
+  }
   const stateProps = hasToggleActivation(entry) ? ['selected'] : LIVE_STATE_PROPS;
   for (const name of stateProps) {
     const constraint = ownEntry(entry?.props, name);
@@ -613,7 +641,7 @@ export function wireActivation(
       if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
       if (variantActivation && chipActivation(element, props) !== name) return;
       if (toggleActivation && props['toggle'] !== true) return;
-      dispatch(liveData(element, props, entry));
+      dispatch(liveData(element, props, entry, event));
     });
   }
 }

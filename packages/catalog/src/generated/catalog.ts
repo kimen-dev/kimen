@@ -429,9 +429,7 @@ export const catalogData = {
     },
     "ki-button": {
       "description": "A token-styled action button with native button semantics.",
-      "events": {
-        "ki-change": "Emitted after toggle activation with the new selected state."
-      },
+      "events": {},
       "props": {
         "command": {
           "type": "enum",
@@ -465,11 +463,6 @@ export const catalogData = {
           "type": "string",
           "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent."
         },
-        "selected": {
-          "type": "boolean",
-          "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-          "default": false
-        },
         "size": {
           "type": "enum",
           "values": [
@@ -482,11 +475,6 @@ export const catalogData = {
           "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls.",
           "default": "md"
         },
-        "toggle": {
-          "type": "boolean",
-          "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
-          "default": false
-        },
         "tone": {
           "type": "enum",
           "values": [
@@ -494,7 +482,7 @@ export const catalogData = {
             "neutral",
             "success"
           ],
-          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "default": "neutral"
         },
         "type": {
@@ -504,7 +492,7 @@ export const catalogData = {
             "reset",
             "submit"
           ],
-          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "default": "submit"
         },
         "value": {
@@ -515,12 +503,11 @@ export const catalogData = {
           "type": "enum",
           "values": [
             "ghost",
-            "outline",
             "primary",
             "quaternary",
             "secondary"
           ],
-          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "default": "secondary",
           "deprecatedValues": [
             "tertiary"
@@ -533,8 +520,8 @@ export const catalogData = {
         "start": "Leading icon or media. Follows writing direction."
       },
       "tag": "ki-button",
-      "whenNotToUse": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress).",
-      "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+      "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
+      "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
     "ki-button-group": {
       "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
@@ -1176,7 +1163,6 @@ export const catalogData = {
           "type": "enum",
           "values": [
             "ghost",
-            "outline",
             "primary",
             "quaternary",
             "secondary"
@@ -1668,9 +1654,7 @@ export const catalogData = {
     },
     "ki-icon-button": {
       "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
-      "events": {
-        "ki-change": "Emitted after toggle activation with the new selected state."
-      },
+      "events": {},
       "props": {
         "command": {
           "type": "enum",
@@ -1711,12 +1695,7 @@ export const catalogData = {
         },
         "pressed": {
           "type": "boolean",
-          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action."
-        },
-        "selected": {
-          "type": "boolean",
-          "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-          "default": false
+          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
         },
         "size": {
           "type": "enum",
@@ -1730,11 +1709,6 @@ export const catalogData = {
           "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor.",
           "default": "md"
         },
-        "toggle": {
-          "type": "boolean",
-          "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
-          "default": false
-        },
         "tone": {
           "type": "enum",
           "values": [
@@ -1742,19 +1716,18 @@ export const catalogData = {
             "neutral",
             "success"
           ],
-          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "default": "neutral"
         },
         "variant": {
           "type": "enum",
           "values": [
             "ghost",
-            "outline",
             "primary",
             "quaternary",
             "secondary"
           ],
-          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "default": "secondary",
           "deprecatedValues": [
             "tertiary"
@@ -1763,12 +1736,11 @@ export const catalogData = {
       },
       "slots": {
         "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
-        "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
-        "selected": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
+        "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
       },
       "tag": "ki-icon-button",
-      "whenNotToUse": "whenever a visible label fits (use ki-button),\nnavigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
-      "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. Enable `toggle` for persistent actions such as\nBookmark. While the action it started is in progress, set `loading`."
+      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+      "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
     },
     "ki-image": {
       "description": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",
@@ -2278,6 +2250,105 @@ export const catalogData = {
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
       "whenToUse": "declare one choice inside a `ki-select` or `ki-combobox`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
+    "ki-pagination": {
+      "description": "Controls for moving among pages of results or appending the next batch.",
+      "activationEvent": "ki-page-change",
+      "events": {
+        "ki-load-more": "Requests another batch. Append results in place and update shown.",
+        "ki-page-change": "Requests a different page. Update results and move focus to their heading\nwhen they are ready. Cancelling the event also cancels a plain link click."
+      },
+      "props": {
+        "boundaries": {
+          "type": "number",
+          "description": "Number of pages to display at each end of the numbered list.",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 10
+        },
+        "compact-label": {
+          "type": "string",
+          "description": "Localized stepper label template. Include {page} and {pages}.",
+          "default": "Page {page} of {pages}"
+        },
+        "href-template": {
+          "type": "string",
+          "description": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+          "format": "url"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the navigation landmark. Distinguish multiple result sets.",
+          "default": "Pagination"
+        },
+        "load-more-label": {
+          "type": "string",
+          "description": "Localized visible label for the button that appends results.",
+          "default": "Load more"
+        },
+        "next-label": {
+          "type": "string",
+          "description": "Localized accessible name of the control that requests the next page.",
+          "default": "Next page"
+        },
+        "page": {
+          "type": "number",
+          "description": "Current 1-based page. Update it when the requested results are ready.",
+          "default": 1,
+          "minimum": 1
+        },
+        "page-label": {
+          "type": "string",
+          "description": "Localized accessible name template for numbered controls. Include {page}.",
+          "default": "Page {page}"
+        },
+        "pages": {
+          "type": "number",
+          "description": "Total number of result pages. Omit it until a page count is available.",
+          "minimum": 0
+        },
+        "previous-label": {
+          "type": "string",
+          "description": "Localized accessible name of the control that requests the previous page.",
+          "default": "Previous page"
+        },
+        "shown": {
+          "type": "number",
+          "description": "Displayed result count in load-more mode. Update it after appending results.",
+          "minimum": 0
+        },
+        "siblings": {
+          "type": "number",
+          "description": "Number of pages to display on each side of the current page.",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 10
+        },
+        "status-label": {
+          "type": "string",
+          "description": "Localized polite count template. Include {shown} and {total}.",
+          "default": "Showing {shown} of {total} results"
+        },
+        "total": {
+          "type": "number",
+          "description": "Total result count in load-more mode. Required with shown for the count.",
+          "minimum": 0
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "compact",
+            "load-more",
+            "pages"
+          ],
+          "description": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width.",
+          "default": "pages"
+        }
+      },
+      "slots": {},
+      "tag": "ki-pagination",
+      "whenNotToUse": "short lists that fit in one view or the steps of a task.",
+      "whenToUse": "paged tables, search results or long lists. Use compact for\na previous/next stepper and load-more to append results in place."
+    },
     "ki-popover": {
       "description": "A non-modal popover anchored to a button.",
       "events": {
@@ -2477,91 +2548,6 @@ export const catalogData = {
       "tag": "ki-radio-group",
       "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
       "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once."
-    },
-    "ki-rating": {
-      "description": "Displays a score or collects one choice on a small rating scale.",
-      "events": {
-        "ki-change": "Fires once when a person changes the selection. The detail contains the numeric value."
-      },
-      "props": {
-        "disabled": {
-          "type": "boolean",
-          "description": "Makes an editable rating unavailable and excludes it from form submission.",
-          "default": false
-        },
-        "icon-name": {
-          "type": "string",
-          "description": "Lucide icon name. Import custom names before mounting. Unavailable names use star.",
-          "default": "star"
-        },
-        "label": {
-          "type": "string",
-          "description": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
-          "required": true
-        },
-        "max": {
-          "type": "number",
-          "description": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
-          "default": 5,
-          "minimum": 1,
-          "maximum": 10
-        },
-        "name": {
-          "type": "string",
-          "description": "Form field name for a selected editable score."
-        },
-        "option-label": {
-          "type": "string",
-          "description": "Accessible name pattern for the other choices. Use {value} for the choice.",
-          "default": "{value} stars"
-        },
-        "option-singular-label": {
-          "type": "string",
-          "description": "Accessible name pattern for the one-star choice. Use {value} for the choice.",
-          "default": "{value} star"
-        },
-        "precision": {
-          "type": "number",
-          "description": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.",
-          "default": 1
-        },
-        "rated-label": {
-          "type": "string",
-          "description": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores.",
-          "default": "Rated {value} out of {max}"
-        },
-        "readonly": {
-          "type": "boolean",
-          "description": "Displays a score without editing or submitting it.",
-          "default": false
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Requires an editable score before the form can be submitted.",
-          "default": false
-        },
-        "required-message": {
-          "type": "string",
-          "description": "Validation message for an unanswered required rating.",
-          "default": "Select a rating."
-        },
-        "score-label": {
-          "type": "string",
-          "description": "Visible score pattern in input mode. Use {value} and {max} for the scores.",
-          "default": "{value} of {max}"
-        },
-        "value": {
-          "type": "number",
-          "description": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
-          "default": 0,
-          "minimum": 0,
-          "maximum": 10
-        }
-      },
-      "slots": {},
-      "tag": "ki-rating",
-      "whenNotToUse": "Use message actions for yes/no feedback and a slider for a\ncontinuous or large numeric range.",
-      "whenToUse": "Show an average review score in readonly mode or ask people to rate\nan answer, experience, or product on a small scale."
     },
     "ki-relative-time": {
       "description": "Displays the elapsed or remaining time for a timestamp in the reader's language.",

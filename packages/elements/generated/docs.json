@@ -1637,11 +1637,11 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
         },
         {
           "name": "whenNotToUse",
-          "text": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress)."
+          "text": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress)."
         },
         {
           "name": "slot",
@@ -1669,7 +1669,7 @@
         }
       ],
       "usage": {
-        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\nIn momentary mode `type` defaults to `submit`. Use `type=\"button\"` for an independent action inside a form.\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nUse `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.\n\n```html\n<ki-button id=\"pin\" variant=\"outline\" toggle selected>Pin</ki-button>\n<script type=\"module\">\n  const button = document.getElementById('pin');\n  button.addEventListener('ki-change', ({ detail: { selected } }) => {\n    console.log('Pinned', selected);\n  });\n</script>\n```\n\nProgrammatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
       },
       "props": [
         {
@@ -1864,35 +1864,6 @@
           "setter": false
         },
         {
-          "name": "selected",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "selected",
-          "reflectToAttr": true,
-          "docs": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
           "name": "size",
           "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
           "complexType": {
@@ -1945,35 +1916,6 @@
           "setter": false
         },
         {
-          "name": "toggle",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "toggle",
-          "reflectToAttr": true,
-          "docs": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
           "name": "tone",
           "type": "\"danger\" | \"neutral\" | \"success\"",
           "complexType": {
@@ -1990,7 +1932,7 @@
           "mutable": false,
           "attr": "tone",
           "reflectToAttr": true,
-          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "docsTags": [
             {
               "name": "default",
@@ -2034,7 +1976,7 @@
           "mutable": false,
           "attr": "type",
           "reflectToAttr": true,
-          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "docsTags": [
             {
               "name": "default",
@@ -2089,10 +2031,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
           "complexType": {
             "original": "KiButtonVariant",
-            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
             "references": {
               "KiButtonVariant": {
                 "location": "local",
@@ -2104,7 +2046,7 @@
           "mutable": false,
           "attr": "variant",
           "reflectToAttr": true,
-          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "docsTags": [
             {
               "name": "default",
@@ -2119,10 +2061,6 @@
           "values": [
             {
               "value": "ghost",
-              "type": "string"
-            },
-            {
-              "value": "outline",
               "type": "string"
             },
             {
@@ -2149,22 +2087,7 @@
         }
       ],
       "methods": [],
-      "events": [
-        {
-          "event": "ki-change",
-          "detail": "{ selected: boolean; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ selected: boolean }",
-            "resolved": "{ selected: boolean; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Emitted after toggle activation with the new selected state.",
-          "docsTags": []
-        }
-      ],
+      "events": [],
       "listeners": [],
       "styles": [],
       "slots": [
@@ -2198,7 +2121,8 @@
       "states": [],
       "dependents": [
         "ki-confirmation",
-        "ki-conversation"
+        "ki-conversation",
+        "ki-pagination"
       ],
       "dependencies": [],
       "dependencyGraph": {
@@ -2206,6 +2130,9 @@
           "ki-button"
         ],
         "ki-conversation": [
+          "ki-button"
+        ],
+        "ki-pagination": [
           "ki-button"
         ]
       }
@@ -6061,10 +5988,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\"",
+          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
           "complexType": {
             "original": "KiCopyButtonVariant",
-            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\"",
+            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
             "references": {
               "KiCopyButtonVariant": {
                 "location": "local",
@@ -6087,10 +6014,6 @@
           "values": [
             {
               "value": "ghost",
-              "type": "string"
-            },
-            {
-              "value": "outline",
               "type": "string"
             },
             {
@@ -8607,7 +8530,7 @@
         "ki-empty-state",
         "ki-fab",
         "ki-message",
-        "ki-rating",
+        "ki-pagination",
         "ki-stat",
         "ki-stepper",
         "ki-table"
@@ -8638,7 +8561,7 @@
         "ki-message": [
           "ki-icon"
         ],
-        "ki-rating": [
+        "ki-pagination": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -8660,19 +8583,15 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. Enable `toggle` for persistent actions such as\nBookmark. While the action it started is in progress, set `loading`."
+          "text": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
         },
         {
           "name": "whenNotToUse",
-          "text": "whenever a visible label fits (use ki-button),\nnavigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
+          "text": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
         },
         {
           "name": "slot",
           "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
-        },
-        {
-          "name": "slot",
-          "text": "selected - Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
         },
         {
           "name": "slot",
@@ -8692,7 +8611,7 @@
         }
       ],
       "usage": {
-        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`). In the original momentary variants, `tone` (default `neutral`) carries semantic intent such as success or danger.\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nAdd `toggle` for an action such as Bookmark that stays pressed until the next activation. `variant=\"outline\"` uses an outline at rest and a fill when selected. Give the pressed version a decorative icon in the `selected` slot.\n\n```html\n<ki-icon-button toggle variant=\"outline\" label=\"Bookmark\">\n  <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" stroke=\"currentColor\" stroke-width=\"2\" />\n  </svg>\n  <svg slot=\"selected\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" />\n  </svg>\n</ki-icon-button>\n```\n\nWith an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
+        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
       },
       "props": [
         {
@@ -8920,7 +8839,7 @@
           "mutable": false,
           "attr": "pressed",
           "reflectToAttr": false,
-          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action.",
+          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
           "docsTags": [],
           "values": [
             {
@@ -8931,35 +8850,6 @@
             }
           ],
           "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "selected",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "selected",
-          "reflectToAttr": true,
-          "docs": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
           "required": false,
           "getter": false,
           "setter": false
@@ -9017,35 +8907,6 @@
           "setter": false
         },
         {
-          "name": "toggle",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "toggle",
-          "reflectToAttr": true,
-          "docs": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
           "name": "tone",
           "type": "\"danger\" | \"neutral\" | \"success\"",
           "complexType": {
@@ -9062,7 +8923,7 @@
           "mutable": false,
           "attr": "tone",
           "reflectToAttr": true,
-          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "docsTags": [
             {
               "name": "default",
@@ -9091,10 +8952,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
           "complexType": {
             "original": "KiIconButtonVariant",
-            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
             "references": {
               "KiIconButtonVariant": {
                 "location": "local",
@@ -9106,7 +8967,7 @@
           "mutable": false,
           "attr": "variant",
           "reflectToAttr": true,
-          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "docsTags": [
             {
               "name": "default",
@@ -9121,10 +8982,6 @@
           "values": [
             {
               "value": "ghost",
-              "type": "string"
-            },
-            {
-              "value": "outline",
               "type": "string"
             },
             {
@@ -9151,22 +9008,7 @@
         }
       ],
       "methods": [],
-      "events": [
-        {
-          "event": "ki-change",
-          "detail": "{ selected: boolean; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ selected: boolean }",
-            "resolved": "{ selected: boolean; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Emitted after toggle activation with the new selected state.",
-          "docsTags": []
-        }
-      ],
+      "events": [],
       "listeners": [],
       "styles": [],
       "slots": [
@@ -9177,10 +9019,6 @@
         {
           "name": "counter",
           "docs": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
-        },
-        {
-          "name": "selected",
-          "docs": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
         }
       ],
       "parts": [
@@ -9199,10 +9037,14 @@
       ],
       "states": [],
       "dependents": [
+        "ki-pagination",
         "ki-toast"
       ],
       "dependencies": [],
       "dependencyGraph": {
+        "ki-pagination": [
+          "ki-icon-button"
+        ],
         "ki-toast": [
           "ki-icon-button"
         ]
@@ -11987,6 +11829,625 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-pagination/ki-pagination.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-pagination",
+      "docs": "Controls for moving among pages of results or appending the next batch.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "paged tables, search results or long lists. Use compact for\na previous/next stepper and load-more to append results in place."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "short lists that fit in one view or the steps of a task."
+        },
+        {
+          "name": "catalogAction",
+          "text": "ki-page-change"
+        },
+        {
+          "name": "part",
+          "text": "navigation - Named navigation landmark."
+        },
+        {
+          "name": "part",
+          "text": "list - Ordered list of pages in the numbered variant."
+        },
+        {
+          "name": "part",
+          "text": "page - Numbered button or link."
+        },
+        {
+          "name": "part",
+          "text": "gap - Decorative marker for omitted pages."
+        },
+        {
+          "name": "part",
+          "text": "previous - Previous-page control."
+        },
+        {
+          "name": "part",
+          "text": "next - Next-page control."
+        },
+        {
+          "name": "part",
+          "text": "compact - Current page and page count in the stepper."
+        },
+        {
+          "name": "part",
+          "text": "load-more - Button that requests another batch."
+        },
+        {
+          "name": "part",
+          "text": "status - Polite result-count announcement."
+        }
+      ],
+      "usage": {
+        "examples": "# Pagination examples\n\nImport `@kimen/tokens/css` and register the element with\n`defineCustomElement` from `@kimen/elements/components/ki-pagination.js`.\n\n## Replace a results page\n\n```html\n<h2 id=\"results-heading\" tabindex=\"-1\">Results page 1</h2>\n<ul id=\"results\"><li>Mercury</li><li>Venus</li></ul>\n<ki-pagination id=\"results-pages\" page=\"1\" pages=\"2\" label=\"Planet results pages\"></ki-pagination>\n\n<script type=\"module\">\n  const pages = [['Mercury', 'Venus'], ['Earth', 'Mars']];\n  const pager = document.getElementById('results-pages');\n  const heading = document.getElementById('results-heading');\n  const results = document.getElementById('results');\n\n  pager.addEventListener('ki-page-change', ({ detail: { page } }) => {\n    const items = pages[page - 1].map((name) => {\n      const item = document.createElement('li');\n      item.textContent = name;\n      return item;\n    });\n    results.replaceChildren(...items);\n    heading.textContent = `Results page ${page}`;\n    pager.page = page;\n    heading.focus();\n  });\n</script>\n```\n\nWhen fetching asynchronously, update `page` and move focus after the\nrequested results render. Keep the heading programmatically focusable.\n\n## Let the server render each page\n\n```html\n<ki-pagination page=\"5\" pages=\"12\" href-template=\"?page={page}\"\n  label=\"Search results pages\"></ki-pagination>\n```\n\nPlace `{page}` in the path, query, or fragment of a relative or HTTP(S) URL.\nThe generated anchors support browser link actions. The catalog applies\nits URL policy. For a guarded page action, use numbered or compact pagination\nin button mode.\n\n## Append results and announce the count\n\n```html\n<ul id=\"recent-results\"><li>Mercury</li><li>Venus</li></ul>\n<ki-pagination id=\"recent-pagination\" variant=\"load-more\" shown=\"2\" total=\"4\"\n  label=\"More planets\"></ki-pagination>\n\n<script type=\"module\">\n  const pager = document.getElementById('recent-pagination');\n  const results = document.getElementById('recent-results');\n\n  pager.addEventListener('ki-load-more', () => {\n    const items = ['Earth', 'Mars'].map((name) => {\n      const item = document.createElement('li');\n      item.textContent = name;\n      return item;\n    });\n    results.append(...items);\n    pager.shown = results.childElementCount;\n  });\n</script>\n```\n\nThe last update keeps the same button in place and announces the final\ncount. Set `previous-label`, `next-label`, and `load-more-label` for\ntranslated controls. Use `page-label`, `compact-label`, and `status-label`\nwith the named placeholders to translate the generated text.\n"
+      },
+      "props": [
+        {
+          "name": "boundaries",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "boundaries",
+          "reflectToAttr": false,
+          "docs": "Number of pages to display at each end of the numbered list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            },
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "10"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "compactLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "compact-label",
+          "reflectToAttr": false,
+          "docs": "Localized stepper label template. Include {page} and {pages}.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Page {page} of {pages}'"
+            }
+          ],
+          "default": "'Page {page} of {pages}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "hrefTemplate",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href-template",
+          "reflectToAttr": false,
+          "docs": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the navigation landmark. Distinguish multiple result sets.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Pagination'"
+            }
+          ],
+          "default": "'Pagination'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loadMoreLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "load-more-label",
+          "reflectToAttr": false,
+          "docs": "Localized visible label for the button that appends results.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Load more'"
+            }
+          ],
+          "default": "'Load more'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "nextLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "next-label",
+          "reflectToAttr": false,
+          "docs": "Localized accessible name of the control that requests the next page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Next page'"
+            }
+          ],
+          "default": "'Next page'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "page",
+          "reflectToAttr": false,
+          "docs": "Current 1-based page. Update it when the requested results are ready.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            },
+            {
+              "name": "minimum",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pageLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "page-label",
+          "reflectToAttr": false,
+          "docs": "Localized accessible name template for numbered controls. Include {page}.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Page {page}'"
+            }
+          ],
+          "default": "'Page {page}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pages",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pages",
+          "reflectToAttr": false,
+          "docs": "Total number of result pages. Omit it until a page count is available.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "previousLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "previous-label",
+          "reflectToAttr": false,
+          "docs": "Localized accessible name of the control that requests the previous page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Previous page'"
+            }
+          ],
+          "default": "'Previous page'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "shown",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "shown",
+          "reflectToAttr": false,
+          "docs": "Displayed result count in load-more mode. Update it after appending results.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "siblings",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "siblings",
+          "reflectToAttr": false,
+          "docs": "Number of pages to display on each side of the current page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            },
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "10"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "statusLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "status-label",
+          "reflectToAttr": false,
+          "docs": "Localized polite count template. Include {shown} and {total}.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Showing {shown} of {total} results'"
+            }
+          ],
+          "default": "'Showing {shown} of {total} results'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "total",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "total",
+          "reflectToAttr": false,
+          "docs": "Total result count in load-more mode. Required with shown for the count.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"compact\" | \"load-more\" | \"pages\"",
+          "complexType": {
+            "original": "'pages' | 'compact' | 'load-more'",
+            "resolved": "\"compact\" | \"load-more\" | \"pages\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": false,
+          "docs": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'pages'"
+            }
+          ],
+          "default": "'pages'",
+          "values": [
+            {
+              "value": "compact",
+              "type": "string"
+            },
+            {
+              "value": "load-more",
+              "type": "string"
+            },
+            {
+              "value": "pages",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-load-more",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Requests another batch. Append results in place and update shown.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-page-change",
+          "detail": "{ page: number; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{\n    page: number;\n  }",
+            "resolved": "{ page: number; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Requests a different page. Update results and move focus to their heading\nwhen they are ready. Cancelling the event also cancels a plain link click.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "compact",
+          "docs": "Current page and page count in the stepper."
+        },
+        {
+          "name": "gap",
+          "docs": "Decorative marker for omitted pages."
+        },
+        {
+          "name": "list",
+          "docs": "Ordered list of pages in the numbered variant."
+        },
+        {
+          "name": "load-more",
+          "docs": "Button that requests another batch."
+        },
+        {
+          "name": "navigation",
+          "docs": "Named navigation landmark."
+        },
+        {
+          "name": "next",
+          "docs": "Next-page control."
+        },
+        {
+          "name": "page",
+          "docs": "Numbered button or link."
+        },
+        {
+          "name": "previous",
+          "docs": "Previous-page control."
+        },
+        {
+          "name": "status",
+          "docs": "Polite result-count announcement."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-icon-button",
+        "ki-button"
+      ],
+      "dependencyGraph": {
+        "ki-pagination": [
+          "ki-icon",
+          "ki-icon-button",
+          "ki-button"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-popover/ki-popover.tsx",
       "encapsulation": "shadow",
       "tag": "ki-popover",
@@ -13053,512 +13514,6 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-rating/ki-rating.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-rating",
-      "docs": "Displays a score or collects one choice on a small rating scale.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Show an average review score in readonly mode or ask people to rate\nan answer, experience, or product on a small scale."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Use message actions for yes/no feedback and a slider for a\ncontinuous or large numeric range."
-        },
-        {
-          "name": "part",
-          "text": "label - Visible question above the editable scale."
-        },
-        {
-          "name": "part",
-          "text": "scale - Read-only score image or editable radio group."
-        },
-        {
-          "name": "part",
-          "text": "glyph - Decorative artwork for one rating step."
-        },
-        {
-          "name": "part",
-          "text": "choice - Native radio target for one selectable score."
-        },
-        {
-          "name": "part",
-          "text": "score - Visible numeric score."
-        }
-      ],
-      "usage": {
-        "examples": "# Rating usage\n\n## Display a review average\n\n```html\n<ki-rating readonly label=\"Average review score\" value=\"4.3\"></ki-rating>\n```\n\nThe text reads 4.3. The glyphs fill to 4.5 and assistive technology receives one image named “Rated 4.3 out of 5”.\n\n## Collect answer feedback\n\n```html\n<form>\n  <ki-rating\n    label=\"How useful was this answer?\"\n    name=\"usefulness\"\n    precision=\"0.5\"\n    required\n  ></ki-rating>\n  <button>Submit feedback</button>\n</form>\n```\n\nA choice of 2.5 submits as `usefulness=2.5`. A form reset restores the starting value. Subscribe to `ki-change` for a user's changed choice and read its numeric `detail.value`.\n\n## Use a different glyph\n\n```js\nimport '@kimen/elements/icons/heart';\n```\n\n```html\n<ki-rating\n  label=\"How much did you enjoy the experience?\"\n  icon-name=\"heart\"\n  option-singular-label=\"{value} heart\"\n  option-label=\"{value} hearts\"\n></ki-rating>\n```\n"
-      },
-      "props": [
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Makes an editable rating unavailable and excludes it from form submission.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Lucide icon name. Import custom names before mounting. Unavailable names use star.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'star'"
-            }
-          ],
-          "default": "'star'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "max",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max",
-          "reflectToAttr": false,
-          "docs": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "1"
-            },
-            {
-              "name": "maximum",
-              "text": "10"
-            },
-            {
-              "name": "default",
-              "text": "5"
-            }
-          ],
-          "default": "5",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Form field name for a selected editable score.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "optionLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "option-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name pattern for the other choices. Use {value} for the choice.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{value} stars'"
-            }
-          ],
-          "default": "'{value} stars'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "optionSingularLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "option-singular-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name pattern for the one-star choice. Use {value} for the choice.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{value} star'"
-            }
-          ],
-          "default": "'{value} star'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "precision",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "precision",
-          "reflectToAttr": false,
-          "docs": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "ratedLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "rated-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Rated {value} out of {max}'"
-            }
-          ],
-          "default": "'Rated {value} out of {max}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "readonly",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "readonly",
-          "reflectToAttr": true,
-          "docs": "Displays a score without editing or submitting it.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required",
-          "reflectToAttr": true,
-          "docs": "Requires an editable score before the form can be submitted.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "requiredMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required-message",
-          "reflectToAttr": false,
-          "docs": "Validation message for an unanswered required rating.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Select a rating.'"
-            }
-          ],
-          "default": "'Select a rating.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "scoreLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "score-label",
-          "reflectToAttr": false,
-          "docs": "Visible score pattern in input mode. Use {value} and {max} for the scores.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{value} of {max}'"
-            }
-          ],
-          "default": "'{value} of {max}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
-          "docsTags": [
-            {
-              "name": "minimum",
-              "text": "0"
-            },
-            {
-              "name": "maximum",
-              "text": "10"
-            },
-            {
-              "name": "default",
-              "text": "0"
-            }
-          ],
-          "default": "0",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-change",
-          "detail": "{ value: number; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ value: number }",
-            "resolved": "{ value: number; }",
-            "references": {}
-          },
-          "cancelable": true,
-          "composed": true,
-          "docs": "Fires once when a person changes the selection. The detail contains the numeric value.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [],
-      "parts": [
-        {
-          "name": "choice",
-          "docs": "Native radio target for one selectable score."
-        },
-        {
-          "name": "glyph",
-          "docs": "Decorative artwork for one rating step."
-        },
-        {
-          "name": "label",
-          "docs": "Visible question above the editable scale."
-        },
-        {
-          "name": "scale",
-          "docs": "Read-only score image or editable radio group."
-        },
-        {
-          "name": "score",
-          "docs": "Visible numeric score."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-rating": [
-          "ki-icon"
-        ]
-      }
     },
     {
       "filePath": "src/components/ki-relative-time/ki-relative-time.tsx",
@@ -19344,7 +19299,7 @@
       "path": "src/components/ki-badge/ki-badge.tsx"
     },
     "src/components/ki-button/ki-button.tsx::KiButtonVariant": {
-      "declaration": "export type KiButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'tertiary'\n  | 'quaternary'\n  | 'ghost'\n  | 'outline';",
+      "declaration": "export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
     },
@@ -19469,7 +19424,7 @@
       "path": "src/components/ki-icon/ki-icon.tsx"
     },
     "src/components/ki-icon-button/ki-icon-button.tsx::KiIconButtonVariant": {
-      "declaration": "export type KiIconButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'tertiary'\n  | 'quaternary'\n  | 'ghost'\n  | 'outline';",
+      "declaration": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
       "docstring": "",
       "path": "src/components/ki-icon-button/ki-icon-button.tsx"
     },

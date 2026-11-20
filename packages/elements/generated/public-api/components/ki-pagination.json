@@ -1,0 +1,545 @@
+{
+  "component": {
+    "attributes": {
+      "boundaries": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Number of pages to display at each end of the numbered list.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "compact-label": {
+        "default": "'Page {page} of {pages}'",
+        "deprecatedSince": null,
+        "description": "Localized stepper label template. Include {page} and {pages}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "href-template": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": "'Pagination'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the navigation landmark. Distinguish multiple result sets.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "load-more-label": {
+        "default": "'Load more'",
+        "deprecatedSince": null,
+        "description": "Localized visible label for the button that appends results.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "next-label": {
+        "default": "'Next page'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the control that requests the next page.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "page": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Current 1-based page. Update it when the requested results are ready.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "page-label": {
+        "default": "'Page {page}'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name template for numbered controls. Include {page}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "pages": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Total number of result pages. Omit it until a page count is available.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "previous-label": {
+        "default": "'Previous page'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the control that requests the previous page.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "shown": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Displayed result count in load-more mode. Update it after appending results.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "siblings": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Number of pages to display on each side of the current page.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "status-label": {
+        "default": "'Showing {shown} of {total} results'",
+        "deprecatedSince": null,
+        "description": "Localized polite count template. Include {shown} and {total}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "total": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Total result count in load-more mode. Required with shown for the count.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "variant": {
+        "default": "'pages'",
+        "deprecatedSince": null,
+        "description": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width.",
+        "replacement": null,
+        "required": false,
+        "type": "\"compact\" | \"load-more\" | \"pages\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-compact-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the compact count and direction controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-current-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the current page control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-current-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink for the current page control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between numbered page controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-item-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the page control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-item-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting background of a numbered page control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-item-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image above the page control background color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting ink for page labels and status text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-item-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a hovered page control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-item-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink for a hovered page control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of numbered page controls and direction links.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-item-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum size of a numbered page control at standard density.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-pagination-more-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the load-more button and the count.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Controls for moving among pages of results or appending the next batch.",
+    "events": {
+      "ki-load-more": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Requests another batch. Append results in place and update shown.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      },
+      "ki-page-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Requests a different page. Update results and move focus to their heading\nwhen they are ready. Cancelling the event also cancels a plain link click.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{\n    page: number;\n  }>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "compact": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current page and page count in the stepper.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative marker for omitted pages.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "list": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ordered list of pages in the numbered variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "load-more": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Button that requests another batch.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "navigation": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Named navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "next": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Next-page control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "page": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Numbered button or link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "previous": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Previous-page control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "status": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Polite result-count announcement.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "boundaries": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Number of pages to display at each end of the numbered list.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "compactLabel": {
+        "default": "'Page {page} of {pages}'",
+        "deprecatedSince": null,
+        "description": "Localized stepper label template. Include {page} and {pages}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "hrefTemplate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": "'Pagination'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the navigation landmark. Distinguish multiple result sets.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "loadMoreLabel": {
+        "default": "'Load more'",
+        "deprecatedSince": null,
+        "description": "Localized visible label for the button that appends results.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "nextLabel": {
+        "default": "'Next page'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the control that requests the next page.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "page": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Current 1-based page. Update it when the requested results are ready.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "pageLabel": {
+        "default": "'Page {page}'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name template for numbered controls. Include {page}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "pages": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Total number of result pages. Omit it until a page count is available.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "previousLabel": {
+        "default": "'Previous page'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the control that requests the previous page.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "shown": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Displayed result count in load-more mode. Update it after appending results.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "siblings": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Number of pages to display on each side of the current page.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "statusLabel": {
+        "default": "'Showing {shown} of {total} results'",
+        "deprecatedSince": null,
+        "description": "Localized polite count template. Include {shown} and {total}.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "total": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Total result count in load-more mode. Required with shown for the count.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "variant": {
+        "default": "'pages'",
+        "deprecatedSince": null,
+        "description": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width.",
+        "replacement": null,
+        "required": false,
+        "type": "\"compact\" | \"load-more\" | \"pages\""
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-pagination.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-pagination.d.ts",
+    "symbols": {
+      "KiPagination": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiPagination extends Components.KiPagination, HTMLElement {\n}\nexport const KiPagination: {\n    prototype: KiPagination;\n    new (): KiPagination;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-pagination.js"
+  }
+}

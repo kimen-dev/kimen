@@ -2192,8 +2192,8 @@
           "customElement": true,
           "tagName": "ki-button",
           "description": "A token-styled action button with native button semantics.",
-          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it.",
-          "whenNotToUse": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress).",
+          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it.",
+          "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
           "attributes": [
             {
               "name": "command",
@@ -2247,15 +2247,6 @@
               "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent."
             },
             {
-              "name": "selected",
-              "fieldName": "selected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change."
-            },
-            {
               "name": "size",
               "fieldName": "size",
               "type": {
@@ -2265,22 +2256,13 @@
               "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls."
             },
             {
-              "name": "toggle",
-              "fieldName": "toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form."
-            },
-            {
               "name": "tone",
               "fieldName": "tone",
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
               "default": "'neutral'",
-              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
             },
             {
               "name": "type",
@@ -2289,7 +2271,7 @@
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
               "default": "'submit'",
-              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
             },
             {
               "name": "value",
@@ -2303,10 +2285,10 @@
               "name": "variant",
               "fieldName": "variant",
               "type": {
-                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "deprecatedValues": [
                 "tertiary"
               ]
@@ -2384,18 +2366,6 @@
             },
             {
               "kind": "field",
-              "name": "selected",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-              "attribute": "selected",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "size",
               "privacy": "public",
               "type": {
@@ -2408,25 +2378,13 @@
             },
             {
               "kind": "field",
-              "name": "toggle",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
-              "attribute": "toggle",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "tone",
               "privacy": "public",
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
               "default": "'neutral'",
-              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
               "attribute": "tone",
               "reflects": true
             },
@@ -2438,7 +2396,7 @@
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
               "default": "'submit'",
-              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
               "attribute": "type",
               "reflects": true
             },
@@ -2458,10 +2416,10 @@
               "name": "variant",
               "privacy": "public",
               "type": {
-                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "attribute": "variant",
               "reflects": true,
               "deprecatedValues": [
@@ -2469,15 +2427,7 @@
               ]
             }
           ],
-          "events": [
-            {
-              "name": "ki-change",
-              "type": {
-                "text": "CustomEvent<{ selected: boolean }>"
-              },
-              "description": "Emitted after toggle activation with the new selected state."
-            }
-          ],
+          "events": [],
           "slots": [
             {
               "name": "",
@@ -2612,14 +2562,6 @@
               "description": "value used by the button component for ghost rest shadow."
             },
             {
-              "name": "--ki-button-ghost-selected-bg",
-              "description": "Background of the selected ghost button toggle."
-            },
-            {
-              "name": "--ki-button-ghost-selected-fg",
-              "description": "Foreground of the selected ghost button toggle."
-            },
-            {
               "name": "--ki-button-ghost-success-hover-bg",
               "description": "color used by the button component for ghost success hover background."
             },
@@ -2720,26 +2662,6 @@
               "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
             },
             {
-              "name": "--ki-button-outline-rest-bg",
-              "description": "Background of the outline variant at rest."
-            },
-            {
-              "name": "--ki-button-outline-rest-border",
-              "description": "Visible outline of the outline variant at rest."
-            },
-            {
-              "name": "--ki-button-outline-rest-fg",
-              "description": "Foreground of the outline variant at rest."
-            },
-            {
-              "name": "--ki-button-outline-selected-bg",
-              "description": "Background of the selected outline button toggle."
-            },
-            {
-              "name": "--ki-button-outline-selected-fg",
-              "description": "Foreground of the selected outline button toggle."
-            },
-            {
               "name": "--ki-button-padding-block",
               "description": "dimension used by the button component for padding block (MarsUI: 4px in every size)."
             },
@@ -2826,14 +2748,6 @@
             {
               "name": "--ki-button-primary-rest-shadow",
               "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
-            },
-            {
-              "name": "--ki-button-primary-selected-bg",
-              "description": "Background of the selected primary button toggle."
-            },
-            {
-              "name": "--ki-button-primary-selected-fg",
-              "description": "Foreground of the selected primary button toggle."
             },
             {
               "name": "--ki-button-primary-success-hover-bg",
@@ -2930,14 +2844,6 @@
             {
               "name": "--ki-button-quaternary-rest-shadow",
               "description": "value used by the button component for quaternary rest shadow."
-            },
-            {
-              "name": "--ki-button-quaternary-selected-bg",
-              "description": "Background of the selected quaternary button toggle."
-            },
-            {
-              "name": "--ki-button-quaternary-selected-fg",
-              "description": "Foreground of the selected quaternary button toggle."
             },
             {
               "name": "--ki-button-quaternary-success-hover-bg",
@@ -3046,14 +2952,6 @@
             {
               "name": "--ki-button-secondary-rest-shadow",
               "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
-            },
-            {
-              "name": "--ki-button-secondary-selected-bg",
-              "description": "Background of the selected secondary button toggle."
-            },
-            {
-              "name": "--ki-button-secondary-selected-fg",
-              "description": "Foreground of the selected secondary button toggle."
             },
             {
               "name": "--ki-button-secondary-success-hover-bg",
@@ -3228,30 +3126,6 @@
               "description": "color used by the button component for tertiary success rest foreground."
             },
             {
-              "name": "--ki-button-toggle-quiet-bg",
-              "description": "Background of unselected ghost and quaternary toggle buttons."
-            },
-            {
-              "name": "--ki-button-toggle-quiet-fg",
-              "description": "Foreground of unselected ghost toggle buttons."
-            },
-            {
-              "name": "--ki-button-toggle-radius",
-              "description": "Rounded rectangle shape for an unselected text toggle button."
-            },
-            {
-              "name": "--ki-button-toggle-selected-radius",
-              "description": "Pill shape for a selected text toggle button."
-            },
-            {
-              "name": "--ki-button-toggle-unselected-bg",
-              "description": "Background of unselected filled toggle buttons."
-            },
-            {
-              "name": "--ki-button-toggle-unselected-fg",
-              "description": "Foreground of unselected filled toggle buttons."
-            },
-            {
               "name": "--ki-button-xl-font-size",
               "description": "dimension used by the button component for xl font size."
             },
@@ -3332,28 +3206,12 @@
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
-              "name": "--ki-effect-component-no-backdrop-filter",
-              "description": "An unadorned surface applies no backdrop filter."
-            },
-            {
-              "name": "--ki-elevation-none",
-              "description": "Flat surfaces carry no resting shadow."
-            },
-            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
             },
             {
               "name": "--ki-motion-easing-out",
               "description": "Decelerating interaction transition easing curve."
-            },
-            {
-              "name": "--ki-outline-none",
-              "description": "semantic color for outline none."
-            },
-            {
-              "name": "--ki-surface-image-none",
-              "description": "An unadorned surface has no background image."
             }
           ]
         }
@@ -7107,7 +6965,7 @@
               "name": "variant",
               "fieldName": "variant",
               "type": {
-                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\""
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\""
               },
               "default": "'ghost'",
               "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action."
@@ -7202,7 +7060,7 @@
               "name": "variant",
               "privacy": "public",
               "type": {
-                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\""
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\""
               },
               "default": "'ghost'",
               "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
@@ -7352,14 +7210,6 @@
               "description": "value used by the button component for ghost rest shadow."
             },
             {
-              "name": "--ki-button-ghost-selected-bg",
-              "description": "Background of the selected ghost button toggle."
-            },
-            {
-              "name": "--ki-button-ghost-selected-fg",
-              "description": "Foreground of the selected ghost button toggle."
-            },
-            {
               "name": "--ki-button-ghost-success-hover-bg",
               "description": "color used by the button component for ghost success hover background."
             },
@@ -7460,26 +7310,6 @@
               "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
             },
             {
-              "name": "--ki-button-outline-rest-bg",
-              "description": "Background of the outline variant at rest."
-            },
-            {
-              "name": "--ki-button-outline-rest-border",
-              "description": "Visible outline of the outline variant at rest."
-            },
-            {
-              "name": "--ki-button-outline-rest-fg",
-              "description": "Foreground of the outline variant at rest."
-            },
-            {
-              "name": "--ki-button-outline-selected-bg",
-              "description": "Background of the selected outline button toggle."
-            },
-            {
-              "name": "--ki-button-outline-selected-fg",
-              "description": "Foreground of the selected outline button toggle."
-            },
-            {
               "name": "--ki-button-padding-block",
               "description": "dimension used by the button component for padding block (MarsUI: 4px in every size)."
             },
@@ -7566,14 +7396,6 @@
             {
               "name": "--ki-button-primary-rest-shadow",
               "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
-            },
-            {
-              "name": "--ki-button-primary-selected-bg",
-              "description": "Background of the selected primary button toggle."
-            },
-            {
-              "name": "--ki-button-primary-selected-fg",
-              "description": "Foreground of the selected primary button toggle."
             },
             {
               "name": "--ki-button-primary-success-hover-bg",
@@ -7670,14 +7492,6 @@
             {
               "name": "--ki-button-quaternary-rest-shadow",
               "description": "value used by the button component for quaternary rest shadow."
-            },
-            {
-              "name": "--ki-button-quaternary-selected-bg",
-              "description": "Background of the selected quaternary button toggle."
-            },
-            {
-              "name": "--ki-button-quaternary-selected-fg",
-              "description": "Foreground of the selected quaternary button toggle."
             },
             {
               "name": "--ki-button-quaternary-success-hover-bg",
@@ -7786,14 +7600,6 @@
             {
               "name": "--ki-button-secondary-rest-shadow",
               "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
-            },
-            {
-              "name": "--ki-button-secondary-selected-bg",
-              "description": "Background of the selected secondary button toggle."
-            },
-            {
-              "name": "--ki-button-secondary-selected-fg",
-              "description": "Foreground of the selected secondary button toggle."
             },
             {
               "name": "--ki-button-secondary-success-hover-bg",
@@ -7966,14 +7772,6 @@
             {
               "name": "--ki-button-tertiary-success-rest-fg",
               "description": "color used by the button component for tertiary success rest foreground."
-            },
-            {
-              "name": "--ki-button-toggle-radius",
-              "description": "Rounded rectangle shape for an unselected text toggle button."
-            },
-            {
-              "name": "--ki-button-toggle-selected-radius",
-              "description": "Pill shape for a selected text toggle button."
             },
             {
               "name": "--ki-button-xl-font-size",
@@ -10546,8 +10344,8 @@
           "customElement": true,
           "tagName": "ki-icon-button",
           "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
-          "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. Enable `toggle` for persistent actions such as\nBookmark. While the action it started is in progress, set `loading`.",
-          "whenNotToUse": "whenever a visible label fits (use ki-button),\nnavigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+          "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it.",
+          "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
           "attributes": [
             {
               "name": "command",
@@ -10615,16 +10413,7 @@
               "type": {
                 "text": "boolean | undefined"
               },
-              "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action."
-            },
-            {
-              "name": "selected",
-              "fieldName": "selected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change."
+              "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
             },
             {
               "name": "size",
@@ -10636,31 +10425,22 @@
               "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor."
             },
             {
-              "name": "toggle",
-              "fieldName": "toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states."
-            },
-            {
               "name": "tone",
               "fieldName": "tone",
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
               "default": "'neutral'",
-              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
             },
             {
               "name": "variant",
               "fieldName": "variant",
               "type": {
-                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "deprecatedValues": [
                 "tertiary"
               ]
@@ -10755,21 +10535,9 @@
               "type": {
                 "text": "boolean | undefined"
               },
-              "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action.",
+              "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
               "attribute": "pressed",
               "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "selected",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-              "attribute": "selected",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -10785,25 +10553,13 @@
             },
             {
               "kind": "field",
-              "name": "toggle",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
-              "attribute": "toggle",
-              "reflects": true
-            },
-            {
-              "kind": "field",
               "name": "tone",
               "privacy": "public",
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
               "default": "'neutral'",
-              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
               "attribute": "tone",
               "reflects": true
             },
@@ -10812,10 +10568,10 @@
               "name": "variant",
               "privacy": "public",
               "type": {
-                "text": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
               "default": "'secondary'",
-              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
               "attribute": "variant",
               "reflects": true,
               "deprecatedValues": [
@@ -10823,15 +10579,7 @@
               ]
             }
           ],
-          "events": [
-            {
-              "name": "ki-change",
-              "type": {
-                "text": "CustomEvent<{ selected: boolean }>"
-              },
-              "description": "Emitted after toggle activation with the new selected state."
-            }
-          ],
+          "events": [],
           "slots": [
             {
               "name": "",
@@ -10840,10 +10588,6 @@
             {
               "name": "counter",
               "description": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
-            },
-            {
-              "name": "selected",
-              "description": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
             }
           ],
           "cssParts": [
@@ -11418,22 +11162,6 @@
               "description": "color used by the button component for tertiary success rest foreground."
             },
             {
-              "name": "--ki-button-toggle-quiet-bg",
-              "description": "Background of unselected ghost and quaternary toggle buttons."
-            },
-            {
-              "name": "--ki-button-toggle-quiet-fg",
-              "description": "Foreground of unselected ghost toggle buttons."
-            },
-            {
-              "name": "--ki-button-toggle-unselected-bg",
-              "description": "Background of unselected filled toggle buttons."
-            },
-            {
-              "name": "--ki-button-toggle-unselected-fg",
-              "description": "Foreground of unselected filled toggle buttons."
-            },
-            {
               "name": "--ki-button-xl-radius",
               "description": "dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns)."
             },
@@ -11452,22 +11180,6 @@
             {
               "name": "--ki-density-target-min",
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-effect-component-no-backdrop-filter",
-              "description": "An unadorned surface applies no backdrop filter."
-            },
-            {
-              "name": "--ki-elevation-none",
-              "description": "Flat surfaces carry no resting shadow."
-            },
-            {
-              "name": "--ki-icon-button-ghost-selected-bg",
-              "description": "Background of the selected ghost icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-ghost-selected-fg",
-              "description": "Foreground of the selected ghost icon button toggle."
             },
             {
               "name": "--ki-icon-button-lg-icon-size",
@@ -11494,50 +11206,6 @@
               "description": "dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon)."
             },
             {
-              "name": "--ki-icon-button-outline-rest-bg",
-              "description": "Background of the outline variant at rest."
-            },
-            {
-              "name": "--ki-icon-button-outline-rest-border",
-              "description": "Visible outline of the outline variant at rest."
-            },
-            {
-              "name": "--ki-icon-button-outline-rest-fg",
-              "description": "Foreground of the outline variant at rest."
-            },
-            {
-              "name": "--ki-icon-button-outline-selected-bg",
-              "description": "Background of the selected outline icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-outline-selected-fg",
-              "description": "Foreground of the selected outline icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-primary-selected-bg",
-              "description": "Background of the selected primary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-primary-selected-fg",
-              "description": "Foreground of the selected primary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-selected-bg",
-              "description": "Background of the selected quaternary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-selected-fg",
-              "description": "Foreground of the selected quaternary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-secondary-selected-bg",
-              "description": "Background of the selected secondary icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-secondary-selected-fg",
-              "description": "Foreground of the selected secondary icon button toggle."
-            },
-            {
               "name": "--ki-icon-button-sm-icon-size",
               "description": "dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px)."
             },
@@ -11548,14 +11216,6 @@
             {
               "name": "--ki-icon-button-sm-spinner-size",
               "description": "dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon)."
-            },
-            {
-              "name": "--ki-icon-button-toggle-radius",
-              "description": "Round shape for an unselected icon toggle button."
-            },
-            {
-              "name": "--ki-icon-button-toggle-selected-radius",
-              "description": "Rounded square shape for a selected icon toggle button."
             },
             {
               "name": "--ki-icon-button-xl-icon-size",
@@ -11588,14 +11248,6 @@
             {
               "name": "--ki-motion-easing-out",
               "description": "Decelerating interaction transition easing curve."
-            },
-            {
-              "name": "--ki-outline-none",
-              "description": "semantic color for outline none."
-            },
-            {
-              "name": "--ki-surface-image-none",
-              "description": "An unadorned surface has no background image."
             },
             {
               "name": "--ki-typography-family-body",
@@ -14890,6 +14542,514 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-pagination.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiPagination",
+          "customElement": true,
+          "tagName": "ki-pagination",
+          "description": "Controls for moving among pages of results or appending the next batch.",
+          "whenToUse": "paged tables, search results or long lists. Use compact for\na previous/next stepper and load-more to append results in place.",
+          "whenNotToUse": "short lists that fit in one view or the steps of a task.",
+          "catalogAction": "ki-page-change",
+          "attributes": [
+            {
+              "name": "boundaries",
+              "fieldName": "boundaries",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of pages to display at each end of the numbered list.",
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "name": "compact-label",
+              "fieldName": "compactLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Page {page} of {pages}'",
+              "description": "Localized stepper label template. Include {page} and {pages}."
+            },
+            {
+              "name": "href-template",
+              "fieldName": "hrefTemplate",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+              "format": "url"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Pagination'",
+              "description": "Accessible name of the navigation landmark. Distinguish multiple result sets."
+            },
+            {
+              "name": "load-more-label",
+              "fieldName": "loadMoreLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Load more'",
+              "description": "Localized visible label for the button that appends results."
+            },
+            {
+              "name": "next-label",
+              "fieldName": "nextLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Next page'",
+              "description": "Localized accessible name of the control that requests the next page."
+            },
+            {
+              "name": "page",
+              "fieldName": "page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Current 1-based page. Update it when the requested results are ready.",
+              "minimum": 1
+            },
+            {
+              "name": "page-label",
+              "fieldName": "pageLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Page {page}'",
+              "description": "Localized accessible name template for numbered controls. Include {page}."
+            },
+            {
+              "name": "pages",
+              "fieldName": "pages",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Total number of result pages. Omit it until a page count is available.",
+              "minimum": 0
+            },
+            {
+              "name": "previous-label",
+              "fieldName": "previousLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Previous page'",
+              "description": "Localized accessible name of the control that requests the previous page."
+            },
+            {
+              "name": "shown",
+              "fieldName": "shown",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Displayed result count in load-more mode. Update it after appending results.",
+              "minimum": 0
+            },
+            {
+              "name": "siblings",
+              "fieldName": "siblings",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of pages to display on each side of the current page.",
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "name": "status-label",
+              "fieldName": "statusLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Showing {shown} of {total} results'",
+              "description": "Localized polite count template. Include {shown} and {total}."
+            },
+            {
+              "name": "total",
+              "fieldName": "total",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Total result count in load-more mode. Required with shown for the count.",
+              "minimum": 0
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"compact\" | \"load-more\" | \"pages\""
+              },
+              "default": "'pages'",
+              "description": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "boundaries",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of pages to display at each end of the numbered list.",
+              "attribute": "boundaries",
+              "reflects": false,
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "kind": "field",
+              "name": "compactLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Page {page} of {pages}'",
+              "description": "Localized stepper label template. Include {page} and {pages}.",
+              "attribute": "compact-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "hrefTemplate",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Relative or HTTP(S) URL template for native navigation. Place {page} in\nthe path, query or fragment, for example \"?page={page}\".",
+              "attribute": "href-template",
+              "reflects": false,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Pagination'",
+              "description": "Accessible name of the navigation landmark. Distinguish multiple result sets.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "loadMoreLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Load more'",
+              "description": "Localized visible label for the button that appends results.",
+              "attribute": "load-more-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "nextLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Next page'",
+              "description": "Localized accessible name of the control that requests the next page.",
+              "attribute": "next-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "page",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Current 1-based page. Update it when the requested results are ready.",
+              "attribute": "page",
+              "reflects": false,
+              "minimum": 1
+            },
+            {
+              "kind": "field",
+              "name": "pageLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Page {page}'",
+              "description": "Localized accessible name template for numbered controls. Include {page}.",
+              "attribute": "page-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "pages",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Total number of result pages. Omit it until a page count is available.",
+              "attribute": "pages",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "previousLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Previous page'",
+              "description": "Localized accessible name of the control that requests the previous page.",
+              "attribute": "previous-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "shown",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Displayed result count in load-more mode. Update it after appending results.",
+              "attribute": "shown",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "siblings",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Number of pages to display on each side of the current page.",
+              "attribute": "siblings",
+              "reflects": false,
+              "minimum": 0,
+              "maximum": 10
+            },
+            {
+              "kind": "field",
+              "name": "statusLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Showing {shown} of {total} results'",
+              "description": "Localized polite count template. Include {shown} and {total}.",
+              "attribute": "status-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "total",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Total result count in load-more mode. Required with shown for the count.",
+              "attribute": "total",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"compact\" | \"load-more\" | \"pages\""
+              },
+              "default": "'pages'",
+              "description": "Numbered pages, a previous/next stepper, or a button to append results.\nNumbered pages switch to the stepper below 480 CSS pixels of available width.",
+              "attribute": "variant",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-load-more",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Requests another batch. Append results in place and update shown."
+            },
+            {
+              "name": "ki-page-change",
+              "type": {
+                "text": "CustomEvent<{\n    page: number;\n  }>"
+              },
+              "description": "Requests a different page. Update results and move focus to their heading\nwhen they are ready. Cancelling the event also cancels a plain link click."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "compact",
+              "description": "Current page and page count in the stepper."
+            },
+            {
+              "name": "gap",
+              "description": "Decorative marker for omitted pages."
+            },
+            {
+              "name": "list",
+              "description": "Ordered list of pages in the numbered variant."
+            },
+            {
+              "name": "load-more",
+              "description": "Button that requests another batch."
+            },
+            {
+              "name": "navigation",
+              "description": "Named navigation landmark."
+            },
+            {
+              "name": "next",
+              "description": "Next-page control."
+            },
+            {
+              "name": "page",
+              "description": "Numbered button or link."
+            },
+            {
+              "name": "previous",
+              "description": "Previous-page control."
+            },
+            {
+              "name": "status",
+              "description": "Polite result-count announcement."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-pagination-compact-gap",
+              "description": "Gap between the compact count and direction controls."
+            },
+            {
+              "name": "--ki-pagination-current-bg",
+              "description": "Background of the current page control."
+            },
+            {
+              "name": "--ki-pagination-current-fg",
+              "description": "Ink for the current page control."
+            },
+            {
+              "name": "--ki-pagination-gap",
+              "description": "Gap between numbered page controls."
+            },
+            {
+              "name": "--ki-pagination-item-backdrop-filter",
+              "description": "Complete backdrop filter for the page control."
+            },
+            {
+              "name": "--ki-pagination-item-bg",
+              "description": "Resting background of a numbered page control."
+            },
+            {
+              "name": "--ki-pagination-item-bg-image",
+              "description": "Optional image above the page control background color."
+            },
+            {
+              "name": "--ki-pagination-item-fg",
+              "description": "Resting ink for page labels and status text."
+            },
+            {
+              "name": "--ki-pagination-item-hover-bg",
+              "description": "Background of a hovered page control."
+            },
+            {
+              "name": "--ki-pagination-item-hover-fg",
+              "description": "Ink for a hovered page control."
+            },
+            {
+              "name": "--ki-pagination-item-radius",
+              "description": "Corner radius of numbered page controls and direction links."
+            },
+            {
+              "name": "--ki-pagination-item-size",
+              "description": "Minimum size of a numbered page control at standard density."
+            },
+            {
+              "name": "--ki-pagination-more-gap",
+              "description": "Gap between the load-more button and the count."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiPagination",
+          "declaration": {
+            "name": "KiPagination",
+            "module": "dist/components/ki-pagination.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-pagination",
+          "declaration": {
+            "name": "KiPagination",
+            "module": "dist/components/ki-pagination.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-popover.js",
       "declarations": [
         {
@@ -16107,477 +16267,6 @@
           "declaration": {
             "name": "KiRadioGroup",
             "module": "dist/components/ki-radio-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/components/ki-rating.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiRating",
-          "customElement": true,
-          "tagName": "ki-rating",
-          "description": "Displays a score or collects one choice on a small rating scale.",
-          "whenToUse": "Show an average review score in readonly mode or ask people to rate\nan answer, experience, or product on a small scale.",
-          "whenNotToUse": "Use message actions for yes/no feedback and a slider for a\ncontinuous or large numeric range.",
-          "attributes": [
-            {
-              "name": "disabled",
-              "fieldName": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Makes an editable rating unavailable and excludes it from form submission."
-            },
-            {
-              "name": "icon-name",
-              "fieldName": "iconName",
-              "type": {
-                "text": "string"
-              },
-              "default": "'star'",
-              "description": "Lucide icon name. Import custom names before mounting. Unavailable names use star."
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
-              "required": true
-            },
-            {
-              "name": "max",
-              "fieldName": "max",
-              "type": {
-                "text": "number"
-              },
-              "default": "5",
-              "description": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
-              "minimum": 1,
-              "maximum": 10
-            },
-            {
-              "name": "name",
-              "fieldName": "name",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form field name for a selected editable score."
-            },
-            {
-              "name": "option-label",
-              "fieldName": "optionLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{value} stars'",
-              "description": "Accessible name pattern for the other choices. Use {value} for the choice."
-            },
-            {
-              "name": "option-singular-label",
-              "fieldName": "optionSingularLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{value} star'",
-              "description": "Accessible name pattern for the one-star choice. Use {value} for the choice."
-            },
-            {
-              "name": "precision",
-              "fieldName": "precision",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps."
-            },
-            {
-              "name": "rated-label",
-              "fieldName": "ratedLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Rated {value} out of {max}'",
-              "description": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores."
-            },
-            {
-              "name": "readonly",
-              "fieldName": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Displays a score without editing or submitting it."
-            },
-            {
-              "name": "required",
-              "fieldName": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Requires an editable score before the form can be submitted."
-            },
-            {
-              "name": "required-message",
-              "fieldName": "requiredMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Select a rating.'",
-              "description": "Validation message for an unanswered required rating."
-            },
-            {
-              "name": "score-label",
-              "fieldName": "scoreLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{value} of {max}'",
-              "description": "Visible score pattern in input mode. Use {value} and {max} for the scores."
-            },
-            {
-              "name": "value",
-              "fieldName": "value",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
-              "minimum": 0,
-              "maximum": 10
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "disabled",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Makes an editable rating unavailable and excludes it from form submission.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "iconName",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'star'",
-              "description": "Lucide icon name. Import custom names before mounting. Unavailable names use star.",
-              "attribute": "icon-name",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
-              "attribute": "label",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "5",
-              "description": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
-              "attribute": "max",
-              "reflects": false,
-              "minimum": 1,
-              "maximum": 10
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form field name for a selected editable score.",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "optionLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{value} stars'",
-              "description": "Accessible name pattern for the other choices. Use {value} for the choice.",
-              "attribute": "option-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "optionSingularLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{value} star'",
-              "description": "Accessible name pattern for the one-star choice. Use {value} for the choice.",
-              "attribute": "option-singular-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "precision",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.",
-              "attribute": "precision",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "ratedLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Rated {value} out of {max}'",
-              "description": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores.",
-              "attribute": "rated-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Displays a score without editing or submitting it.",
-              "attribute": "readonly",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Requires an editable score before the form can be submitted.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "requiredMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Select a rating.'",
-              "description": "Validation message for an unanswered required rating.",
-              "attribute": "required-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "scoreLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'{value} of {max}'",
-              "description": "Visible score pattern in input mode. Use {value} and {max} for the scores.",
-              "attribute": "score-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
-              "attribute": "value",
-              "reflects": false,
-              "minimum": 0,
-              "maximum": 10
-            }
-          ],
-          "events": [
-            {
-              "name": "ki-change",
-              "type": {
-                "text": "CustomEvent<{ value: number }>"
-              },
-              "description": "Fires once when a person changes the selection. The detail contains the numeric value."
-            }
-          ],
-          "slots": [],
-          "cssParts": [
-            {
-              "name": "choice",
-              "description": "Native radio target for one selectable score."
-            },
-            {
-              "name": "glyph",
-              "description": "Decorative artwork for one rating step."
-            },
-            {
-              "name": "label",
-              "description": "Visible question above the editable scale."
-            },
-            {
-              "name": "scale",
-              "description": "Read-only score image or editable radio group."
-            },
-            {
-              "name": "score",
-              "description": "Visible numeric score."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-rating-disabled-fg",
-              "description": "Glyph ink while the rating is unavailable."
-            },
-            {
-              "name": "--ki-rating-gap",
-              "description": "Space between rating glyphs or targets."
-            },
-            {
-              "name": "--ki-rating-hover-backdrop-filter",
-              "description": "Complete backdrop filter for the hovered choice."
-            },
-            {
-              "name": "--ki-rating-hover-bg",
-              "description": "Surface of the choice under the pointer."
-            },
-            {
-              "name": "--ki-rating-hover-bg-image",
-              "description": "Optional image over the hovered choice surface."
-            },
-            {
-              "name": "--ki-rating-label-bg",
-              "description": "Backdrop of the visible question."
-            },
-            {
-              "name": "--ki-rating-label-fg",
-              "description": "Ink of the visible question."
-            },
-            {
-              "name": "--ki-rating-label-gap",
-              "description": "Space between the question and scale."
-            },
-            {
-              "name": "--ki-rating-off-bg",
-              "description": "Backdrop of an outlined glyph."
-            },
-            {
-              "name": "--ki-rating-off-fg",
-              "description": "Ink of an outlined glyph."
-            },
-            {
-              "name": "--ki-rating-on-bg",
-              "description": "Backdrop of a filled glyph."
-            },
-            {
-              "name": "--ki-rating-on-fg",
-              "description": "Ink of a filled glyph."
-            },
-            {
-              "name": "--ki-rating-score-bg",
-              "description": "Backdrop of the visible score."
-            },
-            {
-              "name": "--ki-rating-score-fg",
-              "description": "Ink of the visible score."
-            },
-            {
-              "name": "--ki-rating-score-gap",
-              "description": "Space between the glyphs and visible score."
-            },
-            {
-              "name": "--ki-rating-size",
-              "description": "Size of a rating glyph."
-            },
-            {
-              "name": "--ki-rating-target-radius",
-              "description": "Corners of the interactive target."
-            },
-            {
-              "name": "--ki-rating-target-size",
-              "description": "Default whole-step target size."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-body-1",
-              "description": "semantic dimension for typography line height body 1."
-            },
-            {
-              "name": "--ki-typography-size-body-1",
-              "description": "semantic dimension for typography size body 1."
-            },
-            {
-              "name": "--ki-typography-weight-body-medium",
-              "description": "semantic font weight for typography weight body medium."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiRating",
-          "declaration": {
-            "name": "KiRating",
-            "module": "dist/components/ki-rating.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-rating",
-          "declaration": {
-            "name": "KiRating",
-            "module": "dist/components/ki-rating.js"
           }
         }
       ]

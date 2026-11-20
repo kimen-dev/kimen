@@ -35,6 +35,7 @@ const URL_PROP_NAMES: ReadonlySet<string> = new Set([
   'data',
   'formaction',
   'href',
+  'href-template',
   'ping',
   'poster',
   'src',

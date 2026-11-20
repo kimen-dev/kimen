@@ -50,12 +50,12 @@ import { defineCustomElement as defineKiMenuItem } from '@kimen/elements/compone
 import { defineCustomElement as defineKiMessage } from '@kimen/elements/components/ki-message.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
+import { defineCustomElement as defineKiPagination } from '@kimen/elements/components/ki-pagination.js';
 import { defineCustomElement as defineKiPopover } from '@kimen/elements/components/ki-popover.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
-import { defineCustomElement as defineKiRating } from '@kimen/elements/components/ki-rating.js';
 import { defineCustomElement as defineKiRelativeTime } from '@kimen/elements/components/ki-relative-time.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
@@ -282,14 +282,14 @@ export declare interface KiBreadcrumbItem extends Components.KiBreadcrumbItem {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiButton,
-  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'selected', 'size', 'toggle', 'tone', 'type', 'value', 'variant']
+  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant']
 })
 @Component({
   selector: 'ki-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'selected', 'size', 'toggle', 'tone', 'type', 'value', 'variant'],
+  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant'],
 })
 export class KiButton {
   protected el: HTMLKiButtonElement;
@@ -300,12 +300,7 @@ export class KiButton {
 }
 
 
-
-export declare interface KiButton extends Components.KiButton {
-  /**
-   * Emitted after toggle activation with the new selected state.
-   */
-}
+export declare interface KiButton extends Components.KiButton {}
 
 
 @ProxyCmp({
@@ -889,14 +884,14 @@ export declare interface KiIcon extends Components.KiIcon {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiIconButton,
-  inputs: ['command', 'commandfor', 'disabled', 'expanded', 'label', 'loading', 'loadingLabel', 'pressed', 'selected', 'size', 'toggle', 'tone', 'variant']
+  inputs: ['command', 'commandfor', 'disabled', 'expanded', 'label', 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant']
 })
 @Component({
   selector: 'ki-icon-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['command', 'commandfor', 'disabled', 'expanded', { name: 'label', required: true }, 'loading', 'loadingLabel', 'pressed', 'selected', 'size', 'toggle', 'tone', 'variant'],
+  inputs: ['command', 'commandfor', 'disabled', 'expanded', { name: 'label', required: true }, 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant'],
 })
 export class KiIconButton {
   protected el: HTMLKiIconButtonElement;
@@ -907,12 +902,7 @@ export class KiIconButton {
 }
 
 
-
-export declare interface KiIconButton extends Components.KiIconButton {
-  /**
-   * Emitted after toggle activation with the new selected state.
-   */
-}
+export declare interface KiIconButton extends Components.KiIconButton {}
 
 
 @ProxyCmp({
@@ -1202,6 +1192,38 @@ export declare interface KiOption extends Components.KiOption {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiPagination,
+  inputs: ['boundaries', 'compactLabel', 'hrefTemplate', 'label', 'loadMoreLabel', 'nextLabel', 'page', 'pageLabel', 'pages', 'previousLabel', 'shown', 'siblings', 'statusLabel', 'total', 'variant']
+})
+@Component({
+  selector: 'ki-pagination',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['boundaries', 'compactLabel', 'hrefTemplate', 'label', 'loadMoreLabel', 'nextLabel', 'page', 'pageLabel', 'pages', 'previousLabel', 'shown', 'siblings', 'statusLabel', 'total', 'variant'],
+})
+export class KiPagination {
+  protected el: HTMLKiPaginationElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiPagination extends Components.KiPagination {
+  /**
+   * Requests a different page. Update results and move focus to their heading
+when they are ready. Cancelling the event also cancels a plain link click.
+   */
+  /**
+   * Requests another batch. Append results in place and update shown.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiPopover,
   inputs: ['arrow', 'for', 'kind', 'label', 'open', 'placement']
 })
@@ -1322,34 +1344,6 @@ export class KiRadioGroup {
 
 
 export declare interface KiRadioGroup extends Components.KiRadioGroup {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiRating,
-  inputs: ['disabled', 'iconName', 'label', 'max', 'name', 'optionLabel', 'optionSingularLabel', 'precision', 'ratedLabel', 'readonly', 'required', 'requiredMessage', 'scoreLabel', 'value']
-})
-@Component({
-  selector: 'ki-rating',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'iconName', { name: 'label', required: true }, 'max', 'name', 'optionLabel', 'optionSingularLabel', 'precision', 'ratedLabel', 'readonly', 'required', 'requiredMessage', 'scoreLabel', 'value'],
-})
-export class KiRating {
-  protected el: HTMLKiRatingElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-
-export declare interface KiRating extends Components.KiRating {
-  /**
-   * Fires once when a person changes the selection. The detail contains the numeric value.
-   */
-}
 
 
 @ProxyCmp({
