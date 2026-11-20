@@ -101,7 +101,7 @@ Feature: Play a voice note or recording
 
 Each interpretation below is the agent's choice, pending founder confirmation.
 
-- A missing or whitespace-only title displays and names the group “Audio player”. The published A2UI 0.9/0.9.1 and 1.0 schemas supply `url` and optional `description`, mapped to `src` and `title`. The component exposes local controls and media notifications with an empty catalog action surface.
+- A missing or whitespace-only title displays and names the group “Audio player”. The published A2UI 0.9/0.9.1 and 1.0 schemas supply `url` and optional `description`, mapped to `src` and `title`. The component exposes local controls and media notifications with `ended` as the sole catalog action trigger.
 - A named single-thumb Slider receives an opt-in `value-text` override for assistive technology. Elapsed and total time use a digital clock format. The player handles horizontal arrows as five-second seeks, following the timeline direction in RTL. Space on the seek control toggles playback. Focused buttons and an open speed menu retain their own keyboard activation.
 - Seek is available once a finite positive duration is known. At the beginning or end, seeks stay within the recording. Rates use unique numeric entries from 0.25× to 4×. The default rates apply if all entries are invalid, and 1× is always available for returning to normal speed.
 - The default URL scheme policy applies to both URLs. The catalog also honors configured origins. Playback failures have a localizable status and source changes reset the timeline.
