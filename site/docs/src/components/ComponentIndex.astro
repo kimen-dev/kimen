@@ -1,6 +1,7 @@
 ---
 import manifest from '../../../../packages/elements/generated/custom-elements.json';
 import { getCollection } from 'astro:content';
+import { groupByFamily } from '../../component-families.mjs';
 
 const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
 const descriptions = new Map(
@@ -57,37 +58,56 @@ const docs = await getCollection(
   'docs',
   ({ id, data }) => id.startsWith('components/') && !data.draft,
 );
-const entries = docs
-  .map(({ id, data }) => {
+
+// The page's own short description leads; the manifest's (the full JSDoc, in
+// Markdown) is only a fallback, with its inline code kept as code.
+const escapeHtml = (text: string) =>
+  text.replace(/[&<>"']/gu, (character) => `&#${character.charCodeAt(0)};`);
+const inlineCode = (markdown: string) =>
+  escapeHtml(markdown).replace(/`([^`]+)`/gu, '<code>$1</code>');
+
+const entriesById = new Map(
+  docs.map(({ id, data }) => {
     const tag = `ki-${id.slice('components/'.length)}`;
-    return {
-      path: id,
-      tag,
-      description: descriptions.get(tag) ?? data.description,
-      preview: previews.get(tag),
-    };
-  })
-  .sort((a, b) => a.tag.localeCompare(b.tag, 'en'));
-const previewsInOrder = [...previews.keys()].flatMap((tag) =>
-  entries.filter((entry) => entry.tag === tag),
+    return [
+      id,
+      {
+        path: id,
+        tag,
+        description: inlineCode(data.description || (descriptions.get(tag) ?? '')),
+        preview: previews.get(tag),
+      },
+    ];
+  }),
 );
-const otherEntries = entries.filter(({ preview }) => !preview);
+// Grouped by family (component-families.mjs, as in the sidebar), then by
+// name. A live preview is an extra on its card, never a sort key.
+const families = groupByFamily(entriesById.keys()).map(([label, ids]) => ({
+  label,
+  id: `docs-components-${label.toLowerCase()}`,
+  entries: ids.map((id) => entriesById.get(id)!),
+}));
 ---
 
 <section aria-labelledby="docs-components-title">
   <h2 id="docs-components-title">Components</h2>
   <p class="kimen-home-index-lede">Try a component or open its documentation for examples and the API.</p>
-  <ul class="kimen-index">
-    {
-      [...previewsInOrder, ...otherEntries].map(({ path, tag, description, preview }) => (
-        <li class="kimen-index-cell">
-          {preview && <div class="kimen-index-sample" data-pagefind-ignore set:html={preview} />}
-          <a class="kimen-index-name" href={`${docsBase}${path}/`}>{tag}</a>
-          <p class="kimen-index-desc">{description}</p>
-        </li>
-      ))
-    }
-  </ul>
+  {
+    families.map(({ label, id, entries }) => (
+      <section class="kimen-index-family" aria-labelledby={id}>
+        <h3 id={id}>{label}</h3>
+        <ul class="kimen-index">
+          {entries.map(({ path, tag, description, preview }) => (
+            <li class="kimen-index-cell">
+              {preview && <div class="kimen-index-sample" data-pagefind-ignore set:html={preview} />}
+              <a class="kimen-index-name" href={`${docsBase}${path}/`}>{tag}</a>
+              <p class="kimen-index-desc" set:html={description} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
 </section>
 
 <script>

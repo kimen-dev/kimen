@@ -79,10 +79,14 @@ for family in "${FAMILIES[@]}"; do
       continue
     fi
     for id in $IDS; do
-      if ! printf '%s\n' "$FEATURE_IDS" | grep -qx "$id"; then
-        echo "  FAIL: '$family' references $id, which is not a scenario ID in $FEATURE"
-        FAIL=1
-      fi
+      # Match the whole line in the shell, not through `printf | grep -q`: under
+      # pipefail grep exits on the first match, printf dies of SIGPIPE and a
+      # present ID read as missing whenever printf had not finished writing.
+      case $'\n'"$FEATURE_IDS"$'\n' in
+        *$'\n'"$id"$'\n'*) continue ;;
+      esac
+      echo "  FAIL: '$family' references $id, which is not a scenario ID in $FEATURE"
+      FAIL=1
     done
   fi
 done

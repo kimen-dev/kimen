@@ -51,6 +51,7 @@ html:has(.home-page) {
   --ki-site-preview-blur: 6px;
   --ki-site-title-wrap: 22ch;
   --ki-site-lede-wrap: 42rem;
+  --ki-site-menu-min: 12rem;
   --ki-site-guard-picks-min: 16rem;
   --ki-site-guard-picks-max: 22rem;
   --ki-site-guard-target: 3rem;
@@ -533,33 +534,64 @@ body:has(.home-page) {
     color: var(--ki-text-high-em);
   }
 
-  .scheme {
+  /* The shared scheme control keeps the row height of the icon button it replaced. */
+  .topnav .seg {
+    align-items: center;
+    min-block-size: var(--ki-site-square-target);
+  }
+
+  .topnav-menu {
+    display: none;
+  }
+
+  .topnav-menu > summary {
     display: inline-grid;
     place-items: center;
     inline-size: var(--ki-site-square-target);
     block-size: var(--ki-site-square-target);
-    padding: 0;
     border: var(--ki-site-rule-width) solid var(--ki-outline-low-em);
     border-radius: var(--ki-radius-round);
-    background: transparent;
     color: var(--ki-text-med-em);
+    list-style: none;
     cursor: pointer;
   }
 
-  .scheme:hover {
+  .topnav-menu > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .topnav-menu > summary:hover,
+  .topnav-menu[open] > summary {
     color: var(--ki-text-high-em);
   }
 
-  .scheme .icon {
-    grid-area: 1 / 1;
-    visibility: hidden;
+  .topnav-menu > nav {
+    position: absolute;
+    z-index: 2;
+    inset-block-start: calc(100% + var(--ki-space-md));
+    inset-inline-end: 0;
+    display: grid;
+    min-inline-size: var(--ki-site-menu-min);
+    padding: var(--ki-space-md);
+    border: var(--ki-site-hairline);
+    border-radius: var(--ki-radius-component-lg);
+    background: var(--ki-surface-special-light-s0-dark-s1);
+    box-shadow: var(--ki-elevation-e3);
   }
 
-  .scheme[data-mode="auto"] [data-scheme-icon="auto"],
-  .scheme[data-mode="light"] [data-scheme-icon="light"],
-  .scheme[data-mode="dark"] [data-scheme-icon="dark"],
-  .scheme:not([data-mode]) [data-scheme-icon="dark"] {
-    visibility: visible;
+  .topnav-menu > nav a {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--ki-site-action-height);
+    padding-inline: var(--ki-space-xl);
+    border-radius: var(--ki-radius-component-sm);
+    color: var(--ki-text-med-em);
+    text-decoration: none;
+  }
+
+  .topnav-menu > nav a:hover {
+    background: var(--ki-surface-s2);
+    color: var(--ki-text-high-em);
   }
 
   .pitch {
@@ -870,7 +902,7 @@ body:has(.home-page) {
 
   .themes {
     padding-inline: 0;
-    padding-block-start: 0;
+    padding-block: 0;
   }
 
   .themes > .bands {
@@ -891,6 +923,12 @@ body:has(.home-page) {
 
   .bands:not([data-ready]) {
     block-size: auto;
+  }
+
+  /* The copies exist from the start so their components are rendered; they show once the
+     bands are ready. */
+  .bands:not([data-ready]) .band:not([data-band="1"]) {
+    display: none;
   }
 
   .bands:not([data-ready]) .band {
@@ -1119,6 +1157,7 @@ body:has(.home-page) {
   }
 
   .themes-foot {
+    max-inline-size: calc(var(--ki-site-lede-wrap) + 2 * var(--ki-site-gutter));
     padding: var(--ki-space-7xl) var(--ki-site-gutter) 0;
     color: var(--ki-text-med-em);
     font-size: var(--ki-typography-size-body-1);
@@ -1295,9 +1334,12 @@ body:has(.home-page) {
     border-block: var(--ki-site-hairline);
   }
 
+  /* Dense packing lets a later cell fill the hole a wide one leaves; landing.js stretches the
+     last cell to the end of its row (#520, item 20). */
   .wall {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-flow: row dense;
     margin-block-start: var(--ki-space-18xl);
     border-block-start: var(--ki-site-hairline);
     border-inline-start: var(--ki-site-hairline);
@@ -1321,6 +1363,13 @@ body:has(.home-page) {
 
   .cell-wide {
     grid-column: span 2;
+  }
+
+  /* A default specimen's own layout stays inside its cell: ki-mobile-nav's fixed bar, for one,
+     would otherwise cover the bottom of the page. Popovers live in the top layer, unaffected. */
+  .cell-sample {
+    contain: layout;
+    min-inline-size: 0;
   }
 
   .cell .row {
@@ -1646,7 +1695,7 @@ body:has(.home-page) {
   }
 
   .project-stats dt,
-  .cell-description,
+  .sample-caption,
   .sample-data dt {
     color: var(--ki-text-med-em);
     font-size: var(--ki-typography-size-caption-2);
@@ -1656,12 +1705,34 @@ body:has(.home-page) {
     font-weight: var(--ki-typography-weight-body-semibold);
   }
 
+  /* A separator between two inline items (#520, item 17): room enough that they read apart. The
+     dot is decoration, drawn by CSS with empty alternative text. */
+  .sep::before {
+    margin-inline: var(--ki-space-xs);
+    content: "·" / "";
+  }
+
+  .stat-note {
+    display: block;
+    color: var(--ki-text-med-em);
+    font-size: var(--ki-typography-size-caption-2);
+    font-weight: var(--ki-typography-weight-body-normal);
+  }
+
   .themes-foot > * + * {
     margin-block-start: var(--ki-space-3xl);
   }
 
-  .themes-foot .section-title {
-    font-size: var(--ki-typography-size-title-2);
+  /* The section's heading reads as the first sentence of its lede (#520, item 19). */
+  .themes-lede-title,
+  .themes-lede {
+    display: inline;
+  }
+
+  .themes-lede-title {
+    color: var(--ki-text-high-em);
+    font: inherit;
+    font-weight: var(--ki-typography-weight-body-semibold);
   }
 
   .theme-preferences {
@@ -1670,31 +1741,15 @@ body:has(.home-page) {
     gap: var(--ki-space-3xl);
   }
 
-  .theme-preferences fieldset {
-    min-inline-size: 0;
-    padding: var(--ki-space-md) var(--ki-space-xl);
-    margin: 0;
-    border: var(--ki-site-hairline);
-    border-radius: var(--ki-radius-component-md);
-  }
-
-  .theme-preferences label {
+  .pref-pair {
     display: inline-flex;
     align-items: center;
-    min-block-size: var(--ki-site-action-height);
-    gap: var(--ki-space-sm);
-    margin-inline-end: var(--ki-space-xl);
-    cursor: pointer;
+    gap: var(--ki-space-md);
   }
 
-  .theme-preferences input {
-    margin: 0;
-    accent-color: var(--ki-text-primary-high-em);
-  }
-
-  .catalog-title {
-    margin-block-start: var(--ki-space-10xl);
-    font-size: var(--ki-typography-size-title-2);
+  .pref-label {
+    color: var(--ki-text-med-em);
+    font-size: var(--ki-typography-size-caption-2);
   }
 
   .catalog-all [role="status"] {
@@ -1732,10 +1787,31 @@ body:has(.home-page) {
   }
 
   .comparison summary {
+    display: flex;
+    align-items: center;
+    gap: var(--ki-space-md);
     min-block-size: var(--ki-site-action-height);
     padding-block: var(--ki-space-xl);
+    list-style: none;
     cursor: pointer;
     font-weight: var(--ki-typography-weight-body-semibold);
+  }
+
+  .comparison summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* The site's chevron, turned up while the comparison is open (#520, item 21). */
+  .comparison summary .icon {
+    transition: rotate var(--ki-duration-moderate) var(--ki-site-ease);
+  }
+
+  .comparison[open] summary .icon {
+    rotate: 180deg;
+  }
+
+  .comparison[open] summary {
+    padding-block-end: var(--ki-space-md);
   }
 
   .comparison-wrap {
@@ -1998,6 +2074,50 @@ body:has(.home-page) {
 
     .surface-meter {
       display: grid;
+    }
+  }
+
+  /* Below 40rem the brand, the scheme control and the menu share the header row (#520,
+     item 22); the section links move into the menu. */
+  @media (width < 40rem) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      column-gap: var(--ki-space-md);
+      padding-block-start: var(--ki-space-7xl);
+    }
+
+    .hero > :is(.pitch, .spine, .render) {
+      grid-column: 1 / -1;
+    }
+
+    .hero > .brand {
+      grid-area: 1 / 1;
+      align-self: center;
+      margin-block-start: 0;
+    }
+
+    .hero > .topnav {
+      grid-area: 1 / 2;
+      padding: 0;
+    }
+
+    .hero > .topnav > a {
+      display: none;
+    }
+
+    .hero > .topnav-menu {
+      position: relative;
+      display: block;
+      grid-area: 1 / 3;
+      margin-inline-end: var(--ki-site-gutter);
+    }
+  }
+
+  /* The narrowest phones keep the row by dropping the stage badge. */
+  @media (width < 24rem) {
+    .hero > .brand .brand-stage {
+      display: none;
     }
   }
 

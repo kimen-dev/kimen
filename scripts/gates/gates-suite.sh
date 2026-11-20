@@ -36,6 +36,10 @@ record_suite_evidence() {
   printf 'suite\t%s\t%s\n' "$1" "$2" >>"$KIMEN_GATE_EVIDENCE_FILE" || exit 1
 }
 
+# With no arguments the suite is complete: that is local readiness. CI may
+# narrow both parts to a change's affected scope by exporting
+# KIMEN_GATE_SCOPE=affected with its lists (scripts/gates/select-affected.mjs
+# prints them); such a run records `affected`, never `green`.
 run_gate() {
   local name="$1"; shift
   echo "── GATE $name"
@@ -44,6 +48,9 @@ run_gate() {
       [ -z "${CI:-}" ] && [ "${KIMEN_RUN_VISUALS:-}" != '1' ]; then
       record_suite_evidence "$name" partial
       echo "── GATE $name: PARTIAL (visual specs skipped)"
+    elif [ "${KIMEN_GATE_SCOPE:-full}" = affected ]; then
+      record_suite_evidence "$name" affected
+      echo "── GATE $name: PASS (affected scope)"
     else
       record_suite_evidence "$name" green
       echo "── GATE $name: PASS"
@@ -59,6 +66,8 @@ run_gate core bash scripts/gates/gates-core.sh
 run_gate test-browser bash scripts/gates/gates-browser.sh chromium
 if grep -q $'\tpartial$' "$KIMEN_GATE_EVIDENCE_FILE"; then
   echo 'LOCAL QUALITY CHECKS PASSED WITH SKIPS'
+elif grep -q $'\taffected$' "$KIMEN_GATE_EVIDENCE_FILE"; then
+  echo 'AFFECTED QUALITY GATES GREEN (not release evidence)'
 else
   echo 'QUALITY GATES GREEN'
 fi

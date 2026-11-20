@@ -201,6 +201,25 @@ it('S6 blocks submission below min, announces its error, and clears it on recove
   expect(group.validity.valid).toBe(true);
 });
 
+it('S6 lets the person fix the error from the checkbox the browser focused', async () => {
+  const { form, group, submitted } = await mount({
+    attributes: 'min="1" error-text="Choose at least one region."',
+  });
+
+  // The browser reports the error at the first option's own checkbox, never
+  // at the option element: WebKit on Linux draws its validation bubble inside
+  // the anchor's shadow root, and on an option host that replaced the
+  // option's shadow root, checkbox and all.
+  form.requestSubmit();
+  await expectOptionFocus('Europe');
+  await userEvent.keyboard(' ');
+
+  await expect.element(option('Europe')).toBeChecked();
+  expect(group.value).toEqual(['eu']);
+  form.requestSubmit();
+  expect(submitted).toHaveLength(1);
+});
+
 it('S7 displays range overflow only after leaving the whole group', async () => {
   const { group } = await mount({
     initial: ['eu', 'am'],

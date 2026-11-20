@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # One deterministic real-browser invocation. The caller must select exactly
-# one supported engine; prerelease supplies this script from a three-job matrix.
+# one supported engine; prerelease supplies this script from an engine × shard
+# matrix (.github/workflows/release.yml).
 set -uo pipefail
 
 fail() {
@@ -8,17 +9,20 @@ fail() {
   exit 1
 }
 
-[ "$#" -eq 1 ] || fail 'usage: gates-browser.sh <chromium|firefox|webkit>'
+USAGE='usage: gates-browser.sh <chromium|firefox|webkit> [--plan]'
+[ "$#" -eq 1 ] || { [ "$#" -eq 2 ] && [ "$2" = '--plan' ]; } || fail "$USAGE"
 ENGINE="$1"
+PLAN_ONLY="${2:-}"
 case "$ENGINE" in
   chromium | firefox | webkit) ;;
   *) fail 'engine must be exactly one of chromium, firefox, webkit' ;;
 esac
 
-# CI splits the elements suite across parallel jobs (.github/workflows/ci.yml):
-# KIMEN_BROWSER_SHARD=<index>/<count> runs that share of its files, and the
-# smaller Chromium-only suites run once, in the last shard. Unset, the gate is
-# the whole suite in one invocation (local readiness, release).
+# CI and the release split the elements suite across parallel jobs
+# (.github/workflows/ci.yml, release.yml): KIMEN_BROWSER_SHARD=<index>/<count>
+# runs that share of its files, and the smaller Chromium-only suites run once,
+# in the last shard. Unset, the gate is the whole suite in one invocation
+# (local readiness).
 SHARD="${KIMEN_BROWSER_SHARD:-}"
 SHARD_INDEX=1
 SHARD_COUNT=1
@@ -28,6 +32,60 @@ if [ -n "$SHARD" ]; then
   fi
   SHARD_INDEX="${BASH_REMATCH[1]}"
   SHARD_COUNT="${BASH_REMATCH[2]}"
+fi
+
+# Scope. Unset, every suite runs (local readiness, release). CI opts a change
+# into the affected scope (scripts/gates/select-affected.mjs): each suite runs
+# when the project that owns it is among KIMEN_AFFECTED_PROJECTS, which Nx
+# fills with the changed projects and everything that depends on them, so a
+# change to @kimen/tokens reaches the elements suite through @kimen/elements.
+SCOPE="${KIMEN_GATE_SCOPE:-full}"
+case "$SCOPE" in
+  full) ;;
+  affected)
+    [ "${KIMEN_AFFECTED_PROJECTS+set}" = set ] ||
+      fail 'the affected scope needs KIMEN_AFFECTED_PROJECTS'
+    ;;
+  *) fail "KIMEN_GATE_SCOPE must be full or affected, got '$SCOPE'" ;;
+esac
+affected() {
+  [ "$SCOPE" = full ] || [[ ",$KIMEN_AFFECTED_PROJECTS," == *",$1,"* ]]
+}
+
+# The browser suites and the projects that own them. Every workspace target
+# named test-browser or test-browser-wrapper belongs to one of these
+# (scripts/tests/browser-gates.test.mjs checks the inventory).
+WRAPPER_PROJECTS=(@kimen/react @kimen/vue)
+SUITES=()
+affected @kimen/elements && SUITES+=(elements)
+AFFECTED_WRAPPERS=()
+# Wrapper behavioral suites (spec 034) are Chromium-scoped: the wrapped
+# components already carry the three-engine matrix; the wrapper glue runs
+# on the ordinary PR engine. Sharded, they run once, in the last shard, with
+# the guarded renderer's and the MCP Apps surface's Chromium-only suites.
+if [ "$ENGINE" = 'chromium' ] && [ "$SHARD_INDEX" = "$SHARD_COUNT" ]; then
+  for project in "${WRAPPER_PROJECTS[@]}"; do
+    affected "$project" && AFFECTED_WRAPPERS+=("$project")
+  done
+  [ "${#AFFECTED_WRAPPERS[@]}" -gt 0 ] && SUITES+=(wrappers)
+  affected @kimen/catalog && SUITES+=(catalog)
+  affected @kimen/adapter-mcp-apps && SUITES+=(adapter-mcp-apps)
+fi
+selected() {
+  [[ " ${SUITES[*]} " == *" $1 "* ]]
+}
+comma_list() {
+  [ "$#" -gt 0 ] || return 0
+  local first="$1"
+  shift
+  printf '%s' "$first" "${@/#/,}"
+}
+
+# --plan names this invocation's suites as a $GITHUB_OUTPUT line and stops,
+# so CI prepares a browser only for a shard that has something to run.
+if [ "$PLAN_ONLY" = '--plan' ]; then
+  printf 'suites=%s\n' "$(comma_list "${SUITES[@]}")"
+  exit 0
 fi
 
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
@@ -66,6 +124,12 @@ run_browser_gate() {
     exit 1
   fi
 }
+
+# Nothing ran, so nothing is recorded: a suite without evidence is not green.
+if [ "${#SUITES[@]}" -eq 0 ]; then
+  echo "BROWSER GATE GREEN — engine=$ENGINE shard=${SHARD:-all}: no browser suite is affected"
+  exit 0
+fi
 
 command -v pnpm >/dev/null || fail "pnpm not found — run 'corepack enable pnpm'"
 command -v node >/dev/null || fail 'node not found'
@@ -120,24 +184,30 @@ record_browser_evidence "browser-executable:$ENGINE" green
 # Browser targets are deliberately uncached: KIMEN_BROWSER_ENGINE is a runtime
 # input and independent prerelease jobs must execute rather than reuse another
 # engine's Nx result.
-if [ -n "$SHARD" ]; then
+if ! selected elements; then
+  record_browser_evidence "test-browser:$ENGINE${SHARD:+:$SHARD}" skipped
+elif [ -n "$SHARD" ]; then
   run_browser_gate "test-browser:$ENGINE:$SHARD" pnpm exec nx run @kimen/elements:test-browser --skipNxCache -- "--shard=$SHARD"
 else
   run_browser_gate "test-browser:$ENGINE" pnpm exec nx run @kimen/elements:test-browser --skipNxCache
 fi
-# Wrapper behavioral suites (spec 034) are Chromium-scoped: the wrapped
-# components already carry the three-engine matrix; the wrapper glue runs
-# on the ordinary PR engine. Sharded, they run once, in the last shard.
-if [ "$ENGINE" = 'chromium' ] && [ "$SHARD_INDEX" = "$SHARD_COUNT" ]; then
+if [ "$SCOPE" = full ] && selected wrappers; then
   run_browser_gate "test-browser-wrappers:$ENGINE" pnpm exec nx run-many -t test-browser-wrapper --skipNxCache
-  # The guarded renderer's interaction contract (spec 028 S17) needs real
-  # native-control activation; like the wrapper glue it runs on the ordinary
-  # PR engine — the controls themselves carry the three-engine matrix.
+elif selected wrappers; then
+  run_browser_gate "test-browser-wrappers:$ENGINE" pnpm exec nx run-many -t test-browser-wrapper --skipNxCache \
+    "--projects=$(comma_list "${AFFECTED_WRAPPERS[@]}")"
+fi
+# The guarded renderer's interaction contract (spec 028 S17) needs real
+# native-control activation; like the wrapper glue it runs on the ordinary
+# PR engine — the controls themselves carry the three-engine matrix.
+if selected catalog; then
   run_browser_gate "test-browser-catalog:$ENGINE" pnpm exec nx run @kimen/catalog:test-browser --skipNxCache
-  # The packaged MCP Apps surface document (spec 030 S16–S21) is only proven
-  # where it runs: inside a sandboxed frame, driven by postMessage alone, under
-  # its own content policy. Chromium-scoped for now — its content-policy probe
-  # is verified on this engine only (packages/adapter-mcp-apps/COMPAT.md).
+fi
+# The packaged MCP Apps surface document (spec 030 S16–S21) is only proven
+# where it runs: inside a sandboxed frame, driven by postMessage alone, under
+# its own content policy. Chromium-scoped for now — its content-policy probe
+# is verified on this engine only (packages/adapter-mcp-apps/COMPAT.md).
+if selected adapter-mcp-apps; then
   run_browser_gate "test-browser-adapter-mcp-apps:$ENGINE" pnpm exec nx run @kimen/adapter-mcp-apps:test-browser --skipNxCache
 fi
 echo "BROWSER GATE GREEN — engine=$ENGINE shard=${SHARD:-all} executable=$BROWSER_EXECUTABLE"

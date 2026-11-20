@@ -1,0 +1,132 @@
+/* The segmented control every hand-written page shares (#520, item 9): native radios in a
+   pill, arrow keys move the selection. The color-scheme control is always Auto / Light /
+   Dark and turns compact below 50rem: each option shows its icon and keeps its name for
+   assistive technology. pages.js wires it (wireSchemeControls). The docs header draws the
+   same control in Header.astro with its own stylesheet. Tokens only. */
+
+.seg {
+  --ki-seg-target: var(--ki-size-target-min);
+
+  display: inline-flex;
+  flex: none;
+  min-inline-size: 0;
+  gap: var(--ki-space-xxs);
+  margin: 0;
+  padding: var(--ki-space-xxs);
+  border: var(--ki-size-border-hairline) solid var(--ki-outline-low-em);
+  border-radius: var(--ki-radius-round);
+  background-color: var(--ki-surface-special-light-s0-dark-s1);
+}
+
+.seg[hidden] {
+  display: none;
+}
+
+.seg > legend {
+  position: absolute;
+  inline-size: var(--ki-size-border-hairline);
+  block-size: var(--ki-size-border-hairline);
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.seg label {
+  position: relative;
+  display: inline-flex;
+}
+
+.seg input {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.seg input + span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--ki-seg-target);
+  min-block-size: var(--ki-seg-target);
+  padding-block: var(--ki-space-xs);
+  padding-inline: var(--ki-space-xl);
+  border-radius: var(--ki-radius-round);
+  color: var(--ki-text-med-em);
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+  white-space: nowrap;
+  transition:
+    background-color var(--ki-duration-fast) var(--ki-easing-spring),
+    color var(--ki-duration-fast) var(--ki-easing-spring);
+}
+
+.seg input:hover + span {
+  color: var(--ki-text-high-em);
+}
+
+.seg input:checked + span {
+  background-color: var(--ki-surface-primary-high-em);
+  color: var(--ki-text-primary-on-primary);
+}
+
+.seg input:focus-visible + span {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+.seg-icon {
+  --ki-seg-icon-stroke: currentcolor;
+
+  display: none;
+  inline-size: var(--ki-space-3xl);
+  block-size: var(--ki-space-3xl);
+  fill: none;
+  stroke: var(--ki-seg-icon-stroke);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (width < 50rem) {
+  .seg-scheme input + span {
+    padding-inline: var(--ki-space-md);
+  }
+
+  .seg-scheme .seg-icon {
+    display: block;
+  }
+
+  .seg-scheme .seg-text {
+    position: absolute;
+    inline-size: var(--ki-size-border-hairline);
+    block-size: var(--ki-size-border-hairline);
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seg input + span {
+    transition-duration: 0s;
+  }
+}
+
+@media (forced-colors: active) {
+  .seg input:focus-visible + span {
+    outline-color: CanvasText;
+  }
+
+  .seg input:checked + span {
+    background-color: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+}

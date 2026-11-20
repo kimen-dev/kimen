@@ -1,7 +1,11 @@
 import { Component, Element, Event, type EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 import { focusThroughShadow } from '../../utils/shadow-focus.js';
 import { resolveDismissFocusTarget } from '../ki-alert/ki-alert.focus.js';
-import { firstControlOf, focusOriginOf } from '../ki-toaster/ki-toaster.focus.js';
+import {
+  firstControlOf,
+  focusOriginOf,
+  interactionWithin,
+} from '../ki-toaster/ki-toaster.focus.js';
 import {
   effectiveDuration,
   type KiToastDismissDetail,
@@ -317,10 +321,10 @@ export class KiToast {
   #syncPauses(): void {
     this.#pauses.clear();
     const scope = this.#scope ?? this.host;
-    if (scope.matches(':hover')) {
+    if (interactionWithin(scope, ':hover')) {
       this.#pauses.add('pointer');
     }
-    if (scope.matches(':focus-within')) {
+    if (interactionWithin(scope, ':focus-within')) {
       this.#pauses.add('focus');
     }
     if (document.visibilityState === 'hidden') {

@@ -406,7 +406,7 @@
 .token-table tbody :is(th, td) {
   padding-block: var(--ki-space-sm);
   padding-inline: var(--ki-site-gutter);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   border-block-end: var(--ki-site-hairline);
   color: var(--ki-text-med-em);
   font-weight: var(--ki-typography-weight-body-normal);
@@ -417,7 +417,7 @@
 .token-table tbody th code {
   color: var(--ki-text-high-em);
   font-size: var(--ki-typography-size-caption-2);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .token-table [data-token-value],
@@ -557,6 +557,14 @@
 
   .token-table :is(th, td) {
     padding-inline: var(--ki-space-md);
+  }
+}
+
+/* Below 40rem the Declared column leaves: a token's name and its value stay readable, and
+   names wrap at their hyphens instead of mid-word. Values may still break anywhere. */
+@media (width < 40rem) {
+  .token-table :is(thead th, tbody td):nth-child(2) {
+    display: none;
   }
 }
 

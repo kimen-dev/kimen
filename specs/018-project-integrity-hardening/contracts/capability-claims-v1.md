@@ -36,3 +36,7 @@ Rules:
 - A final evidence validator runs after the declared gates and accepts an
   `available` claim only when every evidence ID is green for the same current
   SHA/worktree digest. Static membership alone is insufficient.
+- Release validation runs the core gates and the browser gate's shards in
+  separate jobs at the candidate SHA. The validator runs after all of them, on
+  their composed current-run evidence, where `test-browser` is green only when
+  every release engine reported every one of its shards green.

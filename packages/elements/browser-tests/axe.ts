@@ -199,6 +199,50 @@ function detailsOf(results: axe.AxeResults): IncompleteDetail[] {
   );
 }
 
+/** Half the side of the parking probe, and its distance from the window edge. */
+const PARK_INSET = 4;
+
+/**
+ * What a resting pointer would hover at a point: a custom element (every
+ * Kimen component and whatever it hosts, light or shadow) or a native
+ * control, the two things a fixture paints a hover state on.
+ */
+const HOVER_PAINT =
+  'a[href], area[href], button, input, select, textarea, summary, label, [tabindex]';
+
+function hoversNothingAt(x: number, y: number): boolean {
+  for (let node = document.elementFromPoint(x, y); node !== null; node = node.parentElement) {
+    if (node.localName.includes('-') || node.matches(HOVER_PAINT)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Where to park: the first corner of the window the pointer can rest on
+ * without hovering anything. The block-end, inline-end corner comes first,
+ * as it always has; a fixture large enough to cover it sends the pointer to
+ * another corner. When every corner is covered the first one is used.
+ */
+function parkingPoint(): { x: number; y: number } {
+  const { clientHeight, clientWidth } = document.documentElement;
+  const start = PARK_INSET;
+  const end = clientWidth - PARK_INSET;
+  const rtl = getComputedStyle(document.body).direction === 'rtl';
+  const [inlineEnd, inlineStart] = rtl ? [start, end] : [end, start];
+  const bottom = clientHeight - PARK_INSET;
+  const top = PARK_INSET;
+  const first = { x: inlineEnd, y: bottom };
+  const corners = [
+    first,
+    { x: inlineStart, y: bottom },
+    { x: inlineEnd, y: top },
+    { x: inlineStart, y: top },
+  ];
+  return corners.find(({ x, y }) => hoversNothingAt(x, y)) ?? first;
+}
+
 /**
  * Rest the pointer on a transient corner probe (the ki-card hover-test
  * pattern). The pointer position persists across spec files, and the
@@ -207,11 +251,28 @@ function detailsOf(results: axe.AxeResults): IncompleteDetail[] {
  * exactly what axe then refuses to reason about (the list-item ::after wash
  * reports as "pseudoContent"). An axe scan is a rest-state claim unless the
  * caller says otherwise.
+ *
+ * The probe goes where removing it leaves the pointer over nothing hoverable.
+ * Once the probe is gone the pointer rests on whatever was under it, and
+ * Chromium, Firefox and WebKit all hand the hover to that (measured). In the
+ * contract audit the ki-card gallery runs to the bottom of the 896px window:
+ * on macOS its last card, the clickable one, stops 9px above the corner the
+ * probe used to take, and with Linux text metrics it covered it. Release dry
+ * run 44750568442 audited that card under its hover wash on Firefox and
+ * WebKit, which axe reports as pseudoContent; a 870px window reproduces it
+ * on macOS in all three engines.
  */
 export async function parkPointer(): Promise<void> {
+  const { x, y } = parkingPoint();
   const park = document.createElement('div');
-  park.style.cssText =
-    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
+  // Physical offsets: the point comes from hit testing, in window pixels.
+  park.style.cssText = [
+    'position:fixed',
+    `left:${String(x - PARK_INSET)}px`,
+    `top:${String(y - PARK_INSET)}px`,
+    `inline-size:${String(2 * PARK_INSET)}px`,
+    `block-size:${String(2 * PARK_INSET)}px`,
+  ].join(';');
   document.body.append(park);
   // An open top layer (modal dialog, popover) covers the probe, and a hover
   // that can never become actionable is not "best-effort": Playwright retries

@@ -30,7 +30,7 @@ export function clearPreference(root, key) {
 }
 
 export function readScheme(root = document) {
-  return readPreference(root, 'kimen-scheme', SCHEMES, 'dark');
+  return readPreference(root, 'kimen-scheme', SCHEMES, 'auto');
 }
 
 export function readTheme(root = document) {
@@ -46,10 +46,13 @@ export function applyScheme(scheme, root = document) {
   root.documentElement.dataset.kiColorScheme = resolveScheme(scheme, root);
 }
 
-/** Synchronize native scheme controls and follow system changes while Auto is active. */
+/**
+ * Wire every shared color-scheme control on the page (segmented.css): keep them in sync,
+ * remember an explicit choice, and follow system changes while Auto is active. With no saved
+ * choice the page follows the system (031 FR-003).
+ */
 export function wireSchemeControls(root, { signal, onChange } = {}) {
   const radios = [...root.querySelectorAll('[data-scheme-control] input[type="radio"]')];
-  const selects = [...root.querySelectorAll('select[data-scheme-control]')];
   const media = root.defaultView?.matchMedia('(prefers-color-scheme: light)');
   let preference = readScheme(root);
 
@@ -57,23 +60,20 @@ export function wireSchemeControls(root, { signal, onChange } = {}) {
     preference = scheme;
     applyScheme(scheme, root);
     for (const radio of radios) radio.checked = radio.value === scheme;
-    for (const select of selects) select.value = scheme;
   };
   set(preference);
 
   const selectScheme = (event) => {
     const control = event.currentTarget;
-    if (control.type === 'radio' && !control.checked) return;
+    if (!control.checked) return;
     set(control.value);
     writePreference(root, 'kimen-scheme', preference);
     onChange?.();
   };
-  for (const control of [...radios, ...selects]) {
-    control.addEventListener('change', selectScheme, { signal });
-  }
   // A click on the scheme already shown is still an explicit choice and is remembered;
-  // it fires no change event.
+  // it fires no change event, so both events select.
   for (const radio of radios) {
+    radio.addEventListener('change', selectScheme, { signal });
     radio.addEventListener('click', selectScheme, { signal });
   }
   media?.addEventListener(
@@ -127,14 +127,19 @@ export function loadKimenElements() {
   return bundle;
 }
 
-if (document.body?.dataset.kimenPage === 'privacy') {
-  const root = document;
-  wireSchemeControls(root);
+/** Wire the privacy page: its scheme control and the saved theme. Returns the listener cleanup. */
+export function initializePrivacy(root = document) {
+  const controller = new root.defaultView.AbortController();
+  wireSchemeControls(root, { signal: controller.signal });
   for (const control of root.querySelectorAll('[data-privacy-scheme]')) control.hidden = false;
   if (readTheme(root) === 'material3') {
     void ensureMaterial3(root).then((loaded) => {
+      if (controller.signal.aborted) return;
       if (loaded) root.documentElement.dataset.kiTheme = 'material3';
       else root.documentElement.removeAttribute('data-ki-theme');
     });
   }
+  return () => controller.abort();
 }
+
+if (document.body?.dataset.kimenPage === 'privacy') initializePrivacy(document);

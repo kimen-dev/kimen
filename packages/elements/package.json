@@ -1,7 +1,7 @@
 {
   "name": "@kimen/elements",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.1",
+  "private": false,
   "license": "Apache-2.0",
   "description": "Kimen web components (ki-*). Standards-first Stencil components, tokens-only styling, agent-legible by contract.",
   "type": "module",
@@ -77,6 +77,17 @@
           "{workspaceRoot}/packages/angular/src/directives"
         ]
       },
+      "test-browser": {
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/site/*",
+          "{workspaceRoot}/site/assets/**/*",
+          "{workspaceRoot}/site/playground/**/*",
+          "{workspaceRoot}/site/privacy/**/*",
+          "{workspaceRoot}/packages/catalog/browser-tests/fixtures/**/*"
+        ]
+      },
       "storybook": {
         "dependsOn": [
           "build"
@@ -108,6 +119,7 @@
     "axe-core": "4.14.0",
     "jsqr": "1.4.0",
     "playwright": "1.65.0",
+    "remark-gfm": "4.0.1",
     "size-limit": "14.3.0",
     "storybook": "10.6.7",
     "vitest": "5.1.0"

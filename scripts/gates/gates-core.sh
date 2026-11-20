@@ -12,6 +12,29 @@ ONLY="${1:-}"
 FEATURE_ARG=()
 [ -n "$ONLY" ] && FEATURE_ARG+=("$ONLY")
 
+# Scope. Unset, the gate is complete: that is local readiness and release. CI
+# opts a change into the affected scope (scripts/gates/select-affected.mjs):
+# every repository-wide gate below still runs, including the build they read,
+# and lint, budgets and unit tests cover only the listed projects and paths.
+SCOPE="${KIMEN_GATE_SCOPE:-full}"
+case "$SCOPE" in
+  full) ;;
+  affected)
+    if [ "${KIMEN_AFFECTED_PROJECTS+set}" != set ] || [ "${KIMEN_AFFECTED_LINT_PATHS+set}" != set ]; then
+      echo 'gates-core: the affected scope needs KIMEN_AFFECTED_PROJECTS and KIMEN_AFFECTED_LINT_PATHS' >&2
+      exit 1
+    fi
+    [ -z "$ONLY" ] || {
+      echo 'gates-core: a feature argument runs the contract gates only; it takes no scope' >&2
+      exit 1
+    }
+    ;;
+  *)
+    echo "gates-core: KIMEN_GATE_SCOPE must be full or affected, got '$SCOPE'" >&2
+    exit 1
+    ;;
+esac
+
 # Direct core runs receive the same isolated caches as the full suite. The
 # feature-scoped fixture path also exercises this wrapper without invoking Nx.
 if [ "${KIMEN_CACHE_ENV_READY:-}" != '1' ]; then
@@ -64,6 +87,35 @@ run_core_gate() {
   fi
 }
 
+# A project gate in the affected scope: it covers the listed projects or
+# paths only and records `affected`, or `skipped` when the list is empty (Nx
+# would read an empty --projects as every project). Neither status is
+# `green`, so current-run evidence from a narrowed run can never back a
+# release capability claim (check-capabilities.mjs).
+run_affected_gate() {
+  local name="$1"
+  local list="$2"
+  shift 2
+  echo "── CORE $name (affected: ${list:-nothing})"
+  if [ -z "$list" ]; then
+    record_core_evidence "$name" skipped
+    echo "── CORE $name: SKIPPED (nothing affected)"
+  elif "$@"; then
+    record_core_evidence "$name" affected
+    echo "── CORE $name: PASS (affected scope)"
+  else
+    record_core_evidence "$name" red
+    echo "── CORE $name: FAIL"
+    exit 1
+  fi
+}
+
+affected_lint() {
+  local paths
+  IFS=, read -r -a paths <<<"$KIMEN_AFFECTED_LINT_PATHS"
+  pnpm exec eslint --no-error-on-unmatched-pattern "${paths[@]}"
+}
+
 # Traceability is meaningful only for a synchronized behavior contract.
 if [ -z "$ONLY" ]; then
   run_core_gate constitution bash scripts/gates/constitution-check.sh
@@ -105,7 +157,9 @@ run_core_gate agent-skills agent_skills
 run_core_gate nx-graph nx_graph
 run_core_gate format pnpm run format:check
 # Build precedes type-aware analysis because component tests and generated
-# contract sync both consume fresh dist output on a clean checkout.
+# contract sync both consume fresh dist output on a clean checkout. It stays
+# whole in the affected scope too: generated sync, typecheck and the infra
+# tests read every package's build output (scripts/tests/gate-build-order).
 run_core_gate build pnpm exec nx run-many -t build
 run_core_gate tokens-sync node scripts/gates/check-generated-sync.mjs tokens
 run_core_gate surfaces-sync node scripts/gates/check-generated-sync.mjs surfaces
@@ -116,21 +170,37 @@ run_core_gate token-contract pnpm run check:tokens
 run_core_gate component-inventory pnpm run check:component-inventory
 (
   kimen_use_worktree_nx_graph
-  run_core_gate lint pnpm run lint
+  if [ "$SCOPE" = full ]; then
+    run_core_gate lint pnpm run lint
+  else
+    run_affected_gate lint "$KIMEN_AFFECTED_LINT_PATHS" affected_lint
+  fi
 ) || exit 1
 run_core_gate styles pnpm run lint:styles
 run_core_gate typecheck pnpm run typecheck
 run_core_gate deadcode pnpm run deadcode
 run_core_gate contrast pnpm --filter @kimen/tokens contrast
-run_core_gate budgets pnpm exec nx run-many -t size
+if [ "$SCOPE" = full ]; then
+  run_core_gate budgets pnpm exec nx run-many -t size
+else
+  run_affected_gate budgets "$KIMEN_AFFECTED_PROJECTS" \
+    pnpm exec nx run-many -t size --projects="$KIMEN_AFFECTED_PROJECTS"
+fi
 # Infrastructure tests assert the wiring promises above (workflow structure,
 # gate composition, release invariants); capabilities keeps public status
 # claims in sync with docs/capabilities.json. Both are fast node checks.
 run_core_gate infra-tests pnpm run test:infra
 run_core_gate capabilities pnpm run check:capabilities
-run_core_gate test pnpm exec nx run-many -t test
+if [ "$SCOPE" = full ]; then
+  run_core_gate test pnpm exec nx run-many -t test
+else
+  run_affected_gate test "$KIMEN_AFFECTED_PROJECTS" \
+    pnpm exec nx run-many -t test --projects="$KIMEN_AFFECTED_PROJECTS"
+fi
 if grep -q $'\tpartial$' "$KIMEN_GATE_EVIDENCE_FILE"; then
   echo 'CORE CHECKS PASSED WITH SKIPS'
+elif [ "$SCOPE" = affected ]; then
+  echo "CORE QUALITY GREEN (affected scope: ${KIMEN_AFFECTED_PROJECTS:-no projects})"
 else
   echo 'CORE QUALITY GREEN'
 fi

@@ -326,6 +326,8 @@ describe('ki-toaster core behavior', () => {
 
   it('S19 brings a queued toast back when a place frees, with its full time', async () => {
     await useClock();
+    const save = button('Save');
+    document.body.append(save);
     const toaster = await mountToaster({ max: '2' }, [
       { message: 'One', duration: 4000 },
       { message: 'Two', duration: 0 },
@@ -341,6 +343,10 @@ describe('ki-toaster core behavior', () => {
 
     expect(displayed(one)).toBe(true);
     expect(displayed(named(toaster, 'Two'))).toBe(true);
+    // Where the click focused the dismiss button, focus went on to "Two"
+    // (I-8), and focus inside the toaster holds every toast in it (FR-005):
+    // the time is measured once the person is back on the page.
+    save.focus();
     await pass(3000);
     expect(displayed(one)).toBe(true);
     await pass(1500);
@@ -440,6 +446,22 @@ describe('ki-toaster core behavior', () => {
     expect(displayed(named(toaster, 'Draft saved'))).toBe(true);
     expect(displayed(named(toaster, 'Photo uploaded'))).toBe(true);
   });
+
+  it('S6 holds a toast that arrives while the pointer rests on the toaster', async () => {
+    await useClock();
+    // Anchored at the top, the stack grows downward: the toast under the
+    // pointer does not move, so no pointer event announces the newcomer and
+    // only the state of the toaster says the pointer is there.
+    const toaster = await mountToaster({ placement: 'top-end' }, [
+      { message: 'Draft saved', duration: 0 },
+    ]);
+    await userEvent.hover(part(named(toaster, 'Draft saved'), 'toast'));
+
+    const photo = await arrive(toaster, { message: 'Photo uploaded', duration: 4000 });
+    await pass(6000);
+
+    expect(displayed(photo)).toBe(true);
+  });
 });
 
 describe('ki-toaster keyboard path', () => {
@@ -538,6 +560,50 @@ describe('ki-toaster focus keeps its toast', () => {
     expect(displayed(photo)).toBe(true);
     expect(displayed(draft)).toBe(false);
     expect(document.activeElement).toBe(save);
+  });
+
+  it('S23 holds a toast that comes back from the queue while focus stays inside the toaster', async () => {
+    await useClock();
+    const toaster = await mountToaster({ max: '2' }, [
+      { message: 'One', duration: 4000 },
+      { message: 'Two', duration: 0 },
+      { message: 'Three', duration: 0 },
+    ]);
+    const one = named(toaster, 'One');
+    dismissButton(named(toaster, 'Three')).focus();
+
+    // Focus goes on to "Two" (I-8) and "One" comes back while it is there.
+    await userEvent.keyboard('{Enter}');
+    await settle();
+    expect(displayed(one)).toBe(true);
+    await pass(6000);
+
+    expect(document.activeElement).toBe(named(toaster, 'Two'));
+    expect(displayed(one)).toBe(true);
+  });
+
+  it('S24 leaves F6 alone once focus is inside the toaster', async () => {
+    const toaster = await mountToaster({}, [
+      { message: 'Draft saved', duration: 0 },
+      { message: 'Photo uploaded', duration: 0 },
+    ]);
+    const draft = named(toaster, 'Draft saved');
+    const photo = named(toaster, 'Photo uploaded');
+    let taken: boolean | undefined;
+    const record = (event: KeyboardEvent): void => {
+      if (event.key === 'F6') taken = event.defaultPrevented;
+    };
+    window.addEventListener('keydown', record);
+    dismissButton(draft).focus();
+
+    try {
+      await userEvent.keyboard('{F6}');
+    } finally {
+      window.removeEventListener('keydown', record);
+    }
+
+    expect(taken).toBe(false);
+    expect(part(photo, 'dismiss').shadowRoot?.activeElement ?? null).toBeNull();
   });
 });
 

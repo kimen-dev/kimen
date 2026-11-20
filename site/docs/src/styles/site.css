@@ -246,7 +246,6 @@ body > .page > .header {
 }
 
 .kimen-docs-search site-search > button,
-.kimen-docs-scheme-compact select,
 .kimen-docs-menu > summary,
 .sl-menu-button {
   min-block-size: var(--ki-space-11xl);
@@ -274,10 +273,6 @@ body > .page > .header {
   color: var(--ki-text-med-em);
   font-family: var(--ki-typography-family-mono);
   font-size: var(--ki-typography-size-caption-1);
-}
-
-.kimen-docs-scheme-compact {
-  display: none;
 }
 
 /* The docs-home menu (Header.astro): shown below 50rem on pages without a sidebar. */
@@ -380,7 +375,7 @@ body > .page > .header {
   cursor: pointer;
 }
 
-:is(.kimen-docs-scheme, .ki-demo-segment) span {
+:is(.kimen-docs-scheme, .ki-demo-segment) input + span {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -390,6 +385,19 @@ body > .page > .header {
   color: var(--ki-text-med-em);
   font-size: var(--ki-typography-size-caption-2);
   line-height: var(--ki-typography-line-height-caption-2);
+}
+
+.kimen-docs-scheme-icon {
+  --ki-site-docs-icon-stroke: currentcolor;
+
+  display: none;
+  inline-size: var(--ki-space-3xl);
+  block-size: var(--ki-space-3xl);
+  fill: none;
+  stroke: var(--ki-site-docs-icon-stroke);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 :is(.kimen-docs-scheme, .ki-demo-segment) input:checked + span {
@@ -684,10 +692,24 @@ nav.sidebar a[href*="/components/"] span {
   margin-block: var(--ki-space-7xl);
 }
 
+/* Code blocks are charcoal islands in both page schemes, as on the landing:
+   Expressive Code paints one dark theme on --ki-surface-s1, which resolves to
+   the onmars dark s1 here because the block itself is in the dark scheme. */
+.expressive-code {
+  color-scheme: dark;
+}
+
 .expressive-code .frame {
   overflow: hidden;
   border-radius: var(--ki-radius-component-lg);
   box-shadow: none;
+}
+
+/* The copy button sits over the top end of the code, and on touch screens it
+   is always shown. Lines wrap (astro.config.mjs), and the first two keep the
+   button's width clear, so it never covers code. */
+.expressive-code .ec-line:nth-child(-n + 2) .code {
+  padding-inline-end: var(--ki-space-14xl);
 }
 
 .ki-demo {
@@ -714,6 +736,19 @@ nav.sidebar a[href*="/components/"] span {
 .ki-demo-row {
   align-items: center;
   gap: var(--ki-space-xl);
+}
+
+.ki-demo-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ki-space-md);
+  min-inline-size: 0;
+}
+
+.ki-demo-group-label {
+  color: var(--ki-text-med-em);
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
 }
 
 .ki-demo-surface {
@@ -917,7 +952,6 @@ footer .meta a {
   }
 
   .kimen-docs-tabs,
-  .kimen-docs-scheme,
   .kimen-docs-primary-nav {
     display: none;
   }
@@ -926,13 +960,24 @@ footer .meta a {
     display: block;
   }
 
-  .kimen-docs-scheme-compact {
-    display: flex;
+  /* The scheme control turns compact: each option shows only its icon. */
+  .kimen-docs-scheme input + span {
+    padding-inline: var(--ki-space-sm);
   }
 
-  .kimen-docs-scheme-compact select {
-    padding-inline: var(--ki-space-xs);
-    font-size: var(--ki-typography-size-caption-2);
+  .kimen-docs-scheme-icon {
+    display: block;
+  }
+
+  .kimen-docs-scheme-text {
+    position: absolute;
+    inline-size: var(--ki-size-border-hairline);
+    block-size: var(--ki-size-border-hairline);
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 
   .ki-demo-surface {
@@ -972,8 +1017,7 @@ footer .meta a {
 @media print {
   .ki-demo-bar,
   .kimen-docs-search,
-  .kimen-docs-scheme,
-  .kimen-docs-scheme-compact {
+  .kimen-docs-scheme {
     display: none;
   }
 }

@@ -398,3 +398,146 @@ test('S6 local suite is exactly reusable core plus explicit Chromium', async () 
   assert.match(source, /run_gate test-browser bash scripts\/gates\/gates-browser\.sh chromium/);
   assert.doesNotMatch(source, /KIMEN_BROWSER_MATRIX/);
 });
+
+// The affected scope (scripts/gates/select-affected.mjs). A suite runs when
+// the project that owns it is affected; CI asks the gate for each shard's
+// suites first (--plan) and prepares a browser only when there are some.
+function planBrowserGate(fixture, environment = {}) {
+  const result = spawnSync('bash', [browserGate, 'chromium', '--plan'], {
+    cwd: repositoryRoot,
+    encoding: 'utf8',
+    env: { ...fixture.environment, ...environment },
+  });
+  assert.equal(result.status, 0, diagnostic(result));
+  return result.stdout;
+}
+
+test('S6 every suite is planned for every shard of the complete gate', async (t) => {
+  const fixture = await browserFixture(t);
+
+  assert.equal(planBrowserGate(fixture), 'suites=elements,wrappers,catalog,adapter-mcp-apps\n');
+  for (const shard of ['1/4', '2/4', '3/4']) {
+    assert.equal(planBrowserGate(fixture, { KIMEN_BROWSER_SHARD: shard }), 'suites=elements\n');
+  }
+  assert.equal(
+    planBrowserGate(fixture, { KIMEN_BROWSER_SHARD: '4/4' }),
+    'suites=elements,wrappers,catalog,adapter-mcp-apps\n',
+  );
+  await assert.rejects(readFile(fixture.commandLog, 'utf8'), /ENOENT/u);
+});
+
+test('S6 the affected scope plans only the suites of affected projects', async (t) => {
+  const fixture = await browserFixture(t);
+  const plan = (projects, shard) =>
+    planBrowserGate(fixture, {
+      KIMEN_GATE_SCOPE: 'affected',
+      KIMEN_AFFECTED_PROJECTS: projects,
+      KIMEN_BROWSER_SHARD: shard,
+    });
+
+  // Documentation, a plugin, the static site, one server manifest.
+  for (const shard of ['1/4', '4/4']) {
+    assert.equal(plan('', shard), 'suites=\n');
+    assert.equal(plan('@kimen/mcp-server,@kimen/docs', shard), 'suites=\n');
+  }
+  // The guarded renderer alone: its suite, once, in the last shard.
+  assert.equal(plan('@kimen/catalog,@kimen/adapter-a2ui', '1/4'), 'suites=\n');
+  assert.equal(plan('@kimen/catalog,@kimen/adapter-a2ui', '4/4'), 'suites=catalog\n');
+  // A component or a token: elements and everything that depends on it.
+  const elements = '@kimen/elements,@kimen/react,@kimen/vue,@kimen/adapter-mcp-apps';
+  assert.equal(plan(elements, '2/4'), 'suites=elements\n');
+  assert.equal(plan(elements, '4/4'), 'suites=elements,wrappers,adapter-mcp-apps\n');
+  // A wrapper alone.
+  assert.equal(plan('@kimen/vue', '4/4'), 'suites=wrappers\n');
+});
+
+test('S6 an affected shard with no suite passes without touching a browser', async (t) => {
+  const fixture = await browserFixture(t);
+  const result = runBrowserGate(fixture, 'chromium', {
+    KIMEN_GATE_SCOPE: 'affected',
+    KIMEN_AFFECTED_PROJECTS: '@kimen/mcp-server',
+    KIMEN_BROWSER_SHARD: '4/4',
+  });
+  const evidence = await readBrowserEvidence(fixture);
+
+  assert.equal(result.status, 0, diagnostic(result));
+  assert.match(result.stdout, /no browser suite is affected/u);
+  await assert.rejects(readFile(fixture.commandLog, 'utf8'), /ENOENT/u);
+  // Nothing ran, so nothing is green: the run records no browser evidence.
+  assert.equal(evidence, '');
+});
+
+test('S6 an affected last shard runs exactly the suites of affected projects', async (t) => {
+  const fixture = await browserFixture(t, { preparedEngine: 'chromium' });
+  const result = runBrowserGate(fixture, 'chromium', {
+    KIMEN_GATE_SCOPE: 'affected',
+    KIMEN_AFFECTED_PROJECTS: '@kimen/catalog,@kimen/vue',
+    KIMEN_BROWSER_SHARD: '4/4',
+  });
+  const commands = (await readFile(fixture.commandLog, 'utf8')).trim().split('\n');
+  const evidence = await readBrowserEvidence(fixture);
+
+  assert.equal(result.status, 0, diagnostic(result));
+  assert.deepEqual(commands, [
+    'chromium|exec tsc -p packages/elements/scripts/tsconfig.json --noEmit --pretty false',
+    'chromium|exec nx run-many -t test-browser-wrapper --skipNxCache --projects=@kimen/vue',
+    'chromium|exec nx run @kimen/catalog:test-browser --skipNxCache',
+  ]);
+  assert.match(evidence, /^browser\ttest-browser:chromium:4\/4\tskipped$/m);
+  assert.match(evidence, /^browser\ttest-browser-catalog:chromium\tgreen$/m);
+});
+
+test('S6 the affected scope needs its project list and a known scope name', async (t) => {
+  const fixture = await browserFixture(t);
+  for (const environment of [
+    { KIMEN_GATE_SCOPE: 'affected' },
+    { KIMEN_GATE_SCOPE: 'partial', KIMEN_AFFECTED_PROJECTS: '' },
+  ]) {
+    const result = spawnSync('bash', [browserGate, 'chromium', '--plan'], {
+      cwd: repositoryRoot,
+      encoding: 'utf8',
+      env: { ...fixture.environment, ...environment },
+    });
+    assert.notEqual(result.status, 0, JSON.stringify(environment));
+    assert.match(diagnostic(result), /KIMEN_AFFECTED_PROJECTS|KIMEN_GATE_SCOPE/u);
+  }
+});
+
+// The gate names the projects that own browser suites; a new browser target
+// anywhere in the workspace must be added to it, or the affected scope would
+// never run it.
+test('S6 every workspace browser target belongs to a suite the gate runs', async () => {
+  const gate = await readFile(browserGate, 'utf8');
+  const owners = new Set();
+  for (const directory of ['packages', 'tools']) {
+    for (const entry of await readdir(join(repositoryRoot, directory), { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      let manifest;
+      try {
+        manifest = JSON.parse(
+          await readFile(join(repositoryRoot, directory, entry.name, 'package.json'), 'utf8'),
+        );
+      } catch {
+        continue;
+      }
+      const targets = [
+        ...Object.keys(manifest.scripts ?? {}),
+        ...Object.keys(manifest.nx?.targets ?? {}),
+      ];
+      if (targets.some((target) => /^test-browser(?:-wrapper)?$/u.test(target))) {
+        owners.add(manifest.name);
+      }
+    }
+  }
+  assert.deepEqual([...owners].sort(), [
+    '@kimen/adapter-mcp-apps',
+    '@kimen/catalog',
+    '@kimen/elements',
+    '@kimen/react',
+    '@kimen/vue',
+  ]);
+  assert.match(gate, /^WRAPPER_PROJECTS=\(@kimen\/react @kimen\/vue\)$/mu);
+  for (const owner of ['@kimen/elements', '@kimen/catalog', '@kimen/adapter-mcp-apps']) {
+    assert.match(gate, new RegExp(`^ *affected ${owner} && SUITES\\+=`, 'mu'), owner);
+  }
+});

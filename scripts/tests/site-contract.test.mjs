@@ -8,6 +8,7 @@ import { dirname, extname, join, relative } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { componentFamilies } from '../../site/docs/component-families.mjs';
 import { componentSidebarItems } from '../../site/docs/component-docs.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -20,10 +21,10 @@ async function readSiteFile(path) {
 function assertSemanticShell(source, path) {
   assert.match(source, /<!doctype html>/iu, `${path} must be an HTML document`);
   assert.match(source, /<html\b[^>]*\blang=["']en["']/iu, `${path} must declare its language`);
-  assert.match(
+  assert.doesNotMatch(
     source,
-    /<html\b[^>]*\bdata-ki-color-scheme=["']dark["']/iu,
-    `${path} must expose the approved dark scheme without JavaScript`,
+    /<html\b[^>]*\bdata-ki-color-scheme=/iu,
+    `${path} must not fix a color scheme: without JavaScript it follows the system (031 FR-003)`,
   );
   assert.match(source, /<header\b/iu, `${path} must expose a header without JavaScript`);
   assert.match(source, /<nav\b/iu, `${path} must expose navigation without JavaScript`);
@@ -127,12 +128,11 @@ test('the public pages retain the approved desktop design structure and density'
 
   for (const heading of [
     'The component foundation built for generative UI.',
-    'Every component, live. Not screenshots.',
+    'The <code>ki-*</code> catalog: every component, live.',
     'This page runs on <code>@kimen/tokens</code>. Flip it.',
     'Legible to agents, by contract.',
     'What only a GenUI-first library does.',
     'Done means gates exit 0.',
-    'The ki-* catalog.',
     'Honest, gated, in the open.',
   ]) {
     assert.ok(landing.includes(heading), `landing must retain heading: ${heading}`);
@@ -154,7 +154,40 @@ test('the public pages retain the approved desktop design structure and density'
   assert.equal(
     (playground.match(/class=["'][^"']*\btoken-row\b/gu) ?? []).length,
     10,
-    'playground inspector must retain ten resolved token rows',
+    'the no-JavaScript playground inspector keeps its ten sample rows (playground.js lists the full semantic set)',
+  );
+});
+
+// The live review of kimen.dev (#520), items 17, 18 and 21.
+test('the landing separates inline pairs, states required gates, and marks its disclosure', async () => {
+  const landing = await readSiteFile('index.html');
+
+  const artifacts = between(
+    landing,
+    '<div class="contract-artifact">',
+    '@kimen/emitter',
+    'artifacts',
+  );
+  assert.doesNotMatch(artifacts, /<\/(?:a|code)>\s*·/u, 'a bare dot reads as part of the words');
+  assert.equal(
+    (artifacts.match(/<span class="sep"><\/span>/gu) ?? []).length,
+    2,
+    'each pair is split by the separator, whose dot site/landing.css draws',
+  );
+
+  const gates = between(landing, '<table class="gate-table">', '</table>', 'gate table');
+  assert.match(gates, /<th scope="col">Required<\/th>/u);
+  assert.doesNotMatch(
+    gates,
+    />\s*required\s*</u,
+    'the column says it once; each row shows the mark',
+  );
+
+  const summary = between(landing, '<details class="comparison">', '</summary>', 'comparison');
+  assert.match(
+    summary,
+    /<use href="#i-chevron" \/>/u,
+    'the comparison opens with the site chevron',
   );
 });
 
@@ -214,6 +247,51 @@ test('S1 keeps the component sidebar in sync with legacy and colocated pages', a
 
   await add('site/docs/src/content/docs/components/alpha.mdx');
   assert.throws(() => componentSidebarItems(workspace), /Duplicate component documentation/u);
+});
+
+// The live review of kimen.dev (#520, item 12): six component pages were
+// titled by name ("Chip", "Link") among dozens titled by tag, and the
+// Components sidebar was one flat list of every page.
+test('every component page is titled by its tag and belongs to at most one family', async () => {
+  const ids = componentSidebarItems();
+  assert.ok(ids.length > 0, 'the documentation must have component pages');
+
+  const misnamed = [];
+  for (const id of ids) {
+    const name = id.slice('components/'.length);
+    const candidates = [
+      join(repositoryRoot, `packages/elements/src/components/ki-${name}/docs/site.mdx`),
+      join(siteRoot, `docs/src/content/docs/components/${name}.mdx`),
+      join(siteRoot, `docs/src/content/docs/components/${name}.md`),
+    ];
+    let source;
+    for (const candidate of candidates) {
+      source = await readFile(candidate, 'utf8').catch(() => undefined);
+      if (source !== undefined) break;
+    }
+    assert.ok(source !== undefined, `${id} must have a documentation page`);
+    const title = /^title:\s*(.+)$/mu.exec(source)?.[1]?.trim();
+    if (title !== `ki-${name}`) misnamed.push(`${id}: "${title}"`);
+  }
+  assert.deepEqual(
+    misnamed,
+    [],
+    'component pages are titled by their tag, as the sidebar lists them',
+  );
+
+  const assigned = componentFamilies.flatMap(({ components }) =>
+    components.map((name) => `components/${name}`),
+  );
+  const duplicated = assigned.filter((id, index) => assigned.indexOf(id) !== index);
+  assert.deepEqual(duplicated, [], 'a component belongs to exactly one family');
+  // A new component page with no family yet still builds, under "Other": the
+  // component generator does not assign one, and a component PR must not fail
+  // on the site's grouping. Adding it to the list is a one-line follow-up.
+  assert.deepEqual(
+    assigned.filter((id) => !ids.includes(id)),
+    [],
+    'site/docs/component-families.mjs names only pages that exist',
+  );
 });
 
 test('the Pages assembler publishes canonical generated assets and the playground route', async () => {

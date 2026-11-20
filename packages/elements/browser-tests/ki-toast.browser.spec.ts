@@ -686,8 +686,14 @@ describe('ki-toast theming', () => {
   });
 
   it('S40 appears without animating under a reduced-motion preference', async () => {
+    // The preference changes with a toast already on the page, as it does for
+    // a person who turns it on with the page open: WebKit re-evaluates a
+    // component's media queries only in the shadow roots present at the
+    // change, and a toast mounted into an empty page would keep the old answer.
+    await mountToast({ message: 'Link copied' });
     await browserCommands.emulateReducedMotion('reduce');
     try {
+      expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
       const el = await mountToast();
       expect(el.shadowRoot?.getAnimations() ?? []).toEqual([]);
     } finally {

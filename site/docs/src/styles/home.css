@@ -122,6 +122,14 @@ html:not([data-has-sidebar]) {
   color: var(--ki-text-med-em);
 }
 
+.kimen-index-family + .kimen-index-family {
+  margin-block-start: var(--ki-space-14xl);
+}
+
+.kimen-index-family h3 {
+  margin-block-end: var(--ki-space-3xl);
+}
+
 .kimen-index {
   display: grid;
   grid-template-columns: repeat(
@@ -192,10 +200,17 @@ html:not([data-has-sidebar]) {
 }
 
 .kimen-index-desc {
+  display: -webkit-box;
   margin: 0;
+  overflow: hidden;
   color: var(--ki-text-med-em);
   font-size: var(--ki-typography-size-body-1);
   line-height: var(--ki-typography-line-height-body-1);
+
+  /* Two lines on every card; the page holds the full description. */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 @media (width < 64rem) {

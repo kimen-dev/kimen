@@ -175,7 +175,9 @@ zero axe-core violations (WCAG 2.2 AA + EN 301 549 target), a single-digit-KB
 size budget, tokens-only styling (no hardcoded visual values), and RTL support
 by construction. Run `bash scripts/gates/gates-suite.sh` for full local checks
 before a pull request. CI requires visual and cross-filesystem checks as part
-of the quality and release gates.
+of the quality and release gates. It runs the part of the suite a change can
+affect, and the complete suite for shared infrastructure and nightly on
+`main` (see [CONTRIBUTING.md](./CONTRIBUTING.md)).
 
 For a quicker local pass, run `bash scripts/gates/gates-suite.sh --affected`.
 Nx selects projects and their dependents from committed, staged, unstaged and
