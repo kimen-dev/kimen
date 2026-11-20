@@ -727,9 +727,8 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   }
   if (node.action !== undefined) {
     const native = isNativePrimitive(node.component);
-    if (native || node.component === 'ki-icon') {
-      // A primitive (037 D7) or icon (069 S11) composes inside an activator
-      // when it accompanies an action.
+    if (native || node.component === 'ki-icon' || node.component === 'ki-feature-icon') {
+      // Primitives and decorative glyphs never bind their own actions.
       issues.push({
         code: 'action-not-allowed',
         message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,

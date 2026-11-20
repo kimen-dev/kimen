@@ -23,6 +23,7 @@ import { defineCustomElement as defineKiDialog } from '@kimen/elements/component
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
 import { defineCustomElement as defineKiFab } from '@kimen/elements/components/ki-fab.js';
+import { defineCustomElement as defineKiFeatureIcon } from '@kimen/elements/components/ki-feature-icon.js';
 import { defineCustomElement as defineKiFormatDate } from '@kimen/elements/components/ki-format-date.js';
 import { defineCustomElement as defineKiFormatNumber } from '@kimen/elements/components/ki-format-number.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
@@ -510,6 +511,29 @@ export class KiFab {
 
 
 export declare interface KiFab extends Components.KiFab {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFeatureIcon,
+  inputs: ['shape', 'size', 'tone']
+})
+@Component({
+  selector: 'ki-feature-icon',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['shape', 'size', 'tone'],
+})
+export class KiFeatureIcon {
+  protected el: HTMLKiFeatureIconElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiFeatureIcon extends Components.KiFeatureIcon {}
 
 
 @ProxyCmp({

@@ -965,6 +965,53 @@ export const catalogData = {
       "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
       "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
     },
+    "ki-feature-icon": {
+      "description": "A decorative glyph centered on a tinted tile.",
+      "events": {},
+      "props": {
+        "shape": {
+          "type": "enum",
+          "values": [
+            "circle",
+            "square"
+          ],
+          "description": "Rounded square or circle. Unknown values use square.",
+          "default": "square"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.",
+          "default": "md"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "info",
+            "neutral",
+            "primary",
+            "primary-light",
+            "success",
+            "warning"
+          ],
+          "description": "Colour pair for the tile and its glyph. Unknown values use neutral.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "One Lucide glyph. Supply an inline SVG using currentColor or a ki-icon with inherited size. Guarded surfaces use a registered ki-icon."
+      },
+      "tag": "ki-feature-icon",
+      "whenNotToUse": "For an action (use ki-icon-button), a status (use ki-badge),\nor the sole label of a section.",
+      "whenToUse": "Place a decorative icon beside the visible heading of a feature,\nempty state or settings section. The heading carries the meaning."
+    },
     "ki-format-date": {
       "description": "Displays an ISO date or timestamp in the reader's language.",
       "events": {},
