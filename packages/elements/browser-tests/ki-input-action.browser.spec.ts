@@ -35,7 +35,9 @@ afterEach(async () => {
   document.documentElement.removeAttribute('data-ki-theme');
 });
 
-afterAll(() => { themeStyle.remove(); });
+afterAll(() => {
+  themeStyle.remove();
+});
 
 function mountSearch(content = textAction, attributes = 'value="tokens"'): HTMLFormElement {
   const form = document.createElement('form');
