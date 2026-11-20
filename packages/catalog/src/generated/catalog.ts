@@ -532,6 +532,109 @@ export const catalogData = {
       "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
       "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits."
     },
+    "ki-chip": {
+      "description": "A compact filter toggle, removable picked value, or contextual action.",
+      "events": {
+        "ki-activate": "Emitted by an assist chip when its native button is activated.",
+        "ki-change": "Emitted after a filter chip changes its pressed state.",
+        "ki-remove": "Remove request for an input chip. Cancel it to keep application ownership of the chip."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Prevents activation, removal and moving the chip.",
+          "default": false
+        },
+        "removable": {
+          "type": "boolean",
+          "description": "Gives an input chip a trailing remove button and keyboard deletion.",
+          "default": false
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+          "default": "Remove"
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "The pressed state of a filter chip. The user can toggle it in place.",
+          "default": false
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm"
+          ],
+          "description": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+          "default": "md"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "assist",
+            "filter",
+            "input"
+          ],
+          "description": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter."
+        },
+        "value": {
+          "type": "string",
+          "description": "Value sent with removal, contextual activation and reorder events.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The visible text label. Use text or non-interactive markup.",
+        "start": "One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+      },
+      "tag": "ki-chip",
+      "whenNotToUse": "static status (ki-badge), primary actions (ki-button), suggested\nprompts, or mutually exclusive choices (ki-radio-group).",
+      "whenToUse": "apply independent filters, represent values selected in an entry\nfield, or offer a small contextual action alongside content."
+    },
+    "ki-chip-group": {
+      "description": "A named collection of filter, input or assist chips, with optional ordering.",
+      "events": {
+        "ki-reorder": "Emitted after moving a chip. Indices are zero-based positions in the visible chip collection."
+      },
+      "props": {
+        "focus-target": {
+          "type": "string",
+          "description": "ID of the entry field in the same document or shadow root for focus after the last chip."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the group or list.",
+          "default": ""
+        },
+        "reorder-announcement": {
+          "type": "string",
+          "description": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+          "default": "{label} moved to position {position} of {total}."
+        },
+        "reorderable": {
+          "type": "boolean",
+          "description": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+          "default": false
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "assist",
+            "filter",
+            "input"
+          ],
+          "description": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+          "default": "filter"
+        }
+      },
+      "slots": {
+        "": "Direct ki-chip children in reading order."
+      },
+      "tag": "ki-chip-group",
+      "whenNotToUse": "choose exactly one option or submit a form value.",
+      "whenToUse": "label related chips or let people change their reading order."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},

@@ -42,6 +42,8 @@ methods, CSS custom properties and examples.
 - [ki-card](llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
 - [ki-checkbox](llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
 - [ki-checkbox-group](llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
+- [ki-chip](llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
+- [ki-chip-group](llms/ki-chip-group.md): label related chips or let people change their reading order.
 - [ki-counter](llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
