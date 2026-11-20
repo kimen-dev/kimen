@@ -1,13 +1,4 @@
-import {
-  Component,
-  Element,
-  type EventEmitter,
-  Event,
-  Fragment,
-  h,
-  Prop,
-  State,
-} from '@stencil/core';
+import { Component, Element, type EventEmitter, Event, h, Prop, State } from '@stencil/core';
 
 import { resolveHighlights, tokenizeCode } from './ki-code-block.behavior';
 
@@ -77,7 +68,7 @@ export class KiCodeBlock {
   kiCopyError!: EventEmitter<void>;
 
   @State() private source = '';
-  private sourceObserver?: MutationObserver;
+  private sourceObserver: MutationObserver | undefined;
 
   connectedCallback(): void {
     this.readSource();
@@ -87,6 +78,7 @@ export class KiCodeBlock {
 
   disconnectedCallback(): void {
     this.sourceObserver?.disconnect();
+    this.sourceObserver = undefined;
   }
 
   private readonly readSource = (): void => {
@@ -98,6 +90,7 @@ export class KiCodeBlock {
     const fallback = this.label?.trim() ?? '';
     const caption = metadata.join(' · ') || fallback || DEFAULT_LABEL;
     const lines = tokenizeCode(this.source, this.language);
+    const gutterWidth = `${String(String(lines.length).length)}ch`;
     const highlights = resolveHighlights(this.highlight, lines.length);
     const description = highlights.map(({ start, end }) =>
       start === end ? String(start) : [start, end].join('–'),
@@ -107,12 +100,11 @@ export class KiCodeBlock {
     let rangeIndex = 0;
     let range = highlights[rangeIndex];
 
+    // Direct names avoid Gecko's cached ariaLabelledByElements reflection.
     return (
-      <figure key="figure" part="figure" aria-labelledby="caption">
+      <figure key="figure" part="figure" aria-label={caption}>
         <figcaption key="header" part="header">
-          <bdi key="caption" id="caption">
-            {caption}
-          </bdi>
+          <bdi key="caption">{caption}</bdi>
           {this.copyable && (
             // CopyButton's composed events cross the shadow root once.
             <ki-copy-button
@@ -130,7 +122,7 @@ export class KiCodeBlock {
           key="scroll"
           part="scroll"
           role="region"
-          aria-labelledby="caption"
+          aria-label={caption}
           aria-describedby={description.length ? 'highlights' : undefined}
           {...focusability}
           dir="ltr"
@@ -138,7 +130,7 @@ export class KiCodeBlock {
           <code
             key="code"
             part="code"
-            data-numbered={this.lineNumbers ? '' : undefined}
+            style={{ '--_line-number-width': gutterWidth }}
             data-wrap={this.wrap ? '' : undefined}
           >
             {lines.map((line, index) => {
