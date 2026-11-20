@@ -5,14 +5,15 @@ import {
 } from '../../utils/boolean-presence';
 
 /**
- * A declarative data option rendered by its owning `ki-select`.
+ * A declarative data option rendered by its owning `ki-select` or `ki-combobox`.
  *
- * @whenToUse declare one choice inside a `ki-select`; its text is the
+ * @whenToUse declare one choice inside a `ki-select` or `ki-combobox`; its text is the
  * human-facing label and its `value` is the submitted value.
  * @whenNotToUse `ki-option` standalone, authoring selection
  * on an option, or expecting it to paint its own row.
  *
- * @slot - Text label mirrored by the owning select.
+ * @slot - Text label mirrored by the owning choice field.
+ * @slot start - Decorative content shown before the label in a combobox row.
  */
 @Component({
   tag: 'ki-option',
@@ -36,6 +37,9 @@ export class KiOption {
    * @default false
    */
   @Prop({ reflect: true }) disabled = false;
+
+  /** Secondary text shown below the label in a combobox choice row. */
+  @Prop({ reflect: true }) description?: string;
 
   private presenceObserver: MutationObserver | undefined;
 
@@ -65,6 +69,6 @@ export class KiOption {
   // The owning ki-select derives the effective value when it reads the option.
 
   render() {
-    return <slot key="label" />;
+    return [<slot key="label" />, <slot key="start" name="start" />];
   }
 }

@@ -38,7 +38,7 @@ import { catalogData, validateUiSpec } from '@kimen/catalog';
 
 // What may an agent emit? One entry per published element:
 catalogData.components['ki-button'].props.variant;
-// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary'], ... }
+// { type: 'enum', values: ['ghost', 'outline', 'primary', 'quaternary', 'secondary'], ... }
 
 // Validate an agent-emitted UI spec before anything renders:
 const report = validateUiSpec({
@@ -146,6 +146,20 @@ A component that degrades gracefully without a prop (a decorative
 validator cannot see adjacent content, so it enforces only what the
 contract states unconditionally.
 
+### Dialog commands
+
+Give a `ki-dialog` a neutral node `id` and reference it from a
+`ki-button` or `ki-icon-button` with both `commandfor` and `command`.
+The command accepts `show-modal`, `close` or `request-close`.
+The target must be a dialog in the same spec. A streamed command and
+its target must share a chunk. Live surfaces resolve the pair against the
+result of the whole batch, including existing roots.
+
+The renderer allocates the DOM ID and writes the matching `commandfor`
+attribute. The original ID stays in the neutral model and the declared
+action payload. A local command can share its button with a declared
+action. That click never dispatches a binding on an ancestor.
+
 ### URL props and allowed origins
 
 A URL-typed prop is one the browser may load or navigate to the moment the
@@ -191,8 +205,8 @@ of an alert.
 ### What validation does NOT protect against
 
 Markup inertness is a render-path invariant owned by the guarded renderer
-(below), and a string prop that is not URL-typed is opaque data to
-validation. Catalog validation is a schema boundary, never content
+(below), and ordinary text props are opaque to validation beyond their
+declared constraints. Catalog validation is a schema boundary, never content
 sanitization — a host that renders outside the guarded renderer is outside
 the guardrail.
 
@@ -238,8 +252,9 @@ SemVer with the catalog's major and a minor not newer than its own, so a
 actions only** (a bound control dispatches its one declared action, as data,
 on the single `onAction` channel, on the one event its catalog entry declares
 — `change` on the form controls, `ki-change` on `ki-tabs` — or on `click`
-when it declares none; a click activation suppresses the native default and
-stops bubbling, a declared-event activation cancels nothing and reports the
+when it declares none; a click activation stops bubbling and suppresses the
+native default unless it carries a local dialog command, a declared-event
+activation cancels nothing and reports the
 control's live `checked`/`value`; the innermost bound node claims an
 interaction, so exactly one action fires even for nested action-bound nodes
 or a button inside a form; a binding on a component declaring several events

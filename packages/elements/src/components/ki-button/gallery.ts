@@ -6,8 +6,18 @@ const buttonToneRow = (tone: string): string =>
     .map((variant) => `<ki-button variant="${variant}" tone="${tone}">${variant}</ki-button>`)
     .join('');
 
+const togglePairs = [...buttonVariants, 'outline']
+  .map((variant) =>
+    row(
+      `<ki-button size="sm" variant="${variant}" toggle>Pin</ki-button>` +
+        `<ki-button size="sm" variant="${variant}" toggle selected>Pin</ki-button>`,
+    ),
+  )
+  .join('');
+
 export default {
   focusFirst: true,
+  width: 400,
   html: [
     row(buttonToneRow('neutral')),
     row(buttonToneRow('success')),
@@ -21,5 +31,6 @@ export default {
     row(
       '<ki-button variant="primary"><span slot="start">+</span>Start and end<span slot="end">&gt;</span></ki-button>',
     ),
+    row(togglePairs),
   ].join(''),
 } satisfies VisualGallery;

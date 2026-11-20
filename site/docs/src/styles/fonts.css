@@ -1,11 +1,20 @@
-/* Registered family names must match the public token values. */
+/* The font descriptors match the public token values. Vite resolves the
+   shared local binaries so the standalone docs build also has its fonts. */
 /* stylelint-disable scale-unlimited/declaration-strict-value */
 @font-face {
-  font-family: Inter;
+  font-family: "Instrument Sans";
   font-style: normal;
-  font-weight: 100 900;
+  font-weight: 400 700;
   font-display: swap;
-  src: url("/assets/fonts/InterVariable.woff2") format("woff2");
+  src: url("../../../../packages/tokens/fonts/InstrumentSansVariable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Newsreader;
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../../../../packages/tokens/fonts/NewsreaderVariable.woff2") format("woff2");
 }
 
 @font-face {
@@ -13,6 +22,15 @@
   font-style: normal;
   font-weight: 100 800;
   font-display: swap;
-  src: url("/assets/fonts/JetBrainsMonoVariable.woff2") format("woff2");
+  src: url("../../../assets/fonts/JetBrainsMonoVariable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../../../../packages/elements/browser-tests/visual/fonts/RobotoVariable.woff2")
+    format("woff2");
 }
 /* stylelint-enable scale-unlimited/declaration-strict-value */

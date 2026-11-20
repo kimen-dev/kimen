@@ -42,6 +42,7 @@ function exampleValue(constraint: CatalogPropConstraint): boolean | number | str
     case 'boolean':
       return true;
     case 'number':
+    case 'number-or-string':
       return Math.min(
         constraint.maximum ?? Number.POSITIVE_INFINITY,
         Math.max(constraint.minimum ?? Number.NEGATIVE_INFINITY, 1),
@@ -83,7 +84,9 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
   if (eventNames.length > 0) {
     const routing =
       modeEvents[tag] ??
-      'a spec never names an event: an "action" on this component fires on its one listed event, and a binding is rejected when more than one is listed';
+      (entry.activationEvent === undefined
+        ? 'a spec never names an event: an "action" on this component fires on its one listed event, and a binding is rejected when more than one is listed'
+        : `an "action" on this component fires on \`${entry.activationEvent}\``);
     lines.push(`- Events (${routing}):`);
     for (const name of eventNames) {
       lines.push(`  - \`${name}\` — ${entry.events[name] ?? ''}`);

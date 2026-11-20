@@ -1,0 +1,264 @@
+{
+  "component": {
+    "attributes": {
+      "animated": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "lines": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "shape": {
+        "default": "'text'",
+        "deprecatedSince": null,
+        "description": "Match the placeholder to the expected text, avatar, or rectangular content.",
+        "replacement": null,
+        "required": false,
+        "type": "\"circle\" | \"rect\" | \"text\""
+      },
+      "size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-skeleton-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind a loading shape. Defaults to none.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Base fill of the decorative loading shapes.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over the static fill. Defaults to none.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-circle-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Proportional corner radius of the circular shape.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-circle-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default diameter of the circle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-highlight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Peak colour of the animated loading highlight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-last-line-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fraction of the usual line width occupied by the final line in multiline text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-line-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block-axis space between text lines.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-line-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default height of each text line.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of text lines and rectangles.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-rect-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default block size of the rectangle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-shimmer-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Duration of a shimmer sweep.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-shimmer-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Easing of the shimmer sweep.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-skeleton-shimmer-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Image of the moving highlight. Use currentColor to inherit the highlight colour.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Decorative placeholder shapes that reserve space for loading content.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "shape": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Each painted text line, circle or rectangle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "animated": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Sweep a highlight while the user permits motion. Set false to use a static\nplaceholder. Shimmer also stops under reduced motion and forced colours.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "blockSize": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "CSS length for the block axis. For text, this is the height of each line.\nUse it to reserve the height of the content that will replace the shape.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "inlineSize": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "CSS length for the inline axis. Use it to match a fixed content width.\nText and rectangles otherwise fill available inline space.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "lines": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Number of text lines. Use a whole number from 1 to 20 for the expected\nparagraph length. Extra lines are ignored for circles and rectangles.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "shape": {
+        "default": "'text'",
+        "deprecatedSince": null,
+        "description": "Match the placeholder to the expected text, avatar, or rectangular content.",
+        "replacement": null,
+        "required": false,
+        "type": "\"circle\" | \"rect\" | \"text\""
+      },
+      "size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "CSS length shared by both axes. Use it for circles or square blocks.\nAn axis-specific override takes precedence.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-skeleton.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-skeleton.d.ts",
+    "symbols": {
+      "KiSkeleton": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSkeleton extends Components.KiSkeleton, HTMLElement {\n}\nexport const KiSkeleton: {\n    prototype: KiSkeleton;\n    new (): KiSkeleton;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-skeleton.js"
+  }
+}

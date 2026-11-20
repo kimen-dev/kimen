@@ -1,0 +1,37 @@
+---
+title: ki-stat
+description: Show a key number and its optional change against a reference period.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a stat for one measurement in a dashboard or report. Set `direction` to
+`lower-is-better` for rates such as render time or error count, or `neutral` when
+a change carries no judgment. The sign of `delta` determines the glyph.
+
+<Demo code={`<ki-stat label="Median render time" value="84" unit="ms" delta="-9" delta-label="vs last week" direction="lower-is-better"></ki-stat>`} />
+
+## Number formatting
+
+Use `lang` on the page or a surrounding region to choose the number locale.
+Assign `format` and `deltaFormat` as JavaScript properties with
+`Intl.NumberFormatOptions`. The delta inherits `format` unless it has its own
+options. A decimal reading uses `unit` as a suffix. Percent, currency and Intl
+unit styles supply their own symbols.
+
+## Accessibility
+
+Supply a localized metric label and comparison period. Localize `up-label` and
+`down-label` when the page uses a language other than English. A screen reader
+can read the metric and comparison as one phrase. The stat itself adds no tab
+stop. Give any sparkline in the `chart` slot a separate text equivalent when it
+adds information.
+
+## API reference
+
+<CemApi tag="ki-stat" />
+
+## Workshop
+
+[Open ki-stat in Storybook](/storybook/?path=/docs/docs-components-ki-stat--docs)

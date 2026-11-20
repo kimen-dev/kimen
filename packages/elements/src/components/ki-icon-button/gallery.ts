@@ -14,8 +14,21 @@ const iconButtonToneRow = (tone: string): string =>
     )
     .join('');
 
+const bookmark = 'M6 3h12v18l-6-4-6 4z';
+const bookmarkOutline = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="${bookmark}" stroke="currentColor" stroke-width="2"/></svg>`;
+const bookmarkSelected = `<svg slot="selected" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="${bookmark}"/></svg>`;
+const togglePairs = [...buttonVariants, 'outline']
+  .map((variant) =>
+    row(
+      `<ki-icon-button variant="${variant}" toggle label="Bookmark">${bookmarkOutline}</ki-icon-button>` +
+        `<ki-icon-button variant="${variant}" toggle selected label="Bookmark">${bookmarkOutline}${variant === 'outline' ? bookmarkSelected : ''}</ki-icon-button>`,
+    ),
+  )
+  .join('');
+
 export default {
   focusFirst: true,
+  width: 400,
   html: [
     row(iconButtonToneRow('neutral')),
     row(iconButtonToneRow('success')),
@@ -43,5 +56,6 @@ export default {
       `<ki-icon-button variant="primary" label="Add">${iconButtonGlyph}</ki-icon-button>` +
       `<ki-icon-button variant="secondary" label="Add">${iconButtonGlyph}</ki-icon-button>` +
       '</div>',
+    row(togglePairs),
   ].join(''),
 } satisfies VisualGallery;

@@ -1,12 +1,30 @@
-import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
+import {
+  AttachInternals,
+  Component,
+  Element,
+  Event,
+  type EventEmitter,
+  h,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
+import { syncButtonAria } from '../../utils/button-aria';
+import type { KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
   startKeyboardPress,
 } from '../../utils/keyboard-press';
 
-export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';
+export type KiButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'quaternary'
+  | 'ghost'
+  | 'outline';
 export type KiButtonTone = 'neutral' | 'success' | 'danger';
 export type KiButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type KiButtonType = 'submit' | 'reset' | 'button';
@@ -15,10 +33,11 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
  * A token-styled action button with native button semantics.
  *
  * @whenToUse trigger the single main action of a view, supporting actions
- * in descending hierarchy, or confirming/destructive actions through tone.
+ * in descending hierarchy, confirming/destructive actions through tone, or
+ * persistent actions such as Bold with `toggle`.
  * While the action a button started is in progress, set `loading` on that
  * button instead of disabling it.
- * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+ * @whenNotToUse navigation, icon-only actions, form values, or the
  * progress of a page or region (use ki-progress).
  *
  * @slot - Label content. This is the accessible name source.
@@ -31,7 +50,12 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
  */
 @Component({
   tag: 'ki-button',
-  styleUrls: ['ki-button.surface.css', 'ki-button.css'],
+  styleUrls: [
+    'ki-button.surface.css',
+    'ki-button.surface.legacy.css',
+    'ki-button.toggle.css',
+    'ki-button.css',
+  ],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -42,7 +66,8 @@ export class KiButton {
   /**
    * Visual hierarchy for the action. Use filled `primary` for the single main
    * action, outlined `secondary` for supporting actions, `quaternary` for
-   * neutral text actions, and `ghost` for accent text actions.
+   * neutral text actions, `ghost` for accent text actions and `outline` for
+   * an unfilled action with a visible boundary.
    * When NOT to use: do not use variant to signal success or danger; use
    * `tone` for intent.
    *
@@ -53,7 +78,8 @@ export class KiButton {
 
   /**
    * Semantic intent for the action, independent of hierarchy. Use `success`
-   * for confirming actions and `danger` for destructive actions.
+   * for confirming actions and `danger` for destructive actions. Toggle
+   * palettes are specific to the variant.
    * When NOT to use: do not use tone for visual hierarchy; use `variant`.
    *
    * @default 'neutral'
@@ -70,9 +96,31 @@ export class KiButton {
   @Prop({ reflect: true }) size: KiButtonSize = 'md';
 
   /**
+   * Enables persistent press state for an action such as Bold. The native
+   * button exposes `aria-pressed` and each activation switches `selected`.
+   * Use the same label in both states. A toggle does not submit or reset a form.
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) toggle = false;
+
+  /**
+   * Current press state in toggle mode. Set this to initialize or synchronize
+   * the state programmatically without emitting a change.
+   *
+   * @default false
+   */
+  @Prop({ mutable: true, reflect: true }) selected = false;
+
+  /** Emitted after toggle activation with the new selected state. */
+  @Event({ eventName: 'ki-change', bubbles: true, composed: true, cancelable: false })
+  change!: EventEmitter<{ selected: boolean }>;
+
+  /**
    * Native form action type: `submit` submits the owning form (running
    * constraint validation and contributing `name`/`value` to the form data),
-   * `reset` restores field defaults, `button` never touches the form.
+   * `reset` restores field defaults, and `button` leaves the form alone.
+   * Toggle mode and configured dialog commands take precedence over form actions.
    * Cancel a submission from the form's `submit` event (`preventDefault()`);
    * unlike a native button, `preventDefault()` on the `click` event does not
    * cancel it. During submission `event.submitter` is a transient native
@@ -94,6 +142,23 @@ export class KiButton {
    * When NOT to use: omit when the default empty submitter value is intended.
    */
   @Prop({ reflect: true }) value?: string;
+
+  /**
+   * ID of a ki-dialog in the same document or shadow tree as this button.
+   * Set it together with `command` to connect a dialog declaratively.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) commandfor?: string;
+
+  /**
+   * Dialog action to run for `commandfor`. Use `show-modal` to open,
+   * `close` for direct dismissal, or `request-close` for guarded dismissal.
+   * Choose a command for local dialog control and omit it for other actions.
+   *
+   * @default undefined
+   */
+  @Prop({ reflect: true }) command?: KiDialogCommand;
 
   /**
    * Prevents activation, removes the button from keyboard reach, and exposes
@@ -140,32 +205,9 @@ export class KiButton {
 
   @State() private formDisabled = false;
   private button: HTMLButtonElement | undefined;
-  private descriptionObserver?: MutationObserver;
 
-  private get effectiveDisabled(): boolean {
+  get #effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
-  }
-
-  /** Loading is in effect only on a button that is not disabled (046 D8). */
-  private get effectiveLoading(): boolean {
-    return this.loading && !this.effectiveDisabled;
-  }
-
-  connectedCallback(): void {
-    // Armed on every connection, not once on load: disconnectedCallback
-    // releases the observer, and a button that is moved in the document (a
-    // keyed reorder, a drag between lists) connects again without loading
-    // again.
-    this.descriptionObserver?.disconnect();
-    this.descriptionObserver = new MutationObserver(() => {
-      this.syncForwardedDescription();
-    });
-    this.descriptionObserver.observe(this.host, {
-      attributeFilter: ['aria-description'],
-    });
-    // A description written while the button was out of the document. On the
-    // first connection there is no inner button yet: componentDidLoad syncs.
-    this.syncForwardedDescription();
   }
 
   componentWillLoad(): void {
@@ -183,26 +225,13 @@ export class KiButton {
   }
 
   componentDidLoad(): void {
-    this.syncForwardedDescription();
+    this.forwardButtonAria();
   }
 
-  disconnectedCallback(): void {
-    this.descriptionObserver?.disconnect();
-  }
-
-  // Assistive tech announces the DELEGATED inner button, not this focus-
-  // delegating host, so an `aria-description` set on the host (e.g. by a
-  // wrapping ki-tooltip) is never announced. Mirror it onto the inner button.
-  // Done imperatively, not in JSX: aria-description is a valid ARIA 1.3 global
-  // (jsx-a11y's allow-list is stale and flags it), and Stencil's vdom never
-  // renders this attribute, so an imperative write survives re-renders intact.
-  private syncForwardedDescription(): void {
-    const description = this.host.getAttribute('aria-description');
-    if (description === null) {
-      this.button?.removeAttribute('aria-description');
-    } else {
-      this.button?.setAttribute('aria-description', description);
-    }
+  @Watch('aria-description')
+  @Watch('aria-haspopup')
+  protected forwardButtonAria(): void {
+    syncButtonAria(this.host, this.button);
   }
 
   // A disabled native button never dispatches a real click, but an
@@ -210,13 +239,18 @@ export class KiButton {
   // cancel both, so no activation reaches the application and the form is
   // never touched (046 D3).
   private readonly handleClick = (event: MouseEvent): void => {
-    if (this.effectiveDisabled || this.effectiveLoading) {
+    if (this.#effectiveDisabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
       return;
     }
 
-    this.activateFormAction();
+    if (this.toggle) {
+      this.selected = !this.selected;
+      this.change.emit({ selected: this.selected });
+    } else {
+      this.activateFormAction();
+    }
   };
 
   formDisabledCallback(disabled: boolean): void {
@@ -230,7 +264,12 @@ export class KiButton {
     }
 
     const type = normalizeKiButtonType(this.type);
-    if (type === 'button') {
+    // A configured invoker takes precedence over a form submit or reset.
+    const command = this.command;
+    const invokes =
+      this.commandfor &&
+      (command === 'show-modal' || command === 'close' || command === 'request-close');
+    if (type === 'button' || invokes) {
       return;
     }
 
@@ -258,22 +297,21 @@ export class KiButton {
     }
   }
 
-  render() {
-    const loading = this.effectiveLoading;
-    // The status region is rendered always, empty until the button loads: a
-    // polite region created together with its text is not announced (042
-    // D6). It sits outside the native button, so its text never joins the
-    // button's name (046 D7).
-    return [
+  #renderButton(disabled: boolean, loading: boolean) {
+    return (
       <button
+        key="button"
         ref={(el) => {
           this.button = el;
         }}
         part="button"
         type="button"
-        tabIndex={this.effectiveDisabled ? -1 : 0}
-        disabled={this.effectiveDisabled}
+        {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
+        {...(this.command === undefined ? {} : { command: this.command })}
+        tabIndex={disabled ? -1 : 0}
+        disabled={disabled}
         aria-disabled={loading ? 'true' : undefined}
+        aria-pressed={this.toggle ? (this.selected ? 'true' : 'false') : undefined}
         onClick={this.handleClick}
         onKeyDown={startKeyboardPress}
         onKeyUp={releaseKeyboardPress}
@@ -299,8 +337,21 @@ export class KiButton {
             />
           </svg>
         ) : null}
-      </button>,
-      <span class="status" role="status">
+      </button>
+    );
+  }
+
+  render() {
+    const disabled = this.#effectiveDisabled;
+    // Loading is in effect only on a button that is not disabled (046 D8).
+    const loading = this.loading && !disabled;
+    // The status region is rendered always, empty until the button loads: a
+    // polite region created together with its text is not announced (042
+    // D6). It sits outside the native button, so its text never joins the
+    // button's name (046 D7).
+    return [
+      this.#renderButton(disabled, loading),
+      <span key="status" class="status" role="status">
         {loading ? this.loadingLabel : null}
       </span>,
     ];

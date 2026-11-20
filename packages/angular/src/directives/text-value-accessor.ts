@@ -5,7 +5,7 @@ import { ValueAccessor } from './value-accessor';
 
 @Directive({
   /* tslint:disable-next-line:directive-selector */
-  selector: 'ki-input, ki-prompt-input, ki-textarea',
+  selector: 'ki-input, ki-prompt-input, ki-slider, ki-textarea',
   host: {
     '(input)': 'handleChangeEvent($event.target?.["value"])'
   },

@@ -1,0 +1,62 @@
+:host {
+  display: inline-flex;
+  font-family: var(--ki-typography-family-body);
+  max-inline-size: 100%;
+  vertical-align: middle;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="group"] {
+  --_ki-button-group-attached-radius: var(--ki-button-group-attached-radius);
+
+  align-items: center;
+  column-gap: var(--ki-button-group-gap);
+  display: inline-flex;
+  min-inline-size: 0;
+}
+
+[role="toolbar"] {
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: var(--ki-button-group-backdrop-filter, none);
+  backdrop-filter: var(--ki-button-group-backdrop-filter, none);
+  background-color: var(--ki-button-group-bg);
+  background-image: var(--ki-button-group-bg-image, none);
+  border: var(--ki-button-group-border-width) solid var(--ki-button-group-border-color);
+  border-radius: var(--ki-button-group-radius);
+  color: var(--ki-button-group-fg);
+  column-gap: var(--ki-button-group-toolbar-gap);
+  padding: var(--ki-button-group-padding);
+}
+
+:host([attached]) [part="group"] {
+  column-gap: var(--ki-button-group-attached-gap);
+}
+
+::slotted([data-ki-button-group-join~="start"]) {
+  margin-inline-start: calc(-1 * var(--ki-button-group-seam-overlap));
+}
+
+::slotted([data-ki-button-group-join]:focus-within) {
+  z-index: 1;
+}
+
+[role="toolbar"] ::slotted([role="separator"]) {
+  block-size: var(--ki-button-group-divider-size);
+  background-color: var(--ki-button-group-divider);
+  inline-size: var(--ki-button-group-border-width);
+  margin-inline: var(--ki-button-group-padding);
+}
+
+@media (forced-colors: active) {
+  [role="toolbar"] {
+    border-color: CanvasText;
+  }
+
+  [role="toolbar"] ::slotted([role="separator"]) {
+    background-color: CanvasText;
+    forced-color-adjust: none;
+  }
+}

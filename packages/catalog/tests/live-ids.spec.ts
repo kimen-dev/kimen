@@ -85,9 +85,9 @@ describe('035 — nodes may carry stable ids', () => {
 });
 
 describe('035 — compatible catalog schema versions are accepted', () => {
-  it('S3 the catalog schema version stays on major 1 with deprecated enum metadata in 1.4.0', () => {
-    expect(CATALOG_SCHEMA_VERSION).toBe('1.4.0');
-    expect(catalogData.catalogSchemaVersion).toBe('1.4.0');
+  it('S3 the catalog schema version stays on major 1 with numeric or string constraints in 1.5.0', () => {
+    expect(CATALOG_SCHEMA_VERSION).toBe('1.5.0');
+    expect(catalogData.catalogSchemaVersion).toBe('1.5.0');
   });
 
   const catalog: Catalog = { ...catalogData, catalogSchemaVersion: '1.1.0' };
@@ -139,7 +139,7 @@ describe('035 — compatible catalog schema versions are accepted', () => {
     });
     expect(older.ok).toBe(true);
     const newer = createCatalog(definition, {
-      extend: { ...catalogData, catalogSchemaVersion: '1.5.0' },
+      extend: { ...catalogData, catalogSchemaVersion: '1.6.0' },
     });
     expect(newer.ok).toBe(false);
     expect(newer.ok ? undefined : newer.issues[0]?.code).toBe('unsupported-version');

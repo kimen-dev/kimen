@@ -1,0 +1,95 @@
+{
+  "ki": {
+    "combobox": {
+      "field": {
+        "bg": {
+          "$value": "{ki.surface.raised}",
+          "$description": "Fill for the editable field."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Text on the editable field."
+        },
+        "border": {
+          "$value": "{ki.outline.control}",
+          "$description": "Outline around the editable field."
+        },
+        "height": {
+          "$value": "{ki.layout.spacing.12xl}",
+          "$description": "Resting minimum block size of the field."
+        }
+      },
+      "input-basis": {
+        "$value": "{ki.layout.spacing.16xl}",
+        "$description": "Preferred text-entry width before a row of tags wraps."
+      },
+      "input-touch-font-size": {
+        "$value": "{ki.layout.spacing.3xl}",
+        "$description": "Minimum editable text size for coarse-pointer input."
+      },
+      "icon-size": {
+        "$value": "{ki.glyph.size.sm}",
+        "$description": "Size of search, selection and remove glyphs."
+      },
+      "listbox": {
+        "bg": {
+          "$value": "{ki.surface.raised}",
+          "$description": "Fill for the floating listbox."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Text on the floating listbox."
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$type": "other",
+          "$description": "Optional image layered over the floating listbox."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$type": "other",
+          "$description": "Complete backdrop filter for the floating listbox."
+        },
+        "border": {
+          "$value": "{ki.outline.low-em}",
+          "$description": "Outline around the floating listbox."
+        },
+        "shadow": {
+          "$value": "{ki.elevation.e3}",
+          "$type": "shadow",
+          "$description": "Elevation of the floating listbox."
+        },
+        "max-block-size": {
+          "$value": "{ki.spacing.floating-surface-max-block}",
+          "$description": "Maximum listbox block size before options scroll."
+        }
+      },
+      "option-active": {
+        "bg": {
+          "$value": "{ki.surface.s2}",
+          "$description": "Fill for the active option."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Text on the active option."
+        }
+      },
+      "match": {
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Foreground of the first bolded query match."
+        }
+      },
+      "tag": {
+        "bg": {
+          "$value": "{ki.surface.s2}",
+          "$description": "Fill for the selected tag."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Text on the selected tag."
+        }
+      }
+    }
+  }
+}

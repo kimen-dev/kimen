@@ -2,30 +2,59 @@
 import StarlightSidebar from '@astrojs/starlight/components/Sidebar.astro';
 ---
 
-<label class="kimen-sidebar-filter">
-  <span class="visually-hidden">Filter documentation</span>
+<label class="kimen-sidebar-filter" hidden>
+  <span class="visually-hidden">Filter documentation navigation</span>
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <circle cx="11" cy="11" r="7"></circle>
     <path d="m20 20-3.5-3.5"></path>
   </svg>
-  <input type="search" placeholder="Filter components…" autocomplete="off" />
+  <input type="search" placeholder="Filter this navigation…" autocomplete="off" />
 </label>
+<p class="kimen-sidebar-empty" role="status" hidden>No matching pages.</p>
 
 <StarlightSidebar {...Astro.props} />
 
 <script>
-  const filter = document.querySelector<HTMLInputElement>('.kimen-sidebar-filter input');
+  const label = document.querySelector<HTMLLabelElement>('.kimen-sidebar-filter');
+  const filter = label?.querySelector('input');
   const sidebar = document.querySelector<HTMLElement>('#starlight__sidebar');
+  const empty = sidebar?.querySelector<HTMLElement>('.kimen-sidebar-empty');
 
-  filter?.addEventListener('input', () => {
-    const query = filter.value.trim().toLocaleLowerCase();
-    for (const item of sidebar?.querySelectorAll<HTMLElement>('.top-level li') ?? []) {
-      const ownLink = item.querySelector(':scope > a, :scope > details > summary');
-      const matches = ownLink?.textContent?.toLocaleLowerCase().includes(query) ?? false;
-      const childMatches = [...item.querySelectorAll('a')].some(
-        (link) => link.textContent?.toLocaleLowerCase().includes(query) ?? false,
-      );
-      item.hidden = query.length > 0 && !matches && !childMatches;
-    }
-  });
+  if (label && filter && sidebar && empty) {
+    label.hidden = false;
+    const items = sidebar.querySelectorAll<HTMLElement>('.top-level li');
+    const details = sidebar.querySelectorAll<HTMLDetailsElement>('.top-level details');
+    const openBeforeFilter = new Map<HTMLDetailsElement, boolean>();
+    const links = Array.from(sidebar.querySelectorAll<HTMLAnchorElement>('.top-level li a'));
+    const wide = matchMedia('(min-width: 72rem)');
+    const openCurrentSection = () => {
+      if (!wide.matches) return;
+      const current = sidebar.querySelector<HTMLDetailsElement>('.top-level > li > details:has([aria-current="page"])');
+      if (current) current.open = true;
+    };
+    openCurrentSection();
+    wide.addEventListener('change', openCurrentSection);
+
+    filter.addEventListener('input', () => {
+      const query = filter.value.trim().toLocaleLowerCase();
+      sidebar.toggleAttribute('data-filtering', Boolean(query));
+
+      if (!query) {
+        for (const item of items) item.hidden = false;
+        for (const [group, open] of openBeforeFilter) group.open = open;
+        openBeforeFilter.clear();
+        openCurrentSection();
+        empty.hidden = true;
+        return;
+      }
+
+      const matches = links.filter((link) => link.textContent.toLocaleLowerCase().includes(query));
+      for (const item of items) item.hidden = !matches.some((link) => item.contains(link));
+      for (const group of details) {
+        if (!openBeforeFilter.has(group)) openBeforeFilter.set(group, group.open);
+        if (!group.parentElement?.hidden) group.open = true;
+      }
+      empty.hidden = matches.length > 0;
+    });
+  }
 </script>

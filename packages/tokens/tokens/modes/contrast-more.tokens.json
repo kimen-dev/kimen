@@ -26,6 +26,13 @@
         "$description": "A 3px keyboard focus ring."
       }
     },
+    "details": {
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.strong}",
+        "$description": "Disclosure frames and accordion separators keep a visible boundary under more contrast."
+      }
+    },
     "card": {
       "border-width": {
         "$type": "dimension",

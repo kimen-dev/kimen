@@ -1,4 +1,5 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as IconButtonStories from '../../src/components/ki-icon-button/ki-icon-button.stories';
 
 <Meta title="Docs/Components/ki-icon-button" />
 
@@ -9,13 +10,13 @@ mandatory accessible name.
 
 **When to use** — a compact, widely understood action where space precludes a
 visible label: toolbars, card and dialog corners (close), media transport,
-data-row actions. Always supply `label`; usually pair with `ki-tooltip` for
-sighted discoverability.
+data-row actions. Always supply `label`. Pair with `ki-tooltip` for sighted
+discoverability. Use `toggle` for an action such as bookmarking that stays
+pressed between activations.
 
 **When NOT to use** — whenever a visible label fits (use `ki-button`),
-toggling state (a future toggle icon button), navigation (use a link), or
-form submit/reset (`ki-icon-button` is not form-associated; use `ki-button`,
-whose visible label communicates the consequence).
+navigation (use a link), or form submit/reset (use `ki-button`, whose
+visible label communicates the consequence).
 
 ## Examples
 
@@ -30,8 +31,9 @@ always comes from the required `label` attribute, never from the slot:
 
 Use filled `primary` for the main action and outlined `secondary` (the default)
 for supporting actions. Use `quaternary` for neutral icon actions and `ghost`
-for accent icon actions. The `tone` prop carries intent, with `neutral`
-as the default.
+for accent icon actions. Use `outline` for an outline at rest and a filled
+selected state in toggle mode. `tone` carries intent for momentary actions
+in the primary, secondary, quaternary and ghost variants.
 
 ```html
 <ki-icon-button variant="primary" label="Play">…</ki-icon-button>
@@ -53,6 +55,20 @@ Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) to `xl`
 <ki-icon-button size="xl" variant="primary" label="Record">…</ki-icon-button>
 ```
 
+## Toggle mode
+
+Set `toggle` to keep the action pressed until the next activation. Set
+`selected` to start pressed. The accessible name comes from `label` in both
+states. An optional `selected` slot supplies the pressed glyph. An inline
+outline SVG whose path inherits its fill takes a `currentColor` fill when
+pressed with an empty `selected` slot.
+
+User activation emits `ki-change` with `{ selected }`. Programmatic
+updates to `selected` are silent. The radius transition is suppressed when
+the person requests reduced motion.
+
+<Canvas of={IconButtonStories.Toggle} />
+
 ## Recipe: an icon button in a toolbar with a tooltip
 
 `ki-tooltip` supplies the visible affordance and writes the accessible
@@ -70,6 +86,17 @@ Inside a native form, activating an icon button never submits or resets the
 form: the component is not form-associated. An icon-only submit control is a
 when-NOT-to-use — reach for `ki-button`.
 
+## Recipe: close a dialog with an icon button
+
+Give the dialog an ID in the same document or shadow root as the icon button.
+`command="close"` dismisses it and focus returns to the opener.
+
+```html
+<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
+  <span aria-hidden="true">✕</span>
+</ki-icon-button>
+```
+
 ## Customization
 
 | Token                                 | Controls                            |
@@ -80,10 +107,14 @@ when-NOT-to-use — reach for `ki-button`.
 | `--ki-button-md-radius`               | Corner radius of the `md` size      |
 | `--ki-button-focus-ring-color`        | Keyboard focus ring color           |
 
-Only the square box and the icon ramp are the icon button's own:
-`--ki-icon-button-{size}-size` and `--ki-icon-button-{size}-icon-size`.
-Everything else is the button visual system, defined once and shared with
-`ki-button`: the matrix `--ki-button-{variant}-{tone}-{state}-{bg|border|fg}`,
+The square box and icon ramp use `--ki-icon-button-{size}-size` and
+`--ki-icon-button-{size}-icon-size`. Toggle selection uses
+`--ki-icon-button-{variant}-selected-bg`,
+`--ki-icon-button-{variant}-selected-fg` and
+`--ki-icon-button-toggle-selected-radius`.
+
+The original momentary variants use the same visual system as `ki-button`.
+This includes the matrix `--ki-button-{variant}-{tone}-{state}-{bg|border|fg}`,
 the radius `--ki-button-{size}-radius`, the effect tokens
 `--ki-button-{variant}-{state}-shadow`, the per-side bevel
 `--ki-button-{variant}-rest-border-bottom` (raised variants only) and the

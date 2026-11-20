@@ -1,0 +1,118 @@
+{
+  "ki": {
+    "stepper": {
+      "dot-size": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.7xl}",
+        "$description": "Diameter of the step marker."
+      },
+      "glyph-size": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.2xl}",
+        "$description": "Size of the marker and disclosure glyphs."
+      },
+      "stroke": {
+        "$type": "dimension",
+        "$value": "{ki.activity-size.stroke}",
+        "$description": "Width of the marker outline and connector."
+      },
+      "done-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Fill of a completed step marker."
+      },
+      "done-fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-on-primary}",
+        "$description": "Glyph ink on the completed step marker."
+      },
+      "current-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Fill of the current step marker."
+      },
+      "current-border": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Outline of the current step marker."
+      },
+      "current-fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Number ink on the current step marker."
+      },
+      "upcoming-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Fill of an upcoming step marker."
+      },
+      "upcoming-border": {
+        "$type": "color",
+        "$value": "{ki.outline.control}",
+        "$description": "Outline of an upcoming step marker."
+      },
+      "upcoming-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Number and label ink of an upcoming step."
+      },
+      "error-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Fill of the step error marker."
+      },
+      "error-border": {
+        "$type": "color",
+        "$value": "{ki.text.danger-high-em}",
+        "$description": "Outline of the step error marker."
+      },
+      "error-fg": {
+        "$type": "color",
+        "$value": "{ki.text.danger-high-em}",
+        "$description": "Glyph ink of the step error marker."
+      },
+      "label-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Default backing of a step label."
+      },
+      "label-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Default ink of a step label."
+      },
+      "summary-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Backing of the compact disclosure."
+      },
+      "summary-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink of the compact disclosure."
+      },
+      "connector": {
+        "$type": "color",
+        "$value": "{ki.outline.low-em}",
+        "$description": "Decorative connector from a step that is still incomplete."
+      },
+      "connector-done": {
+        "$type": "color",
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Decorative connector from a completed step."
+      }
+    },
+    "step": {
+      "description-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Backing of a step description."
+      },
+      "description-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink of a step description."
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+---
+title: ki-code-block
+description: Display source with syntax highlighting, line controls and a copy button.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+<Demo code={`<ki-code-block language="ts" filename="main.ts" line-numbers highlight="2">// Load the current sample.
+const sample = load(3);</ki-code-block>`} />
+
+Supply the snippet as a plain text child. Escape HTML markup in static
+examples or assign `textContent` when you create the element in JavaScript.
+JavaScript, TypeScript and JSON have syntax colors. Other language labels
+display the source as plain text.
+
+Use `line-numbers` to show a gutter and `highlight="3,5-7"` for one-based
+lines or inclusive ranges. Long lines scroll by default. Add `wrap` to wrap
+them. The scroll area is a Tab stop, and the arrow keys scroll overflowing
+code. The language and filename name the figure and scroll area. The scroll
+area describes highlighted lines, and line numbers are hidden from assistive
+technology.
+
+CopyButton copies the original whitespace and reports the outcome. Set
+`copyable="false"` to hide the button. Localize the figure's fallback name
+with `label`, the description prefix with `highlight-label` and the copy
+control with `copy-label`, `copied-label` and `copy-error-label`.
+
+Listen for `ki-copy` to receive the original source in `detail.value`, or
+`ki-copy-error` to respond to a failed write. A guarded surface can bind a
+declared action to `ki-copy`.
+
+## API reference
+
+<CemApi tag="ki-code-block" />
+
+[Open ki-code-block in Storybook](/storybook/?path=/docs/docs-components-ki-code-block--docs)

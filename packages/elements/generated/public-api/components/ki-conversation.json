@@ -1,0 +1,169 @@
+{
+  "component": {
+    "attributes": {
+      "jump-label": {
+        "default": "'Jump to latest'",
+        "deprecatedSince": null,
+        "description": "Visible and accessible label for the control that resumes following.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": "'Conversation'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "stick-to-bottom": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Follow new or growing messages until the reader scrolls away from the end.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "cssProperties": {
+      "--ki-conversation-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between messages in the transcript.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-conversation-max-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum inline size of the transcript.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The md spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "An accessible chat transcript with optional following as messages arrive.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "jump": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The Jump to latest button shown while following is paused.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "log": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named polite live region and keyboard-focusable scrollport.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "messages": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The stack of slotted messages inside the scrollport.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "jumpLabel": {
+        "default": "'Jump to latest'",
+        "deprecatedSince": null,
+        "description": "Visible and accessible label for the control that resumes following.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": "'Conversation'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "stickToBottom": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Follow new or growing messages until the reader scrolls away from the end.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The chronological transcript, normally ki-message elements.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-conversation.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-conversation.d.ts",
+    "symbols": {
+      "KiConversation": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiConversation extends Components.KiConversation, HTMLElement {\n}\nexport const KiConversation: {\n    prototype: KiConversation;\n    new (): KiConversation;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-conversation.js"
+  }
+}

@@ -231,7 +231,8 @@ export class KiPromptInput {
 
   private readonly onPick = (event: globalThis.Event): void => {
     const picker = event.currentTarget as HTMLInputElement;
-    if (picker.files) this.handleFiles(picker.files);
+    const files = picker.files;
+    if (files) this.handleFiles(files);
     picker.value = '';
   };
 
