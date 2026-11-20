@@ -192,6 +192,11 @@ Windows `%APPDATA%\Claude\claude_desktop_config.json`):
 }
 ```
 
+Claude Desktop does not inherit your terminal's `PATH`, so it may not find
+`node`, or may find an older one. If the server does not start, replace
+`"node"` with the absolute path that `command -v node` prints in your
+terminal (for example `/opt/homebrew/bin/node`).
+
 Quit and reopen Claude Desktop. It renders MCP Apps, so specs the model
 renders appear as live Kimen components. Claude on the web and on mobile
 connect only to remote servers, so a local `kimen-mcp` is a desktop feature.
@@ -323,7 +328,10 @@ The `kimen-genui` skill carries a short recipe for each of the three.
   should exit at once, silently, with status 0. A syntax or version error
   means Node is older than 22. "Cannot find module" means the file was not
   built or the path is not absolute. The binary refuses any argument, so
-  check that the config passes only the path.
+  check that the config passes only the path. If the command works in your
+  terminal but not in a desktop app (Claude Desktop, Antigravity), the app
+  is not finding `node`: use the absolute path from `command -v node` as the
+  command.
 - **No live components, only an outline.** The client does not render MCP
   Apps (see [What works where](#what-works-where)). The outline is the
   expected result there.
