@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 451 semantic
-and 1519 component tokens. Values are the resolved **onmars light**
+and 1540 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -2323,6 +2323,32 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-toaster-gap` | `0.75rem` | dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014). |
 | `--ki-toaster-inset-block` | `1rem` | dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014). |
 | `--ki-toaster-inset-inline` | `1rem` | dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014). |
+
+### `ki-tool-call`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-tool-call-backdrop-filter` | `none` | Whole filter behind the call. |
+| `--ki-tool-call-bg` | `#f9f7f4` | Solid background of the call disclosure. |
+| `--ki-tool-call-bg-image` | `none` | Optional image over the solid background. |
+| `--ki-tool-call-border` | `rgba(24, 22, 19, 0.1)` | Border ink around the call. |
+| `--ki-tool-call-border-width` | `1px` | Width of the disclosure frame. |
+| `--ki-tool-call-caption-size` | `0.75rem` | Size of captions and the tool identifier. |
+| `--ki-tool-call-code-bg` | `#f3f0eb` | Background for input and output payloads. |
+| `--ki-tool-call-code-fg` | `#181613` | Plain text ink on the payload surface. |
+| `--ki-tool-call-code-radius` | `8px` | Corners of the plain payload surface. |
+| `--ki-tool-call-fg` | `#181613` | Text ink on the call surface. |
+| `--ki-tool-call-font-size` | `0.8125rem` | Body text size. |
+| `--ki-tool-call-gap` | `0.5rem` | Gap between summary items and body sections. |
+| `--ki-tool-call-icon` | `#5e5953` | Ink of the decorative icons. |
+| `--ki-tool-call-icon-size` | `0.625rem` | Size of the wrench and chevron. |
+| `--ki-tool-call-inline-gap` | `0.25rem` | Gap between status items and after each caption. |
+| `--ki-tool-call-line-height` | `1.5rem` | Body text line height. |
+| `--ki-tool-call-mono-family` | `'JetBrains Mono', ui-monospace, monospace` | Typeface of the tool identifier. |
+| `--ki-tool-call-padding` | `0.75rem` | Horizontal inset and space after the body. |
+| `--ki-tool-call-radius` | `12px` | Corners of the disclosure surface. |
+| `--ki-tool-call-transition-duration` | `150ms` | Duration of the disclosure chevron rotation. |
+| `--ki-tool-call-transition-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the disclosure chevron rotation. |
 
 ### `ki-tooltip`
 

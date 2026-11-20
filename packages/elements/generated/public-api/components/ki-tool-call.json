@@ -1,0 +1,632 @@
+{
+  "component": {
+    "attributes": {
+      "approval-label": {
+        "default": "'Needs approval'",
+        "deprecatedSince": null,
+        "description": "Status text for a call waiting on an approval decision.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "done-label": {
+        "default": "'Done'",
+        "deprecatedSince": null,
+        "description": "Status text for a successful call.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "error-label": {
+        "default": "'Error'",
+        "deprecatedSince": null,
+        "description": "Caption for the error slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "failed-label": {
+        "default": "'Failed'",
+        "deprecatedSince": null,
+        "description": "Status text for a failed call.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "input-label": {
+        "default": "'Input'",
+        "deprecatedSince": null,
+        "description": "Caption for the input slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "locale": {
+        "default": "'en'",
+        "deprecatedSince": null,
+        "description": "Language tag used to format the completed duration. Defaults to English.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tool identifier, such as search_docs, displayed in monospace.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "open": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
+      },
+      "output-label": {
+        "default": "'Output'",
+        "deprecatedSince": null,
+        "description": "Caption for the output slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "pending-label": {
+        "default": "'Pending'",
+        "deprecatedSince": null,
+        "description": "Status text for a call waiting to run.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "retry-label": {
+        "default": "'Retry'",
+        "deprecatedSince": null,
+        "description": "Visible and accessible label for the built-in retry control.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "retryable": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Offer the built-in Retry button when the call fails.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "running-label": {
+        "default": "'Running'",
+        "deprecatedSince": null,
+        "description": "Status text for a call in progress.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "status": {
+        "default": "'pending'",
+        "deprecatedSince": null,
+        "description": "Lifecycle status. Unknown values display Pending.",
+        "replacement": null,
+        "required": false,
+        "type": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\""
+      },
+      "title": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional human-readable label displayed beside the identifier.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-badge-sm-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the badge component for sm height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Whole filter behind the call.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Solid background of the call disclosure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the solid background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border ink around the call.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the disclosure frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-caption-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of captions and the tool identifier.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-code-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background for input and output payloads.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-code-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Plain text ink on the payload surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-code-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corners of the plain payload surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink on the call surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body text size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between summary items and body sections.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the decorative icons.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the wrench and chevron.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-inline-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between status items and after each caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body text line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-mono-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the tool identifier.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Horizontal inset and space after the body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corners of the disclosure surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-transition-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Duration of the disclosure chevron rotation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tool-call-transition-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Easing of the disclosure chevron rotation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A disclosure for one assistant tool call, with a status and optional payloads.",
+    "events": {
+      "ki-tool-retry": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A request to retry this tool call. Bind a declared surface action to handle it.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ name: string }>"
+      },
+      "ki-tool-status-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Once per status transition after initialization. Append one entry to the conversation log.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ name: string; status: KiToolCallStatus; label: string }>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Content disclosed by opening the call.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "disclosure": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native details surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Error section for failed calls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Input section with its caption and payload.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Monospaced tool identifier.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "output": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Output section with its caption and payload.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "payload": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface for the input and output content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "retry": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Opt-in action button for failed calls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "status": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Badge that contains the status text and completed duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "summary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native disclosure control and its status row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "approvalLabel": {
+        "default": "'Needs approval'",
+        "deprecatedSince": null,
+        "description": "Status text for a call waiting on an approval decision.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "doneLabel": {
+        "default": "'Done'",
+        "deprecatedSince": null,
+        "description": "Status text for a successful call.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "errorLabel": {
+        "default": "'Error'",
+        "deprecatedSince": null,
+        "description": "Caption for the error slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "failedLabel": {
+        "default": "'Failed'",
+        "deprecatedSince": null,
+        "description": "Status text for a failed call.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "inputLabel": {
+        "default": "'Input'",
+        "deprecatedSince": null,
+        "description": "Caption for the input slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "locale": {
+        "default": "'en'",
+        "deprecatedSince": null,
+        "description": "Language tag used to format the completed duration. Defaults to English.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tool identifier, such as search_docs, displayed in monospace.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "open": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean | undefined"
+      },
+      "outputLabel": {
+        "default": "'Output'",
+        "deprecatedSince": null,
+        "description": "Caption for the output slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "pendingLabel": {
+        "default": "'Pending'",
+        "deprecatedSince": null,
+        "description": "Status text for a call waiting to run.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "retryLabel": {
+        "default": "'Retry'",
+        "deprecatedSince": null,
+        "description": "Visible and accessible label for the built-in retry control.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "retryable": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Offer the built-in Retry button when the call fails.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "runningLabel": {
+        "default": "'Running'",
+        "deprecatedSince": null,
+        "description": "Status text for a call in progress.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "status": {
+        "default": "'pending'",
+        "deprecatedSince": null,
+        "description": "Lifecycle status. Unknown values display Pending.",
+        "replacement": null,
+        "required": false,
+        "type": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\""
+      },
+      "toolTitle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional human-readable label displayed beside the identifier.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A failure message or a consumer-owned retry control, visible on failed calls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "input": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Arguments supplied to the tool. Use ki-code-block for structured text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "output": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Result returned by the tool. Use ki-code-block for structured text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-tool-call.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-tool-call.d.ts",
+    "symbols": {
+      "KiToolCall": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiToolCall extends Components.KiToolCall, HTMLElement {\n}\nexport const KiToolCall: {\n    prototype: KiToolCall;\n    new (): KiToolCall;\n};"
+      },
+      "KiToolCallStatus": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiToolCallStatus = 'pending' | 'running' | 'done' | 'failed' | 'approval';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-tool-call.js"
+  }
+}

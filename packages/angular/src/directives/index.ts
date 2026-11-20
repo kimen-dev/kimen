@@ -56,6 +56,7 @@ export const DIRECTIVES = [
   d.KiTextarea,
   d.KiToast,
   d.KiToaster,
+  d.KiToolCall,
   d.KiTooltip,
   d.KiVideo
 ];

@@ -2578,6 +2578,107 @@ export const catalogData = {
       "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
       "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
     },
+    "ki-tool-call": {
+      "description": "A disclosure for one assistant tool call, with a status and optional payloads.",
+      "events": {
+        "ki-tool-retry": "A request to retry this tool call. Bind a declared surface action to handle it."
+      },
+      "props": {
+        "approval-label": {
+          "type": "string",
+          "description": "Status text for a call waiting on an approval decision.",
+          "default": "Needs approval"
+        },
+        "done-label": {
+          "type": "string",
+          "description": "Status text for a successful call.",
+          "default": "Done"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
+          "minimum": 0
+        },
+        "error-label": {
+          "type": "string",
+          "description": "Caption for the error slot.",
+          "default": "Error"
+        },
+        "failed-label": {
+          "type": "string",
+          "description": "Status text for a failed call.",
+          "default": "Failed"
+        },
+        "input-label": {
+          "type": "string",
+          "description": "Caption for the input slot.",
+          "default": "Input"
+        },
+        "locale": {
+          "type": "string",
+          "description": "Language tag used to format the completed duration. Defaults to English.",
+          "default": "en"
+        },
+        "name": {
+          "type": "string",
+          "description": "Tool identifier, such as search_docs, displayed in monospace.",
+          "required": true
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice."
+        },
+        "output-label": {
+          "type": "string",
+          "description": "Caption for the output slot.",
+          "default": "Output"
+        },
+        "pending-label": {
+          "type": "string",
+          "description": "Status text for a call waiting to run.",
+          "default": "Pending"
+        },
+        "retry-label": {
+          "type": "string",
+          "description": "Visible and accessible label for the built-in retry control.",
+          "default": "Retry"
+        },
+        "retryable": {
+          "type": "boolean",
+          "description": "Offer the built-in Retry button when the call fails.",
+          "default": false
+        },
+        "running-label": {
+          "type": "string",
+          "description": "Status text for a call in progress.",
+          "default": "Running"
+        },
+        "status": {
+          "type": "enum",
+          "values": [
+            "approval",
+            "done",
+            "failed",
+            "pending",
+            "running"
+          ],
+          "description": "Lifecycle status. Unknown values display Pending.",
+          "default": "pending"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional human-readable label displayed beside the identifier."
+        }
+      },
+      "slots": {
+        "error": "A failure message or a consumer-owned retry control, visible on failed calls.",
+        "input": "Arguments supplied to the tool. Use ki-code-block for structured text.",
+        "output": "Result returned by the tool. Use ki-code-block for structured text."
+      },
+      "tag": "ki-tool-call",
+      "whenNotToUse": "collecting approval, running or configuring tools. Pair with a\nseparate confirmation control for an approval decision.",
+      "whenToUse": "show which tool ran, its state and duration, and let the reader\ninspect the supplied input, output or error. Use a conversation log for status updates."
+    },
     "ki-tooltip": {
       "description": "A transient, text-only description bubble for one slotted trigger.",
       "events": {},

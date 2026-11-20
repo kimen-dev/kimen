@@ -60,6 +60,7 @@ import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
+import { defineCustomElement as defineKiToolCall } from '@kimen/elements/components/ki-tool-call.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
 @ProxyCmp({
@@ -1402,6 +1403,37 @@ export class KiToaster {
 
 
 export declare interface KiToaster extends Components.KiToaster {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiToolCall,
+  inputs: ['approvalLabel', 'doneLabel', 'duration', 'errorLabel', 'failedLabel', 'inputLabel', 'locale', 'name', 'open', 'outputLabel', 'pendingLabel', 'retryLabel', 'retryable', 'runningLabel', 'status', 'toolTitle']
+})
+@Component({
+  selector: 'ki-tool-call',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['approvalLabel', 'doneLabel', 'duration', 'errorLabel', 'failedLabel', 'inputLabel', 'locale', { name: 'name', required: true }, 'open', 'outputLabel', 'pendingLabel', 'retryLabel', 'retryable', 'runningLabel', 'status', 'toolTitle'],
+})
+export class KiToolCall {
+  protected el: HTMLKiToolCallElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiToolCall extends Components.KiToolCall {
+  /**
+   * Once per status transition after initialization. Append one entry to the conversation log.
+   */
+  /**
+   * A request to retry this tool call. Bind a declared surface action to handle it.
+   */
+}
 
 
 @ProxyCmp({

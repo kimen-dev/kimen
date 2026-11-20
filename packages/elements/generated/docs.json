@@ -814,9 +814,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-tool-call"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-tool-call": [
+          "ki-badge"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-button/ki-button.tsx",
@@ -5554,7 +5560,8 @@
       "dependents": [
         "ki-copy-button",
         "ki-empty-state",
-        "ki-stat"
+        "ki-stat",
+        "ki-tool-call"
       ],
       "dependencies": [],
       "dependencyGraph": {
@@ -5565,6 +5572,9 @@
           "ki-icon"
         ],
         "ki-stat": [
+          "ki-icon"
+        ],
+        "ki-tool-call": [
           "ki-icon"
         ]
       }
@@ -10664,9 +10674,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-tool-call"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-tool-call": [
+          "ki-spinner"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-stack/ki-stack.tsx",
@@ -13318,6 +13334,665 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-tool-call/ki-tool-call.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-tool-call",
+      "docs": "A disclosure for one assistant tool call, with a status and optional payloads.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show which tool ran, its state and duration, and let the reader\ninspect the supplied input, output or error. Use a conversation log for status updates."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "collecting approval, running or configuring tools. Pair with a\nseparate confirmation control for an approval decision."
+        },
+        {
+          "name": "slot",
+          "text": "input - Arguments supplied to the tool. Use ki-code-block for structured text."
+        },
+        {
+          "name": "slot",
+          "text": "output - Result returned by the tool. Use ki-code-block for structured text."
+        },
+        {
+          "name": "slot",
+          "text": "error - A failure message or a consumer-owned retry control, visible on failed calls."
+        },
+        {
+          "name": "part",
+          "text": "disclosure - Native details surface."
+        },
+        {
+          "name": "part",
+          "text": "summary - Native disclosure control and its status row."
+        },
+        {
+          "name": "part",
+          "text": "name - Monospaced tool identifier."
+        },
+        {
+          "name": "part",
+          "text": "status - Badge that contains the status text and completed duration."
+        },
+        {
+          "name": "part",
+          "text": "body - Content disclosed by opening the call."
+        },
+        {
+          "name": "part",
+          "text": "input - Input section with its caption and payload."
+        },
+        {
+          "name": "part",
+          "text": "output - Output section with its caption and payload."
+        },
+        {
+          "name": "part",
+          "text": "payload - Surface for the input and output content."
+        },
+        {
+          "name": "part",
+          "text": "error - Error section for failed calls."
+        },
+        {
+          "name": "part",
+          "text": "retry - Opt-in action button for failed calls."
+        }
+      ],
+      "usage": {
+        "examples": "# ToolCall examples\n\n## Inspect a completed tool call\n\n```html\n<ki-tool-call name=\"search_docs\" title=\"Search docs\" status=\"done\" duration=\"1200\">\n  <ki-code-block slot=\"input\" language=\"json\" wrap>{\"query\": \"Forms\"}</ki-code-block>\n  <ki-code-block slot=\"output\" language=\"json\" wrap>[\"Field help\"]</ki-code-block>\n</ki-tool-call>\n```\n\n## Handle a failed call\n\n```html\n<ki-tool-call name=\"build_preview\" status=\"failed\" retryable>\n  <p slot=\"error\">The build was interrupted.</p>\n</ki-tool-call>\n```\n\nListen for `ki-tool-retry` to let the application handle the request. In\na guarded surface, set the node's `action` to a declared retry action.\nA consumer-owned control in the error slot can declare its own action.\n\n## Record a transition in the conversation\n\n```html\n<div id=\"tool-updates\" role=\"log\" aria-label=\"Tool updates\"></div>\n<ki-tool-call id=\"call\" name=\"run_tests\" status=\"running\"></ki-tool-call>\n<script type=\"module\">\n  const log = document.querySelector('#tool-updates');\n  const call = document.querySelector('#call');\n  call.addEventListener('ki-tool-status-change', ({ detail: { name, label } }) => {\n    const entry = document.createElement('p');\n    entry.textContent = [name, label].join(': ');\n    log.append(entry);\n  });\n</script>\n```\n"
+      },
+      "props": [
+        {
+          "name": "approvalLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "approval-label",
+          "reflectToAttr": false,
+          "docs": "Status text for a call waiting on an approval decision.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Needs approval'"
+            }
+          ],
+          "default": "'Needs approval'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "doneLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "done-label",
+          "reflectToAttr": false,
+          "docs": "Status text for a successful call.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Done'"
+            }
+          ],
+          "default": "'Done'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "duration",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "duration",
+          "reflectToAttr": false,
+          "docs": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-label",
+          "reflectToAttr": false,
+          "docs": "Caption for the error slot.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Error'"
+            }
+          ],
+          "default": "'Error'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "failedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "failed-label",
+          "reflectToAttr": false,
+          "docs": "Status text for a failed call.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Failed'"
+            }
+          ],
+          "default": "'Failed'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "inputLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "input-label",
+          "reflectToAttr": false,
+          "docs": "Caption for the input slot.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Input'"
+            }
+          ],
+          "default": "'Input'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "locale",
+          "reflectToAttr": false,
+          "docs": "Language tag used to format the completed duration. Defaults to English.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'en'"
+            }
+          ],
+          "default": "'en'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": false,
+          "docs": "Tool identifier, such as search_docs, displayed in monospace.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean | undefined",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": false,
+          "docs": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "outputLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "output-label",
+          "reflectToAttr": false,
+          "docs": "Caption for the output slot.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Output'"
+            }
+          ],
+          "default": "'Output'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pendingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pending-label",
+          "reflectToAttr": false,
+          "docs": "Status text for a call waiting to run.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Pending'"
+            }
+          ],
+          "default": "'Pending'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "retryLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "retry-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible label for the built-in retry control.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Retry'"
+            }
+          ],
+          "default": "'Retry'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "retryable",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "retryable",
+          "reflectToAttr": false,
+          "docs": "Offer the built-in Retry button when the call fails.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "runningLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "running-label",
+          "reflectToAttr": false,
+          "docs": "Status text for a call in progress.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Running'"
+            }
+          ],
+          "default": "'Running'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "status",
+          "type": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\"",
+          "complexType": {
+            "original": "KiToolCallStatus",
+            "resolved": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\"",
+            "references": {
+              "KiToolCallStatus": {
+                "location": "local",
+                "path": "src/components/ki-tool-call/ki-tool-call.tsx",
+                "id": "src/components/ki-tool-call/ki-tool-call.tsx::KiToolCallStatus"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "status",
+          "reflectToAttr": false,
+          "docs": "Lifecycle status. Unknown values display Pending.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'pending'"
+            }
+          ],
+          "default": "'pending'",
+          "values": [
+            {
+              "value": "approval",
+              "type": "string"
+            },
+            {
+              "value": "done",
+              "type": "string"
+            },
+            {
+              "value": "failed",
+              "type": "string"
+            },
+            {
+              "value": "pending",
+              "type": "string"
+            },
+            {
+              "value": "running",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "toolTitle",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "title",
+          "reflectToAttr": true,
+          "docs": "Optional human-readable label displayed beside the identifier.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-tool-retry",
+          "detail": "{ name: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ name: string }",
+            "resolved": "{ name: string; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "A request to retry this tool call. Bind a declared surface action to handle it.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-tool-status-change",
+          "detail": "{ name: string; status: KiToolCallStatus; label: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ name: string; status: KiToolCallStatus; label: string }",
+            "resolved": "{ name: string; status: KiToolCallStatus; label: string; }",
+            "references": {
+              "KiToolCallStatus": {
+                "location": "local",
+                "path": "src/components/ki-tool-call/ki-tool-call.tsx",
+                "id": "src/components/ki-tool-call/ki-tool-call.tsx::KiToolCallStatus"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Once per status transition after initialization. Append one entry to the conversation log.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "error",
+          "docs": "A failure message or a consumer-owned retry control, visible on failed calls."
+        },
+        {
+          "name": "input",
+          "docs": "Arguments supplied to the tool. Use ki-code-block for structured text."
+        },
+        {
+          "name": "output",
+          "docs": "Result returned by the tool. Use ki-code-block for structured text."
+        }
+      ],
+      "parts": [
+        {
+          "name": "body",
+          "docs": "Content disclosed by opening the call."
+        },
+        {
+          "name": "disclosure",
+          "docs": "Native details surface."
+        },
+        {
+          "name": "error",
+          "docs": "Error section for failed calls."
+        },
+        {
+          "name": "input",
+          "docs": "Input section with its caption and payload."
+        },
+        {
+          "name": "name",
+          "docs": "Monospaced tool identifier."
+        },
+        {
+          "name": "output",
+          "docs": "Output section with its caption and payload."
+        },
+        {
+          "name": "payload",
+          "docs": "Surface for the input and output content."
+        },
+        {
+          "name": "retry",
+          "docs": "Opt-in action button for failed calls."
+        },
+        {
+          "name": "status",
+          "docs": "Badge that contains the status text and completed duration."
+        },
+        {
+          "name": "summary",
+          "docs": "Native disclosure control and its status row."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-spinner",
+        "ki-badge"
+      ],
+      "dependencyGraph": {
+        "ki-tool-call": [
+          "ki-icon",
+          "ki-spinner",
+          "ki-badge"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-tooltip/ki-tooltip.tsx",
       "encapsulation": "shadow",
       "tag": "ki-tooltip",
@@ -13775,6 +14450,11 @@
       "declaration": "export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-textarea/ki-textarea.tsx"
+    },
+    "src/components/ki-tool-call/ki-tool-call.tsx::KiToolCallStatus": {
+      "declaration": "export type KiToolCallStatus = 'pending' | 'running' | 'done' | 'failed' | 'approval';",
+      "docstring": "",
+      "path": "src/components/ki-tool-call/ki-tool-call.tsx"
     },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",

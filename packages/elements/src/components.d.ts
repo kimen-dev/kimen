@@ -45,6 +45,7 @@ import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
+import { KiToolCallStatus } from "./components/ki-tool-call/ki-tool-call";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
@@ -86,6 +87,7 @@ export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
+export { KiToolCallStatus } from "./components/ki-tool-call/ki-tool-call";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
     /**
@@ -2092,6 +2094,92 @@ export namespace Components {
         "show": (options: KiToastShowOptions) => Promise<HTMLElement>;
     }
     /**
+     * A disclosure for one assistant tool call, with a status and optional payloads.
+     * @whenToUse show which tool ran, its state and duration, and let the reader
+     * inspect the supplied input, output or error. Use a conversation log for status updates.
+     * @whenNotToUse collecting approval, running or configuring tools. Pair with a
+     * separate confirmation control for an approval decision.
+     */
+    interface KiToolCall {
+        /**
+          * Status text for a call waiting on an approval decision.
+          * @default 'Needs approval'
+         */
+        "approvalLabel": string;
+        /**
+          * Status text for a successful call.
+          * @default 'Done'
+         */
+        "doneLabel": string;
+        /**
+          * Non-negative elapsed time in milliseconds. Displayed only for Done.
+          * @minimum 0
+         */
+        "duration"?: number;
+        /**
+          * Caption for the error slot.
+          * @default 'Error'
+         */
+        "errorLabel": string;
+        /**
+          * Status text for a failed call.
+          * @default 'Failed'
+         */
+        "failedLabel": string;
+        /**
+          * Caption for the input slot.
+          * @default 'Input'
+         */
+        "inputLabel": string;
+        /**
+          * Language tag used to format the completed duration. Defaults to English.
+          * @default 'en'
+         */
+        "locale": string;
+        /**
+          * Tool identifier, such as search_docs, displayed in monospace.
+         */
+        "name": string;
+        /**
+          * Override the disclosure state. Without an override, failed calls are open and other calls are closed. Set open="false" for an explicit collapse. Using the summary sets the property to the reader's choice.
+         */
+        "open": boolean | undefined;
+        /**
+          * Caption for the output slot.
+          * @default 'Output'
+         */
+        "outputLabel": string;
+        /**
+          * Status text for a call waiting to run.
+          * @default 'Pending'
+         */
+        "pendingLabel": string;
+        /**
+          * Visible and accessible label for the built-in retry control.
+          * @default 'Retry'
+         */
+        "retryLabel": string;
+        /**
+          * Offer the built-in Retry button when the call fails.
+          * @default false
+         */
+        "retryable": boolean;
+        /**
+          * Status text for a call in progress.
+          * @default 'Running'
+         */
+        "runningLabel": string;
+        /**
+          * Lifecycle status. Unknown values display Pending.
+          * @default 'pending'
+         */
+        "status": KiToolCallStatus;
+        /**
+          * Optional human-readable label displayed beside the identifier.
+         */
+        "toolTitle"?: string;
+    }
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -2192,6 +2280,10 @@ export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
 export interface KiToastCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiToastElement;
+}
+export interface KiToolCallCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiToolCallElement;
 }
 declare global {
     interface HTMLKiAlertElementEventMap {
@@ -3222,6 +3314,31 @@ declare global {
         prototype: HTMLKiToasterElement;
         new (): HTMLKiToasterElement;
     };
+    interface HTMLKiToolCallElementEventMap {
+        "ki-tool-status-change": { name: string; status: KiToolCallStatus; label: string };
+        "ki-tool-retry": { name: string };
+    }
+    /**
+     * A disclosure for one assistant tool call, with a status and optional payloads.
+     * @whenToUse show which tool ran, its state and duration, and let the reader
+     * inspect the supplied input, output or error. Use a conversation log for status updates.
+     * @whenNotToUse collecting approval, running or configuring tools. Pair with a
+     * separate confirmation control for an approval decision.
+     */
+    interface HTMLKiToolCallElement extends Components.KiToolCall, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiToolCallElementEventMap>(type: K, listener: (this: HTMLKiToolCallElement, ev: KiToolCallCustomEvent<HTMLKiToolCallElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiToolCallElementEventMap>(type: K, listener: (this: HTMLKiToolCallElement, ev: KiToolCallCustomEvent<HTMLKiToolCallElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiToolCallElement: {
+        prototype: HTMLKiToolCallElement;
+        new (): HTMLKiToolCallElement;
+    };
     /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
@@ -3320,6 +3437,7 @@ declare global {
         "ki-textarea": HTMLKiTextareaElement;
         "ki-toast": HTMLKiToastElement;
         "ki-toaster": HTMLKiToasterElement;
+        "ki-tool-call": HTMLKiToolCallElement;
         "ki-tooltip": HTMLKiTooltipElement;
         "ki-video": HTMLKiVideoElement;
     }
@@ -5423,6 +5541,100 @@ declare namespace LocalJSX {
         "placement"?: KiToasterPlacement | (string & {});
     }
     /**
+     * A disclosure for one assistant tool call, with a status and optional payloads.
+     * @whenToUse show which tool ran, its state and duration, and let the reader
+     * inspect the supplied input, output or error. Use a conversation log for status updates.
+     * @whenNotToUse collecting approval, running or configuring tools. Pair with a
+     * separate confirmation control for an approval decision.
+     */
+    interface KiToolCall {
+        /**
+          * Status text for a call waiting on an approval decision.
+          * @default 'Needs approval'
+         */
+        "approvalLabel"?: string;
+        /**
+          * Status text for a successful call.
+          * @default 'Done'
+         */
+        "doneLabel"?: string;
+        /**
+          * Non-negative elapsed time in milliseconds. Displayed only for Done.
+          * @minimum 0
+         */
+        "duration"?: number;
+        /**
+          * Caption for the error slot.
+          * @default 'Error'
+         */
+        "errorLabel"?: string;
+        /**
+          * Status text for a failed call.
+          * @default 'Failed'
+         */
+        "failedLabel"?: string;
+        /**
+          * Caption for the input slot.
+          * @default 'Input'
+         */
+        "inputLabel"?: string;
+        /**
+          * Language tag used to format the completed duration. Defaults to English.
+          * @default 'en'
+         */
+        "locale"?: string;
+        /**
+          * Tool identifier, such as search_docs, displayed in monospace.
+         */
+        "name": string;
+        /**
+          * A request to retry this tool call. Bind a declared surface action to handle it.
+         */
+        "onKi-tool-retry"?: (event: KiToolCallCustomEvent<{ name: string }>) => void;
+        /**
+          * Once per status transition after initialization. Append one entry to the conversation log.
+         */
+        "onKi-tool-status-change"?: (event: KiToolCallCustomEvent<{ name: string; status: KiToolCallStatus; label: string }>) => void;
+        /**
+          * Override the disclosure state. Without an override, failed calls are open and other calls are closed. Set open="false" for an explicit collapse. Using the summary sets the property to the reader's choice.
+         */
+        "open"?: boolean | undefined;
+        /**
+          * Caption for the output slot.
+          * @default 'Output'
+         */
+        "outputLabel"?: string;
+        /**
+          * Status text for a call waiting to run.
+          * @default 'Pending'
+         */
+        "pendingLabel"?: string;
+        /**
+          * Visible and accessible label for the built-in retry control.
+          * @default 'Retry'
+         */
+        "retryLabel"?: string;
+        /**
+          * Offer the built-in Retry button when the call fails.
+          * @default false
+         */
+        "retryable"?: boolean;
+        /**
+          * Status text for a call in progress.
+          * @default 'Running'
+         */
+        "runningLabel"?: string;
+        /**
+          * Lifecycle status. Unknown values display Pending.
+          * @default 'pending'
+         */
+        "status"?: KiToolCallStatus;
+        /**
+          * Optional human-readable label displayed beside the identifier.
+         */
+        "toolTitle"?: string;
+    }
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -5861,6 +6073,24 @@ declare namespace LocalJSX {
         "max": number;
         "label": string;
     }
+    interface KiToolCallAttributes {
+        "name": string;
+        "toolTitle": string;
+        "status": KiToolCallStatus;
+        "duration": number;
+        "open": boolean | undefined;
+        "locale": string;
+        "retryable": boolean;
+        "pendingLabel": string;
+        "runningLabel": string;
+        "doneLabel": string;
+        "failedLabel": string;
+        "approvalLabel": string;
+        "inputLabel": string;
+        "outputLabel": string;
+        "errorLabel": string;
+        "retryLabel": string;
+    }
     interface KiTooltipAttributes {
         "label": string;
         "placement": KiTooltipPlacement;
@@ -5924,6 +6154,7 @@ declare namespace LocalJSX {
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
         "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
         "ki-toaster": Omit<KiToaster, keyof KiToasterAttributes> & { [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K] };
+        "ki-tool-call": Omit<KiToolCall, keyof KiToolCallAttributes> & { [K in keyof KiToolCall & keyof KiToolCallAttributes]?: KiToolCall[K] } & { [K in keyof KiToolCall & keyof KiToolCallAttributes as `attr:${K}`]?: KiToolCallAttributes[K] } & { [K in keyof KiToolCall & keyof KiToolCallAttributes as `prop:${K}`]?: KiToolCall[K] } & OneOf<"name", KiToolCall["name"], KiToolCallAttributes["name"]>;
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
         "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] } & OneOf<"label", KiVideo["label"], KiVideoAttributes["label"]>;
     }
@@ -6539,6 +6770,14 @@ declare module "@stencil/core" {
              * covers nothing.
              */
             "ki-toaster": LocalJSX.IntrinsicElements["ki-toaster"] & JSXBase.HTMLAttributes<HTMLKiToasterElement>;
+            /**
+             * A disclosure for one assistant tool call, with a status and optional payloads.
+             * @whenToUse show which tool ran, its state and duration, and let the reader
+             * inspect the supplied input, output or error. Use a conversation log for status updates.
+             * @whenNotToUse collecting approval, running or configuring tools. Pair with a
+             * separate confirmation control for an approval decision.
+             */
+            "ki-tool-call": LocalJSX.IntrinsicElements["ki-tool-call"] & JSXBase.HTMLAttributes<HTMLKiToolCallElement>;
             /**
              * A transient, text-only description bubble for one slotted trigger.
              * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or

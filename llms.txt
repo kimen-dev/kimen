@@ -96,6 +96,7 @@ methods, CSS custom properties and examples.
 - [ki-textarea](https://kimen.dev/llms/ki-textarea.md): free-form text longer than one line, such as comments, descriptions, messages, delivery notes, or addresses when paired with a matching `autocomplete` purpose.
 - [ki-toast](https://kimen.dev/llms/ki-toast.md): confirm an action that happened elsewhere on screen ("Changes saved", "Link copied"), report a background result ("Export ready"), or offer a quick undo.
 - [ki-toaster](https://kimen.dev/llms/ki-toaster.md): once per page (or once inside a modal `ki-dialog`), as the place every `ki-toast` of the application appears in: append toasts to it, or call `show()`.
+- [ki-tool-call](https://kimen.dev/llms/ki-tool-call.md): show which tool ran, its state and duration, and let the reader inspect the supplied input, output or error.
 - [ki-tooltip](https://kimen.dev/llms/ki-tooltip.md): add a brief clarifying hint for an icon-only, abbreviated, or otherwise ambiguous control when the same information is discoverable elsewhere in the interface.
 - [ki-video](https://kimen.dev/llms/ki-video.md): playable content the person deliberately chooses to watch — product tours, talks, tutorials, announcements — presented as a poster with one play control.
 

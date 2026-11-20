@@ -22,6 +22,8 @@
 - **Retry** (agent's choice, pending founder confirmation). Authors can supply an error message or their own action through the error slot. Failed calls with `retryable` also offer a built-in Retry button, which requests a declared `ki-tool-retry` action. The built-in control is a native ghost-style button. The host decides whether to run anything. Approval uses its own status label and can be paired with a separate confirmation surface.
 - **Presentation** (agent's choice, pending founder confirmation). Follow the reference's badge tones and code surface. Display only populated payload sections, and show the error section for failed calls. The title and slot labels follow the body typography. The spinner stops moving under reduced motion.
 
+- **API declaration** (agent's choice, pending founder confirmation). Use the major declaration required by the API gate for the regenerated loader Components and JSX namespaces.
+
 ## Gherkin
 
 ```gherkin

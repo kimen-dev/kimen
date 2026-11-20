@@ -17202,6 +17202,553 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-tool-call.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiToolCall",
+          "customElement": true,
+          "tagName": "ki-tool-call",
+          "description": "A disclosure for one assistant tool call, with a status and optional payloads.",
+          "whenToUse": "show which tool ran, its state and duration, and let the reader\ninspect the supplied input, output or error. Use a conversation log for status updates.",
+          "whenNotToUse": "collecting approval, running or configuring tools. Pair with a\nseparate confirmation control for an approval decision.",
+          "attributes": [
+            {
+              "name": "approval-label",
+              "fieldName": "approvalLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Needs approval'",
+              "description": "Status text for a call waiting on an approval decision."
+            },
+            {
+              "name": "done-label",
+              "fieldName": "doneLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Done'",
+              "description": "Status text for a successful call."
+            },
+            {
+              "name": "duration",
+              "fieldName": "duration",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
+              "minimum": 0
+            },
+            {
+              "name": "error-label",
+              "fieldName": "errorLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Error'",
+              "description": "Caption for the error slot."
+            },
+            {
+              "name": "failed-label",
+              "fieldName": "failedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Failed'",
+              "description": "Status text for a failed call."
+            },
+            {
+              "name": "input-label",
+              "fieldName": "inputLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Input'",
+              "description": "Caption for the input slot."
+            },
+            {
+              "name": "locale",
+              "fieldName": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "'en'",
+              "description": "Language tag used to format the completed duration. Defaults to English."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Tool identifier, such as search_docs, displayed in monospace.",
+              "required": true
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice."
+            },
+            {
+              "name": "output-label",
+              "fieldName": "outputLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Output'",
+              "description": "Caption for the output slot."
+            },
+            {
+              "name": "pending-label",
+              "fieldName": "pendingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Pending'",
+              "description": "Status text for a call waiting to run."
+            },
+            {
+              "name": "retry-label",
+              "fieldName": "retryLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Retry'",
+              "description": "Visible and accessible label for the built-in retry control."
+            },
+            {
+              "name": "retryable",
+              "fieldName": "retryable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Offer the built-in Retry button when the call fails."
+            },
+            {
+              "name": "running-label",
+              "fieldName": "runningLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Running'",
+              "description": "Status text for a call in progress."
+            },
+            {
+              "name": "status",
+              "fieldName": "status",
+              "type": {
+                "text": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\""
+              },
+              "default": "'pending'",
+              "description": "Lifecycle status. Unknown values display Pending."
+            },
+            {
+              "name": "title",
+              "fieldName": "toolTitle",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional human-readable label displayed beside the identifier."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "approvalLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Needs approval'",
+              "description": "Status text for a call waiting on an approval decision.",
+              "attribute": "approval-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "doneLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Done'",
+              "description": "Status text for a successful call.",
+              "attribute": "done-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "duration",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Non-negative elapsed time in milliseconds. Displayed only for Done.",
+              "attribute": "duration",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "errorLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Error'",
+              "description": "Caption for the error slot.",
+              "attribute": "error-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "failedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Failed'",
+              "description": "Status text for a failed call.",
+              "attribute": "failed-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "inputLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Input'",
+              "description": "Caption for the input slot.",
+              "attribute": "input-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'en'",
+              "description": "Language tag used to format the completed duration. Defaults to English.",
+              "attribute": "locale",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Tool identifier, such as search_docs, displayed in monospace.",
+              "attribute": "name",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "privacy": "public",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Override the disclosure state. Without an override, failed calls are open\nand other calls are closed. Set open=\"false\" for an explicit collapse.\nUsing the summary sets the property to the reader's choice.",
+              "attribute": "open",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "outputLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Output'",
+              "description": "Caption for the output slot.",
+              "attribute": "output-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "pendingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Pending'",
+              "description": "Status text for a call waiting to run.",
+              "attribute": "pending-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "retryLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Retry'",
+              "description": "Visible and accessible label for the built-in retry control.",
+              "attribute": "retry-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "retryable",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Offer the built-in Retry button when the call fails.",
+              "attribute": "retryable",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "runningLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Running'",
+              "description": "Status text for a call in progress.",
+              "attribute": "running-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "privacy": "public",
+              "type": {
+                "text": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\""
+              },
+              "default": "'pending'",
+              "description": "Lifecycle status. Unknown values display Pending.",
+              "attribute": "status",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "toolTitle",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional human-readable label displayed beside the identifier.",
+              "attribute": "title",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-tool-retry",
+              "type": {
+                "text": "CustomEvent<{ name: string }>"
+              },
+              "description": "A request to retry this tool call. Bind a declared surface action to handle it."
+            },
+            {
+              "name": "ki-tool-status-change",
+              "type": {
+                "text": "CustomEvent<{ name: string; status: KiToolCallStatus; label: string }>"
+              },
+              "description": "Once per status transition after initialization. Append one entry to the conversation log."
+            }
+          ],
+          "slots": [
+            {
+              "name": "error",
+              "description": "A failure message or a consumer-owned retry control, visible on failed calls."
+            },
+            {
+              "name": "input",
+              "description": "Arguments supplied to the tool. Use ki-code-block for structured text."
+            },
+            {
+              "name": "output",
+              "description": "Result returned by the tool. Use ki-code-block for structured text."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "body",
+              "description": "Content disclosed by opening the call."
+            },
+            {
+              "name": "disclosure",
+              "description": "Native details surface."
+            },
+            {
+              "name": "error",
+              "description": "Error section for failed calls."
+            },
+            {
+              "name": "input",
+              "description": "Input section with its caption and payload."
+            },
+            {
+              "name": "name",
+              "description": "Monospaced tool identifier."
+            },
+            {
+              "name": "output",
+              "description": "Output section with its caption and payload."
+            },
+            {
+              "name": "payload",
+              "description": "Surface for the input and output content."
+            },
+            {
+              "name": "retry",
+              "description": "Opt-in action button for failed calls."
+            },
+            {
+              "name": "status",
+              "description": "Badge that contains the status text and completed duration."
+            },
+            {
+              "name": "summary",
+              "description": "Native disclosure control and its status row."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-badge-sm-height",
+              "description": "dimension used by the badge component for sm height."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-tool-call-backdrop-filter",
+              "description": "Whole filter behind the call."
+            },
+            {
+              "name": "--ki-tool-call-bg",
+              "description": "Solid background of the call disclosure."
+            },
+            {
+              "name": "--ki-tool-call-bg-image",
+              "description": "Optional image over the solid background."
+            },
+            {
+              "name": "--ki-tool-call-border",
+              "description": "Border ink around the call."
+            },
+            {
+              "name": "--ki-tool-call-border-width",
+              "description": "Width of the disclosure frame."
+            },
+            {
+              "name": "--ki-tool-call-caption-size",
+              "description": "Size of captions and the tool identifier."
+            },
+            {
+              "name": "--ki-tool-call-code-bg",
+              "description": "Background for input and output payloads."
+            },
+            {
+              "name": "--ki-tool-call-code-fg",
+              "description": "Plain text ink on the payload surface."
+            },
+            {
+              "name": "--ki-tool-call-code-radius",
+              "description": "Corners of the plain payload surface."
+            },
+            {
+              "name": "--ki-tool-call-fg",
+              "description": "Text ink on the call surface."
+            },
+            {
+              "name": "--ki-tool-call-font-size",
+              "description": "Body text size."
+            },
+            {
+              "name": "--ki-tool-call-gap",
+              "description": "Gap between summary items and body sections."
+            },
+            {
+              "name": "--ki-tool-call-icon",
+              "description": "Ink of the decorative icons."
+            },
+            {
+              "name": "--ki-tool-call-icon-size",
+              "description": "Size of the wrench and chevron."
+            },
+            {
+              "name": "--ki-tool-call-inline-gap",
+              "description": "Gap between status items and after each caption."
+            },
+            {
+              "name": "--ki-tool-call-line-height",
+              "description": "Body text line height."
+            },
+            {
+              "name": "--ki-tool-call-mono-family",
+              "description": "Typeface of the tool identifier."
+            },
+            {
+              "name": "--ki-tool-call-padding",
+              "description": "Horizontal inset and space after the body."
+            },
+            {
+              "name": "--ki-tool-call-radius",
+              "description": "Corners of the disclosure surface."
+            },
+            {
+              "name": "--ki-tool-call-transition-duration",
+              "description": "Duration of the disclosure chevron rotation."
+            },
+            {
+              "name": "--ki-tool-call-transition-easing",
+              "description": "Easing of the disclosure chevron rotation."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiToolCall",
+          "declaration": {
+            "name": "KiToolCall",
+            "module": "dist/components/ki-tool-call.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-tool-call",
+          "declaration": {
+            "name": "KiToolCall",
+            "module": "dist/components/ki-tool-call.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-tooltip.js",
       "declarations": [
         {
