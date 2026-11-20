@@ -56,17 +56,10 @@ function partOf(element: HTMLElement, name: string): HTMLElement {
 }
 
 async function scrollPageTo(top: number): Promise<void> {
-  const scrolled = new Promise<void>((resolve) => {
-    window.addEventListener(
-      'scroll',
-      () => {
-        resolve();
-      },
-      { once: true },
-    );
-  });
+  const { scrollHeight, clientHeight } = document.documentElement;
+  const target = Math.min(top, scrollHeight - clientHeight);
   window.scrollTo({ top, behavior: 'instant' });
-  await scrolled;
+  await expect.poll(() => Math.abs(window.scrollY - target)).toBeLessThan(1);
 }
 
 async function mountScrollFab(): Promise<HTMLElement> {
@@ -77,7 +70,12 @@ async function mountScrollFab(): Promise<HTMLElement> {
 
 async function expectCollapsed(control: HTMLElement): Promise<void> {
   await expect.element(composeText).not.toBeVisible();
-  await expect.poll(() => Math.abs(control.getBoundingClientRect().width - 56)).toBeLessThan(0.5);
+  await expect
+    .poll(() => {
+      const { width, height } = control.getBoundingClientRect();
+      return Math.max(Math.abs(width - 56), Math.abs(height - 56));
+    })
+    .toBeLessThan(0.5);
 }
 
 it.each([

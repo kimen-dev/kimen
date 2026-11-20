@@ -151,8 +151,9 @@ Feature: Floating action button
 
 Each item is an agent's choice, pending founder confirmation.
 
-1. Scroll collapse watches the owner document's viewport. A component starts expanded, ignores unchanged or out-of-range scroll positions, and restores the label when either opt-in is cleared. Nested scroll regions keep their own scrolling behavior.
+1. Scroll collapse watches the owner document's viewport. A component starts expanded, bounds scroll positions to the document range, and restores the label when either opt-in is cleared. Nested scroll regions keep their own scrolling behavior.
 2. Fixed positioning uses a 16px logical edge offset and an inherited `--ki-fab-mobile-nav-block-size` reservation, which excludes the bottom safe area and defaults to zero. A page with mobile navigation supplies its visible height. The page controls content clearance.
 3. A provided decorative icon slot overrides the name fallback. The application registers named Lucide glyphs via the existing per-icon imports. The public CSS parts are `control`, `icon` and `label`.
 4. Reduced motion makes the change immediate. Regular motion transitions the label and spacing without replacing the focused native element.
 5. Use the current `surface.s1` alias for the raised variant. The sizes remain constant under coarse pointer and compact density.
+6. Hover follows the issue's elevation step. Optional background imagery stays theme-controlled.

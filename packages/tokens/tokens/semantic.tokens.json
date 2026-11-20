@@ -1880,6 +1880,28 @@
     },
     "layout": {
       "$type": "dimension",
+      "floating-action": {
+        "md": {
+          "$value": "{ki.space.16xl}",
+          "$description": "Default floating action footprint (56px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.20xl}",
+          "$description": "Medium floating action footprint (80px at the default root size)."
+        },
+        "xl": {
+          "$value": "{ki.space.22xl}",
+          "$description": "Large floating action footprint (96px at the default root size)."
+        },
+        "lg-icon": {
+          "$value": "{ki.space.9xl}",
+          "$description": "Medium floating action glyph (28px at the default root size)."
+        },
+        "xl-icon": {
+          "$value": "{ki.space.11xl}",
+          "$description": "Large floating action glyph (36px at the default root size)."
+        }
+      },
       "spacing": {
         "zero": {
           "$value": "{ki.space.zero}",
