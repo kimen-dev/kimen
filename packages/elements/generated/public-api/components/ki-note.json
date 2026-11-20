@@ -1,0 +1,423 @@
+{
+  "component": {
+    "attributes": {
+      "icon": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Uses caption text at sm and body text at md. Unknown values use md.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Selects the background tint and decorative icon. Unknown values use neutral.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter behind the note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a neutral note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the note's solid background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-danger-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a danger note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-danger-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink of a danger note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-danger-icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative icon ink of a danger note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink of a neutral note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Note text font family.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium note text size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the icon and the text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative icon ink of a neutral note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-icon-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium icon offset from the first line's block start.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium note icon size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-info-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of an info note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-info-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink of an info note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-info-icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative icon ink of an info note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium note text line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium note block padding.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium note inline padding.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-primary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a primary note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink of a primary note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-primary-icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative icon ink of a primary note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Note surface corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-sm-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small note caption size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-sm-icon-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small icon offset from the first line's block start.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-sm-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small note icon size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-sm-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small note caption line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-sm-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small note block padding.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-sm-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small note inline padding.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-success-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a success note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-success-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink of a success note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-success-icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative icon ink of a success note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-warning-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a warning note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-warning-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text ink of a warning note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-note-warning-icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative icon ink of a warning note.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A compact, static explanation beside a control or inside a card.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The decorative icon frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "message": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The explanatory text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "note": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The surface, including the tint, typography and spacing.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "icon": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Uses caption text at sm and body text at md. Unknown values use md.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "tone": {
+        "default": "'neutral'",
+        "deprecatedSince": null,
+        "description": "Selects the background tint and decorative icon. Unknown values use neutral.",
+        "replacement": null,
+        "required": false,
+        "type": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Short explanatory text that carries the full meaning.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A decorative glyph that replaces the tone's built-in icon.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-note.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-note.d.ts",
+    "symbols": {
+      "KiNote": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiNote extends Components.KiNote, HTMLElement {\n}\nexport const KiNote: {\n    prototype: KiNote;\n    new (): KiNote;\n};"
+      },
+      "KiNoteSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiNoteSize = 'sm' | 'md';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-note.js"
+  }
+}

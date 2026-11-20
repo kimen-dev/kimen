@@ -1,0 +1,58 @@
+{
+  "ki": {
+    "image": {
+      "radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of the default media frame."
+      },
+      "radius-md": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Corner radius of the medium media frame."
+      },
+      "fallback-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Solid fill behind the image and fallback symbol."
+      },
+      "fallback-fg": {
+        "$value": "{ki.text.med-em}",
+        "$description": "Foreground of the fallback symbol."
+      },
+      "fallback-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional background image over the media fill."
+      },
+      "fallback-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete filter applied behind the media surface."
+      },
+      "fallback-icon-size": {
+        "$value": "{ki.glyph.size.md}",
+        "$description": "Inline and block size of the unavailable-image symbol."
+      },
+      "fallback-icon-stroke-width": {
+        "$value": "{ki.glyph.stroke-width}",
+        "$description": "Stroke width of the unavailable-image symbol."
+      },
+      "caption-gap": {
+        "$value": "{ki.spacing.media-caption}",
+        "$description": "Space between the image frame and its caption."
+      },
+      "caption-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Text colour of the visible caption."
+      },
+      "caption-font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Typeface of the visible caption."
+      },
+      "caption-font-size": {
+        "$value": "{ki.typography.size.caption-2}",
+        "$description": "Type size of the visible caption."
+      },
+      "caption-line-height": {
+        "$value": "{ki.typography.line-height.caption-2}",
+        "$description": "Line height of the visible caption."
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "ki": {
+    "stack": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Default gap of a stack."
+      }
+    },
+    "grid": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Default gap between grid tracks."
+      },
+      "min": {
+        "$type": "dimension",
+        "$value": "{ki.layout.grid-min}",
+        "$description": "Default minimum size of an automatic grid track."
+      }
+    }
+  }
+}

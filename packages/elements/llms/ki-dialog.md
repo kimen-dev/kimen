@@ -12,7 +12,7 @@ the least destructive action.
 
 ## When not to use
 
-non-blocking feedback (`ki-alert`, future `ki-toast`),
+non-blocking feedback (`ki-alert`, `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows
 (navigate or use a future full-screen variant), menus, or pickers.
 

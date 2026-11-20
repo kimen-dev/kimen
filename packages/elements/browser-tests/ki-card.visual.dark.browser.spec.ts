@@ -8,5 +8,4 @@ runVisualSuite({
   component: 'ki-card',
   define: [defineKiCard],
   scheme: 'dark',
-  themes: ['onmars', 'material3'],
 });

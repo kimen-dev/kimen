@@ -52,7 +52,7 @@
       },
       "backdrop-filter": {
         "$type": "other",
-        "$value": "{ki.effect.backdrop-filter-none}",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete card backdrop filter, off by default."
       },
       "elevated-bg": {

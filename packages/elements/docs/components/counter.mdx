@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-counter" />
+
+# ki-counter
+
+Show unread or pending items on a trigger, or a presence dot on an avatar.
+The counter ignores pointer input and stays out of the accessibility tree.
+Set the full, localized meaning in the trigger's accessible name.
+
+```html
+<ki-avatar label="Ana García, online" initials="AG">
+  <ki-counter slot="counter" tone="success" dot></ki-counter>
+</ki-avatar>
+
+<a id="inbox-link" href="/inbox" aria-label="Inbox, 120 unread">Inbox</a>
+<ki-counter for="inbox-link" value="120" max="99"></ki-counter>
+```
+
+Use the `counter` slot on `ki-icon-button` or `ki-avatar`. A standalone
+counter with `for` uses a literal ID in its document or shadow root.
+Without `for` or a slot, the counter renders inline for custom layouts.
+
+| Property | Default | Purpose |
+| --- | --- | --- |
+| `value` | unset | A count below one hides the pill. |
+| `max` | `99` | Higher values display the cap followed by a plus sign. |
+| `dot` | `false` | Shows a dot regardless of value. |
+| `tone` | `danger` | Also accepts `primary`, `success`, and `neutral`. |
+| `for` | unset | ID of an external trigger. |
+
+Use `--ki-counter-bg` and `--ki-counter-fg` for the danger paint, or their
+tone-specific equivalents. Use `--ki-counter-ring` to match the surrounding
+surface and `::part(indicator)` to style the painted box.
+
+For meaningful updates, change the host label and write one message to a
+pre-existing, page-owned polite status region.

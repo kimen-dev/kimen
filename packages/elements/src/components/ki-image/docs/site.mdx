@@ -1,0 +1,45 @@
+---
+title: ki-image
+description: An image frame with lazy loading, alternative text, an optional caption, and a fallback.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+import hills from '../fixtures/hills.svg?url&no-inline';
+
+Use `ki-image` for one image with a predictable crop or a fallback. Give an
+informative image an `alt` description of the details that matter on this page.
+Use the `caption` slot for supporting context or attribution.
+
+<Demo layout="block" code={`<ki-image src="${hills}" alt="Low green hills under a pale sky" ratio="16:9">
+  <span slot="caption">View from the ridge</span>
+</ki-image>`} />
+
+An explicit `ratio` keeps the frame the same size while the image loads or
+when it falls back. `auto` reserves 16:9 until the source supplies its natural
+ratio. `fit="contain"` keeps the entire image visible in a fixed frame.
+Loading is lazy by default. Use `loading="eager"` for an image that must load
+immediately.
+
+## Fallback and accessibility
+
+An unavailable or refused source shows a fallback in the same frame. The
+accessible name includes the alt, for example `Image unavailable: Office floor plan`.
+Use `fallback-label` to translate the prefix. A missing or blank `alt` on an
+informative image shows the fallback before the source is requested.
+
+Use `decorative` for imagery that adds no information. Assistive technology
+skips decorative images and their fallback, while an authored caption stays
+available. The image frame stays out of sequential keyboard navigation.
+
+`src` accepts HTTP(S) and relative references. The guarded catalog also applies
+any configured origin allowlist before rendering. `ki-error` signals a failed
+image load or URL refusal.
+
+## API reference
+
+<CemApi tag="ki-image" />
+
+## Workshop
+
+[Open ki-image in Storybook](/storybook/?path=/docs/docs-components-ki-image--docs)

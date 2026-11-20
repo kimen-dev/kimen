@@ -92,9 +92,9 @@ This table is the **A2UI 0.9.1** matrix (spec 029); the 1.0 matrix is under
 [A2UI 1.0](#a2ui-10) below.
 
 `mapped` types render as the listed `ki-*` components. `inline` types carry no
-element of their own: their resolved string becomes inert text in the parent
-slot. `layout` types render no element: their children join the parent slot
-in order. `unmapped` types degrade per node to a fixed fallback that carries no
+element of their own. Their resolved string becomes inert text in the parent
+slot. A direct Text child of Row or Column gets a neutral stack to occupy its
+own layout item. `unmapped` types degrade per node to a fixed fallback that carries no
 agent-supplied content (scenarios S4/S11); a type outside the basic catalog
 degrades the same way. `forbidden` types reject the whole message on security
 grounds (scenario S7). A property the basic catalog does not declare for the
@@ -103,8 +103,8 @@ type rejects the message (`unknown-property`, scenario S9).
 | A2UI type     | Coverage  | Catalog counterpart           |
 | ------------- | --------- | ----------------------------- |
 | Text          | inline    | —                             |
-| Row           | layout    | —                             |
-| Column        | layout    | —                             |
+| Row           | mapped    | ki-stack                      |
+| Column        | mapped    | ki-stack                      |
 | List          | mapped    | ki-list, ki-list-item         |
 | Card          | mapped    | ki-card                       |
 | Tabs          | mapped    | ki-tabs, ki-tab, ki-tab-panel |
@@ -112,9 +112,9 @@ type rejects the message (`unknown-property`, scenario S9).
 | Button        | mapped    | ki-button                     |
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
-| ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
-| Image         | unmapped  | —                             |
-| Icon          | unmapped  | —                             |
+| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-checkbox-group, ki-checkbox |
+| Image         | mapped    | ki-image                      |
+| Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
 | Modal         | unmapped  | —                             |
@@ -125,11 +125,10 @@ type rejects the message (`unknown-property`, scenario S9).
 | script        | forbidden | —                             |
 | iframe        | forbidden | —                             |
 
-When the component `root` translates to anything other than one catalog node
-(a `Column` or `Row` root with several children, or a `Text` root), the
-adapter wraps it in `ki-card`: the guarded renderer renders a single root
-node and the catalog has no neutral layout element yet. This holds for both
-versions.
+Row maps to `ki-stack direction="row"` and Column uses the default column
+stack. Both retain their children in order at every depth. An inline or
+empty root still uses the `ki-card` fallback to satisfy the guarded renderer's
+single root requirement.
 
 ## Client functions
 
@@ -174,20 +173,41 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
 
 - `Text.variant` (h1 to h5, caption): the text renders without heading or
   caption semantics.
-- `Row`/`Column` `justify` and `align`, and `weight` on any component: not
-  rendered; the order of children is kept.
+- Row and Column map `justify` values `start`, `center`, `end` and
+  `spaceBetween` (as `between`). They map `align` values `start`, `center`,
+  `end`, `stretch` and `baseline`. Other values keep the stack defaults.
+- A2UI `weight` has no representation in the guarded catalog's child slots.
+  Authors using HTML can opt a direct stack child into growth with `data-grow`.
 - `List.direction` and `align`: not rendered; each child becomes a
   `ki-list-item`.
+- `Image.url` becomes `ki-image` `src` and passes through the guarded URL
+  policy. `accessibility.label` supplies the alternative text and
+  `accessibility.hidden: true` marks the image as decorative. An informative
+  image with a missing or blank label uses the per-node fallback and reports
+  `missing-image-alt`. `cover` and `contain` pass through to `fit`. Other fit
+  values and the `variant` size hint use the `ki-image` defaults.
 - `Button.variant`: `primary` becomes `variant="primary"`, `borderless`
   becomes `variant="ghost"`, `default` keeps the catalog default.
 - `TextField.variant`: `longText` becomes `ki-textarea`, `obscured` becomes
   `ki-input type="password"`, `number` and `shortText` become `ki-input`;
   `validationRegexp` is not evaluated.
 - `ChoicePicker`: `mutuallyExclusive` becomes `ki-radio-group` with the first
-  selected value; `multipleSelection` degrades (reason `unsupported-variant`);
-  `displayStyle` and `filterable` are not rendered.
-- `accessibility` is accepted and not rendered; `createSurface.theme` is
-  accepted and ignored (appearance stays token-driven, Art. VI).
+  selected value. `multipleSelection` becomes a `ki-checkbox-group` with
+  a checkbox per option and checked states from the selected value list.
+  Provide a label to name either group. An unlabeled multiple-selection
+  picker uses the accessible fallback. `displayStyle` and `filterable`
+  are not rendered.
+- `Image` consumes the accessibility label and hidden flag. All types
+  accept the remaining accessibility metadata. `createSurface.theme` is
+  accepted and appearance stays token-driven (Art. VI).
+- `Icon.name` accepts static names and bindings in both versions. The host
+  imports each Lucide module that its surface uses. For example, `check`
+  uses `@kimen/elements/icons/check` and `warning` uses
+  `@kimen/elements/icons/triangle-alert`. Other strings pass through as Lucide
+  names. A binding without a value contributes no glyph while the model loads. The
+  guarded renderer rejects an unavailable name and preserves the previous
+  surface. The `svgPath` form uses the fixed fallback with reason
+  `unsupported-variant`. Icons from the adapter are decorative. [Name mappings](src/translate.ts)
 
 ## A2UI 1.0
 
@@ -204,8 +224,8 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | A2UI type     | Coverage  | Catalog counterpart           |
 | ------------- | --------- | ----------------------------- |
 | Text          | inline    | —                             |
-| Row           | layout    | —                             |
-| Column        | layout    | —                             |
+| Row           | mapped    | ki-stack                      |
+| Column        | mapped    | ki-stack                      |
 | List          | mapped    | ki-list, ki-list-item         |
 | Card          | mapped    | ki-card                       |
 | Tabs          | mapped    | ki-tabs, ki-tab, ki-tab-panel |
@@ -213,9 +233,9 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | Button        | mapped    | ki-button                     |
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
-| ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
-| Image         | unmapped  | —                             |
-| Icon          | unmapped  | —                             |
+| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-checkbox-group, ki-checkbox |
+| Image         | mapped    | ki-image                      |
+| Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
 | Modal         | unmapped  | —                             |
@@ -284,8 +304,9 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
 - `TextField.placeholder` becomes the `placeholder` of `ki-input` or
   `ki-textarea`; `TextField.variant` maps as in 0.9.1; `validationRegexp` no
   longer exists (`@checks` with `regex`).
-- `@accessibility` and `@metadata` are accepted and not rendered; `@checks`
-  is accepted and not evaluated.
+- `Image` reads its label and hidden flag from `@accessibility`. The
+  remaining `@accessibility` attributes and `@metadata` are accepted as
+  metadata. The adapter accepts `@checks` without evaluating them.
 - `Text.variant` (`caption`, `body`; 1.0 dropped the headings), `weight`,
   `Video.posterUrl` and `Slider.steps`: not rendered.
 - `sendDataModel` metadata travels under `a2uiRendererDataModel` with
@@ -310,12 +331,12 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
   rejected.
 - **Surface deletion.** `deleteSurface` drops the adapter's state; the host
   owns the teardown of the surface element.
-- **Text, image and layout primitives (spec 037).** Until the catalog's
-  text, image and layout primitives merge, `Text` stays `inline`,
-  `Row`/`Column` stay `layout` and `Image` stays `unmapped` in both matrices;
-  when they land, both matrices switch those rows together.
+- **Text and layout primitives (spec 037).** `Text` renders inline, and
+  `Row` and `Column` flatten into their parent slot. Both matrices retain
+  these mappings pending the adapter's adoption of native primitives.
 - **1.0 accessibility attributes.** 1.0 asks renderers to plumb
-  `@accessibility` (label, description, live, hidden); it is accepted and not
-  rendered until the catalog exposes a neutral accessible-name channel.
+  `@accessibility` (label, description, live, hidden). The adapter maps
+  `Image` label and hidden into the element's image-specific API. Wider
+  support awaits a neutral accessibility channel in the catalog.
 - **No agent function calls.** The adapter neither answers
   `callRendererFunction` with a result nor issues `callAgentFunction`.
