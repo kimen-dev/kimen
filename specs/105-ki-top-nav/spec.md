@@ -34,6 +34,17 @@ Link and action destinations belong to the consuming app.
   the contrast-more mode strengthens it. Draw the current indicator as a
   logical border so forced colors can preserve the mark.
 
+- Agent's choice, pending founder confirmation. Record the measured MCP
+  Apps and MCP server byte increases in the component budget metadata.
+  The baseline is the starting commit `183f880`. Both builds used Node
+  26.5.0 and matching dependency layouts. The values below are exact
+  positive deltas for the whole artifacts.
+
+  | Artifact | Raw bytes | Gzip bytes | Brotli bytes |
+  | --- | ---: | ---: | ---: |
+  | MCP Apps self-contained document | 22905 | 5751 | 4778 |
+  | MCP server binary | 36052 | 8091 | 5661 |
+
 ## Scenario Family Coverage
 
 | Family                 | Scenario IDs                            | N/A justification                                                        |
