@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 456 semantic
-and 1518 component tokens. Values are the resolved **onmars light**
+and 1526 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -187,6 +187,11 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-layout-floating-action-lg` | `5rem` | Medium floating action footprint (80px at the default root size). |
+| `--ki-layout-floating-action-lg-icon` | `1.75rem` | Medium floating action glyph (28px at the default root size). |
+| `--ki-layout-floating-action-md` | `3.5rem` | Default floating action footprint (56px at the default root size). |
+| `--ki-layout-floating-action-xl` | `6rem` | Large floating action footprint (96px at the default root size). |
+| `--ki-layout-floating-action-xl-icon` | `2.25rem` | Large floating action glyph (36px at the default root size). |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
@@ -358,16 +363,6 @@ every component at once.
 | `--ki-placeholder-rect-size` | `6rem` | Default block size of a loading media placeholder. |
 | `--ki-placeholder-shimmer-duration` | `1400ms` | Duration of one loading highlight sweep. |
 | `--ki-placeholder-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | A soft currentColor highlight that can sweep across a loading placeholder. |
-
-### `ki.scale-control`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-scale-control-coarse-target` | `44px` | Minimum grip target when a value scale has a coarse primary pointer. |
-| `--ki-scale-control-mark-width` | `1px` | Thickness of a tick marking an interval. |
-| `--ki-scale-control-thumb-border-width` | `0.125rem` | Outline thickness of the visible grip. |
-| `--ki-scale-control-track-height` | `0.25rem` | Thickness of the inactive rail of a value scale. |
-| `--ki-scale-control-vertical-length` | `8rem` | Length of a vertical value scale. |
 
 ### `ki.spacing`
 
@@ -1351,6 +1346,42 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-empty-state-tile-warning-bg` | `#fcf0dc` | Background of the warning decorative tile. |
 | `--ki-empty-state-tile-warning-fg` | `#945b05` | Glyph ink on the warning decorative tile. |
 
+### `ki-fab`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-fab-backdrop-filter` | `none` | Complete optional filter behind the FAB. |
+| `--ki-fab-bg` | `#ffebe5` | Tinted secondary FAB fill. |
+| `--ki-fab-bg-image` | `none` | Optional layer painted over the FAB fill. |
+| `--ki-fab-collapse-duration` | `150ms` | Duration of the extended FAB footprint change. |
+| `--ki-fab-collapse-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the extended FAB footprint change. |
+| `--ki-fab-fg` | `#9a3715` | Ink on the tinted secondary FAB. |
+| `--ki-fab-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface for FAB labels. |
+| `--ki-fab-font-size` | `0.9375rem` | Text size for extended FAB labels. |
+| `--ki-fab-font-weight` | `700` | Text weight for extended FAB labels. |
+| `--ki-fab-forced-colors-border-width` | `1px` | Boundary width for the FAB in forced colors. |
+| `--ki-fab-gap` | `0.5rem` | Space between icon and label in an extended FAB. |
+| `--ki-fab-hover-shadow` | `0 4px 12px 0 rgba(24, 22, 19, 0.07), 0 20px 44px 0 rgba(24, 22, 19, 0.12), 0 18px 40px 0 transparent` | FAB elevation for a pointer that can hover. |
+| `--ki-fab-icon-size` | `1.5rem` | Glyph size of the default FAB. |
+| `--ki-fab-lg-icon-size` | `1.75rem` | Glyph size of the medium FAB. |
+| `--ki-fab-lg-radius` | `20px` | Corner radius of the medium FAB. |
+| `--ki-fab-lg-size` | `5rem` | Minimum footprint of the medium FAB. |
+| `--ki-fab-line-height` | `1.5rem` | Line height for extended FAB labels. |
+| `--ki-fab-mobile-nav-block-size` | `0rem` | Height to reserve for mobile navigation, excluding the safe-area inset. |
+| `--ki-fab-offset` | `1rem` | Fixed FAB gap to the viewport edge or mobile navigation. |
+| `--ki-fab-padding-inline-end` | `1.125rem` | Inline end padding of an extended FAB. |
+| `--ki-fab-padding-inline-start` | `1rem` | Inline start padding of an extended FAB. |
+| `--ki-fab-primary-bg` | `#1d1a16` | Strong primary FAB fill. |
+| `--ki-fab-primary-fg` | `#ffffff` | Ink on the strong primary FAB. |
+| `--ki-fab-radius` | `16px` | Corner radius of the default FAB size. |
+| `--ki-fab-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Resting FAB elevation. |
+| `--ki-fab-size` | `3.5rem` | Minimum FAB footprint in the default size. |
+| `--ki-fab-surface-bg` | `#f9f7f4` | Raised surface FAB fill. |
+| `--ki-fab-surface-fg` | `#ad411c` | Ink on the raised surface FAB. |
+| `--ki-fab-xl-icon-size` | `2.25rem` | Glyph size of the large FAB. |
+| `--ki-fab-xl-radius` | `28px` | Corner radius of the large FAB. |
+| `--ki-fab-xl-size` | `6rem` | Minimum footprint of the large FAB. |
+
 ### `ki-format`
 
 | Token | Value (onmars light) | Description |
@@ -1950,34 +1981,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-skeleton-shimmer-duration` | `1400ms` | Duration of a shimmer sweep. |
 | `--ki-skeleton-shimmer-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the shimmer sweep. |
 | `--ki-skeleton-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | Image of the moving highlight. Use currentColor to inherit the highlight colour. |
-
-### `ki-slider`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-slider-coarse-target` | `44px` | Minimum target size on a coarse pointer. |
-| `--ki-slider-fill-backdrop-filter` | `none` | Optional effect behind the active rail. |
-| `--ki-slider-fill-bg` | `#1d1a16` | Colour of the active section of the rail. |
-| `--ki-slider-fill-bg-image` | `none` | Optional image painted on the active rail. |
-| `--ki-slider-gap` | `0.5rem` | Gap between the slider control and its labels. |
-| `--ki-slider-label-bg` | `rgba(0, 0, 0, 0)` | Background beneath the field label. |
-| `--ki-slider-label-fg` | `#181613` | Ink of the field label. |
-| `--ki-slider-mark-width` | `1px` | Thickness of each interval tick. |
-| `--ki-slider-radius` | `1000px` | Round rail, grip and midpoint tick corners. |
-| `--ki-slider-text-bg` | `rgba(0, 0, 0, 0)` | Background beneath the value readout and help. |
-| `--ki-slider-text-fg` | `#181613` | Ink of the value readout and help. |
-| `--ki-slider-thumb-backdrop-filter` | `none` | Optional effect behind the grip. |
-| `--ki-slider-thumb-bg` | `#ffffff` | Grip surface behind the outline. |
-| `--ki-slider-thumb-bg-image` | `none` | Optional image painted on the grip. |
-| `--ki-slider-thumb-border` | `#1d1a16` | Outline colour of the visible grip. |
-| `--ki-slider-thumb-border-width` | `0.125rem` | Outline thickness of the visible grip. |
-| `--ki-slider-thumb-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Optional grip elevation. |
-| `--ki-slider-thumb-size` | `1.25rem` | Diameter of the visible grip within the pointer target. |
-| `--ki-slider-track-backdrop-filter` | `none` | Optional effect behind the inactive rail. |
-| `--ki-slider-track-bg` | `#86827b` | Inactive rail colour against the surrounding surface. |
-| `--ki-slider-track-bg-image` | `none` | Optional image painted on the inactive rail. |
-| `--ki-slider-track-height` | `0.25rem` | Inactive rail thickness. |
-| `--ki-slider-vertical-length` | `8rem` | Length of the vertical rail. |
 
 ### `ki-spinner`
 

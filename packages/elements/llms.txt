@@ -50,6 +50,7 @@ methods, CSS custom properties and examples.
 - [ki-dialog](llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
 - [ki-empty-state](llms/ki-empty-state.md): explain an empty list, table, search result, or first-run view.
+- [ki-fab](llms/ki-fab.md): give a mobile screen one primary action, such as composing a draft or creating a project.
 - [ki-format-date](llms/ki-format-date.md): For raw date and timestamp values in tables, records and prose.
 - [ki-format-number](llms/ki-format-number.md): For numeric data, currency amounts, ratios and measurements in content.
 - [ki-grid](llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.
@@ -76,7 +77,6 @@ methods, CSS custom properties and examples.
 - [ki-segmented-control](llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
 - [ki-select](llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
 - [ki-skeleton](llms/ki-skeleton.md): Reserve the expected layout of a card, list, or assistant reply while it loads.
-- [ki-slider](llms/ki-slider.md): coarse adjustments such as volume, balance or a price filter, with a descriptive label.
 - [ki-spinner](llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-stat](llms/ki-stat.md): Summarize one numeric metric in a dashboard or report.
