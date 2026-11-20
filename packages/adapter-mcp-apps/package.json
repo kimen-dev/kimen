@@ -68,6 +68,7 @@
         "inputs": [
           "{projectRoot}/**/*",
           "!{projectRoot}/src/generated/**",
+          "{workspaceRoot}/scripts/lib/bundled-package-inventory.mjs",
           "{workspaceRoot}/scripts/lib/stock-surface-icons.mjs",
           "^default"
         ],

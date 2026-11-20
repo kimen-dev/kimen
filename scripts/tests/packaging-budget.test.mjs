@@ -35,7 +35,19 @@ test('S1: packaging invokes publint once per publishable package and checks ever
     },
   });
 
-  assert.equal(calls.filter(({ args }) => args[1] === 'publint').length, 7);
+  assert.deepEqual(
+    calls.filter(({ args }) => args[1] === 'publint').map(({ args }) => args[2]),
+    [
+      'packages/tokens',
+      'packages/elements',
+      'packages/catalog',
+      'packages/kimen',
+      'packages/emitter',
+      'packages/adapter-a2ui',
+      'packages/adapter-mcp-apps',
+      'packages/mcp-server',
+    ],
+  );
   const componentAttw = calls.filter(
     ({ args }) => args[1] === 'attw' && args.some((arg) => arg.startsWith('./ki-')),
   );

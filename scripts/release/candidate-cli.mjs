@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 // Thin workflow boundary for release-candidate-v1. Core behavior remains in
 // build-candidate.mjs and is mutation-tested independently.
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { buildCandidate, verifyCandidate } from './build-candidate.mjs';
+import { releasePackages } from './release-plan.mjs';
 
 function fail(message) {
   throw new Error(`candidate-cli: ${message}`);
@@ -40,10 +41,9 @@ async function build(arguments_, buildCandidateImpl) {
   const result = await buildCandidateImpl({
     mode,
     outputDirectory: resolve(required(options, '--output-directory')),
-    packageDirectories: [
-      resolve(repositoryRoot, 'packages/elements'),
-      resolve(repositoryRoot, 'packages/tokens'),
-    ],
+    packageDirectories: [...releasePackages.values()].map((manifest) =>
+      resolve(repositoryRoot, dirname(manifest)),
+    ),
     protectedMainRef: 'refs/heads/main',
     repositoryRoot,
     sourceSha: required(options, '--source-sha'),

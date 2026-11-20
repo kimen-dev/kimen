@@ -65,6 +65,7 @@ export async function checkPackaging({
     'packages/emitter',
     'packages/adapter-a2ui',
     'packages/adapter-mcp-apps',
+    'packages/mcp-server',
   ]) {
     execute('pnpm', ['exec', 'publint', packageDirectory], root);
   }

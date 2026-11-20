@@ -94,13 +94,20 @@ test('a notice file with two sections of the same title is rejected', () => {
 // elements package ships the QR encoder, the embedded Stencil client runtime,
 // and the Lucide icon modules, including assets derived from Feather.
 test('the package notices include the third-party works shipped in each tarball', () => {
-  for (const name of ['@kimen/elements', '@kimen/adapter-mcp-apps', '@kimen/mcp-server']) {
-    assert.deepEqual(PACKAGE_NOTICE_SECTIONS[name], [
-      'QR Code generator library (MIT)',
-      'Stencil client runtime (MIT)',
-      'Lucide 1.63.0 and Feather icons (ISC and MIT)',
-    ]);
+  const elementNotices = [
+    'QR Code generator library (MIT)',
+    '@stencil/core (MIT)',
+    'Lucide 1.63.0 and Feather icons (ISC and MIT)',
+  ];
+  for (const name of ['@kimen/elements', '@kimen/adapter-mcp-apps']) {
+    assert.deepEqual(PACKAGE_NOTICE_SECTIONS[name], elementNotices);
   }
+  assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/mcp-server'], [
+    ...elementNotices,
+    '@modelcontextprotocol/core (Apache-2.0)',
+    '@modelcontextprotocol/server (Apache-2.0)',
+    'zod (MIT)',
+  ]);
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], ['onmars theme fonts (SIL OFL 1.1)']);
 });
 
@@ -109,7 +116,7 @@ test('the Stencil notice reproduces the licence the installed runtime ships with
     read('NOTICE'),
     read('packages/elements/node_modules/@stencil/core/LICENSE'),
   ]);
-  const section = noticeSections(notice).sections.get('Stencil client runtime (MIT)');
+  const section = noticeSections(notice).sections.get('@stencil/core (MIT)');
   assert.ok(section, 'the repository NOTICE has no Stencil client runtime section');
   const flattened = section.replaceAll(/\s+/gu, ' ');
   const upstream = stencilLicence.split('-----')[0];

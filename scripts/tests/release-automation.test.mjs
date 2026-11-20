@@ -77,6 +77,7 @@ test('S2 the dated entry folds in Unreleased notes and keeps previous versions',
   assert.equal(releaseNotes(result, '0.1.0'), '### Fixed\n\n- Previous fix.');
   assert.throws(() => buildChangelog(result, '0.2.0', nxEntry), /already exists/u);
   const proposal = releaseProposal(result, '0.2.0');
+  assert.match(proposal.body, /@kimen\/elements.*@kimen\/tokens.*@kimen\/mcp-server/u);
   assert.equal(proposal.title, 'chore(release): v0.2.0');
   assert.match(proposal.body, /@kimen\/elements.*@kimen\/tokens/u);
   assert.ok(proposal.body.endsWith(releaseNotes(result, '0.2.0')));
@@ -189,7 +190,7 @@ test('S5 existing tags cannot be rewritten and a partial release can be retried'
   assert.deepEqual(methods, ['GET', 'POST']);
 });
 
-test('S6 only the two public manifests can be prepared and their runtime ranges stay installable', () => {
+test('S6 only the three release manifests can be prepared and their runtime ranges stay installable', () => {
   const elements = {
     name: '@kimen/elements',
     version: '0.2.0',
@@ -201,7 +202,14 @@ test('S6 only the two public manifests can be prepared and their runtime ranges 
     },
     devDependencies: { '@kimen/tokens': 'workspace:*' },
   };
-  assert.deepEqual(prepareManifest(elements, '0.2.0'), { ...elements, private: false });
+  for (const name of ['elements', 'tokens', 'mcp-server']) {
+    const manifest = {
+      ...elements,
+      name: `@kimen/${name}`,
+      repository: { ...elements.repository, directory: `packages/${name}` },
+    };
+    assert.deepEqual(prepareManifest(manifest, '0.2.0'), { ...manifest, private: false });
+  }
   assert.throws(() => prepareManifest({ ...elements, name: '@kimen/catalog' }, '0.2.0'), /scope/u);
   assert.throws(
     () => prepareManifest({ ...elements, dependencies: elements.devDependencies }, '0.2.0'),
