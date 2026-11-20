@@ -4,10 +4,10 @@
     "@kimen/elements": "0.0.0"
   },
   "deltas": {
-    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "28dc1c2dcb3f5d41b29c974b2661b07d8933964cf6618cd597f748f055f636ec",
-    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "e36ab0ffa83ae748105325323eb26d165bae06c46bc311b6f209dd3d4ce1b2fe",
-    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "8ab419b620a1821705a42fbb8f32b110b29f4bbd1a7866aca8e99c01d7fc23b6",
-    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "38072fa4b6df0c08440f3f667405d524d871864d8b56feaaf9ef85b33e2d0896"
+    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "c0597cf55040ea985d6e0ae836b6595ffa64ab4ec90f4a9adcef5d4055362449",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "f93b95eab948440d04920e47b15cb157dfa2c1a7e3e3aa5684f5656c4e76aadc",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "8c5ed80f1ff8ed8041601069eda24015f10221c50ea9abbe6a50b3a4c32dbe21",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "95148f591ffc5c1ace3a4bd1f9db7477ee63eb718edefbfcf07f6a8b90d31c94"
   },
   "packages": [
     "@kimen/elements"

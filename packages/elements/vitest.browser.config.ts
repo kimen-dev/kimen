@@ -186,15 +186,24 @@ export default defineConfig({
           }
           throw new Error(`Touch target not found: ${selector}`);
         }),
+        // A one-finger swipe toward the inline start: press near the end edge of
+        // the target, move across 80% of its width and lift.
+        //
+        // NOT Input.synthesizeScrollGesture: on Aura (Linux) Chromium hands the
+        // touches it synthesizes for DevTools straight to the view, past the
+        // platform gesture recognizer. Measured in CI, the page saw touchstart
+        // and touchend, no touchmove, and no scroll ever started; macOS routes the
+        // same gesture differently and scrolls. Input.dispatchTouchEvent runs the
+        // touches through the browser's own gesture detection on every platform,
+        // the same path tapWithCoarsePointer relies on.
         swipeWithCoarsePointer: defineBrowserCommand(async ({ page }, selector: string) => {
           const session = await cdpSessions.get(page);
           if (!session) throw new Error('Touch emulation must be enabled before swiping');
           for (const frame of page.frames()) {
             const target = frame.locator(selector);
             if ((await target.count()) === 0) continue;
-            // A synthesized gesture that starts outside the visible viewport is
-            // dropped, so bring the target into view and keep the stroke inside
-            // the part of it the viewport shows (CI runs a smaller window).
+            // A touch outside the visible viewport is dropped, so bring the target
+            // into view and keep the stroke inside the part of it the viewport shows.
             const element = target.first();
             await element.scrollIntoViewIfNeeded();
             const bounds = await element.boundingBox();
@@ -208,13 +217,29 @@ export default defineConfig({
             if (width <= 0 || bottom <= top) {
               throw new Error(`Swipe target is outside the viewport: ${selector}`);
             }
-            await session.send('Input.synthesizeScrollGesture', {
-              x: left + width * 0.9,
-              y: (top + bottom) / 2,
-              xDistance: -width * 0.8,
-              preventFling: true,
-              gestureSourceType: 'touch',
+            const y = (top + bottom) / 2;
+            const start = left + width * 0.9;
+            const distance = width * 0.8;
+            const steps = 12;
+            const pause = (milliseconds: number): Promise<void> =>
+              new Promise((resolve) => {
+                setTimeout(resolve, milliseconds);
+              });
+            await session.send('Input.dispatchTouchEvent', {
+              type: 'touchStart',
+              touchPoints: [{ x: start, y }],
             });
+            for (let step = 1; step <= steps; step += 1) {
+              await pause(16);
+              await session.send('Input.dispatchTouchEvent', {
+                type: 'touchMove',
+                touchPoints: [{ x: start - (distance * step) / steps, y }],
+              });
+            }
+            // Rest the finger before lifting it: a release that still carries
+            // velocity starts a fling, which could carry past the next position.
+            await pause(200);
+            await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
             return;
           }
           throw new Error(`Swipe target not found: ${selector}`);

@@ -1,0 +1,217 @@
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ki-carousel-gap);
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="viewport"] {
+  --_ki-carousel-gap: calc(var(--ki-carousel-gap) * var(--ki-density-space-scale));
+  --_ki-carousel-regular: calc(
+    (100% - (var(--_ki-carousel-view) - 1) * var(--_ki-carousel-gap)) /
+    var(--_ki-carousel-view)
+  );
+  --_ki-carousel-medium: var(--_ki-carousel-regular);
+  --_ki-carousel-small: var(--_ki-carousel-regular);
+
+  display: flex;
+  gap: var(--_ki-carousel-gap);
+  overflow-inline: auto;
+  overflow-block: hidden;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  scroll-snap-type: inline mandatory;
+  border-radius: var(--ki-carousel-radius);
+}
+
+[part="viewport"][data-layout="multi-browse"] {
+  --_ki-carousel-available: calc(100% - 2 * var(--_ki-carousel-gap));
+  --_ki-carousel-min: min(100%, var(--ki-carousel-preview-min-inline-size));
+  --_ki-carousel-regular: max(var(--_ki-carousel-min), calc(var(--_ki-carousel-available) * 0.58));
+  --_ki-carousel-medium: max(var(--_ki-carousel-min), calc(var(--_ki-carousel-available) * 0.29));
+  --_ki-carousel-small: max(var(--_ki-carousel-min), calc(var(--_ki-carousel-available) * 0.13));
+}
+
+[part="viewport"][data-layout="hero"] {
+  --_ki-carousel-small: min(35%, max(var(--ki-carousel-preview-min-inline-size), 18%));
+  --_ki-carousel-regular: calc(100% - var(--_ki-carousel-small) - var(--_ki-carousel-gap));
+}
+
+[part="viewport"][data-layout="uncontained"] {
+  --_ki-carousel-regular: 80%;
+}
+
+[part="viewport"][data-layout="full-screen"] {
+  --_ki-carousel-gap: 0px;
+
+  flex-direction: column;
+  block-size: var(--ki-carousel-full-screen-block-size);
+  overflow-block: auto;
+  overflow-inline: hidden;
+  overscroll-behavior-block: contain;
+  scroll-snap-type: block mandatory;
+  border-radius: 0;
+}
+
+slot {
+  display: contents;
+}
+
+::slotted(ki-carousel-item) {
+  flex: 0 0 var(--_ki-carousel-regular);
+  min-inline-size: 0;
+  scroll-snap-align: start;
+}
+
+::slotted([data-ki-carousel-size="medium"]) {
+  flex-basis: var(--_ki-carousel-medium);
+}
+
+::slotted([data-ki-carousel-size="small"]) {
+  flex-basis: var(--_ki-carousel-small);
+}
+
+::slotted([data-ki-carousel-size="end"]) {
+  flex-basis: 100%;
+}
+
+[data-layout="full-screen"] ::slotted(ki-carousel-item) {
+  flex: 0 0 auto;
+  min-block-size: 100%;
+
+  --_ki-carousel-item-radius: 0;
+}
+
+/* The final preview still needs a reachable snap point before it grows. */
+[part="viewport"][data-end-size="medium"] {
+  --_ki-carousel-tail: var(--_ki-carousel-medium);
+}
+
+[part="viewport"][data-end-size="small"] {
+  --_ki-carousel-tail: var(--_ki-carousel-small);
+}
+
+[part="viewport"]:is(
+  [data-layout="hero"],
+  [data-layout="multi-browse"],
+  [data-layout="uncontained"]
+):not([data-end-size="end"])::after {
+  flex: 0 0
+    max(
+      0px,
+      calc(100% - var(--_ki-carousel-tail, var(--_ki-carousel-regular)) - var(--_ki-carousel-gap))
+    );
+  content: "";
+}
+
+[part="controls"],
+[part="position"],
+.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ki-carousel-control-gap);
+}
+
+[part="controls"] {
+  justify-content: space-between;
+}
+
+.navigation {
+  margin-inline-start: auto;
+}
+
+[part="position"] {
+  min-inline-size: 0;
+}
+
+[part="position"] span {
+  padding-inline: var(--ki-carousel-control-gap);
+  color: var(--ki-carousel-control-fg);
+  background-color: var(--ki-carousel-control-bg);
+  background-image: var(--ki-carousel-control-bg-image);
+  border-radius: var(--ki-carousel-control-radius);
+}
+
+button {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-block-size: max(var(--ki-carousel-control-size), var(--ki-density-target-min));
+  min-inline-size: max(var(--ki-carousel-control-size), var(--ki-density-target-min));
+  padding: 0;
+  border: var(--ki-control-border-width) solid var(--ki-carousel-control-border);
+  border-radius: var(--ki-carousel-control-radius);
+  color: var(--ki-carousel-control-fg);
+  background-color: var(--ki-carousel-control-bg);
+  background-image: var(--ki-carousel-control-bg-image);
+  backdrop-filter: var(--ki-carousel-control-backdrop-filter);
+  box-shadow: var(--ki-carousel-control-shadow);
+  font: inherit;
+  cursor: pointer;
+}
+
+[part="rotation"] {
+  justify-self: start;
+  max-inline-size: 100%;
+  padding-inline: var(--ki-carousel-gap);
+  overflow-wrap: anywhere;
+}
+
+button[aria-disabled="true"] {
+  border-style: dashed;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  button:not([aria-disabled="true"]):hover {
+    border-color: var(--ki-carousel-control-fg);
+  }
+}
+
+ki-icon {
+  font-size: var(--ki-carousel-control-icon-size);
+  rotate: var(--_ki-carousel-turn, 0deg);
+}
+
+[part="previous"] ki-icon {
+  rotate: calc(var(--_ki-carousel-turn, 0deg) + 180deg);
+}
+
+[data-layout="full-screen"] ~ [part="controls"] {
+  --_ki-carousel-turn: 90deg;
+}
+
+:host(:dir(rtl)) [data-layout]:not([data-layout="full-screen"]) ~ [part="controls"] {
+  --_ki-carousel-turn: 180deg;
+}
+
+:where(button, [part="viewport"]):focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+[part="announcement"] {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  button {
+    color: ButtonText;
+    border-color: ButtonText;
+  }
+
+  :where(button, [part="viewport"]):focus-visible {
+    outline-color: Highlight;
+  }
+}

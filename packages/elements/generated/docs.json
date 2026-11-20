@@ -3204,6 +3204,803 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-carousel/ki-carousel.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-carousel",
+      "docs": "An ordered, swipeable sequence with previous and next controls and position feedback.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show a short set of related highlights, onboarding steps or media panels.\nGive the carousel a meaningful label and supply one ki-carousel-item per slide."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "hide essential content behind rotation, replace ordinary page navigation,\nor present slides that readers need to compare side by side at the same time."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-carousel-item children in reading order."
+        },
+        {
+          "name": "part",
+          "text": "viewport - Scroll-snap viewport and its keyboard focus outline."
+        },
+        {
+          "name": "part",
+          "text": "controls - Row containing slide position and navigation."
+        },
+        {
+          "name": "part",
+          "text": "previous - Previous slide button."
+        },
+        {
+          "name": "part",
+          "text": "next - Next slide button."
+        },
+        {
+          "name": "part",
+          "text": "rotation - Play or Pause button when automatic rotation is configured."
+        },
+        {
+          "name": "part",
+          "text": "position - Position indicator and optional numeric position."
+        },
+        {
+          "name": "part",
+          "text": "announcement - Visually hidden live region for manual changes."
+        }
+      ],
+      "usage": {
+        "examples": "# Carousel examples\n\n```html\n<ki-carousel label=\"Product tour\" slides-per-view=\"2\" slides-per-move=\"2\">\n  <ki-carousel-item>Discover the tools</ki-carousel-item>\n  <ki-carousel-item>Pick a theme</ki-carousel-item>\n  <ki-carousel-item>Set up your workspace</ki-carousel-item>\n  <ki-carousel-item>Share your first surface</ki-carousel-item>\n</ki-carousel>\n```\n\n```js\nconst carousel = document.querySelector('ki-carousel');\ncarousel.addEventListener('ki-slide-change', ({ detail }) => {\n  console.log(detail.index);\n});\nawait carousel.goTo(3);\n```\n\nWith per-tag imports, define both `ki-carousel` and `ki-carousel-item`.\n"
+      },
+      "props": [
+        {
+          "name": "autoplay",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "autoplay",
+          "reflectToAttr": false,
+          "docs": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "carouselRoleDescription",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "carousel-role-description",
+          "reflectToAttr": false,
+          "docs": "Accessible role description of the region.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'carousel'"
+            }
+          ],
+          "default": "'carousel'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "current",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "current",
+          "reflectToAttr": true,
+          "docs": "One-based leading slide. Setting it moves the carousel and clamps the index to\nthe available leading positions.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Required accessible name of the carousel region.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "layout",
+          "type": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\"",
+          "complexType": {
+            "original": "CarouselLayout",
+            "resolved": "\"full-screen\" | \"hero\" | \"multi-browse\" | \"single\" | \"uncontained\"",
+            "references": {
+              "CarouselLayout": {
+                "location": "local",
+                "path": "src/components/ki-carousel/ki-carousel.tsx",
+                "id": "src/components/ki-carousel/ki-carousel.tsx::CarouselLayout"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "layout",
+          "reflectToAttr": false,
+          "docs": "Item arrangement. Full-screen uses a vertical, full-viewport slide.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'single'"
+            }
+          ],
+          "default": "'single'",
+          "values": [
+            {
+              "value": "full-screen",
+              "type": "string"
+            },
+            {
+              "value": "hero",
+              "type": "string"
+            },
+            {
+              "value": "multi-browse",
+              "type": "string"
+            },
+            {
+              "value": "single",
+              "type": "string"
+            },
+            {
+              "value": "uncontained",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "loop",
+          "reflectToAttr": false,
+          "docs": "Whether navigating past one endpoint wraps to the other.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "navigation",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "navigation",
+          "reflectToAttr": false,
+          "docs": "Whether to show the Previous and Next buttons. The viewport stays keyboard-operable.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "nextLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "next-label",
+          "reflectToAttr": false,
+          "docs": "Accessible label of the Next button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Next slide'"
+            }
+          ],
+          "default": "'Next slide'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pagination",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pagination",
+          "reflectToAttr": false,
+          "docs": "Whether to show the noninteractive slide position indicator.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "pauseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pause-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible label of the Pause button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Pause'"
+            }
+          ],
+          "default": "'Pause'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "playLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "play-label",
+          "reflectToAttr": false,
+          "docs": "Visible and accessible label of the Play button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Play'"
+            }
+          ],
+          "default": "'Play'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "positionLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "position-label",
+          "reflectToAttr": false,
+          "docs": "Accessible label of the position indicator.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Slide position'"
+            }
+          ],
+          "default": "'Slide position'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "previousLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "previous-label",
+          "reflectToAttr": false,
+          "docs": "Accessible label of the Previous button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Previous slide'"
+            }
+          ],
+          "default": "'Previous slide'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "slideLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "slide-label",
+          "reflectToAttr": false,
+          "docs": "Spoken slide name and announcement. Use {index} and {count} as placeholders.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{index} of {count}'"
+            }
+          ],
+          "default": "'{index} of {count}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "slideRoleDescription",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "slide-role-description",
+          "reflectToAttr": false,
+          "docs": "Accessible role description of each slide group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'slide'"
+            }
+          ],
+          "default": "'slide'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "slidesPerMove",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "slides-per-move",
+          "reflectToAttr": false,
+          "docs": "Number of positions advanced by Previous, Next and automatic rotation.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "slidesPerView",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "slides-per-view",
+          "reflectToAttr": false,
+          "docs": "Number of slides visible together in the single layout. Material 3 layouts\ndetermine their own item widths.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "goTo",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "(index: number) => Promise<void>",
+            "parameters": [
+              {
+                "name": "index",
+                "type": "number",
+                "docs": ""
+              }
+            ],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "goTo(index: number) => Promise<void>",
+          "parameters": [
+            {
+              "name": "index",
+              "type": "number",
+              "docs": ""
+            }
+          ],
+          "docs": "Moves to the requested one-based leading position within the available range.",
+          "docsTags": []
+        },
+        {
+          "name": "next",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<void>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "next() => Promise<void>",
+          "parameters": [],
+          "docs": "Advances by slidesPerMove.",
+          "docsTags": []
+        },
+        {
+          "name": "previous",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<void>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "previous() => Promise<void>",
+          "parameters": [],
+          "docs": "Moves back by slidesPerMove.",
+          "docsTags": []
+        }
+      ],
+      "events": [
+        {
+          "event": "ki-slide-change",
+          "detail": "CarouselSlideChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "CarouselSlideChangeDetail",
+            "resolved": "CarouselSlideChangeDetail",
+            "references": {
+              "CarouselSlideChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-carousel/ki-carousel.tsx",
+                "id": "src/components/ki-carousel/ki-carousel.tsx::CarouselSlideChangeDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports the one-based index when the leading slide changes.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-carousel-item children in reading order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "announcement",
+          "docs": "Visually hidden live region for manual changes."
+        },
+        {
+          "name": "controls",
+          "docs": "Row containing slide position and navigation."
+        },
+        {
+          "name": "next",
+          "docs": "Next slide button."
+        },
+        {
+          "name": "position",
+          "docs": "Position indicator and optional numeric position."
+        },
+        {
+          "name": "previous",
+          "docs": "Previous slide button."
+        },
+        {
+          "name": "rotation",
+          "docs": "Play or Pause button when automatic rotation is configured."
+        },
+        {
+          "name": "viewport",
+          "docs": "Scroll-snap viewport and its keyboard focus outline."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-indicator",
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-carousel": [
+          "ki-indicator",
+          "ki-icon"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-carousel-item/ki-carousel-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-carousel-item",
+      "docs": "A slide in an ordered ki-carousel sequence.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "supply a single slide to a ki-carousel. Put the full slide in the\ndefault slot and optional decorative preview media in the preview slot."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "present a standalone card or a layout container outside a carousel."
+        },
+        {
+          "name": "slot",
+          "text": "- The full slide content, including any links and controls."
+        },
+        {
+          "name": "slot",
+          "text": "preview - Decorative, noninteractive media shown when the item is a reduced preview."
+        },
+        {
+          "name": "part",
+          "text": "content - Surface that holds the full slide."
+        },
+        {
+          "name": "part",
+          "text": "preview - Decorative surface used in small or partly shown previews."
+        }
+      ],
+      "usage": {
+        "examples": "# Carousel item example\n\n```html\n<ki-carousel label=\"Getting started\" layout=\"hero\">\n  <ki-carousel-item><a href=\"/guide\">Read the guide</a></ki-carousel-item>\n  <ki-carousel-item>\n    <img slot=\"preview\" src=\"/cover.jpg\" alt=\"\">\n    <a href=\"/themes\">Explore themes</a>\n  </ki-carousel-item>\n</ki-carousel>\n```\n"
+      },
+      "props": [],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The full slide content, including any links and controls."
+        },
+        {
+          "name": "preview",
+          "docs": "Decorative, noninteractive media shown when the item is a reduced preview."
+        }
+      ],
+      "parts": [
+        {
+          "name": "content",
+          "docs": "Surface that holds the full slide."
+        },
+        {
+          "name": "preview",
+          "docs": "Decorative surface used in small or partly shown previews."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-checkbox/ki-checkbox.tsx",
       "encapsulation": "shadow",
       "tag": "ki-checkbox",
@@ -12155,6 +12952,7 @@
         "ki-ai-label",
         "ki-audio",
         "ki-breadcrumb",
+        "ki-carousel",
         "ki-combobox",
         "ki-copy-button",
         "ki-date-picker",
@@ -12193,6 +12991,9 @@
           "ki-icon"
         ],
         "ki-breadcrumb": [
+          "ki-icon"
+        ],
+        "ki-carousel": [
           "ki-icon"
         ],
         "ki-combobox": [
@@ -13383,9 +14184,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-carousel"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-carousel": [
+          "ki-indicator"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-input/ki-input.tsx",
@@ -30869,6 +31676,16 @@
       "declaration": "export type KiDialogCommand = 'show-modal' | 'close' | 'request-close';",
       "docstring": "",
       "path": "src/utils/dialog-invoker.ts"
+    },
+    "src/components/ki-carousel/ki-carousel.tsx::CarouselLayout": {
+      "declaration": "export type CarouselLayout = 'single' | 'multi-browse' | 'uncontained' | 'hero' | 'full-screen';",
+      "docstring": "",
+      "path": "src/components/ki-carousel/ki-carousel.tsx"
+    },
+    "src/components/ki-carousel/ki-carousel.tsx::CarouselSlideChangeDetail": {
+      "declaration": "export interface CarouselSlideChangeDetail {\n  index: number;\n}",
+      "docstring": "",
+      "path": "src/components/ki-carousel/ki-carousel.tsx"
     },
     "src/components/ki-checkbox/ki-checkbox.tsx::KiCheckboxSize": {
       "declaration": "export type KiCheckboxSize = 'sm' | 'md' | 'lg';",
