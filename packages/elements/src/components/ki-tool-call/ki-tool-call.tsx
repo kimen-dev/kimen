@@ -65,7 +65,7 @@ export class KiToolCall {
 
   /**
    * Non-negative elapsed time in milliseconds. Displayed only for Done.
-   * @min 0
+   * @minimum 0
    */
   @Prop() duration?: number;
 
