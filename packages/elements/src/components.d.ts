@@ -10,7 +10,6 @@ import { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
-import { KiDialogCommand } from "./utils/dialog-invoker";
 import { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
@@ -27,6 +26,8 @@ import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+import { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
+import { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -48,7 +49,6 @@ export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
-export { KiDialogCommand } from "./utils/dialog-invoker";
 export { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
@@ -65,6 +65,8 @@ export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+export { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
+export { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -218,16 +220,6 @@ export namespace Components {
      */
     interface KiButton {
         /**
-          * Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
-          * @default undefined
-         */
-        "command"?: KiDialogCommand;
-        /**
-          * ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
-          * @default undefined
-         */
-        "commandfor"?: string;
-        /**
           * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
          */
@@ -257,7 +249,7 @@ export namespace Components {
          */
         "tone": KiButtonTone;
         /**
-          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
           * @default 'submit'
          */
         "type": KiButtonType;
@@ -553,8 +545,8 @@ export namespace Components {
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
-     * provide a `heading`, place actions in the `footer` slot, wire each
-     * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
+     * provide a `heading`, place actions in the `footer` slot, wire each footer
+     * action to `close()`, and in destructive confirmations put `autofocus` on
      * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -562,7 +554,7 @@ export namespace Components {
      */
     interface KiDialog {
         /**
-          * Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method or an invoker command. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
+          * Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
          */
         "close": () => Promise<void>;
         /**
@@ -665,16 +657,6 @@ export namespace Components {
      * visible label communicates the consequence).
      */
     interface KiIconButton {
-        /**
-          * Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
-          * @default undefined
-         */
-        "command"?: KiDialogCommand;
-        /**
-          * ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
-          * @default undefined
-         */
-        "commandfor"?: string;
         /**
           * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
@@ -954,6 +936,87 @@ export namespace Components {
           * @default 'md'
          */
         "size": KiListItemSize;
+    }
+    /**
+     * A popup of actions opened by a button in the same document or shadow root.
+     * @whenToUse row actions, account commands, split buttons, and overflow actions.
+     * @whenNotToUse form values, navigation destinations, or long action lists.
+     */
+    interface KiMenu {
+        /**
+          * Literal ID of the menu button in the same document or containing shadow root.
+          * @default ''
+         */
+        "anchor": string;
+        /**
+          * Accessible name and placeholder of the filter. Omit to hide the field.
+          * @default ''
+         */
+        "filterLabel": string;
+        /**
+          * Polite results message. The menu substitutes the number of matches for `{count}`.
+          * @default 'Matching actions: {count}'
+         */
+        "filterResultsLabel": string;
+        /**
+          * Whether the popup is open. Reflected when the user opens or dismisses it.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Preferred side and logical alignment. Flips when the opposite side has more room.
+          * @default 'bottom-start'
+         */
+        "placement": KiMenuPlacement;
+    }
+    /**
+     * A named group of related actions in a ki-menu.
+     * @whenToUse name a set of related actions or scope exclusive radio items in a menu.
+     * @whenNotToUse standalone sections or nested menus.
+     */
+    interface KiMenuGroup {
+        /**
+          * Visible and accessible group name.
+          * @default ''
+         */
+        "label": string;
+    }
+    /**
+     * A pointer and keyboard action within a ki-menu.
+     * @whenToUse a command, independent checkbox action, or exclusive radio action in a menu.
+     * @whenNotToUse standalone controls, navigational links, or form options.
+     */
+    interface KiMenuItem {
+        /**
+          * Checked state for checkbox and radio actions.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Disabled actions remain discoverable via menu navigation.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Display-only keyboard shortcut. Applications own shortcut registration.
+          * @default ''
+         */
+        "shortcut": string;
+        /**
+          * Apply the danger tone to a destructive action.
+          * @default 'neutral'
+         */
+        "tone": KiMenuItemTone;
+        /**
+          * Action role. A checkbox stays open. A radio selects one action within its group.
+          * @default 'item'
+         */
+        "type": KiMenuItemType;
+        /**
+          * Action identifier reported by the parent menu.
+          * @default ''
+         */
+        "value": string;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -1780,6 +1843,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
+export interface KiMenuCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiMenuElement;
+}
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiSegmentedControlElement;
@@ -2057,8 +2124,8 @@ declare global {
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
-     * provide a `heading`, place actions in the `footer` slot, wire each
-     * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
+     * provide a `heading`, place actions in the `footer` slot, wire each footer
+     * action to `close()`, and in destructive confirmations put `autofocus` on
      * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -2255,6 +2322,50 @@ declare global {
     var HTMLKiListItemElement: {
         prototype: HTMLKiListItemElement;
         new (): HTMLKiListItemElement;
+    };
+    interface HTMLKiMenuElementEventMap {
+        "ki-select": KiMenuSelectDetail;
+    }
+    /**
+     * A popup of actions opened by a button in the same document or shadow root.
+     * @whenToUse row actions, account commands, split buttons, and overflow actions.
+     * @whenNotToUse form values, navigation destinations, or long action lists.
+     */
+    interface HTMLKiMenuElement extends Components.KiMenu, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiMenuElementEventMap>(type: K, listener: (this: HTMLKiMenuElement, ev: KiMenuCustomEvent<HTMLKiMenuElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiMenuElementEventMap>(type: K, listener: (this: HTMLKiMenuElement, ev: KiMenuCustomEvent<HTMLKiMenuElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiMenuElement: {
+        prototype: HTMLKiMenuElement;
+        new (): HTMLKiMenuElement;
+    };
+    /**
+     * A named group of related actions in a ki-menu.
+     * @whenToUse name a set of related actions or scope exclusive radio items in a menu.
+     * @whenNotToUse standalone sections or nested menus.
+     */
+    interface HTMLKiMenuGroupElement extends Components.KiMenuGroup, HTMLStencilElement {
+    }
+    var HTMLKiMenuGroupElement: {
+        prototype: HTMLKiMenuGroupElement;
+        new (): HTMLKiMenuGroupElement;
+    };
+    /**
+     * A pointer and keyboard action within a ki-menu.
+     * @whenToUse a command, independent checkbox action, or exclusive radio action in a menu.
+     * @whenNotToUse standalone controls, navigational links, or form options.
+     */
+    interface HTMLKiMenuItemElement extends Components.KiMenuItem, HTMLStencilElement {
+    }
+    var HTMLKiMenuItemElement: {
+        prototype: HTMLKiMenuItemElement;
+        new (): HTMLKiMenuItemElement;
     };
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -2729,6 +2840,9 @@ declare global {
         "ki-link": HTMLKiLinkElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
+        "ki-menu": HTMLKiMenuElement;
+        "ki-menu-group": HTMLKiMenuGroupElement;
+        "ki-menu-item": HTMLKiMenuItemElement;
         "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
@@ -2897,16 +3011,6 @@ declare namespace LocalJSX {
      */
     interface KiButton {
         /**
-          * Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
-          * @default undefined
-         */
-        "command"?: KiDialogCommand;
-        /**
-          * ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
-          * @default undefined
-         */
-        "commandfor"?: string;
-        /**
           * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
          */
@@ -2940,7 +3044,7 @@ declare namespace LocalJSX {
          */
         "tone"?: KiButtonTone;
         /**
-          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
           * @default 'submit'
          */
         "type"?: KiButtonType;
@@ -3272,8 +3376,8 @@ declare namespace LocalJSX {
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
-     * provide a `heading`, place actions in the `footer` slot, wire each
-     * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
+     * provide a `heading`, place actions in the `footer` slot, wire each footer
+     * action to `close()`, and in destructive confirmations put `autofocus` on
      * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -3290,7 +3394,7 @@ declare namespace LocalJSX {
          */
         "heading": string;
         /**
-          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
          */
         "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
         /**
@@ -3380,16 +3484,6 @@ declare namespace LocalJSX {
      * visible label communicates the consequence).
      */
     interface KiIconButton {
-        /**
-          * Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
-          * @default undefined
-         */
-        "command"?: KiDialogCommand;
-        /**
-          * ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
-          * @default undefined
-         */
-        "commandfor"?: string;
         /**
           * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
@@ -3677,6 +3771,91 @@ declare namespace LocalJSX {
           * @default 'md'
          */
         "size"?: KiListItemSize;
+    }
+    /**
+     * A popup of actions opened by a button in the same document or shadow root.
+     * @whenToUse row actions, account commands, split buttons, and overflow actions.
+     * @whenNotToUse form values, navigation destinations, or long action lists.
+     */
+    interface KiMenu {
+        /**
+          * Literal ID of the menu button in the same document or containing shadow root.
+          * @default ''
+         */
+        "anchor"?: string;
+        /**
+          * Accessible name and placeholder of the filter. Omit to hide the field.
+          * @default ''
+         */
+        "filterLabel"?: string;
+        /**
+          * Polite results message. The menu substitutes the number of matches for `{count}`.
+          * @default 'Matching actions: {count}'
+         */
+        "filterResultsLabel"?: string;
+        /**
+          * Reports the selected action and, for a checkbox or radio, its new checked state.
+         */
+        "onKi-select"?: (event: KiMenuCustomEvent<KiMenuSelectDetail>) => void;
+        /**
+          * Whether the popup is open. Reflected when the user opens or dismisses it.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Preferred side and logical alignment. Flips when the opposite side has more room.
+          * @default 'bottom-start'
+         */
+        "placement"?: KiMenuPlacement;
+    }
+    /**
+     * A named group of related actions in a ki-menu.
+     * @whenToUse name a set of related actions or scope exclusive radio items in a menu.
+     * @whenNotToUse standalone sections or nested menus.
+     */
+    interface KiMenuGroup {
+        /**
+          * Visible and accessible group name.
+          * @default ''
+         */
+        "label"?: string;
+    }
+    /**
+     * A pointer and keyboard action within a ki-menu.
+     * @whenToUse a command, independent checkbox action, or exclusive radio action in a menu.
+     * @whenNotToUse standalone controls, navigational links, or form options.
+     */
+    interface KiMenuItem {
+        /**
+          * Checked state for checkbox and radio actions.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Disabled actions remain discoverable via menu navigation.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Display-only keyboard shortcut. Applications own shortcut registration.
+          * @default ''
+         */
+        "shortcut"?: string;
+        /**
+          * Apply the danger tone to a destructive action.
+          * @default 'neutral'
+         */
+        "tone"?: KiMenuItemTone;
+        /**
+          * Action role. A checkbox stays open. A radio selects one action within its group.
+          * @default 'item'
+         */
+        "type"?: KiMenuItemType;
+        /**
+          * Action identifier reported by the parent menu.
+          * @default ''
+         */
+        "value"?: string;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -4527,8 +4706,6 @@ declare namespace LocalJSX {
         "type": KiButtonType;
         "name": string;
         "value": string;
-        "commandfor": string;
-        "command": KiDialogCommand;
         "disabled": boolean;
         "loading": boolean;
         "loadingLabel": string;
@@ -4612,8 +4789,6 @@ declare namespace LocalJSX {
         "tone": KiIconButtonTone;
         "size": KiIconButtonSize;
         "label": string;
-        "commandfor": string;
-        "command": KiDialogCommand;
         "disabled": boolean;
         "loading": boolean;
         "loadingLabel": string;
@@ -4662,6 +4837,24 @@ declare namespace LocalJSX {
     }
     interface KiListItemAttributes {
         "size": KiListItemSize;
+    }
+    interface KiMenuAttributes {
+        "anchor": string;
+        "open": boolean;
+        "placement": KiMenuPlacement;
+        "filterLabel": string;
+        "filterResultsLabel": string;
+    }
+    interface KiMenuGroupAttributes {
+        "label": string;
+    }
+    interface KiMenuItemAttributes {
+        "value": string;
+        "type": KiMenuItemType;
+        "checked": boolean;
+        "disabled": boolean;
+        "tone": KiMenuItemTone;
+        "shortcut": string;
     }
     interface KiNoteAttributes {
         "tone": KiNoteTone;
@@ -4833,6 +5026,9 @@ declare namespace LocalJSX {
         "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
         "ki-list": KiList;
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
+        "ki-menu": Omit<KiMenu, keyof KiMenuAttributes> & { [K in keyof KiMenu & keyof KiMenuAttributes]?: KiMenu[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `attr:${K}`]?: KiMenuAttributes[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `prop:${K}`]?: KiMenu[K] };
+        "ki-menu-group": Omit<KiMenuGroup, keyof KiMenuGroupAttributes> & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes]?: KiMenuGroup[K] } & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes as `attr:${K}`]?: KiMenuGroupAttributes[K] } & { [K in keyof KiMenuGroup & keyof KiMenuGroupAttributes as `prop:${K}`]?: KiMenuGroup[K] };
+        "ki-menu-item": Omit<KiMenuItem, keyof KiMenuItemAttributes> & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes]?: KiMenuItem[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `attr:${K}`]?: KiMenuItemAttributes[K] } & { [K in keyof KiMenuItem & keyof KiMenuItemAttributes as `prop:${K}`]?: KiMenuItem[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
@@ -5002,8 +5198,8 @@ declare module "@stencil/core" {
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
-             * provide a `heading`, place actions in the `footer` slot, wire each
-             * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
+             * provide a `heading`, place actions in the `footer` slot, wire each footer
+             * action to `close()`, and in destructive confirmations put `autofocus` on
              * the least destructive action.
              * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
              * supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -5127,6 +5323,24 @@ declare module "@stencil/core" {
              * tabular row, navigation link or whole-item clickable control.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
+            /**
+             * A popup of actions opened by a button in the same document or shadow root.
+             * @whenToUse row actions, account commands, split buttons, and overflow actions.
+             * @whenNotToUse form values, navigation destinations, or long action lists.
+             */
+            "ki-menu": LocalJSX.IntrinsicElements["ki-menu"] & JSXBase.HTMLAttributes<HTMLKiMenuElement>;
+            /**
+             * A named group of related actions in a ki-menu.
+             * @whenToUse name a set of related actions or scope exclusive radio items in a menu.
+             * @whenNotToUse standalone sections or nested menus.
+             */
+            "ki-menu-group": LocalJSX.IntrinsicElements["ki-menu-group"] & JSXBase.HTMLAttributes<HTMLKiMenuGroupElement>;
+            /**
+             * A pointer and keyboard action within a ki-menu.
+             * @whenToUse a command, independent checkbox action, or exclusive radio action in a menu.
+             * @whenNotToUse standalone controls, navigational links, or form options.
+             */
+            "ki-menu-item": LocalJSX.IntrinsicElements["ki-menu-item"] & JSXBase.HTMLAttributes<HTMLKiMenuItemElement>;
             /**
              * A compact, static explanation beside a control or inside a card.
              * @whenToUse Add a short constraint, tip or consequence next to the content

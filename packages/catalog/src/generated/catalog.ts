@@ -298,19 +298,6 @@ export const catalogData = {
       "description": "A token-styled action button with native button semantics.",
       "events": {},
       "props": {
-        "command": {
-          "type": "enum",
-          "values": [
-            "close",
-            "request-close",
-            "show-modal"
-          ],
-          "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
-        },
-        "commandfor": {
-          "type": "string",
-          "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
-        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button. Wins over\n`loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
@@ -359,7 +346,7 @@ export const catalogData = {
             "reset",
             "submit"
           ],
-          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "default": "submit"
         },
         "value": {
@@ -728,7 +715,7 @@ export const catalogData = {
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
       "events": {
-        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
       },
       "props": {
         "close-on-backdrop": {
@@ -749,11 +736,11 @@ export const catalogData = {
       },
       "slots": {
         "": "Dialog body content.",
-        "footer": "Dialog actions. Dismiss using an invoker command or `close()`."
+        "footer": "Dialog actions; applications wire every action to `close()`."
       },
       "tag": "ki-dialog",
       "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
-      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action."
     },
     "ki-divider": {
       "description": "A static, decorative rule that visually separates adjacent content.",
@@ -869,19 +856,6 @@ export const catalogData = {
       "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
       "events": {},
       "props": {
-        "command": {
-          "type": "enum",
-          "values": [
-            "close",
-            "request-close",
-            "show-modal"
-          ],
-          "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
-        },
-        "commandfor": {
-          "type": "string",
-          "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
-        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button. Wins\nover `loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
@@ -1239,6 +1213,121 @@ export const catalogData = {
       "tag": "ki-list-item",
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+    },
+    "ki-menu": {
+      "description": "A popup of actions opened by a button in the same document or shadow root.",
+      "events": {
+        "ki-select": "Reports the selected action and, for a checkbox or radio, its new checked state."
+      },
+      "props": {
+        "anchor": {
+          "type": "string",
+          "description": "Literal ID of the menu button in the same document or containing shadow root.",
+          "default": ""
+        },
+        "filter-label": {
+          "type": "string",
+          "description": "Accessible name and placeholder of the filter. Omit to hide the field.",
+          "default": ""
+        },
+        "filter-results-label": {
+          "type": "string",
+          "description": "Polite results message. The menu substitutes the number of matches for `{count}`.",
+          "default": "Matching actions: {count}"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the popup is open. Reflected when the user opens or dismisses it.",
+          "default": false
+        },
+        "placement": {
+          "type": "enum",
+          "values": [
+            "bottom-end",
+            "bottom-start",
+            "top-end",
+            "top-start"
+          ],
+          "description": "Preferred side and logical alignment. Flips when the opposite side has more room.",
+          "default": "bottom-start"
+        }
+      },
+      "slots": {
+        "": "Place ki-menu-item, ki-menu-group, and ki-divider here.",
+        "header": "Informational content above the actions, such as account details."
+      },
+      "tag": "ki-menu",
+      "whenNotToUse": "form values, navigation destinations, or long action lists.",
+      "whenToUse": "row actions, account commands, split buttons, and overflow actions."
+    },
+    "ki-menu-group": {
+      "description": "A named group of related actions in a ki-menu.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Visible and accessible group name.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The ki-menu-item and ki-divider children of the group."
+      },
+      "tag": "ki-menu-group",
+      "whenNotToUse": "standalone sections or nested menus.",
+      "whenToUse": "name a set of related actions or scope exclusive radio items in a menu."
+    },
+    "ki-menu-item": {
+      "description": "A pointer and keyboard action within a ki-menu.",
+      "events": {},
+      "props": {
+        "checked": {
+          "type": "boolean",
+          "description": "Checked state for checkbox and radio actions.",
+          "default": false
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disabled actions remain discoverable via menu navigation.",
+          "default": false
+        },
+        "shortcut": {
+          "type": "string",
+          "description": "Display-only keyboard shortcut. Applications own shortcut registration.",
+          "default": ""
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral"
+          ],
+          "description": "Apply the danger tone to a destructive action.",
+          "default": "neutral"
+        },
+        "type": {
+          "type": "enum",
+          "values": [
+            "checkbox",
+            "item",
+            "radio"
+          ],
+          "description": "Action role. A checkbox stays open. A radio selects one action within its group.",
+          "default": "item"
+        },
+        "value": {
+          "type": "string",
+          "description": "Action identifier reported by the parent menu.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "The action's visible label.",
+        "start": "One decorative icon or avatar before the label."
+      },
+      "tag": "ki-menu-item",
+      "whenNotToUse": "standalone controls, navigational links, or form options.",
+      "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu."
     },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",

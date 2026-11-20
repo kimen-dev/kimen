@@ -29,6 +29,9 @@ import { defineCustomElement as defineKiInput } from '@kimen/elements/components
 import { defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
 import { defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
+import { defineCustomElement as defineKiMenu } from '@kimen/elements/components/ki-menu.js';
+import { defineCustomElement as defineKiMenuGroup } from '@kimen/elements/components/ki-menu-group.js';
+import { defineCustomElement as defineKiMenuItem } from '@kimen/elements/components/ki-menu-item.js';
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
@@ -157,14 +160,14 @@ export declare interface KiBadge extends Components.KiBadge {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiButton,
-  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant']
+  inputs: ['disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant']
 })
 @Component({
   selector: 'ki-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant'],
+  inputs: ['disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant'],
 })
 export class KiButton {
   protected el: HTMLKiButtonElement;
@@ -391,7 +394,7 @@ export declare interface KiDialog extends Components.KiDialog {
   /**
    * Post-close notification for every close path. Footer actions report
 `method` when they call `close()`, Escape reports `escape`, and opt-in
-backdrop dismissal reports `backdrop`. Invoker dismissals report `command`.
+backdrop dismissal reports `backdrop`.
 When to use: update application state after the dialog is already closed
 and focus has returned through the native mechanism.
 When NOT to use: do not expect this event to veto closing; it is not
@@ -471,14 +474,14 @@ export declare interface KiIcon extends Components.KiIcon {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiIconButton,
-  inputs: ['command', 'commandfor', 'disabled', 'expanded', 'label', 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant']
+  inputs: ['disabled', 'expanded', 'label', 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant']
 })
 @Component({
   selector: 'ki-icon-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['command', 'commandfor', 'disabled', 'expanded', { name: 'label', required: true }, 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant'],
+  inputs: ['disabled', 'expanded', { name: 'label', required: true }, 'loading', 'loadingLabel', 'pressed', 'size', 'tone', 'variant'],
 })
 export class KiIconButton {
   protected el: HTMLKiIconButtonElement;
@@ -633,6 +636,80 @@ export class KiListItem {
 
 
 export declare interface KiListItem extends Components.KiListItem {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMenu,
+  inputs: ['anchor', 'filterLabel', 'filterResultsLabel', 'open', 'placement']
+})
+@Component({
+  selector: 'ki-menu',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['anchor', 'filterLabel', 'filterResultsLabel', 'open', 'placement'],
+})
+export class KiMenu {
+  protected el: HTMLKiMenuElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiMenu extends Components.KiMenu {
+  /**
+   * Reports the selected action and, for a checkbox or radio, its new checked state.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMenuGroup,
+  inputs: ['label']
+})
+@Component({
+  selector: 'ki-menu-group',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label'],
+})
+export class KiMenuGroup {
+  protected el: HTMLKiMenuGroupElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMenuGroup extends Components.KiMenuGroup {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiMenuItem,
+  inputs: ['checked', 'disabled', 'shortcut', 'tone', 'type', 'value']
+})
+@Component({
+  selector: 'ki-menu-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['checked', 'disabled', 'shortcut', 'tone', 'type', 'value'],
+})
+export class KiMenuItem {
+  protected el: HTMLKiMenuItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiMenuItem extends Components.KiMenuItem {}
 
 
 @ProxyCmp({

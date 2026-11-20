@@ -540,18 +540,6 @@ A standalone primary action:
 </form>
 ```
 
-Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
-dialog and invoker share a document or shadow root. The command takes
-precedence over form submission or reset.
-
-```html
-<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
-<ki-dialog id="draft-preview" heading="Draft preview">
-  This draft is visible only to you.
-  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
-</ki-dialog>
-```
-
 Programmatic creation after registration; string attributes and properties are interchangeable:
 
 ```ts
@@ -587,15 +575,13 @@ While the action a button started is in progress, set `loading` on it instead of
 ```
 
 Attributes:
-- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
-- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
 - `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
-- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
 - `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
@@ -1561,8 +1547,8 @@ A modal dialog for one interrupting decision or short focused task.
 
 When to use: destructive confirmations, blocking choices, and brief
 critical input that must be resolved before returning to the page. Always
-provide a `heading`, place actions in the `footer` slot, wire each
-dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
+provide a `heading`, place actions in the `footer` slot, wire each footer
+action to `close()`, and in destructive confirmations put `autofocus` on
 the least destructive action.
 When NOT to use: non-blocking feedback (`ki-alert`, `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -1570,22 +1556,23 @@ supplementary hints (`ki-tooltip`), long forms or multi-step flows
 
 Examples:
 
-A modal confirmation. `heading` names the dialog and actions go in the `footer`
-slot. Each invoker uses the dialog's ID within the same document or shadow root.
+A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:
 
 ```html
-<ki-button commandfor="confirm-dialog" command="show-modal" tone="danger">Delete draft</ki-button>
 <ki-dialog heading="Delete draft?" id="confirm-dialog">
   <p>This permanently removes the draft.</p>
-  <ki-button slot="footer" commandfor="confirm-dialog" command="request-close" autofocus>Cancel</ki-button>
-  <ki-button slot="footer" commandfor="confirm-dialog" command="close" tone="danger" variant="primary">Delete</ki-button>
+  <ki-button slot="footer" type="button">Cancel</ki-button>
+  <ki-button slot="footer" tone="danger" variant="primary">Delete</ki-button>
 </ki-dialog>
 ```
 
-`close` dismisses the dialog. `request-close` first gives the dialog a chance
-to cancel the request. After an accepted close command, the opening button
-regains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and
-`close()` remain available for programmatic control.
+Open it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):
+
+```html
+<ki-button type="button" onclick="document.getElementById('confirm-dialog').show()">
+  Delete draft
+</ki-button>
+```
 
 Attributes:
 - `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
@@ -1594,7 +1581,7 @@ Attributes:
 
 Slots:
 - (default): Dialog body content.
-- `footer`: Dialog actions. Dismiss using an invoker command or `close()`.
+- `footer`: Dialog actions; applications wire every action to `close()`.
 
 Parts:
 - `body`: Scrollable body region.
@@ -1603,10 +1590,10 @@ Parts:
 - `heading`: Visible h2 title, rendered only when `heading` is non-empty.
 
 Events:
-- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
 
 Methods:
-- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method or an invoker command. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
+- `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
 - `show()` (Promise<void>): Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
 
 CSS custom properties:
@@ -1898,15 +1885,6 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 </ki-tooltip>
 ```
 
-An icon button in the dialog footer can dismiss it by ID. The dialog must be
-in the same document or shadow root as the icon button.
-
-```html
-<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
-</ki-icon-button>
-```
-
 While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
 
 ```html
@@ -1916,8 +1894,6 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 ```
 
 Attributes:
-- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
-- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
@@ -2704,6 +2680,233 @@ CSS custom properties:
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-menu
+
+A popup of actions opened by a button in the same document or shadow root.
+
+When to use: row actions, account commands, split buttons, and overflow actions.
+When NOT to use: form values, navigation destinations, or long action lists.
+
+Examples:
+
+# Menu examples
+
+## Row actions
+
+Register `ki-button`, `ki-menu`, `ki-menu-item`, `ki-menu-group`, and
+`ki-divider` when using the elements individually.
+
+```html
+<ki-button id="row-actions" type="button">Actions</ki-button>
+<ki-menu id="row-menu" anchor="row-actions" filter-label="Filter actions">
+  <ki-menu-group label="Edit">
+    <ki-menu-item value="rename" shortcut="F2">Rename</ki-menu-item>
+    <ki-menu-item value="duplicate">Duplicate</ki-menu-item>
+    <ki-menu-item value="move" disabled>Move to…</ki-menu-item>
+    <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+  </ki-menu-group>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="delete" tone="danger">Delete</ki-menu-item>
+</ki-menu>
+```
+
+```js
+const menu = document.getElementById('row-menu');
+menu.addEventListener('ki-select', ({ detail: { value, checked } }) => {
+  dispatchRowAction(value, checked);
+});
+```
+
+A plain action emits its value and closes the popup. A checkbox also emits its
+new checked state and keeps the popup open. A radio selection emits
+`checked: true`, clears its peer radios and closes the popup. Place independent
+radio sets in distinct groups.
+
+## Account menu
+
+```html
+<button id="account" type="button" aria-label="Account for Ana García">AG</button>
+<ki-menu anchor="account" placement="bottom-end">
+  <p slot="header">Ana García<br />ana@example.com</p>
+  <ki-divider></ki-divider>
+  <ki-menu-item value="profile">Profile</ki-menu-item>
+  <ki-menu-item value="sign-out">Sign out</ki-menu-item>
+</ki-menu>
+```
+
+Give a glyph-only trigger an accessible name. Keep header content informational
+and put actions in `ki-menu-item`. A `start` slot can hold a decorative SVG or
+avatar. The application owns the shortcuts displayed by `shortcut`.
+
+With a filter, supply `filter-label` and optionally localize
+`filter-results-label`, retaining `{count}` where the number should appear.
+
+# When to use Menu
+
+Use Menu for commands on the same object, account actions, split buttons and
+overflow actions. Keep destructive actions at the end after a divider. Pick
+a select for a form value, links for navigation, or a dialog or page for
+long action lists.
+
+Supply a host-authored trigger with an ID in the same DOM tree. Bind the
+catalog action on the menu's declared `ki-select` event. Application DOM
+listeners can read the selected item's `value` and optional `checked` from
+the event detail.
+
+Attributes:
+- `anchor` (string, default ''): Literal ID of the menu button in the same document or containing shadow root.
+- `filter-label` (string, default ''): Accessible name and placeholder of the filter. Omit to hide the field.
+- `filter-results-label` (string, default 'Matching actions: {count}'): Polite results message. The menu substitutes the number of matches for `{count}`.
+- `open` (boolean, default false): Whether the popup is open. Reflected when the user opens or dismisses it.
+- `placement` ("bottom-end" | "bottom-start" | "top-end" | "top-start", default 'bottom-start'): Preferred side and logical alignment. Flips when the opposite side has more room.
+
+Slots:
+- (default): Place ki-menu-item, ki-menu-group, and ki-divider here.
+- `header`: Informational content above the actions, such as account details.
+
+Parts:
+- `filter`: The filter field.
+- `header`: The informational header.
+- `menu`: The named menu containing the actions.
+- `popup`: The anchored surface.
+
+Events:
+- `ki-select` (CustomEvent<KiMenuSelectDetail>): Reports the selected action and, for a checkbox or radio, its new checked state.
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-menu-backdrop-filter`: Complete backdrop filter applied to the popup.
+- `--ki-menu-bg`: Base fill of the popup surface.
+- `--ki-menu-bg-image`: Optional image composited over the popup fill.
+- `--ki-menu-border`: Popup edge and the filter divider.
+- `--ki-menu-border-width`: Thickness of menu border and dividers.
+- `--ki-menu-fg`: Text over the popup surface.
+- `--ki-menu-filter-icon-size`: Size of the search icon.
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-font-size`: Text size for action labels and the filter.
+- `--ki-menu-gap`: Inline space between the parts of a row.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-height`: Default action row minimum height.
+- `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-line-height`: Line height for action labels and the filter.
+- `--ki-menu-max-block-size`: Maximum popup height, bounded by the viewport.
+- `--ki-menu-max-inline-size`: Maximum popup width, bounded by the viewport.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
+- `--ki-menu-min-inline-size`: Default minimum popup width, bounded by the viewport.
+- `--ki-menu-padding`: Space inside the popup.
+- `--ki-menu-radius`: Popup corner radius.
+- `--ki-menu-shadow`: Popup elevation shadow.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
+
+### ki-menu-group
+
+A named group of related actions in a ki-menu.
+
+When to use: name a set of related actions or scope exclusive radio items in a menu.
+When NOT to use: standalone sections or nested menus.
+
+Examples:
+
+# Menu group
+
+Provide a group label and place menu items or dividers in its default slot. A group scopes its own exclusive radio selection.
+
+```html
+<ki-menu anchor="actions">
+  <ki-menu-group label="Edit"><ki-menu-item value="rename">Rename</ki-menu-item></ki-menu-group>
+</ki-menu>
+```
+
+Attributes:
+- `label` (string, default ''): Visible and accessible group name.
+
+Slots:
+- (default): The ki-menu-item and ki-divider children of the group.
+
+Parts:
+- `label`: The visible group name.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-group-fg`: Foreground for group labels.
+- `--ki-menu-group-label-weight`: Weight of group labels.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-line-height`: Line height of metadata and group labels.
+- `--ki-menu-padding`: Space inside the popup.
+
+### ki-menu-item
+
+A pointer and keyboard action within a ki-menu.
+
+When to use: a command, independent checkbox action, or exclusive radio action in a menu.
+When NOT to use: standalone controls, navigational links, or form options.
+
+Examples:
+
+# Menu item
+
+Give each item a value and a visible label. Use `type="checkbox"` for independent toggles or `type="radio"` for exclusive choices. Set `disabled` to keep an unavailable action discoverable by keyboard.
+
+```html
+<ki-menu anchor="actions">
+  <ki-menu-item value="pin" type="checkbox" checked>Pin to sidebar</ki-menu-item>
+</ki-menu>
+```
+
+Attributes:
+- `checked` (boolean, default false): Checked state for checkbox and radio actions.
+- `disabled` (boolean, default false): Disabled actions remain discoverable via menu navigation.
+- `shortcut` (string, default ''): Display-only keyboard shortcut. Applications own shortcut registration.
+- `tone` ("danger" | "neutral", default 'neutral'): Apply the danger tone to a destructive action.
+- `type` ("checkbox" | "item" | "radio", default 'item'): Action role. A checkbox stays open. A radio selects one action within its group.
+- `value` (string, default ''): Action identifier reported by the parent menu.
+
+Slots:
+- (default): The action's visible label.
+- `start`: One decorative icon or avatar before the label.
+
+Parts:
+- `check`: The indicator of a checked action.
+- `item`: The focusable action row.
+- `shortcut`: The display-only shortcut hint.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
+- `--ki-menu-font-family`: Family for action labels and the filter.
+- `--ki-menu-gap`: Inline space between the parts of a row.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-danger-fg`: Foreground for destructive actions.
+- `--ki-menu-item-danger-hover-fg`: Foreground for hovered or keyboard-focused destructive actions.
+- `--ki-menu-item-disabled-fg`: Muted ink of disabled actions.
+- `--ki-menu-item-fg`: Foreground for resting actions.
+- `--ki-menu-item-height`: Default action row minimum height.
+- `--ki-menu-item-hover-bg`: Background behind hovered or keyboard-focused actions.
+- `--ki-menu-item-hover-fg`: Foreground for hovered or keyboard-focused actions.
+- `--ki-menu-item-icon-size`: Size of an action glyph and the check indicator.
+- `--ki-menu-item-padding`: Vertical inset used when an action wraps.
+- `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-hover-fg`: Foreground for shortcut hints on a hovered or focused action.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
 
 ### ki-note
 
