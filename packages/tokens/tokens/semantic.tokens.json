@@ -2218,6 +2218,21 @@
         "$value": "{ki.space.xxs}",
         "$description": "Minimum edge space for a wrapped action label."
       }
+    },
+    "empty-layout": {
+      "$type": "dimension",
+      "max-width": {
+        "$value": "{ki.size.surface.sm}",
+        "$description": "Readable maximum line length for a short message in an empty view."
+      },
+      "tile-regular": {
+        "$value": "{ki.space.14xl}",
+        "$description": "Size of the decorative tile in a regular empty view."
+      },
+      "tile-compact": {
+        "$value": "{ki.space.12xl}",
+        "$description": "Size of the decorative tile in a compact empty view."
+      }
     }
   }
 }

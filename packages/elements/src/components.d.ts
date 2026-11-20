@@ -609,6 +609,52 @@ export namespace Components {
         "orientation": KiDividerOrientation;
     }
     /**
+     * A short explanation and next step for an empty view.
+     * @whenToUse explain an empty list, table, search result, or first-run view.
+     * Supply a localized heading that names what is empty and a short next step.
+     * Use announce for results that change after an interaction.
+     * @whenNotToUse signal that results are loading or draw attention to an error
+     * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+     */
+    interface KiEmptyState {
+        /**
+          * Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.
+          * @default false
+         */
+        "announce": boolean;
+        /**
+          * Localized heading that identifies the empty view. Blank text omits the heading.
+         */
+        "heading": string;
+        /**
+          * Native heading level for the surrounding document outline. Only integers from 2 through 6 are valid; unsupported values use level 3.
+          * @minimum 2
+          * @maximum 6
+          * @default 3
+         */
+        "headingLevel": number;
+        /**
+          * Optional decorative Lucide glyph. Register it with a per-icon import before mounting. A supplied illustration takes precedence.
+         */
+        "iconName"?: string;
+        /**
+          * Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.
+          * @default 'md'
+         */
+        "size": 'sm' | 'md';
+        /**
+          * FeatureIcon tone. Unrecognized tones use the neutral tile.
+          * @default 'neutral'
+         */
+        "tone": | 'neutral'
+    | 'primary'
+    | 'primary-light'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'danger';
+    }
+    /**
      * A passive responsive grid for content items.
      * @whenToUse lay out items on responsive tracks with consistent token spacing.
      * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
@@ -2240,6 +2286,20 @@ declare global {
         new (): HTMLKiDividerElement;
     };
     /**
+     * A short explanation and next step for an empty view.
+     * @whenToUse explain an empty list, table, search result, or first-run view.
+     * Supply a localized heading that names what is empty and a short next step.
+     * Use announce for results that change after an interaction.
+     * @whenNotToUse signal that results are loading or draw attention to an error
+     * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+     */
+    interface HTMLKiEmptyStateElement extends Components.KiEmptyState, HTMLStencilElement {
+    }
+    var HTMLKiEmptyStateElement: {
+        prototype: HTMLKiEmptyStateElement;
+        new (): HTMLKiEmptyStateElement;
+    };
+    /**
      * A passive responsive grid for content items.
      * @whenToUse lay out items on responsive tracks with consistent token spacing.
      * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
@@ -2920,6 +2980,7 @@ declare global {
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
+        "ki-empty-state": HTMLKiEmptyStateElement;
         "ki-grid": HTMLKiGridElement;
         "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
@@ -3522,6 +3583,52 @@ declare namespace LocalJSX {
           * @default 'horizontal'
          */
         "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * A short explanation and next step for an empty view.
+     * @whenToUse explain an empty list, table, search result, or first-run view.
+     * Supply a localized heading that names what is empty and a short next step.
+     * Use announce for results that change after an interaction.
+     * @whenNotToUse signal that results are loading or draw attention to an error
+     * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+     */
+    interface KiEmptyState {
+        /**
+          * Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.
+          * @default false
+         */
+        "announce"?: boolean;
+        /**
+          * Localized heading that identifies the empty view. Blank text omits the heading.
+         */
+        "heading": string;
+        /**
+          * Native heading level for the surrounding document outline. Only integers from 2 through 6 are valid; unsupported values use level 3.
+          * @minimum 2
+          * @maximum 6
+          * @default 3
+         */
+        "headingLevel"?: number;
+        /**
+          * Optional decorative Lucide glyph. Register it with a per-icon import before mounting. A supplied illustration takes precedence.
+         */
+        "iconName"?: string;
+        /**
+          * Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.
+          * @default 'md'
+         */
+        "size"?: 'sm' | 'md';
+        /**
+          * FeatureIcon tone. Unrecognized tones use the neutral tile.
+          * @default 'neutral'
+         */
+        "tone"?: | 'neutral'
+    | 'primary'
+    | 'primary-light'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'danger';
     }
     /**
      * A passive responsive grid for content items.
@@ -4939,6 +5046,20 @@ declare namespace LocalJSX {
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
     }
+    interface KiEmptyStateAttributes {
+        "heading": string;
+        "iconName": string;
+        "tone": | 'neutral'
+    | 'primary'
+    | 'primary-light'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'danger';
+        "size": 'sm' | 'md';
+        "headingLevel": number;
+        "announce": boolean;
+    }
     interface KiGridAttributes {
         "columns": number;
         "minColumn": string;
@@ -5194,6 +5315,7 @@ declare namespace LocalJSX {
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-empty-state": Omit<KiEmptyState, keyof KiEmptyStateAttributes> & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes]?: KiEmptyState[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `attr:${K}`]?: KiEmptyStateAttributes[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `prop:${K}`]?: KiEmptyState[K] } & OneOf<"heading", KiEmptyState["heading"], KiEmptyStateAttributes["heading"]>;
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
         "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
@@ -5398,6 +5520,15 @@ declare module "@stencil/core" {
              * (prefer white space).
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
+            /**
+             * A short explanation and next step for an empty view.
+             * @whenToUse explain an empty list, table, search result, or first-run view.
+             * Supply a localized heading that names what is empty and a short next step.
+             * Use announce for results that change after an interaction.
+             * @whenNotToUse signal that results are loading or draw attention to an error
+             * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+             */
+            "ki-empty-state": LocalJSX.IntrinsicElements["ki-empty-state"] & JSXBase.HTMLAttributes<HTMLKiEmptyStateElement>;
             /**
              * A passive responsive grid for content items.
              * @whenToUse lay out items on responsive tracks with consistent token spacing.

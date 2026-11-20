@@ -18,6 +18,7 @@ export { KiChipGroup } from './ki-chip-group.js';
 export { KiCounter } from './ki-counter.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
+export { KiEmptyState } from './ki-empty-state.js';
 export { KiGrid } from './ki-grid.js';
 export { KiIcon } from './ki-icon.js';
 export { KiIconButton } from './ki-icon-button.js';
