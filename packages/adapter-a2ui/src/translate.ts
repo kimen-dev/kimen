@@ -80,7 +80,7 @@ export interface WriteBackBinding {
  * guarded renderer reports its committed value (spec 039 FR-012). It never
  * reaches the agent and never joins the surface's declared action set.
  */
-export const WRITE_BACK_ACTION = 'kimen-a2ui-write-back';
+const WRITE_BACK_ACTION = 'kimen-a2ui-write-back';
 
 export interface TranslationResult {
   readonly ok: boolean;
