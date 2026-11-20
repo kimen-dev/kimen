@@ -692,10 +692,24 @@ nav.sidebar a[href*="/components/"] span {
   margin-block: var(--ki-space-7xl);
 }
 
+/* Code blocks are charcoal islands in both page schemes, as on the landing:
+   Expressive Code paints one dark theme on --ki-surface-s1, which resolves to
+   the onmars dark s1 here because the block itself is in the dark scheme. */
+.expressive-code {
+  color-scheme: dark;
+}
+
 .expressive-code .frame {
   overflow: hidden;
   border-radius: var(--ki-radius-component-lg);
   box-shadow: none;
+}
+
+/* The copy button sits over the top end of the code, and on touch screens it
+   is always shown. Lines wrap (astro.config.mjs), and the first two keep the
+   button's width clear, so it never covers code. */
+.expressive-code .ec-line:nth-child(-n + 2) .code {
+  padding-inline-end: var(--ki-space-14xl);
 }
 
 .ki-demo {
@@ -722,6 +736,19 @@ nav.sidebar a[href*="/components/"] span {
 .ki-demo-row {
   align-items: center;
   gap: var(--ki-space-xl);
+}
+
+.ki-demo-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ki-space-md);
+  min-inline-size: 0;
+}
+
+.ki-demo-group-label {
+  color: var(--ki-text-med-em);
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
 }
 
 .ki-demo-surface {

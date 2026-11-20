@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
-import { componentSidebarItems } from './component-docs.mjs';
+import { componentSidebarGroups } from './component-docs.mjs';
 
 // The local factory plugin links the already-built elements through their
 // public package exports. It is a repository build-time dependency.
@@ -52,6 +52,31 @@ const analyticsHead =
       })()
     : [];
 
+// Every docs page shares the site's browser chrome color and social card:
+// theme-color follows the visitor's system scheme (paper or charcoal, as on
+// the landing, playground and privacy pages), and og:image is the 1200×630
+// card scripts/build-site.sh publishes at the site root.
+const siteHead = [
+  {
+    tag: 'meta',
+    attrs: { name: 'theme-color', content: '#f9f7f4', media: '(prefers-color-scheme: light)' },
+  },
+  {
+    tag: 'meta',
+    attrs: { name: 'theme-color', content: '#1b1916', media: '(prefers-color-scheme: dark)' },
+  },
+  { tag: 'meta', attrs: { property: 'og:image', content: 'https://kimen.dev/og-image.png' } },
+  { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+  { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+  {
+    tag: 'meta',
+    attrs: {
+      property: 'og:image:alt',
+      content: 'Kimen: Agents write data. Kimen renders real UI.',
+    },
+  },
+];
+
 // The docs site lives inside the single Cloudflare Pages artifact assembled
 // by scripts/build-site.sh and published at the domain root: landing at /,
 // this site at /docs/, Storybook at /storybook/.
@@ -90,7 +115,7 @@ export default defineConfig({
         },
         {
           label: 'Components',
-          items: componentSidebarItems(),
+          items: componentSidebarGroups(),
         },
         {
           label: 'Design Tokens',
@@ -124,14 +149,29 @@ export default defineConfig({
         './src/styles/home.css',
       ],
       expressiveCode: {
+        // Code sits on a charcoal island in both page schemes, as it does on
+        // the landing: one dark theme, on the onmars dark s1 surface
+        // (site.css resolves that token in the dark scheme for code blocks).
+        themes: ['github-dark-default'],
         useDarkModeMediaQuery: false,
+        // A plain code frame for every block: shell snippets no longer get a
+        // terminal window around a one-line install command. Long lines wrap
+        // with a hanging indent instead of scrolling, as on the landing, so
+        // no line runs under the copy button (site.css keeps its width clear).
+        defaultProps: { frame: 'code', wrap: true },
         styleOverrides: {
+          codeBackground: 'var(--ki-surface-s1)',
+          borderColor: 'transparent',
           codeFontFamily: 'var(--ki-typography-family-mono)',
           codeFontSize: 'var(--ki-site-docs-code-size)',
           codeLineHeight: 'var(--ki-site-docs-code-line)',
+          frames: {
+            editorBackground: 'var(--ki-surface-s1)',
+            frameBoxShadowCssValue: 'none',
+          },
         },
       },
-      head: analyticsHead,
+      head: [...siteHead, ...analyticsHead],
     }),
   ],
 });

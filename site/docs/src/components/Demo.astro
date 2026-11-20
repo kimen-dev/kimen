@@ -17,18 +17,24 @@ const { code, lang = 'html', layout = 'row', live = true } = Astro.props;
   {
     live && (
       <form class="ki-demo-bar">
-        <fieldset class="ki-demo-segment">
-          <legend class="visually-hidden">Theme for this example</legend>
-          <label><input type="radio" name="demo-theme" value="" data-demo-theme checked /><span>Page theme</span></label>
-          <label><input type="radio" name="demo-theme" value="onmars" data-demo-theme /><span>Onmars</span></label>
-          <label><input type="radio" name="demo-theme" value="material3" data-demo-theme /><span>Material 3</span></label>
-        </fieldset>
-        <fieldset class="ki-demo-segment">
-          <legend class="visually-hidden">Color scheme for this example</legend>
-          <label><input type="radio" name="demo-scheme" value="" data-demo-scheme checked /><span>Page scheme</span></label>
-          <label><input type="radio" name="demo-scheme" value="light" data-demo-scheme /><span>Light</span></label>
-          <label><input type="radio" name="demo-scheme" value="dark" data-demo-scheme /><span>Dark</span></label>
-        </fieldset>
+        <div class="ki-demo-group">
+          <span class="ki-demo-group-label" aria-hidden="true">Theme</span>
+          <fieldset class="ki-demo-segment">
+            <legend class="visually-hidden">Theme for this example</legend>
+            <label><input type="radio" name="demo-theme" value="" data-demo-theme checked /><span>Same as page</span></label>
+            <label><input type="radio" name="demo-theme" value="onmars" data-demo-theme /><span>onmars</span></label>
+            <label><input type="radio" name="demo-theme" value="material3" data-demo-theme /><span>Material 3</span></label>
+          </fieldset>
+        </div>
+        <div class="ki-demo-group">
+          <span class="ki-demo-group-label" aria-hidden="true">Scheme</span>
+          <fieldset class="ki-demo-segment">
+            <legend class="visually-hidden">Color scheme for this example</legend>
+            <label><input type="radio" name="demo-scheme" value="" data-demo-scheme checked /><span>Same as page</span></label>
+            <label><input type="radio" name="demo-scheme" value="light" data-demo-scheme /><span>Light</span></label>
+            <label><input type="radio" name="demo-scheme" value="dark" data-demo-scheme /><span>Dark</span></label>
+          </fieldset>
+        </div>
       </form>
       <div class:list={['ki-demo-surface', `ki-demo-${layout}`]} set:html={code} />
     )

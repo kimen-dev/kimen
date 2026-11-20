@@ -8,6 +8,7 @@ import { dirname, extname, join, relative } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { componentFamilies } from '../../site/docs/component-families.mjs';
 import { componentSidebarItems } from '../../site/docs/component-docs.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -246,6 +247,51 @@ test('S1 keeps the component sidebar in sync with legacy and colocated pages', a
 
   await add('site/docs/src/content/docs/components/alpha.mdx');
   assert.throws(() => componentSidebarItems(workspace), /Duplicate component documentation/u);
+});
+
+// The live review of kimen.dev (#520, item 12): six component pages were
+// titled by name ("Chip", "Link") among dozens titled by tag, and the
+// Components sidebar was one flat list of every page.
+test('every component page is titled by its tag and belongs to at most one family', async () => {
+  const ids = componentSidebarItems();
+  assert.ok(ids.length > 0, 'the documentation must have component pages');
+
+  const misnamed = [];
+  for (const id of ids) {
+    const name = id.slice('components/'.length);
+    const candidates = [
+      join(repositoryRoot, `packages/elements/src/components/ki-${name}/docs/site.mdx`),
+      join(siteRoot, `docs/src/content/docs/components/${name}.mdx`),
+      join(siteRoot, `docs/src/content/docs/components/${name}.md`),
+    ];
+    let source;
+    for (const candidate of candidates) {
+      source = await readFile(candidate, 'utf8').catch(() => undefined);
+      if (source !== undefined) break;
+    }
+    assert.ok(source !== undefined, `${id} must have a documentation page`);
+    const title = /^title:\s*(.+)$/mu.exec(source)?.[1]?.trim();
+    if (title !== `ki-${name}`) misnamed.push(`${id}: "${title}"`);
+  }
+  assert.deepEqual(
+    misnamed,
+    [],
+    'component pages are titled by their tag, as the sidebar lists them',
+  );
+
+  const assigned = componentFamilies.flatMap(({ components }) =>
+    components.map((name) => `components/${name}`),
+  );
+  const duplicated = assigned.filter((id, index) => assigned.indexOf(id) !== index);
+  assert.deepEqual(duplicated, [], 'a component belongs to exactly one family');
+  // A new component page with no family yet still builds, under "Other": the
+  // component generator does not assign one, and a component PR must not fail
+  // on the site's grouping. Adding it to the list is a one-line follow-up.
+  assert.deepEqual(
+    assigned.filter((id) => !ids.includes(id)),
+    [],
+    'site/docs/component-families.mjs names only pages that exist',
+  );
 });
 
 test('the Pages assembler publishes canonical generated assets and the playground route', async () => {

@@ -307,6 +307,72 @@ test('every documentation page reaches the sections, Home and Playground from a 
   assert.deepEqual(linkTexts(footer), ['Home', 'Playground', 'GitHub']);
 });
 
+// The live review of kimen.dev (#520, items 10, 11, 13, 14): code blocks
+// turned light in the light scheme and drew install commands in a terminal
+// window; the docs home index showed raw Markdown backticks; demo options read
+// like group labels; the home title named the brand twice; and no docs page
+// carried theme-color or a social image.
+test('the built documentation keeps its code islands, index, demos and metadata', async () => {
+  const documentationRoot = join(siteRoot, 'docs/dist');
+  const read = (page) =>
+    readFile(join(documentationRoot, page), 'utf8').catch((error) => {
+      assert.fail(
+        `site/docs/dist is missing: run \`pnpm --filter @kimen/docs build\` first (${error.message})`,
+      );
+    });
+  const home = await read('index.html');
+  const button = await read('components/button/index.html');
+
+  assert.match(home, /<title>\s*Documentation \| Kimen\s*<\/title>/u);
+  for (const markup of [home, button]) {
+    assert.match(
+      markup,
+      /<meta name="theme-color" content="#f9f7f4" media="\(prefers-color-scheme: light\)"/u,
+    );
+    assert.match(
+      markup,
+      /<meta name="theme-color" content="#1b1916" media="\(prefers-color-scheme: dark\)"/u,
+    );
+    assert.match(
+      markup,
+      /<meta property="og:image" content="https:\/\/kimen\.dev\/og-image\.png"/u,
+    );
+    assert.match(markup, /<meta property="og:image:width" content="1200"/u);
+    assert.match(markup, /<meta property="og:image:height" content="630"/u);
+    // One dark theme: a second theme would add a second color per token.
+    assert.doesNotMatch(markup, /--1:#/u, 'code blocks render one theme in both page schemes');
+    assert.doesNotMatch(markup, /class="frame is-terminal/u, 'no snippet is framed as a terminal');
+  }
+
+  const index = between(
+    home,
+    'id="docs-components-title"',
+    '</section></section>',
+    'the component index',
+  );
+  assert.doesNotMatch(
+    index.replaceAll(/<code>[^<]*<\/code>/gu, ''),
+    /`/u,
+    'component descriptions show code, not Markdown backticks',
+  );
+  const families = [...home.matchAll(/<h3 id="docs-components-([a-z]+)">([^<]+)<\/h3>/gu)].map(
+    ([, , label]) => label,
+  );
+  assert.deepEqual(families, ['Actions', 'Forms', 'Navigation', 'Feedback', 'Layout', 'Data']);
+
+  const demoBar = between(button, '<form class="ki-demo-bar">', '</form>', 'the first demo bar');
+  assert.deepEqual(
+    [...demoBar.matchAll(/<span>([^<]+)<\/span>/gu)].map(([, label]) => label),
+    ['Same as page', 'onmars', 'Material 3', 'Same as page', 'Light', 'Dark'],
+  );
+  assert.deepEqual(
+    [...demoBar.matchAll(/class="ki-demo-group-label"[^>]*>([^<]+)</gu)].map(([, label]) => label),
+    ['Theme', 'Scheme'],
+  );
+  const firstDemo = between(button, 'class="ki-demo-surface', '</div>', 'the first demo');
+  assert.match(firstDemo, /<ki-button variant="primary">Save changes<\/ki-button>/u);
+});
+
 test('S8 the measured privacy declaration names every category it records, at country level', async () => {
   // The categories come from the running Umami instance's own `session` table
   // schema (not its docs): browser, os, device, screen, language and location
