@@ -71,8 +71,8 @@
 /assets/elements/custom-elements.json
   Cache-Control: public, max-age=300, must-revalidate
 
-# Vendored font binaries: `InterVariable.woff2` and `JetBrainsMonoVariable.woff2`
-# are stable filenames — they do NOT change when the bytes do, so they belong
+# Vendored font binaries such as `JetBrainsMonoVariable.woff2` have stable
+# filenames — they do NOT change when the bytes do, so they belong
 # in this revalidatable group, not the content-addressed one above. The file
 # is replaced only by a deliberate vendoring commit, reviewed alongside the
 # pages that reference it, but a re-vendor under the same name still has to

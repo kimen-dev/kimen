@@ -4,7 +4,7 @@ Read `AGENTS.md` first: it is the agent entry point and lists the law of the
 repo. This file only adds Claude-specific notes.
 
 - Governance: the constitution digest at `.specify/memory/constitution.md`
-  (v2.0.0) is the operative text for every agent working in this repo. The
+  (v2.0.1) is the operative text for every agent working in this repo. The
   normative master is maintained by the founder outside the repository; on
   founder machines a copy may exist under `internal/` (gitignored) and
   `scripts/gates/constitution-check.sh` verifies the stamps match.

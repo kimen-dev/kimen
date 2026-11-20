@@ -96,7 +96,7 @@ are a deprecated compatibility facade: see
 
 ## Generative UI
 
-Runtime GenUI (A2UI, MCP Apps, AG-UI, json-render) injects agent-generated UI
+Runtime GenUI (A2UI and MCP Apps, which AG-UI streams also carry) injects agent-generated UI
 into applications you don't control. Web components are the one component
 technology that behaves identically in every host, and a closed, validated
 catalog is safer than letting an agent emit open HTML. Kimen ships both
@@ -242,7 +242,6 @@ everything else: see [`CONTRIBUTING.md`](./CONTRIBUTING.md). Security reports:
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer
 - **available** — MCP Apps adapter: Kimen surfaces reach MCP Apps hosts as self-contained ui:// resources rendered through the guarded renderer
-- **planned** — AG-UI and json-render protocol adapters planned
 - **available** — Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary
 - **available** — Machine-readable Web Components foundation with token-driven theming
 <!-- kimen:capabilities:root-readme-status:end -->
