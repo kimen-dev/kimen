@@ -307,6 +307,7 @@ export default defineConfig({
             )) as {
               nodes: {
                 nodeId: string;
+                parentId?: string;
                 childIds?: string[];
                 ignored: boolean;
                 role?: { value?: string };
@@ -330,9 +331,12 @@ export default defineConfig({
                 const property = (name: string): unknown =>
                   node.properties?.find((entry) => entry.name === name)?.value?.value;
                 const live = property('live') ?? null;
+                const parent = node.parentId === undefined ? undefined : byId.get(node.parentId);
                 return {
                   role: node.role?.value ?? '',
                   name: node.name?.value ?? '',
+                  parentRole: parent?.role?.value ?? '',
+                  parentName: parent?.name?.value ?? '',
                   description: node.description?.value ?? '',
                   invalid: property('invalid') ?? 'false',
                   live,

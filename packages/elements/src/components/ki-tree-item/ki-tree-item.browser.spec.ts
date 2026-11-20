@@ -1,7 +1,7 @@
 // @spec:122-ki-tree
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { userEvent } from 'vitest/browser';
 
 import { parkPointer } from '../../../browser-tests/axe';
 import { defineCustomElement as defineTreeItem } from '../../../dist/components/ki-tree-item.js';
@@ -45,13 +45,20 @@ it('S5 displays loaded children on later expansions without requesting them agai
   if (!control) throw new Error('Missing disclosure');
 
   await userEvent.click(control);
-  await expect.element(page.getByRole('treeitem', { name: 'Palette' })).toBeVisible();
+  const palette = branch.querySelector('ki-tree-item');
+  if (!palette) throw new Error('Missing loaded child');
+  await expect.poll(() => palette.getClientRects().length).toBeGreaterThan(0);
   await userEvent.click(control);
-  await expect.element(page.getByRole('treeitem', { name: 'Palette' })).not.toBeInTheDocument();
+  await expect.element(branch).not.toHaveAttribute('expanded');
+  // The child stays mounted. A role locator on WebKit misses the hidden
+  // group across the slot, so check whether the same child has a layout box.
+  await expect.poll(() => palette.getClientRects().length).toBe(0);
 
   await userEvent.click(control);
 
-  await expect.element(page.getByRole('treeitem', { name: 'Palette' })).toBeVisible();
+  await expect.element(branch).toHaveAttribute('expanded');
+  await expect.poll(() => palette.getClientRects().length).toBeGreaterThan(0);
+  expect(branch.querySelector('ki-tree-item')).toBe(palette);
   expect(requests).toHaveLength(1);
-  expect(branch.shadowRoot?.querySelector('ki-spinner')).toBeNull();
+  await expect.poll(() => branch.shadowRoot?.querySelector('ki-spinner')).toBeNull();
 });

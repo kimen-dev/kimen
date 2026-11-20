@@ -9,7 +9,7 @@
 }
 
 :host([hidden]),
-:host(:not([aria-expanded="true"])) [part="group"] {
+[part="group"][hidden] {
   display: none;
 }
 
@@ -55,17 +55,17 @@
   color: var(--ki-tree-icon-fg);
 }
 
-:host(:not([aria-expanded])) [part="disclosure"] {
+[part="row"]:not([aria-expanded]) [part="disclosure"] {
   visibility: hidden;
 }
 
-:host(:not([aria-checked])) [part="checkbox"],
+[part="row"]:not([aria-checked]) [part="checkbox"],
 .box ki-icon {
   display: none;
 }
 
-:host([aria-checked="true"]) .checked,
-:host([aria-checked="mixed"]) .mixed {
+[part="row"][aria-checked="true"] .checked,
+[part="row"][aria-checked="mixed"] .mixed {
   display: block;
 }
 
@@ -79,31 +79,31 @@
   border-radius: var(--ki-tree-item-box-radius);
 }
 
-:host([aria-expanded]) [part="row"],
-:host([aria-selected]) [part="row"],
-:host([aria-checked]) [part="row"] {
+[part="row"]:is([aria-expanded], [aria-selected], [aria-checked]) {
   cursor: pointer;
 }
 
 @media (hover: hover) {
-  :host(:not([disabled], [aria-selected="true"], [aria-checked="true"])) [part="row"]:hover {
-    background-color: var(--ki-tree-hover-bg);
-    color: var(--ki-tree-hover-fg);
+  :host(:not([disabled])) [part="row"]:not([aria-selected="true"], [aria-checked="true"]):hover {
+    background-color: var(--_ki-tree-hover-bg, var(--ki-tree-hover-bg));
+    color: var(--_ki-tree-hover-fg, var(--ki-tree-hover-fg));
   }
 }
 
-:host([aria-selected="true"]) [part="row"],
-:host([aria-checked="true"]) [part="row"] {
+[part="row"]:is([aria-selected="true"], [aria-checked="true"]) {
   background-color: var(--ki-tree-selected-bg);
   color: var(--ki-tree-selected-fg);
   font-weight: var(--ki-typography-weight-body-medium);
 }
 
-:host([aria-selected="true"]) [part="disclosure"],
-:host([aria-checked="true"]) [part="disclosure"],
-:host([aria-selected="true"]) .item-icon,
-:host([aria-checked="true"]) .item-icon {
+[part="row"]:is([aria-selected="true"], [aria-checked="true"])
+  :is([part="disclosure"], .item-icon) {
   color: inherit;
+}
+
+[part="row"]:focus-visible {
+  outline: var(--ki-tree-focus-ring-width) solid var(--ki-tree-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-tree-focus-ring-width));
 }
 
 :host([disabled]) [part="row"] {
@@ -111,20 +111,11 @@
   color: var(--ki-tree-icon-fg);
 }
 
-:host(:focus-visible) {
-  outline: none;
-}
-
-:host(:focus-visible) [part="row"] {
-  outline: var(--ki-tree-focus-ring-width) solid var(--ki-tree-focus-ring-color);
-  outline-offset: calc(-1 * var(--ki-tree-focus-ring-width));
-}
-
 :host(:dir(rtl)) [part="disclosure"] ki-icon {
   transform: scaleX(-1);
 }
 
-:host([aria-expanded="true"]) [part="disclosure"] ki-icon {
+[part="row"][aria-expanded="true"] [part="disclosure"] ki-icon {
   transform: rotate(90deg);
 }
 
@@ -146,6 +137,9 @@
 
 @media (forced-colors: active) {
   [part="row"] {
+    --_ki-tree-hover-bg: Canvas;
+    --_ki-tree-hover-fg: CanvasText;
+
     forced-color-adjust: none;
     background-color: Canvas;
     color: CanvasText;
@@ -156,27 +150,20 @@
     color: inherit;
   }
 
-  :host([aria-selected="true"]) [part="row"],
-  :host([aria-checked="true"]) [part="row"] {
+  [part="row"]:is([aria-selected="true"], [aria-checked="true"]) {
     background-color: Highlight;
     color: HighlightText;
+  }
+
+  [part="row"]:focus-visible {
+    outline-color: CanvasText;
   }
 
   :host([disabled]) [part="row"] {
     color: GrayText;
   }
 
-  :host(:focus-visible) [part="row"] {
-    outline-color: CanvasText;
-  }
-
-  :host([aria-selected="true"]:focus-visible) [part="row"],
-  :host([aria-checked="true"]:focus-visible) [part="row"] {
+  [part="row"]:is([aria-selected="true"], [aria-checked="true"]):focus-visible {
     outline-color: HighlightText;
-  }
-
-  :host(:not([disabled], [aria-selected="true"], [aria-checked="true"])) [part="row"]:hover {
-    background-color: Canvas;
-    color: CanvasText;
   }
 }

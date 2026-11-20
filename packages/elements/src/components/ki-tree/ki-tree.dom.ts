@@ -2,6 +2,12 @@ const ITEM_TAG = 'ki-tree-item';
 
 export const CHILDREN_SLOT = 'children';
 
+export const rowReady = new WeakMap<HTMLElement, (item: HTMLKiTreeItemElement) => void>();
+
+export function itemControl(item: HTMLKiTreeItemElement): HTMLElement | null | undefined {
+  return item.shadowRoot?.querySelector<HTMLElement>('[part="row"]');
+}
+
 export function itemChildren(parent: HTMLElement): HTMLKiTreeItemElement[] {
   return [...parent.children].filter(
     (child): child is HTMLKiTreeItemElement => child.localName === ITEM_TAG,

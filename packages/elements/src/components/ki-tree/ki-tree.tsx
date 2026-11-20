@@ -2,7 +2,14 @@ import { Component, Element, Event, Host, Prop, Watch, h } from '@stencil/core';
 import { getVerticalKeyboardIntent, isNavigationIntent } from '../../utils/keyboard-intent';
 import { rovingFocusIndex } from '../../utils/roving-focus';
 import { extendTypeahead, typeaheadIndex } from '../../utils/typeahead';
-import { CHILDREN_SLOT, itemChildren, itemFlag, itemLabel } from './ki-tree.dom';
+import {
+  CHILDREN_SLOT,
+  itemChildren,
+  itemControl,
+  itemFlag,
+  itemLabel,
+  rowReady,
+} from './ki-tree.dom';
 import { branchCheck, type TreeCheck } from './ki-tree.selection';
 
 export type KiTreeSelection = 'none' | 'single' | 'multiple';
@@ -33,8 +40,7 @@ interface Row {
  * @slot - Direct ki-tree-item children in reading order.
  * @part base - The surface around the hierarchy.
  */
-// Shadow encloses the surface. Tree and treeitem roles live on their hosts
-// so the keyboard tab stop and the announced item are the same element.
+// Shadow encloses the surface. Items supply their own focusable semantic rows.
 @Component({ tag: 'ki-tree', styleUrl: 'ki-tree.css', shadow: true })
 export class KiTree {
   @Element() private readonly host!: HTMLElement;
@@ -62,6 +68,10 @@ export class KiTree {
   }
 
   connectedCallback(): void {
+    rowReady.set(this.host, (item) => {
+      const row = this.rows.find((entry) => entry.item === item);
+      if (row) this.updateRow(row);
+    });
     this.observer = new MutationObserver(() => {
       // Leaf text and direct hierarchy changes matter. Stencil's shadow
       // rendering is outside this observer.
@@ -71,13 +81,26 @@ export class KiTree {
       subtree: true,
       childList: true,
       characterData: true,
-      attributeFilter: ['disabled', 'expanded', 'hidden', 'lazy', 'selected'],
+      attributeFilter: [
+        'aria-checked',
+        'aria-disabled',
+        'aria-expanded',
+        'aria-label',
+        'aria-level',
+        'aria-selected',
+        'disabled',
+        'expanded',
+        'hidden',
+        'lazy',
+        'selected',
+      ],
     });
     this.reconcile();
   }
 
   disconnectedCallback(): void {
     this.observer?.disconnect();
+    rowReady.delete(this.host);
   }
 
   componentDidLoad(): void {
@@ -136,24 +159,35 @@ export class KiTree {
     tabStop ??= visible.find((row) => row.checked === 'true' && this.mode !== 'none') ?? visible[0];
     this.tabStop = tabStop?.item;
 
-    for (const row of rows) {
-      const { item } = row;
-      item.setAttribute('role', 'treeitem');
-      item.setAttribute('aria-label', row.label);
-      item.setAttribute('aria-level', String(row.level));
-      this.stamp(item, 'aria-expanded', row.branch ? String(row.expanded) : undefined);
-      this.stamp(item, 'aria-disabled', row.disabled ? 'true' : undefined);
-      this.stamp(item, 'aria-selected', this.mode === 'single' ? row.checked : undefined);
-      this.stamp(item, 'aria-checked', this.mode === 'multiple' ? row.checked : undefined);
-      item.style.setProperty('--_ki-tree-depth', String(row.level - 1));
-      item.tabIndex = item === this.tabStop ? 0 : -1;
+    for (const row of rows) this.updateRow(row);
+    if (hadFocus && this.tabStop && previous !== this.tabStop) {
+      itemControl(this.tabStop)?.focus();
     }
-    if (hadFocus && previous !== this.tabStop) this.tabStop?.focus();
   }
 
-  private stamp(item: HTMLElement, name: string, value: string | undefined): void {
-    if (value === undefined) item.removeAttribute(name);
-    else item.setAttribute(name, value);
+  private updateRow(row: Row): void {
+    const { item } = row;
+    const control = itemControl(item);
+    if (!control) return;
+    control.role = 'treeitem';
+    const open = row.branch && row.expanded;
+    const group = item.shadowRoot?.querySelector<HTMLElement>('[part="group"]');
+    if (group) group.hidden = !open;
+    if (open) control.setAttribute('aria-owns', 'children');
+    else control.removeAttribute('aria-owns');
+    const label = item.getAttribute('aria-label');
+    // IDREFs stay inside the item's shadow root. An explicit author name
+    // takes precedence over the default name from the visible label.
+    if (label) control.removeAttribute('aria-labelledby');
+    else control.setAttribute('aria-labelledby', 'label');
+    control.ariaLabel = label;
+    control.ariaLevel = item.ariaLevel ?? String(row.level);
+    control.ariaExpanded = item.ariaExpanded ?? (row.branch ? String(row.expanded) : null);
+    control.ariaDisabled = item.ariaDisabled ?? (row.disabled ? 'true' : null);
+    control.ariaSelected = item.ariaSelected ?? (this.mode === 'single' ? row.checked : null);
+    control.ariaChecked = item.ariaChecked ?? (this.mode === 'multiple' ? row.checked : null);
+    item.style.setProperty('--_ki-tree-depth', String(row.level - 1));
+    control.tabIndex = item === this.tabStop ? 0 : -1;
   }
 
   private setSelected(item: HTMLKiTreeItemElement, selected: boolean): void {
@@ -223,7 +257,6 @@ export class KiTree {
 
   private setExpanded(row: Row, expanded: boolean): void {
     if (!row.disabled && row.branch && row.expanded !== expanded) {
-      row.item.setAttribute('aria-expanded', String(expanded));
       row.item.expanded = expanded;
       this.reconcile();
     }
@@ -238,11 +271,16 @@ export class KiTree {
 
   private moveFocus(row: Row | undefined, focus: boolean): void {
     if (!row) return;
+    const control = itemControl(row.item);
+    if (!control) return;
     this.entered = true;
-    if (this.tabStop && this.tabStop !== row.item) this.tabStop.tabIndex = -1;
+    if (this.tabStop && this.tabStop !== row.item) {
+      const previous = itemControl(this.tabStop);
+      if (previous) previous.tabIndex = -1;
+    }
     this.tabStop = row.item;
-    this.tabStop.tabIndex = 0;
-    if (focus) this.tabStop.focus();
+    control.tabIndex = 0;
+    if (focus) control.focus();
   }
 
   private readonly onFocusIn = (event: FocusEvent): void => {

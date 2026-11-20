@@ -9,6 +9,9 @@ import { defineCustomElement as defineTree } from '../../../dist/components/ki-t
 
 const browser = commands as unknown as {
   ariaSnapshot: (selector: string) => Promise<string>;
+  accessibilityTree: () => Promise<
+    { role: string; name: string; parentRole: string; parentName: string }[] | null
+  >;
   emulateForcedColors: (value: 'active' | 'none' | null) => Promise<void>;
   emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
 };
@@ -66,11 +69,18 @@ function spinnerVisible(): boolean {
   return (spinner?.getClientRects().length ?? 0) > 0;
 }
 
+async function expectRowState(id: string, attribute: string, value: string | null): Promise<void> {
+  await expect.poll(() => part(id, 'row')?.getAttribute(attribute)).toBe(value);
+}
+
+async function expectRowFocus(id: string): Promise<void> {
+  await expect.poll(() => item(id).shadowRoot?.activeElement).toBe(paintedPart(id, 'row'));
+}
+
 async function focusItem(id: string): Promise<void> {
-  await expect.poll(() => part(id, 'row')).toBeInstanceOf(HTMLElement);
-  await expect.element(item(id)).toHaveAttribute('role', 'treeitem');
-  item(id).focus();
-  await expect.element(item(id)).toHaveFocus();
+  await expectRowState(id, 'role', 'treeitem');
+  paintedPart(id, 'row').focus();
+  await expectRowFocus(id);
 }
 
 function itemEvents(tree: HTMLElement) {
@@ -122,7 +132,7 @@ it('S1 opens a collapsed branch from the disclosure and emits one expansion even
 
   await clickPart('tokens', 'disclosure');
 
-  await expect.element(item('tokens')).toHaveAttribute('aria-expanded', 'true');
+  await expectRowState('tokens', 'aria-expanded', 'true');
   await expect.element(item('preview')).toBeVisible();
   expect(events).toEqual([{ type: 'ki-expand', item: item('tokens') }]);
 });
@@ -132,7 +142,7 @@ it('S1 closes an expanded branch from the disclosure and emits one collapse even
 
   await clickPart('source', 'disclosure');
 
-  await expect.element(item('source')).toHaveAttribute('aria-expanded', 'false');
+  await expectRowState('source', 'aria-expanded', 'false');
   await expect.element(item('dialog')).not.toBeVisible();
   expect(events).toEqual([{ type: 'ki-collapse', item: item('source') }]);
 });
@@ -142,8 +152,8 @@ it('S2 switches the single selection and emits the new selected item', async () 
 
   await page.getByRole('treeitem', { name: 'Package', exact: true }).click();
 
-  await expect.element(item('package')).toHaveAttribute('aria-selected', 'true');
-  await expect.element(item('dialog')).toHaveAttribute('aria-selected', 'false');
+  await expectRowState('package', 'aria-selected', 'true');
+  await expectRowState('dialog', 'aria-selected', 'false');
   expect(events).toEqual([[item('package')]]);
 });
 
@@ -163,11 +173,11 @@ it('S3 checks the enabled descendants of a branch and leaves a disabled subtree 
 
   await clickPart('source', 'checkbox');
 
-  await expect.element(item('source')).toHaveAttribute('aria-checked', 'true');
-  await expect.element(item('dialog')).toHaveAttribute('aria-checked', 'true');
-  await expect.element(item('styles')).toHaveAttribute('aria-checked', 'true');
-  await expect.element(item('archived')).not.toHaveAttribute('aria-checked', 'true');
-  await expect.element(item('legacy')).not.toHaveAttribute('aria-checked', 'true');
+  await expectRowState('source', 'aria-checked', 'true');
+  await expectRowState('dialog', 'aria-checked', 'true');
+  await expectRowState('styles', 'aria-checked', 'true');
+  await expectRowState('archived', 'aria-checked', 'false');
+  await expectRowState('legacy', 'aria-checked', 'false');
   expect(events).toEqual([[item('source'), item('dialog'), item('styles')]]);
 });
 
@@ -180,15 +190,15 @@ it('S3 S14 exposes a mixed parent when a checked child is cleared', async () => 
     'selection="multiple"',
   );
   const events = selectionEvents(tree);
-  await expect.element(item('source')).toHaveAttribute('aria-checked', 'true');
+  await expectRowState('source', 'aria-checked', 'true');
 
   await clickPart('dialog', 'checkbox');
 
   await expect.element(tree).toHaveAttribute('aria-multiselectable', 'true');
-  await expect.element(item('source')).toHaveAttribute('aria-checked', 'mixed');
-  await expect.element(item('source')).not.toHaveAttribute('aria-selected');
-  await expect.element(item('dialog')).toHaveAttribute('aria-checked', 'false');
-  await expect.element(item('styles')).toHaveAttribute('aria-checked', 'true');
+  await expectRowState('source', 'aria-checked', 'mixed');
+  await expectRowState('source', 'aria-selected', null);
+  await expectRowState('dialog', 'aria-checked', 'false');
+  await expectRowState('styles', 'aria-checked', 'true');
   expect(events).toEqual([[item('styles')]]);
 });
 
@@ -197,7 +207,7 @@ it('S4 starts a lazy load once and shows the loading row while expanded', async 
 
   await clickPart('tokens', 'disclosure');
   await expect.poll(spinnerVisible).toBe(true);
-  await expect.element(item('tokens')).toHaveAttribute('aria-expanded', 'true');
+  await expectRowState('tokens', 'aria-expanded', 'true');
   await clickPart('tokens', 'disclosure');
   await expect.poll(spinnerVisible).toBe(false);
   await clickPart('tokens', 'disclosure');
@@ -230,7 +240,7 @@ it('S5 finishes an empty lazy load when the host clears lazy', async () => {
   item('tokens').removeAttribute('lazy');
 
   await expect.poll(spinnerVisible).toBe(false);
-  await expect.element(item('tokens')).not.toHaveAttribute('aria-expanded');
+  await expectRowState('tokens', 'aria-expanded', null);
 });
 
 it('S6 follows a native URL without selecting the destination in none mode', async () => {
@@ -247,8 +257,8 @@ it('S6 follows a native URL without selecting the destination in none mode', asy
     await clickPart('guide', 'label');
 
     await expect.poll(() => location.hash).toBe('#tree-guide');
-    await expect.element(item('guide')).not.toHaveAttribute('aria-selected');
-    await expect.element(item('guide')).not.toHaveAttribute('aria-checked');
+    await expectRowState('guide', 'aria-selected', null);
+    await expectRowState('guide', 'aria-checked', null);
     expect(events).toEqual([]);
   } finally {
     history.replaceState(history.state, '', previousUrl);
@@ -262,36 +272,45 @@ it('S7 keeps a disabled branch focusable and inert under pointer and keyboard in
   await focusItem('paths');
 
   await userEvent.keyboard('{ArrowDown}');
-  await expect.element(item('archived')).toHaveFocus();
+  await expectRowFocus('archived');
   await userEvent.keyboard('{ArrowRight}{Enter} ');
   paintedPart('archived', 'disclosure').click();
 
-  await expect.element(item('archived')).toHaveAttribute('aria-expanded', 'false');
+  await expectRowState('archived', 'aria-expanded', 'false');
   await expect.element(item('legacy')).not.toBeVisible();
   expect(expansion).toEqual([]);
   expect(selection).toEqual([]);
 });
 
-it('S8 gives the visible selected item the only tab stop inside the tree', async () => {
-  const tree = mount();
-  const before = document.createElement('button');
-  before.textContent = 'Before files';
-  before.tabIndex = 0;
-  const after = document.createElement('button');
-  after.textContent = 'After files';
-  after.tabIndex = 0;
-  tree.before(before);
-  tree.after(after);
-  await expect.element(item('dialog')).toHaveAttribute('tabindex', '0');
-  before.focus();
+it.each(['dialog', 'styles'])(
+  'S8 Tabs to the visible selected %s as the only tab stop',
+  async (selected) => {
+    const tree = mount();
+    const before = document.createElement('button');
+    before.textContent = 'Before files';
+    before.tabIndex = 0;
+    const after = document.createElement('button');
+    after.textContent = 'After files';
+    after.tabIndex = 0;
+    tree.before(before);
+    tree.after(after);
+    await expectRowState('dialog', 'tabindex', '0');
+    if (selected === 'styles') item(selected).setAttribute('selected', '');
+    await expectRowState(selected, 'tabindex', '0');
+    before.focus();
 
-  await userEvent.tab();
-  await expect.element(item('dialog')).toHaveFocus();
-  await userEvent.tab();
+    await userEvent.tab();
+    await expectRowFocus(selected);
+    await userEvent.tab();
 
-  await expect.element(after).toHaveFocus();
-  expect([...tree.querySelectorAll('[tabindex="0"]')]).toEqual([item('dialog')]);
-});
+    await expect.element(after).toHaveFocus();
+    const tabbableRows = [...tree.querySelectorAll('ki-tree-item')]
+      .map((host) => host.shadowRoot?.querySelector('[part="row"][tabindex="0"]'))
+      .filter((row) => row != null);
+    expect(tabbableRows).toEqual([paintedPart(selected, 'row')]);
+    expect(tree.querySelector('[tabindex="0"]')).toBeNull();
+  },
+);
 
 it.each([
   ['ArrowDown', 'styles', 'tokens'],
@@ -305,8 +324,8 @@ it.each([
 
   await userEvent.keyboard(`{${key}}`);
 
-  await expect.element(item(target)).toHaveFocus();
-  await expect.element(item('dialog')).toHaveAttribute('aria-selected', 'true');
+  await expectRowFocus(target);
+  await expectRowState('dialog', 'aria-selected', 'true');
 });
 
 it.each([
@@ -318,17 +337,17 @@ it.each([
   await focusItem('tokens');
 
   await userEvent.keyboard(`{${towardChild}}`);
-  await expect.element(item('tokens')).toHaveAttribute('aria-expanded', 'true');
-  await expect.element(item('tokens')).toHaveFocus();
+  await expectRowState('tokens', 'aria-expanded', 'true');
+  await expectRowFocus('tokens');
   await userEvent.keyboard(`{${towardChild}}`);
-  await expect.element(item('preview')).toHaveFocus();
+  await expectRowFocus('preview');
 
   await userEvent.keyboard(`{${towardParent}}`);
-  await expect.element(item('tokens')).toHaveFocus();
+  await expectRowFocus('tokens');
   await userEvent.keyboard(`{${towardParent}}`);
 
-  await expect.element(item('tokens')).toHaveAttribute('aria-expanded', 'false');
-  await expect.element(item('tokens')).toHaveFocus();
+  await expectRowState('tokens', 'aria-expanded', 'false');
+  await expectRowFocus('tokens');
 });
 
 it('S10 indents the child toward inline end and mirrors the disclosure in RTL', async () => {
@@ -362,7 +381,7 @@ it('S11 wraps type-ahead over visible item names and skips collapsed descendants
 
   await userEvent.keyboard('pa');
 
-  await expect.element(item('package')).toHaveFocus();
+  await expectRowFocus('package');
   await expect.element(item('preview')).not.toBeVisible();
 });
 
@@ -379,24 +398,43 @@ it.each([
 
   await userEvent.keyboard(key);
 
-  await expect.element(item('styles')).toHaveAttribute(attribute, 'true');
+  await expectRowState('styles', attribute, 'true');
   expect(events).toEqual([[item('styles')]]);
 });
 
 it('S13 exposes one named tree with branch groups, levels and item states', async () => {
   mount();
   await expect.element(page.getByRole('tree', { name: 'Files', exact: true })).toBeVisible();
-  await expect.element(item('source')).toHaveAttribute('aria-level', '1');
-  await expect.element(item('source')).toHaveAttribute('aria-expanded', 'true');
-  await expect.element(item('dialog')).toHaveAttribute('aria-level', '2');
-  await expect.element(item('dialog')).toHaveAttribute('aria-selected', 'true');
-  await expect.element(item('dialog')).not.toHaveAttribute('aria-expanded');
-  await expect.element(item('archived')).toHaveAttribute('aria-disabled', 'true');
+  await expectRowState('source', 'aria-level', '1');
+  await expectRowState('source', 'aria-expanded', 'true');
+  await expectRowState('source', 'aria-owns', paintedPart('source', 'group').id);
+  await expectRowState('dialog', 'aria-level', '2');
+  await expectRowState('dialog', 'aria-selected', 'true');
+  await expectRowState('dialog', 'aria-expanded', null);
+  await expectRowState('archived', 'aria-disabled', 'true');
   const snapshot = await browser.ariaSnapshot('#files');
 
   expect(snapshot).toContain('tree "Files"');
   expect(snapshot).toContain('treeitem "Source"');
   expect(snapshot).toMatch(/- group[^\n]*:\n\s*- treeitem "Dialog"/);
+  // Playwright's snapshot resolves aria-owns from the document. The engine
+  // can resolve the group in the row's shadow root, so verify that via CDP.
+  const nodes = await browser.accessibilityTree();
+  if (nodes) {
+    expect(nodes).toContainEqual(
+      expect.objectContaining({ role: 'group', parentRole: 'treeitem', parentName: 'Source' }),
+    );
+  }
+});
+
+it('S13 honors a name supplied by the author on the item host', async () => {
+  mount();
+  item('source').setAttribute('aria-label', 'Source files');
+
+  await expect
+    .element(page.getByRole('treeitem', { name: 'Source files', exact: true }))
+    .toBeVisible();
+  expect(item('source').getAttribute('aria-label')).toBe('Source files');
 });
 
 it('S15 passes axe with selectable, mixed, disabled and loading rows', async () => {
@@ -408,7 +446,7 @@ it('S15 passes axe with selectable, mixed, disabled and loading rows', async () 
     <ki-tree-item disabled>Archived</ki-tree-item>`,
     'selection="multiple"',
   );
-  await expect.element(item('source')).toHaveAttribute('aria-checked', 'mixed');
+  await expectRowState('source', 'aria-checked', 'mixed');
 
   await clickPart('tokens', 'disclosure');
 
@@ -452,7 +490,7 @@ it('S17 keeps selection and keyboard focus visible in forced colors', async ({ s
     }
     await userEvent.keyboard('{ArrowDown}');
 
-    await expect.element(item('dialog')).toHaveFocus();
+    await expectRowFocus('dialog');
     const selected = getComputedStyle(paintedPart('dialog', 'row'));
     const unselected = getComputedStyle(paintedPart('styles', 'row'));
     expect(selected.backgroundColor).not.toBe(unselected.backgroundColor);

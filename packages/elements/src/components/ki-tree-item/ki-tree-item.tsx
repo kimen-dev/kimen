@@ -2,7 +2,7 @@ import '../../../icons/check.js';
 import '../../../icons/chevron-right.js';
 import '../../../icons/minus.js';
 import { Component, Element, Event, Prop, State, Watch, h } from '@stencil/core';
-import { CHILDREN_SLOT, itemChildren } from '../ki-tree/ki-tree.dom';
+import { CHILDREN_SLOT, itemChildren, rowReady } from '../ki-tree/ki-tree.dom';
 
 interface EventEmitter<T> {
   emit(detail: T): CustomEvent<T>;
@@ -23,8 +23,8 @@ interface EventEmitter<T> {
  * @part label - Visible row text or native destination link.
  * @part group - The region containing the expanded child items.
  */
-// Shadow separates the row label from the children without asking the author
-// to name slots. The parent tree owns role, selection and focus on this host.
+// The focusable row owns its sibling group within the same shadow root.
+// The group's visible text does not belong to the row's label.
 @Component({ tag: 'ki-tree-item', styleUrl: 'ki-tree-item.css', shadow: true })
 export class KiTreeItem {
   @Element() private readonly host!: HTMLKiTreeItemElement;
@@ -68,6 +68,8 @@ export class KiTreeItem {
   private loadRequested = false;
 
   componentDidLoad(): void {
+    const tree = this.host.closest<HTMLElement>('ki-tree');
+    if (tree) rowReady.get(tree)?.(this.host);
     this.requestChildren();
   }
 
@@ -118,25 +120,31 @@ export class KiTreeItem {
           </span>
         </span>
         {this.href && !this.disabled ? (
-          <a part="label" href={this.href} tabIndex={-1}>
+          <a id="label" part="label" href={this.href} tabIndex={-1}>
             {icon}
             <slot />
           </a>
         ) : (
-          <span part="label">
+          <span id="label" part="label">
             {icon}
             <slot />
           </span>
         )}
       </div>,
-      <div part="group" role="group" key="group">
+      <div id="children" part="group" role="group" key="group" hidden>
+        {this.loading && (
+          <div
+            class="loading"
+            role="treeitem"
+            aria-disabled="true"
+            aria-selected="false"
+            aria-label={this.loadingLabel}
+          >
+            <ki-spinner size="sm" label={this.loadingLabel} showLabel />
+          </div>
+        )}
         <slot name={CHILDREN_SLOT} onSlotchange={this.onChildrenChanged} />
       </div>,
-      this.loading && this.expanded && (
-        <div class="loading" key="loading">
-          <ki-spinner size="sm" label={this.loadingLabel} showLabel />
-        </div>
-      ),
     ];
   }
 }
