@@ -39,6 +39,9 @@ Readers can open the disclosure to follow the supplied steps as they arrive.
 - **Agent's choice, pending founder confirmation.** The API declaration uses
   the comparator's major classification for the expanded Stencil loader
   `Components` and `JSX` namespaces.
+- **Agent's choice, pending founder confirmation.** Reasoning contributes
+  13,834 raw bytes to the bundled MCP server in paired builds. The component
+  manifest records that measured allowance.
 
 ## Behavior contract
 
