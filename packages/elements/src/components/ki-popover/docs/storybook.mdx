@@ -1,0 +1,18 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-popover" />
+
+# ki-popover
+
+Anchor non-modal filters, details, or a small form to a native or Kimen button. The default slot holds the content, and `label` gives a dialog popover its accessible name.
+
+```html
+<ki-button id="project-filters" type="button" variant="secondary">Filters</ki-button>
+<ki-popover for="project-filters" label="Project filters">
+  <ki-checkbox checked>Active projects</ki-checkbox>
+</ki-popover>
+```
+
+The trigger exposes the expanded state. Escape closes the popover and restores trigger focus. Tab can reach the surrounding page. Use `kind="toggletip"` for a polite text announcement that keeps focus on the trigger.
+
+The default placement is `bottom-start`. Change it with `placement` and hide the arrow with `arrow="false"`. Use `open` to update visibility from application state. Listen for `ki-open` and `ki-close` to observe the result.
