@@ -1835,6 +1835,9 @@
           },
           "secondary-on-success-dark": {
             "$value": "rgba(13, 38, 14, 0.8)"
+          },
+          "low-em-light": {
+            "$value": "#6e6973"
           }
         },
         "state-layer": {

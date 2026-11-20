@@ -10,8 +10,8 @@
         "$description": "Material 3 focused field fill."
       },
       "field-disabled-fg": {
-        "$value": "{ki.text.low-em}",
-        "$description": "Material 3 disabled entry ink."
+        "$value": "{ki.outline.strong}",
+        "$description": "Material 3 disabled entry ink. Kept on the M3 outline role (outline.strong) when the low-em text ink darkened."
       },
       "border-block-start-width": {
         "$value": "{ki.space.zero}",
@@ -52,6 +52,10 @@
       "label-font-weight": {
         "$value": "{ki.typography.weight.body.normal}",
         "$description": "Material 3 field label font weight."
+      },
+      "stepper-disabled-fg": {
+        "$value": "{ki.outline.strong}",
+        "$description": "Material 3 keeps this mark on the M3 outline role (outline.strong), apart from the darker low-em text ink."
       }
     }
   }

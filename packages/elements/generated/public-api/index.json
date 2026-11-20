@@ -37753,7 +37753,7 @@
                 "--ki-text-inverse-black": "#ffffff",
                 "--ki-text-inverse-primary": "#d0bcff",
                 "--ki-text-inverse-white": "#000000",
-                "--ki-text-low-em": "#79747e",
+                "--ki-text-low-em": "#6e6973",
                 "--ki-text-med-em": "#49454f",
                 "--ki-text-muted": "#49454f",
                 "--ki-text-none": "rgba(255,255,255,0)",
@@ -43689,7 +43689,7 @@
                 "--ki-text-inverse-black": "#ffffff",
                 "--ki-text-inverse-primary": "#d0bcff",
                 "--ki-text-inverse-white": "#000000",
-                "--ki-text-low-em": "#79747e",
+                "--ki-text-low-em": "#6e6973",
                 "--ki-text-med-em": "#49454f",
                 "--ki-text-muted": "#49454f",
                 "--ki-text-none": "rgba(255,255,255,0)",
@@ -49625,7 +49625,7 @@
                 "--ki-text-inverse-black": "#ffffff",
                 "--ki-text-inverse-primary": "#d0bcff",
                 "--ki-text-inverse-white": "#000000",
-                "--ki-text-low-em": "#79747e",
+                "--ki-text-low-em": "#6e6973",
                 "--ki-text-med-em": "#49454f",
                 "--ki-text-muted": "#49454f",
                 "--ki-text-none": "rgba(255,255,255,0)",
@@ -55561,7 +55561,7 @@
                 "--ki-text-inverse-black": "#ffffff",
                 "--ki-text-inverse-primary": "#d0bcff",
                 "--ki-text-inverse-white": "#000000",
-                "--ki-text-low-em": "#79747e",
+                "--ki-text-low-em": "#6e6973",
                 "--ki-text-med-em": "#49454f",
                 "--ki-text-muted": "#49454f",
                 "--ki-text-none": "rgba(255,255,255,0)",
@@ -61497,7 +61497,7 @@
                 "--ki-text-inverse-black": "#ffffff",
                 "--ki-text-inverse-primary": "#d0bcff",
                 "--ki-text-inverse-white": "#000000",
-                "--ki-text-low-em": "#79747e",
+                "--ki-text-low-em": "#6e6973",
                 "--ki-text-med-em": "#49454f",
                 "--ki-text-muted": "#49454f",
                 "--ki-text-none": "rgba(255,255,255,0)",
@@ -86580,5 +86580,5 @@
       }
     }
   },
-  "surfaceSha256": "08cfd215b2b4f0fd1ab0549012c2c3a3d91ca247a0e26bd8ae5bbdf6b50fa1f9"
+  "surfaceSha256": "a2cb402f85c58abf12cae9ab9df36bf5069bdc8b3cefc1ece436d7fcb950d760"
 }

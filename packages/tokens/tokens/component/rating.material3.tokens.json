@@ -18,8 +18,8 @@
         "$description": "Backdrop of an outlined glyph."
       },
       "disabled-fg": {
-        "$value": "{ki.text.low-em}",
-        "$description": "Glyph ink while the rating is unavailable."
+        "$value": "{ki.outline.strong}",
+        "$description": "Glyph ink while the rating is unavailable. Kept on the M3 outline role (outline.strong) when the low-em text ink darkened."
       },
       "hover-bg": {
         "$value": "{ki.surface.s2}",

@@ -47,6 +47,12 @@ const CONTRAST_PAIRS = [
   // 4.27:1 at white 72% and 1.43:1 on the light Material 3 dark fill
   // (design-system review 2026-11-20).
   { text: '--ki-text-secondary-on-success', surface: '--ki-surface-success-high-em' },
+  // The neutral low-em ink sets supporting text and meta. Material 3 light
+  // read 4.0-4.3:1 with the M3 outline tone (design-system review 2026-11-20).
+  ...['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].map((surface) => ({
+    text: '--ki-text-low-em',
+    surface,
+  })),
   // The tonal med-em inks are published text tokens. Straight from the 500
   // ramp steps they read 1.7-3.5:1 on the light pages, with no component
   // painting them to trip a sweep (design-system review 2026-11-20); every

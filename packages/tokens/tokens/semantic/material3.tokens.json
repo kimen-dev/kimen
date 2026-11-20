@@ -166,8 +166,8 @@
         "$description": "Material 3 semantic color for text med em."
       },
       "low-em": {
-        "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}",
-        "$description": "Material 3 semantic color for text low em."
+        "$value": "{ki.foundation.material3.text-ink.low-em-light}",
+        "$description": "Low-emphasis text in Material 3 light: a step darker than the M3 outline tone (#79747e, 4.0-4.3:1), so supporting text and meta reach 4.5:1 or more on s0-s2. Dark keeps neutral-variant tone 60."
       },
       "base-em": {
         "$value": "{ki.foundation.material3.palette.neutral-variant.60}",
