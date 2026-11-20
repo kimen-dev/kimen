@@ -1,0 +1,508 @@
+{
+  "component": {
+    "attributes": {
+      "collapse-on-scroll": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "extended": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show the action label next to its icon.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "icon-name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the action. Also the visible text in the extended state.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "position": {
+        "default": "'static'",
+        "deprecatedSince": null,
+        "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+        "replacement": null,
+        "required": false,
+        "type": "\"fixed\" | \"static\""
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Square footprint when icon-only, and minimum size when extended.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"xl\""
+      },
+      "variant": {
+        "default": "'secondary'",
+        "deprecatedSince": null,
+        "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+        "replacement": null,
+        "required": false,
+        "type": "\"primary\" | \"secondary\" | \"surface\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete optional filter behind the FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tinted secondary FAB fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional layer painted over the FAB fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-collapse-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Duration of the extended FAB footprint change.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-collapse-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Easing of the extended FAB footprint change.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink on the tinted secondary FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface for FAB labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text size for extended FAB labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text weight for extended FAB labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-forced-colors-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Boundary width for the FAB in forced colors.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between icon and label in an extended FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "FAB elevation for a pointer that can hover.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph size of the default FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-lg-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph size of the medium FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-lg-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the medium FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-lg-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum footprint of the medium FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height for extended FAB labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-mobile-nav-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Height to reserve for mobile navigation, excluding the safe-area inset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fixed FAB gap to the viewport edge or mobile navigation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-padding-inline-end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline end padding of an extended FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-padding-inline-start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline start padding of an extended FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-primary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Strong primary FAB fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink on the strong primary FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the default FAB size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting FAB elevation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum FAB footprint in the default size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-surface-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised surface FAB fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-surface-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink on the raised surface FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-xl-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph size of the large FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-xl-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the large FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-xl-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum footprint of the large FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
+    "events": {
+      "click": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native activation click. The page or guarded renderer handles the declared action.",
+        "replacement": null,
+        "required": false,
+        "type": "Event"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "control": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native button or link, including its surface and focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapper for the decorative named or slotted glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible label of an extended FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "collapseOnScroll": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "extended": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Show the action label next to its icon.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "iconName": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the action. Also the visible text in the extended state.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "position": {
+        "default": "'static'",
+        "deprecatedSince": null,
+        "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+        "replacement": null,
+        "required": false,
+        "type": "\"fixed\" | \"static\""
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Square footprint when icon-only, and minimum size when extended.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"xl\""
+      },
+      "variant": {
+        "default": "'secondary'",
+        "deprecatedSince": null,
+        "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+        "replacement": null,
+        "required": false,
+        "type": "\"primary\" | \"secondary\" | \"surface\""
+      }
+    },
+    "slots": {
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative, noninteractive icon replacing the named glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-fab.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-fab.d.ts",
+    "symbols": {
+      "KiFab": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiFab extends Components.KiFab, HTMLElement {\n}\nexport const KiFab: {\n    prototype: KiFab;\n    new (): KiFab;\n};"
+      },
+      "KiFabPosition": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiFabPosition = 'static' | 'fixed';"
+      },
+      "KiFabSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiFabSize = 'md' | 'lg' | 'xl';"
+      },
+      "KiFabVariant": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiFabVariant = 'primary' | 'secondary' | 'surface';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-fab.js"
+  }
+}

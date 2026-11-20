@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-fab" />
+
+# ki-fab
+
+Use a floating action button for a screen's primary action. Choose one FAB per
+screen. For a visible primary action in a desktop layout, use a `ki-button`.
+
+```html
+<ki-fab label="Compose" icon-name="pencil"></ki-fab>
+<ki-fab label="New project" icon-name="plus" href="/projects/new" extended></ki-fab>
+```
+
+Import named glyphs before mounting the examples. For example,
+`import '@kimen/elements/icons/pencil'` registers the Pencil glyph. The
+`icon` slot accepts a decorative glyph in place of `icon-name`.
+
+## Interaction
+
+`label` is the accessible name in both layouts. With `extended`, it also
+appears next to the glyph. Enter and Space activate a focused button. A FAB
+with `href` is a native link that follows its destination on Enter.
+
+With `position="fixed"`, place the FAB after the main content. Reserve space
+under the last item for the FAB size, its offsets, the bottom safe area and
+any fixed navigation. Set `--ki-fab-mobile-nav-block-size` to the navigation's
+block size excluding the safe area. Add `collapse-on-scroll` to an extended
+FAB to hide the visible label on downward page scroll and restore it on
+upward scroll. The control keeps its focus and accessible name. With reduced
+motion, the layout change is immediate.
+
+## Customization
+
+The `md`, `lg` and `xl` sizes are 56, 80 and 96 px at a 16 px root font size.
+`secondary` is the default tinted variant. `primary` uses a strong fill and
+`surface` uses a raised surface. Use `--ki-fab-bg` and `--ki-fab-fg` for the
+default color pair or the corresponding variant tokens for other fills.
+`--ki-fab-bg-image` and `--ki-fab-backdrop-filter` default to `none`.
+
+The `control`, `icon` and `label` parts expose the native control, the
+decorative icon wrapper and the visible label.
