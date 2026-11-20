@@ -213,6 +213,11 @@ it('S9 keeps the status and keyboard focus visible in forced colors', async (con
   await expect.poll(paletteApplied).toBe(true);
 
   const control = part(host, 'summary');
+  const before = document.createElement('button');
+  before.textContent = 'Previous';
+  before.tabIndex = 0;
+  fixture.prepend(before);
+  before.focus();
   await userEvent.tab();
   await expect.poll(() => host.shadowRoot?.activeElement).toBe(control);
   const focus = getComputedStyle(control);
@@ -253,7 +258,7 @@ it('S13 displays the approval badge without a duration', async () => {
   const badge = part(host, 'status');
   expect(badge.getAttribute('tone')).toBe('warning');
   await expect.element(summary()).toHaveTextContent('Needs approval');
-  await expect.element(summary()).not.toHaveTextContent(/3\s*sec/u);
+  expect(summary().textContent).not.toMatch(/3\s*sec/u);
 });
 
 it('S14 opens an automatic disclosure when the status becomes Failed', async () => {
