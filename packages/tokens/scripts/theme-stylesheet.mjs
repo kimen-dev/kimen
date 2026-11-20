@@ -70,6 +70,14 @@ const COLOUR_LITERAL = /^(?:#[0-9a-f]{3,8}|rgba?\([^()]*\)|transparent)$/iu;
 const REFERENCE = /^var\((--[a-z0-9-]+)\)$/u;
 
 /**
+ * A private foundation literal is inlined where it is referenced and never
+ * declared: `ki.foundation.onmars-v2.*` and `ki.foundation.material3.text-ink.*`.
+ */
+export function isPrivateFoundation([group, subgroup]) {
+  return group === 'onmars-v2' || (group === 'material3' && subgroup === 'text-ink');
+}
+
+/**
  * Read one composition out of a Style Dictionary platform dictionary: for each
  * custom property, the expression to emit (references kept as `var()`) and the
  * fully resolved value. Token descriptions are not emitted: the stylesheet is
@@ -79,9 +87,11 @@ const REFERENCE = /^var\((--[a-z0-9-]+)\)$/u;
 export function compositionDeclarations(dictionary) {
   // Calma's private literals keep the DTCG layers closed. Emit their values
   // at the referring token instead of publishing a second set of CSS names.
+  // Material 3's text inks are private the same way: only its own semantic
+  // overrides read them, so the default stylesheet never carries them.
   const inline = new Set(
     dictionary.allTokens
-      .filter(({ path }) => path[1] === 'foundation' && path[2] === 'onmars-v2')
+      .filter(({ path }) => path[1] === 'foundation' && isPrivateFoundation(path.slice(2)))
       .map(({ name }) => `--${name}`),
   );
   const formatProperty = createPropertyFormatter({

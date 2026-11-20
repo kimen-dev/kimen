@@ -1821,6 +1821,19 @@
             "$description": "M3 md.ref.palette.neutral-variant (baseline)."
           }
         },
+        "text-ink": {
+          "$type": "color",
+          "$description": "Kimen text inks for the Material 3 light scheme where the shared tone ramps read below 4.5:1 on the M3 surfaces (design-system review 2026-11-20). M3 has no info, success or warning roles, so these stay within the Kimen hues, a step darker than onmars to clear the lavender M3 surfaces.",
+          "info-med-em-light": {
+            "$value": "#0c7292"
+          },
+          "success-med-em-light": {
+            "$value": "#0b794c"
+          },
+          "warning-med-em-light": {
+            "$value": "#965d09"
+          }
+        },
         "state-layer": {
           "$type": "color",
           "$description": "M3 state-layer colors: md.sys.state.{hover,focus,pressed,dragged}.state-layer-opacity (8% / 12% / 12% / 16%) of md.sys.color.on-surface (light #1d1b20 = neutral10, dark #e6e0e9 = neutral90). Pressed shares the focus value (both 12%).",
@@ -2550,6 +2563,15 @@
           },
           "text-primary-low-em-dark": {
             "$value": "#b18475"
+          },
+          "text-info-med-em-light": {
+            "$value": "#0c7697"
+          },
+          "text-success-med-em-light": {
+            "$value": "#0b7d4e"
+          },
+          "text-warning-med-em-light": {
+            "$value": "#9b6009"
           },
           "text-info-low-em-light": {
             "$value": "#25768f"

@@ -21,6 +21,7 @@ import {
   compositionDeclarations,
   DENSITIES,
   densityRules,
+  isPrivateFoundation,
   layeredOverrides,
   MODES,
   renderBaseStylesheet,
@@ -28,6 +29,21 @@ import {
   renderThemeStylesheet,
   themeOverrides,
 } from './theme-stylesheet.mjs';
+
+test('private foundations: onmars v2 literals and the Material 3 text inks, nothing else', () => {
+  assert.equal(isPrivateFoundation(['onmars-v2', 'palette']), true);
+  assert.equal(isPrivateFoundation(['material3', 'text-ink']), true);
+  assert.equal(isPrivateFoundation(['material3', 'palette']), false);
+  assert.equal(isPrivateFoundation(['migrated', 'themes-onmars']), false);
+});
+
+test('the built stylesheets declare no private foundation', async () => {
+  const { readFile } = await import('node:fs/promises');
+  for (const sheet of ['tokens.css', 'tokens.material3.css']) {
+    const css = await readFile(new URL(`../dist/css/${sheet}`, import.meta.url), 'utf8');
+    assert.doesNotMatch(css, /--ki-foundation-(?:onmars-v2|material3-text-ink)-/u, sheet);
+  }
+});
 
 /** A composition as the emitter sees it: name -> emitted expression + resolved value. */
 const composition = (entries) =>

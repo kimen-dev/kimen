@@ -271,6 +271,15 @@
       "primary-low-em": {
         "$value": "{ki.foundation.onmars-v2.palette.text-primary-low-em-light}"
       },
+      "info-med-em": {
+        "$value": "{ki.foundation.onmars-v2.palette.text-info-med-em-light}"
+      },
+      "success-med-em": {
+        "$value": "{ki.foundation.onmars-v2.palette.text-success-med-em-light}"
+      },
+      "warning-med-em": {
+        "$value": "{ki.foundation.onmars-v2.palette.text-warning-med-em-light}"
+      },
       "info-low-em": {
         "$value": "{ki.foundation.onmars-v2.palette.text-info-low-em-light}"
       },

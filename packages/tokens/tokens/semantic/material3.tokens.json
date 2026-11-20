@@ -229,6 +229,18 @@
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}",
         "$description": "Material 3 semantic color for text primary base em."
       },
+      "info-med-em": {
+        "$value": "{ki.foundation.material3.text-ink.info-med-em-light}",
+        "$description": "Medium-emphasis info text in Material 3 light: the info hue darkened to 4.5:1 or more on s0-s2 (the shared info-500 step reads 2.0:1). Dark keeps its own step."
+      },
+      "success-med-em": {
+        "$value": "{ki.foundation.material3.text-ink.success-med-em-light}",
+        "$description": "Medium-emphasis success text in Material 3 light: the success hue darkened to 4.5:1 or more on s0-s2 (the shared success-500 step reads 3.1:1). Dark keeps its own step."
+      },
+      "warning-med-em": {
+        "$value": "{ki.foundation.material3.text-ink.warning-med-em-light}",
+        "$description": "Medium-emphasis warning text in Material 3 light: the warning hue darkened to 4.5:1 or more on s0-s2 (the shared warning-500 step reads 1.7:1). Dark keeps its own step."
+      },
       "danger-high-em": {
         "$value": "{ki.foundation.material3.palette.error.30}",
         "$description": "High-emphasis danger text: M3 error tone 30 (AA over the error-container tints)."

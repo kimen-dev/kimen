@@ -468,7 +468,7 @@
       },
       "info-med-em": {
         "$value": "{ki.color.info.500}",
-        "$description": "semantic color for text info med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
+        "$description": "semantic color for text info med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only."
       },
       "info-low-em": {
         "$value": "{ki.color.info.300}",
@@ -484,7 +484,7 @@
       },
       "success-med-em": {
         "$value": "{ki.color.success.500}",
-        "$description": "semantic color for text success med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
+        "$description": "semantic color for text success med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only."
       },
       "success-low-em": {
         "$value": "{ki.color.success.300}",
@@ -500,7 +500,7 @@
       },
       "warning-med-em": {
         "$value": "{ki.color.warning.500}",
-        "$description": "semantic color for text warning med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
+        "$description": "semantic color for text warning med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only."
       },
       "warning-low-em": {
         "$value": "{ki.color.warning.300}",
@@ -516,7 +516,7 @@
       },
       "danger-med-em": {
         "$value": "{ki.color.danger.500}",
-        "$description": "semantic color for text danger med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
+        "$description": "semantic color for text danger med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only."
       },
       "danger-low-em": {
         "$value": "{ki.color.danger.300}",

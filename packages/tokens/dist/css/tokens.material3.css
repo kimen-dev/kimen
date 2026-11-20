@@ -211,10 +211,13 @@
   --ki-text-primary-med-em:light-dark(var(--ki-foundation-migrated-themes-material3-color-brand-500),var(--ki-foundation-migrated-themes-material3-color-brand-200));
   --ki-text-primary-low-em:light-dark(var(--ki-foundation-migrated-semantic-material3-text-primary-low-em),var(--ki-foundation-migrated-themes-material3-color-brand-300));
   --ki-text-primary-base-em:light-dark(var(--ki-foundation-migrated-themes-material3-color-brand-100),var(--ki-foundation-migrated-themes-material3-color-brand-700));
+  --ki-text-info-med-em:light-dark(#0c7292,var(--ki-color-info-400));
   --ki-text-info-low-em:light-dark(var(--ki-color-info-300),var(--ki-color-info-500));
   --ki-text-info-base-em:light-dark(var(--ki-color-info-100),var(--ki-color-info-700));
+  --ki-text-success-med-em:light-dark(#0b794c,var(--ki-color-success-400));
   --ki-text-success-low-em:light-dark(var(--ki-color-success-300),var(--ki-color-success-500));
   --ki-text-success-base-em:light-dark(var(--ki-color-success-100),var(--ki-color-success-700));
+  --ki-text-warning-med-em:light-dark(#965d09,var(--ki-color-warning-400));
   --ki-text-warning-low-em:light-dark(var(--ki-color-warning-300),var(--ki-color-warning-500));
   --ki-text-warning-base-em:light-dark(var(--ki-color-warning-100),var(--ki-color-warning-700));
   --ki-text-danger-high-em:light-dark(var(--ki-foundation-material3-palette-error-30),var(--ki-foundation-material3-palette-error-80));
