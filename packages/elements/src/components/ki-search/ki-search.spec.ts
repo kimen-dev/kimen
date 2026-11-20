@@ -19,6 +19,21 @@ describe('highlightSegments', () => {
     ]);
   });
 
+  it('keeps source offsets when a preceding character folds to more than one character', () => {
+    expect(highlightSegments('İstanbul Dialog', 'dia')).toEqual([
+      { text: 'İstanbul ', match: false },
+      { text: 'Dia', match: true },
+      { text: 'log', match: false },
+    ]);
+  });
+
+  it('matches Greek sigma at the end of a word regardless of case', () => {
+    expect(highlightSegments('φως', 'Σ')).toEqual([
+      { text: 'φω', match: false },
+      { text: 'ς', match: true },
+    ]);
+  });
+
   it.each(['', '   ', 'different'])('returns the title unchanged for %j', (query) => {
     expect(highlightSegments('Dialog', query)).toEqual([{ text: 'Dialog', match: false }]);
   });
