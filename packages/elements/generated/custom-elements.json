@@ -17667,6 +17667,354 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-table.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTable",
+          "customElement": true,
+          "tagName": "ki-table",
+          "description": "A scrollable frame for a native data table with optional sorting and selection.",
+          "whenToUse": "Show records with shared fields that people compare, scan or sort.\nSupply a native caption, column headers with scope=\"col\" and record headers\nwith scope=\"row\". Mark numeric cells with data-numeric and secondary cells\nwith data-meta. The host application supplies the native table markup.",
+          "whenNotToUse": "Lay out a screen, show a short one-line list, or present the\nname-value details of one record. Use CSS grid, ki-list or a description list.",
+          "attributes": [
+            {
+              "name": "density",
+              "fieldName": "density",
+              "type": {
+                "text": "\"compact\" | \"default\""
+              },
+              "default": "'default'",
+              "description": "Row density. Default measures 48px and compact measures 40px at a 16px root on desktop."
+            },
+            {
+              "name": "loading",
+              "fieldName": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the native table busy and adds a decorative loading row after the current records."
+            },
+            {
+              "name": "row-selection-label",
+              "fieldName": "rowSelectionLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Select {row}'",
+              "description": "Accessible name template for each row checkbox. Include {row} for the row header or key."
+            },
+            {
+              "name": "select-all-label",
+              "fieldName": "selectAllLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Select all rows'",
+              "description": "Accessible name for the bulk selection checkbox. Translate for the page language."
+            },
+            {
+              "name": "selectable",
+              "fieldName": "selectable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a leading selection column with a checked, mixed or unchecked bulk control.\nGive each selectable body row a distinct, nonempty data-key. Register\nki-checkbox alongside ki-table when using individual component imports."
+            },
+            {
+              "name": "sticky-header",
+              "fieldName": "stickyHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keeps the native column header in view inside a vertically constrained frame."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "density",
+              "privacy": "public",
+              "type": {
+                "text": "\"compact\" | \"default\""
+              },
+              "default": "'default'",
+              "description": "Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.",
+              "attribute": "density",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the native table busy and adds a decorative loading row after the current records.",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "rowSelectionLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Select {row}'",
+              "description": "Accessible name template for each row checkbox. Include {row} for the row header or key.",
+              "attribute": "row-selection-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "selectAllLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Select all rows'",
+              "description": "Accessible name for the bulk selection checkbox. Translate for the page language.",
+              "attribute": "select-all-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "selectable",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a leading selection column with a checked, mixed or unchecked bulk control.\nGive each selectable body row a distinct, nonempty data-key. Register\nki-checkbox alongside ki-table when using individual component imports.",
+              "attribute": "selectable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "stickyHeader",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keeps the native column header in view inside a vertically constrained frame.",
+              "attribute": "sticky-header",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-selection-change",
+              "type": {
+                "text": "CustomEvent<KiTableSelectionDetail>"
+              },
+              "description": "A person changes selection with a checkbox. The event supplies the selected\ndata-key values in displayed order."
+            },
+            {
+              "name": "ki-sort",
+              "type": {
+                "text": "CustomEvent<KiTableSortDetail>"
+              },
+              "description": "A person activates a sortable column. Use the key and direction to sort records\nand move aria-sort to the active header. The event is a request."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "One native light-DOM table with a caption, head and body. Use data-sort\non sortable headers and data-key on each record available for selection."
+            }
+          ],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-table-backdrop-filter",
+              "description": "Complete filter applied behind the frame."
+            },
+            {
+              "name": "--ki-table-bg",
+              "description": "Table frame and caption surface."
+            },
+            {
+              "name": "--ki-table-bg-image",
+              "description": "Optional image layered over the table frame."
+            },
+            {
+              "name": "--ki-table-border",
+              "description": "Frame and row dividers."
+            },
+            {
+              "name": "--ki-table-border-width",
+              "description": "Frame and row divider stroke."
+            },
+            {
+              "name": "--ki-table-caption-font-family",
+              "description": "Typeface of the native table caption."
+            },
+            {
+              "name": "--ki-table-cell-padding-inline",
+              "description": "Horizontal space inside cells."
+            },
+            {
+              "name": "--ki-table-fg",
+              "description": "Primary record and caption ink."
+            },
+            {
+              "name": "--ki-table-focus-radius",
+              "description": "Corner radius of the sort button focus ring."
+            },
+            {
+              "name": "--ki-table-focus-ring-color",
+              "description": "Keyboard focus outline ink."
+            },
+            {
+              "name": "--ki-table-focus-ring-offset",
+              "description": "Space between a focus outline and its control."
+            },
+            {
+              "name": "--ki-table-focus-ring-width",
+              "description": "Keyboard focus outline stroke."
+            },
+            {
+              "name": "--ki-table-header-bg",
+              "description": "Column header surface, including when sticky."
+            },
+            {
+              "name": "--ki-table-header-bg-image",
+              "description": "Optional image layered over the column header."
+            },
+            {
+              "name": "--ki-table-header-fg",
+              "description": "Column header ink."
+            },
+            {
+              "name": "--ki-table-header-height",
+              "description": "Column header row height."
+            },
+            {
+              "name": "--ki-table-meta-fg",
+              "description": "Secondary and numeric value ink."
+            },
+            {
+              "name": "--ki-table-radius",
+              "description": "Outer frame corner radius."
+            },
+            {
+              "name": "--ki-table-row-height",
+              "description": "Default data row height."
+            },
+            {
+              "name": "--ki-table-row-height-compact",
+              "description": "Compact data row height."
+            },
+            {
+              "name": "--ki-table-row-hover-bg",
+              "description": "Surface under a record on hover."
+            },
+            {
+              "name": "--ki-table-row-hover-fg",
+              "description": "Record ink on hover."
+            },
+            {
+              "name": "--ki-table-row-selected-bg",
+              "description": "Surface under a selected record."
+            },
+            {
+              "name": "--ki-table-row-selected-fg",
+              "description": "Record ink when selected."
+            },
+            {
+              "name": "--ki-table-skeleton",
+              "description": "Decorative loading bar fill."
+            },
+            {
+              "name": "--ki-table-skeleton-height",
+              "description": "Loading bar height."
+            },
+            {
+              "name": "--ki-table-skeleton-radius",
+              "description": "Loading bar corner radius."
+            },
+            {
+              "name": "--ki-table-sort-gap",
+              "description": "Space between a column label and sort indicator."
+            },
+            {
+              "name": "--ki-table-sort-glyph-size",
+              "description": "Decorative sort indicator edge."
+            },
+            {
+              "name": "--ki-table-touch-target-min",
+              "description": "Minimum width and height of controls with a coarse pointer."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTable",
+          "declaration": {
+            "name": "KiTable",
+            "module": "dist/components/ki-table.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-table",
+          "declaration": {
+            "name": "KiTable",
+            "module": "dist/components/ki-table.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-tabs.js",
       "declarations": [
         {

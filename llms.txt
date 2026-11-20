@@ -99,6 +99,7 @@ methods, CSS custom properties and examples.
 - [ki-switch](https://kimen.dev/llms/ki-switch.md): binary settings whose change takes effect immediately, always with a slotted label.
 - [ki-tab](https://kimen.dev/llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional `start` and `end` slot media.
 - [ki-tab-panel](https://kimen.dev/llms/ki-tab-panel.md): hold the content for one peer tab view, sharing `value` with its `ki-tab`.
+- [ki-table](https://kimen.dev/llms/ki-table.md): Show records with shared fields that people compare, scan or sort.
 - [ki-tabs](https://kimen.dev/llms/ki-tabs.md): switch between small sets of peer views inside the same page, with one visible panel at a time.
 - [ki-textarea](https://kimen.dev/llms/ki-textarea.md): free-form text longer than one line, such as comments, descriptions, messages, delivery notes, or addresses when paired with a matching `autocomplete` purpose.
 - [ki-toast](https://kimen.dev/llms/ki-toast.md): confirm an action that happened elsewhere on screen ("Changes saved", "Link copied"), report a background result ("Export ready"), or offer a quick undo.

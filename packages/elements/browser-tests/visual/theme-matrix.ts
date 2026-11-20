@@ -30,6 +30,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-stack',
   'ki-stat',
   'ki-stepper',
+  'ki-table',
 ]);
 
 /** Both schemes are alternately themed when the component contract requires it. */

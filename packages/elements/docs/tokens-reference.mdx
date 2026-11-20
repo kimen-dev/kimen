@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 478 semantic
-and 1632 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 479 semantic
+and 1663 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -211,6 +211,7 @@ every component at once.
 | `--ki-layout-floating-action-xl-icon` | `2.25rem` | Large floating action glyph (36px at the default root size). |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
+| `--ki-layout-rule-width` | `1px` | The width of a hairline rule separating adjacent content. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
@@ -2371,6 +2372,42 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-panel-focus-ring-width` | `0.125rem` | dimension used by the tab panel component for focus ring width. |
 | `--ki-tab-panel-padding-block` | `0.625rem` | dimension used by the tab panel component for padding block. |
 | `--ki-tab-panel-padding-inline` | `0.625rem` | dimension used by the tab panel component for padding inline. |
+
+### `ki-table`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-table-backdrop-filter` | `none` | Complete filter applied behind the frame. |
+| `--ki-table-bg` | `#ffffff` | Table frame and caption surface. |
+| `--ki-table-bg-image` | `none` | Optional image layered over the table frame. |
+| `--ki-table-border` | `rgba(24, 22, 19, 0.1)` | Frame and row dividers. |
+| `--ki-table-border-width` | `1px` | Frame and row divider stroke. |
+| `--ki-table-caption-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the native table caption. |
+| `--ki-table-cell-padding-inline` | `0.75rem` | Horizontal space inside cells. |
+| `--ki-table-fg` | `#181613` | Primary record and caption ink. |
+| `--ki-table-focus-radius` | `2px` | Corner radius of the sort button focus ring. |
+| `--ki-table-focus-ring-color` | `#bb4e2a` | Keyboard focus outline ink. |
+| `--ki-table-focus-ring-offset` | `0.125rem` | Space between a focus outline and its control. |
+| `--ki-table-focus-ring-width` | `0.125rem` | Keyboard focus outline stroke. |
+| `--ki-table-header-bg` | `#f9f7f4` | Column header surface, including when sticky. |
+| `--ki-table-header-bg-image` | `none` | Optional image layered over the column header. |
+| `--ki-table-header-fg` | `#5e5953` | Column header ink. |
+| `--ki-table-header-height` | `2.5rem` | Column header row height. |
+| `--ki-table-meta-bg` | `#ffffff` | Surface behind secondary and numeric values at rest. |
+| `--ki-table-meta-fg` | `#5e5953` | Secondary and numeric value ink. |
+| `--ki-table-radius` | `12px` | Outer frame corner radius. |
+| `--ki-table-row-height` | `3rem` | Default data row height. |
+| `--ki-table-row-height-compact` | `2.5rem` | Compact data row height. |
+| `--ki-table-row-hover-bg` | `#f9f7f4` | Surface under a record on hover. |
+| `--ki-table-row-hover-fg` | `#181613` | Record ink on hover. |
+| `--ki-table-row-selected-bg` | `#ffebe5` | Surface under a selected record. |
+| `--ki-table-row-selected-fg` | `#181613` | Record ink when selected. |
+| `--ki-table-skeleton` | `#ebe7e1` | Decorative loading bar fill. |
+| `--ki-table-skeleton-height` | `0.625rem` | Loading bar height. |
+| `--ki-table-skeleton-radius` | `1000px` | Loading bar corner radius. |
+| `--ki-table-sort-gap` | `0.25rem` | Space between a column label and sort indicator. |
+| `--ki-table-sort-glyph-size` | `0.875rem` | Decorative sort indicator edge. |
+| `--ki-table-touch-target-min` | `2.75rem` | Minimum width and height of controls with a coarse pointer. |
 
 ### `ki-tabs`
 

@@ -46,6 +46,7 @@ import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiStepState } from "./components/ki-step/ki-step";
 import { KiStepperOrientation } from "./components/ki-stepper/ki-stepper";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
+import { KiTableDensity, KiTableSelectionDetail, KiTableSortDetail } from "./components/ki-table/ki-table";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
@@ -93,6 +94,7 @@ export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiStepState } from "./components/ki-step/ki-step";
 export { KiStepperOrientation } from "./components/ki-stepper/ki-stepper";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
+export { KiTableDensity, KiTableSelectionDetail, KiTableSortDetail } from "./components/ki-table/ki-table";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
@@ -2179,6 +2181,47 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A scrollable frame for a native data table with optional sorting and selection.
+     * @whenToUse Show records with shared fields that people compare, scan or sort.
+     * Supply a native caption, column headers with scope="col" and record headers
+     * with scope="row". Mark numeric cells with data-numeric and secondary cells
+     * with data-meta. The host application supplies the native table markup.
+     * @whenNotToUse Lay out a screen, show a short one-line list, or present the
+     * name-value details of one record. Use CSS grid, ki-list or a description list.
+     */
+    interface KiTable {
+        /**
+          * Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.
+          * @default 'default'
+         */
+        "density": KiTableDensity;
+        /**
+          * Makes the native table busy and adds a decorative loading row after the current records.
+          * @default false
+         */
+        "loading": boolean;
+        /**
+          * Accessible name template for each row checkbox. Include {row} for the row header or key.
+          * @default 'Select {row}'
+         */
+        "rowSelectionLabel": string;
+        /**
+          * Accessible name for the bulk selection checkbox. Translate for the page language.
+          * @default 'Select all rows'
+         */
+        "selectAllLabel": string;
+        /**
+          * Adds a leading selection column with a checked, mixed or unchecked bulk control. Give each selectable body row a distinct, nonempty data-key. Register ki-checkbox alongside ki-table when using individual component imports.
+          * @default false
+         */
+        "selectable": boolean;
+        /**
+          * Keeps the native column header in view inside a vertically constrained frame.
+          * @default false
+         */
+        "stickyHeader": boolean;
+    }
+    /**
      * A tab group for switching between peer content views.
      * @whenToUse switch between small sets of peer views inside the same page,
      * with one visible panel at a time.
@@ -2469,6 +2512,10 @@ export interface KiPopoverCustomEvent<T> extends CustomEvent<T> {
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiSegmentedControlElement;
+}
+export interface KiTableCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiTableElement;
 }
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3513,6 +3560,33 @@ declare global {
         prototype: HTMLKiTabPanelElement;
         new (): HTMLKiTabPanelElement;
     };
+    interface HTMLKiTableElementEventMap {
+        "ki-sort": KiTableSortDetail;
+        "ki-selection-change": KiTableSelectionDetail;
+    }
+    /**
+     * A scrollable frame for a native data table with optional sorting and selection.
+     * @whenToUse Show records with shared fields that people compare, scan or sort.
+     * Supply a native caption, column headers with scope="col" and record headers
+     * with scope="row". Mark numeric cells with data-numeric and secondary cells
+     * with data-meta. The host application supplies the native table markup.
+     * @whenNotToUse Lay out a screen, show a short one-line list, or present the
+     * name-value details of one record. Use CSS grid, ki-list or a description list.
+     */
+    interface HTMLKiTableElement extends Components.KiTable, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiTableElementEventMap>(type: K, listener: (this: HTMLKiTableElement, ev: KiTableCustomEvent<HTMLKiTableElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiTableElementEventMap>(type: K, listener: (this: HTMLKiTableElement, ev: KiTableCustomEvent<HTMLKiTableElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiTableElement: {
+        prototype: HTMLKiTableElement;
+        new (): HTMLKiTableElement;
+    };
     interface HTMLKiTabsElementEventMap {
         "ki-change": { value: string };
     }
@@ -3723,6 +3797,7 @@ declare global {
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
         "ki-tab-panel": HTMLKiTabPanelElement;
+        "ki-table": HTMLKiTableElement;
         "ki-tabs": HTMLKiTabsElement;
         "ki-textarea": HTMLKiTextareaElement;
         "ki-toast": HTMLKiToastElement;
@@ -5901,6 +5976,55 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A scrollable frame for a native data table with optional sorting and selection.
+     * @whenToUse Show records with shared fields that people compare, scan or sort.
+     * Supply a native caption, column headers with scope="col" and record headers
+     * with scope="row". Mark numeric cells with data-numeric and secondary cells
+     * with data-meta. The host application supplies the native table markup.
+     * @whenNotToUse Lay out a screen, show a short one-line list, or present the
+     * name-value details of one record. Use CSS grid, ki-list or a description list.
+     */
+    interface KiTable {
+        /**
+          * Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.
+          * @default 'default'
+         */
+        "density"?: KiTableDensity;
+        /**
+          * Makes the native table busy and adds a decorative loading row after the current records.
+          * @default false
+         */
+        "loading"?: boolean;
+        /**
+          * A person changes selection with a checkbox. The event supplies the selected data-key values in displayed order.
+         */
+        "onKi-selection-change"?: (event: KiTableCustomEvent<KiTableSelectionDetail>) => void;
+        /**
+          * A person activates a sortable column. Use the key and direction to sort records and move aria-sort to the active header. The event is a request.
+         */
+        "onKi-sort"?: (event: KiTableCustomEvent<KiTableSortDetail>) => void;
+        /**
+          * Accessible name template for each row checkbox. Include {row} for the row header or key.
+          * @default 'Select {row}'
+         */
+        "rowSelectionLabel"?: string;
+        /**
+          * Accessible name for the bulk selection checkbox. Translate for the page language.
+          * @default 'Select all rows'
+         */
+        "selectAllLabel"?: string;
+        /**
+          * Adds a leading selection column with a checked, mixed or unchecked bulk control. Give each selectable body row a distinct, nonempty data-key. Register ki-checkbox alongside ki-table when using individual component imports.
+          * @default false
+         */
+        "selectable"?: boolean;
+        /**
+          * Keeps the native column header in view inside a vertically constrained frame.
+          * @default false
+         */
+        "stickyHeader"?: boolean;
+    }
+    /**
      * A tab group for switching between peer content views.
      * @whenToUse switch between small sets of peer views inside the same page,
      * with one visible panel at a time.
@@ -6563,6 +6687,14 @@ declare namespace LocalJSX {
     interface KiTabPanelAttributes {
         "value": string;
     }
+    interface KiTableAttributes {
+        "density": KiTableDensity;
+        "selectable": boolean;
+        "stickyHeader": boolean;
+        "loading": boolean;
+        "selectAllLabel": string;
+        "rowSelectionLabel": string;
+    }
     interface KiTabsAttributes {
         "value": string;
         "label": string;
@@ -6663,6 +6795,7 @@ declare namespace LocalJSX {
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
+        "ki-table": Omit<KiTable, keyof KiTableAttributes> & { [K in keyof KiTable & keyof KiTableAttributes]?: KiTable[K] } & { [K in keyof KiTable & keyof KiTableAttributes as `attr:${K}`]?: KiTableAttributes[K] } & { [K in keyof KiTable & keyof KiTableAttributes as `prop:${K}`]?: KiTable[K] };
         "ki-tabs": Omit<KiTabs, keyof KiTabsAttributes> & { [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
         "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
@@ -7295,6 +7428,16 @@ declare module "@stencil/core" {
              * navigation; orphan and duplicate panels are hidden by the parent group.
              */
             "ki-tab-panel": LocalJSX.IntrinsicElements["ki-tab-panel"] & JSXBase.HTMLAttributes<HTMLKiTabPanelElement>;
+            /**
+             * A scrollable frame for a native data table with optional sorting and selection.
+             * @whenToUse Show records with shared fields that people compare, scan or sort.
+             * Supply a native caption, column headers with scope="col" and record headers
+             * with scope="row". Mark numeric cells with data-numeric and secondary cells
+             * with data-meta. The host application supplies the native table markup.
+             * @whenNotToUse Lay out a screen, show a short one-line list, or present the
+             * name-value details of one record. Use CSS grid, ki-list or a description list.
+             */
+            "ki-table": LocalJSX.IntrinsicElements["ki-table"] & JSXBase.HTMLAttributes<HTMLKiTableElement>;
             /**
              * A tab group for switching between peer content views.
              * @whenToUse switch between small sets of peer views inside the same page,

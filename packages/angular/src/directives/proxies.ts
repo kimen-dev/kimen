@@ -63,6 +63,7 @@ import { defineCustomElement as defineKiStepper } from '@kimen/elements/componen
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
 import { defineCustomElement as defineKiTab } from '@kimen/elements/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
+import { defineCustomElement as defineKiTable } from '@kimen/elements/components/ki-table.js';
 import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/ki-tabs.js';
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
@@ -1458,6 +1459,39 @@ export class KiTabPanel {
 
 
 export declare interface KiTabPanel extends Components.KiTabPanel {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiTable,
+  inputs: ['density', 'loading', 'rowSelectionLabel', 'selectAllLabel', 'selectable', 'stickyHeader']
+})
+@Component({
+  selector: 'ki-table',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'loading', 'rowSelectionLabel', 'selectAllLabel', 'selectable', 'stickyHeader'],
+})
+export class KiTable {
+  protected el: HTMLKiTableElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiTable extends Components.KiTable {
+  /**
+   * A person activates a sortable column. Use the key and direction to sort records
+and move aria-sort to the active header. The event is a request.
+   */
+  /**
+   * A person changes selection with a checkbox. The event supplies the selected
+data-key values in displayed order.
+   */
+}
 
 
 @ProxyCmp({

@@ -2092,6 +2092,10 @@
           "$value": "{ki.space.11xl}",
           "$description": "Large floating action glyph (36px at the default root size)."
         }
+      },
+      "rule-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "The width of a hairline rule separating adjacent content."
       }
     },
     "control": {

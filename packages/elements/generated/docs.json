@@ -6005,7 +6005,8 @@
         "ki-empty-state",
         "ki-fab",
         "ki-stat",
-        "ki-stepper"
+        "ki-stepper",
+        "ki-table"
       ],
       "dependencies": [],
       "dependencyGraph": {
@@ -6025,6 +6026,9 @@
           "ki-icon"
         ],
         "ki-stepper": [
+          "ki-icon"
+        ],
+        "ki-table": [
           "ki-icon"
         ]
       }
@@ -14092,6 +14096,294 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-table/ki-table.tsx",
+      "encapsulation": "none",
+      "tag": "ki-table",
+      "docs": "A scrollable frame for a native data table with optional sorting and selection.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Show records with shared fields that people compare, scan or sort.\nSupply a native caption, column headers with scope=\"col\" and record headers\nwith scope=\"row\". Mark numeric cells with data-numeric and secondary cells\nwith data-meta. The host application supplies the native table markup."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Lay out a screen, show a short one-line list, or present the\nname-value details of one record. Use CSS grid, ki-list or a description list."
+        },
+        {
+          "name": "slot",
+          "text": "- One native light-DOM table with a caption, head and body. Use data-sort\non sortable headers and data-key on each record available for selection."
+        }
+      ],
+      "usage": {
+        "examples": "# Table examples\n\nWrap one native table and keep the caption, column scope and row scope in\nthe markup. A selected row's `data-key` identifies its record after sorting\nor replacement.\n\n```html\n<ki-table id=\"services\" selectable sticky-header style=\"max-block-size: 14rem\">\n  <table>\n    <caption>Services</caption>\n    <thead>\n      <tr>\n        <th scope=\"col\" data-sort=\"name\" aria-sort=\"ascending\">Name</th>\n        <th scope=\"col\">Status</th>\n        <th scope=\"col\" data-numeric>Runs</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr data-key=\"billing\">\n        <th scope=\"row\">Billing API</th>\n        <td><ki-badge size=\"sm\" tone=\"success\">Ready</ki-badge></td>\n        <td data-numeric>64</td>\n      </tr>\n      <tr data-key=\"search\">\n        <th scope=\"row\">Search index</th>\n        <td><ki-badge size=\"sm\" tone=\"warning\">Slow</ki-badge></td>\n        <td data-numeric>18</td>\n      </tr>\n    </tbody>\n  </table>\n</ki-table>\n```\n\nWith individual imports or a framework wrapper, register `ki-checkbox` when\nusing `selectable`. The full Kimen loader registers both elements.\n\n```js\nimport { defineCustomElement as defineTable } from '@kimen/elements/ki-table';\nimport { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';\n\ndefineTable();\ndefineCheckbox();\n```\n\nApply sort requests and update the native header state from the page.\n\n```js\nconst frame = document.querySelector('#services');\nconst table = frame.querySelector('table');\n\nframe.addEventListener('ki-sort', ({ detail: { key, direction } }) => {\n  if (key !== 'name') return;\n  const body = table.tBodies[0];\n  const nameOf = (row) => row.querySelector('th[scope=\"row\"]').textContent.trim();\n  const sign = direction === 'ascending' ? 1 : -1;\n  body.append(...Array.from(body.rows).sort((a, b) => sign * nameOf(a).localeCompare(nameOf(b))));\n\n  for (const header of table.tHead.querySelectorAll('th[data-sort]')) {\n    if (header.dataset.sort === key) header.setAttribute('aria-sort', direction);\n    else header.removeAttribute('aria-sort');\n  }\n});\n\nframe.addEventListener('ki-selection-change', ({ detail: { keys } }) => {\n  updateBulkActions(keys);\n});\n```\n\nUse `density=\"compact\"` where the available block space is tight.\nDuring a refresh, set `loading` to mark the native table busy and show\na placeholder below the existing records. Remove it once the refresh ends.\n\nFor a person column, place `<ki-avatar size=\"xs\" initials=\"AG\"></ki-avatar>`\nnext to the visible name. For a row menu, use a trailing \"Actions\" header\nand a button whose name includes the row. Import\n`@kimen/elements/icons/ellipsis` before mounting the glyph.\n\n```html\n<td>\n  <ki-icon-button\n    id=\"billing-actions\"\n    size=\"xs\"\n    variant=\"ghost\"\n    label=\"More actions for Billing API\"\n  >\n    <ki-icon name=\"ellipsis\"></ki-icon>\n  </ki-icon-button>\n  <ki-menu anchor=\"billing-actions\">\n    <ki-menu-item value=\"inspect\">View service</ki-menu-item>\n  </ki-menu>\n</td>\n```\n\nGive each row trigger a unique ID and handle the menu's `ki-select` event in\nthe application. Translate the checkbox labels with `select-all-label=\"Sélectionner toutes les lignes\"`\nand `row-selection-label=\"Sélectionner {row}\"` on a French page.\n"
+      },
+      "props": [
+        {
+          "name": "density",
+          "type": "\"compact\" | \"default\"",
+          "complexType": {
+            "original": "KiTableDensity",
+            "resolved": "\"compact\" | \"default\"",
+            "references": {
+              "KiTableDensity": {
+                "location": "local",
+                "path": "src/components/ki-table/ki-table.tsx",
+                "id": "src/components/ki-table/ki-table.tsx::KiTableDensity"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "density",
+          "reflectToAttr": true,
+          "docs": "Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "compact",
+              "type": "string"
+            },
+            {
+              "value": "default",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "loading",
+          "reflectToAttr": true,
+          "docs": "Makes the native table busy and adds a decorative loading row after the current records.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "rowSelectionLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "row-selection-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name template for each row checkbox. Include {row} for the row header or key.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Select {row}'"
+            }
+          ],
+          "default": "'Select {row}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selectAllLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "select-all-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the bulk selection checkbox. Translate for the page language.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Select all rows'"
+            }
+          ],
+          "default": "'Select all rows'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selectable",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "selectable",
+          "reflectToAttr": true,
+          "docs": "Adds a leading selection column with a checked, mixed or unchecked bulk control.\nGive each selectable body row a distinct, nonempty data-key. Register\nki-checkbox alongside ki-table when using individual component imports.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "stickyHeader",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "sticky-header",
+          "reflectToAttr": true,
+          "docs": "Keeps the native column header in view inside a vertically constrained frame.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-selection-change",
+          "detail": "KiTableSelectionDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiTableSelectionDetail",
+            "resolved": "KiTableSelectionDetail",
+            "references": {
+              "KiTableSelectionDetail": {
+                "location": "local",
+                "path": "src/components/ki-table/ki-table.tsx",
+                "id": "src/components/ki-table/ki-table.tsx::KiTableSelectionDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "A person changes selection with a checkbox. The event supplies the selected\ndata-key values in displayed order.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-sort",
+          "detail": "KiTableSortDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiTableSortDetail",
+            "resolved": "KiTableSortDetail",
+            "references": {
+              "KiTableSortDetail": {
+                "location": "local",
+                "path": "src/components/ki-table/ki-table.tsx",
+                "id": "src/components/ki-table/ki-table.tsx::KiTableSortDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "A person activates a sortable column. Use the key and direction to sort records\nand move aria-sort to the active header. The event is a request.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "change",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "One native light-DOM table with a caption, head and body. Use data-sort\non sortable headers and data-key on each record available for selection."
+        }
+      ],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-table": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-tabs/ki-tabs.tsx",
       "encapsulation": "shadow",
       "tag": "ki-tabs",
@@ -15807,6 +16099,21 @@
       "declaration": "export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-switch/ki-switch.tsx"
+    },
+    "src/components/ki-table/ki-table.tsx::KiTableDensity": {
+      "declaration": "export type KiTableDensity = 'default' | 'compact';",
+      "docstring": "",
+      "path": "src/components/ki-table/ki-table.tsx"
+    },
+    "src/components/ki-table/ki-table.tsx::KiTableSortDetail": {
+      "declaration": "export interface KiTableSortDetail {\n  key: string;\n  direction: KiTableSortDirection;\n}",
+      "docstring": "",
+      "path": "src/components/ki-table/ki-table.tsx"
+    },
+    "src/components/ki-table/ki-table.tsx::KiTableSelectionDetail": {
+      "declaration": "export interface KiTableSelectionDetail {\n  keys: string[];\n}",
+      "docstring": "",
+      "path": "src/components/ki-table/ki-table.tsx"
     },
     "src/components/ki-tabs/ki-tabs.tsx::KiTabsSize": {
       "declaration": "export type KiTabsSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
