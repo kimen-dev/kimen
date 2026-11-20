@@ -2371,6 +2371,17 @@
           "$value": "none",
           "$description": "Default compact pill surface leaves the backdrop unfiltered."
         }
+      },
+      "indicator-width": {
+        "$type": "dimension",
+        "thin": {
+          "$value": "{ki.size.border.thin}",
+          "$description": "Thin selection marker for navigation within content."
+        },
+        "medium": {
+          "$value": "{ki.size.border.medium}",
+          "$description": "Medium selection marker for primary navigation."
+        }
       }
     },
     "placeholder": {
