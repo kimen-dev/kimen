@@ -1,0 +1,24 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Slider" />
+
+# Slider
+
+Choose an approximate value or a range. Provide a specific label, and add
+help text when the scale needs context.
+
+```html
+<ki-slider label="Volume" name="volume" help-text="Playback level"
+  value="60" marks="5" format="percent"></ki-slider>
+<ki-slider label="Price per night" name="price" range
+  value="20,80" format="currency" currency="EUR"></ki-slider>
+```
+
+Use `centered` for a single-thumb scale with a midpoint, and
+`orientation="vertical"` for a bottom-to-top scale. Both work in RTL.
+The end of each range is a separate focus stop with its own accessible name.
+Use `minimum-label` and `maximum-label` with translated labels.
+
+A named slider contributes one form value. For the example above that is
+`volume=60` and `price=20,80`. Listen for `input` during adjustments and
+`change` on commit.

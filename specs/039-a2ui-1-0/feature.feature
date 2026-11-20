@@ -100,8 +100,8 @@ Feature: A2UI 1.0 alongside 0.9.1 in the A2UI adapter
 
     # S14
     Scenario: An unmapped 1.0 component type renders its declared fallback
-      Given the 1.0 compatibility matrix declares no catalog mapping for "Slider"
-      When the agent sends a 1.0 slider that snaps to steps of 5
+      Given the 1.0 compatibility matrix declares no catalog mapping for "Video"
+      When the agent sends a 1.0 video with a poster
       Then the declared fallback renders in its place and the gap is reported to the agent
       And the rest of the surface renders normally
 
