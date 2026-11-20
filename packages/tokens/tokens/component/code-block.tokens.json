@@ -1,0 +1,126 @@
+{
+  "ki": {
+    "code": {
+      "bg": {
+        "$value": "{ki.surface.s1}",
+        "$type": "color",
+        "$description": "Solid backing for the header and source."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$type": "gradient",
+        "$description": "Optional image layer above the solid backing."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$type": "other",
+        "$description": "Whole backdrop filter for the figure."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$type": "color",
+        "$description": "Frame and header divider."
+      },
+      "border-width": {
+        "$value": "{ki.spacing.action-hairline}",
+        "$type": "dimension",
+        "$description": "Width of the frame and header divider."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$type": "dimension",
+        "$description": "Corner radius of the figure."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$type": "color",
+        "$description": "Default source ink."
+      },
+      "header-fg": {
+        "$value": "{ki.text.supporting}",
+        "$type": "color",
+        "$description": "Supporting language and filename ink."
+      },
+      "keyword": {
+        "$value": "{ki.text.primary-high-em}",
+        "$type": "color",
+        "$description": "Syntax ink for keywords."
+      },
+      "string": {
+        "$value": "{ki.text.success-high-em}",
+        "$type": "color",
+        "$description": "Syntax ink for strings."
+      },
+      "number": {
+        "$value": "{ki.text.warning-high-em}",
+        "$type": "color",
+        "$description": "Syntax ink for numbers."
+      },
+      "function": {
+        "$value": "{ki.text.info-high-em}",
+        "$type": "color",
+        "$description": "Syntax ink for function names."
+      },
+      "comment": {
+        "$value": "{ki.text.supporting}",
+        "$type": "color",
+        "$description": "Supporting syntax ink for comments."
+      },
+      "line-number": {
+        "$value": "{ki.text.supporting}",
+        "$type": "color",
+        "$description": "Ink for the decorative line numbers."
+      },
+      "highlight-bg": {
+        "$value": "{ki.surface.s3}",
+        "$type": "color",
+        "$description": "Fill of a highlighted line."
+      },
+      "highlight-marker": {
+        "$value": "{ki.outline.primary-high-em}",
+        "$type": "color",
+        "$description": "Inline rule identifying a highlighted line."
+      },
+      "highlight-marker-width": {
+        "$value": "{ki.focus.ring-width}",
+        "$type": "dimension",
+        "$description": "Width of the highlighted line rule."
+      },
+      "focus-color": {
+        "$value": "{ki.focus.ring-color}",
+        "$type": "color",
+        "$description": "Keyboard focus ring of the scroll area."
+      },
+      "focus-width": {
+        "$value": "{ki.focus.ring-width}",
+        "$type": "dimension",
+        "$description": "Width of the scroll area's focus ring."
+      },
+      "padding": {
+        "$value": "{ki.layout.spacing.xl}",
+        "$type": "dimension",
+        "$description": "Inset of the source and leading caption edge."
+      },
+      "header-padding": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$type": "dimension",
+        "$description": "Compact header inset and gap."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.mono}",
+        "$type": "fontFamily",
+        "$description": "Typeface for source and line numbers."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.caption-2}",
+        "$type": "dimension",
+        "$description": "Compact text size for caption and source."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.caption-2}",
+        "$type": "dimension",
+        "$description": "Line box height for caption and source."
+      }
+    }
+  }
+}

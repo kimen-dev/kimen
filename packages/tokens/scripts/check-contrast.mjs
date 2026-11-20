@@ -297,9 +297,19 @@ const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)(?:-[\w-]+)?-bg$/u;
 // guard is defeated once any other component contributes a pair).
 const CANARY_COMPONENT = 'button';
 
-// Stat paints a continuous surface under all five inks, including any
-// theme image. Check the shared solid backing without introducing row fills.
+// Several text roles share the same painted surfaces.
+const CODE_INKS = [
+  '--ki-code-keyword',
+  '--ki-code-string',
+  '--ki-code-number',
+  '--ki-code-function',
+  '--ki-code-comment',
+  '--ki-code-line-number',
+];
+
 const SHARED_SURFACE_FOREGROUNDS = {
+  '--ki-code-bg': ['--ki-code-header-fg', ...CODE_INKS],
+  '--ki-code-highlight-bg': ['--ki-code-fg', ...CODE_INKS],
   '--ki-stat-bg': [
     '--ki-stat-label-fg',
     '--ki-stat-value-fg',

@@ -4,6 +4,7 @@
  */
 
 /* eslint-disable */
+export { KiAiLabel } from './ki-ai-label.js';
 export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';
@@ -17,6 +18,7 @@ export { KiCheckbox } from './ki-checkbox.js';
 export { KiCheckboxGroup } from './ki-checkbox-group.js';
 export { KiChip } from './ki-chip.js';
 export { KiChipGroup } from './ki-chip-group.js';
+export { KiCodeBlock } from './ki-code-block.js';
 export { KiCopyButton } from './ki-copy-button.js';
 export { KiCounter } from './ki-counter.js';
 export { KiDialog } from './ki-dialog.js';
@@ -56,9 +58,12 @@ export { KiSpinner } from './ki-spinner.js';
 export { KiStack } from './ki-stack.js';
 export { KiStat } from './ki-stat.js';
 export { KiStatus } from './ki-status.js';
+export { KiStep } from './ki-step.js';
+export { KiStepper } from './ki-stepper.js';
 export { KiSwitch } from './ki-switch.js';
 export { KiTab } from './ki-tab.js';
 export { KiTabPanel } from './ki-tab-panel.js';
+export { KiTable } from './ki-table.js';
 export { KiTabs } from './ki-tabs.js';
 export { KiTextarea } from './ki-textarea.js';
 export { KiToast } from './ki-toast.js';
