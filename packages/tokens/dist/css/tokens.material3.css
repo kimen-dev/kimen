@@ -712,6 +712,7 @@
   --ki-tooltip-font-size:var(--ki-font-size-caption-2);
   --ki-tooltip-line-height:var(--ki-font-line-height-caption-2);
   --ki-tooltip-shadow:0 0 0 0 var(--ki-color-transparent-black);
+  --ki-top-nav-menu-radius:var(--ki-radius-component-md);
   --ki-video-frame-radius:var(--ki-radius-component-lg);
   --ki-video-scrim-color:var(--ki-transparent-inverse);
   --ki-video-scrim-padding:var(--ki-space-zero);

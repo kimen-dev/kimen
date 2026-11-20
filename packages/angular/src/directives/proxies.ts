@@ -45,6 +45,7 @@ import { defineCustomElement as defineKiTextarea } from '@kimen/elements/compone
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
+import { defineCustomElement as defineKiTopNav } from '@kimen/elements/components/ki-top-nav.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
 @ProxyCmp({
   defineCustomElementFn: defineKiAlert,
@@ -993,6 +994,29 @@ export class KiTooltip {
 
 
 export declare interface KiTooltip extends Components.KiTooltip {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiTopNav,
+  inputs: ['collapseAt', 'headingLevel', 'label', 'navigationLabel', 'overflowLabel', 'screenTitle', 'scrollBehavior', 'size', 'sticky', 'subtitle', 'titleAlign', 'variant']
+})
+@Component({
+  selector: 'ki-top-nav',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseAt', 'headingLevel', 'label', 'navigationLabel', 'overflowLabel', 'screenTitle', 'scrollBehavior', 'size', 'sticky', 'subtitle', 'titleAlign', 'variant'],
+})
+export class KiTopNav {
+  protected el: HTMLKiTopNavElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiTopNav extends Components.KiTopNav {}
 
 
 @ProxyCmp({

@@ -37,6 +37,7 @@ import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toas
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
+import { TopNavSize } from "./components/ki-top-nav/ki-top-nav.layout";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
@@ -69,6 +70,7 @@ export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toas
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
+export { TopNavSize } from "./components/ki-top-nav/ki-top-nav.layout";
 export namespace Components {
     /**
      * A persistent inline status message with token-backed tone semantics.
@@ -1484,6 +1486,76 @@ export namespace Components {
         "placement": KiTooltipPlacement;
     }
     /**
+     * Application navigation with responsive primary links, or a per-screen app
+     * bar with a real heading, optional search, and overflow actions.
+     * @whenToUse group a brand, up to five primary sections and global controls,
+     * or set a screen title, leading control and screen actions in app-bar mode.
+     * @whenNotToUse more than five sections or a deep navigation tree (use a
+     * sidebar), or switches between in-page views (use ki-tabs).
+     */
+    interface KiTopNav {
+        /**
+          * CSS length below which navigation collapses and single-row app bars can center their title.
+          * @default '48rem'
+         */
+        "collapseAt": string;
+        /**
+          * Native heading level for the screen title. Use 1 through 6 to fit the page outline.
+          * @default 1
+         */
+        "headingLevel": number;
+        /**
+          * Accessible name of the header's primary navigation landmark. Override for localization.
+          * @default 'Main'
+         */
+        "label": string;
+        /**
+          * Accessible name for the compact navigation button and menu. Override for localization.
+          * @default 'Open navigation'
+         */
+        "navigationLabel": string;
+        /**
+          * Accessible name for the app-bar overflow button and menu. Override for localization.
+          * @default 'More actions'
+         */
+        "overflowLabel": string;
+        /**
+          * Screen heading, set with the HTML title attribute or the screenTitle property.
+          * @default ''
+         */
+        "screenTitle": string;
+        /**
+          * Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.
+          * @default 'elevate'
+         */
+        "scrollBehavior": TopNavScrollBehavior;
+        /**
+          * Bar size. Only app-bar mode has large and extra-large two-row sizes.
+          * @default 'md'
+         */
+        "size": TopNavSize;
+        /**
+          * Keep the bar at the block start of the scroll container and draw a bottom border.
+          * @default false
+         */
+        "sticky": boolean;
+        /**
+          * Supporting text displayed under the screen heading.
+          * @default ''
+         */
+        "subtitle": string;
+        /**
+          * Center a compact single-row title when the app bar has at most one action.
+          * @default 'start'
+         */
+        "titleAlign": TopNavTitleAlign;
+        /**
+          * Header for primary navigation, or app-bar for the current screen. Defaults to header.
+          * @default 'header'
+         */
+        "variant": TopNavVariant;
+    }
+    /**
      * A themed video surface: a calm poster facade with exactly one accessible
      * play control over a slotted native `<video>` element. From the first
      * activation on, playback, scrubbing, volume, captions and fullscreen belong
@@ -2299,6 +2371,20 @@ declare global {
         new (): HTMLKiTooltipElement;
     };
     /**
+     * Application navigation with responsive primary links, or a per-screen app
+     * bar with a real heading, optional search, and overflow actions.
+     * @whenToUse group a brand, up to five primary sections and global controls,
+     * or set a screen title, leading control and screen actions in app-bar mode.
+     * @whenNotToUse more than five sections or a deep navigation tree (use a
+     * sidebar), or switches between in-page views (use ki-tabs).
+     */
+    interface HTMLKiTopNavElement extends Components.KiTopNav, HTMLStencilElement {
+    }
+    var HTMLKiTopNavElement: {
+        prototype: HTMLKiTopNavElement;
+        new (): HTMLKiTopNavElement;
+    };
+    /**
      * A themed video surface: a calm poster facade with exactly one accessible
      * play control over a slotted native `<video>` element. From the first
      * activation on, playback, scrubbing, volume, captions and fullscreen belong
@@ -2365,6 +2451,7 @@ declare global {
         "ki-toast": HTMLKiToastElement;
         "ki-toaster": HTMLKiToasterElement;
         "ki-tooltip": HTMLKiTooltipElement;
+        "ki-top-nav": HTMLKiTopNavElement;
         "ki-video": HTMLKiVideoElement;
     }
 }
@@ -3829,6 +3916,76 @@ declare namespace LocalJSX {
         "placement"?: KiTooltipPlacement;
     }
     /**
+     * Application navigation with responsive primary links, or a per-screen app
+     * bar with a real heading, optional search, and overflow actions.
+     * @whenToUse group a brand, up to five primary sections and global controls,
+     * or set a screen title, leading control and screen actions in app-bar mode.
+     * @whenNotToUse more than five sections or a deep navigation tree (use a
+     * sidebar), or switches between in-page views (use ki-tabs).
+     */
+    interface KiTopNav {
+        /**
+          * CSS length below which navigation collapses and single-row app bars can center their title.
+          * @default '48rem'
+         */
+        "collapseAt"?: string;
+        /**
+          * Native heading level for the screen title. Use 1 through 6 to fit the page outline.
+          * @default 1
+         */
+        "headingLevel"?: number;
+        /**
+          * Accessible name of the header's primary navigation landmark. Override for localization.
+          * @default 'Main'
+         */
+        "label"?: string;
+        /**
+          * Accessible name for the compact navigation button and menu. Override for localization.
+          * @default 'Open navigation'
+         */
+        "navigationLabel"?: string;
+        /**
+          * Accessible name for the app-bar overflow button and menu. Override for localization.
+          * @default 'More actions'
+         */
+        "overflowLabel"?: string;
+        /**
+          * Screen heading, set with the HTML title attribute or the screenTitle property.
+          * @default ''
+         */
+        "screenTitle"?: string;
+        /**
+          * Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.
+          * @default 'elevate'
+         */
+        "scrollBehavior"?: TopNavScrollBehavior;
+        /**
+          * Bar size. Only app-bar mode has large and extra-large two-row sizes.
+          * @default 'md'
+         */
+        "size"?: TopNavSize;
+        /**
+          * Keep the bar at the block start of the scroll container and draw a bottom border.
+          * @default false
+         */
+        "sticky"?: boolean;
+        /**
+          * Supporting text displayed under the screen heading.
+          * @default ''
+         */
+        "subtitle"?: string;
+        /**
+          * Center a compact single-row title when the app bar has at most one action.
+          * @default 'start'
+         */
+        "titleAlign"?: TopNavTitleAlign;
+        /**
+          * Header for primary navigation, or app-bar for the current screen. Defaults to header.
+          * @default 'header'
+         */
+        "variant"?: TopNavVariant;
+    }
+    /**
      * A themed video surface: a calm poster facade with exactly one accessible
      * play control over a slotted native `<video>` element. From the first
      * activation on, playback, scrubbing, volume, captions and fullscreen belong
@@ -4110,6 +4267,20 @@ declare namespace LocalJSX {
         "label": string;
         "placement": KiTooltipPlacement;
     }
+    interface KiTopNavAttributes {
+        "variant": TopNavVariant;
+        "label": string;
+        "size": TopNavSize;
+        "collapseAt": string;
+        "sticky": boolean;
+        "navigationLabel": string;
+        "overflowLabel": string;
+        "screenTitle": string;
+        "subtitle": string;
+        "headingLevel": number;
+        "titleAlign": TopNavTitleAlign;
+        "scrollBehavior": TopNavScrollBehavior;
+    }
     interface KiVideoAttributes {
         "label": string;
     }
@@ -4154,6 +4325,7 @@ declare namespace LocalJSX {
         "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
         "ki-toaster": Omit<KiToaster, keyof KiToasterAttributes> & { [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K] };
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
+        "ki-top-nav": Omit<KiTopNav, keyof KiTopNavAttributes> & { [K in keyof KiTopNav & keyof KiTopNavAttributes]?: KiTopNav[K] } & { [K in keyof KiTopNav & keyof KiTopNavAttributes as `attr:${K}`]?: KiTopNavAttributes[K] } & { [K in keyof KiTopNav & keyof KiTopNavAttributes as `prop:${K}`]?: KiTopNav[K] };
         "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] } & OneOf<"label", KiVideo["label"], KiVideoAttributes["label"]>;
     }
 }
@@ -4662,6 +4834,15 @@ declare module "@stencil/core" {
              * pattern for those cases.
              */
             "ki-tooltip": LocalJSX.IntrinsicElements["ki-tooltip"] & JSXBase.HTMLAttributes<HTMLKiTooltipElement>;
+            /**
+             * Application navigation with responsive primary links, or a per-screen app
+             * bar with a real heading, optional search, and overflow actions.
+             * @whenToUse group a brand, up to five primary sections and global controls,
+             * or set a screen title, leading control and screen actions in app-bar mode.
+             * @whenNotToUse more than five sections or a deep navigation tree (use a
+             * sidebar), or switches between in-page views (use ki-tabs).
+             */
+            "ki-top-nav": LocalJSX.IntrinsicElements["ki-top-nav"] & JSXBase.HTMLAttributes<HTMLKiTopNavElement>;
             /**
              * A themed video surface: a calm poster facade with exactly one accessible
              * play control over a slotted native `<video>` element. From the first

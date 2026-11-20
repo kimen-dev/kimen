@@ -12442,6 +12442,618 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-top-nav.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTopNav",
+          "customElement": true,
+          "tagName": "ki-top-nav",
+          "description": "Application navigation with responsive primary links, or a per-screen app\nbar with a real heading, optional search, and overflow actions.",
+          "whenToUse": "group a brand, up to five primary sections and global controls,\nor set a screen title, leading control and screen actions in app-bar mode.",
+          "whenNotToUse": "more than five sections or a deep navigation tree (use a\nsidebar), or switches between in-page views (use ki-tabs).",
+          "attributes": [
+            {
+              "name": "collapse-at",
+              "fieldName": "collapseAt",
+              "type": {
+                "text": "string"
+              },
+              "default": "'48rem'",
+              "description": "CSS length below which navigation collapses and single-row app bars can center their title."
+            },
+            {
+              "name": "heading-level",
+              "fieldName": "headingLevel",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Native heading level for the screen title. Use 1 through 6 to fit the page outline."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main'",
+              "description": "Accessible name of the header's primary navigation landmark. Override for localization."
+            },
+            {
+              "name": "navigation-label",
+              "fieldName": "navigationLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Open navigation'",
+              "description": "Accessible name for the compact navigation button and menu. Override for localization."
+            },
+            {
+              "name": "overflow-label",
+              "fieldName": "overflowLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'More actions'",
+              "description": "Accessible name for the app-bar overflow button and menu. Override for localization."
+            },
+            {
+              "name": "title",
+              "fieldName": "screenTitle",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Screen heading, set with the HTML title attribute or the screenTitle property."
+            },
+            {
+              "name": "scroll-behavior",
+              "fieldName": "scrollBehavior",
+              "type": {
+                "text": "\"collapse\" | \"elevate\" | \"none\""
+              },
+              "default": "'elevate'",
+              "description": "Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+              },
+              "default": "'md'",
+              "description": "Bar size. Only app-bar mode has large and extra-large two-row sizes."
+            },
+            {
+              "name": "sticky",
+              "fieldName": "sticky",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keep the bar at the block start of the scroll container and draw a bottom border."
+            },
+            {
+              "name": "subtitle",
+              "fieldName": "subtitle",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Supporting text displayed under the screen heading."
+            },
+            {
+              "name": "title-align",
+              "fieldName": "titleAlign",
+              "type": {
+                "text": "\"center\" | \"start\""
+              },
+              "default": "'start'",
+              "description": "Center a compact single-row title when the app bar has at most one action."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"app-bar\" | \"header\""
+              },
+              "default": "'header'",
+              "description": "Header for primary navigation, or app-bar for the current screen. Defaults to header."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "collapseAt",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'48rem'",
+              "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
+              "attribute": "collapse-at",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "headingLevel",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Native heading level for the screen title. Use 1 through 6 to fit the page outline.",
+              "attribute": "heading-level",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main'",
+              "description": "Accessible name of the header's primary navigation landmark. Override for localization.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "navigationLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Open navigation'",
+              "description": "Accessible name for the compact navigation button and menu. Override for localization.",
+              "attribute": "navigation-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "overflowLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'More actions'",
+              "description": "Accessible name for the app-bar overflow button and menu. Override for localization.",
+              "attribute": "overflow-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "screenTitle",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Screen heading, set with the HTML title attribute or the screenTitle property.",
+              "attribute": "title",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "scrollBehavior",
+              "privacy": "public",
+              "type": {
+                "text": "\"collapse\" | \"elevate\" | \"none\""
+              },
+              "default": "'elevate'",
+              "description": "Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.",
+              "attribute": "scroll-behavior",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+              },
+              "default": "'md'",
+              "description": "Bar size. Only app-bar mode has large and extra-large two-row sizes.",
+              "attribute": "size",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "sticky",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Keep the bar at the block start of the scroll container and draw a bottom border.",
+              "attribute": "sticky",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "subtitle",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Supporting text displayed under the screen heading.",
+              "attribute": "subtitle",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "titleAlign",
+              "privacy": "public",
+              "type": {
+                "text": "\"center\" | \"start\""
+              },
+              "default": "'start'",
+              "description": "Center a compact single-row title when the app bar has at most one action.",
+              "attribute": "title-align",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"app-bar\" | \"header\""
+              },
+              "default": "'header'",
+              "description": "Header for primary navigation, or app-bar for the current screen. Defaults to header.",
+              "attribute": "variant",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\"."
+            },
+            {
+              "name": "actions",
+              "description": "Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow."
+            },
+            {
+              "name": "brand",
+              "description": "Header mode: the brand link or wordmark."
+            },
+            {
+              "name": "leading",
+              "description": "App bar: a named Back or Open navigation control."
+            },
+            {
+              "name": "search",
+              "description": "App bar: an accessible search control that can shrink inside its row."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "actions",
+              "description": "Wrapper for the trailing actions."
+            },
+            {
+              "name": "bar",
+              "description": "Painted header or app-bar surface."
+            },
+            {
+              "name": "brand",
+              "description": "Wrapper for the header brand."
+            },
+            {
+              "name": "heading",
+              "description": "The native screen heading."
+            },
+            {
+              "name": "leading",
+              "description": "Wrapper for the app-bar leading control."
+            },
+            {
+              "name": "links",
+              "description": "Wrapper for the primary links, including when displayed as a menu."
+            },
+            {
+              "name": "menu",
+              "description": "Anchored navigation or overflow menu surface."
+            },
+            {
+              "name": "menu-item",
+              "description": "Generated screen action in the overflow menu."
+            },
+            {
+              "name": "menu-trigger",
+              "description": "Native button opening collapsed navigation or overflow."
+            },
+            {
+              "name": "navigation",
+              "description": "The named primary navigation landmark."
+            },
+            {
+              "name": "search",
+              "description": "Wrapper for the app-bar search control."
+            },
+            {
+              "name": "subtitle",
+              "description": "Supporting text below the screen heading."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-app-bar-backdrop-filter",
+              "description": "Filter applied to the entire app-bar backdrop."
+            },
+            {
+              "name": "--ki-app-bar-bg",
+              "description": "Resting app-bar fill."
+            },
+            {
+              "name": "--ki-app-bar-bg-image",
+              "description": "Optional image above the app-bar fill."
+            },
+            {
+              "name": "--ki-app-bar-fg",
+              "description": "Resting app-bar title and control ink."
+            },
+            {
+              "name": "--ki-app-bar-height",
+              "description": "Height of a normal or collapsed app bar."
+            },
+            {
+              "name": "--ki-app-bar-height-compact",
+              "description": "Height of a small app bar."
+            },
+            {
+              "name": "--ki-app-bar-lg-height",
+              "description": "Expanded height of a large app bar."
+            },
+            {
+              "name": "--ki-app-bar-lg-title-line-height",
+              "description": "Expanded two-row app-bar title line height."
+            },
+            {
+              "name": "--ki-app-bar-lg-title-size",
+              "description": "Expanded two-row app-bar title size."
+            },
+            {
+              "name": "--ki-app-bar-scrolled-bg",
+              "description": "App-bar fill when its container scrolls."
+            },
+            {
+              "name": "--ki-app-bar-scrolled-fg",
+              "description": "App-bar title and control ink when its container scrolls."
+            },
+            {
+              "name": "--ki-app-bar-scrolled-subtitle-fg",
+              "description": "App-bar subtitle ink when its container scrolls."
+            },
+            {
+              "name": "--ki-app-bar-subtitle-fg",
+              "description": "Resting app-bar subtitle ink."
+            },
+            {
+              "name": "--ki-app-bar-title-font-family",
+              "description": "Screen heading typeface."
+            },
+            {
+              "name": "--ki-app-bar-title-font-weight",
+              "description": "Screen heading font weight."
+            },
+            {
+              "name": "--ki-app-bar-title-line-height",
+              "description": "One-row app-bar title line height."
+            },
+            {
+              "name": "--ki-app-bar-title-padding",
+              "description": "Block-end padding under the expanded title group."
+            },
+            {
+              "name": "--ki-app-bar-title-size",
+              "description": "One-row app-bar title size."
+            },
+            {
+              "name": "--ki-app-bar-xl-height",
+              "description": "Expanded height of an extra-large app bar."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
+              "name": "--ki-top-nav-action-gap",
+              "description": "Gap between actions and inner menu padding."
+            },
+            {
+              "name": "--ki-top-nav-backdrop-filter",
+              "description": "Filter applied to the entire header backdrop."
+            },
+            {
+              "name": "--ki-top-nav-bg",
+              "description": "Application header fill."
+            },
+            {
+              "name": "--ki-top-nav-bg-image",
+              "description": "Optional image above the header fill."
+            },
+            {
+              "name": "--ki-top-nav-border",
+              "description": "Edge color for sticky bars and menus."
+            },
+            {
+              "name": "--ki-top-nav-border-width",
+              "description": "Edge width for sticky bars and menus."
+            },
+            {
+              "name": "--ki-top-nav-control-size",
+              "description": "Trigger size before applying the density target floor."
+            },
+            {
+              "name": "--ki-top-nav-fg",
+              "description": "Application header brand and control ink."
+            },
+            {
+              "name": "--ki-top-nav-gap",
+              "description": "Gap between header regions."
+            },
+            {
+              "name": "--ki-top-nav-height",
+              "description": "Height of a normal application header."
+            },
+            {
+              "name": "--ki-top-nav-height-compact",
+              "description": "Height of a small application header."
+            },
+            {
+              "name": "--ki-top-nav-indicator",
+              "description": "Bar marking the current primary destination."
+            },
+            {
+              "name": "--ki-top-nav-indicator-width",
+              "description": "Thickness of the current-destination bar."
+            },
+            {
+              "name": "--ki-top-nav-item-bg",
+              "description": "Primary navigation item resting surface."
+            },
+            {
+              "name": "--ki-top-nav-item-current-bg",
+              "description": "Current navigation destination surface."
+            },
+            {
+              "name": "--ki-top-nav-item-current-fg",
+              "description": "Current navigation destination ink."
+            },
+            {
+              "name": "--ki-top-nav-item-fg",
+              "description": "Primary navigation item resting ink."
+            },
+            {
+              "name": "--ki-top-nav-item-hover-bg",
+              "description": "Hovered control or highlighted menu item surface."
+            },
+            {
+              "name": "--ki-top-nav-item-hover-fg",
+              "description": "Hovered control or highlighted menu item ink."
+            },
+            {
+              "name": "--ki-top-nav-item-padding-inline",
+              "description": "Inline padding for links and menu items."
+            },
+            {
+              "name": "--ki-top-nav-menu-backdrop-filter",
+              "description": "Filter applied to the entire menu backdrop."
+            },
+            {
+              "name": "--ki-top-nav-menu-bg",
+              "description": "Navigation and overflow menu fill."
+            },
+            {
+              "name": "--ki-top-nav-menu-bg-image",
+              "description": "Optional image above the menu fill."
+            },
+            {
+              "name": "--ki-top-nav-menu-disabled-fg",
+              "description": "Disabled overflow menu item ink."
+            },
+            {
+              "name": "--ki-top-nav-menu-fg",
+              "description": "Overflow menu item ink."
+            },
+            {
+              "name": "--ki-top-nav-menu-max-size",
+              "description": "Maximum group dimension for the anchored menu."
+            },
+            {
+              "name": "--ki-top-nav-menu-radius",
+              "description": "Menu and trigger corner radius."
+            },
+            {
+              "name": "--ki-top-nav-menu-shadow",
+              "description": "Elevation of the anchored menu."
+            },
+            {
+              "name": "--ki-top-nav-padding-inline",
+              "description": "Padding at the inline edges of both bars."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-title-2",
+              "description": "semantic dimension for typography size title 2."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            },
+            {
+              "name": "--ki-typography-weight-display-semibold",
+              "description": "semantic font weight for typography weight display semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTopNav",
+          "declaration": {
+            "name": "KiTopNav",
+            "module": "dist/components/ki-top-nav.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-top-nav",
+          "declaration": {
+            "name": "KiTopNav",
+            "module": "dist/components/ki-top-nav.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-video.js",
       "declarations": [
         {

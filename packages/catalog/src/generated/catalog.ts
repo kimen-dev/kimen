@@ -1815,6 +1815,101 @@ export const catalogData = {
       "whenNotToUse": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases.",
       "whenToUse": "add a brief clarifying hint for an icon-only, abbreviated, or\notherwise ambiguous control when the same information is discoverable\nelsewhere in the interface."
     },
+    "ki-top-nav": {
+      "description": "Application navigation with responsive primary links, or a per-screen app\nbar with a real heading, optional search, and overflow actions.",
+      "events": {},
+      "props": {
+        "collapse-at": {
+          "type": "string",
+          "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
+          "default": "48rem"
+        },
+        "heading-level": {
+          "type": "number",
+          "description": "Native heading level for the screen title. Use 1 through 6 to fit the page outline.",
+          "default": 1
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the header's primary navigation landmark. Override for localization.",
+          "default": "Main"
+        },
+        "navigation-label": {
+          "type": "string",
+          "description": "Accessible name for the compact navigation button and menu. Override for localization.",
+          "default": "Open navigation"
+        },
+        "overflow-label": {
+          "type": "string",
+          "description": "Accessible name for the app-bar overflow button and menu. Override for localization.",
+          "default": "More actions"
+        },
+        "scroll-behavior": {
+          "type": "enum",
+          "values": [
+            "collapse",
+            "elevate",
+            "none"
+          ],
+          "description": "Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.",
+          "default": "elevate"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl"
+          ],
+          "description": "Bar size. Only app-bar mode has large and extra-large two-row sizes.",
+          "default": "md"
+        },
+        "sticky": {
+          "type": "boolean",
+          "description": "Keep the bar at the block start of the scroll container and draw a bottom border.",
+          "default": false
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "Supporting text displayed under the screen heading.",
+          "default": ""
+        },
+        "title": {
+          "type": "string",
+          "description": "Screen heading, set with the HTML title attribute or the screenTitle property.",
+          "default": ""
+        },
+        "title-align": {
+          "type": "enum",
+          "values": [
+            "center",
+            "start"
+          ],
+          "description": "Center a compact single-row title when the app bar has at most one action.",
+          "default": "start"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "app-bar",
+            "header"
+          ],
+          "description": "Header for primary navigation, or app-bar for the current screen. Defaults to header.",
+          "default": "header"
+        }
+      },
+      "slots": {
+        "": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\".",
+        "actions": "Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow.",
+        "brand": "Header mode: the brand link or wordmark.",
+        "leading": "App bar: a named Back or Open navigation control.",
+        "search": "App bar: an accessible search control that can shrink inside its row."
+      },
+      "tag": "ki-top-nav",
+      "whenNotToUse": "more than five sections or a deep navigation tree (use a\nsidebar), or switches between in-page views (use ki-tabs).",
+      "whenToUse": "group a brand, up to five primary sections and global controls,\nor set a screen title, leading control and screen actions in app-bar mode."
+    },
     "ki-video": {
       "description": "A themed video surface: a calm poster facade with exactly one accessible\nplay control over a slotted native `<video>` element. From the first\nactivation on, playback, scrubbing, volume, captions and fullscreen belong\nto the native player — Kimen ships no custom chrome.",
       "events": {},
