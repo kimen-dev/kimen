@@ -21,78 +21,87 @@
 // then-unused imports — leaving the native path as the one event channel.
 // Fail-loud: any drift in the upstream shape aborts the build rather than
 // shipping a half-normalized artifact.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const proxiesPath = join(
-  fileURLToPath(new URL('.', import.meta.url)),
-  '../../angular/src/directives/proxies.ts',
-);
+export function normalizeAngularProxies(source) {
+  if (!source.includes('outputs: [') && !source.includes('@Output()')) {
+    return { source, orphanCount: 0, strippedTypeImports: 0 };
+  }
 
-let source = readFileSync(proxiesPath, 'utf8');
+  const outputLine = /^ {2}@Output\(\) (\w+) = new EventEmitter<.+>\(\);\n/gmu;
+  const metadataLine = /^ {2}outputs: \[([^\]]+)\],?\n/gmu;
+  const phantomField = /^ {2}'([a-z][a-z0-9-]*)': EventEmitter<.+>;\n/gmu;
+  const metadataName = /^'([a-z][a-z0-9-]*)'$/u;
 
-if (!source.includes('outputs: [') && !source.includes('@Output()')) {
-  process.stdout.write('angular proxies: already normalized\n');
-  process.exit(0);
-}
+  const orphanNames = Array.from(source.matchAll(outputLine), ([, name]) => name);
+  const metadataNames = Array.from(source.matchAll(metadataLine), ([, list]) => list)
+    .flatMap((list) => list.split(','))
+    .map((entry) => metadataName.exec(entry.trim())?.[1]);
+  const phantomNames = Array.from(source.matchAll(phantomField), ([, name]) => name);
+  const camelCase = (name) => name?.replace(/-([a-z])/gu, (_match, letter) => letter.toUpperCase());
+  const namesMatch = (left, right) =>
+    left.length === right.length && left.toSorted().every((name, index) => name === right[index]);
+  const orphanCount = orphanNames.length;
+  if (
+    orphanCount === 0 ||
+    metadataNames.includes(undefined) ||
+    !namesMatch(metadataNames, phantomNames.toSorted()) ||
+    !namesMatch(metadataNames.map(camelCase), orphanNames.toSorted())
+  ) {
+    throw new Error(
+      `angular proxies: inconsistent upstream event shape (${String(orphanCount)} @Output, ${String(metadataNames.length)} outputs metadata, ${String(phantomNames.length)} interface fields) — refusing to normalize`,
+    );
+  }
 
-const outputLine = /^ {2}@Output\(\) (\w+) = new EventEmitter<.+>\(\);\n/gmu;
-const metadataLine = /^ {2}outputs: \[([^\]]+)\],?\n/gmu;
-const phantomField = /^ {2}'([a-z][a-z0-9-]*)': EventEmitter<.+>;\n/gmu;
-const metadataName = /^'([a-z][a-z0-9-]*)'$/u;
+  source = source.replace(outputLine, '');
+  source = source.replace(metadataLine, '');
+  source = source.replace(phantomField, '');
+  source = source.replace(/import \{ ([^}]*)\} from '@angular\/core';/u, (_match, list) => {
+    const kept = list
+      .split(',')
+      .map((entry) => entry.trim())
+      .filter((entry) => entry !== '' && entry !== 'Output' && entry !== 'EventEmitter');
+    return `import { ${kept.join(', ')} } from '@angular/core';`;
+  });
 
-const orphanNames = Array.from(source.matchAll(outputLine), ([, name]) => name);
-const metadataNames = Array.from(source.matchAll(metadataLine), ([, list]) => list)
-  .flatMap((list) => list.split(','))
-  .map((entry) => metadataName.exec(entry.trim())?.[1]);
-const phantomNames = Array.from(source.matchAll(phantomField), ([, name]) => name);
-const camelCase = (name) => name?.replace(/-([a-z])/gu, (_match, letter) => letter.toUpperCase());
-const namesMatch = (left, right) =>
-  left.length === right.length && left.toSorted().every((name, index) => name === right[index]);
-const orphanCount = orphanNames.length;
-if (
-  orphanCount === 0 ||
-  metadataNames.includes(undefined) ||
-  !namesMatch(metadataNames, phantomNames.toSorted()) ||
-  !namesMatch(metadataNames.map(camelCase), orphanNames.toSorted())
-) {
-  throw new Error(
-    `angular proxies: inconsistent upstream event shape (${String(orphanCount)} @Output, ${String(metadataNames.length)} outputs metadata entries, ${String(phantomNames.length)} interface fields) — refusing to normalize`,
+  // The removed outputs were the ONLY consumers of the per-event custom-event
+  // type imports (`KiAlertCustomEvent`, each event's detail alias, …); with the
+  // machinery gone they are dangling. Strip every `@kimen/elements/components`
+  // type import except the `Components` namespace the input interfaces extend.
+  // `$event` on a native `(ki-*)` binding is still fully typed under strict
+  // templates via the elements' HTMLElementTagNameMap/addEventListener overloads
+  // (README + FR-004) — that typing does not flow through these proxy imports.
+  const componentsTypeImport =
+    /^import type \{ ([^}]+) \} from '@kimen\/elements\/components';\n/gmu;
+  const strippedTypeImports = [...source.matchAll(componentsTypeImport)].filter(
+    ([, names]) => names.trim() !== 'Components',
+  ).length;
+  source = source.replace(componentsTypeImport, (match, names) =>
+    names.trim() === 'Components' ? match : '',
   );
+
+  if (/@Output|EventEmitter|outputs: \[/u.test(source)) {
+    throw new Error('angular proxies: normalization left output machinery behind');
+  }
+
+  return { source, orphanCount, strippedTypeImports };
 }
 
-source = source.replace(outputLine, '');
-source = source.replace(metadataLine, '');
-source = source.replace(phantomField, '');
-source = source.replace(/import \{ ([^}]*)\} from '@angular\/core';/u, (_match, list) => {
-  const kept = list
-    .split(',')
-    .map((entry) => entry.trim())
-    .filter((entry) => entry !== '' && entry !== 'Output' && entry !== 'EventEmitter');
-  return `import { ${kept.join(', ')} } from '@angular/core';`;
-});
-
-// The removed outputs were the ONLY consumers of the per-event custom-event
-// type imports (`KiAlertCustomEvent`, each event's detail alias, …); with the
-// machinery gone they are dangling. Strip every `@kimen/elements/components`
-// type import except the `Components` namespace the input interfaces extend.
-// `$event` on a native `(ki-*)` binding is still fully typed under strict
-// templates via the elements' HTMLElementTagNameMap/addEventListener overloads
-// (README + FR-004) — that typing does not flow through these proxy imports.
-const componentsTypeImport = /^import type \{ ([^}]+) \} from '@kimen\/elements\/components';\n/gmu;
-const strippedTypeImports = [...source.matchAll(componentsTypeImport)].filter(
-  ([, names]) => names.trim() !== 'Components',
-).length;
-source = source.replace(componentsTypeImport, (match, names) =>
-  names.trim() === 'Components' ? match : '',
-);
-
-if (/@Output|EventEmitter|outputs: \[/u.test(source)) {
-  throw new Error('angular proxies: normalization left output machinery behind');
+const entry = process.argv[1];
+if (entry && existsSync(entry) && import.meta.url === pathToFileURL(realpathSync(entry)).href) {
+  const proxiesPath = join(
+    fileURLToPath(new URL('.', import.meta.url)),
+    '../../angular/src/directives/proxies.ts',
+  );
+  const normalized = normalizeAngularProxies(readFileSync(proxiesPath, 'utf8'));
+  if (normalized.orphanCount === 0) {
+    process.stdout.write('angular proxies: already normalized\n');
+  } else {
+    writeFileSync(proxiesPath, normalized.source, 'utf8');
+    process.stdout.write(
+      `angular proxies: removed ${String(normalized.orphanCount)} broken output surfaces and ${String(normalized.strippedTypeImports)} dangling event-type imports — kebab-case ki-* events bind natively\n`,
+    );
+  }
 }
-
-writeFileSync(proxiesPath, source, 'utf8');
-process.stdout.write(
-  `angular proxies: removed ${String(orphanCount)} broken output surfaces and ${String(strippedTypeImports)} dangling event-type imports — kebab-case ki-* events bind natively\n`,
-);

@@ -55,7 +55,7 @@ bash scripts/gates/check-traceability.sh specs/009-ki-card
    `data-ki-theme="material3"` on `<html>`: every card restyles — surface,
    border, elevation, radius, spacing — markup untouched (S6). Add
    `data-ki-color-scheme="dark"` under onmars: dark values apply (S7).
-4. **Robustness** — set `variant="elevated"` (M3 vocabulary) on a card:
+4. **Robustness** — set `variant="foreign"` (unrecognized vocabulary) on a card:
    nothing changes, content renders with the default appearance (S3).
 5. **RTL** — set `dir="rtl"` on the page: regions still stack in the block
    direction and per-region padding mirrors (logical properties, FR-012).

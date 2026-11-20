@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Recipes/Save split button" />
+
+# Save split button
+
+A split button offers a primary action and a second button that opens its
+alternatives. Keep the chevron label specific to the action, such as
+“More save options”. `ki-button-group` supplies the shared shape, while the
+menu controls disclosure, item focus and selection. Use this recipe with the
+`ki-menu` component when it is available in your build.
+
+Import `@kimen/elements/icons/chevron-down` before rendering the example.
+
+```html
+<ki-button-group label="Save actions" attached>
+  <ki-button type="button" variant="primary">Save</ki-button>
+  <ki-tooltip label="More save options">
+    <ki-icon-button id="save-options" label="More save options" aria-haspopup="menu" expanded="false">
+      <ki-icon name="chevron-down"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+</ki-button-group>
+<ki-menu anchor="save-options">
+  <ki-menu-item value="draft">Save as draft</ki-menu-item>
+  <ki-menu-item value="copy">Save a copy</ki-menu-item>
+</ki-menu>
+```
+
+Handle the primary button's click and the menu's `ki-select` event
+independently. Keep the icon button's `expanded` property in sync with the
+menu's `open` state. When the primary action submits a form, give that button
+`type="submit"`.

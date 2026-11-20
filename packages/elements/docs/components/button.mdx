@@ -74,6 +74,19 @@ native button, `preventDefault()` on the `click` event does not cancel it:
 
 Use `type="button"` when the action must never submit a form.
 
+## Recipe: open a dialog
+
+Use `commandfor` with the ID of a `ki-dialog` in the same document or shadow
+root. The dialog command takes precedence over form submission or reset.
+
+```html
+<ki-button commandfor="draft-preview" command="show-modal">Preview draft</ki-button>
+<ki-dialog id="draft-preview" heading="Draft preview">
+  This draft is visible only to you.
+  <ki-button slot="footer" commandfor="draft-preview" command="close">Done</ki-button>
+</ki-dialog>
+```
+
 ## Customization
 
 | Token                                   | Controls                              |
