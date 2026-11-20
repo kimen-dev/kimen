@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 420 semantic
-and 1357 component tokens. Values are the resolved **onmars light**
+and 1370 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1607,6 +1607,24 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-radio-group-label-hint-fg` | `#5e5953` | color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
 | `--ki-radio-group-label-hint-gap` | `0.25rem` | dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-radio-group-label-line-height` | `1.25rem` | dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement). |
+
+### `ki-reasoning`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-reasoning-backdrop-filter` | `none` | Complete filter behind the disclosure. None keeps the backdrop clear. |
+| `--ki-reasoning-bg` | `rgba(0, 0, 0, 0)` | Fill behind the disclosure summary and its steps. |
+| `--ki-reasoning-bg-image` | `none` | Optional image painted over the disclosure fill. |
+| `--ki-reasoning-body-gap` | `0.5rem` | Block spacing between the summary and the step content. |
+| `--ki-reasoning-body-indent` | `0.75rem` | Inline spacing between the rule and the content. |
+| `--ki-reasoning-border` | `rgba(24, 22, 19, 0.16)` | Ink of the decorative rule at the inline start of the steps. |
+| `--ki-reasoning-border-width` | `2px` | Width of the steps rule. |
+| `--ki-reasoning-fg` | `#5e5953` | Medium-emphasis ink for the disclosure summary and its steps. |
+| `--ki-reasoning-list-indent` | `1.25rem` | Inline space for markers on a slotted list. |
+| `--ki-reasoning-shimmer-duration` | `1200ms` | Period of the thinking shimmer. |
+| `--ki-reasoning-shimmer-easing` | `cubic-bezier(0.42, 0, 0.58, 1)` | Easing into and out of the thinking highlight. |
+| `--ki-reasoning-shimmer-fg` | `#181613` | Readable highlight at the midpoint of the thinking shimmer. |
+| `--ki-reasoning-summary-gap` | `0.25rem` | Space between the summary text and glyphs and between separate step blocks. |
 
 ### `ki-scroller`
 

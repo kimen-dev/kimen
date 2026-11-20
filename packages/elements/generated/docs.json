@@ -3751,9 +3751,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-reasoning"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-reasoning": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -6677,6 +6683,301 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-reasoning/ki-reasoning.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-reasoning",
+      "docs": "A disclosure for the assistant's progress or plan, with a localized summary.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "present assistant-supplied steps, progress or a completed plan alongside the answer."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content."
+        },
+        {
+          "name": "slot",
+          "text": "- Supporting content shown when expanded, such as an ordered list of steps supplied by the application."
+        },
+        {
+          "name": "part",
+          "text": "summary - The native disclosure control that shows the current status."
+        },
+        {
+          "name": "part",
+          "text": "body - The slotted content area with the inline-start rule."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-reasoning\n\n## Show a plan while it develops\n\n```html\n<ki-reasoning open>\n  <ol>\n    <li>Check the inputs.</li>\n  </ol>\n</ki-reasoning>\n```\n\nAdd subsequent list items as the assistant produces them. The default state is\ncollapsed. Set `open` to show the steps immediately.\n\n## Show the elapsed time after completion\n\n```html\n<ki-reasoning status=\"done\" duration=\"12000\">\n  <ol>\n    <li>Check the inputs.</li>\n    <li>Compare the available outcomes.</li>\n  </ol>\n</ki-reasoning>\n```\n\nThe summary reads “Thought for 12 seconds.” Omit `duration` if it is unavailable.\n\n## Localize the summary\n\n```html\n<ki-reasoning\n  lang=\"es\"\n  status=\"done\"\n  duration=\"1000\"\n  thinking-label=\"Pensando…\"\n  done-label=\"Listo\"\n  singular-duration-label=\"Pensó durante {seconds} segundo\"\n  duration-label=\"Pensó durante {seconds} segundos\"\n>\n  <ol>\n    <li>Revisar los datos de entrada.</li>\n  </ol>\n</ki-reasoning>\n```\n\n## Report disclosure changes in a guarded surface\n\nDeclare the action in the surface and reference it on the disclosure. The\nrenderer binds it to the catalog's `ki-toggle` event.\n\n```json\n{\n  \"version\": 1,\n  \"actions\": [\"record-plan-toggle\"],\n  \"root\": {\n    \"component\": \"ki-reasoning\",\n    \"props\": { \"status\": \"done\", \"duration\": 12000 },\n    \"action\": \"record-plan-toggle\",\n    \"slots\": { \"\": [\"Check the inputs and compare the outcomes.\"] }\n  }\n}\n```\n\n## Custom-elements entry point\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-reasoning';\n\ndefineCustomElement();\n```\n"
+      },
+      "props": [
+        {
+          "name": "doneLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "done-label",
+          "reflectToAttr": false,
+          "docs": "Summary text when done and elapsed time is unavailable.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Thought'"
+            }
+          ],
+          "default": "'Thought'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "duration",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "duration",
+          "reflectToAttr": false,
+          "docs": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "durationLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "duration-label",
+          "reflectToAttr": false,
+          "docs": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Thought for {seconds} seconds'"
+            }
+          ],
+          "default": "'Thought for {seconds} seconds'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the disclosure shows its steps. Native toggles update this reflected property.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "singularDurationLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "singular-duration-label",
+          "reflectToAttr": false,
+          "docs": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Thought for {seconds} second'"
+            }
+          ],
+          "default": "'Thought for {seconds} second'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "status",
+          "type": "\"done\" | \"thinking\"",
+          "complexType": {
+            "original": "KiReasoningStatus",
+            "resolved": "\"done\" | \"thinking\"",
+            "references": {
+              "KiReasoningStatus": {
+                "location": "local",
+                "path": "src/components/ki-reasoning/ki-reasoning.tsx",
+                "id": "src/components/ki-reasoning/ki-reasoning.tsx::KiReasoningStatus"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "status",
+          "reflectToAttr": true,
+          "docs": "Use thinking while steps arrive and done once the assistant finishes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'thinking'"
+            }
+          ],
+          "default": "'thinking'",
+          "values": [
+            {
+              "value": "done",
+              "type": "string"
+            },
+            {
+              "value": "thinking",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "thinkingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "thinking-label",
+          "reflectToAttr": false,
+          "docs": "Summary text while the assistant is thinking.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Thinking…'"
+            }
+          ],
+          "default": "'Thinking…'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-toggle",
+          "detail": "KiReasoningToggleDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiReasoningToggleDetail",
+            "resolved": "KiReasoningToggleDetail",
+            "references": {
+              "KiReasoningToggleDetail": {
+                "location": "local",
+                "path": "src/components/ki-reasoning/ki-reasoning.tsx",
+                "id": "src/components/ki-reasoning/ki-reasoning.tsx::KiReasoningToggleDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Emitted after a native disclosure toggle. Setting open from the application is silent.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Supporting content shown when expanded, such as an ordered list of steps supplied by the application."
+        }
+      ],
+      "parts": [
+        {
+          "name": "body",
+          "docs": "The slotted content area with the inline-start rule."
+        },
+        {
+          "name": "summary",
+          "docs": "The native disclosure control that shows the current status."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-reasoning": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-scroller/ki-scroller.tsx",
@@ -10351,6 +10652,16 @@
       "declaration": "export type KiRadioGroupSize = 'sm' | 'md';",
       "docstring": "",
       "path": "src/components/ki-radio-group/ki-radio-group.tsx"
+    },
+    "src/components/ki-reasoning/ki-reasoning.tsx::KiReasoningStatus": {
+      "declaration": "export type KiReasoningStatus = 'thinking' | 'done';",
+      "docstring": "",
+      "path": "src/components/ki-reasoning/ki-reasoning.tsx"
+    },
+    "src/components/ki-reasoning/ki-reasoning.tsx::KiReasoningToggleDetail": {
+      "declaration": "export interface KiReasoningToggleDetail {\n  open: boolean;\n}",
+      "docstring": "The resulting open state of the disclosure.",
+      "path": "src/components/ki-reasoning/ki-reasoning.tsx"
     },
     "src/components/ki-scroller/ki-scroller.tsx::KiScrollerOrientation": {
       "declaration": "export type KiScrollerOrientation = 'vertical' | 'horizontal';",

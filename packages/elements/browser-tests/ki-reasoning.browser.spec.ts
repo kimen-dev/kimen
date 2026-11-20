@@ -55,7 +55,7 @@ async function mount(markup: string) {
 
   const root = host.shadowRoot;
   const panel = root?.querySelector('details');
-  const summary = panel?.querySelector('summary[part~="summary"]');
+  const summary = panel?.querySelector<HTMLElement>('summary[part~="summary"]');
   const body = panel?.querySelector<HTMLElement>('[part~="body"]');
   if (!root || !panel || !summary || !body) throw new Error('Missing reasoning disclosure');
   return { host, root, panel, summary, body };

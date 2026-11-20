@@ -9093,6 +9093,307 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-reasoning.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiReasoning",
+          "customElement": true,
+          "tagName": "ki-reasoning",
+          "description": "A disclosure for the assistant's progress or plan, with a localized summary.",
+          "whenToUse": "present assistant-supplied steps, progress or a completed plan alongside the answer.",
+          "whenNotToUse": "hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.",
+          "attributes": [
+            {
+              "name": "done-label",
+              "fieldName": "doneLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Thought'",
+              "description": "Summary text when done and elapsed time is unavailable."
+            },
+            {
+              "name": "duration",
+              "fieldName": "duration",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds."
+            },
+            {
+              "name": "duration-label",
+              "fieldName": "durationLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Thought for {seconds} seconds'",
+              "description": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time."
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the disclosure shows its steps. Native toggles update this reflected property."
+            },
+            {
+              "name": "singular-duration-label",
+              "fieldName": "singularDurationLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Thought for {seconds} second'",
+              "description": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time."
+            },
+            {
+              "name": "status",
+              "fieldName": "status",
+              "type": {
+                "text": "\"done\" | \"thinking\""
+              },
+              "default": "'thinking'",
+              "description": "Use thinking while steps arrive and done once the assistant finishes."
+            },
+            {
+              "name": "thinking-label",
+              "fieldName": "thinkingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Thinking…'",
+              "description": "Summary text while the assistant is thinking."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "doneLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Thought'",
+              "description": "Summary text when done and elapsed time is unavailable.",
+              "attribute": "done-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "duration",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.",
+              "attribute": "duration",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "durationLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Thought for {seconds} seconds'",
+              "description": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.",
+              "attribute": "duration-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the disclosure shows its steps. Native toggles update this reflected property.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "singularDurationLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Thought for {seconds} second'",
+              "description": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.",
+              "attribute": "singular-duration-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "privacy": "public",
+              "type": {
+                "text": "\"done\" | \"thinking\""
+              },
+              "default": "'thinking'",
+              "description": "Use thinking while steps arrive and done once the assistant finishes.",
+              "attribute": "status",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "thinkingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Thinking…'",
+              "description": "Summary text while the assistant is thinking.",
+              "attribute": "thinking-label",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-toggle",
+              "type": {
+                "text": "CustomEvent<KiReasoningToggleDetail>"
+              },
+              "description": "Emitted after a native disclosure toggle. Setting open from the application is silent."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Supporting content shown when expanded, such as an ordered list of steps supplied by the application."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "body",
+              "description": "The slotted content area with the inline-start rule."
+            },
+            {
+              "name": "summary",
+              "description": "The native disclosure control that shows the current status."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
+              "name": "--ki-reasoning-backdrop-filter",
+              "description": "Complete filter behind the disclosure. None keeps the backdrop clear."
+            },
+            {
+              "name": "--ki-reasoning-bg",
+              "description": "Fill behind the disclosure summary and its steps."
+            },
+            {
+              "name": "--ki-reasoning-bg-image",
+              "description": "Optional image painted over the disclosure fill."
+            },
+            {
+              "name": "--ki-reasoning-body-gap",
+              "description": "Block spacing between the summary and the step content."
+            },
+            {
+              "name": "--ki-reasoning-body-indent",
+              "description": "Inline spacing between the rule and the content."
+            },
+            {
+              "name": "--ki-reasoning-border",
+              "description": "Ink of the decorative rule at the inline start of the steps."
+            },
+            {
+              "name": "--ki-reasoning-border-width",
+              "description": "Width of the steps rule."
+            },
+            {
+              "name": "--ki-reasoning-fg",
+              "description": "Medium-emphasis ink for the disclosure summary and its steps."
+            },
+            {
+              "name": "--ki-reasoning-list-indent",
+              "description": "Inline space for markers on a slotted list."
+            },
+            {
+              "name": "--ki-reasoning-shimmer-duration",
+              "description": "Period of the thinking shimmer."
+            },
+            {
+              "name": "--ki-reasoning-shimmer-easing",
+              "description": "Easing into and out of the thinking highlight."
+            },
+            {
+              "name": "--ki-reasoning-shimmer-fg",
+              "description": "Readable highlight at the midpoint of the thinking shimmer."
+            },
+            {
+              "name": "--ki-reasoning-summary-gap",
+              "description": "Space between the summary text and glyphs and between separate step blocks."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-para",
+              "description": "semantic dimension for typography line height para."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiReasoning",
+          "declaration": {
+            "name": "KiReasoning",
+            "module": "dist/components/ki-reasoning.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-reasoning",
+          "declaration": {
+            "name": "KiReasoning",
+            "module": "dist/components/ki-reasoning.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-scroller.js",
       "declarations": [
         {

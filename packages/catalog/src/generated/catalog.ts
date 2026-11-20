@@ -1367,6 +1367,58 @@ export const catalogData = {
       "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
       "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once."
     },
+    "ki-reasoning": {
+      "description": "A disclosure for the assistant's progress or plan, with a localized summary.",
+      "events": {
+        "ki-toggle": "Emitted after a native disclosure toggle. Setting open from the application is silent."
+      },
+      "props": {
+        "done-label": {
+          "type": "string",
+          "description": "Summary text when done and elapsed time is unavailable.",
+          "default": "Thought"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds."
+        },
+        "duration-label": {
+          "type": "string",
+          "description": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.",
+          "default": "Thought for {seconds} seconds"
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the disclosure shows its steps. Native toggles update this reflected property.",
+          "default": false
+        },
+        "singular-duration-label": {
+          "type": "string",
+          "description": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.",
+          "default": "Thought for {seconds} second"
+        },
+        "status": {
+          "type": "enum",
+          "values": [
+            "done",
+            "thinking"
+          ],
+          "description": "Use thinking while steps arrive and done once the assistant finishes.",
+          "default": "thinking"
+        },
+        "thinking-label": {
+          "type": "string",
+          "description": "Summary text while the assistant is thinking.",
+          "default": "Thinking…"
+        }
+      },
+      "slots": {
+        "": "Supporting content shown when expanded, such as an ordered list of steps supplied by the application."
+      },
+      "tag": "ki-reasoning",
+      "whenNotToUse": "hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.",
+      "whenToUse": "present assistant-supplied steps, progress or a completed plan alongside the answer."
+    },
     "ki-scroller": {
       "description": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",
       "events": {},

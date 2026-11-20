@@ -29,6 +29,7 @@ import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
+import { KiReasoningStatus, KiReasoningToggleDetail } from "./components/ki-reasoning/ki-reasoning";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 import { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
 import { KiSelectSize } from "./components/ki-select/ki-select";
@@ -65,6 +66,7 @@ export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
+export { KiReasoningStatus, KiReasoningToggleDetail } from "./components/ki-reasoning/ki-reasoning";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 export { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
 export { KiSelectSize } from "./components/ki-select/ki-select";
@@ -1088,6 +1090,47 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A disclosure for the assistant's progress or plan, with a localized summary.
+     * @whenToUse present assistant-supplied steps, progress or a completed plan alongside the answer.
+     * @whenNotToUse hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
+     */
+    interface KiReasoning {
+        /**
+          * Summary text when done and elapsed time is unavailable.
+          * @default 'Thought'
+         */
+        "doneLabel": string;
+        /**
+          * Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.
+         */
+        "duration"?: number;
+        /**
+          * Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.
+          * @default 'Thought for {seconds} seconds'
+         */
+        "durationLabel": string;
+        /**
+          * Whether the disclosure shows its steps. Native toggles update this reflected property.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.
+          * @default 'Thought for {seconds} second'
+         */
+        "singularDurationLabel": string;
+        /**
+          * Use thinking while steps arrive and done once the assistant finishes.
+          * @default 'thinking'
+         */
+        "status": KiReasoningStatus;
+        /**
+          * Summary text while the assistant is thinking.
+          * @default 'Thinking…'
+         */
+        "thinkingLabel": string;
+    }
+    /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
      * @whenToUse a bounded region inside a view whose content can outgrow it:
@@ -1682,6 +1725,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
+export interface KiReasoningCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiReasoningElement;
+}
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiSegmentedControlElement;
@@ -2252,6 +2299,28 @@ declare global {
         prototype: HTMLKiRadioGroupElement;
         new (): HTMLKiRadioGroupElement;
     };
+    interface HTMLKiReasoningElementEventMap {
+        "ki-toggle": KiReasoningToggleDetail;
+    }
+    /**
+     * A disclosure for the assistant's progress or plan, with a localized summary.
+     * @whenToUse present assistant-supplied steps, progress or a completed plan alongside the answer.
+     * @whenNotToUse hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
+     */
+    interface HTMLKiReasoningElement extends Components.KiReasoning, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiReasoningElementEventMap>(type: K, listener: (this: HTMLKiReasoningElement, ev: KiReasoningCustomEvent<HTMLKiReasoningElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiReasoningElementEventMap>(type: K, listener: (this: HTMLKiReasoningElement, ev: KiReasoningCustomEvent<HTMLKiReasoningElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiReasoningElement: {
+        prototype: HTMLKiReasoningElement;
+        new (): HTMLKiReasoningElement;
+    };
     /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
@@ -2609,6 +2678,7 @@ declare global {
         "ki-qr": HTMLKiQrElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
+        "ki-reasoning": HTMLKiReasoningElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-segment": HTMLKiSegmentElement;
         "ki-segmented-control": HTMLKiSegmentedControlElement;
@@ -3692,6 +3762,51 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A disclosure for the assistant's progress or plan, with a localized summary.
+     * @whenToUse present assistant-supplied steps, progress or a completed plan alongside the answer.
+     * @whenNotToUse hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
+     */
+    interface KiReasoning {
+        /**
+          * Summary text when done and elapsed time is unavailable.
+          * @default 'Thought'
+         */
+        "doneLabel"?: string;
+        /**
+          * Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.
+         */
+        "duration"?: number;
+        /**
+          * Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.
+          * @default 'Thought for {seconds} seconds'
+         */
+        "durationLabel"?: string;
+        /**
+          * Emitted after a native disclosure toggle. Setting open from the application is silent.
+         */
+        "onKi-toggle"?: (event: KiReasoningCustomEvent<KiReasoningToggleDetail>) => void;
+        /**
+          * Whether the disclosure shows its steps. Native toggles update this reflected property.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.
+          * @default 'Thought for {seconds} second'
+         */
+        "singularDurationLabel"?: string;
+        /**
+          * Use thinking while steps arrive and done once the assistant finishes.
+          * @default 'thinking'
+         */
+        "status"?: KiReasoningStatus;
+        /**
+          * Summary text while the assistant is thinking.
+          * @default 'Thinking…'
+         */
+        "thinkingLabel"?: string;
+    }
+    /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
      * @whenToUse a bounded region inside a view whose content can outgrow it:
@@ -4465,6 +4580,15 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiReasoningAttributes {
+        "status": KiReasoningStatus;
+        "duration": number;
+        "open": boolean;
+        "thinkingLabel": string;
+        "doneLabel": string;
+        "singularDurationLabel": string;
+        "durationLabel": string;
+    }
     interface KiScrollerAttributes {
         "orientation": KiScrollerOrientation;
         "label": string;
@@ -4597,6 +4721,7 @@ declare namespace LocalJSX {
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
+        "ki-reasoning": Omit<KiReasoning, keyof KiReasoningAttributes> & { [K in keyof KiReasoning & keyof KiReasoningAttributes]?: KiReasoning[K] } & { [K in keyof KiReasoning & keyof KiReasoningAttributes as `attr:${K}`]?: KiReasoningAttributes[K] } & { [K in keyof KiReasoning & keyof KiReasoningAttributes as `prop:${K}`]?: KiReasoning[K] };
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-segment": Omit<KiSegment, keyof KiSegmentAttributes> & { [K in keyof KiSegment & keyof KiSegmentAttributes]?: KiSegment[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `attr:${K}`]?: KiSegmentAttributes[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `prop:${K}`]?: KiSegment[K] } & OneOf<"value", KiSegment["value"], KiSegmentAttributes["value"]>;
         "ki-segmented-control": Omit<KiSegmentedControl, keyof KiSegmentedControlAttributes> & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes]?: KiSegmentedControl[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `attr:${K}`]?: KiSegmentedControlAttributes[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `prop:${K}`]?: KiSegmentedControl[K] } & OneOf<"label", KiSegmentedControl["label"], KiSegmentedControlAttributes["label"]>;
@@ -4953,6 +5078,12 @@ declare module "@stencil/core" {
              * it for programmatic `value` writes, which are silent.
              */
             "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
+            /**
+             * A disclosure for the assistant's progress or plan, with a localized summary.
+             * @whenToUse present assistant-supplied steps, progress or a completed plan alongside the answer.
+             * @whenNotToUse hide the answer or controls the user needs to complete a task. Use a general disclosure for unrelated content.
+             */
+            "ki-reasoning": LocalJSX.IntrinsicElements["ki-reasoning"] & JSXBase.HTMLAttributes<HTMLKiReasoningElement>;
             /**
              * A bounded scroll container that clips its content along one declared axis
              * and replaces platform scrollbar chrome with a token-resolved indicator.
