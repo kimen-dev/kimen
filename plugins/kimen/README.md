@@ -68,3 +68,4 @@ claude plugin eval plugins/kimen --allow-tools Write "WebFetch(domain:kimen.dev)
 Each case runs three times with the plugin and three times without it. For a
 quick check, add `--runs 1 --ablation none`; in CI, add `--trust-plugin`,
 `--json results.json`, a pinned `--model` and `--max-cost-usd`.
+<!-- CI scope probe: this line never lands. -->
