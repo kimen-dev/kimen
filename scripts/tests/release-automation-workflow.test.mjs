@@ -25,6 +25,10 @@ test('S3 tagging binds to the pushed SHA and the existing workflow remains the t
   const [, source] = workflows[1];
   assert.match(source, /ref: \$\{\{ github\.sha \}\}/u);
   assert.match(source, /node scripts\/release\/release-github\.mjs tag/u);
+  assert.match(
+    source,
+    /if: "startsWith\(github\.event\.head_commit\.message, 'chore\(release\): v'\)"/u,
+  );
   assert.doesNotMatch(source, /workflow_dispatch|npm publish|registry\.npmjs/u);
   const publisher = await read('.github/workflows/release.yml');
   assert.match(publisher, /tags:\s*\n\s*- 'v\*\.\*\.\*'/u);

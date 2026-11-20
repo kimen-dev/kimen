@@ -60,7 +60,9 @@ authority. A non-tag dispatch always emits a manifest whose `mode` is
    catalog's embedded elements version. Private package manifests keep their
    existing versions and visibility. A push with nothing to release or the
    release commit itself needs no new PR.
-3. Once required checks pass, the founder squash-merges the release PR.
+3. Once required checks pass, the founder squash-merges the release PR,
+   keeping its title as the commit title: `release-tag.yml` only runs for a
+   push whose commit title starts with `chore(release): v`.
    `release-tag.yml` verifies that the PR merged at the exact pushed commit
    and that both package versions match its title. It pushes an annotated
    `vX.Y.Z` tag on that commit and creates the GitHub Release from that

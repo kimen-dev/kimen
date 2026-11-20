@@ -12,6 +12,9 @@ concurrency:
 
 jobs:
   tag:
+    # A squash-merged release PR keeps its title as the commit title; every other
+    # push skips the job instead of failing on missing App credentials.
+    if: "startsWith(github.event.head_commit.message, 'chore(release): v')"
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
