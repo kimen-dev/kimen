@@ -47,7 +47,7 @@ methods, CSS custom properties and examples.
 - [ki-avatar-group](https://kimen.dev/llms/ki-avatar-group.md): a compact "who is involved" stack — the members of a shared document, project card or event row — where space deserves only the first few identities and an exact "+N" counter accounts for the rest.
 - [ki-badge](https://kimen.dev/llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.
 - [ki-button](https://kimen.dev/llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, or confirming/destructive actions through tone.
-- [ki-card](https://kimen.dev/llms/ki-card.md): group related media, heading, supporting text and actions into one scannable surface visually distinct from the page; fill any subset of regions.
+- [ki-card](https://kimen.dev/llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
 - [ki-checkbox](https://kimen.dev/llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
 - [ki-checkbox-group](https://kimen.dev/llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
 - [ki-counter](https://kimen.dev/llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
@@ -69,6 +69,8 @@ methods, CSS custom properties and examples.
 - [ki-radio](https://kimen.dev/llms/ki-radio.md): place inside `ki-radio-group` when a person must choose exactly one of a small visible set.
 - [ki-radio-group](https://kimen.dev/llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
 - [ki-scroller](https://kimen.dev/llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
+- [ki-segment](https://kimen.dev/llms/ki-segment.md): offer one mutually exclusive choice with text or a named icon.
+- [ki-segmented-control](https://kimen.dev/llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
 - [ki-select](https://kimen.dev/llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
 - [ki-spinner](https://kimen.dev/llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](https://kimen.dev/llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
@@ -80,8 +82,8 @@ methods, CSS custom properties and examples.
 - [ki-textarea](https://kimen.dev/llms/ki-textarea.md): free-form text longer than one line, such as comments, descriptions, messages, delivery notes, or addresses when paired with a matching `autocomplete` purpose.
 - [ki-toast](https://kimen.dev/llms/ki-toast.md): confirm an action that happened elsewhere on screen ("Changes saved", "Link copied"), report a background result ("Export ready"), or offer a quick undo.
 - [ki-toaster](https://kimen.dev/llms/ki-toaster.md): once per page (or once inside a modal `ki-dialog`), as the place every `ki-toast` of the application appears in: append toasts to it, or call `show()`.
+- [ki-toolbar](https://kimen.dev/llms/ki-toolbar.md): group a small set of related page actions, such as text formatting or the commands on a compact message screen.
 - [ki-tooltip](https://kimen.dev/llms/ki-tooltip.md): add a brief clarifying hint for an icon-only, abbreviated, or otherwise ambiguous control when the same information is discoverable elsewhere in the interface.
-- [ki-top-nav](https://kimen.dev/llms/ki-top-nav.md): group a brand, up to five primary sections and global controls, or set a screen title, leading control and screen actions in app-bar mode.
 - [ki-video](https://kimen.dev/llms/ki-video.md): playable content the person deliberately chooses to watch — product tours, talks, tutorials, announcements — presented as a poster with one play control.
 
 ## Generative UI

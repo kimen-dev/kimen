@@ -378,18 +378,42 @@ export const catalogData = {
       "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
     "ki-card": {
-      "description": "A non-interactive card surface for grouping related content.",
-      "events": {},
-      "props": {},
+      "description": "A card surface for grouping related content, with an optional primary link or action.",
+      "events": {
+        "ki-activate": "Fires once when the user activates an action card by pointer or keyboard."
+      },
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "Destination for the card's title link. Supply a text heading in the\nheader slot. A nonblank href takes precedence over interactive.",
+          "format": "url"
+        },
+        "interactive": {
+          "type": "boolean",
+          "description": "Gives a titled card a primary button that emits ki-activate. Use href\nfor navigation. Keep other actions in separate controls in the card.",
+          "default": false
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "default",
+            "elevated",
+            "filled",
+            "outlined"
+          ],
+          "description": "Surface treatment. Choose elevated for a raised panel, filled for a\ntinted group or outlined for a bordered surface. Use default to follow\nthe theme's existing card treatment.",
+          "default": "default"
+        }
+      },
       "slots": {
         "": "Body region for supporting text or arbitrary composed content.",
         "footer": "Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1.",
-        "header": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics.",
+        "header": "Title region. Supply one nonempty text heading at the surrounding document level for a clickable card.",
         "media": "Leading visual region for an image, video or illustration."
       },
       "tag": "ki-card",
-      "whenNotToUse": "as a button or link target, form control, fieldset, page\nlandmark, section replacement or nested card. For an interactive card, slot\nthe button or link INSIDE a region (whole-card interactivity is a future\nfeature, not this component).",
-      "whenToUse": "group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology."
+      "whenNotToUse": "as a form field, fieldset, page landmark, section replacement\nor nested card. Use a standalone button or link for a control without\nsupporting content.",
+      "whenToUse": "group related media, a title, supporting text and actions into\none scannable surface. Set `href` for navigation or `interactive` for a\ndeclared action. Give a clickable card one text heading in the header\nslot and place secondary controls in the body or footer."
     },
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
@@ -1266,6 +1290,72 @@ export const catalogData = {
       "whenNotToUse": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis.",
       "whenToUse": "a bounded region inside a view whose content can outgrow it:\nchat or message panes, code and log blocks, tag rows, sidebar navigation,\ntall menus inside cards. Give it bounds (its size comes entirely from your\nlayout) and a `label` (required: the accessible name of the scroll\nregion). Scrolling stays native — wheel, touch, keyboard and indicator\ndrag operate the viewport directly."
     },
+    "ki-segment": {
+      "description": "A single choice in a ki-segmented-control.",
+      "events": {},
+      "props": {
+        "aria-label": {
+          "type": "string",
+          "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Excludes the option from selection and keyboard navigation.",
+          "default": false
+        },
+        "value": {
+          "type": "string",
+          "description": "Required nonempty option identifier. Each value must be unique in its group.",
+          "required": true
+        }
+      },
+      "slots": {
+        "": "Noninteractive visible option label.",
+        "start": "Decorative leading icon. Supply aria-label for an icon-only option."
+      },
+      "tag": "ki-segment",
+      "whenNotToUse": "standalone, for navigation, or for form submission.",
+      "whenToUse": "offer one mutually exclusive choice with text or a named icon."
+    },
+    "ki-segmented-control": {
+      "description": "A compact control for one in-place choice among two to five options.",
+      "events": {
+        "ki-change": "Emitted once per changed user choice with the new resolved value."
+      },
+      "props": {
+        "full-width": {
+          "type": "boolean",
+          "description": "Distribute the available inline space evenly among all segments.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Required accessible name of the group. Use a short name for the setting.",
+          "required": true
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "md",
+            "sm",
+            "xs"
+          ],
+          "description": "Track size. The default heights are 28, 32 and 40 CSS px respectively;\nsurrounding density settings can increase or decrease targets.",
+          "default": "md"
+        },
+        "value": {
+          "type": "string",
+          "description": "Resolved selected value. Set it to choose an option programmatically.\nOmit it to select the first available option. The value is empty when\nthere are no available options. Programmatic changes are silent.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "Two to five direct ki-segment children with distinct nonempty values."
+      },
+      "tag": "ki-segmented-control",
+      "whenNotToUse": "switching between panels (ki-tabs), submitted form choices\n(ki-radio-group), or more than five options (ki-select).",
+      "whenToUse": "apply a chart range, view mode, or another immediate setting."
+    },
     "ki-select": {
       "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
@@ -1787,6 +1877,56 @@ export const catalogData = {
       "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
       "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
     },
+    "ki-toolbar": {
+      "description": "Brings frequent page actions together in a floating pill or docked surface.",
+      "events": {},
+      "props": {
+        "hide-on-scroll": {
+          "type": "boolean",
+          "description": "Hides on downward page scroll and reveals on upward scroll or when an\naction receives focus. Use for secondary actions where content needs room.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the group, such as \"Formatting\". Supply it in the page's language.",
+          "required": true
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.",
+          "default": "horizontal"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "standard",
+            "vibrant"
+          ],
+          "description": "Surface palette. Use vibrant to emphasize the toolbar with an accent tint.",
+          "default": "standard"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "docked",
+            "floating"
+          ],
+          "description": "Floating leaves placement to the page. Docked fixes the surface to the\nviewport's bottom edge. Reserve space below the content when docking.",
+          "default": "floating"
+        }
+      },
+      "slots": {
+        "": "Direct ki-button, ki-icon-button (including toggles), native button\nand ki-divider children. Give every icon-only action an accessible name.",
+        "fab": "A companion ki-fab for the floating variant. It follows the\ntoolbar and has its own Tab stop."
+      },
+      "tag": "ki-toolbar",
+      "whenNotToUse": "for site navigation, mutually exclusive choices, or a docked\nbar on a screen already using MobileNav.",
+      "whenToUse": "group a small set of related page actions, such as text\nformatting or the commands on a compact message screen."
+    },
     "ki-tooltip": {
       "description": "A transient, text-only description bubble for one slotted trigger.",
       "events": {},
@@ -1814,101 +1954,6 @@ export const catalogData = {
       "tag": "ki-tooltip",
       "whenNotToUse": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases.",
       "whenToUse": "add a brief clarifying hint for an icon-only, abbreviated, or\notherwise ambiguous control when the same information is discoverable\nelsewhere in the interface."
-    },
-    "ki-top-nav": {
-      "description": "Application navigation with responsive primary links, or a per-screen app\nbar with a real heading, optional search, and overflow actions.",
-      "events": {},
-      "props": {
-        "collapse-at": {
-          "type": "string",
-          "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
-          "default": "48rem"
-        },
-        "heading-level": {
-          "type": "number",
-          "description": "Native heading level for the screen title. Use 1 through 6 to fit the page outline.",
-          "default": 1
-        },
-        "label": {
-          "type": "string",
-          "description": "Accessible name of the header's primary navigation landmark. Override for localization.",
-          "default": "Main"
-        },
-        "navigation-label": {
-          "type": "string",
-          "description": "Accessible name for the compact navigation button and menu. Override for localization.",
-          "default": "Open navigation"
-        },
-        "overflow-label": {
-          "type": "string",
-          "description": "Accessible name for the app-bar overflow button and menu. Override for localization.",
-          "default": "More actions"
-        },
-        "scroll-behavior": {
-          "type": "enum",
-          "values": [
-            "collapse",
-            "elevate",
-            "none"
-          ],
-          "description": "Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.",
-          "default": "elevate"
-        },
-        "size": {
-          "type": "enum",
-          "values": [
-            "lg",
-            "md",
-            "sm",
-            "xl"
-          ],
-          "description": "Bar size. Only app-bar mode has large and extra-large two-row sizes.",
-          "default": "md"
-        },
-        "sticky": {
-          "type": "boolean",
-          "description": "Keep the bar at the block start of the scroll container and draw a bottom border.",
-          "default": false
-        },
-        "subtitle": {
-          "type": "string",
-          "description": "Supporting text displayed under the screen heading.",
-          "default": ""
-        },
-        "title": {
-          "type": "string",
-          "description": "Screen heading, set with the HTML title attribute or the screenTitle property.",
-          "default": ""
-        },
-        "title-align": {
-          "type": "enum",
-          "values": [
-            "center",
-            "start"
-          ],
-          "description": "Center a compact single-row title when the app bar has at most one action.",
-          "default": "start"
-        },
-        "variant": {
-          "type": "enum",
-          "values": [
-            "app-bar",
-            "header"
-          ],
-          "description": "Header for primary navigation, or app-bar for the current screen. Defaults to header.",
-          "default": "header"
-        }
-      },
-      "slots": {
-        "": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\".",
-        "actions": "Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow.",
-        "brand": "Header mode: the brand link or wordmark.",
-        "leading": "App bar: a named Back or Open navigation control.",
-        "search": "App bar: an accessible search control that can shrink inside its row."
-      },
-      "tag": "ki-top-nav",
-      "whenNotToUse": "more than five sections or a deep navigation tree (use a\nsidebar), or switches between in-page views (use ki-tabs).",
-      "whenToUse": "group a brand, up to five primary sections and global controls,\nor set a screen title, leading control and screen actions in app-bar mode."
     },
     "ki-video": {
       "description": "A themed video surface: a calm poster facade with exactly one accessible\nplay control over a slotted native `<video>` element. From the first\nactivation on, playback, scrubbing, volume, captions and fullscreen belong\nto the native player — Kimen ships no custom chrome.",

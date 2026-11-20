@@ -33,6 +33,8 @@ import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
+import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
+import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
 import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
@@ -44,8 +46,8 @@ import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
+import { defineCustomElement as defineKiToolbar } from '@kimen/elements/components/ki-toolbar.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
-import { defineCustomElement as defineKiTopNav } from '@kimen/elements/components/ki-top-nav.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
 @ProxyCmp({
   defineCustomElementFn: defineKiAlert,
@@ -174,14 +176,15 @@ export declare interface KiButton extends Components.KiButton {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiCard
+  defineCustomElementFn: defineKiCard,
+  inputs: ['href', 'interactive', 'variant']
 })
 @Component({
   selector: 'ki-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['href', 'interactive', 'variant'],
 })
 export class KiCard {
   protected el: HTMLKiCardElement;
@@ -192,7 +195,12 @@ export class KiCard {
 }
 
 
-export declare interface KiCard extends Components.KiCard {}
+
+export declare interface KiCard extends Components.KiCard {
+  /**
+   * Fires once when the user activates an action card by pointer or keyboard.
+   */
+}
 
 
 @ProxyCmp({
@@ -701,6 +709,57 @@ export declare interface KiScroller extends Components.KiScroller {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiSegment,
+  inputs: ['accessibleLabel', 'disabled', 'value']
+})
+@Component({
+  selector: 'ki-segment',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['accessibleLabel', 'disabled', { name: 'value', required: true }],
+})
+export class KiSegment {
+  protected el: HTMLKiSegmentElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSegment extends Components.KiSegment {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSegmentedControl,
+  inputs: ['fullWidth', 'label', 'size', 'value']
+})
+@Component({
+  selector: 'ki-segmented-control',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['fullWidth', { name: 'label', required: true }, 'size', 'value'],
+})
+export class KiSegmentedControl {
+  protected el: HTMLKiSegmentedControlElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiSegmentedControl extends Components.KiSegmentedControl {
+  /**
+   * Emitted once per changed user choice with the new resolved value.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiSelect,
   inputs: ['disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'required', 'size', 'value']
 })
@@ -974,6 +1033,29 @@ export declare interface KiToaster extends Components.KiToaster {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiToolbar,
+  inputs: ['hideOnScroll', 'label', 'orientation', 'tone', 'variant']
+})
+@Component({
+  selector: 'ki-toolbar',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['hideOnScroll', { name: 'label', required: true }, 'orientation', 'tone', 'variant'],
+})
+export class KiToolbar {
+  protected el: HTMLKiToolbarElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiToolbar extends Components.KiToolbar {}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiTooltip,
   inputs: ['label', 'placement']
 })
@@ -994,29 +1076,6 @@ export class KiTooltip {
 
 
 export declare interface KiTooltip extends Components.KiTooltip {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiTopNav,
-  inputs: ['collapseAt', 'headingLevel', 'label', 'navigationLabel', 'overflowLabel', 'screenTitle', 'scrollBehavior', 'size', 'sticky', 'subtitle', 'titleAlign', 'variant']
-})
-@Component({
-  selector: 'ki-top-nav',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapseAt', 'headingLevel', 'label', 'navigationLabel', 'overflowLabel', 'screenTitle', 'scrollBehavior', 'size', 'sticky', 'subtitle', 'titleAlign', 'variant'],
-})
-export class KiTopNav {
-  protected el: HTMLKiTopNavElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiTopNav extends Components.KiTopNav {}
 
 
 @ProxyCmp({

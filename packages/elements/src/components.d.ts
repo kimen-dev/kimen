@@ -27,6 +27,7 @@ import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
+import { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
 import { KiSelectSize } from "./components/ki-select/ki-select";
 import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 import { KiStatusTone } from "./components/ki-status/ki-status";
@@ -36,8 +37,8 @@ import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
+import { KiToolbarOrientation, KiToolbarTone, KiToolbarVariant } from "./components/ki-toolbar/ki-toolbar";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
-import { TopNavSize } from "./components/ki-top-nav/ki-top-nav.layout";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
@@ -60,6 +61,7 @@ export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
+export { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
 export { KiSelectSize } from "./components/ki-select/ki-select";
 export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 export { KiStatusTone } from "./components/ki-status/ki-status";
@@ -69,8 +71,8 @@ export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
+export { KiToolbarOrientation, KiToolbarTone, KiToolbarVariant } from "./components/ki-toolbar/ki-toolbar";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
-export { TopNavSize } from "./components/ki-top-nav/ki-top-nav.layout";
 export namespace Components {
     /**
      * A persistent inline status message with token-backed tone semantics.
@@ -253,17 +255,31 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * A non-interactive card surface for grouping related content.
-     * @whenToUse group related media, heading, supporting text and actions into
-     * one scannable surface visually distinct from the page; fill any subset of
-     * regions. Supply the heading element yourself in the `header` slot — plain
-     * text slotted there carries no heading semantics for assistive technology.
-     * @whenNotToUse as a button or link target, form control, fieldset, page
-     * landmark, section replacement or nested card. For an interactive card, slot
-     * the button or link INSIDE a region (whole-card interactivity is a future
-     * feature, not this component).
+     * A card surface for grouping related content, with an optional primary link or action.
+     * @whenToUse group related media, a title, supporting text and actions into
+     * one scannable surface. Set `href` for navigation or `interactive` for a
+     * declared action. Give a clickable card one text heading in the header
+     * slot and place secondary controls in the body or footer.
+     * @whenNotToUse as a form field, fieldset, page landmark, section replacement
+     * or nested card. Use a standalone button or link for a control without
+     * supporting content.
      */
     interface KiCard {
+        /**
+          * Destination for the card's title link. Supply a text heading in the header slot. A nonblank href takes precedence over interactive.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Gives a titled card a primary button that emits ki-activate. Use href for navigation. Keep other actions in separate controls in the card.
+          * @default false
+         */
+        "interactive"?: boolean;
+        /**
+          * Surface treatment. Choose elevated for a raised panel, filled for a tinted group or outlined for a bordered surface. Use default to follow the theme's existing card treatment.
+          * @default 'default'
+         */
+        "variant"?: 'default' | 'elevated' | 'filled' | 'outlined';
     }
     /**
      * A form-associated checkbox for selecting independent options.
@@ -1021,6 +1037,53 @@ export namespace Components {
         "orientation": KiScrollerOrientation;
     }
     /**
+     * A single choice in a ki-segmented-control.
+     * @whenToUse offer one mutually exclusive choice with text or a named icon.
+     * @whenNotToUse standalone, for navigation, or for form submission.
+     */
+    interface KiSegment {
+        /**
+          * Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.
+         */
+        "accessibleLabel"?: string;
+        /**
+          * Excludes the option from selection and keyboard navigation.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Required nonempty option identifier. Each value must be unique in its group.
+         */
+        "value": string;
+    }
+    /**
+     * A compact control for one in-place choice among two to five options.
+     * @whenToUse apply a chart range, view mode, or another immediate setting.
+     * @whenNotToUse switching between panels (ki-tabs), submitted form choices
+     * (ki-radio-group), or more than five options (ki-select).
+     */
+    interface KiSegmentedControl {
+        /**
+          * Distribute the available inline space evenly among all segments.
+          * @default false
+         */
+        "fullWidth": boolean;
+        /**
+          * Required accessible name of the group. Use a short name for the setting.
+         */
+        "label": string;
+        /**
+          * Track size. The default heights are 28, 32 and 40 CSS px respectively; surrounding density settings can increase or decrease targets.
+          * @default 'md'
+         */
+        "size": KiSegmentedControlSize;
+        /**
+          * Resolved selected value. Set it to choose an option programmatically. Omit it to select the first available option. The value is empty when there are no available options. Programmatic changes are silent.
+          * @default first available option
+         */
+        "value": string;
+    }
+    /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -1464,6 +1527,39 @@ export namespace Components {
         "show": (options: KiToastShowOptions) => Promise<HTMLElement>;
     }
     /**
+     * Brings frequent page actions together in a floating pill or docked surface.
+     * @whenToUse group a small set of related page actions, such as text
+     * formatting or the commands on a compact message screen.
+     * @whenNotToUse for site navigation, mutually exclusive choices, or a docked
+     * bar on a screen already using MobileNav.
+     */
+    interface KiToolbar {
+        /**
+          * Hides on downward page scroll and reveals on upward scroll or when an action receives focus. Use for secondary actions where content needs room.
+          * @default false
+         */
+        "hideOnScroll": boolean;
+        /**
+          * Accessible name for the group, such as "Formatting". Supply it in the page's language.
+         */
+        "label": string;
+        /**
+          * Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.
+          * @default 'horizontal'
+         */
+        "orientation": KiToolbarOrientation;
+        /**
+          * Surface palette. Use vibrant to emphasize the toolbar with an accent tint.
+          * @default 'standard'
+         */
+        "tone": KiToolbarTone;
+        /**
+          * Floating leaves placement to the page. Docked fixes the surface to the viewport's bottom edge. Reserve space below the content when docking.
+          * @default 'floating'
+         */
+        "variant": KiToolbarVariant;
+    }
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -1484,76 +1580,6 @@ export namespace Components {
           * @default 'top'
          */
         "placement": KiTooltipPlacement;
-    }
-    /**
-     * Application navigation with responsive primary links, or a per-screen app
-     * bar with a real heading, optional search, and overflow actions.
-     * @whenToUse group a brand, up to five primary sections and global controls,
-     * or set a screen title, leading control and screen actions in app-bar mode.
-     * @whenNotToUse more than five sections or a deep navigation tree (use a
-     * sidebar), or switches between in-page views (use ki-tabs).
-     */
-    interface KiTopNav {
-        /**
-          * CSS length below which navigation collapses and single-row app bars can center their title.
-          * @default '48rem'
-         */
-        "collapseAt": string;
-        /**
-          * Native heading level for the screen title. Use 1 through 6 to fit the page outline.
-          * @default 1
-         */
-        "headingLevel": number;
-        /**
-          * Accessible name of the header's primary navigation landmark. Override for localization.
-          * @default 'Main'
-         */
-        "label": string;
-        /**
-          * Accessible name for the compact navigation button and menu. Override for localization.
-          * @default 'Open navigation'
-         */
-        "navigationLabel": string;
-        /**
-          * Accessible name for the app-bar overflow button and menu. Override for localization.
-          * @default 'More actions'
-         */
-        "overflowLabel": string;
-        /**
-          * Screen heading, set with the HTML title attribute or the screenTitle property.
-          * @default ''
-         */
-        "screenTitle": string;
-        /**
-          * Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.
-          * @default 'elevate'
-         */
-        "scrollBehavior": TopNavScrollBehavior;
-        /**
-          * Bar size. Only app-bar mode has large and extra-large two-row sizes.
-          * @default 'md'
-         */
-        "size": TopNavSize;
-        /**
-          * Keep the bar at the block start of the scroll container and draw a bottom border.
-          * @default false
-         */
-        "sticky": boolean;
-        /**
-          * Supporting text displayed under the screen heading.
-          * @default ''
-         */
-        "subtitle": string;
-        /**
-          * Center a compact single-row title when the app bar has at most one action.
-          * @default 'start'
-         */
-        "titleAlign": TopNavTitleAlign;
-        /**
-          * Header for primary navigation, or app-bar for the current screen. Defaults to header.
-          * @default 'header'
-         */
-        "variant": TopNavVariant;
     }
     /**
      * A themed video surface: a calm poster facade with exactly one accessible
@@ -1587,6 +1613,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiCardCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCardElement;
+}
 export interface KiCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCheckboxGroupElement;
@@ -1598,6 +1628,10 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
 export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
+}
+export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiSegmentedControlElement;
 }
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1710,18 +1744,28 @@ declare global {
         prototype: HTMLKiButtonElement;
         new (): HTMLKiButtonElement;
     };
+    interface HTMLKiCardElementEventMap {
+        "ki-activate": void;
+    }
     /**
-     * A non-interactive card surface for grouping related content.
-     * @whenToUse group related media, heading, supporting text and actions into
-     * one scannable surface visually distinct from the page; fill any subset of
-     * regions. Supply the heading element yourself in the `header` slot — plain
-     * text slotted there carries no heading semantics for assistive technology.
-     * @whenNotToUse as a button or link target, form control, fieldset, page
-     * landmark, section replacement or nested card. For an interactive card, slot
-     * the button or link INSIDE a region (whole-card interactivity is a future
-     * feature, not this component).
+     * A card surface for grouping related content, with an optional primary link or action.
+     * @whenToUse group related media, a title, supporting text and actions into
+     * one scannable surface. Set `href` for navigation or `interactive` for a
+     * declared action. Give a clickable card one text heading in the header
+     * slot and place secondary controls in the body or footer.
+     * @whenNotToUse as a form field, fieldset, page landmark, section replacement
+     * or nested card. Use a standalone button or link for a control without
+     * supporting content.
      */
     interface HTMLKiCardElement extends Components.KiCard, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCardElementEventMap>(type: K, listener: (this: HTMLKiCardElement, ev: KiCardCustomEvent<HTMLKiCardElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCardElementEventMap>(type: K, listener: (this: HTMLKiCardElement, ev: KiCardCustomEvent<HTMLKiCardElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiCardElement: {
         prototype: HTMLKiCardElement;
@@ -2126,6 +2170,40 @@ declare global {
         new (): HTMLKiScrollerElement;
     };
     /**
+     * A single choice in a ki-segmented-control.
+     * @whenToUse offer one mutually exclusive choice with text or a named icon.
+     * @whenNotToUse standalone, for navigation, or for form submission.
+     */
+    interface HTMLKiSegmentElement extends Components.KiSegment, HTMLStencilElement {
+    }
+    var HTMLKiSegmentElement: {
+        prototype: HTMLKiSegmentElement;
+        new (): HTMLKiSegmentElement;
+    };
+    interface HTMLKiSegmentedControlElementEventMap {
+        "ki-change": { value: string };
+    }
+    /**
+     * A compact control for one in-place choice among two to five options.
+     * @whenToUse apply a chart range, view mode, or another immediate setting.
+     * @whenNotToUse switching between panels (ki-tabs), submitted form choices
+     * (ki-radio-group), or more than five options (ki-select).
+     */
+    interface HTMLKiSegmentedControlElement extends Components.KiSegmentedControl, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiSegmentedControlElementEventMap>(type: K, listener: (this: HTMLKiSegmentedControlElement, ev: KiSegmentedControlCustomEvent<HTMLKiSegmentedControlElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiSegmentedControlElementEventMap>(type: K, listener: (this: HTMLKiSegmentedControlElement, ev: KiSegmentedControlCustomEvent<HTMLKiSegmentedControlElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiSegmentedControlElement: {
+        prototype: HTMLKiSegmentedControlElement;
+        new (): HTMLKiSegmentedControlElement;
+    };
+    /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -2355,6 +2433,19 @@ declare global {
         new (): HTMLKiToasterElement;
     };
     /**
+     * Brings frequent page actions together in a floating pill or docked surface.
+     * @whenToUse group a small set of related page actions, such as text
+     * formatting or the commands on a compact message screen.
+     * @whenNotToUse for site navigation, mutually exclusive choices, or a docked
+     * bar on a screen already using MobileNav.
+     */
+    interface HTMLKiToolbarElement extends Components.KiToolbar, HTMLStencilElement {
+    }
+    var HTMLKiToolbarElement: {
+        prototype: HTMLKiToolbarElement;
+        new (): HTMLKiToolbarElement;
+    };
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -2369,20 +2460,6 @@ declare global {
     var HTMLKiTooltipElement: {
         prototype: HTMLKiTooltipElement;
         new (): HTMLKiTooltipElement;
-    };
-    /**
-     * Application navigation with responsive primary links, or a per-screen app
-     * bar with a real heading, optional search, and overflow actions.
-     * @whenToUse group a brand, up to five primary sections and global controls,
-     * or set a screen title, leading control and screen actions in app-bar mode.
-     * @whenNotToUse more than five sections or a deep navigation tree (use a
-     * sidebar), or switches between in-page views (use ki-tabs).
-     */
-    interface HTMLKiTopNavElement extends Components.KiTopNav, HTMLStencilElement {
-    }
-    var HTMLKiTopNavElement: {
-        prototype: HTMLKiTopNavElement;
-        new (): HTMLKiTopNavElement;
     };
     /**
      * A themed video surface: a calm poster facade with exactly one accessible
@@ -2439,6 +2516,8 @@ declare global {
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-scroller": HTMLKiScrollerElement;
+        "ki-segment": HTMLKiSegmentElement;
+        "ki-segmented-control": HTMLKiSegmentedControlElement;
         "ki-select": HTMLKiSelectElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
@@ -2450,8 +2529,8 @@ declare global {
         "ki-textarea": HTMLKiTextareaElement;
         "ki-toast": HTMLKiToastElement;
         "ki-toaster": HTMLKiToasterElement;
+        "ki-toolbar": HTMLKiToolbarElement;
         "ki-tooltip": HTMLKiTooltipElement;
-        "ki-top-nav": HTMLKiTopNavElement;
         "ki-video": HTMLKiVideoElement;
     }
 }
@@ -2647,17 +2726,35 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * A non-interactive card surface for grouping related content.
-     * @whenToUse group related media, heading, supporting text and actions into
-     * one scannable surface visually distinct from the page; fill any subset of
-     * regions. Supply the heading element yourself in the `header` slot — plain
-     * text slotted there carries no heading semantics for assistive technology.
-     * @whenNotToUse as a button or link target, form control, fieldset, page
-     * landmark, section replacement or nested card. For an interactive card, slot
-     * the button or link INSIDE a region (whole-card interactivity is a future
-     * feature, not this component).
+     * A card surface for grouping related content, with an optional primary link or action.
+     * @whenToUse group related media, a title, supporting text and actions into
+     * one scannable surface. Set `href` for navigation or `interactive` for a
+     * declared action. Give a clickable card one text heading in the header
+     * slot and place secondary controls in the body or footer.
+     * @whenNotToUse as a form field, fieldset, page landmark, section replacement
+     * or nested card. Use a standalone button or link for a control without
+     * supporting content.
      */
     interface KiCard {
+        /**
+          * Destination for the card's title link. Supply a text heading in the header slot. A nonblank href takes precedence over interactive.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Gives a titled card a primary button that emits ki-activate. Use href for navigation. Keep other actions in separate controls in the card.
+          * @default false
+         */
+        "interactive"?: boolean;
+        /**
+          * Fires once when the user activates an action card by pointer or keyboard.
+         */
+        "onKi-activate"?: (event: KiCardCustomEvent<void>) => void;
+        /**
+          * Surface treatment. Choose elevated for a raised panel, filled for a tinted group or outlined for a bordered surface. Use default to follow the theme's existing card treatment.
+          * @default 'default'
+         */
+        "variant"?: 'default' | 'elevated' | 'filled' | 'outlined';
     }
     /**
      * A form-associated checkbox for selecting independent options.
@@ -3435,6 +3532,57 @@ declare namespace LocalJSX {
         "orientation"?: KiScrollerOrientation;
     }
     /**
+     * A single choice in a ki-segmented-control.
+     * @whenToUse offer one mutually exclusive choice with text or a named icon.
+     * @whenNotToUse standalone, for navigation, or for form submission.
+     */
+    interface KiSegment {
+        /**
+          * Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.
+         */
+        "accessibleLabel"?: string;
+        /**
+          * Excludes the option from selection and keyboard navigation.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Required nonempty option identifier. Each value must be unique in its group.
+         */
+        "value": string;
+    }
+    /**
+     * A compact control for one in-place choice among two to five options.
+     * @whenToUse apply a chart range, view mode, or another immediate setting.
+     * @whenNotToUse switching between panels (ki-tabs), submitted form choices
+     * (ki-radio-group), or more than five options (ki-select).
+     */
+    interface KiSegmentedControl {
+        /**
+          * Distribute the available inline space evenly among all segments.
+          * @default false
+         */
+        "fullWidth"?: boolean;
+        /**
+          * Required accessible name of the group. Use a short name for the setting.
+         */
+        "label": string;
+        /**
+          * Emitted once per changed user choice with the new resolved value.
+         */
+        "onKi-change"?: (event: KiSegmentedControlCustomEvent<{ value: string }>) => void;
+        /**
+          * Track size. The default heights are 28, 32 and 40 CSS px respectively; surrounding density settings can increase or decrease targets.
+          * @default 'md'
+         */
+        "size"?: KiSegmentedControlSize;
+        /**
+          * Resolved selected value. Set it to choose an option programmatically. Omit it to select the first available option. The value is empty when there are no available options. Programmatic changes are silent.
+          * @default first available option
+         */
+        "value"?: string;
+    }
+    /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -3894,6 +4042,39 @@ declare namespace LocalJSX {
         "placement"?: KiToasterPlacement | (string & {});
     }
     /**
+     * Brings frequent page actions together in a floating pill or docked surface.
+     * @whenToUse group a small set of related page actions, such as text
+     * formatting or the commands on a compact message screen.
+     * @whenNotToUse for site navigation, mutually exclusive choices, or a docked
+     * bar on a screen already using MobileNav.
+     */
+    interface KiToolbar {
+        /**
+          * Hides on downward page scroll and reveals on upward scroll or when an action receives focus. Use for secondary actions where content needs room.
+          * @default false
+         */
+        "hideOnScroll"?: boolean;
+        /**
+          * Accessible name for the group, such as "Formatting". Supply it in the page's language.
+         */
+        "label": string;
+        /**
+          * Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.
+          * @default 'horizontal'
+         */
+        "orientation"?: KiToolbarOrientation;
+        /**
+          * Surface palette. Use vibrant to emphasize the toolbar with an accent tint.
+          * @default 'standard'
+         */
+        "tone"?: KiToolbarTone;
+        /**
+          * Floating leaves placement to the page. Docked fixes the surface to the viewport's bottom edge. Reserve space below the content when docking.
+          * @default 'floating'
+         */
+        "variant"?: KiToolbarVariant;
+    }
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -3914,76 +4095,6 @@ declare namespace LocalJSX {
           * @default 'top'
          */
         "placement"?: KiTooltipPlacement;
-    }
-    /**
-     * Application navigation with responsive primary links, or a per-screen app
-     * bar with a real heading, optional search, and overflow actions.
-     * @whenToUse group a brand, up to five primary sections and global controls,
-     * or set a screen title, leading control and screen actions in app-bar mode.
-     * @whenNotToUse more than five sections or a deep navigation tree (use a
-     * sidebar), or switches between in-page views (use ki-tabs).
-     */
-    interface KiTopNav {
-        /**
-          * CSS length below which navigation collapses and single-row app bars can center their title.
-          * @default '48rem'
-         */
-        "collapseAt"?: string;
-        /**
-          * Native heading level for the screen title. Use 1 through 6 to fit the page outline.
-          * @default 1
-         */
-        "headingLevel"?: number;
-        /**
-          * Accessible name of the header's primary navigation landmark. Override for localization.
-          * @default 'Main'
-         */
-        "label"?: string;
-        /**
-          * Accessible name for the compact navigation button and menu. Override for localization.
-          * @default 'Open navigation'
-         */
-        "navigationLabel"?: string;
-        /**
-          * Accessible name for the app-bar overflow button and menu. Override for localization.
-          * @default 'More actions'
-         */
-        "overflowLabel"?: string;
-        /**
-          * Screen heading, set with the HTML title attribute or the screenTitle property.
-          * @default ''
-         */
-        "screenTitle"?: string;
-        /**
-          * Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.
-          * @default 'elevate'
-         */
-        "scrollBehavior"?: TopNavScrollBehavior;
-        /**
-          * Bar size. Only app-bar mode has large and extra-large two-row sizes.
-          * @default 'md'
-         */
-        "size"?: TopNavSize;
-        /**
-          * Keep the bar at the block start of the scroll container and draw a bottom border.
-          * @default false
-         */
-        "sticky"?: boolean;
-        /**
-          * Supporting text displayed under the screen heading.
-          * @default ''
-         */
-        "subtitle"?: string;
-        /**
-          * Center a compact single-row title when the app bar has at most one action.
-          * @default 'start'
-         */
-        "titleAlign"?: TopNavTitleAlign;
-        /**
-          * Header for primary navigation, or app-bar for the current screen. Defaults to header.
-          * @default 'header'
-         */
-        "variant"?: TopNavVariant;
     }
     /**
      * A themed video surface: a calm poster facade with exactly one accessible
@@ -4044,6 +4155,11 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "loading": boolean;
         "loadingLabel": string;
+    }
+    interface KiCardAttributes {
+        "variant": 'default' | 'elevated' | 'filled' | 'outlined';
+        "href": string;
+        "interactive": boolean;
     }
     interface KiCheckboxAttributes {
         "checked": boolean;
@@ -4183,6 +4299,17 @@ declare namespace LocalJSX {
         "orientation": KiScrollerOrientation;
         "label": string;
     }
+    interface KiSegmentAttributes {
+        "value": string;
+        "disabled": boolean;
+        "accessibleLabel": string;
+    }
+    interface KiSegmentedControlAttributes {
+        "label": string;
+        "value": string;
+        "size": KiSegmentedControlSize;
+        "fullWidth": boolean;
+    }
     interface KiSelectAttributes {
         "label": string;
         "labelHint": string;
@@ -4263,23 +4390,16 @@ declare namespace LocalJSX {
         "max": number;
         "label": string;
     }
+    interface KiToolbarAttributes {
+        "label": string;
+        "variant": KiToolbarVariant;
+        "orientation": KiToolbarOrientation;
+        "tone": KiToolbarTone;
+        "hideOnScroll": boolean;
+    }
     interface KiTooltipAttributes {
         "label": string;
         "placement": KiTooltipPlacement;
-    }
-    interface KiTopNavAttributes {
-        "variant": TopNavVariant;
-        "label": string;
-        "size": TopNavSize;
-        "collapseAt": string;
-        "sticky": boolean;
-        "navigationLabel": string;
-        "overflowLabel": string;
-        "screenTitle": string;
-        "subtitle": string;
-        "headingLevel": number;
-        "titleAlign": TopNavTitleAlign;
-        "scrollBehavior": TopNavScrollBehavior;
     }
     interface KiVideoAttributes {
         "label": string;
@@ -4291,7 +4411,7 @@ declare namespace LocalJSX {
         "ki-avatar-group": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K] };
         "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
-        "ki-card": KiCard;
+        "ki-card": Omit<KiCard, keyof KiCardAttributes> & { [K in keyof KiCard & keyof KiCardAttributes]?: KiCard[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `attr:${K}`]?: KiCardAttributes[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `prop:${K}`]?: KiCard[K] };
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
@@ -4313,6 +4433,8 @@ declare namespace LocalJSX {
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
+        "ki-segment": Omit<KiSegment, keyof KiSegmentAttributes> & { [K in keyof KiSegment & keyof KiSegmentAttributes]?: KiSegment[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `attr:${K}`]?: KiSegmentAttributes[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `prop:${K}`]?: KiSegment[K] } & OneOf<"value", KiSegment["value"], KiSegmentAttributes["value"]>;
+        "ki-segmented-control": Omit<KiSegmentedControl, keyof KiSegmentedControlAttributes> & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes]?: KiSegmentedControl[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `attr:${K}`]?: KiSegmentedControlAttributes[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `prop:${K}`]?: KiSegmentedControl[K] } & OneOf<"label", KiSegmentedControl["label"], KiSegmentedControlAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
@@ -4324,8 +4446,8 @@ declare namespace LocalJSX {
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
         "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
         "ki-toaster": Omit<KiToaster, keyof KiToasterAttributes> & { [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K] };
+        "ki-toolbar": Omit<KiToolbar, keyof KiToolbarAttributes> & { [K in keyof KiToolbar & keyof KiToolbarAttributes]?: KiToolbar[K] } & { [K in keyof KiToolbar & keyof KiToolbarAttributes as `attr:${K}`]?: KiToolbarAttributes[K] } & { [K in keyof KiToolbar & keyof KiToolbarAttributes as `prop:${K}`]?: KiToolbar[K] } & OneOf<"label", KiToolbar["label"], KiToolbarAttributes["label"]>;
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
-        "ki-top-nav": Omit<KiTopNav, keyof KiTopNavAttributes> & { [K in keyof KiTopNav & keyof KiTopNavAttributes]?: KiTopNav[K] } & { [K in keyof KiTopNav & keyof KiTopNavAttributes as `attr:${K}`]?: KiTopNavAttributes[K] } & { [K in keyof KiTopNav & keyof KiTopNavAttributes as `prop:${K}`]?: KiTopNav[K] };
         "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] } & OneOf<"label", KiVideo["label"], KiVideoAttributes["label"]>;
     }
 }
@@ -4400,15 +4522,14 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * A non-interactive card surface for grouping related content.
-             * @whenToUse group related media, heading, supporting text and actions into
-             * one scannable surface visually distinct from the page; fill any subset of
-             * regions. Supply the heading element yourself in the `header` slot — plain
-             * text slotted there carries no heading semantics for assistive technology.
-             * @whenNotToUse as a button or link target, form control, fieldset, page
-             * landmark, section replacement or nested card. For an interactive card, slot
-             * the button or link INSIDE a region (whole-card interactivity is a future
-             * feature, not this component).
+             * A card surface for grouping related content, with an optional primary link or action.
+             * @whenToUse group related media, a title, supporting text and actions into
+             * one scannable surface. Set `href` for navigation or `interactive` for a
+             * declared action. Give a clickable card one text heading in the header
+             * slot and place secondary controls in the body or footer.
+             * @whenNotToUse as a form field, fieldset, page landmark, section replacement
+             * or nested card. Use a standalone button or link for a control without
+             * supporting content.
              */
             "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
             /**
@@ -4672,6 +4793,19 @@ declare module "@stencil/core" {
              */
             "ki-scroller": LocalJSX.IntrinsicElements["ki-scroller"] & JSXBase.HTMLAttributes<HTMLKiScrollerElement>;
             /**
+             * A single choice in a ki-segmented-control.
+             * @whenToUse offer one mutually exclusive choice with text or a named icon.
+             * @whenNotToUse standalone, for navigation, or for form submission.
+             */
+            "ki-segment": LocalJSX.IntrinsicElements["ki-segment"] & JSXBase.HTMLAttributes<HTMLKiSegmentElement>;
+            /**
+             * A compact control for one in-place choice among two to five options.
+             * @whenToUse apply a chart range, view mode, or another immediate setting.
+             * @whenNotToUse switching between panels (ki-tabs), submitted form choices
+             * (ki-radio-group), or more than five options (ki-select).
+             */
+            "ki-segmented-control": LocalJSX.IntrinsicElements["ki-segmented-control"] & JSXBase.HTMLAttributes<HTMLKiSegmentedControlElement>;
+            /**
              * A form-associated select-only combobox for choosing one option from
              * declarative `ki-option` children.
              * Like a native field, it answers `checkValidity()`, `reportValidity()`,
@@ -4824,6 +4958,14 @@ declare module "@stencil/core" {
              */
             "ki-toaster": LocalJSX.IntrinsicElements["ki-toaster"] & JSXBase.HTMLAttributes<HTMLKiToasterElement>;
             /**
+             * Brings frequent page actions together in a floating pill or docked surface.
+             * @whenToUse group a small set of related page actions, such as text
+             * formatting or the commands on a compact message screen.
+             * @whenNotToUse for site navigation, mutually exclusive choices, or a docked
+             * bar on a screen already using MobileNav.
+             */
+            "ki-toolbar": LocalJSX.IntrinsicElements["ki-toolbar"] & JSXBase.HTMLAttributes<HTMLKiToolbarElement>;
+            /**
              * A transient, text-only description bubble for one slotted trigger.
              * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
              * otherwise ambiguous control when the same information is discoverable
@@ -4834,15 +4976,6 @@ declare module "@stencil/core" {
              * pattern for those cases.
              */
             "ki-tooltip": LocalJSX.IntrinsicElements["ki-tooltip"] & JSXBase.HTMLAttributes<HTMLKiTooltipElement>;
-            /**
-             * Application navigation with responsive primary links, or a per-screen app
-             * bar with a real heading, optional search, and overflow actions.
-             * @whenToUse group a brand, up to five primary sections and global controls,
-             * or set a screen title, leading control and screen actions in app-bar mode.
-             * @whenNotToUse more than five sections or a deep navigation tree (use a
-             * sidebar), or switches between in-page views (use ki-tabs).
-             */
-            "ki-top-nav": LocalJSX.IntrinsicElements["ki-top-nav"] & JSXBase.HTMLAttributes<HTMLKiTopNavElement>;
             /**
              * A themed video surface: a calm poster facade with exactly one accessible
              * play control over a slotted native `<video>` element. From the first

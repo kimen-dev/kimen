@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Recipes/Working with page actions" />
+
+# Working with page actions
+
+Place a floating toolbar where the actions are used. Tabs and arrow keys
+serve different purposes: Tab moves into or past the group, while arrows
+move between its actions. Home and End reach the first and last action.
+
+```html
+<ki-toolbar label="Image actions" orientation="vertical">
+  <ki-button variant="ghost">Crop</ki-button>
+  <ki-divider></ki-divider>
+  <ki-button variant="ghost">Rotate</ki-button>
+</ki-toolbar>
+```
+
+Use a named `ki-icon-button` for each action represented by an icon. With
+ToggleIconButton, use its `toggle` and `selected` props for a pressed
+action such as Bold. A floating toolbar can pair with a `ki-fab` in the
+`fab` slot. The companion remains a separate stop in the Tab sequence.
+
+Use a docked toolbar on compact screens that can dedicate their bottom edge to
+page actions. Give the content room to scroll clear of the bar and its safe-area
+padding. Opt into `hide-on-scroll` where actions should recede on downward
+page scroll and reappear on upward scroll or focus. Choose MobileNav on screens
+where the bottom edge is needed for navigation.
