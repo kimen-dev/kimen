@@ -1,0 +1,12 @@
+{
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
+  "catalog": true,
+  "visual": {
+    "material3Dark": true
+  }
+}

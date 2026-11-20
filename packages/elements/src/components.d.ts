@@ -42,6 +42,7 @@ import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./compo
 import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
+import { KiListChangeDetail, KiListSelection, KiListValue } from "./components/ki-list/ki-list";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
 import { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
@@ -116,6 +117,7 @@ export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./compo
 export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
+export { KiListChangeDetail, KiListSelection, KiListValue } from "./components/ki-list/ki-list";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
 export { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
@@ -902,6 +904,24 @@ export namespace Components {
         "type": KiChipType;
     }
     /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface KiCitation {
+        /**
+          * ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.
+         */
+        "citationRef": string;
+        /**
+          * Localized link name with `{number}` and `{title}` placeholders.
+          * @default 'Source {number}: {title}'
+         */
+        "labelTemplate": string;
+    }
+    /**
      * Presents source code with a named header, syntax colors, line controls and
      * clipboard feedback.
      * @whenToUse display a multiline example, generated code or a tool result that
@@ -1432,15 +1452,16 @@ export namespace Components {
         "summary"?: string;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface KiDialog {
         /**
@@ -1448,10 +1469,24 @@ export namespace Components {
          */
         "close": () => Promise<void>;
         /**
+          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
+          * @default 'Close'
+         */
+        "closeLabel": string;
+        /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop": boolean;
+        /**
+          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+         */
+        "confirmLabel"?: string;
+        /**
+          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
+          * @default 'never'
+         */
+        "fullscreen": 'never' | 'compact' | 'always';
         /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
@@ -1991,7 +2026,7 @@ export namespace Components {
          */
         "expanded"?: boolean;
         /**
-          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog. When slotted as a trailing list control, the row text supplies a fallback through the host aria-label. Use ki-button when the action has a visible label.
          */
         "label": string;
         /**
@@ -2148,6 +2183,11 @@ export namespace Components {
          */
         "aiSuggestionText": string;
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
         "autocomplete"?: string;
@@ -2157,7 +2197,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -2172,6 +2212,18 @@ export namespace Components {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
@@ -2190,6 +2242,11 @@ export namespace Components {
           * @default false
          */
         "required": boolean;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -2251,30 +2308,76 @@ export namespace Components {
         "variant": KiLinkVariant;
     }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface KiList {
+        /**
+          * Accessible name for a list with links, options or trailing controls.
+         */
+        "label"?: string;
+        /**
+          * Form field name. Multiple selection submits repeated entries under this name.
+         */
+        "name"?: string;
+        /**
+          * Requires at least one enabled choice in a selection list.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Enables single or multiple selection. The default supports static, link and control rows.
+          * @default 'none'
+         */
+        "selection": KiListSelection;
+        /**
+          * Selected value or null in single selection, or selected values in source order in multiple selection. Assign a fresh array to change multiple selection. In HTML or catalog specs, set `selected` on the initial rows.
+          * @default null
+         */
+        "value": KiListValue;
     }
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+     * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface KiListItem {
+        /**
+          * Excludes this option from focus, selection by the user, and form data.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Native row link destination. Use outside selection lists, with no slotted interactive content.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Whether this row is selected in a single- or multiple-selection list.
+          * @default false
+         */
+        "selected": boolean;
         /**
           * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
          */
         "size": KiListItemSize;
+        /**
+          * Submitted option value. The primary row text supplies the default.
+         */
+        "value"?: string;
     }
     /**
      * Displays Markdown as Kimen components and native HTML semantics.
@@ -3615,6 +3718,57 @@ export namespace Components {
         "value": number | string | undefined;
     }
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface KiSource {
+        /**
+          * Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Optional plain-text excerpt displayed in the source card.
+          * @default undefined
+         */
+        "snippet"?: string;
+        /**
+          * Source identifier in this document or shadow root. Overrides the native HTML `id` when set. Use this value in guarded specs and in citation refs.
+          * @default undefined
+         */
+        "sourceId"?: string;
+        /**
+          * Required plain-text source title. In HTML use the `title` attribute.
+         */
+        "sourceTitle": string;
+    }
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface KiSources {
+        /**
+          * Whether the disclosure is expanded. Set to show the list initially.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Localized summary when there is one source. Use `{count}` for its number.
+          * @default '{count} source'
+         */
+        "sourceCountLabel": string;
+        /**
+          * Localized summary for multiple sources. Use `{count}` for their number.
+          * @default '{count} sources'
+         */
+        "sourcesCountLabel": string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -4076,6 +4230,11 @@ export namespace Components {
      */
     interface KiTextarea {
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
          */
         "autocomplete"?: string;
@@ -4085,7 +4244,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -4100,6 +4259,23 @@ export namespace Components {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
+          * @default 'Shorten the text to fit the character limit.'
+         */
+        "maxlengthErrorText"?: string;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
@@ -4123,6 +4299,11 @@ export namespace Components {
           * @default 2
          */
         "rows": number;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -4756,6 +4937,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
+export interface KiListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiListElement;
+}
 export interface KiMenuCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiMenuElement;
@@ -5206,6 +5391,19 @@ declare global {
         prototype: HTMLKiChipGroupElement;
         new (): HTMLKiChipGroupElement;
     };
+    /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface HTMLKiCitationElement extends Components.KiCitation, HTMLStencilElement {
+    }
+    var HTMLKiCitationElement: {
+        prototype: HTMLKiCitationElement;
+        new (): HTMLKiCitationElement;
+    };
     interface HTMLKiCodeBlockElementEventMap {
         "ki-copy": { value: string };
         "ki-copy-error": void;
@@ -5411,17 +5609,19 @@ declare global {
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
+        "ki-confirm": void;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface HTMLKiDialogElement extends Components.KiDialog, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5764,28 +5964,43 @@ declare global {
         prototype: HTMLKiLinkElement;
         new (): HTMLKiLinkElement;
     };
+    interface HTMLKiListElementEventMap {
+        "ki-change": KiListChangeDetail;
+    }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface HTMLKiListElement extends Components.KiList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiListElementEventMap>(type: K, listener: (this: HTMLKiListElement, ev: KiListCustomEvent<HTMLKiListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiListElementEventMap>(type: K, listener: (this: HTMLKiListElement, ev: KiListCustomEvent<HTMLKiListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiListElement: {
         prototype: HTMLKiListElement;
         new (): HTMLKiListElement;
     };
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+     * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface HTMLKiListItemElement extends Components.KiListItem, HTMLStencilElement {
     }
@@ -6345,6 +6560,31 @@ declare global {
         new (): HTMLKiSliderElement;
     };
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface HTMLKiSourceElement extends Components.KiSource, HTMLStencilElement {
+    }
+    var HTMLKiSourceElement: {
+        prototype: HTMLKiSourceElement;
+        new (): HTMLKiSourceElement;
+    };
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface HTMLKiSourcesElement extends Components.KiSources, HTMLStencilElement {
+    }
+    var HTMLKiSourcesElement: {
+        prototype: HTMLKiSourcesElement;
+        new (): HTMLKiSourcesElement;
+    };
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -6899,6 +7139,7 @@ declare global {
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-citation": HTMLKiCitationElement;
         "ki-code-block": HTMLKiCodeBlockElement;
         "ki-code-input": HTMLKiCodeInputElement;
         "ki-combobox": HTMLKiComboboxElement;
@@ -6959,6 +7200,8 @@ declare global {
         "ki-sidebar-item": HTMLKiSidebarItemElement;
         "ki-skeleton": HTMLKiSkeletonElement;
         "ki-slider": HTMLKiSliderElement;
+        "ki-source": HTMLKiSourceElement;
+        "ki-sources": HTMLKiSourcesElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-stat": HTMLKiStatElement;
@@ -7798,6 +8041,24 @@ declare namespace LocalJSX {
         "type"?: KiChipType;
     }
     /**
+     * A numbered inline link from an answer to a source card.
+     * @whenToUse Next to a claim supported by a `ki-source` in the same document
+     * or shadow root. Repeat the same reference for subsequent mentions.
+     * @whenNotToUse To cite a source outside this tree or replace a standalone
+     * link. Use `ki-link` for direct navigation.
+     */
+    interface KiCitation {
+        /**
+          * ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.
+         */
+        "citationRef": string;
+        /**
+          * Localized link name with `{number}` and `{title}` placeholders.
+          * @default 'Source {number}: {title}'
+         */
+        "labelTemplate"?: string;
+    }
+    /**
      * Presents source code with a named header, syntax colors, line controls and
      * clipboard feedback.
      * @whenToUse display a multiline example, generated code or a tool result that
@@ -8380,30 +8641,49 @@ declare namespace LocalJSX {
         "summary"?: string;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface KiDialog {
+        /**
+          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
+          * @default 'Close'
+         */
+        "closeLabel"?: string;
         /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop"?: boolean;
         /**
+          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+         */
+        "confirmLabel"?: string;
+        /**
+          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
+          * @default 'never'
+         */
+        "fullscreen"?: 'never' | 'compact' | 'always';
+        /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
         "heading": string;
         /**
-          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+          * Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
          */
         "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
+        /**
+          * The user activated the confirmation button. Handle validation, submission and dismissal in the application.
+         */
+        "onKi-confirm"?: (event: KiDialogCustomEvent<void>) => void;
         /**
           * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
           * @default false
@@ -8963,7 +9243,7 @@ declare namespace LocalJSX {
          */
         "expanded"?: boolean;
         /**
-          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog. When slotted as a trailing list control, the row text supplies a fallback through the host aria-label. Use ki-button when the action has a visible label.
          */
         "label": string;
         /**
@@ -9128,6 +9408,11 @@ declare namespace LocalJSX {
          */
         "aiSuggestionText"?: string;
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
         "autocomplete"?: string;
@@ -9137,7 +9422,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -9157,6 +9442,18 @@ declare namespace LocalJSX {
          */
         "labelHint"?: string;
         /**
+          * Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
+        /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
         "name"?: string;
@@ -9174,6 +9471,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "required"?: boolean;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -9235,30 +9537,88 @@ declare namespace LocalJSX {
         "variant"?: KiLinkVariant;
     }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface KiList {
+        /**
+          * If `true`, the user cannot interact with the element.
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Accessible name for a list with links, options or trailing controls.
+         */
+        "label"?: string;
+        /**
+          * Form field name. Multiple selection submits repeated entries under this name.
+         */
+        "name"?: string;
+        /**
+          * Fires once per user selection change, after updating the form value.
+         */
+        "onKi-change"?: (event: KiListCustomEvent<KiListChangeDetail>) => void;
+        /**
+          * Requires at least one enabled choice in a selection list.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Enables single or multiple selection. The default supports static, link and control rows.
+          * @default 'none'
+         */
+        "selection"?: KiListSelection;
+        /**
+          * Selected value or null in single selection, or selected values in source order in multiple selection. Assign a fresh array to change multiple selection. In HTML or catalog specs, set `selected` on the initial rows.
+          * @default null
+         */
+        "value"?: KiListValue;
     }
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+     * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface KiListItem {
+        /**
+          * Excludes this option from focus, selection by the user, and form data.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Native row link destination. Use outside selection lists, with no slotted interactive content.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Whether this row is selected in a single- or multiple-selection list.
+          * @default false
+         */
+        "selected"?: boolean;
         /**
           * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
          */
         "size"?: KiListItemSize;
+        /**
+          * Submitted option value. The primary row text supplies the default.
+         */
+        "value"?: string;
     }
     /**
      * Displays Markdown as Kimen components and native HTML semantics.
@@ -10705,6 +11065,57 @@ declare namespace LocalJSX {
         "value"?: number | string | undefined;
     }
     /**
+     * Declares one named web source for a `ki-sources` list.
+     * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+     * `href` and `title`; in guarded specs provide `source-id`, `href` and
+     * `title`. Use the same identifier on any citation of the source.
+     * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+     */
+    interface KiSource {
+        /**
+          * Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Optional plain-text excerpt displayed in the source card.
+          * @default undefined
+         */
+        "snippet"?: string;
+        /**
+          * Source identifier in this document or shadow root. Overrides the native HTML `id` when set. Use this value in guarded specs and in citation refs.
+          * @default undefined
+         */
+        "sourceId"?: string;
+        /**
+          * Required plain-text source title. In HTML use the `title` attribute.
+         */
+        "sourceTitle": string;
+    }
+    /**
+     * A disclosure with the ordered sources behind an answer.
+     * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+     * children and place `ki-citation` markers next to the claims they support.
+     * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+     */
+    interface KiSources {
+        /**
+          * Whether the disclosure is expanded. Set to show the list initially.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Localized summary when there is one source. Use `{count}` for its number.
+          * @default '{count} source'
+         */
+        "sourceCountLabel"?: string;
+        /**
+          * Localized summary for multiple sources. Use `{count}` for their number.
+          * @default '{count} sources'
+         */
+        "sourcesCountLabel"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -11186,6 +11597,11 @@ declare namespace LocalJSX {
      */
     interface KiTextarea {
         /**
+          * Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
+          * @default 'default'
+         */
+        "appearance"?: 'default' | 'outlined' | 'filled';
+        /**
           * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
          */
         "autocomplete"?: string;
@@ -11195,7 +11611,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -11214,6 +11630,23 @@ declare namespace LocalJSX {
           * Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
         "labelHint"?: string;
+        /**
+          * Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "maxlength"?: number;
+        /**
+          * Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
+          * @default 'Shorten the text to fit the character limit.'
+         */
+        "maxlengthErrorText"?: string;
+        /**
+          * Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
+          * @minimum 0
+          * @maximum 2147483647
+         */
+        "minlength"?: number;
         /**
           * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
          */
@@ -11237,6 +11670,11 @@ declare namespace LocalJSX {
           * @default 2
          */
         "rows"?: number;
+        /**
+          * Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
+          * @default false
+         */
+        "showCount"?: boolean;
         /**
           * Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
@@ -11954,6 +12392,10 @@ declare namespace LocalJSX {
         "focusTarget": string;
         "reorderAnnouncement": string;
     }
+    interface KiCitationAttributes {
+        "citationRef": string;
+        "labelTemplate": string;
+    }
     interface KiCodeBlockAttributes {
         "language": string;
         "filename": string;
@@ -12069,6 +12511,9 @@ declare namespace LocalJSX {
         "open": boolean;
         "heading": string;
         "closeOnBackdrop": boolean;
+        "fullscreen": 'never' | 'compact' | 'always';
+        "confirmLabel": string;
+        "closeLabel": string;
     }
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
@@ -12209,6 +12654,10 @@ declare namespace LocalJSX {
     interface KiInputAttributes {
         "type": KiInputType;
         "size": KiInputSize;
+        "appearance": 'default' | 'outlined' | 'filled';
+        "maxlength": number;
+        "minlength": number;
+        "showCount": boolean;
         "label": string;
         "labelHint": string;
         "placeholder": string;
@@ -12232,8 +12681,18 @@ declare namespace LocalJSX {
         "target": string;
         "rel": string;
     }
+    interface KiListAttributes {
+        "selection": KiListSelection;
+        "label": string;
+        "name": string;
+        "required": boolean;
+    }
     interface KiListItemAttributes {
         "size": KiListItemSize;
+        "href": string;
+        "value": string;
+        "selected": boolean;
+        "disabled": boolean;
     }
     interface KiMarkdownAttributes {
         "srcText": string;
@@ -12510,6 +12969,17 @@ declare namespace LocalJSX {
         "centered": boolean;
         "orientation": KiSliderOrientation;
     }
+    interface KiSourceAttributes {
+        "sourceId": string;
+        "href": string;
+        "sourceTitle": string;
+        "snippet": string;
+    }
+    interface KiSourcesAttributes {
+        "open": boolean;
+        "sourceCountLabel": string;
+        "sourcesCountLabel": string;
+    }
     interface KiSpinnerAttributes {
         "label": string;
         "variant": 'ring' | 'dots';
@@ -12593,6 +13063,11 @@ declare namespace LocalJSX {
         "iconLayout": KiTabsIconLayout;
     }
     interface KiTextareaAttributes {
+        "appearance": 'default' | 'outlined' | 'filled';
+        "maxlength": number;
+        "minlength": number;
+        "showCount": boolean;
+        "maxlengthErrorText": string;
         "label": string;
         "labelHint": string;
         "placeholder": string;
@@ -12728,6 +13203,7 @@ declare namespace LocalJSX {
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-citation": Omit<KiCitation, keyof KiCitationAttributes> & { [K in keyof KiCitation & keyof KiCitationAttributes]?: KiCitation[K] } & { [K in keyof KiCitation & keyof KiCitationAttributes as `attr:${K}`]?: KiCitationAttributes[K] } & { [K in keyof KiCitation & keyof KiCitationAttributes as `prop:${K}`]?: KiCitation[K] } & OneOf<"citationRef", KiCitation["citationRef"], KiCitationAttributes["citationRef"]>;
         "ki-code-block": Omit<KiCodeBlock, keyof KiCodeBlockAttributes> & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes]?: KiCodeBlock[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `attr:${K}`]?: KiCodeBlockAttributes[K] } & { [K in keyof KiCodeBlock & keyof KiCodeBlockAttributes as `prop:${K}`]?: KiCodeBlock[K] };
         "ki-code-input": Omit<KiCodeInput, keyof KiCodeInputAttributes> & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes]?: KiCodeInput[K] } & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes as `attr:${K}`]?: KiCodeInputAttributes[K] } & { [K in keyof KiCodeInput & keyof KiCodeInputAttributes as `prop:${K}`]?: KiCodeInput[K] } & OneOf<"label", KiCodeInput["label"], KiCodeInputAttributes["label"]>;
         "ki-combobox": Omit<KiCombobox, keyof KiComboboxAttributes> & { [K in keyof KiCombobox & keyof KiComboboxAttributes]?: KiCombobox[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `attr:${K}`]?: KiComboboxAttributes[K] } & { [K in keyof KiCombobox & keyof KiComboboxAttributes as `prop:${K}`]?: KiCombobox[K] } & OneOf<"label", KiCombobox["label"], KiComboboxAttributes["label"]>;
@@ -12755,7 +13231,7 @@ declare namespace LocalJSX {
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
         "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
-        "ki-list": KiList;
+        "ki-list": Omit<KiList, keyof KiListAttributes> & { [K in keyof KiList & keyof KiListAttributes]?: KiList[K] } & { [K in keyof KiList & keyof KiListAttributes as `attr:${K}`]?: KiListAttributes[K] } & { [K in keyof KiList & keyof KiListAttributes as `prop:${K}`]?: KiList[K] };
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
         "ki-markdown": Omit<KiMarkdown, keyof KiMarkdownAttributes> & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes]?: KiMarkdown[K] } & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes as `attr:${K}`]?: KiMarkdownAttributes[K] } & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes as `prop:${K}`]?: KiMarkdown[K] };
         "ki-menu": Omit<KiMenu, keyof KiMenuAttributes> & { [K in keyof KiMenu & keyof KiMenuAttributes]?: KiMenu[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `attr:${K}`]?: KiMenuAttributes[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `prop:${K}`]?: KiMenu[K] };
@@ -12788,6 +13264,8 @@ declare namespace LocalJSX {
         "ki-sidebar-item": Omit<KiSidebarItem, keyof KiSidebarItemAttributes> & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes]?: KiSidebarItem[K] } & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes as `attr:${K}`]?: KiSidebarItemAttributes[K] } & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes as `prop:${K}`]?: KiSidebarItem[K] };
         "ki-skeleton": Omit<KiSkeleton, keyof KiSkeletonAttributes> & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes]?: KiSkeleton[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `attr:${K}`]?: KiSkeletonAttributes[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `prop:${K}`]?: KiSkeleton[K] };
         "ki-slider": Omit<KiSlider, keyof KiSliderAttributes> & { [K in keyof KiSlider & keyof KiSliderAttributes]?: KiSlider[K] } & { [K in keyof KiSlider & keyof KiSliderAttributes as `attr:${K}`]?: KiSliderAttributes[K] } & { [K in keyof KiSlider & keyof KiSliderAttributes as `prop:${K}`]?: KiSlider[K] };
+        "ki-source": Omit<KiSource, keyof KiSourceAttributes> & { [K in keyof KiSource & keyof KiSourceAttributes]?: KiSource[K] } & { [K in keyof KiSource & keyof KiSourceAttributes as `attr:${K}`]?: KiSourceAttributes[K] } & { [K in keyof KiSource & keyof KiSourceAttributes as `prop:${K}`]?: KiSource[K] } & OneOf<"href", KiSource["href"], KiSourceAttributes["href"]> & OneOf<"sourceTitle", KiSource["sourceTitle"], KiSourceAttributes["sourceTitle"]>;
+        "ki-sources": Omit<KiSources, keyof KiSourcesAttributes> & { [K in keyof KiSources & keyof KiSourcesAttributes]?: KiSources[K] } & { [K in keyof KiSources & keyof KiSourcesAttributes as `attr:${K}`]?: KiSourcesAttributes[K] } & { [K in keyof KiSources & keyof KiSourcesAttributes as `prop:${K}`]?: KiSources[K] };
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-stat": Omit<KiStat, keyof KiStatAttributes> & { [K in keyof KiStat & keyof KiStatAttributes]?: KiStat[K] } & { [K in keyof KiStat & keyof KiStatAttributes as `attr:${K}`]?: KiStatAttributes[K] } & { [K in keyof KiStat & keyof KiStatAttributes as `prop:${K}`]?: KiStat[K] } & OneOf<"label", KiStat["label"], KiStatAttributes["label"]> & OneOf<"value", KiStat["value"], KiStatAttributes["value"]>;
@@ -13000,6 +13478,14 @@ declare module "@stencil/core" {
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
             /**
+             * A numbered inline link from an answer to a source card.
+             * @whenToUse Next to a claim supported by a `ki-source` in the same document
+             * or shadow root. Repeat the same reference for subsequent mentions.
+             * @whenNotToUse To cite a source outside this tree or replace a standalone
+             * link. Use `ki-link` for direct navigation.
+             */
+            "ki-citation": LocalJSX.IntrinsicElements["ki-citation"] & JSXBase.HTMLAttributes<HTMLKiCitationElement>;
+            /**
              * Presents source code with a named header, syntax colors, line controls and
              * clipboard feedback.
              * @whenToUse display a multiline example, generated code or a tool result that
@@ -13077,15 +13563,16 @@ declare module "@stencil/core" {
              */
             "ki-details": LocalJSX.IntrinsicElements["ki-details"] & JSXBase.HTMLAttributes<HTMLKiDetailsElement>;
             /**
-             * A modal dialog for one interrupting decision or short focused task.
+             * A modal dialog for an interrupting decision or a focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
              * provide a `heading`, place actions in the `footer` slot, wire each
              * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-             * the least destructive action.
+             * the least destructive action. Use `fullscreen="compact"` for longer tasks
+             * that need the whole window on compact screens.
              * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-             * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-             * (navigate or use a future full-screen variant), menus, or pickers.
+             * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+             * page, menus, or pickers.
              */
             "ki-dialog": LocalJSX.IntrinsicElements["ki-dialog"] & JSXBase.HTMLAttributes<HTMLKiDialogElement>;
             /**
@@ -13261,22 +13748,26 @@ declare module "@stencil/core" {
              */
             "ki-link": LocalJSX.IntrinsicElements["ki-link"] & JSXBase.HTMLAttributes<HTMLKiLinkElement>;
             /**
-             * A non-interactive vertical list container for read-only collections of
-             * similar entries composed with `ki-list-item` children.
-             * @whenToUse settings, contacts, results or activity feeds where each item
-             * composes leading media, primary text, optional secondary text and trailing
-             * meta or a slotted control.
-             * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-             * whole-item clickable rows or lone items outside a list.
+             * A vertical list of read-only entries, navigation links, settings controls,
+             * or options in a single- or multiple-selection listbox.
+             * @whenToUse settings, contacts, results, navigation or visible choices composed
+             * from primary text, supporting text and optional media. Name interactive lists.
+             * @whenNotToUse popup action menus, tabular data, or rows with several actions.
              */
             "ki-list": LocalJSX.IntrinsicElements["ki-list"] & JSXBase.HTMLAttributes<HTMLKiListElement>;
             /**
-             * A non-interactive item inside `ki-list`, composed from leading media,
-             * primary text, optional secondary text and trailing media or meta.
-             * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-             * similar vertical collection.
-             * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-             * tabular row, navigation link or whole-item clickable control.
+             * A row inside `ki-list`, composed from leading media, primary text,
+             * optional secondary text and trailing content.
+             * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+             * selection option, or a settings row with one control.
+             * @whenNotToUse as a menu item, tabular row, or row with several actions.
+             * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+             * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+             * @cssprop --ki-list-item-selected-bg - Selected option fill.
+             * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+             * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+             * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
+             * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
             /**
@@ -13555,6 +14046,21 @@ declare module "@stencil/core" {
              * Programmatic updates and form resets are silent.
              */
             "ki-slider": LocalJSX.IntrinsicElements["ki-slider"] & JSXBase.HTMLAttributes<HTMLKiSliderElement>;
+            /**
+             * Declares one named web source for a `ki-sources` list.
+             * @whenToUse As a direct child of `ki-sources`. In HTML provide an `id`,
+             * `href` and `title`; in guarded specs provide `source-id`, `href` and
+             * `title`. Use the same identifier on any citation of the source.
+             * @whenNotToUse For standalone links outside a source list; use `ki-link`.
+             */
+            "ki-source": LocalJSX.IntrinsicElements["ki-source"] & JSXBase.HTMLAttributes<HTMLKiSourceElement>;
+            /**
+             * A disclosure with the ordered sources behind an answer.
+             * @whenToUse To show the evidence behind an answer. Add direct `ki-source`
+             * children and place `ki-citation` markers next to the claims they support.
+             * @whenNotToUse For ordinary navigation, unrelated links, or form controls.
+             */
+            "ki-sources": LocalJSX.IntrinsicElements["ki-sources"] & JSXBase.HTMLAttributes<HTMLKiSourcesElement>;
             /**
              * A compact status for an indeterminate wait.
              * @whenToUse show brief inline activity such as saving a change or running a

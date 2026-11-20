@@ -5370,6 +5370,130 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-citation/ki-citation.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-citation",
+      "docs": "A numbered inline link from an answer to a source card.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Next to a claim supported by a `ki-source` in the same document\nor shadow root. Repeat the same reference for subsequent mentions."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "To cite a source outside this tree or replace a standalone\nlink. Use `ki-link` for direct navigation."
+        },
+        {
+          "name": "part",
+          "text": "link - Focusable citation link."
+        },
+        {
+          "name": "part",
+          "text": "marker - Visible citation number."
+        },
+        {
+          "name": "part",
+          "text": "preview - Anchored title and hostname preview."
+        },
+        {
+          "name": "part",
+          "text": "preview-title - Title in the preview."
+        },
+        {
+          "name": "part",
+          "text": "preview-domain - Hostname in the preview."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-citation\n\nPlace a citation after its claim and set `ref` to the matching source identifier.\n\n```html\n<p>The methods account for the difference<ki-citation ref=\"methods\"></ki-citation>.</p>\n<ki-sources>\n  <ki-source id=\"methods\" title=\"Study design\" href=\"/methods\"></ki-source>\n</ki-sources>\n```\n\nUse `citationRef` in JSX. Tab to the link for a preview. Escape dismisses the\npreview, and Enter opens the list and moves focus to the source link.\n"
+      },
+      "props": [
+        {
+          "name": "citationRef",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "ref",
+          "reflectToAttr": false,
+          "docs": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelTemplate",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-template",
+          "reflectToAttr": false,
+          "docs": "Localized link name with `{number}` and `{title}` placeholders.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Source {number}: {title}'"
+            }
+          ],
+          "default": "'Source {number}: {title}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "link",
+          "docs": "Focusable citation link."
+        },
+        {
+          "name": "marker",
+          "docs": "Visible citation number."
+        },
+        {
+          "name": "preview",
+          "docs": "Anchored title and hostname preview."
+        },
+        {
+          "name": "preview-domain",
+          "docs": "Hostname in the preview."
+        },
+        {
+          "name": "preview-title",
+          "docs": "Title in the preview."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-code-block/ki-code-block.tsx",
       "encapsulation": "shadow",
       "tag": "ki-code-block",
@@ -9123,15 +9247,15 @@
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
       "encapsulation": "shadow",
       "tag": "ki-dialog",
-      "docs": "A modal dialog for one interrupting decision or short focused task.",
+      "docs": "A modal dialog for an interrupting decision or a focused task.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action. Use `fullscreen=\"compact\"` for longer tasks\nthat need the whole window on compact screens."
         },
         {
           "name": "whenNotToUse",
-          "text": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers."
+          "text": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), multi-step flows that need their own\npage, menus, or pickers."
         },
         {
           "name": "slot",
@@ -9147,6 +9271,10 @@
         },
         {
           "name": "part",
+          "text": "header - Fullscreen bar with the title and its controls."
+        },
+        {
+          "name": "part",
           "text": "heading - Visible h2 title, rendered only when `heading` is non-empty."
         },
         {
@@ -9159,9 +9287,38 @@
         }
       ],
       "usage": {
-        "examples": "A modal confirmation. `heading` names the dialog and actions go in the `footer`\nslot. Each invoker uses the dialog's ID within the same document or shadow root.\n\n```html\n<ki-button commandfor=\"confirm-dialog\" command=\"show-modal\" tone=\"danger\">Delete draft</ki-button>\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"request-close\" autofocus>Cancel</ki-button>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"close\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\n`close` dismisses the dialog. `request-close` first gives the dialog a chance\nto cancel the request. After an accepted close command, the opening button\nregains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and\n`close()` remain available for programmatic control.\n"
+        "examples": "A modal confirmation. `heading` names the dialog and actions go in the `footer`\nslot. Each invoker uses the dialog's ID within the same document or shadow root.\n\n```html\n<ki-button commandfor=\"confirm-dialog\" command=\"show-modal\" tone=\"danger\">Delete draft</ki-button>\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"request-close\" autofocus>Cancel</ki-button>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"close\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\n`close` dismisses the dialog. `request-close` first gives the dialog a chance\nto cancel the request. After an accepted close command, the opening button\nregains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and\n`close()` remain available for programmatic control.\n\n\n## Edit a longer form\n\n```html\n<ki-button commandfor=\"event-details\" command=\"show-modal\">Add event</ki-button>\n<ki-dialog id=\"event-details\" heading=\"New event\" fullscreen=\"compact\"\n  confirm-label=\"Save\" close-label=\"Discard and close\">\n  <ki-input label=\"Title\"></ki-input>\n  <ki-input label=\"Date\"></ki-input>\n</ki-dialog>\n```\n\nBelow 600 CSS pixels the modal fills the window and keeps its heading and\nactions visible above the scrollable body. At wider widths `Save` moves to\nthe centered dialog's footer. Handle `ki-confirm` to save the form and call\n`close()` after success. In fullscreen, call `preventDefault()` on\n`ki-close` to veto Escape or the header close button while editing.\n\nWhen importing the dialog directly, register `ki-button` to use the themed\nconfirmation button. A single-element import still provides a native\nconfirmation button with the same label and event.\n"
       },
       "props": [
+        {
+          "name": "closeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "close-label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the fullscreen close button. Localize it or describe\nthe effect of dismissing, for example \"Discard and close\".",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Close'"
+            }
+          ],
+          "default": "'Close'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "closeOnBackdrop",
           "type": "boolean",
@@ -9184,6 +9341,70 @@
           "values": [
             {
               "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "confirm-label",
+          "reflectToAttr": true,
+          "docs": "Label for the optional confirmation button. Use an action verb such as\n\"Save\". The button is in the fullscreen header or the centered footer.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "fullscreen",
+          "type": "\"always\" | \"compact\" | \"never\"",
+          "complexType": {
+            "original": "'never' | 'compact' | 'always'",
+            "resolved": "\"always\" | \"compact\" | \"never\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "fullscreen",
+          "reflectToAttr": true,
+          "docs": "Layout for the native modal. Use `compact` to fill windows narrower than\n600 CSS pixels, or `always` to fill any window. Use `never` for a centered\ndialog at every width.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'never'"
+            }
+          ],
+          "default": "'never'",
+          "values": [
+            {
+              "value": "always",
+              "type": "string"
+            },
+            {
+              "value": "compact",
+              "type": "string"
+            },
+            {
+              "value": "never",
+              "type": "string"
             }
           ],
           "optional": false,
@@ -9308,7 +9529,21 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
+          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-confirm",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application.",
           "docsTags": []
         }
       ],
@@ -9344,14 +9579,24 @@
           "docs": "Action row, collapsed when empty."
         },
         {
+          "name": "header",
+          "docs": "Fullscreen bar with the title and its controls."
+        },
+        {
           "name": "heading",
           "docs": "Visible h2 title, rendered only when `heading` is non-empty."
         }
       ],
       "states": [],
       "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-dialog": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-divider/ki-divider.tsx",
@@ -12957,12 +13202,14 @@
         "ki-copy-button",
         "ki-date-picker",
         "ki-details",
+        "ki-dialog",
         "ki-drawer",
         "ki-empty-state",
         "ki-fab",
         "ki-fab-menu",
         "ki-fab-menu-item",
         "ki-file-upload",
+        "ki-list-item",
         "ki-message",
         "ki-mobile-nav-item",
         "ki-number-input",
@@ -13008,6 +13255,9 @@
         "ki-details": [
           "ki-icon"
         ],
+        "ki-dialog": [
+          "ki-icon"
+        ],
         "ki-drawer": [
           "ki-icon"
         ],
@@ -13024,6 +13274,9 @@
           "ki-icon"
         ],
         "ki-file-upload": [
+          "ki-icon"
+        ],
+        "ki-list-item": [
           "ki-icon"
         ],
         "ki-message": [
@@ -13098,7 +13351,7 @@
         },
         {
           "name": "slot",
-          "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+          "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control."
         },
         {
           "name": "slot",
@@ -13269,7 +13522,7 @@
           "mutable": false,
           "attr": "label",
           "reflectToAttr": true,
-          "docs": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+          "docs": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog. When slotted as a trailing list control, the\nrow text supplies a fallback through the host aria-label.\nUse ki-button when the action has a visible label.",
           "docsTags": [],
           "values": [
             {
@@ -13602,7 +13855,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+          "docs": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control."
         },
         {
           "name": "counter",
@@ -14222,6 +14475,10 @@
         },
         {
           "name": "part",
+          "text": "count - Current character count and maximum at the end of the field message row."
+        },
+        {
+          "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
         {
@@ -14250,7 +14507,7 @@
         }
       ],
       "usage": {
-        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nPlace a one-field form's only submit action inside the field.\n\n```html\n<form role=\"search\">\n  <ki-input type=\"search\" name=\"q\" label=\"Search docs\" placeholder=\"Components, tokens…\">\n    <ki-button slot=\"action\" size=\"sm\" variant=\"secondary\" type=\"submit\">Search</ki-button>\n  </ki-input>\n</form>\n```\n\nThe action has a separate tab stop. Enter in the entry also submits the form.\nFor an icon-only action, give `ki-icon-button size=\"sm\"` a `label` and call\n`form.requestSubmit()` from its click handler.\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
+        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nPlace a one-field form's only submit action inside the field.\n\n```html\n<form role=\"search\">\n  <ki-input type=\"search\" name=\"q\" label=\"Search docs\" placeholder=\"Components, tokens…\">\n    <ki-button slot=\"action\" size=\"sm\" variant=\"secondary\" type=\"submit\">Search</ki-button>\n  </ki-input>\n</form>\n```\n\nThe action has a separate tab stop. Enter in the entry also submits the form.\nFor an icon-only action, give `ki-icon-button size=\"sm\"` a `label` and call\n`form.requestSubmit()` from its click handler.\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n\n## Appearance and character limits\n\nSet `appearance` to `outlined` for a full border or `filled` for a\ntinted surface with a bottom indicator. Both keep the label above the field.\nThe default appearance follows the theme.\n\nSet `minlength` and `maxlength` to use the native input limits. With\na maximum, `show-count` adds the current length to the field description\nand announces when the user reaches the limit.\n\n```html\n<ki-input label=\"Workspace name\" appearance=\"outlined\" minlength=\"3\" maxlength=\"30\" show-count help-text=\"Shown to members\" value=\"Kimen design\"></ki-input>\n<ki-input label=\"Price\" appearance=\"filled\" value=\"49.00\"><span slot=\"start\">EUR</span><span slot=\"end\">/ month</span></ki-input>\n```\n"
       },
       "props": [
         {
@@ -14278,6 +14535,47 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "appearance",
+          "type": "\"default\" | \"filled\" | \"outlined\" | undefined",
+          "complexType": {
+            "original": "'default' | 'outlined' | 'filled'",
+            "resolved": "\"default\" | \"filled\" | \"outlined\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "appearance",
+          "reflectToAttr": true,
+          "docs": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "filled",
+              "type": "string"
+            },
+            {
+              "value": "outlined",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -14348,7 +14646,7 @@
           "mutable": false,
           "attr": "error-text",
           "reflectToAttr": true,
-          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
           "docsTags": [],
           "values": [
             {
@@ -14428,6 +14726,76 @@
           "values": [
             {
               "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength",
+          "reflectToAttr": true,
+          "docs": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minlength",
+          "reflectToAttr": true,
+          "docs": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
             },
             {
               "type": "undefined"
@@ -14544,6 +14912,38 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-count",
+          "reflectToAttr": true,
+          "docs": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -14711,6 +15111,10 @@
         }
       ],
       "parts": [
+        {
+          "name": "count",
+          "docs": "Current character count and maximum at the end of the field message row."
+        },
         {
           "name": "error",
           "docs": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
@@ -15038,43 +15442,251 @@
       "filePath": "src/components/ki-list/ki-list.tsx",
       "encapsulation": "shadow",
       "tag": "ki-list",
-      "docs": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
+      "docs": "A vertical list of read-only entries, navigation links, settings controls,\nor options in a single- or multiple-selection listbox.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "settings, contacts, results or activity feeds where each item\ncomposes leading media, primary text, optional secondary text and trailing\nmeta or a slotted control."
+          "text": "settings, contacts, results, navigation or visible choices composed\nfrom primary text, supporting text and optional media. Name interactive lists."
         },
         {
           "name": "whenNotToUse",
-          "text": "menus, selectable option lists, tabular data, navigation,\nwhole-item clickable rows or lone items outside a list."
+          "text": "popup action menus, tabular data, or rows with several actions."
         },
         {
           "name": "slot",
-          "text": "- `ki-list-item` children. Other children are unsupported."
+          "text": "- Direct `ki-list-item` children."
         },
         {
           "name": "part",
-          "text": "list - List surface that owns background, padding, item gap and\nbetween-item divider styling."
+          "text": "list - List surface that owns background, padding, gap and dividers."
         }
       ],
       "usage": {
-        "examples": "The list accepts only `ki-list-item` children (other children are unsupported); each item's default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Ada Lovelace</ki-list-item>\n  <ki-list-item>Grace Hopper</ki-list-item>\n  <ki-list-item>Margaret Hamilton</ki-list-item>\n</ki-list>\n```\n\nFull item composition — `start` for leading media (decorative beside the visible name, so the avatar carries no `label`), `secondary` for supporting text and `end` for trailing meta:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"AL\" size=\"sm\"></ki-avatar>\n    Ada Lovelace\n    <span slot=\"secondary\">Analytical engine programs</span>\n    <ki-badge slot=\"end\" tone=\"success\">Active</ki-badge>\n  </ki-list-item>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <span slot=\"end\">1906–1992</span>\n  </ki-list-item>\n</ki-list>\n```\n\nRows are never click targets; interactivity lives in controls slotted into a region, which keep their own semantics and focus behavior:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Two-factor authentication\n    <span slot=\"secondary\">Enabled via authenticator app</span>\n    <ki-button slot=\"end\" size=\"sm\" variant=\"secondary\" type=\"button\">Manage</ki-button>\n  </ki-list-item>\n</ki-list>\n```\n"
+        "examples": "The list accepts only `ki-list-item` children (other children are unsupported); each item's default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Ada Lovelace</ki-list-item>\n  <ki-list-item>Grace Hopper</ki-list-item>\n  <ki-list-item>Margaret Hamilton</ki-list-item>\n</ki-list>\n```\n\nFull item composition — `start` for leading media (decorative beside the visible name, so the avatar carries no `label`), `secondary` for supporting text and `end` for trailing meta:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"AL\" size=\"sm\"></ki-avatar>\n    Ada Lovelace\n    <span slot=\"secondary\">Analytical engine programs</span>\n    <ki-badge slot=\"end\" tone=\"success\">Active</ki-badge>\n  </ki-list-item>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <span slot=\"end\">1906–1992</span>\n  </ki-list-item>\n</ki-list>\n```\n\n```html\n<ki-list label=\"Settings\">\n  <ki-list-item href=\"/settings/account\">\n    Account\n    <span slot=\"secondary\">Name, email, password</span>\n  </ki-list-item>\n</ki-list>\n```\n\n```html\n<ki-list label=\"Reviewers\" selection=\"multiple\" name=\"reviewers\" required>\n  <ki-list-item value=\"ana\" selected>Ana Garcia</ki-list-item>\n  <ki-list-item value=\"luis\">Luis Perez</ki-list-item>\n</ki-list>\n```\n\n```html\n<ki-list label=\"Notifications\">\n  <ki-list-item>\n    Email digest\n    <span slot=\"secondary\">Every Monday</span>\n    <ki-switch slot=\"end\" checked></ki-switch>\n  </ki-list-item>\n</ki-list>\n```\n"
       },
-      "props": [],
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for a list with links, options or trailing controls.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form field name. Multiple selection submits repeated entries under this name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires at least one enabled choice in a selection list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selection",
+          "type": "\"multiple\" | \"none\" | \"single\"",
+          "complexType": {
+            "original": "KiListSelection",
+            "resolved": "\"multiple\" | \"none\" | \"single\"",
+            "references": {
+              "KiListSelection": {
+                "location": "local",
+                "path": "src/components/ki-list/ki-list.tsx",
+                "id": "src/components/ki-list/ki-list.tsx::KiListSelection"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "selection",
+          "reflectToAttr": true,
+          "docs": "Enables single or multiple selection. The default supports static, link and control rows.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'none'"
+            }
+          ],
+          "default": "'none'",
+          "values": [
+            {
+              "value": "multiple",
+              "type": "string"
+            },
+            {
+              "value": "none",
+              "type": "string"
+            },
+            {
+              "value": "single",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "null | string & {} | string[]",
+          "complexType": {
+            "original": "KiListValue",
+            "resolved": "null | string & {} | string[]",
+            "references": {
+              "KiListValue": {
+                "location": "local",
+                "path": "src/components/ki-list/ki-list.tsx",
+                "id": "src/components/ki-list/ki-list.tsx::KiListValue"
+              }
+            }
+          },
+          "mutable": true,
+          "reflectToAttr": false,
+          "docs": "Selected value or null in single selection, or selected values in source\norder in multiple selection. Assign a fresh array to change multiple\nselection. In HTML or catalog specs, set `selected` on the initial rows.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "null"
+            }
+          ],
+          "default": "null",
+          "values": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string & {}"
+            },
+            {
+              "type": "string[]"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
       "methods": [],
-      "events": [],
-      "listeners": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "KiListChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiListChangeDetail",
+            "resolved": "KiListChangeDetail",
+            "references": {
+              "KiListChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-list/ki-list.tsx",
+                "id": "src/components/ki-list/ki-list.tsx::KiListChangeDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fires once per user selection change, after updating the form value.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "focusin",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "focusout",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        }
+      ],
       "styles": [],
       "slots": [
         {
           "name": "",
-          "docs": "`ki-list-item` children. Other children are unsupported."
+          "docs": "Direct `ki-list-item` children."
         }
       ],
       "parts": [
         {
           "name": "list",
-          "docs": "List surface that owns background, padding, item gap and\nbetween-item divider styling."
+          "docs": "List surface that owns background, padding, gap and dividers."
         }
       ],
       "states": [],
@@ -15086,15 +15698,15 @@
       "filePath": "src/components/ki-list-item/ki-list-item.tsx",
       "encapsulation": "shadow",
       "tag": "ki-list-item",
-      "docs": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+      "docs": "A row inside `ki-list`, composed from leading media, primary text,\noptional secondary text and trailing content.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+          "text": "as a direct child of `ki-list`, for a static entry, link,\nselection option, or a settings row with one control."
         },
         {
           "name": "whenNotToUse",
-          "text": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control."
+          "text": "as a menu item, tabular row, or row with several actions."
         },
         {
           "name": "slot",
@@ -15110,7 +15722,7 @@
         },
         {
           "name": "slot",
-          "text": "end - Trailing media, meta text or a slotted control."
+          "text": "end - Trailing media, meta text or the only control of a settings row."
         },
         {
           "name": "part",
@@ -15127,12 +15739,133 @@
         {
           "name": "part",
           "text": "end - Trailing region wrapper."
+        },
+        {
+          "name": "part",
+          "text": "indicator - Decorative navigation or selection indicator."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-hover-bg - Interactive row hover fill."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-hover-fg - Text and indicator on an unselected hovered row."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-selected-bg - Selected option fill."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-selected-fg - Text and indicator on a selected option."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-interactive-radius - Corner radius of links and options."
         }
       ],
       "usage": {
-        "examples": "Valid only as a child of `ki-list`; the default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Release 1.4 shipped</ki-list-item>\n</ki-list>\n```\n\n`secondary` adds a supporting line below the primary text; its presence selects the multi-line min-height token:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Backups\n    <span slot=\"secondary\">Last run 2 hours ago</span>\n  </ki-list-item>\n</ki-list>\n```\n\n`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while a slotted control needs its own accessible name:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <ki-icon-button slot=\"end\" size=\"sm\" label=\"Edit Grace Hopper\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 20l1-4L16 5l3 3L8 19l-4 1z\" fill=\"currentColor\" /></svg>\n    </ki-icon-button>\n  </ki-list-item>\n</ki-list>\n```\n"
+        "examples": "Valid only as a child of `ki-list`; the default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Release 1.4 shipped</ki-list-item>\n</ki-list>\n```\n\n`secondary` adds a supporting line below the primary text; its presence selects the multi-line min-height token:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Backups\n    <span slot=\"secondary\">Last run 2 hours ago</span>\n  </ki-list-item>\n</ki-list>\n```\n\n`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while an unlabeled trailing control receives its name from the row:\n\n```html\n<ki-list label=\"Contacts\">\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <ki-icon-button slot=\"end\" size=\"sm\" label=\"Edit Grace Hopper\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 20l1-4L16 5l3 3L8 19l-4 1z\" fill=\"currentColor\" /></svg>\n    </ki-icon-button>\n  </ki-list-item>\n</ki-list>\n```\n\n```html\n<ki-list label=\"Settings\">\n  <ki-list-item href=\"/settings/account\">\n    Account\n    <span slot=\"secondary\">Name, email, password</span>\n  </ki-list-item>\n</ki-list>\n```\n"
       },
       "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Excludes this option from focus, selection by the user, and form data.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": true,
+          "docs": "Native row link destination. Use outside selection lists, with no\nslotted interactive content.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "selected",
+          "reflectToAttr": true,
+          "docs": "Whether this row is selected in a single- or multiple-selection list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "size",
           "type": "\"lg\" | \"md\" | \"sm\" | \"xl\"",
@@ -15180,6 +15913,32 @@
           "required": false,
           "getter": false,
           "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Submitted option value. The primary row text supplies the default.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
         }
       ],
       "methods": [],
@@ -15193,7 +15952,7 @@
         },
         {
           "name": "end",
-          "docs": "Trailing media, meta text or a slotted control."
+          "docs": "Trailing media, meta text or the only control of a settings row."
         },
         {
           "name": "secondary",
@@ -15214,6 +15973,10 @@
           "docs": "Trailing region wrapper."
         },
         {
+          "name": "indicator",
+          "docs": "Decorative navigation or selection indicator."
+        },
+        {
           "name": "item",
           "docs": "Item row surface and layout container."
         },
@@ -15224,8 +15987,14 @@
       ],
       "states": [],
       "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-list-item": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-markdown/ki-markdown.tsx",
@@ -24370,6 +25139,342 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-source/ki-source.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-source",
+      "docs": "Declares one named web source for a `ki-sources` list.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "As a direct child of `ki-sources`. In HTML provide an `id`,\n`href` and `title`; in guarded specs provide `source-id`, `href` and\n`title`. Use the same identifier on any citation of the source."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For standalone links outside a source list; use `ki-link`."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-source\n\nDeclare a source directly inside the default slot of `ki-sources`.\n\n```html\n<ki-sources open>\n  <ki-source id=\"methods\" href=\"/methods\" title=\"Study design\" snippet=\"How the study ran.\"></ki-source>\n</ki-sources>\n```\n\nUse a unique identifier in the current document or shadow root. In a\nguarded spec, use the `source-id` prop instead of the native `id`. The\ndisclosure displays the hostname from the resolved URL.\n"
+      },
+      "props": [
+        {
+          "name": "href",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": true,
+          "docs": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "snippet",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "snippet",
+          "reflectToAttr": true,
+          "docs": "Optional plain-text excerpt displayed in the source card.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceId",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "source-id",
+          "reflectToAttr": true,
+          "docs": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceTitle",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "title",
+          "reflectToAttr": true,
+          "docs": "Required plain-text source title. In HTML use the `title` attribute.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-sources/ki-sources.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-sources",
+      "docs": "A disclosure with the ordered sources behind an answer.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "To show the evidence behind an answer. Add direct `ki-source`\nchildren and place `ki-citation` markers next to the claims they support."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For ordinary navigation, unrelated links, or form controls."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct `ki-source` definitions for this answer."
+        },
+        {
+          "name": "part",
+          "text": "disclosure - Native expandable section."
+        },
+        {
+          "name": "part",
+          "text": "summary - Disclosure control with the localized source count."
+        },
+        {
+          "name": "part",
+          "text": "list - Ordered list of sources."
+        },
+        {
+          "name": "part",
+          "text": "source - Source card link."
+        },
+        {
+          "name": "part",
+          "text": "number - Source order marker inside the card."
+        },
+        {
+          "name": "part",
+          "text": "title - Visible title of the link."
+        },
+        {
+          "name": "part",
+          "text": "domain - Hostname derived from the link destination."
+        },
+        {
+          "name": "part",
+          "text": "snippet - Optional excerpt."
+        }
+      ],
+      "usage": {
+        "examples": "# Using Sources\n\nPut a citation immediately after the clause it supports. Put the source\ndefinitions directly inside the corresponding disclosure. The list shows\nsources in order of first citation and adds uncited sources in declaration order.\n\n```html\n<p>The study design<ki-citation ref=\"methods\"></ki-citation> explains the results.</p>\n<ki-sources>\n  <ki-source\n    id=\"methods\"\n    href=\"https://example.org/methods\"\n    title=\"Study design\"\n    snippet=\"How the study ran.\"\n  ></ki-source>\n</ki-sources>\n```\n\nUse `open` to start with the list expanded. Use unique source identifiers\nwithin each document or shadow root. Hover or focus a citation to see its\ntitle and hostname. Activate it to expand the list and focus the title link.\nThe card links can be used independently of the inline markers.\n\nWhen importing individual elements, register all three tags with their\nrespective `defineCustomElement()` functions. Use `citationRef` and\n`sourceTitle` as component props in JSX. In a guarded spec, use keys\n`ref`, `source-id`, `title` and `href` on their respective nodes. Put\nthe citation in a `div` primitive if it shares a line with text.\n\nProvide the local language through `label-template`, `source-count-label`,\nand `sources-count-label`. Titles and snippets are plain text. HTTP(S) URLs\nand relative web references work in authored HTML. Guarded specs also follow\nthe application's allowed-origin policy.\n"
+      },
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the disclosure is expanded. Set to show the list initially.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourceCountLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "source-count-label",
+          "reflectToAttr": false,
+          "docs": "Localized summary when there is one source. Use `{count}` for its number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} source'"
+            }
+          ],
+          "default": "'{count} source'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sourcesCountLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "sources-count-label",
+          "reflectToAttr": false,
+          "docs": "Localized summary for multiple sources. Use `{count}` for their number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{count} sources'"
+            }
+          ],
+          "default": "'{count} sources'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct `ki-source` definitions for this answer."
+        }
+      ],
+      "parts": [
+        {
+          "name": "disclosure",
+          "docs": "Native expandable section."
+        },
+        {
+          "name": "domain",
+          "docs": "Hostname derived from the link destination."
+        },
+        {
+          "name": "list",
+          "docs": "Ordered list of sources."
+        },
+        {
+          "name": "number",
+          "docs": "Source order marker inside the card."
+        },
+        {
+          "name": "snippet",
+          "docs": "Optional excerpt."
+        },
+        {
+          "name": "source",
+          "docs": "Source card link."
+        },
+        {
+          "name": "summary",
+          "docs": "Disclosure control with the localized source count."
+        },
+        {
+          "name": "title",
+          "docs": "Visible title of the link."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",
       "encapsulation": "shadow",
       "tag": "ki-spinner",
@@ -27460,6 +28565,10 @@
         },
         {
           "name": "part",
+          "text": "count - Current character count and maximum at the end of the field message row."
+        },
+        {
+          "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
         {
@@ -27488,9 +28597,50 @@
         }
       ],
       "usage": {
-        "examples": "A labeled multiline field in a form (`label` is mandatory — the visible label and accessible name); `rows` sets the stable visible line count (default `2`, no auto-grow in v1):\n\n```html\n<form>\n  <ki-textarea label=\"Comments\" name=\"comments\" rows=\"4\"></ki-textarea>\n  <ki-button variant=\"primary\">Send</ki-button>\n</form>\n```\n\nInitial text is declared through the `value` attribute — element text content is ignored — and Enter inserts a line break, never submitting the enclosing form:\n\n```html\n<ki-textarea label=\"Bio\" name=\"bio\" value=\"Web components enthusiast.\"></ki-textarea>\n```\n\n`required` blocks submission while empty, and an `autocomplete` purpose such as `street-address` exposes the entry's meaning to autofill:\n\n```html\n<ki-textarea\n  label=\"Shipping address\"\n  name=\"address\"\n  rows=\"3\"\n  autocomplete=\"street-address\"\n  required\n></ki-textarea>\n```\n\nRead-only and disabled are distinct states — `readonly` stays focusable, selectable, submitted and validation-exempt; `disabled` is none of those:\n\n```html\n<ki-textarea label=\"Accepted policy\" value=\"Version 2.1, accepted 2026-05-02.\" readonly></ki-textarea>\n<ki-textarea label=\"Legacy notes\" value=\"Migrated from v1.\" disabled></ki-textarea>\n```\n"
+        "examples": "A labeled multiline field in a form (`label` is mandatory — the visible label and accessible name); `rows` sets the stable visible line count (default `2`, no auto-grow in v1):\n\n```html\n<form>\n  <ki-textarea label=\"Comments\" name=\"comments\" rows=\"4\"></ki-textarea>\n  <ki-button variant=\"primary\">Send</ki-button>\n</form>\n```\n\nInitial text is declared through the `value` attribute — element text content is ignored — and Enter inserts a line break, never submitting the enclosing form:\n\n```html\n<ki-textarea label=\"Bio\" name=\"bio\" value=\"Web components enthusiast.\"></ki-textarea>\n```\n\n`required` blocks submission while empty, and an `autocomplete` purpose such as `street-address` exposes the entry's meaning to autofill:\n\n```html\n<ki-textarea\n  label=\"Shipping address\"\n  name=\"address\"\n  rows=\"3\"\n  autocomplete=\"street-address\"\n  required\n></ki-textarea>\n```\n\nRead-only and disabled are distinct states — `readonly` stays focusable, selectable, submitted and validation-exempt; `disabled` is none of those:\n\n```html\n<ki-textarea label=\"Accepted policy\" value=\"Version 2.1, accepted 2026-05-02.\" readonly></ki-textarea>\n<ki-textarea label=\"Legacy notes\" value=\"Migrated from v1.\" disabled></ki-textarea>\n```\n\n## Appearance and character limits\n\nSet `appearance` to `outlined` for a full border or `filled` for a\ntinted surface with a bottom indicator. Both keep the label above the field.\nThe default appearance follows the theme.\n\n`minlength` uses native minimum-length validation. The textarea keeps edits\npast `maxlength` and blocks submission until the value fits. With a maximum,\n`show-count` adds the current length to the field description and announces\nwhen the user reaches or exceeds the limit. Use `maxlength-error-text` to\nlocalize the default length error.\n\n```html\n<ki-textarea label=\"Bio\" appearance=\"outlined\" minlength=\"3\" maxlength=\"24\" show-count help-text=\"Keep it short\" value=\"Designer and front-end developer\"></ki-textarea>\n<ki-textarea label=\"Short bio\" appearance=\"filled\" maxlength=\"12\" show-count help-text=\"Keep it short\" value=\"Designs generative interfaces.\"></ki-textarea>\n```\n"
       },
       "props": [
+        {
+          "name": "appearance",
+          "type": "\"default\" | \"filled\" | \"outlined\" | undefined",
+          "complexType": {
+            "original": "'default' | 'outlined' | 'filled'",
+            "resolved": "\"default\" | \"filled\" | \"outlined\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "appearance",
+          "reflectToAttr": true,
+          "docs": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'default'"
+            }
+          ],
+          "default": "'default'",
+          "values": [
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "filled",
+              "type": "string"
+            },
+            {
+              "value": "outlined",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "autocomplete",
           "type": "string | undefined",
@@ -27557,7 +28707,7 @@
           "mutable": false,
           "attr": "error-text",
           "reflectToAttr": true,
-          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
           "docsTags": [],
           "values": [
             {
@@ -27637,6 +28787,108 @@
           "values": [
             {
               "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength",
+          "reflectToAttr": true,
+          "docs": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxlengthErrorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maxlength-error-text",
+          "reflectToAttr": true,
+          "docs": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Shorten the text to fit the character limit.'"
+            }
+          ],
+          "default": "'Shorten the text to fit the character limit.'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minlength",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minlength",
+          "reflectToAttr": true,
+          "docs": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "2147483647"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
             },
             {
               "type": "undefined"
@@ -27787,6 +29039,38 @@
           "setter": false
         },
         {
+          "name": "showCount",
+          "type": "boolean | undefined",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-count",
+          "reflectToAttr": true,
+          "docs": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "size",
           "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
           "complexType": {
@@ -27880,6 +29164,10 @@
       "styles": [],
       "slots": [],
       "parts": [
+        {
+          "name": "count",
+          "docs": "Current character count and maximum at the end of the field message row."
+        },
         {
           "name": "error",
           "docs": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
@@ -31763,8 +33051,8 @@
       "path": "src/components/ki-details/ki-details.tsx"
     },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
-      "declaration": "export interface KiDialogCloseDetail {\n  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. */\n  reason: KiDialogCloseReason;\n}",
-      "docstring": "Event payload for the post-close `ki-close` notification.",
+      "declaration": "export interface KiDialogCloseDetail {\n  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. The fullscreen close button uses `method`. */\n  reason: KiDialogCloseReason;\n}",
+      "docstring": "Event payload for `ki-close`.",
       "path": "src/components/ki-dialog/ki-dialog.tsx"
     },
     "src/components/ki-divider/ki-divider.tsx::KiDividerOrientation": {
@@ -31901,6 +33189,21 @@
       "declaration": "export type KiLinkUnderline = 'always' | 'hover';",
       "docstring": "",
       "path": "src/components/ki-link/ki-link.tsx"
+    },
+    "src/components/ki-list/ki-list.tsx::KiListSelection": {
+      "declaration": "export type KiListSelection = 'none' | 'single' | 'multiple';",
+      "docstring": "",
+      "path": "src/components/ki-list/ki-list.tsx"
+    },
+    "src/components/ki-list/ki-list.tsx::KiListValue": {
+      "declaration": "export type KiListValue = (string & {}) | string[] | null;",
+      "docstring": "",
+      "path": "src/components/ki-list/ki-list.tsx"
+    },
+    "src/components/ki-list/ki-list.tsx::KiListChangeDetail": {
+      "declaration": "export interface KiListChangeDetail {\n  value: KiListValue;\n}",
+      "docstring": "",
+      "path": "src/components/ki-list/ki-list.tsx"
     },
     "src/components/ki-list-item/ki-list-item.tsx::KiListItemSize": {
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",

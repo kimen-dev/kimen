@@ -3,10 +3,11 @@
 // safety net. Regeneration flow: browser-tests/README.md.
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
+import { defineCustomElement as defineKiSwitch } from '../dist/components/ki-switch.js';
 import { runVisualSuite } from './visual/harness';
 
 runVisualSuite({
   component: 'ki-list',
-  define: [defineKiList, defineKiListItem],
+  define: [defineKiList, defineKiListItem, defineKiSwitch],
   scheme: 'dark',
 });

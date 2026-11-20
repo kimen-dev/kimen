@@ -1,0 +1,116 @@
+:host {
+  display: block;
+  max-inline-size: var(--ki-sources-max-inline-size);
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+slot {
+  display: none;
+}
+
+[part="summary"] {
+  align-content: center;
+  inline-size: fit-content;
+  min-block-size: var(--ki-density-target-min);
+  min-inline-size: var(--ki-density-target-min);
+  background-color: var(--ki-sources-summary-bg);
+  color: var(--ki-sources-summary-fg);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-body-1);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+[part="list"] {
+  display: grid;
+  gap: calc(var(--ki-sources-list-gap) * var(--ki-density-space-scale));
+  margin-block: var(--ki-source-card-padding) 0;
+  margin-inline: 0;
+  padding: 0;
+  list-style: decimal;
+}
+
+/* Keep the native ordered-list marker for accessibility. The card supplies
+   the visible number, so the browser marker has no painted size. */
+[part="list"] li::marker {
+  font-size: 0;
+}
+
+[part="source"] {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--ki-source-card-padding) * var(--ki-density-space-scale));
+  box-sizing: border-box;
+  min-block-size: var(--ki-density-target-min);
+  min-inline-size: var(--ki-density-target-min);
+  padding: calc(var(--ki-source-card-padding) * var(--ki-density-space-scale));
+  border: var(--ki-source-card-border-width) solid var(--ki-source-card-border);
+  border-radius: var(--ki-source-card-radius);
+  background-color: var(--ki-source-card-bg);
+  background-image: var(--ki-source-card-bg-image, none);
+  backdrop-filter: var(--ki-source-card-backdrop-filter, none);
+  color: var(--ki-source-card-fg);
+  text-decoration: none;
+}
+
+[part="number"] {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  min-inline-size: var(--ki-source-number-size);
+  min-block-size: var(--ki-source-number-size);
+  border-radius: var(--ki-source-number-radius);
+  background-color: var(--ki-source-number-bg);
+  color: var(--ki-source-number-fg);
+  font-size: var(--ki-typography-size-caption-2);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.description {
+  display: grid;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+[part="title"] {
+  font-size: var(--ki-typography-size-body-1);
+  font-weight: var(--ki-typography-weight-body-medium);
+  line-height: var(--ki-typography-line-height-body-1);
+}
+
+[part="domain"],
+[part="snippet"] {
+  display: block;
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+}
+
+[part="source"]:focus-visible,
+[part="summary"]:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+@media (hover: hover) {
+  [part="source"]:hover {
+    background-color: var(--ki-source-card-hover-bg);
+    color: var(--ki-source-card-hover-fg);
+  }
+}
+
+@media (forced-colors: active) {
+  [part="source"] {
+    border-color: LinkText;
+  }
+
+  [part="summary"]:focus-visible,
+  [part="source"]:focus-visible {
+    outline-color: Highlight;
+  }
+}

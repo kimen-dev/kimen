@@ -26,6 +26,7 @@ import { z } from 'zod';
 import { DIALOG_TAG, isDialogCommand, isDialogInvoker } from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
 import { contentModelViolation, isNativePrimitive } from './primitives.js';
+import { sourceTags } from './source-reference.js';
 import { isUrlProp, urlViolation } from './url-policy.js';
 
 /** One prop constraint, exactly as narrow as the manifest documents. */
@@ -733,10 +734,12 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
       native ||
       node.component === 'ki-icon' ||
       node.component === 'ki-feature-icon' ||
-      node.component === 'ki-markdown'
+      node.component === 'ki-markdown' ||
+      sourceTags.has(node.component)
     ) {
       // Primitives and decorative glyphs never bind their own actions.
       // Markdown delegates native interaction to its links and copy buttons.
+      // Source links navigate natively.
       issues.push({
         code: 'action-not-allowed',
         message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,

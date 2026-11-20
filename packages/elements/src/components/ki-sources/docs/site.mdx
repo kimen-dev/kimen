@@ -1,0 +1,37 @@
+---
+title: ki-sources
+description: List the evidence behind an answer and cite it from the claims it supports.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-sources` to show the evidence behind an answer. Give every direct
+`ki-source` a unique identifier, destination and title. Place a `ki-citation`
+immediately after the supported claim and set its `ref` to that identifier.
+
+<Demo code={`<p>The study design<ki-citation ref="methods"></ki-citation> explains the results.</p>
+<ki-sources>
+  <ki-source id="methods" href="https://example.org/methods" title="Study design" snippet="How the study ran."></ki-source>
+</ki-sources>`} />
+
+The disclosure starts closed. Add `open` to expand it initially. The first
+mention decides each number. Repeated mentions reuse that number. Sources
+without citations follow in declaration order.
+
+Hover or focus a citation to preview its title and hostname. Escape
+dismisses the preview. Activating the citation expands the disclosure
+and focuses its source link. The links in the ordered list have their
+source titles as names.
+
+Use `label-template`, `source-count-label`, and `sources-count-label`
+to localize the labels. Set `source-id` instead of `id` in a guarded spec.
+Use the same reference in the citation.
+
+## API reference
+
+<CemApi tag="ki-sources" />
+
+## Workshop
+
+[Open Sources in Storybook](/storybook/?path=/docs/docs-components-sources--docs)

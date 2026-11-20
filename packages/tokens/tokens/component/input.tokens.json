@@ -1,6 +1,78 @@
 {
   "ki": {
     "input": {
+      "appearance-border-width": {
+        "$value": "{ki.control.border-width}",
+        "$description": "Resting stroke width of both explicit text field appearances."
+      },
+      "outlined-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Surface of an outlined text field."
+      },
+      "outlined-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Entered text on an outlined field."
+      },
+      "outlined-placeholder-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Placeholder on an outlined field."
+      },
+      "outlined-border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Full outline of an enabled outlined text field."
+      },
+      "outlined-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner radius of an outlined text field."
+      },
+      "filled-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Surface of a filled text field."
+      },
+      "filled-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Entered text on a filled field."
+      },
+      "filled-placeholder-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Placeholder on a filled field."
+      },
+      "filled-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional background image of a filled field."
+      },
+      "filled-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Optional backdrop filter of a filled field."
+      },
+      "filled-indicator": {
+        "$value": "{ki.outline.control}",
+        "$description": "Continuous block-end edge of an enabled filled text field."
+      },
+      "filled-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Block-start corner radius of a filled text field."
+      },
+      "filled-focus-width": {
+        "$value": "{ki.focus.ring-width}",
+        "$description": "Stroke width of the block-end indicator while focused."
+      },
+      "count-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Resting character count surface over the surrounding page."
+      },
+      "count-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Character count when the value fits the maximum."
+      },
+      "count-over-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Over-limit character count surface over the surrounding page."
+      },
+      "count-over-fg": {
+        "$value": "{ki.text.danger-high-em}",
+        "$description": "Character count when the value exceeds the maximum."
+      },
       "height": {
         "$value": "{ki.space.12xl}",
         "$description": "dimension used by the input component for height (MarsUI Input_field md cell: min-height 40px; consume as min-block-size so the field can grow)."

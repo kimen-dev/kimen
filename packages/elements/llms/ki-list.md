@@ -1,17 +1,15 @@
 # ki-list
 
-> A non-interactive vertical list container for read-only collections of similar entries composed with `ki-list-item` children.
+> A vertical list of read-only entries, navigation links, settings controls, or options in a single- or multiple-selection listbox.
 
 ## When to use
 
-settings, contacts, results or activity feeds where each item
-composes leading media, primary text, optional secondary text and trailing
-meta or a slotted control.
+settings, contacts, results, navigation or visible choices composed
+from primary text, supporting text and optional media. Name interactive lists.
 
 ## When not to use
 
-menus, selectable option lists, tabular data, navigation,
-whole-item clickable rows or lone items outside a list.
+popup action menus, tabular data, or rows with several actions.
 
 ## Examples
 
@@ -44,33 +42,50 @@ Full item composition — `start` for leading media (decorative beside the visib
 </ki-list>
 ```
 
-Rows are never click targets; interactivity lives in controls slotted into a region, which keep their own semantics and focus behavior:
+```html
+<ki-list label="Settings">
+  <ki-list-item href="/settings/account">
+    Account
+    <span slot="secondary">Name, email, password</span>
+  </ki-list-item>
+</ki-list>
+```
 
 ```html
-<ki-list>
+<ki-list label="Reviewers" selection="multiple" name="reviewers" required>
+  <ki-list-item value="ana" selected>Ana Garcia</ki-list-item>
+  <ki-list-item value="luis">Luis Perez</ki-list-item>
+</ki-list>
+```
+
+```html
+<ki-list label="Notifications">
   <ki-list-item>
-    Two-factor authentication
-    <span slot="secondary">Enabled via authenticator app</span>
-    <ki-button slot="end" size="sm" variant="secondary" type="button">Manage</ki-button>
+    Email digest
+    <span slot="secondary">Every Monday</span>
+    <ki-switch slot="end" checked></ki-switch>
   </ki-list-item>
 </ki-list>
 ```
 
 ## Attributes
 
-None.
+- `label` (string | undefined): Accessible name for a list with links, options or trailing controls.
+- `name` (string | undefined): Form field name. Multiple selection submits repeated entries under this name.
+- `required` (boolean, default false): Requires at least one enabled choice in a selection list.
+- `selection` ("multiple" | "none" | "single", default 'none'): Enables single or multiple selection. The default supports static, link and control rows.
 
 ## Slots
 
-- (default): `ki-list-item` children. Other children are unsupported.
+- (default): Direct `ki-list-item` children.
 
 ## Parts
 
-- `list`: List surface that owns background, padding, item gap and between-item divider styling.
+- `list`: List surface that owns background, padding, gap and dividers.
 
 ## Events
 
-None.
+- `ki-change` (CustomEvent<KiListChangeDetail>): Fires once per user selection change, after updating the form value.
 
 ## Methods
 

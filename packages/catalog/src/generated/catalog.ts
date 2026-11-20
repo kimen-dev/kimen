@@ -1032,6 +1032,26 @@ export const catalogData = {
       "whenNotToUse": "choose exactly one option or submit a form value.",
       "whenToUse": "label related chips or let people change their reading order."
     },
+    "ki-citation": {
+      "description": "A numbered inline link from an answer to a source card.",
+      "events": {},
+      "props": {
+        "label-template": {
+          "type": "string",
+          "description": "Localized link name with `{number}` and `{title}` placeholders.",
+          "default": "Source {number}: {title}"
+        },
+        "ref": {
+          "type": "string",
+          "description": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
+          "required": true
+        }
+      },
+      "slots": {},
+      "tag": "ki-citation",
+      "whenNotToUse": "To cite a source outside this tree or replace a standalone\nlink. Use `ki-link` for direct navigation.",
+      "whenToUse": "Next to a claim supported by a `ki-source` in the same document\nor shadow root. Repeat the same reference for subsequent mentions."
+    },
     "ki-code-block": {
       "description": "Presents source code with a named header, syntax colors, line controls and\nclipboard feedback.",
       "events": {
@@ -1646,15 +1666,35 @@ export const catalogData = {
       "whenToUse": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
     },
     "ki-dialog": {
-      "description": "A modal dialog for one interrupting decision or short focused task.",
+      "description": "A modal dialog for an interrupting decision or a focused task.",
       "events": {
-        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+        "ki-close": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
+        "ki-confirm": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application."
       },
       "props": {
+        "close-label": {
+          "type": "string",
+          "description": "Accessible name for the fullscreen close button. Localize it or describe\nthe effect of dismissing, for example \"Discard and close\".",
+          "default": "Close"
+        },
         "close-on-backdrop": {
           "type": "boolean",
           "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
           "default": false
+        },
+        "confirm-label": {
+          "type": "string",
+          "description": "Label for the optional confirmation button. Use an action verb such as\n\"Save\". The button is in the fullscreen header or the centered footer."
+        },
+        "fullscreen": {
+          "type": "enum",
+          "values": [
+            "always",
+            "compact",
+            "never"
+          ],
+          "description": "Layout for the native modal. Use `compact` to fill windows narrower than\n600 CSS pixels, or `always` to fill any window. Use `never` for a centered\ndialog at every width.",
+          "default": "never"
         },
         "heading": {
           "type": "string",
@@ -1672,8 +1712,8 @@ export const catalogData = {
         "footer": "Dialog actions. Dismiss using an invoker command or `close()`."
       },
       "tag": "ki-dialog",
-      "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
-      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+      "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), multi-step flows that need their own\npage, menus, or pickers.",
+      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action. Use `fullscreen=\"compact\"` for longer tasks\nthat need the whole window on compact screens."
     },
     "ki-divider": {
       "description": "A static, decorative rule that visually separates adjacent content.",
@@ -2342,7 +2382,7 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+          "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog. When slotted as a trailing list control, the\nrow text supplies a fallback through the host aria-label.\nUse ki-button when the action has a visible label.",
           "required": true
         },
         "loading": {
@@ -2408,7 +2448,7 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.",
         "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
         "selected": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
       },
@@ -2528,6 +2568,16 @@ export const catalogData = {
           "description": "Localized provenance description read alongside help or an error when\nthe end slot contains an AI label. Use this to translate the description.",
           "default": "Suggested by AI"
         },
+        "appearance": {
+          "type": "enum",
+          "values": [
+            "default",
+            "filled",
+            "outlined"
+          ],
+          "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "default": "default"
+        },
         "autocomplete": {
           "type": "string",
           "description": "Native autocomplete detail token forwarded to the internal input.\nWhen NOT to use: omit when no autofill entry purpose is known."
@@ -2539,7 +2589,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -2553,6 +2603,18 @@ export const catalogData = {
         "label-hint": {
           "type": "string",
           "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or formats in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+        },
+        "maxlength": {
+          "type": "number",
+          "description": "Native maximum length in UTF-16 code units. The input prevents user entry\npast this limit.\nWhen to use: cap the number of characters people can enter.",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "minlength": {
+          "type": "number",
+          "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "minimum": 0,
+          "maximum": 2147483647
         },
         "name": {
           "type": "string",
@@ -2570,6 +2632,11 @@ export const catalogData = {
         "required": {
           "type": "boolean",
           "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
+          "default": false
+        },
+        "show-count": {
+          "type": "boolean",
+          "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
           "default": false
         },
         "size": {
@@ -2671,20 +2738,61 @@ export const catalogData = {
       "whenToUse": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation."
     },
     "ki-list": {
-      "description": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
-      "events": {},
-      "props": {},
+      "description": "A vertical list of read-only entries, navigation links, settings controls,\nor options in a single- or multiple-selection listbox.",
+      "events": {
+        "ki-change": "Fires once per user selection change, after updating the form value."
+      },
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name for a list with links, options or trailing controls."
+        },
+        "name": {
+          "type": "string",
+          "description": "Form field name. Multiple selection submits repeated entries under this name."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Requires at least one enabled choice in a selection list.",
+          "default": false
+        },
+        "selection": {
+          "type": "enum",
+          "values": [
+            "multiple",
+            "none",
+            "single"
+          ],
+          "description": "Enables single or multiple selection. The default supports static, link and control rows.",
+          "default": "none"
+        }
+      },
       "slots": {
-        "": "`ki-list-item` children. Other children are unsupported."
+        "": "Direct `ki-list-item` children."
       },
       "tag": "ki-list",
-      "whenNotToUse": "menus, selectable option lists, tabular data, navigation,\nwhole-item clickable rows or lone items outside a list.",
-      "whenToUse": "settings, contacts, results or activity feeds where each item\ncomposes leading media, primary text, optional secondary text and trailing\nmeta or a slotted control."
+      "whenNotToUse": "popup action menus, tabular data, or rows with several actions.",
+      "whenToUse": "settings, contacts, results, navigation or visible choices composed\nfrom primary text, supporting text and optional media. Name interactive lists."
     },
     "ki-list-item": {
-      "description": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+      "description": "A row inside `ki-list`, composed from leading media, primary text,\noptional secondary text and trailing content.",
       "events": {},
       "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Excludes this option from focus, selection by the user, and form data.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Native row link destination. Use outside selection lists, with no\nslotted interactive content.",
+          "format": "url"
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "Whether this row is selected in a single- or multiple-selection list.",
+          "default": false
+        },
         "size": {
           "type": "enum",
           "values": [
@@ -2695,17 +2803,21 @@ export const catalogData = {
           ],
           "description": "Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height\n(48, 56, 64 or 72px with a secondary line in onmars), padding, gap and\ntext. Slotted start and end content keeps the size its author gave it.\nAn unrecognized value matches no style rule and keeps the medium metrics.\nWhen to use: give every row of one list the same size.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
           "default": "md"
+        },
+        "value": {
+          "type": "string",
+          "description": "Submitted option value. The primary row text supplies the default."
         }
       },
       "slots": {
         "": "Primary text line.",
-        "end": "Trailing media, meta text or a slotted control.",
+        "end": "Trailing media, meta text or the only control of a settings row.",
         "secondary": "Supporting text below the primary line. Its presence\nselects the multi-line min-height token.",
         "start": "Leading media such as an icon, avatar or image."
       },
       "tag": "ki-list-item",
-      "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
-      "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+      "whenNotToUse": "as a menu item, tabular row, or row with several actions.",
+      "whenToUse": "as a direct child of `ki-list`, for a static entry, link,\nselection option, or a settings row with one control."
     },
     "ki-markdown": {
       "description": "Displays Markdown as Kimen components and native HTML semantics.",
@@ -4275,6 +4387,62 @@ export const catalogData = {
       "whenNotToUse": "when people need to enter exact numbers or choose among a\nfew named options. Use a number input or radio group for those tasks.",
       "whenToUse": "coarse adjustments such as volume, balance or a price filter,\nwith a descriptive label."
     },
+    "ki-source": {
+      "description": "Declares one named web source for a `ki-sources` list.",
+      "events": {},
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
+          "required": true,
+          "format": "url"
+        },
+        "snippet": {
+          "type": "string",
+          "description": "Optional plain-text excerpt displayed in the source card."
+        },
+        "source-id": {
+          "type": "string",
+          "description": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs."
+        },
+        "title": {
+          "type": "string",
+          "description": "Required plain-text source title. In HTML use the `title` attribute.",
+          "required": true
+        }
+      },
+      "slots": {},
+      "tag": "ki-source",
+      "whenNotToUse": "For standalone links outside a source list; use `ki-link`.",
+      "whenToUse": "As a direct child of `ki-sources`. In HTML provide an `id`,\n`href` and `title`; in guarded specs provide `source-id`, `href` and\n`title`. Use the same identifier on any citation of the source."
+    },
+    "ki-sources": {
+      "description": "A disclosure with the ordered sources behind an answer.",
+      "events": {},
+      "props": {
+        "open": {
+          "type": "boolean",
+          "description": "Whether the disclosure is expanded. Set to show the list initially.",
+          "default": false
+        },
+        "source-count-label": {
+          "type": "string",
+          "description": "Localized summary when there is one source. Use `{count}` for its number.",
+          "default": "{count} source"
+        },
+        "sources-count-label": {
+          "type": "string",
+          "description": "Localized summary for multiple sources. Use `{count}` for their number.",
+          "default": "{count} sources"
+        }
+      },
+      "slots": {
+        "": "Direct `ki-source` definitions for this answer."
+      },
+      "tag": "ki-sources",
+      "whenNotToUse": "For ordinary navigation, unrelated links, or form controls.",
+      "whenToUse": "To show the evidence behind an answer. Add direct `ki-source`\nchildren and place `ki-citation` markers next to the claims they support."
+    },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",
       "events": {},
@@ -4829,6 +4997,16 @@ export const catalogData = {
         "change": "Fired when the user commits an edited value (on blur, with native\ntextarea timing), composed across the shadow boundary; `value` is already\ncurrent when listeners run. When to use: react to a committed value. When\nNOT to use: do not use it for per-keystroke updates; the native `input`\nevent carries those."
       },
       "props": {
+        "appearance": {
+          "type": "enum",
+          "values": [
+            "default",
+            "filled",
+            "outlined"
+          ],
+          "description": "Field appearance. `default` uses the current theme, `outlined` draws a\nfull border, and `filled` uses a tinted surface and bottom indicator.\nThe visible label stays above the field.\nWhen to use: set an explicit appearance when fields must share a shape\nacross themes.",
+          "default": "default"
+        },
         "autocomplete": {
           "type": "string",
           "description": "Autofill detail token forwarded to the native textarea.\nWhen to use: expose entry purpose such as `street-address` when available.\nWhen NOT to use: omit when no valid autofill purpose applies."
@@ -4840,7 +5018,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -4854,6 +5032,23 @@ export const catalogData = {
         "label-hint": {
           "type": "string",
           "description": "Short text shown after the label and read with it as part of the field's\nname, so people know before submitting whether to answer: \"(optional)\" on\nthe few optional fields of a mostly required form, or \"(required)\" the\nother way round, in the page's own language. It changes no validation;\nset `required` for that, and keep the two consistent.\nWhen NOT to use: do not put instructions or length limits in it (use\n`help-text`), errors (use `error-text`), or a repeat of the label."
+        },
+        "maxlength": {
+          "type": "number",
+          "description": "Soft maximum in UTF-16 code units. Longer user edits and assigned values\nare preserved and fail form validation with `validity.tooLong`.\nWhen to use: let people revise an over-limit draft without losing text.",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "maxlength-error-text": {
+          "type": "string",
+          "description": "Localized message for an over-limit value. `error-text` and\n`setCustomValidity()` take precedence.\nWhen to use: translate the soft maximum message for the page language.",
+          "default": "Shorten the text to fit the character limit."
+        },
+        "minlength": {
+          "type": "number",
+          "description": "Native minimum length in UTF-16 code units for a nonempty user edit.\nWhen to use: require a minimum number of characters in an answer.",
+          "minimum": 0,
+          "maximum": 2147483647
         },
         "name": {
           "type": "string",
@@ -4877,6 +5072,11 @@ export const catalogData = {
           "type": "number",
           "description": "Visible line count. Invalid, non-numeric, zero, or negative values fall\nback to 2; no auto-grow or user resize handle exists in v1.\nWhen to use: set the stable multiline height needed by the layout. When\nNOT to use: do not use rows as a responsive size axis.",
           "default": 2
+        },
+        "show-count": {
+          "type": "boolean",
+          "description": "Shows the current count and maximum next to the help or error text and\nannounces reaching or exceeding the limit. Requires `maxlength`.\nWhen to use: give people feedback while writing to a limit.",
+          "default": false
         },
         "size": {
           "type": "enum",

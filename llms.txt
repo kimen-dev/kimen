@@ -60,6 +60,7 @@ methods, CSS custom properties and examples.
 - [ki-checkbox-group](https://kimen.dev/llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
 - [ki-chip](https://kimen.dev/llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
 - [ki-chip-group](https://kimen.dev/llms/ki-chip-group.md): label related chips or let people change their reading order.
+- [ki-citation](https://kimen.dev/llms/ki-citation.md): Next to a claim supported by a `ki-source` in the same document or shadow root.
 - [ki-code-block](https://kimen.dev/llms/ki-code-block.md): display a multiline example, generated code or a tool result that readers should be able to inspect and copy.
 - [ki-code-input](https://kimen.dev/llms/ki-code-input.md): Collect a one-time code of four to eight characters for sign-in or verification.
 - [ki-combobox](https://kimen.dev/llms/ki-combobox.md): choose from a long list of options, let people search an option source, or allow multiple selections that remain visible as tags.
@@ -87,8 +88,8 @@ methods, CSS custom properties and examples.
 - [ki-indicator](https://kimen.dev/llms/ki-indicator.md): show the current position within a bounded, sequential set of peer views whose navigation lives elsewhere: carousel slides, unlabeled onboarding steps, gallery pages.
 - [ki-input](https://kimen.dev/llms/ki-input.md): collect one line of free text from a person, always with a visible `label`; choose the `type` and `autocomplete` that match the entry purpose.
 - [ki-link](https://kimen.dev/llms/ki-link.md): navigate to a page, section, or resource.
-- [ki-list](https://kimen.dev/llms/ki-list.md): settings, contacts, results or activity feeds where each item composes leading media, primary text, optional secondary text and trailing meta or a slotted control.
-- [ki-list-item](https://kimen.dev/llms/ki-list-item.md): only as a child of `ki-list`, for one read-only entry in a similar vertical collection.
+- [ki-list](https://kimen.dev/llms/ki-list.md): settings, contacts, results, navigation or visible choices composed from primary text, supporting text and optional media.
+- [ki-list-item](https://kimen.dev/llms/ki-list-item.md): as a direct child of `ki-list`, for a static entry, link, selection option, or a settings row with one control.
 - [ki-markdown](https://kimen.dev/llms/ki-markdown.md): Show a formatted reply, readme excerpt or progressively received text from a person or model.
 - [ki-menu](https://kimen.dev/llms/ki-menu.md): row actions, account commands, split buttons, and overflow actions.
 - [ki-menu-group](https://kimen.dev/llms/ki-menu-group.md): name a set of related actions or scope exclusive radio items in a menu.
@@ -120,6 +121,8 @@ methods, CSS custom properties and examples.
 - [ki-sidebar-item](https://kimen.dev/llms/ki-sidebar-item.md): link to a named destination in ki-sidebar or ki-sidebar-group.
 - [ki-skeleton](https://kimen.dev/llms/ki-skeleton.md): Reserve the expected layout of a card, list, or assistant reply while it loads.
 - [ki-slider](https://kimen.dev/llms/ki-slider.md): coarse adjustments such as volume, balance or a price filter, with a descriptive label.
+- [ki-source](https://kimen.dev/llms/ki-source.md): As a direct child of `ki-sources`.
+- [ki-sources](https://kimen.dev/llms/ki-sources.md): To show the evidence behind an answer.
 - [ki-spinner](https://kimen.dev/llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](https://kimen.dev/llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-stat](https://kimen.dev/llms/ki-stat.md): Summarize one numeric metric in a dashboard or report.

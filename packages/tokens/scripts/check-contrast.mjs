@@ -485,6 +485,9 @@ const BOUNDARY_ROLE = /-(?:border|track)(?:-color)?$/u;
 // measured 4.49-5.02:1 and carried the cell while the rail a user actually
 // sees sat at 1.05-1.18:1 (Codex review of #64).
 const CELL_ROLE = /-(?:bg|border|track|thumb)(?:-color)?$/u;
+// A filled field's indicator is a full, fixed bottom edge. Readout indicators
+// still cannot certify their boundary because their extent can be zero.
+const FIXED_INDICATOR_ROLE = /(?<=-filled)-indicator$/u;
 
 export function controlBoundaryCells(declarations) {
   const cells = new Map();
@@ -502,14 +505,15 @@ export function controlBoundaryCells(declarations) {
     if (/-disabled/u.test(name)) {
       continue;
     }
-    const role = name.match(CELL_ROLE);
+    const fixedIndicator = name.match(FIXED_INDICATOR_ROLE);
+    const role = name.match(CELL_ROLE) ?? fixedIndicator;
     if (role === null) {
       continue;
     }
     const stem = name.slice(0, name.length - role[0].length);
     const cell = cells.get(stem) ?? { stem, members: [], hasEdge: false };
     cell.members.push(name);
-    cell.hasEdge ||= BOUNDARY_ROLE.test(name);
+    cell.hasEdge ||= BOUNDARY_ROLE.test(name) || fixedIndicator !== null;
     cells.set(stem, cell);
   }
 

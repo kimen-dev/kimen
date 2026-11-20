@@ -2142,6 +2142,77 @@ CSS custom properties:
 - `--ki-chip-height-sm`: Small height of a compact pill.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 
+### ki-citation
+
+A numbered inline link from an answer to a source card.
+
+When to use: Next to a claim supported by a `ki-source` in the same document
+or shadow root. Repeat the same reference for subsequent mentions.
+When NOT to use: To cite a source outside this tree or replace a standalone
+link. Use `ki-link` for direct navigation.
+
+Examples:
+
+# Using ki-citation
+
+Place a citation after its claim and set `ref` to the matching source identifier.
+
+```html
+<p>The methods account for the difference<ki-citation ref="methods"></ki-citation>.</p>
+<ki-sources>
+  <ki-source id="methods" title="Study design" href="/methods"></ki-source>
+</ki-sources>
+```
+
+Use `citationRef` in JSX. Tab to the link for a preview. Escape dismisses the
+preview, and Enter opens the list and moves focus to the source link.
+
+Attributes:
+- `ref` (string, required): ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.
+- `label-template` (string, default 'Source {number}: {title}'): Localized link name with `{number}` and `{title}` placeholders.
+
+Slots: none
+
+Parts:
+- `link`: Focusable citation link.
+- `marker`: Visible citation number.
+- `preview`: Anchored title and hostname preview.
+- `preview-domain`: Hostname in the preview.
+- `preview-title`: Title in the preview.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-citation-backdrop-filter`: Complete backdrop filter for a citation marker.
+- `--ki-citation-bg`: Background of a citation marker.
+- `--ki-citation-bg-image`: Optional decorative image over a citation marker.
+- `--ki-citation-fg`: Text on a citation marker.
+- `--ki-citation-hover-bg`: Background of a hovered citation marker.
+- `--ki-citation-hover-fg`: Text on a hovered citation marker.
+- `--ki-citation-padding`: Inline padding of the citation number.
+- `--ki-citation-preview-backdrop-filter`: Complete backdrop filter for the citation preview.
+- `--ki-citation-preview-bg`: Background of the title and hostname preview.
+- `--ki-citation-preview-bg-image`: Optional decorative image over the citation preview.
+- `--ki-citation-preview-border`: Edge color of the citation preview.
+- `--ki-citation-preview-border-width`: Edge width of the citation preview.
+- `--ki-citation-preview-fg`: Text on the citation preview.
+- `--ki-citation-preview-max-inline-size`: Maximum width of the citation preview.
+- `--ki-citation-preview-padding`: Inset around the preview content.
+- `--ki-citation-preview-radius`: Corner radius of the citation preview.
+- `--ki-citation-preview-shadow`: Elevation of the citation preview.
+- `--ki-citation-radius`: Corner radius of a citation marker.
+- `--ki-citation-size`: Minimum painted edge of a citation marker.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+
 ### ki-code-block
 
 Presents source code with a named header, syntax colors, line controls and clipboard feedback.
@@ -3255,16 +3326,17 @@ CSS custom properties:
 
 ### ki-dialog
 
-A modal dialog for one interrupting decision or short focused task.
+A modal dialog for an interrupting decision or a focused task.
 
 When to use: destructive confirmations, blocking choices, and brief
 critical input that must be resolved before returning to the page. Always
 provide a `heading`, place actions in the `footer` slot, wire each
 dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-the least destructive action.
+the least destructive action. Use `fullscreen="compact"` for longer tasks
+that need the whole window on compact screens.
 When NOT to use: non-blocking feedback (`ki-alert`, `ki-toast`),
-supplementary hints (`ki-tooltip`), long forms or multi-step flows
-(navigate or use a future full-screen variant), menus, or pickers.
+supplementary hints (`ki-tooltip`), multi-step flows that need their own
+page, menus, or pickers.
 
 Examples:
 
@@ -3285,8 +3357,33 @@ to cancel the request. After an accepted close command, the opening button
 regains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and
 `close()` remain available for programmatic control.
 
+
+## Edit a longer form
+
+```html
+<ki-button commandfor="event-details" command="show-modal">Add event</ki-button>
+<ki-dialog id="event-details" heading="New event" fullscreen="compact"
+  confirm-label="Save" close-label="Discard and close">
+  <ki-input label="Title"></ki-input>
+  <ki-input label="Date"></ki-input>
+</ki-dialog>
+```
+
+Below 600 CSS pixels the modal fills the window and keeps its heading and
+actions visible above the scrollable body. At wider widths `Save` moves to
+the centered dialog's footer. Handle `ki-confirm` to save the form and call
+`close()` after success. In fullscreen, call `preventDefault()` on
+`ki-close` to veto Escape or the header close button while editing.
+
+When importing the dialog directly, register `ki-button` to use the themed
+confirmation button. A single-element import still provides a native
+confirmation button with the same label and event.
+
 Attributes:
+- `close-label` (string, default 'Close'): Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
 - `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
+- `confirm-label` (string | undefined): Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+- `fullscreen` ("always" | "compact" | "never", default 'never'): Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
 - `heading` (string, required): Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
 - `open` (boolean, default false): Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
 
@@ -3298,17 +3395,24 @@ Parts:
 - `body`: Scrollable body region.
 - `dialog`: Internal native dialog surface.
 - `footer`: Action row, collapsed when empty.
+- `header`: Fullscreen bar with the title and its controls.
 - `heading`: Visible h2 title, rendered only when `heading` is non-empty.
 
 Events:
-- `ki-close` (CustomEvent<KiDialogCloseDetail>): Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+- `ki-close` (CustomEvent<KiDialogCloseDetail>): Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
+- `ki-confirm` (CustomEvent<void>): The user activated the confirmation button. Handle validation, submission and dismissal in the application.
 
 Methods:
 - `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method or an invoker command. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
 - `show()` (Promise<void>): Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
 
 CSS custom properties:
+- `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).
+- `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
+- `--ki-control-radius-item`: Corner radius of an individual control inside a track.
+- `--ki-control-size-md`: Medium control track height, 40 CSS px at the default root size.
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background.
 - `--ki-dialog-backdrop-filter`: Complete backdrop filter behind the dialog surface.
 - `--ki-dialog-bg`: Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image.
@@ -3326,6 +3430,12 @@ CSS custom properties:
 - `--ki-dialog-footer-padding-block-end`: dimension used by the dialog component for footer section padding block end (Modal-actions/CTAs: Space/7xl 24px.)
 - `--ki-dialog-footer-padding-block-start`: dimension used by the dialog component for footer section padding block start (Modal-actions/CTAs 14158:28302: Space/7xl 24px, below the divider.)
 - `--ki-dialog-footer-padding-inline`: dimension used by the dialog component for footer section padding inline (Modal-actions/CTAs: Space/5xl 20px.)
+- `--ki-dialog-fullscreen-backdrop-filter`: Complete backdrop filter for the fullscreen surface.
+- `--ki-dialog-fullscreen-bg`: Solid raised surface for the fullscreen dialog.
+- `--ki-dialog-fullscreen-bg-image`: Optional image over the fullscreen fill.
+- `--ki-dialog-fullscreen-fg`: Foreground for the fullscreen dialog.
+- `--ki-dialog-fullscreen-header-border`: Divider beneath the fullscreen header.
+- `--ki-dialog-fullscreen-header-height`: Minimum block size of the fullscreen header.
 - `--ki-dialog-gap`: dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px).
 - `--ki-dialog-heading-font-family`: Font family for the dialog heading. Override it to give dialogs their own heading typeface.
 - `--ki-dialog-heading-font-size`: dimension used by the dialog component for heading font size.
@@ -3342,15 +3452,24 @@ CSS custom properties:
 - `--ki-dialog-padding`: dimension used by the dialog component for the room it keeps from the viewport edges when its width or height is clamped. Each section pads itself (heading, body and footer padding tokens).
 - `--ki-dialog-radius`: dimension used by the dialog component for radius (MarsUI compact Modal master 16414:19665: Radius/big_component/radius_sm 20px; the large variant anchors 24px big_component/radius_md).
 - `--ki-dialog-shadow`: Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3).
+- `--ki-elevation-none`: Flat surfaces carry no resting shadow.
 - `--ki-focus-primary`: MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
 - `--ki-motion-distance-md`: Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard-accelerate`: Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).
+- `--ki-spacing-action-hairline`: Width of the frame and divider in an action surface.
+- `--ki-state-layer-hover`: Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark).
+- `--ki-state-layer-pressed`: Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark).
+- `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-family-heading`: Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy.
 - `--ki-typography-line-height-para`: semantic dimension for typography line height para.
 - `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
 
 ### ki-divider
 
@@ -4541,7 +4660,7 @@ Attributes:
 - `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
-- `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+- `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog. When slotted as a trailing list control, the row text supplies a fallback through the host aria-label. Use ki-button when the action has a visible label.
 - `loading` (boolean, default false): Pending state of the action this icon button started (refreshing, sending). While set, every activation is blocked (pointer, Enter and Space), but the icon button stays focusable, in the Tab order and at its size: the icon stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its `label`, and `loadingLabel` is announced as a polite status message. `disabled` wins over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this icon button started is running, so a second activation cannot repeat it. When NOT to use: for an icon button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the icon button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Refreshing"). When NOT to use: do not repeat `label` here; the person already hears it on focus.
 - `pressed` (boolean | undefined): Application-owned toggle state. The native icon button exposes this as `aria-pressed` when `toggle` is off. Omit for a momentary action.
@@ -4552,7 +4671,7 @@ Attributes:
 - `variant` ("ghost" | "outline" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, `ghost` for accent icon actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
 Slots:
-- (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name — that comes from `label` alone.
+- (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name. Supply `label` or use a named trailing list control.
 - `counter`: Decorative ki-counter in the block-start inline-end corner. Include its meaning in the button label.
 - `selected`: Optional decorative icon shown when the toggle is selected. If omitted, the default icon stays visible and an inline SVG takes a current-colour fill.
 
@@ -4952,18 +5071,37 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 <ki-input label="Legacy ID" value="A-1042" disabled></ki-input>
 ```
 
+## Appearance and character limits
+
+Set `appearance` to `outlined` for a full border or `filled` for a
+tinted surface with a bottom indicator. Both keep the label above the field.
+The default appearance follows the theme.
+
+Set `minlength` and `maxlength` to use the native input limits. With
+a maximum, `show-count` adds the current length to the field description
+and announces when the user reaches the limit.
+
+```html
+<ki-input label="Workspace name" appearance="outlined" minlength="3" maxlength="30" show-count help-text="Shown to members" value="Kimen design"></ki-input>
+<ki-input label="Price" appearance="filled" value="49.00"><span slot="start">EUR</span><span slot="end">/ month</span></ki-input>
+```
+
 Attributes:
 - `ai-suggestion-text` (string, default 'Suggested by AI'): Localized provenance description read alongside help or an error when the end slot contains an AI label. Use this to translate the description.
+- `appearance` ("default" | "filled" | "outlined" | undefined, default 'default'): Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
 - `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
 - `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
-- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the field, read with it as its description: the format expected, or why the answer is asked. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
 - `label-hint` (string | undefined): Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+- `maxlength` (number | undefined, minimum 0, maximum 2147483647): Native maximum length in UTF-16 code units. The input prevents user entry past this limit. When to use: cap the number of characters people can enter.
+- `minlength` (number | undefined, minimum 0, maximum 2147483647): Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
 - `name` (string | undefined): Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
 - `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
 - `readonly` (boolean, default false): Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
 - `required` (boolean, default false): Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+- `show-count` (boolean | undefined, default false): Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed field size (`--ki-input-{size}-*` tokens): the field box is 24, 32, 40, 48 or 56px tall in onmars, with its padding, radius, text and icon box; the label and help text follow in three steps. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the buttons and fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `type` ("email" | "password" | "search" | "tel" | "text" | "url", default 'text'): Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
 - `value` (string, default ''): Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
@@ -4974,6 +5112,7 @@ Slots:
 - `start`: Leading icon or text affix inside the field. Follows writing direction.
 
 Parts:
+- `count`: Current character count and maximum at the end of the field message row.
 - `error`: Error line shown in place of the help text while the field is invalid after the person answered or submitted; a polite live region, starting with a decorative error symbol.
 - `field`: Enclosure wrapper for background, border, radius and focus ring.
 - `help`: Help line under the field, read as the field's description.
@@ -4991,15 +5130,28 @@ CSS custom properties:
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-input-action-gap`: Gap between the input action and the preceding control or adornment.
 - `--ki-input-action-padding-end`: Inline-end inset between the input action and the inside edge of the field border.
+- `--ki-input-appearance-border-width`: Resting stroke width of both explicit text field appearances.
 - `--ki-input-border-block-end-width`: dimension used by the input component for border block end width.
 - `--ki-input-border-block-start-width`: dimension used by the input component for border block start width.
 - `--ki-input-border-inline-end-width`: dimension used by the input component for border inline end width.
 - `--ki-input-border-inline-start-width`: dimension used by the input component for border inline start width.
+- `--ki-input-count-bg`: Resting character count surface over the surrounding page.
+- `--ki-input-count-fg`: Character count when the value fits the maximum.
+- `--ki-input-count-over-bg`: Over-limit character count surface over the surrounding page.
+- `--ki-input-count-over-fg`: Character count when the value exceeds the maximum.
 - `--ki-input-disabled-bg`: color used by the input component for disabled background.
 - `--ki-input-disabled-border`: color used by the input component for disabled border.
 - `--ki-input-disabled-fg`: color used by the input component for disabled foreground (MarsUI disabled text Text/base_em; disabled cells are exempt from the contrast sweep).
 - `--ki-input-disabled-label-fg`: color used by the input component for disabled label foreground.
 - `--ki-input-disabled-placeholder-fg`: color used by the input component for disabled placeholder foreground.
+- `--ki-input-filled-backdrop-filter`: Optional backdrop filter of a filled field.
+- `--ki-input-filled-bg`: Surface of a filled text field.
+- `--ki-input-filled-bg-image`: Optional background image of a filled field.
+- `--ki-input-filled-fg`: Entered text on a filled field.
+- `--ki-input-filled-focus-width`: Stroke width of the block-end indicator while focused.
+- `--ki-input-filled-indicator`: Continuous block-end edge of an enabled filled text field.
+- `--ki-input-filled-placeholder-fg`: Placeholder on a filled field.
+- `--ki-input-filled-radius`: Block-start corner radius of a filled text field.
 - `--ki-input-focus-bg`: color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0).
 - `--ki-input-focus-fg`: color used by the input component for focus foreground.
 - `--ki-input-focus-label-fg`: color used by the input component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
@@ -5042,6 +5194,11 @@ CSS custom properties:
 - `--ki-input-lg-radius`: dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg).
 - `--ki-input-lg-text-padding-inline`: dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token).
 - `--ki-input-line-height`: dimension used by the input component for line height.
+- `--ki-input-outlined-bg`: Surface of an outlined text field.
+- `--ki-input-outlined-border`: Full outline of an enabled outlined text field.
+- `--ki-input-outlined-fg`: Entered text on an outlined field.
+- `--ki-input-outlined-placeholder-fg`: Placeholder on an outlined field.
+- `--ki-input-outlined-radius`: Corner radius of an outlined text field.
 - `--ki-input-padding-inline`: dimension used by the input component for padding inline.
 - `--ki-input-radius`: dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it).
 - `--ki-input-readonly-bg`: color used by the input component for readonly background (retires the deprecated ki.surface.raised alias; same resolved value).
@@ -5091,7 +5248,9 @@ CSS custom properties:
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
 
 ### ki-link
 
@@ -5180,13 +5339,11 @@ CSS custom properties:
 
 ### ki-list
 
-A non-interactive vertical list container for read-only collections of similar entries composed with `ki-list-item` children.
+A vertical list of read-only entries, navigation links, settings controls, or options in a single- or multiple-selection listbox.
 
-When to use: settings, contacts, results or activity feeds where each item
-composes leading media, primary text, optional secondary text and trailing
-meta or a slotted control.
-When NOT to use: menus, selectable option lists, tabular data, navigation,
-whole-item clickable rows or lone items outside a list.
+When to use: settings, contacts, results, navigation or visible choices composed
+from primary text, supporting text and optional media. Name interactive lists.
+When NOT to use: popup action menus, tabular data, or rows with several actions.
 
 Examples:
 
@@ -5219,27 +5376,46 @@ Full item composition — `start` for leading media (decorative beside the visib
 </ki-list>
 ```
 
-Rows are never click targets; interactivity lives in controls slotted into a region, which keep their own semantics and focus behavior:
-
 ```html
-<ki-list>
-  <ki-list-item>
-    Two-factor authentication
-    <span slot="secondary">Enabled via authenticator app</span>
-    <ki-button slot="end" size="sm" variant="secondary" type="button">Manage</ki-button>
+<ki-list label="Settings">
+  <ki-list-item href="/settings/account">
+    Account
+    <span slot="secondary">Name, email, password</span>
   </ki-list-item>
 </ki-list>
 ```
 
-Attributes: none
+```html
+<ki-list label="Reviewers" selection="multiple" name="reviewers" required>
+  <ki-list-item value="ana" selected>Ana Garcia</ki-list-item>
+  <ki-list-item value="luis">Luis Perez</ki-list-item>
+</ki-list>
+```
+
+```html
+<ki-list label="Notifications">
+  <ki-list-item>
+    Email digest
+    <span slot="secondary">Every Monday</span>
+    <ki-switch slot="end" checked></ki-switch>
+  </ki-list-item>
+</ki-list>
+```
+
+Attributes:
+- `label` (string | undefined): Accessible name for a list with links, options or trailing controls.
+- `name` (string | undefined): Form field name. Multiple selection submits repeated entries under this name.
+- `required` (boolean, default false): Requires at least one enabled choice in a selection list.
+- `selection` ("multiple" | "none" | "single", default 'none'): Enables single or multiple selection. The default supports static, link and control rows.
 
 Slots:
-- (default): `ki-list-item` children. Other children are unsupported.
+- (default): Direct `ki-list-item` children.
 
 Parts:
-- `list`: List surface that owns background, padding, item gap and between-item divider styling.
+- `list`: List surface that owns background, padding, gap and dividers.
 
-Events: none
+Events:
+- `ki-change` (CustomEvent<KiListChangeDetail>): Fires once per user selection change, after updating the form value.
 
 Methods: none
 
@@ -5258,12 +5434,11 @@ CSS custom properties:
 
 ### ki-list-item
 
-A non-interactive item inside `ki-list`, composed from leading media, primary text, optional secondary text and trailing media or meta.
+A row inside `ki-list`, composed from leading media, primary text, optional secondary text and trailing content.
 
-When to use: only as a child of `ki-list`, for one read-only entry in a
-similar vertical collection.
-When NOT to use: outside `ki-list`, as a menu item, selectable option,
-tabular row, navigation link or whole-item clickable control.
+When to use: as a direct child of `ki-list`, for a static entry, link,
+selection option, or a settings row with one control.
+When NOT to use: as a menu item, tabular row, or row with several actions.
 
 Examples:
 
@@ -5286,10 +5461,10 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 </ki-list>
 ```
 
-`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while a slotted control needs its own accessible name:
+`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while an unlabeled trailing control receives its name from the row:
 
 ```html
-<ki-list>
+<ki-list label="Contacts">
   <ki-list-item>
     <ki-avatar slot="start" initials="GH" size="sm"></ki-avatar>
     Grace Hopper
@@ -5301,18 +5476,32 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 </ki-list>
 ```
 
+```html
+<ki-list label="Settings">
+  <ki-list-item href="/settings/account">
+    Account
+    <span slot="secondary">Name, email, password</span>
+  </ki-list-item>
+</ki-list>
+```
+
 Attributes:
+- `disabled` (boolean, default false): Excludes this option from focus, selection by the user, and form data.
+- `href` (string | undefined, URL): Native row link destination. Use outside selection lists, with no slotted interactive content.
+- `selected` (boolean, default false): Whether this row is selected in a single- or multiple-selection list.
 - `size` ("lg" | "md" | "sm" | "xl", default 'md'): Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+- `value` (string | undefined): Submitted option value. The primary row text supplies the default.
 
 Slots:
 - (default): Primary text line.
-- `end`: Trailing media, meta text or a slotted control.
+- `end`: Trailing media, meta text or the only control of a settings row.
 - `secondary`: Supporting text below the primary line. Its presence selects the multi-line min-height token.
 - `start`: Leading media such as an icon, avatar or image.
 
 Parts:
 - `content`: Text column containing primary and secondary lines.
 - `end`: Trailing region wrapper.
+- `indicator`: Decorative navigation or selection indicator.
 - `item`: Item row surface and layout container.
 - `start`: Leading region wrapper.
 
@@ -5324,9 +5513,22 @@ CSS custom properties:
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
 - `--ki-inverse-white-alpha-3`: semantic color for inverse white alpha 3.
 - `--ki-inverse-white-alpha-6`: semantic color for inverse white alpha 6.
+- `--ki-list-item-checkbox-radius`: Corner radius of a multiple-selection indicator.
+- `--ki-list-item-checkbox-selected-bg`: Fill of the selected multiple-choice indicator.
+- `--ki-list-item-checkbox-selected-fg`: Check mark ink on the selected indicator.
 - `--ki-list-item-gap`: dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).
+- `--ki-list-item-hover-bg`: Background of an unselected hovered interactive list row.
+- `--ki-list-item-hover-fg`: Text and indicator on an unselected hovered interactive list row.
+- `--ki-list-item-indicator-border-width`: Stroke around a visual option indicator.
+- `--ki-list-item-indicator-size`: Edge of the trailing selection or navigation mark.
+- `--ki-list-item-interactive-backdrop-filter`: Complete backdrop filter for an interactive list row.
+- `--ki-list-item-interactive-bg`: Resting fill of an unselected interactive list row.
+- `--ki-list-item-interactive-bg-image`: Optional image layered over interactive list row fills.
+- `--ki-list-item-interactive-radius`: Corner radius of link and option rows.
 - `--ki-list-item-lg-gap`: dimension used by the list component for lg item gap (List 10063:2066 lg binds Space/xl, 12px).
 - `--ki-list-item-lg-min-height`: dimension used by the list component for the lg one-line item min height (two List 10063:2066 lg block paddings plus the primary line: 48px).
 - `--ki-list-item-lg-min-height-multiline`: dimension used by the list component for the lg two-line item min height (List 10063:2066 lg measures 64px).
@@ -5344,11 +5546,14 @@ CSS custom properties:
 - `--ki-list-item-primary-font-size`: dimension used by the list component for item primary font size.
 - `--ki-list-item-primary-font-weight`: font weight used by the list component for item primary font weight.
 - `--ki-list-item-primary-line-height`: dimension used by the list component for primary line height (MarsUI primary is UI/Para/medium 13/20, not UI/Body 1 13/24).
+- `--ki-list-item-radio-radius`: Corner radius of a single-selection indicator.
 - `--ki-list-item-radius`: dimension used by the list component for item radius.
 - `--ki-list-item-secondary-fg`: color used by the list component for item secondary foreground.
 - `--ki-list-item-secondary-font-size`: dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px).
 - `--ki-list-item-secondary-font-weight`: font weight used by the list component for item secondary font weight.
 - `--ki-list-item-secondary-line-height`: dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance).
+- `--ki-list-item-selected-bg`: Background of a selected list option.
+- `--ki-list-item-selected-fg`: Text and indicator on a selected list option.
 - `--ki-list-item-sm-gap`: dimension used by the list component for sm item gap (List 10063:2066 sm binds Space/lg, 10px).
 - `--ki-list-item-sm-min-height`: dimension used by the list component for the sm one-line item min height (two List 10063:2066 sm block paddings plus the primary line: 32px).
 - `--ki-list-item-sm-min-height-multiline`: dimension used by the list component for the sm two-line item min height (List 10063:2066 sm measures 48px).
@@ -8339,6 +8544,146 @@ CSS custom properties:
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 
+### ki-source
+
+Declares one named web source for a `ki-sources` list.
+
+When to use: As a direct child of `ki-sources`. In HTML provide an `id`,
+`href` and `title`; in guarded specs provide `source-id`, `href` and
+`title`. Use the same identifier on any citation of the source.
+When NOT to use: For standalone links outside a source list; use `ki-link`.
+
+Examples:
+
+# Using ki-source
+
+Declare a source directly inside the default slot of `ki-sources`.
+
+```html
+<ki-sources open>
+  <ki-source id="methods" href="/methods" title="Study design" snippet="How the study ran."></ki-source>
+</ki-sources>
+```
+
+Use a unique identifier in the current document or shadow root. In a
+guarded spec, use the `source-id` prop instead of the native `id`. The
+disclosure displays the hostname from the resolved URL.
+
+Attributes:
+- `href` (string, required, URL): Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.
+- `snippet` (string | undefined): Optional plain-text excerpt displayed in the source card.
+- `source-id` (string | undefined): Source identifier in this document or shadow root. Overrides the native HTML `id` when set. Use this value in guarded specs and in citation refs.
+- `title` (string, required): Required plain-text source title. In HTML use the `title` attribute.
+
+Slots: none
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-sources
+
+A disclosure with the ordered sources behind an answer.
+
+When to use: To show the evidence behind an answer. Add direct `ki-source`
+children and place `ki-citation` markers next to the claims they support.
+When NOT to use: For ordinary navigation, unrelated links, or form controls.
+
+Examples:
+
+# Using Sources
+
+Put a citation immediately after the clause it supports. Put the source
+definitions directly inside the corresponding disclosure. The list shows
+sources in order of first citation and adds uncited sources in declaration order.
+
+```html
+<p>The study design<ki-citation ref="methods"></ki-citation> explains the results.</p>
+<ki-sources>
+  <ki-source
+    id="methods"
+    href="https://example.org/methods"
+    title="Study design"
+    snippet="How the study ran."
+  ></ki-source>
+</ki-sources>
+```
+
+Use `open` to start with the list expanded. Use unique source identifiers
+within each document or shadow root. Hover or focus a citation to see its
+title and hostname. Activate it to expand the list and focus the title link.
+The card links can be used independently of the inline markers.
+
+When importing individual elements, register all three tags with their
+respective `defineCustomElement()` functions. Use `citationRef` and
+`sourceTitle` as component props in JSX. In a guarded spec, use keys
+`ref`, `source-id`, `title` and `href` on their respective nodes. Put
+the citation in a `div` primitive if it shares a line with text.
+
+Provide the local language through `label-template`, `source-count-label`,
+and `sources-count-label`. Titles and snippets are plain text. HTTP(S) URLs
+and relative web references work in authored HTML. Guarded specs also follow
+the application's allowed-origin policy.
+
+Attributes:
+- `open` (boolean, default false): Whether the disclosure is expanded. Set to show the list initially.
+- `source-count-label` (string, default '{count} source'): Localized summary when there is one source. Use `{count}` for its number.
+- `sources-count-label` (string, default '{count} sources'): Localized summary for multiple sources. Use `{count}` for their number.
+
+Slots:
+- (default): Direct `ki-source` definitions for this answer.
+
+Parts:
+- `disclosure`: Native expandable section.
+- `domain`: Hostname derived from the link destination.
+- `list`: Ordered list of sources.
+- `number`: Source order marker inside the card.
+- `snippet`: Optional excerpt.
+- `source`: Source card link.
+- `summary`: Disclosure control with the localized source count.
+- `title`: Visible title of the link.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-source-card-backdrop-filter`: Complete backdrop filter for a source card.
+- `--ki-source-card-bg`: Resting background of a source card.
+- `--ki-source-card-bg-image`: Optional decorative image over a source card.
+- `--ki-source-card-border`: Border color of a source card.
+- `--ki-source-card-border-width`: Border width of a source card.
+- `--ki-source-card-fg`: Text on a resting source card.
+- `--ki-source-card-hover-bg`: Background of a hovered source card.
+- `--ki-source-card-hover-fg`: Text on a hovered source card.
+- `--ki-source-card-padding`: Inset around source card content.
+- `--ki-source-card-radius`: Corner radius of a source card.
+- `--ki-source-number-bg`: Background of the number in a source card.
+- `--ki-source-number-fg`: Text color of the number in a source card.
+- `--ki-source-number-radius`: Corner radius of the number in a source card.
+- `--ki-source-number-size`: Minimum size of the number in a source card.
+- `--ki-sources-list-gap`: Gap between source cards.
+- `--ki-sources-max-inline-size`: Maximum line length of the source disclosure.
+- `--ki-sources-summary-bg`: Background of the source-count control.
+- `--ki-sources-summary-fg`: Text on the source-count control.
+- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+
 ### ki-spinner
 
 A compact status for an indeterminate wait.
@@ -9649,24 +9994,47 @@ Read-only and disabled are distinct states — `readonly` stays focusable, selec
 <ki-textarea label="Legacy notes" value="Migrated from v1." disabled></ki-textarea>
 ```
 
+## Appearance and character limits
+
+Set `appearance` to `outlined` for a full border or `filled` for a
+tinted surface with a bottom indicator. Both keep the label above the field.
+The default appearance follows the theme.
+
+`minlength` uses native minimum-length validation. The textarea keeps edits
+past `maxlength` and blocks submission until the value fits. With a maximum,
+`show-count` adds the current length to the field description and announces
+when the user reaches or exceeds the limit. Use `maxlength-error-text` to
+localize the default length error.
+
+```html
+<ki-textarea label="Bio" appearance="outlined" minlength="3" maxlength="24" show-count help-text="Keep it short" value="Designer and front-end developer"></ki-textarea>
+<ki-textarea label="Short bio" appearance="filled" maxlength="12" show-count help-text="Keep it short" value="Designs generative interfaces."></ki-textarea>
+```
+
 Attributes:
+- `appearance` ("default" | "filled" | "outlined" | undefined, default 'default'): Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
 - `autocomplete` (string | undefined): Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
 - `disabled` (boolean, default false): Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
-- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the field, read with it as its description: what to write, or how long. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
 - `label-hint` (string | undefined): Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
+- `maxlength` (number | undefined, minimum 0, maximum 2147483647): Soft maximum in UTF-16 code units. Longer user edits and assigned values are preserved and fail form validation with `validity.tooLong`. When to use: let people revise an over-limit draft without losing text.
+- `maxlength-error-text` (string | undefined, default 'Shorten the text to fit the character limit.'): Localized message for an over-limit value. `error-text` and `setCustomValidity()` take precedence. When to use: translate the soft maximum message for the page language.
+- `minlength` (number | undefined, minimum 0, maximum 2147483647): Native minimum length in UTF-16 code units for a nonempty user edit. When to use: require a minimum number of characters in an answer.
 - `name` (string | undefined): Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
 - `placeholder` (string | undefined): Hint shown while the textarea is empty. When to use: add an example or short formatting hint. When NOT to use: do not use placeholder as the accessible name or required instruction.
 - `readonly` (boolean, default false): Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
 - `required` (boolean, default false): Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
 - `rows` (number, default 2): Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+- `show-count` (boolean | undefined, default false): Shows the current count and maximum next to the help or error text and announces reaching or exceeding the limit. Requires `maxlength`. When to use: give people feedback while writing to a limit.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed field size (`--ki-textarea-{size}-*` tokens): padding, radius and text; the label and help text follow in three steps. The height stays `rows` lines. An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the fields around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string, default ''): Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
 
 Slots: none
 
 Parts:
+- `count`: Current character count and maximum at the end of the field message row.
 - `error`: Error line shown in place of the help text while the field is invalid after the person answered or submitted; a polite live region, starting with a decorative error symbol.
 - `field`: The enclosure wrapper.
 - `help`: Help line under the field, read as the field's description.
@@ -9682,6 +10050,25 @@ Methods: none
 CSS custom properties:
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-input-appearance-border-width`: Resting stroke width of both explicit text field appearances.
+- `--ki-input-count-bg`: Resting character count surface over the surrounding page.
+- `--ki-input-count-fg`: Character count when the value fits the maximum.
+- `--ki-input-count-over-bg`: Over-limit character count surface over the surrounding page.
+- `--ki-input-count-over-fg`: Character count when the value exceeds the maximum.
+- `--ki-input-filled-backdrop-filter`: Optional backdrop filter of a filled field.
+- `--ki-input-filled-bg`: Surface of a filled text field.
+- `--ki-input-filled-bg-image`: Optional background image of a filled field.
+- `--ki-input-filled-fg`: Entered text on a filled field.
+- `--ki-input-filled-focus-width`: Stroke width of the block-end indicator while focused.
+- `--ki-input-filled-indicator`: Continuous block-end edge of an enabled filled text field.
+- `--ki-input-filled-placeholder-fg`: Placeholder on a filled field.
+- `--ki-input-filled-radius`: Block-start corner radius of a filled text field.
+- `--ki-input-label-gap`: dimension used by the input component for label gap.
+- `--ki-input-outlined-bg`: Surface of an outlined text field.
+- `--ki-input-outlined-border`: Full outline of an enabled outlined text field.
+- `--ki-input-outlined-fg`: Entered text on an outlined field.
+- `--ki-input-outlined-placeholder-fg`: Placeholder on an outlined field.
+- `--ki-input-outlined-radius`: Corner radius of an outlined text field.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
@@ -9772,7 +10159,9 @@ CSS custom properties:
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
 
 ### ki-time-input
 

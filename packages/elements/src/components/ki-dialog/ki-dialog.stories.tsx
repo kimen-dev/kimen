@@ -93,7 +93,7 @@ const meta = {
   parameters: {
     layout: 'centered',
     actions: {
-      handles: ['ki-close'],
+      handles: ['ki-close', 'ki-confirm'],
     },
   },
   args: {
@@ -137,4 +137,36 @@ export const ScrollingBody: Story = {
 export const RTL: Story = {
   render: (args, { id }) => renderDialog(args, id, { dir: 'rtl' }),
   play: openViaTrigger,
+};
+
+/** The header actions stay in view on a compact viewport. */
+export const Fullscreen: Story = {
+  args: {
+    heading: 'New event',
+    fullscreen: 'compact',
+    confirmLabel: 'Save',
+    closeLabel: 'Discard and close',
+  },
+  render: (args, { id }) => {
+    const dialogId = `${id}-dialog`;
+    return (
+      <main>
+        <ki-button commandfor={dialogId} command="show-modal">
+          Add event
+        </ki-button>
+        <ki-dialog
+          id={dialogId}
+          heading={args.heading}
+          fullscreen={args.fullscreen ?? 'compact'}
+          confirmLabel={args.confirmLabel ?? 'Save'}
+          closeLabel={args.closeLabel ?? 'Discard and close'}
+          onKi-confirm={(event) => void (event.currentTarget as HTMLKiDialogElement).close()}
+        >
+          <ki-input label="Title" value="Design review" />
+          <ki-input label="Date" value="24 Nov 2026" />
+          <ki-switch>All day</ki-switch>
+        </ki-dialog>
+      </main>
+    );
+  },
 };

@@ -10,7 +10,7 @@
 
 **Status**: Draft
 
-**Input**: User description: "Fase 2 batch component: a `<ki-list>` web
+**Original input**: User description: "Fase 2 batch component: a `<ki-list>` web
 component with `<ki-list-item>` children — a simple, non-virtualized,
 non-interactive data list. Each item composes leading media, a primary text
 line, an optional secondary text line and trailing media or meta through
@@ -21,6 +21,10 @@ are explicitly out of v1 scope per roadmap."
 
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is complete. Behavior enters the system exactly once, here (Art. II).
+
+## Scope after #377
+
+This contract covers the shipped default-mode layout. [InteractiveList](../107-interactive-list/spec.md) adds native whole-row links, single and multiple selection, and accessible names for trailing controls. Each row supports at most one interactive element. Development builds warn when the rule is broken.
 
 ## Design-source analysis (Figma)
 
@@ -191,7 +195,7 @@ observe default rendering.
   list introduces no truncation or internal scrolling in v1 — consumers
   manage overflow. A third text line (M3 three-line items) is wrapped
   secondary text, not a dedicated region.
-- Interactive content slotted in `start`/`end` (e.g. a trailing switch)
+- A control slotted in `end` (e.g. a trailing switch)
   keeps its own focus and events; the list never intercepts, duplicates or
   re-targets them.
 - RTL documents: `start`/`end` regions and all internal spacing follow the
@@ -204,7 +208,7 @@ observe default rendering.
 
 ```gherkin
 Feature: List
-  A list presents a read-only collection of similar items — leading media,
+  Default-mode lists present similar items — leading media,
   primary and secondary text, trailing meta — in one consistent vertical
   structure that any brand restyles through tokens alone.
 
@@ -260,10 +264,8 @@ Feature: List
     Then it exposes a list of exactly three items
     And each item exposes its text content and no interactive role
 
-  # Family: form participation — N/A for ki-list: a non-interactive data
-  # display container is not a form control, holds no value and contributes
-  # no entry to submitted form data (justified in spec.md's Scenario Family
-  # Coverage table).
+  # Family: form participation — selection-mode scenarios are in
+  # 107-interactive-list. Default-mode lists contribute no form data.
 
   # Family: theming
   # S7
@@ -301,14 +303,14 @@ Feature: List
 | Core behavior | S1, S2, S3, S4, S10 | |
 | Keyboard path | S5, S11 | |
 | Assistive-tech outcome | S6 | |
-| Form participation | | N/A — ki-list is a non-interactive data-display container: it is not a form control, holds no value and contributes no entry to submitted form data (charter-listed valid N/A). Controls slotted inside items (e.g. ki-switch) participate in forms on their own. |
+| Form participation | | Default-mode lists contribute no form data. Controls slotted in a default-mode row participate independently. See #377 for selection-mode form participation. |
 | Theming | S7, S8, S9 | |
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: The list MUST be a non-interactive, non-virtualized container
+- **FR-001**: A static list MUST be a non-virtualized container
   that renders its `ki-list-item` children as one vertical list in source
   order. Neither the list nor its items are focusable, appear in the tab
   order, or emit component events of their own.
@@ -328,7 +330,7 @@ Feature: List
   changing which min-height token applies.
 - **FR-004**: Regions MUST render in the documented reading order: leading
   media, primary text above secondary text, trailing media/meta.
-- **FR-005**: The list MUST expose list semantics to assistive technology:
+- **FR-005**: A static list MUST expose list semantics to assistive technology:
   a list with an accurate item count, each item exposing its text content;
   neither list nor item adds an interactive role, name or state of its own.
   Because the items are slotted custom elements in the light DOM, a native
@@ -339,7 +341,7 @@ Feature: List
   roles are document-structure semantics, not an APG interactive widget
   pattern, so they do not conflict with "no ARIA is better than wrong ARIA"
   (Art. V).
-- **FR-006**: Interactive elements slotted inside an item MUST remain fully
+- **FR-006**: A control in the `end` slot of a settings row MUST remain fully
   operable; the list MUST NOT intercept, duplicate or re-target their focus
   or events.
 - **FR-007**: Every visual property (surface, item min-heights, padding,
@@ -445,11 +447,7 @@ Feature: List
   reveal a scale. The decision stands as shipped; whether the scale is a
   `size` attribute, a per-theme token step or nothing at all is a founder
   re-derivation against the master, not an agent call.)
-- Non-interactive v1 is a charter scope decision: item selection, whole-item
-  click/navigation, drag, menus and the M3 interactive item states are
-  future features; until then the catalog documents them as when-NOT-to-use.
-  Controls composed inside `start`/`end` slots (e.g. a settings list with
-  trailing switches) are the supported v1 pattern for interactivity.
+- Selection and whole-row navigation are opt-in through [InteractiveList](../107-interactive-list/spec.md). Each row supports at most one interaction. A settings control belongs in the trailing slot.
 - Non-virtualized v1 is a charter scope decision: the list renders all its
   children; very long collections are the consumer's concern beyond the
   bundle budget gate.

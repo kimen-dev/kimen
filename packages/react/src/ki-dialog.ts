@@ -15,7 +15,8 @@ import type { KiDialogCloseDetail, KiDialogCustomEvent } from '@kimen/elements/c
 import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
 export type KiDialogEvents = {
-  onKiClose: EventName<KiDialogCustomEvent<KiDialogCloseDetail>>
+  onKiClose: EventName<KiDialogCustomEvent<KiDialogCloseDetail>>,
+  onKiConfirm: EventName<KiDialogCustomEvent<void>>
 };
 
 export const KiDialog: StencilReactComponent<KiDialogElement, KiDialogEvents, Components.KiDialog, 'heading'> = /*@__PURE__*/ createComponent<KiDialogElement, KiDialogEvents, Components.KiDialog, 'heading'>({
@@ -24,7 +25,8 @@ export const KiDialog: StencilReactComponent<KiDialogElement, KiDialogEvents, Co
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
     events: {
-      onKiClose: 'ki-close'
+      onKiClose: 'ki-close',
+      onKiConfirm: 'ki-confirm'
     } as KiDialogEvents,
     defineCustomElement: defineKiDialog,
 });

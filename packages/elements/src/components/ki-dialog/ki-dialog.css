@@ -64,6 +64,16 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The fullscreen variant uses the shared heading family at every width. */
+:host([fullscreen="compact"]),
+:host([fullscreen="always"]) {
+  --_ki-dialog-heading-font-family: var(
+    --ki-typography-family-heading,
+    var(--ki-typography-family-body)
+  );
+  --_ki-dialog-heading-font-weight: var(--ki-typography-weight-body-semibold);
+}
+
 /* The modal dialog is fixed in the top layer, so its containing block is the
  * viewport and percentages measure the window it opens in, as the UA's own
  * `dialog:modal` limits do. Not viewport units: WebKit resolves those in a
@@ -177,6 +187,126 @@ slot[name="footer"] {
   display: none;
 }
 
+/* Fullscreen uses the same native modal and independent body scroll area. */
+[part="dialog"][data-fullscreen] {
+  inset-block: 0;
+  inset-inline: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  color: var(--ki-dialog-fullscreen-fg);
+  background-color: var(--ki-dialog-fullscreen-bg);
+  background-image: var(--ki-dialog-fullscreen-bg-image);
+  backdrop-filter: var(--ki-dialog-fullscreen-backdrop-filter);
+  border: 0;
+  border-radius: 0;
+  box-shadow: var(--ki-elevation-none);
+  outline-offset: calc(
+    -1 *
+    (var(--ki-dialog-focus-ring-width) + var(--ki-dialog-focus-ring-offset))
+  );
+}
+
+[part="header"] {
+  box-sizing: border-box;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: calc(var(--ki-layout-spacing-xs) * var(--ki-density-space-scale));
+  min-block-size: var(--ki-dialog-fullscreen-header-height);
+  padding-block: calc(var(--ki-layout-spacing-xs) * var(--ki-density-space-scale));
+  padding-inline: calc(var(--ki-layout-spacing-xs) * var(--ki-density-space-scale))
+    calc(var(--ki-layout-spacing-md) * var(--ki-density-space-scale));
+  border-block-end: var(--ki-spacing-action-hairline) solid
+    var(--ki-dialog-fullscreen-header-border);
+}
+
+button[data-close],
+button[data-confirm] {
+  box-sizing: border-box;
+  min-inline-size: var(--ki-density-target-min);
+  min-block-size: max(var(--ki-control-size-md), var(--ki-density-target-min));
+  padding-inline: var(--ki-layout-spacing-md);
+  color: inherit;
+  font: inherit;
+  background-color: var(--ki-surface-transparent);
+  border: 0;
+  border-radius: var(--ki-control-radius-item);
+  cursor: pointer;
+}
+
+button[data-close] {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: max(var(--ki-control-size-md), var(--ki-density-target-min));
+  padding: 0;
+}
+
+[part="footer"] button[data-confirm] {
+  color: var(--ki-button-primary-neutral-rest-fg);
+  background-color: var(--ki-button-primary-neutral-rest-bg);
+}
+
+ki-button:not(:defined),
+ki-button:defined + button[data-confirm] {
+  display: none;
+}
+
+@media (hover: hover) {
+  button[data-close]:hover,
+  [part="header"] button[data-confirm]:hover {
+    background-color: var(--ki-state-layer-hover);
+  }
+}
+
+button[data-close]:active,
+[part="header"] button[data-confirm]:active {
+  background-color: var(--ki-state-layer-pressed);
+}
+
+button:focus-visible {
+  outline: var(--ki-dialog-focus-ring-width) solid var(--ki-dialog-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-dialog-focus-ring-width));
+}
+
+[part="header"] [part="heading"] {
+  flex: 1;
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
+[part="header"] [data-confirm] {
+  margin-inline-start: auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+[part="header"] ki-button::part(button) {
+  block-size: auto;
+  min-inline-size: var(--ki-density-target-min);
+  min-block-size: var(--ki-density-target-min);
+}
+
+[part="dialog"][data-fullscreen] [part="body"] {
+  flex: 1;
+  overscroll-behavior-block: contain;
+  text-align: start;
+}
+
+[part="dialog"][data-fullscreen] [part="footer"] {
+  flex: none;
+}
+
+[part="footer"] [data-confirm] {
+  margin-inline-start: var(--_ki-dialog-gap);
+}
+
 [part="dialog"]::backdrop {
   background: var(--_ki-dialog-backdrop-bg);
 }
@@ -235,6 +365,14 @@ slot[name="footer"] {
   [part="dialog"] {
     background: Canvas;
     border: thin solid CanvasText;
+  }
+
+  [part="dialog"][data-fullscreen] {
+    background: Canvas;
+  }
+
+  [part="header"] {
+    border-block-end-color: CanvasText;
   }
 }
 

@@ -1,6 +1,39 @@
 {
   "component": {
-    "attributes": {},
+    "attributes": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for a list with links, options or trailing controls.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form field name. Multiple selection submits repeated entries under this name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires at least one enabled choice in a selection list.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "selection": {
+        "default": "'none'",
+        "deprecatedSince": null,
+        "description": "Enables single or multiple selection. The default supports static, link and control rows.",
+        "replacement": null,
+        "required": false,
+        "type": "\"multiple\" | \"none\" | \"single\""
+      }
+    },
     "cssProperties": {
       "--ki-density-space-scale": {
         "default": null,
@@ -91,25 +124,75 @@
         "type": null
       }
     },
-    "description": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
-    "events": {},
+    "description": "A vertical list of read-only entries, navigation links, settings controls,\nor options in a single- or multiple-selection listbox.",
+    "events": {
+      "ki-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fires once per user selection change, after updating the form value.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiListChangeDetail>"
+      }
+    },
     "methods": {},
     "parts": {
       "list": {
         "default": null,
         "deprecatedSince": null,
-        "description": "List surface that owns background, padding, item gap and\nbetween-item divider styling.",
+        "description": "List surface that owns background, padding, gap and dividers.",
         "replacement": null,
         "required": false,
         "type": null
       }
     },
-    "properties": {},
+    "properties": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for a list with links, options or trailing controls.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form field name. Multiple selection submits repeated entries under this name.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires at least one enabled choice in a selection list.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "selection": {
+        "default": "'none'",
+        "deprecatedSince": null,
+        "description": "Enables single or multiple selection. The default supports static, link and control rows.",
+        "replacement": null,
+        "required": false,
+        "type": "\"multiple\" | \"none\" | \"single\""
+      },
+      "value": {
+        "default": "null",
+        "deprecatedSince": null,
+        "description": "Selected value or null in single selection, or selected values in source\norder in multiple selection. Assign a fresh array to change multiple\nselection. In HTML or catalog specs, set `selected` on the initial rows.",
+        "replacement": null,
+        "required": false,
+        "type": "null | string & {} | string[]"
+      }
+    },
     "slots": {
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "`ki-list-item` children. Other children are unsupported.",
+        "description": "Direct `ki-list-item` children.",
         "replacement": null,
         "required": false,
         "type": null
@@ -130,6 +213,24 @@
           "value"
         ],
         "signature": "interface KiList extends Components.KiList, HTMLElement {\n}\nexport const KiList: {\n    prototype: KiList;\n    new (): KiList;\n};"
+      },
+      "KiListChangeDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiListChangeDetail {\n    value: KiListValue;\n}"
+      },
+      "KiListSelection": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiListSelection = 'none' | 'single' | 'multiple';"
+      },
+      "KiListValue": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiListValue = (string & {}) | string[] | null;"
       },
       "defineCustomElement": {
         "kinds": [

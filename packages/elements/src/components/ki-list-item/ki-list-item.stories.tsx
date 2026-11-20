@@ -20,17 +20,6 @@ const frameStyle = {
   display: 'block',
 };
 
-// The end-slot switch keeps its accessible name through visually hidden
-// slotted label text instead of duplicating the row's visible primary text.
-const visuallyHidden = {
-  position: 'absolute',
-  inlineSize: '1px',
-  blockSize: '1px',
-  overflow: 'hidden',
-  clipPath: 'inset(50%)',
-  whiteSpace: 'nowrap',
-};
-
 export const Playground: Story = {
   render: () => (
     <ki-list style={frameStyle}>
@@ -69,7 +58,7 @@ export const SecondaryLine: Story = {
 /** Start icon at the catalog 18px icon size plus an end-slot control. */
 export const IconAndControl: Story = {
   render: () => (
-    <ki-list style={frameStyle}>
+    <ki-list style={frameStyle} label="Notifications">
       <ki-list-item>
         <svg
           slot="start"
@@ -88,10 +77,27 @@ export const IconAndControl: Story = {
         </svg>
         Notifications
         <span slot="secondary">Immediate push alerts</span>
-        <ki-switch slot="end" name="push" checked>
-          <span style={visuallyHidden}>Notifications</span>
-        </ki-switch>
+        <ki-switch slot="end" name="push" checked />
       </ki-list-item>
+    </ki-list>
+  ),
+};
+
+export const LinkRow: Story = {
+  render: () => (
+    <ki-list style={frameStyle} label="Settings">
+      <ki-list-item href="#account">Account</ki-list-item>
+    </ki-list>
+  ),
+};
+
+export const SelectedRow: Story = {
+  render: () => (
+    <ki-list style={frameStyle} label="Reviewers" selection="multiple">
+      <ki-list-item value="ana" selected>
+        Ana Garcia
+      </ki-list-item>
+      <ki-list-item value="luis">Luis Perez</ki-list-item>
     </ki-list>
   ),
 };

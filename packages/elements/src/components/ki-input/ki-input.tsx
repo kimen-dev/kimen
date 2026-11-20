@@ -1,11 +1,11 @@
 import { AttachInternals, Component, Element, Listen, Prop, State, Watch, h } from '@stencil/core';
 import {
-  FieldMessage,
-  fieldDescribedBy,
-  fieldInvalid,
-  fieldText,
-  fieldValidationMessage,
-} from '../../utils/field-message';
+  applyFieldLengthLimit,
+  CountedFieldMessage,
+  countedFieldDescription,
+} from '../../utils/counted-field-message';
+import { fieldCountAnnouncement, normalizeLengthLimit } from '../../utils/field-count';
+import { fieldInvalid, fieldText, fieldValidationMessage } from '../../utils/field-message';
 import { LabelHint } from '../../utils/label-hint';
 import { normalizeKiInputType } from './ki-input.form';
 
@@ -39,6 +39,7 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  * `ki-button size="sm" type="submit"` here, or wire a labeled
  * `ki-icon-button size="sm"` to request form submission. The action has its own tab
  * stop. Use the end slot for clear or reveal controls.
+ * @part count - Current character count and maximum at the end of the field message row.
  * @part error - Error line shown in place of the help text while the field is invalid
  * after the person answered or submitted; a polite live region, starting with a
  * decorative error symbol.
@@ -56,7 +57,13 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  */
 @Component({
   tag: 'ki-input',
-  styleUrls: ['../../utils/field-message.css', '../../utils/label-hint.css', 'ki-input.css'],
+  styleUrls: [
+    '../../utils/field-message.css',
+    '../../utils/label-hint.css',
+    'ki-input.css',
+    '../../utils/field-appearance.css',
+    '../../utils/field-count.css',
+  ],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -74,6 +81,7 @@ export class KiInput {
   @State() private userInvalid = false;
   // The validation message last handed to ElementInternals (D4).
   @State() private message = '';
+  @State() private countAnnouncement = '';
 
   /**
    * Entry kind with native single-line input semantics. Unknown runtime
@@ -97,6 +105,45 @@ export class KiInput {
    * @default 'md'
    */
   @Prop({ reflect: true }) size: KiInputSize = 'md';
+
+  /**
+   * Field appearance. `default` uses the current theme, `outlined` draws a
+   * full border, and `filled` uses a tinted surface and bottom indicator.
+   * The visible label stays above the field.
+   * When to use: set an explicit appearance when fields must share a shape
+   * across themes.
+   *
+   * @default 'default'
+   */
+  @Prop({ reflect: true }) appearance?: 'default' | 'outlined' | 'filled' = 'default';
+
+  /**
+   * Native maximum length in UTF-16 code units. The input prevents user entry
+   * past this limit.
+   * When to use: cap the number of characters people can enter.
+   *
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  @Prop({ reflect: true }) maxlength?: number;
+
+  /**
+   * Native minimum length in UTF-16 code units for a nonempty user edit.
+   * When to use: require a minimum number of characters in an answer.
+   *
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  @Prop({ reflect: true }) minlength?: number;
+
+  /**
+   * Shows the current count and maximum next to the help or error text and
+   * announces reaching or exceeding the limit. Requires `maxlength`.
+   * When to use: give people feedback while writing to a limit.
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) showCount?: boolean = false;
 
   /**
    * Visible label rendered next to the entry area and used as the accessible
@@ -192,7 +239,7 @@ export class KiInput {
 
   /**
    * Message shown in place of the help text once the person's answer fails a
-   * constraint (`required`, `type`), and the field's `validationMessage`. Say
+   * constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say
    * how to fix the answer ("Enter an email address like name@example.com").
    * Without it the browser's own message shows, in the browser's language. An
    * error set with `setCustomValidity` outranks it.
@@ -281,7 +328,10 @@ export class KiInput {
   }
 
   @Watch('value')
-  protected valueChanged(): void {
+  protected valueChanged(value = this.value, previous = value): void {
+    if (this.announcementFor(previous, value) !== undefined) {
+      this.countAnnouncement = '';
+    }
     if (this.input && this.input.value !== this.value) {
       this.input.value = this.value;
     }
@@ -289,11 +339,19 @@ export class KiInput {
     this.syncValidity();
   }
 
+  @Watch('showCount')
+  @Watch('maxlength')
+  protected countSettingsChanged(): void {
+    this.countAnnouncement = '';
+  }
+
   @Watch('errorText')
   protected errorTextChanged(): void {
     this.syncValidity();
   }
 
+  @Watch('maxlength')
+  @Watch('minlength')
   @Watch('type')
   @Watch('required')
   @Watch('readonly')
@@ -323,7 +381,12 @@ export class KiInput {
   }
 
   private readonly handleInput = (event: Event): void => {
-    this.value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement).value;
+    const announcement = this.announcementFor(this.value, value);
+    this.value = value;
+    if (announcement !== undefined) {
+      this.countAnnouncement = announcement;
+    }
     if (this.input?.validity.valid) {
       this.clearUserInvalid();
     }
@@ -423,6 +486,8 @@ export class KiInput {
     this.input.required = this.required;
     this.input.readOnly = this.readonly;
     this.input.disabled = this.effectiveDisabled;
+    applyFieldLengthLimit(this.input, 'maxlength', this.maxlength);
+    applyFieldLengthLimit(this.input, 'minlength', this.minlength);
   }
 
   private setUserInvalid(): void {
@@ -435,20 +500,36 @@ export class KiInput {
     this.userInvalid = false;
   }
 
+  private get countLimit(): number | undefined {
+    return this.showCount ? normalizeLengthLimit(this.maxlength) : undefined;
+  }
+
+  private lengthOf(value: string | null | undefined): number {
+    const singleLine = (value ?? '').replace(/[\r\n]/gu, '');
+    const trimsSpaces = this.type === 'email' || this.type === 'url';
+    return (trimsSpaces ? singleLine.replace(/^[\t\f ]+|[\t\f ]+$/gu, '') : singleLine).length;
+  }
+
+  private announcementFor(previous: string, value: string): string | undefined {
+    return fieldCountAnnouncement(this.lengthOf(previous), this.lengthOf(value), this.countLimit);
+  }
+
   private syncAiLabels = (event: Event): void => {
     const slot = event.currentTarget as HTMLSlotElement;
     this.hasAiLabel = slot.assignedElements().some((element) => element.localName === aiLabelTag);
   };
 
   render() {
+    const minimum = normalizeLengthLimit(this.minlength);
     const type = normalizeKiInputType(this.type);
+    const maximum = normalizeLengthLimit(this.maxlength);
     const messages = {
       help: fieldText(this.helpText),
       error: this.userInvalid ? this.message : '',
     };
 
     const suggestion = this.hasAiLabel ? fieldText(this.aiSuggestionText) : '';
-    const messageId = fieldDescribedBy(messages);
+    const messageId = countedFieldDescription(messages, this.countLimit);
     const description = [messageId, suggestion ? aiSuggestionId : undefined]
       .filter(Boolean)
       .join(' ');
@@ -472,6 +553,8 @@ export class KiInput {
             part="input"
             type={type}
             value={this.value}
+            {...(maximum === undefined ? {} : { maxlength: maximum })}
+            {...(minimum === undefined ? {} : { minlength: minimum })}
             required={this.required}
             readOnly={this.readonly}
             disabled={this.effectiveDisabled}
@@ -487,7 +570,12 @@ export class KiInput {
           <slot name="end" onSlotchange={this.syncAiLabels} />
           <slot name="action" />
         </div>
-        <FieldMessage {...messages} />
+        <CountedFieldMessage
+          {...messages}
+          length={this.lengthOf(this.value)}
+          limit={this.countLimit}
+          announcement={this.countAnnouncement}
+        />
         {suggestion ? (
           <span id={aiSuggestionId} hidden>
             {suggestion}

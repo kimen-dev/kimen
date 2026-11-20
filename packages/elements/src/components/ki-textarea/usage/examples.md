@@ -31,3 +31,20 @@ Read-only and disabled are distinct states — `readonly` stays focusable, selec
 <ki-textarea label="Accepted policy" value="Version 2.1, accepted 2026-05-02." readonly></ki-textarea>
 <ki-textarea label="Legacy notes" value="Migrated from v1." disabled></ki-textarea>
 ```
+
+## Appearance and character limits
+
+Set `appearance` to `outlined` for a full border or `filled` for a
+tinted surface with a bottom indicator. Both keep the label above the field.
+The default appearance follows the theme.
+
+`minlength` uses native minimum-length validation. The textarea keeps edits
+past `maxlength` and blocks submission until the value fits. With a maximum,
+`show-count` adds the current length to the field description and announces
+when the user reaches or exceeds the limit. Use `maxlength-error-text` to
+localize the default length error.
+
+```html
+<ki-textarea label="Bio" appearance="outlined" minlength="3" maxlength="24" show-count help-text="Keep it short" value="Designer and front-end developer"></ki-textarea>
+<ki-textarea label="Short bio" appearance="filled" maxlength="12" show-count help-text="Keep it short" value="Designs generative interfaces."></ki-textarea>
+```

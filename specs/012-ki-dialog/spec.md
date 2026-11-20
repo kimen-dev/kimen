@@ -20,6 +20,9 @@ dialog and returns to the invoker on close. First dialog-type interaction
 pattern in the repo — manual APG walkthrough required. The full-screen dialog
 is deferred as a future additive variant."
 
+[Spec 126](../126-fullscreen-dialog/spec.md) defines that additive layout for
+longer tasks in the same modal.
+
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is complete. Behavior enters the system exactly once, here (Art. II).
 
@@ -52,11 +55,16 @@ handle (Miscellaneous page) are adjacent artifacts, not the dialog anatomy.
 |---|---|---|---|
 | Anatomy | **[premise refuted]** `Modal` (`16414:19664`, page Modals `14153:2128`) composes `Modal_header` (`14160:29188`) and `Modal_actions` (`14158:28301`) — a header / body / actions anatomy that was never read (2026-07-08 false negative); `Modal_overlay` (scrim) and `Modal_dragger` (sheet handle) are adjacent artifacts, not the container anatomy. Needs design-extraction | Basic dialog: container, headline, supporting text, end-aligned text-button actions; optional hero icon | `heading` attribute (title and accessible name) + default slot (body) + `footer` slot (actions). A hero icon composes inside the body; a dedicated slot can arrive later as additive MINOR |
 | Modality and scrim | onmars ships surface levels s0–s5 in its token vocabulary; the `Modal_overlay` scrim symbol confirms a scrim-over-page treatment. The dialog surface frame DOES exist — `Modal` (`16414:19664`) — and its surface treatment is still unread (2026-07-08 false negative) | Modal: a scrim covers the page and blocks interaction until the dialog is resolved | Modal-only v1: while open, everything behind the dialog is inert; the backdrop is styled through `--ki-dialog-backdrop-*` tokens |
-| Dismissal | **[premise refuted]** the dismissal affordances of `Modal` (`16414:19664`) — in particular whatever `Modal_header` (`14160:29188`) carries — were never read (2026-07-08 false negative), not absent. Needs design-extraction | Resolved through its actions; scrim/back dismissal follows platform convention | Escape always closes; backdrop click closes only with the opt-in `close-on-backdrop` attribute (a stray click must not destroy a critical confirmation); `close()` / removing `open` close programmatically; every path reports `ki-close` |
+| Dismissal | **[premise refuted]** the dismissal affordances of `Modal` (`16414:19664`) — in particular whatever `Modal_header` (`14160:29188`) carries — were never read (2026-07-08 false negative), not absent. Needs design-extraction | Resolved through its actions; scrim/back dismissal follows platform convention | In the centered dialog, Escape closes. Backdrop click closes only with the opt-in `close-on-backdrop` attribute (a stray click must not destroy a critical confirmation); `close()` / removing `open` close programmatically; every path reports `ki-close` |
 | Sizing | **[premise refuted]** onmars metrics xs–xl exist in the token vocabulary; the dialog frame `Modal` (`16414:19664`) exists and its width/padding/gap values were never read (2026-07-08 false negative) — whether MarsUI carries a dialog size axis is UNKNOWN, not answered. Needs design-extraction | Width bounded between min and max constraints; no size scale on the basic dialog | **[rests on a refuted premise — re-derive]** No `size` attribute in v1; width bounds, padding, gap and radius are per-theme component tokens |
 | Emphasis / intent | **[premise refuted]** onmars tone ramps (incl. info/warning) exist at the semantic layer; the dialog frame `Modal` (`16414:19664`) exists and was never inspected for a dialog-level emphasis axis (2026-07-08 false negative) — the axis is UNVERIFIED, not absent. Needs design-extraction | No color-variant or emphasis axis on dialogs | **[rests on a refuted premise — re-derive]** No `variant`, no `tone` in v1: Material 3 shows no emphasis or intent axis on the basic dialog and ~~MarsUI has no dialog at all~~ (that clause is refuted — `Modal` `16414:19664`); a future axis would be evaluated as an additive MINOR change (Art. VII) |
-| Full-screen | **[premise refuted]** whether `Modal` (`16414:19664`) carries a full-screen variant is UNKNOWN — the 2026-07-08 sweep never opened the Modals page, so its "no full-screen dialog component" claim carries no evidential weight; `Modal_dragger` hints at sheet-style modals in MarsUI applications. Needs design-extraction | Separate full-screen dialog for compact screens, with a header close affordance | Out of scope for v1; future additive variant |
 | Motion | **[premise refuted]** the dialog frame `Modal` (`16414:19664`) exists and was never inspected for motion artifacts (2026-07-08 false negative) — "no dialog motion in MarsUI" is UNVERIFIED, not established. Needs design-extraction | Entrance/exit transitions | Open/close motion is a theme decision expressed through `--ki-dialog-motion-*` tokens and is disabled under `prefers-reduced-motion` |
+
+### Additive variants
+
+| Variant | Surface | Behavior | Contract |
+| --- | --- | --- | --- |
+| Full-screen | An opt-in layout of the shipped modal | Fullscreen dialog for longer tasks, with a header close control and optional confirm action | Additive variant in [spec 126](../126-fullscreen-dialog/spec.md) |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -398,10 +406,10 @@ Feature: Dialog
 - **Catalog/agent legibility** (Art. I): when-to-use — an interrupting
   decision or short focused task that must be resolved before returning to
   the page: destructive confirmations, blocking choices, brief critical
-  input. When NOT to use — non-blocking feedback (ki-alert, future
-  ki-toast), supplementary hints (ki-tooltip), long forms or multi-step
-  flows (navigate, or the future full-screen variant), menus and pickers
-  (future components). Composition guidance: footer actions never close the
+  input. Use the [fullscreen layout](../126-fullscreen-dialog/spec.md) for
+  longer tasks that fit in one modal. When NOT to use — non-blocking feedback
+  (ki-alert, ki-toast), supplementary hints (ki-tooltip), multi-step flows
+  that need their own page, menus and pickers. Composition guidance: footer actions never close the
   dialog by themselves — wire each one to `close()` (FR-009); in destructive
   confirmations, place `autofocus` on the least destructive action so
   initial focus follows the APG dialog (modal) guidance (FR-005).
@@ -434,17 +442,16 @@ Feature: Dialog
 
 - Modal only in v1 (charter scope); a non-modal/modeless presentation is
   excluded, not forgotten.
-- No built-in close ("X") button in v1: the M3 basic dialog resolves through
-  its footer actions, and applications compose their own buttons in the
-  `footer` slot. Consequently the component ships no default user-visible
-  strings and needs no overridable label prop; the future full-screen
-  variant may introduce one as an additive change.
+- In the centered dialog, applications compose their dismissal controls in
+  the `footer` slot. The additive fullscreen layout in
+  [spec 126](../126-fullscreen-dialog/spec.md) provides a header close button
+  with an overridable accessible name.
 - `heading` is the accessible-name source and is expected on every dialog; a
   heading-less dialog is documented as invalid usage in the catalog rather
   than auto-named or blocked at runtime.
-- `ki-close` is a post-close notification and is not cancelable; a
-  cancelable before-close event (e.g. dirty-form veto) would be an additive
-  future enhancement.
+- Centered dismissal and programmatic close report a noncancelable
+  `ki-close` after closing. [Spec 126](../126-fullscreen-dialog/spec.md)
+  defines a cancelable request for the fullscreen close button and Escape.
 - No `variant`, `tone` or `size` axes in v1: Material 3 does not scale the
   basic dialog on an emphasis, intent or size axis. **[rests on a refuted
   premise — re-derive]** the second half of this justification — "MarsUI
