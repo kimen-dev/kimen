@@ -56,6 +56,14 @@ function tokenDeclarations(root, tokens) {
   return declarations;
 }
 
+/** Show primitives by their short names, as the reference does: var(--ki-color-white-100) reads white-100. */
+function shortDeclaration(value) {
+  return value.replace(
+    /var\(--ki-(?:color-|foundation-migrated-[a-z]+-(?:material3-(?:dark-)?)?)([a-z0-9-]+)\)/gu,
+    '$1',
+  );
+}
+
 function inspectTokens(root, rows, previous) {
   const view = root.defaultView;
   const styles = view.getComputedStyle(root.documentElement);
@@ -77,7 +85,7 @@ function inspectTokens(root, rows, previous) {
       value = formatColor(view.getComputedStyle(probe).color);
       swatch.style.setProperty('--ki-site-swatch-color', `var(${token})`);
     }
-    declared.textContent = declarations.get(token) || 'Unavailable';
+    declared.textContent = shortDeclaration(declarations.get(token) ?? '') || 'Unavailable';
     current.textContent = value;
     if (previous.has(token) && previous.get(token) !== value) changed.push(row);
     previous.set(token, value);
@@ -219,14 +227,18 @@ export function initializePlayground(root = document) {
   };
   const setScheme = wireSchemeControls(root, { signal, onChange: refresh });
 
+  // A click on the theme already shown is still an explicit choice and is remembered;
+  // it fires no change event, so both events select.
   for (const input of themeInputs) {
-    input.addEventListener(
-      'change',
-      () => {
-        if (input.checked) void setTheme(input.value, { persist: true });
-      },
-      { signal },
-    );
+    for (const type of ['change', 'click']) {
+      input.addEventListener(
+        type,
+        () => {
+          if (input.checked) void setTheme(input.value, { persist: true });
+        },
+        { signal },
+      );
+    }
   }
   root.querySelector('[data-reset]').addEventListener(
     'click',

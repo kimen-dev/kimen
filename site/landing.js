@@ -62,11 +62,17 @@ function wirePreferences(root, view, signal) {
       { signal },
     );
   }
+  // A click on the choice already shown is still an explicit choice and is remembered;
+  // it fires no change event, so both events select.
   for (const radio of radios) {
-    radio.addEventListener('change', () => setScheme(radio.value, true), { signal });
+    for (const type of ['change', 'click']) {
+      radio.addEventListener(type, () => setScheme(radio.value, true), { signal });
+    }
   }
   for (const radio of themeRadios) {
-    radio.addEventListener('change', () => void setTheme(radio.value, true), { signal });
+    for (const type of ['change', 'click']) {
+      radio.addEventListener(type, () => void setTheme(radio.value, true), { signal });
+    }
   }
   systemScheme.addEventListener(
     'change',
@@ -235,8 +241,10 @@ function wireHero(root, view, signal) {
     redrawFrame = view.requestAnimationFrame(() => drawLeads(root, hero, overlay));
   }
 
+  // The preview's slotted targets have no box until their elements render, which does not
+  // resize the hero; observing them redraws the leads once they can be reached.
   const resizeObserver = new view.ResizeObserver(redraw);
-  resizeObserver.observe(hero);
+  for (const element of [hero, ...targets]) resizeObserver.observe(element);
   void root.fonts?.ready.then(() => {
     if (!signal.aborted) redraw();
   });

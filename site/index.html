@@ -134,16 +134,11 @@
       </nav>
 
       <header class="hero" id="top">
-        <a
-          class="brand"
-          data-ki-theme="onmars"
-          data-ki-color-scheme="dark"
-          href="./"
-          aria-label="Kimen home"
-        >
+        <a class="brand" data-ki-theme="onmars" data-ki-color-scheme="dark" href="./">
           <svg class="icon mark" aria-hidden="true" focusable="false"><use href="#i-mark" /></svg>
           <span class="brand-name">Kimen</span>
-          <ki-badge size="sm" aria-hidden="true">pre-v1</ki-badge>
+          <ki-badge class="brand-stage" size="sm">pre-v1</ki-badge>
+          <span class="sr">home</span>
         </a>
         <nav class="topnav" aria-label="Primary">
           <a href="./docs/components/alert/">Components</a>
@@ -223,6 +218,7 @@
           <pre
             class="spec"
             data-spec
+            role="region"
             tabindex="0"
             aria-label="Example workspace spec"
           ><code><span class="ln">{</span>
@@ -249,7 +245,7 @@
 <span class="ln">      ]</span>
 <span class="ln">} } }</span></code></pre>
           <div class="verdict" data-verdict role="status">
-            <p class="v-call"><code>validateUiSpec(spec)</code></p>
+            <p class="v-call"><span><code>validateUiSpec(spec)</code></span></p>
             <p class="v-bad" data-step="reject">
               <svg aria-hidden="true" focusable="false" class="icon"><use href="#i-x" /></svg>
               <span
@@ -637,12 +633,7 @@ claude mcp add kimen -- node --permission \
             </div>
             <div class="guard-io" data-ki-theme="onmars" data-ki-color-scheme="dark">
               <p class="io-label">spec</p>
-              <pre
-                class="code"
-                data-guard-in
-                tabindex="0"
-                aria-label="Spec input"
-              ><code>{ <i class="k">"version"</i>: 1,
+              <pre class="code" data-guard-in><code>{ <i class="k">"version"</i>: 1,
   <i class="k">"root"</i>: { <i class="k">"component"</i>: <i class="c">"ki-button"</i>,
     <i class="k">"props"</i>: { <i class="k">"onclick"</i>: <i class="s">"alert(1)"</i> },
     <i class="k">"slots"</i>: { <i class="k">""</i>: [<i class="s">"Pay now"</i>] } } }</code></pre>
@@ -650,8 +641,6 @@ claude mcp add kimen -- node --permission \
               <pre
                 class="code out"
                 data-guard-out
-                tabindex="0"
-                aria-label="Validator output"
                 aria-live="polite"
                 aria-atomic="true"
               ><code>{ ok: <i class="no">false</i>, issues: [{

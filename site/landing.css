@@ -31,6 +31,7 @@ html:has(.home-page) {
   --ki-site-underline-offset: 0.2em;
   --ki-site-glyph-size: 1.125em;
   --ki-site-brand-glyph-size: 1.25em;
+  --ki-site-brand-height: 1.5rem;
   --ki-site-compact-target: 2rem;
   --ki-site-replay-target: 1.75rem;
   --ki-site-line-number-size: 1.5rem;
@@ -288,7 +289,11 @@ body:has(.home-page) {
     display: flex;
     flex-direction: column;
     gap: var(--ki-space-3xl);
-    padding-block: var(--ki-space-22xl) var(--ki-space-7xl);
+
+    /* The brand sits above the spine's file header, as the first item of the reference spine:
+       the spine's top inset, the brand row and the spine's gap. */
+    padding-block: calc(var(--ki-space-7xl) + var(--ki-site-brand-height) + var(--ki-space-3xl))
+      var(--ki-space-7xl);
     background: var(--ki-surface-s1);
     color: var(--ki-text-high-em);
     overflow: hidden;
@@ -301,6 +306,7 @@ body:has(.home-page) {
     display: inline-flex;
     align-items: center;
     gap: var(--ki-space-md);
+    block-size: var(--ki-site-brand-height);
     margin-block-start: var(--ki-space-7xl);
     margin-inline-start: var(--ki-space-10xl);
     color: var(--ki-text-high-em);
@@ -318,6 +324,13 @@ body:has(.home-page) {
     display: flex;
     align-items: center;
     gap: var(--ki-space-xl);
+
+    /* Reduced motion hides the replay button; the header keeps its row. */
+    min-block-size: calc(
+      var(--ki-site-replay-target) +
+      var(--ki-space-xl) +
+      var(--ki-site-rule-width)
+    );
     margin-block-start: var(--ki-space-12xl);
     padding: 0 var(--ki-space-10xl) var(--ki-space-xl);
     border-block-end: var(--ki-site-hairline);
@@ -373,10 +386,17 @@ body:has(.home-page) {
     font-size: inherit;
   }
 
+  /* Long lines wrap with a hanging indent instead of being clipped by the spine (the reference
+     clips them at wide desktops): overflow aligns two characters past the line's own indent,
+     set per line by landing.js. */
   .ln {
+    --ki-site-hang: calc((var(--ki-site-indent, 0) + 2) * 1ch);
+
     position: relative;
     display: block;
-    padding: 0 var(--ki-space-3xl) 0 var(--ki-space-18xl);
+    padding-block: 0;
+    padding-inline: calc(var(--ki-space-18xl) + var(--ki-site-hang)) var(--ki-space-3xl);
+    text-indent: calc(var(--ki-site-hang) * -1);
     white-space: pre-wrap;
     transition:
       opacity var(--ki-duration-moderate) var(--ki-site-ease),
@@ -395,6 +415,7 @@ body:has(.home-page) {
     content: counter(line);
     counter-increment: line;
     text-align: end;
+    text-indent: 0;
   }
 
   .spec i {
@@ -436,7 +457,7 @@ body:has(.home-page) {
 
   .ln.bad::after {
     position: absolute;
-    inset-block-start: 50%;
+    inset-block-start: calc(var(--ki-site-code-line) * 1em / 2);
     inset-inline: var(--ki-space-18xl) var(--ki-space-3xl);
     border-block-start: var(--ki-site-rule-width) solid currentcolor;
     content: "";
@@ -634,10 +655,13 @@ body:has(.home-page) {
     margin-block-start: var(--ki-space-md);
   }
 
+  /* The leads run from the spine's edge to the preview's edge. Keeping the overlay to that
+     gutter leaves no layer over the hero's text, which axe would otherwise have to read through. */
   .leads {
     position: absolute;
-    inset: 0;
-    inline-size: 100%;
+    inset-block: 0;
+    inset-inline-start: var(--ki-site-spine-size);
+    inline-size: var(--ki-site-gutter);
     block-size: 100%;
     overflow: visible;
     pointer-events: none;
@@ -789,7 +813,11 @@ body:has(.home-page) {
     font-family: var(--ki-typography-family-mono);
     font-size: var(--ki-site-code);
     line-height: var(--ki-site-code-line);
-    overflow-x: auto;
+
+    /* A line wider than its column wraps rather than scrolling: no snippet becomes a scroll
+       region that keyboard users would have to reach. */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
     tab-size: 2;
   }
 
@@ -1276,7 +1304,9 @@ body:has(.home-page) {
     align-content: center;
     gap: var(--ki-space-3xl);
     min-block-size: var(--ki-site-wall-cell-height);
-    padding: var(--ki-space-10xl);
+
+    /* The block-end inset reserves the row the tag line sits in. */
+    padding: var(--ki-space-10xl) var(--ki-space-10xl) var(--ki-space-14xl);
     min-inline-size: 0;
     border-block-end: var(--ki-site-hairline);
     border-inline-end: var(--ki-site-hairline);
@@ -1311,7 +1341,9 @@ body:has(.home-page) {
   }
 
   .tag {
-    align-self: end;
+    position: absolute;
+    inset-block-end: var(--ki-space-3xl);
+    inset-inline: var(--ki-space-10xl);
     overflow-wrap: anywhere;
     color: var(--ki-text-low-em);
     font-family: var(--ki-typography-family-mono);
@@ -1803,19 +1835,14 @@ body:has(.home-page) {
       font-size: var(--ki-typography-size-caption-1);
     }
 
-    /* Wrap long lines instead of clipping tokens, with a hanging indent: overflow aligns two characters past the
-     line's own indent (set per line by landing.js). The strike follows the wrapped text. */
+    /* Lines wrap more often here: the hanging indent starts nearer the line numbers, and the
+       strike follows the wrapped text. */
     .ln {
-      --ki-site-hang: calc((var(--ki-site-indent, 0) + 2) * 1ch);
-
       padding-inline: calc(var(--ki-space-14xl) + var(--ki-site-hang)) var(--ki-space-3xl);
-      text-indent: calc(var(--ki-site-hang) * -1);
-      white-space: pre-wrap;
     }
 
     .ln::before {
       inset-inline-start: var(--ki-space-md);
-      text-indent: 0;
     }
 
     .file-from {
@@ -2000,6 +2027,16 @@ body:has(.home-page) {
 
     .cell-wide {
       grid-column: auto;
+    }
+
+    /* A long tag line may wrap in a single column, so it joins the cell's flow. */
+    .cell {
+      padding-block-end: var(--ki-space-10xl);
+    }
+
+    .tag {
+      position: static;
+      align-self: end;
     }
 
     .artifacts > div,

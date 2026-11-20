@@ -71,6 +71,11 @@ export function wireSchemeControls(root, { signal, onChange } = {}) {
   for (const control of [...radios, ...selects]) {
     control.addEventListener('change', selectScheme, { signal });
   }
+  // A click on the scheme already shown is still an explicit choice and is remembered;
+  // it fires no change event.
+  for (const radio of radios) {
+    radio.addEventListener('click', selectScheme, { signal });
+  }
   media?.addEventListener(
     'change',
     () => {
