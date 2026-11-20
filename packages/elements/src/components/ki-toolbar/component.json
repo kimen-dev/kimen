@@ -11,7 +11,8 @@
   "catalog": true,
   "sizeBudget": {
     "mcpServer": {
-      "raw": 14897
+      "raw": 14897,
+      "gzip": 3520
     }
   }
 }
