@@ -2,5 +2,12 @@
   "barePage": { "keyboardPressed": false },
   "pointer": { "hoverWitness": false },
   "visual": { "material3Dark": true },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 18429,
+      "gzip": 4484,
+      "brotli": 2982
+    }
+  }
 }
