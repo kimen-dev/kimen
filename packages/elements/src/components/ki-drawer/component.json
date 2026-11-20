@@ -1,6 +1,17 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
-  "visual": { "material3Dark": true }
+  "visual": {
+    "material3Dark": true
+  },
+  "sizeBudget": {
+    "tokenStylesheets": {
+      "onmars": 65
+    }
+  }
 }
