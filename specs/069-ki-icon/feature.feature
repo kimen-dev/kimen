@@ -75,5 +75,5 @@ Feature: ki-icon displays an imported Lucide glyph
   # S13
   Scenario: Keep the stock MCP surface and server in agreement
     Given the stock MCP surface has selected circle-check
-    When a spec names circle-check or the unselected triangle-alert
-    Then the server and packaged surface accept circle-check and diagnose triangle-alert
+    When a spec names circle-check or the unselected house
+    Then the server and packaged surface accept circle-check and diagnose house

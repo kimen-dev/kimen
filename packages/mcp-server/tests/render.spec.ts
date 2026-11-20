@@ -74,7 +74,7 @@ describe('Kimen MCP server: render (038 S9-S11)', () => {
     expect(available.structuredContent).toEqual({ [KIMEN_SURFACE_KEY]: { spec: stock } });
 
     const unbundled = {
-      root: { component: 'ki-icon', props: { name: 'triangle-alert' } },
+      root: { component: 'ki-icon', props: { name: 'house' } },
       version: 1,
     };
     const refused = await render(unbundled);
