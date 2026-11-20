@@ -90,7 +90,7 @@ export class KiCodeBlock {
   }
 
   private readonly readSource = (): void => {
-    this.source = this.host.textContent;
+    this.source = this.host.textContent || '';
   };
 
   render() {
