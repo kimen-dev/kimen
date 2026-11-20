@@ -94,11 +94,7 @@ A consumer-owned control in the error slot can declare its own action.
 ## Events
 
 - `ki-tool-retry` (CustomEvent<{ name: string }>): A request to retry this tool call. Bind a declared surface action to handle it.
-- `ki-tool-status-change` (CustomEvent<{
-    name: string;
-    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';
-    label: string;
-  }>): Once per status transition after initialization. Append one entry to the conversation log.
+- `ki-tool-status-change` (CustomEvent<{ name: string; status: string; label: string }>): Once per status transition after initialization. Append one entry to the conversation log.
 
 ## Methods
 

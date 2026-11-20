@@ -13894,11 +13894,11 @@
         },
         {
           "event": "ki-tool-status-change",
-          "detail": "{ name: string; status: \"failed\" | \"pending\" | \"running\" | \"done\" | \"approval\"; label: string; }",
+          "detail": "{ name: string; status: string; label: string; }",
           "bubbles": true,
           "complexType": {
-            "original": "{\n    name: string;\n    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';\n    label: string;\n  }",
-            "resolved": "{ name: string; status: \"failed\" | \"pending\" | \"running\" | \"done\" | \"approval\"; label: string; }",
+            "original": "{ name: string; status: string; label: string }",
+            "resolved": "{ name: string; status: string; label: string; }",
             "references": {}
           },
           "cancelable": false,

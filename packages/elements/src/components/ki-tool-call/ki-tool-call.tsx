@@ -111,11 +111,7 @@ export class KiToolCall {
 
   /** Once per status transition after initialization. Append one entry to the conversation log. */
   @Event({ eventName: 'ki-tool-status-change', bubbles: true, composed: true, cancelable: false })
-  kiToolStatusChange!: EventEmitter<{
-    name: string;
-    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';
-    label: string;
-  }>;
+  kiToolStatusChange!: EventEmitter<{ name: string; status: string; label: string }>;
 
   /** A request to retry this tool call. Bind a declared surface action to handle it. */
   @Event({ eventName: 'ki-tool-retry', bubbles: true, composed: true, cancelable: false })

@@ -3313,11 +3313,7 @@ declare global {
         new (): HTMLKiToasterElement;
     };
     interface HTMLKiToolCallElementEventMap {
-        "ki-tool-status-change": {
-    name: string;
-    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';
-    label: string;
-  };
+        "ki-tool-status-change": { name: string; status: string; label: string };
         "ki-tool-retry": { name: string };
     }
     /**
@@ -5596,11 +5592,7 @@ declare namespace LocalJSX {
         /**
           * Once per status transition after initialization. Append one entry to the conversation log.
          */
-        "onKi-tool-status-change"?: (event: KiToolCallCustomEvent<{
-    name: string;
-    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';
-    label: string;
-  }>) => void;
+        "onKi-tool-status-change"?: (event: KiToolCallCustomEvent<{ name: string; status: string; label: string }>) => void;
         /**
           * Override the disclosure state. Without an override, failed calls are open and other calls are closed. Set open="false" for an explicit collapse. Using the summary sets the property to the reader's choice.
          */

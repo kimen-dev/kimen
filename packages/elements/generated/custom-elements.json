@@ -17559,7 +17559,7 @@
             {
               "name": "ki-tool-status-change",
               "type": {
-                "text": "CustomEvent<{\n    name: string;\n    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';\n    label: string;\n  }>"
+                "text": "CustomEvent<{ name: string; status: string; label: string }>"
               },
               "description": "Once per status transition after initialization. Append one entry to the conversation log."
             }
