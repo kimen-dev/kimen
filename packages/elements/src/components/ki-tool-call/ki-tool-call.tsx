@@ -15,15 +15,15 @@ import '../../../icons/wrench.js';
 
 import { formatToolCallDuration } from './ki-tool-call.duration';
 
-export type KiToolCallStatus = 'pending' | 'running' | 'done' | 'failed' | 'approval';
-
 const tones = {
   pending: 'neutral',
   running: 'info',
   done: 'success',
   failed: 'danger',
   approval: 'warning',
-} as const satisfies Record<KiToolCallStatus, string>;
+} as const;
+
+type KiToolCallStatus = keyof typeof tones;
 
 function visibleStatus(status: KiToolCallStatus): KiToolCallStatus {
   return Object.hasOwn(tones, status) ? status : 'pending';
@@ -61,7 +61,7 @@ export class KiToolCall {
   @Prop({ attribute: 'title', reflect: true }) toolTitle?: string;
 
   /** Lifecycle status. Unknown values display Pending. */
-  @Prop() status: KiToolCallStatus = 'pending';
+  @Prop() status: 'pending' | 'running' | 'done' | 'failed' | 'approval' = 'pending';
 
   /**
    * Non-negative elapsed time in milliseconds. Displayed only for Done.
@@ -111,7 +111,11 @@ export class KiToolCall {
 
   /** Once per status transition after initialization. Append one entry to the conversation log. */
   @Event({ eventName: 'ki-tool-status-change', bubbles: true, composed: true, cancelable: false })
-  kiToolStatusChange!: EventEmitter<{ name: string; status: KiToolCallStatus; label: string }>;
+  kiToolStatusChange!: EventEmitter<{
+    name: string;
+    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';
+    label: string;
+  }>;
 
   /** A request to retry this tool call. Bind a declared surface action to handle it. */
   @Event({ eventName: 'ki-tool-retry', bubbles: true, composed: true, cancelable: false })

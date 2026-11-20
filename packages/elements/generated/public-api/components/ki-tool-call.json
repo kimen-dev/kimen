@@ -356,7 +356,7 @@
         "description": "Once per status transition after initialization. Append one entry to the conversation log.",
         "replacement": null,
         "required": false,
-        "type": "CustomEvent<{ name: string; status: KiToolCallStatus; label: string }>"
+        "type": "CustomEvent<{\n    name: string;\n    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';\n    label: string;\n  }>"
       }
     },
     "methods": {},
@@ -613,12 +613,6 @@
           "value"
         ],
         "signature": "interface KiToolCall extends Components.KiToolCall, HTMLElement {\n}\nexport const KiToolCall: {\n    prototype: KiToolCall;\n    new (): KiToolCall;\n};"
-      },
-      "KiToolCallStatus": {
-        "kinds": [
-          "type"
-        ],
-        "signature": "export type KiToolCallStatus = 'pending' | 'running' | 'done' | 'failed' | 'approval';"
       },
       "defineCustomElement": {
         "kinds": [

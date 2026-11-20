@@ -13807,15 +13807,9 @@
           "name": "status",
           "type": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\"",
           "complexType": {
-            "original": "KiToolCallStatus",
+            "original": "'pending' | 'running' | 'done' | 'failed' | 'approval'",
             "resolved": "\"approval\" | \"done\" | \"failed\" | \"pending\" | \"running\"",
-            "references": {
-              "KiToolCallStatus": {
-                "location": "local",
-                "path": "src/components/ki-tool-call/ki-tool-call.tsx",
-                "id": "src/components/ki-tool-call/ki-tool-call.tsx::KiToolCallStatus"
-              }
-            }
+            "references": {}
           },
           "mutable": false,
           "attr": "status",
@@ -13900,18 +13894,12 @@
         },
         {
           "event": "ki-tool-status-change",
-          "detail": "{ name: string; status: KiToolCallStatus; label: string; }",
+          "detail": "{ name: string; status: \"failed\" | \"pending\" | \"running\" | \"done\" | \"approval\"; label: string; }",
           "bubbles": true,
           "complexType": {
-            "original": "{ name: string; status: KiToolCallStatus; label: string }",
-            "resolved": "{ name: string; status: KiToolCallStatus; label: string; }",
-            "references": {
-              "KiToolCallStatus": {
-                "location": "local",
-                "path": "src/components/ki-tool-call/ki-tool-call.tsx",
-                "id": "src/components/ki-tool-call/ki-tool-call.tsx::KiToolCallStatus"
-              }
-            }
+            "original": "{\n    name: string;\n    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';\n    label: string;\n  }",
+            "resolved": "{ name: string; status: \"failed\" | \"pending\" | \"running\" | \"done\" | \"approval\"; label: string; }",
+            "references": {}
           },
           "cancelable": false,
           "composed": true,
@@ -14480,11 +14468,6 @@
       "declaration": "export interface KiToastShowOptions {\n  /** One action, rendered as a ghost `ki-button size=\"sm\"`; its click calls `onClick`. */\n  action?: { label: string; onClick?: (event: MouseEvent) => void };\n  /** Shows the dismiss button; `true` by default. */\n  dismissible?: boolean;\n  /** Milliseconds before the toast leaves on its own; see `ki-toast`'s `duration`. */\n  duration?: number;\n  /** The message text. */\n  message: string;\n  /** The optional bold first line. */\n  title?: string;\n  /** `neutral` (default), `info`, `success`, `warning` or `danger`. */\n  tone?: string;\n}",
       "docstring": "What `show()` turns into a toast (spec 049 FR-018).",
       "path": "src/components/ki-toaster/ki-toaster.show.ts"
-    },
-    "src/components/ki-tool-call/ki-tool-call.tsx::KiToolCallStatus": {
-      "declaration": "export type KiToolCallStatus = 'pending' | 'running' | 'done' | 'failed' | 'approval';",
-      "docstring": "",
-      "path": "src/components/ki-tool-call/ki-tool-call.tsx"
     }
   }
 }

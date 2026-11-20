@@ -11,11 +11,11 @@ import React from 'react';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import type { Components } from '@kimen/elements/components';
 import { KiToolCall as KiToolCallElement, defineCustomElement as defineKiToolCall } from '@kimen/elements/components/ki-tool-call.js';
-import type { KiToolCallStatus, KiToolCallCustomEvent } from '@kimen/elements/components';
+import type { KiToolCallCustomEvent } from '@kimen/elements/components';
 import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
 export type KiToolCallEvents = {
-  onKiToolStatusChange: EventName<KiToolCallCustomEvent<{ name: string; status: KiToolCallStatus; label: string }>>,
+  onKiToolStatusChange: EventName<KiToolCallCustomEvent<{ name: string; status: 'pending' | 'running' | 'done' | 'failed' | 'approval'; label: string; }>>,
   onKiToolRetry: EventName<KiToolCallCustomEvent<{ name: string }>>
 };
 

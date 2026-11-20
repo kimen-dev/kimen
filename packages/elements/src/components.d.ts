@@ -45,7 +45,6 @@ import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
-import { KiToolCallStatus } from "./components/ki-tool-call/ki-tool-call";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
@@ -87,7 +86,6 @@ export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
-export { KiToolCallStatus } from "./components/ki-tool-call/ki-tool-call";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
     /**
@@ -2173,7 +2171,7 @@ export namespace Components {
           * Lifecycle status. Unknown values display Pending.
           * @default 'pending'
          */
-        "status": KiToolCallStatus;
+        "status": 'pending' | 'running' | 'done' | 'failed' | 'approval';
         /**
           * Optional human-readable label displayed beside the identifier.
          */
@@ -3315,7 +3313,11 @@ declare global {
         new (): HTMLKiToasterElement;
     };
     interface HTMLKiToolCallElementEventMap {
-        "ki-tool-status-change": { name: string; status: KiToolCallStatus; label: string };
+        "ki-tool-status-change": {
+    name: string;
+    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';
+    label: string;
+  };
         "ki-tool-retry": { name: string };
     }
     /**
@@ -5594,7 +5596,11 @@ declare namespace LocalJSX {
         /**
           * Once per status transition after initialization. Append one entry to the conversation log.
          */
-        "onKi-tool-status-change"?: (event: KiToolCallCustomEvent<{ name: string; status: KiToolCallStatus; label: string }>) => void;
+        "onKi-tool-status-change"?: (event: KiToolCallCustomEvent<{
+    name: string;
+    status: 'pending' | 'running' | 'done' | 'failed' | 'approval';
+    label: string;
+  }>) => void;
         /**
           * Override the disclosure state. Without an override, failed calls are open and other calls are closed. Set open="false" for an explicit collapse. Using the summary sets the property to the reader's choice.
          */
@@ -5628,7 +5634,7 @@ declare namespace LocalJSX {
           * Lifecycle status. Unknown values display Pending.
           * @default 'pending'
          */
-        "status"?: KiToolCallStatus;
+        "status"?: 'pending' | 'running' | 'done' | 'failed' | 'approval';
         /**
           * Optional human-readable label displayed beside the identifier.
          */
@@ -6076,7 +6082,7 @@ declare namespace LocalJSX {
     interface KiToolCallAttributes {
         "name": string;
         "toolTitle": string;
-        "status": KiToolCallStatus;
+        "status": 'pending' | 'running' | 'done' | 'failed' | 'approval';
         "duration": number;
         "open": boolean | undefined;
         "locale": string;
