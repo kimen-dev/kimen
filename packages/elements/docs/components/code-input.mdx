@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-code-input" />
+
+# ki-code-input
+
+Collect a short one-time code for sign-in or verification. The boxes show progress
+while one native text field handles paste, selection, undo, and browser autofill.
+
+```html
+<ki-code-input
+  label="Verification code"
+  name="otp"
+  length="6"
+  required
+  help-text="We sent a code to ana@example.com. It is valid for ten minutes."
+></ki-code-input>
+<ki-button type="button" variant="ghost">Resend code</ki-button>
+```
+
+The default mode accepts digits. Choose `type="alphanumeric"` to accept ASCII
+letters and digits and `size="sm"` for smaller cells. Supported lengths range
+from four to eight. Use `ki-input` for passwords and longer values.
+
+## Forms and events
+
+A named field contributes one string to a form. Required fields need a full
+code, and optional fields may be blank. A partial code blocks submission.
+`error-text` customizes the browser's validation message. Server errors go
+through `setCustomValidity(message)` and `reportValidity()` on the
+custom-elements build.
+
+`ki-input` carries `{ value }` after an edit changes the code. `ki-complete`
+carries the same detail after the edit fills every cell. Use completion to
+guide the next step and only auto-submit when the person cannot lose work.
+
+## Expiry and resend
+
+State the validity period in the help text. When the code expires, surface the
+error and keep the resend action available. Have the application clear the old
+code and give updated delivery instructions after a successful resend.
+
+## Customization
+
+Set `--ki-code-input-cell-size`, `--ki-code-input-cell-size-sm`,
+`--ki-code-input-gap` or `--ki-code-input-radius` to adjust cell geometry.
+The `cell` part exposes each box. The `input` part exposes the native field.

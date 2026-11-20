@@ -1,0 +1,23 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as Stories from '../ki-toolbar.stories';
+
+<Meta title="Docs/Components/ki-toolbar" />
+
+# ki-toolbar
+
+Group frequent commands in a named toolbar. A floating pill fits where you
+place it and can run horizontally or vertically. A docked toolbar uses the
+bottom edge with safe-area padding.
+
+<Canvas of={Stories.Playground} />
+<Canvas of={Stories.Vertical} />
+<Canvas of={Stories.FloatingWithCompanion} />
+<Canvas of={Stories.Docked} />
+
+Tab enters the action group once, then reaches the companion in the floating
+example. Use arrows, Home and End within the group. Give each icon button a
+name and choose the closest toolbar label for the task.
+
+Use `tone="vibrant"` for the accent surface. The `toolbar` part exposes the
+painted group. Use its background, foreground, image and backdrop filter
+tokens to theme the surface.

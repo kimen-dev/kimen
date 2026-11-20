@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-fab-menu" />
+
+# ki-fab-menu
+
+Use a floating action menu to group two to six related actions on one screen.
+
+```html
+<ki-fab-menu label="Create" position="fixed">
+  <ki-fab-menu-item icon-name="pencil" value="message">New message</ki-fab-menu-item>
+  <ki-fab-menu-item icon-name="calendar" href="/events/new">New event</ki-fab-menu-item>
+</ki-fab-menu>
+```
+
+For direct imports, call `defineCustomElement()` from
+`@kimen/elements/ki-fab-menu` and `@kimen/elements/ki-fab-menu-item`. Import
+`@kimen/elements/icons/pencil` and `@kimen/elements/icons/calendar` for the
+item glyphs in this example.
+
+## Interaction
+
+`label` names the closed trigger and the open menu. Set `close-label` to
+localize the open trigger. ArrowDown, Enter and Space open on the first
+action. ArrowUp opens on the last action. Use the vertical arrows, Home and
+End to move within the menu, Escape to return to the trigger, and Tab to
+continue through the page.
+
+The menu reports `ki-open` and `ki-close` when the stack changes state.
+`ki-select` reports `{ value }` from the selected item. An item without an
+explicit value reports its trimmed label. Items with `href` follow their
+native destination.
+
+## Placement and themes
+
+Static placement anchors to its host. Leave enough space above it for the
+stack. Fixed placement uses the viewport's block-end inline-end corner.
+Reserve clearance after your content and set `--ki-fab-mobile-nav-block-size`
+to the height of fixed navigation excluding the safe area.
+
+The closed trigger accepts the FAB variants `secondary`, `primary` and
+`surface`. The open trigger uses `primary`. A scrim dims the page by default.
+Set the `scrim` property to false or use `scrim="false"` in HTML to omit it.
+
+Use the `--ki-fab-menu-item-bg` and `--ki-fab-menu-item-fg` pair to style
+actions. The item and scrim each expose background image and backdrop filter
+tokens with `none` defaults.

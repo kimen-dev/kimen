@@ -57,6 +57,17 @@ function hasShadowFocus(control: HTMLButtonElement): boolean {
   return root instanceof ShadowRoot && root.activeElement === control;
 }
 
+async function chipHandle(value: string) {
+  const findHandle = () =>
+    fixture
+      .querySelector(`ki-chip[value="${value}"]`)
+      ?.shadowRoot?.querySelector('[part~="drag-handle"]') ?? null;
+  await expect.poll(findHandle).not.toBeNull();
+  const handle = findHandle();
+  if (!handle) throw new Error(`Missing drag handle for chip "${value}"`);
+  return page.elementLocator(handle);
+}
+
 it('S2 removes the picked value and focuses the next chip', async () => {
   fixture.innerHTML = recipients;
   const remove = vi.fn();
@@ -127,8 +138,9 @@ it.each([
 
 it('S7 drags the handle to reorder the reading order', async () => {
   const group = reorderable();
-  const handles = page.getByTestId('drag-handle');
-  await handles.nth(1).dropTo(handles.nth(0));
+  const design = await chipHandle('design');
+  const engineering = await chipHandle('eng');
+  await engineering.dropTo(design);
   expect(order(group)).toEqual(['eng', 'design']);
 });
 
@@ -151,9 +163,10 @@ it('S12 picks and places chips through their handles without activating the filt
   const group = reorderable();
   const activated = vi.fn();
   group.addEventListener('ki-change', activated);
-  const handles = page.getByTestId('drag-handle');
-  await handles.nth(1).click();
-  await handles.nth(0).click();
+  const engineering = await chipHandle('eng');
+  const design = await chipHandle('design');
+  await engineering.click();
+  await design.click();
   expect(order(group)).toEqual(['eng', 'design']);
   expect(activated).not.toHaveBeenCalled();
 });

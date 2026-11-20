@@ -1,0 +1,182 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+[part="field"],
+.editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+[part="field"] {
+  gap: calc(var(--ki-prompt-input-padding) * var(--ki-density-space-scale));
+  min-inline-size: 0;
+  padding: calc(var(--ki-prompt-input-padding) * var(--ki-density-space-scale));
+  border: var(--ki-prompt-input-border-width) solid var(--ki-prompt-input-border);
+  border-radius: var(--ki-prompt-input-radius);
+  background-color: var(--ki-prompt-input-bg);
+  background-image: var(--ki-prompt-input-bg-image);
+  backdrop-filter: var(--ki-prompt-input-backdrop-filter);
+  color: var(--ki-prompt-input-fg);
+}
+
+[part="field"]:focus-within {
+  border-color: var(--ki-focus-ring-color);
+}
+
+.sizer,
+textarea {
+  grid-area: 1 / 1;
+  box-sizing: border-box;
+  min-block-size: min(var(--ki-prompt-input-min-height), var(--ki-prompt-input-max-height));
+  max-block-size: var(--ki-prompt-input-max-height);
+  padding-block: var(--ki-prompt-input-editor-padding-block);
+  padding-inline: var(--ki-prompt-input-editor-padding-inline);
+  font-family: inherit;
+  font-size: var(--ki-typography-size-body-2);
+  line-height: var(--ki-typography-line-height-body-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.sizer {
+  visibility: hidden;
+  overflow: hidden;
+}
+
+textarea {
+  inline-size: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow: auto;
+  resize: none;
+}
+
+textarea::placeholder {
+  color: var(--ki-prompt-input-placeholder-fg);
+  opacity: 1;
+}
+
+:where(textarea, button):focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+[part="attachments"],
+[part="actions"],
+[part="tools"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ki-prompt-input-action-gap);
+  min-inline-size: 0;
+}
+
+[part="attachments"] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:host([hidden]),
+[hidden] {
+  display: none;
+}
+
+li,
+::slotted([slot="attachments"]) {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+button {
+  display: grid;
+  flex: none;
+  place-items: center;
+
+  --_action-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-control-size-sm) + var(--ki-density-control-offset))
+  );
+
+  inline-size: var(--_action-size);
+  block-size: var(--_action-size);
+  padding: 0;
+  border: var(--ki-prompt-input-border-width) solid var(--ki-button-secondary-neutral-rest-border);
+  border-radius: var(--ki-button-sm-radius);
+  background-color: var(--ki-button-secondary-neutral-rest-bg);
+  color: var(--ki-button-secondary-neutral-rest-fg);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button ki-icon {
+  inline-size: var(--ki-icon-button-sm-icon-size);
+  block-size: var(--ki-icon-button-sm-icon-size);
+}
+
+[part="attach"] {
+  border-color: transparent;
+  background-color: var(--ki-button-ghost-neutral-rest-bg);
+  color: var(--ki-button-ghost-neutral-rest-fg);
+}
+
+[part="send"] {
+  border-color: var(--ki-button-primary-neutral-rest-border);
+  background-color: var(--ki-button-primary-neutral-rest-bg);
+  color: var(--ki-button-primary-neutral-rest-fg);
+}
+
+@media (hover: hover) {
+  [part="attach"]:not(:disabled):hover {
+    background-color: var(--ki-button-ghost-neutral-hover-bg);
+    color: var(--ki-button-ghost-neutral-hover-fg);
+  }
+}
+
+button:disabled {
+  border-color: var(--ki-button-primary-neutral-disabled-border);
+  background-color: var(--ki-button-primary-neutral-disabled-bg);
+  color: var(--ki-button-primary-neutral-disabled-fg);
+  cursor: default;
+}
+
+[part="tools"] {
+  flex: auto;
+}
+
+[part="status"],
+[part="feedback"] {
+  font-size: var(--ki-typography-size-caption-2);
+  line-height: var(--ki-typography-line-height-caption-2);
+  overflow-wrap: anywhere;
+}
+
+[part="status"] {
+  color: var(--ki-prompt-input-placeholder-fg);
+}
+
+[part="feedback"] {
+  background-color: var(--ki-prompt-input-feedback-bg);
+  color: var(--ki-prompt-input-feedback-fg);
+}
+
+[part="status"]:empty,
+[part="feedback"]:empty {
+  position: absolute;
+}
+
+@media (forced-colors: active) {
+  [part="field"] {
+    border-color: CanvasText;
+  }
+
+  :where(textarea, button):focus-visible {
+    outline-color: Highlight;
+  }
+}

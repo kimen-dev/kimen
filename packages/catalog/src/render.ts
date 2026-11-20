@@ -20,6 +20,7 @@ import {
   writeDialogId,
 } from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
+import { MARKDOWN_ORIGINS_ATTRIBUTE } from './generated/url-scheme.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
 import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
@@ -120,9 +121,9 @@ export interface RenderOptions {
    */
   readonly catalog?: Catalog;
   /**
-   * The allowed origins of URL props (FR-004, S23). Absent, URL props are
-   * held to the scheme allowlist alone. Present — even empty — every URL
-   * prop value must be an absolute http(s) URL whose origin is listed
+   * The allowed origins of URL props (FR-004, S23) and Markdown destinations.
+   * Absent, URLs are held to the scheme allowlist alone. Present — even empty —
+   * each URL must be an absolute http(s) URL whose origin is listed
    * exactly as `URL.origin` prints it (`https://cdn.example.com`); relative
    * references are rejected, and an entry in any other form matches nothing.
    */
@@ -159,6 +160,16 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
  */
 export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
+}
+
+const PROMPT_INPUT_ACTIVATIONS = ['ki-submit', 'ki-stop'] as const;
+
+function promptInputActivations(tag: string, events: readonly string[]): boolean {
+  return (
+    tag === 'ki-prompt-input' &&
+    events.length === PROMPT_INPUT_ACTIVATIONS.length &&
+    PROMPT_INPUT_ACTIVATIONS.every((event) => events.includes(event))
+  );
 }
 
 /** These buttons use their declared change only when the spec enables toggle mode. */
@@ -257,20 +268,30 @@ export function guardNode(
       });
     }
   }
-  // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
-  // activation event. Chips select it by type. Other multi-event entries
-  // must declare which of their events activates the action.
+  // Renderer-native activation guard (FR-003, S19): a bound action needs one
+  // event in its current mode. Chip type and composer status select that
+  // event. Other multi-event entries must identify their activation event.
   if (node.action !== undefined) {
     const entry = ownEntry(state.components, node.component);
     const events = declaredEvents(entry);
     const activation = entry?.activationEvent;
-    if (activation !== undefined && !events.includes(activation)) {
+    if (node.component === 'ki-pagination' && ownEntry(node.props, 'href-template') !== undefined) {
       state.diagnostics.push({
-        message: `${node.component} activationEvent must name a declared event`,
+        message:
+          'ki-pagination uses native navigation when href-template is supplied; omit the URL template to bind an action',
         path: `${path}.action`,
-        rule: 'invalid-activation-event',
+        rule: 'ambiguous-activation-event',
         value: node.action,
       });
+    } else if (activation !== undefined) {
+      if (!events.includes(activation)) {
+        state.diagnostics.push({
+          message: `${node.component} activationEvent must name a declared event`,
+          path: `${path}.action`,
+          rule: 'invalid-activation-event',
+          value: node.action,
+        });
+      }
     } else if (chipActivations(node.component, events)) {
       const kind =
         node.props?.['type'] ??
@@ -283,7 +304,7 @@ export function guardNode(
           value: node.action,
         });
       }
-    } else if (activation === undefined && events.length > 1) {
+    } else if (events.length > 1 && !promptInputActivations(node.component, events)) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
@@ -296,10 +317,8 @@ export function guardNode(
     // Renderer-native name guard (defence in depth for hand-built catalogs that
     // never crossed createCatalog), the same grammar registration applies
     // (prop-names.ts): an on* name would compile into a live inline handler, a
-    // reserved name (style, class, slot, id; 032 FR-015) is never written from
-    // spec data, and an exotic name would throw InvalidCharacterError out of
-    // setAttribute — reject all three fail-closed before buildNode touches the
-    // DOM.
+    // reserved name (032 FR-015) is never written from spec data, and an
+    // exotic name would throw InvalidCharacterError out of setAttribute.
     const violation = propNameViolation(name);
     if (violation !== null) {
       state.diagnostics.push({
@@ -405,8 +424,28 @@ function liveData(
   element: Element,
   props: Readonly<Record<string, Scalar>>,
   entry: CatalogEntry | undefined,
+  event: Event,
 ): Record<string, boolean | number | string> {
   const data: Record<string, boolean | number | string> = { ...props };
+  // An explicit activation can carry a requested number before the host
+  // commits it. Read only own data fields for declared numeric props.
+  if (entry?.activationEvent === event.type && 'detail' in event) {
+    const detail = event.detail;
+    if (typeof detail === 'object' && detail !== null) {
+      for (const [name, constraint] of Object.entries(entry.props)) {
+        if (constraint.type !== 'number') continue;
+        const value: unknown = Object.getOwnPropertyDescriptor(detail, name)?.value;
+        if (
+          typeof value === 'number' &&
+          Number.isSafeInteger(value) &&
+          value >= (constraint.minimum ?? -Infinity) &&
+          value <= (constraint.maximum ?? Infinity)
+        ) {
+          data[name] = value;
+        }
+      }
+    }
+  }
   const stateProps = hasToggleActivation(entry) ? ['selected'] : LIVE_STATE_PROPS;
   for (const name of stateProps) {
     const constraint = ownEntry(entry?.props, name);
@@ -416,6 +455,9 @@ function liveData(
     const live = readLiveScalar(element, name, constraint);
     if (live !== undefined) {
       data[name] = live;
+    } else if (name === 'value' && constraint.required !== true && 'value' in element) {
+      // A cleared optional value should not resurrect the initial spec prop.
+      delete data['value'];
     }
   }
   return data;
@@ -477,10 +519,13 @@ export function writeProp(
   if (attributeValue === undefined) {
     element.removeAttribute(name);
   } else if (attributeValue === false) {
-    // Built-in Stencil props that default to true require an explicit false.
+    // Preserve explicit false for default-on props and for ToolCall’s automatic disclosure.
     // Registered components continue to use boolean attribute presence.
     const entry = ownEntry(builtInCatalog.components, component);
-    if (ownEntry(entry?.props, name)?.default === true) {
+    if (
+      ownEntry(entry?.props, name)?.default === true ||
+      (component === 'ki-tool-call' && name === 'open')
+    ) {
       element.setAttribute(name, 'false');
     } else {
       element.removeAttribute(name);
@@ -493,11 +538,23 @@ export function writeProp(
 /**
  * Creates the element of one validated, guarded node: a catalog component
  * or a native primitive (spec 037), the latter with what the renderer pins
- * on it (an image's referrer policy and container-fit sizing).
+ * on it (an image's referrer policy and container-fit sizing). Markdown
+ * receives the host's scope before any source is attached.
  */
-export function createNodeElement(doc: Document, component: string): Element {
+export function createNodeElement(
+  doc: Document,
+  component: string,
+  allowedUrlOrigins: readonly string[] | undefined,
+): Element {
   const element = doc.createElement(component);
   pinNative(element, component);
+  if (component === 'ki-markdown' && allowedUrlOrigins !== undefined) {
+    const origins = Array.isArray(allowedUrlOrigins) ? Array.from<unknown>(allowedUrlOrigins) : [];
+    element.setAttribute(
+      MARKDOWN_ORIGINS_ATTRIBUTE,
+      JSON.stringify(origins.every((origin) => typeof origin === 'string') ? origins : []),
+    );
+  }
   return element;
 }
 
@@ -568,9 +625,14 @@ export function wireActivation(
     return;
   }
   const events = declaredEvents(entry);
-  const variantActivation = chipActivations(element.localName, events);
-  const activation = entry?.activationEvent ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
-  const clickActivated = !variantActivation && activation === DEFAULT_ACTIVATION_EVENT;
+  const declaredActivation = entry?.activationEvent;
+  const variantActivation =
+    declaredActivation === undefined && chipActivations(element.localName, events);
+  const composerActivation =
+    declaredActivation === undefined && promptInputActivations(element.localName, events);
+  const activation = declaredActivation ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
+  const clickActivated =
+    !variantActivation && !composerActivation && activation === DEFAULT_ACTIVATION_EVENT;
   const toggleActivation = hasToggleActivation(entry);
   const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
   const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
@@ -600,14 +662,33 @@ export function wireActivation(
 
   // Accept only the component's own event for its current mode (S17–S19).
   // The control's default behavior remains intact, and actions carry its live state.
-  for (const name of variantActivation ? CHIP_ACTIVATIONS : [activation]) {
+  const activationEvents = variantActivation
+    ? CHIP_ACTIVATIONS
+    : composerActivation
+      ? PROMPT_INPUT_ACTIVATIONS
+      : [activation];
+  for (const name of activationEvents) {
     element.addEventListener(name, (event: Event) => {
       if (event.target !== element || !claim(event)) return;
       const props = currentProps();
       if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
       if (variantActivation && chipActivation(element, props) !== name) return;
       if (toggleActivation && props['toggle'] !== true) return;
-      dispatch(liveData(element, props, entry));
+      const data = liveData(element, props, entry, event);
+      if (composerActivation) {
+        const status: unknown = Reflect.get(element, 'status') ?? props['status'] ?? 'idle';
+        const constraint = ownEntry(entry?.props, 'status');
+        if (constraint === undefined || !matchesConstraint(status, constraint)) return;
+        if (
+          !(
+            (status === 'idle' && name === 'ki-submit') ||
+            (status === 'streaming' && name === 'ki-stop')
+          )
+        )
+          return;
+        data['status'] = status;
+      }
+      dispatch(data);
     });
   }
 }
@@ -625,8 +706,9 @@ function buildNode(
   onAction: ((event: ActionEvent) => void) | undefined,
   entries: Readonly<Record<string, CatalogEntry>>,
   idFor: DialogIdFor,
+  allowedUrlOrigins: readonly string[] | undefined,
 ): Element {
-  const element = createNodeElement(doc, node.component);
+  const element = createNodeElement(doc, node.component, allowedUrlOrigins);
   const props = node.props ?? {};
   writeProps(element, node.component, props, idFor);
   writeDialogId(element, node.id, idFor);
@@ -653,6 +735,7 @@ function buildNode(
           onAction,
           entries,
           idFor,
+          allowedUrlOrigins,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -837,6 +920,7 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
       options.onAction,
       catalog.components,
       scopedDialogIds(options.surface),
+      options.allowedUrlOrigins,
     ),
   );
   return { diagnostics: [], ok: true };
@@ -959,6 +1043,7 @@ export function createStreamingRenderer(
           options.onAction,
           catalog.components,
           scopedDialogIds(options.surface),
+          context.allowedUrlOrigins,
         ),
       );
       return { diagnostics: [], ok: true };

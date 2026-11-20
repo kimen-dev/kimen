@@ -1,8 +1,8 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
-  --_ki-tab-fg: var(--ki-tab-unselected-rest-fg);
-  --_ki-tab-bg: var(--ki-tab-unselected-rest-bg);
+  --_ki-tab-fg: var(--_ki-tab-unselected-fg, var(--ki-tab-unselected-rest-fg));
+  --_ki-tab-bg: var(--_ki-tab-unselected-bg, var(--ki-tab-unselected-rest-bg));
 
   /* The size ramp (spec 050). The strip decides the size: ki-tabs sets these
      on its slotted tabs, the ki-avatar-group pattern. Medium is the unsized
@@ -23,15 +23,17 @@
   font-size: var(--_ki-tab-font-size);
   font-weight: var(--ki-tab-font-weight);
   line-height: var(--_ki-tab-line-height);
-  background: var(--_ki-tab-bg);
+  background-color: var(--_ki-tab-bg);
+  background-image: var(--ki-tab-bg-image);
+  backdrop-filter: var(--ki-tab-backdrop-filter);
   border-radius: var(--ki-tab-radius);
   cursor: pointer;
   outline: none;
 }
 
 :host([selected]) {
-  --_ki-tab-fg: var(--ki-tab-selected-rest-fg);
-  --_ki-tab-bg: var(--ki-tab-selected-rest-bg);
+  --_ki-tab-fg: var(--_ki-tab-selected-fg, var(--ki-tab-selected-rest-fg));
+  --_ki-tab-bg: var(--_ki-tab-selected-bg, var(--ki-tab-selected-rest-bg));
 }
 
 @media (hover: hover) {
@@ -100,14 +102,49 @@
   min-inline-size: var(--ki-density-target-min);
 }
 
+/* Keep the established start/label/end flex row for label-only tabs. The
+ * icon tab groups its icon and label, giving a primary indicator the exact
+ * content width even when the density target makes the tab wider. */
+:host([data-ki-tab-with-icon]) [part="tab"] {
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(
+      max(var(--_ki-tab-min-block-size), var(--_ki-tab-icon-height, 0px)) +
+      var(--ki-density-control-offset)
+    )
+  );
+}
+
+.content {
+  position: var(--_ki-tab-icon-content-position, relative);
+  display: flex;
+  flex-direction: var(--_ki-tab-icon-direction, row);
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+  gap: var(--_ki-tab-icon-gap, var(--ki-tab-icon-inline-gap));
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+  inline-size: var(--ki-tab-icon-size);
+  block-size: var(--ki-tab-icon-size);
+}
+
+::slotted(svg[slot="icon"]) {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
 [part="indicator"] {
   position: absolute;
-  inset-inline: var(--ki-tab-padding-inline);
-  inset-block-end: 0;
+  inset-inline: var(--_ki-tab-indicator-inset, var(--ki-tab-padding-inline));
+  inset-block-end: var(--_ki-tab-indicator-block-end, 0);
   display: none;
-  block-size: var(--ki-tab-indicator-size);
+  block-size: var(--_ki-tab-indicator-height, var(--ki-tab-indicator-size));
   background: var(--ki-tab-indicator-color);
-  border-radius: var(--ki-tab-indicator-radius);
+  border-radius: var(--_ki-tab-indicator-radius, var(--ki-tab-indicator-radius));
 }
 
 :host([selected]) [part="indicator"] {
@@ -155,7 +192,8 @@
 }
 
 /* The HTML hidden attribute outranks the host's own display. */
-:host([hidden]) {
+:host([hidden]),
+:host([data-ki-tab-unlabelled]) {
   display: none;
 }
 
@@ -166,7 +204,13 @@
  * The selection indicator is a background: Canvas on Canvas, and no tab
  * reads as selected. It takes the selection colour. */
 @media (forced-colors: active) {
+  :host([selected]:not([disabled])) [part="tab"] {
+    forced-color-adjust: none;
+    color: LinkText;
+  }
+
   [part="indicator"] {
+    forced-color-adjust: none;
     background: Highlight;
   }
 }

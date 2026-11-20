@@ -1,0 +1,817 @@
+{
+  "component": {
+    "attributes": {
+      "collapse-at": {
+        "default": "'48rem'",
+        "deprecatedSince": null,
+        "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "heading-level": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Native heading level for the screen title. Use 1 through 6 to fit the page outline.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "label": {
+        "default": "'Main'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the header's primary navigation landmark. Override for localization.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "navigation-label": {
+        "default": "'Open navigation'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the compact navigation button and menu. Override for localization.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "overflow-label": {
+        "default": "'More actions'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the app-bar overflow button and menu. Override for localization.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "scroll-behavior": {
+        "default": "'elevate'",
+        "deprecatedSince": null,
+        "description": "Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.",
+        "replacement": null,
+        "required": false,
+        "type": "\"collapse\" | \"elevate\" | \"none\""
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Bar size. Only app-bar mode has large and extra-large two-row sizes.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+      },
+      "sticky": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Keep the bar at the block start of the scroll container and draw a bottom border.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "subtitle": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Supporting text displayed under the screen heading.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "title": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Screen heading, set with the HTML title attribute or the screenTitle property.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "title-align": {
+        "default": "'start'",
+        "deprecatedSince": null,
+        "description": "Center a compact single-row title when the app bar has at most one action.",
+        "replacement": null,
+        "required": false,
+        "type": "\"center\" | \"start\""
+      },
+      "variant": {
+        "default": "'header'",
+        "deprecatedSince": null,
+        "description": "Header for primary navigation, or app-bar for the current screen. Defaults to header.",
+        "replacement": null,
+        "required": false,
+        "type": "\"app-bar\" | \"header\""
+      }
+    },
+    "cssProperties": {
+      "--ki-app-bar-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Filter applied to the entire app-bar backdrop.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting app-bar fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image above the app-bar fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting app-bar title and control ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Height of a normal or collapsed app bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-lg-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Expanded height of a large app bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-lg-title-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Expanded two-row app-bar title size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-scrolled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "App-bar fill when its container scrolls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-scrolled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "App-bar title and control ink when its container scrolls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-scrolled-subtitle-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "App-bar subtitle ink when its container scrolls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-subtitle-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting app-bar subtitle ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-title-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Screen heading typeface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-title-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One-row app-bar title size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-xl-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Expanded height of an extra-large app bar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-elevation-e3": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hairline edge on a structural surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-indicator-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the line identifying a selected navigation destination.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-12xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 12xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-7xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 7xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-touch-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum target dimension for navigation controls on a coarse pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-medium-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-text-low-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for text low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Filter applied to the entire header backdrop.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Application header fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image above the header fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge color for sticky bars and menus.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Application header brand and control ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Height of a normal application header.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-height-compact": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Height of a small application header.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Bar marking the current primary destination.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-item-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Primary navigation item resting surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-item-current-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current navigation destination surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-item-current-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current navigation destination ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Primary navigation item resting ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-item-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hovered control or highlighted menu item surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-item-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hovered control or highlighted menu item ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-menu-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Menu and trigger corner radius.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Padding at the inline edges of both bars.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-heading-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height heading 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-title-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height title 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-title-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size title 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-display-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight display semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Application navigation with responsive primary links, or a per-screen app\nbar with a real heading, optional search, and overflow actions.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapper for the trailing actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "bar": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Painted header or app-bar surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "brand": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapper for the header brand.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native screen heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "leading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapper for the app-bar leading control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "links": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapper for the primary links, including when displayed as a menu.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "menu": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Anchored navigation or overflow menu surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "menu-item": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Generated screen action in the overflow menu.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "menu-trigger": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native button opening collapsed navigation or overflow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "navigation": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named primary navigation landmark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "search": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Wrapper for the app-bar search control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "subtitle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting text below the screen heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "collapseAt": {
+        "default": "'48rem'",
+        "deprecatedSince": null,
+        "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "headingLevel": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Native heading level for the screen title. Use 1 through 6 to fit the page outline.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "label": {
+        "default": "'Main'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the header's primary navigation landmark. Override for localization.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "navigationLabel": {
+        "default": "'Open navigation'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the compact navigation button and menu. Override for localization.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "overflowLabel": {
+        "default": "'More actions'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the app-bar overflow button and menu. Override for localization.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "screenTitle": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Screen heading, set with the HTML title attribute or the screenTitle property.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "scrollBehavior": {
+        "default": "'elevate'",
+        "deprecatedSince": null,
+        "description": "Tint on scroll with elevate, also shrink tall bars with collapse, or opt out with none.",
+        "replacement": null,
+        "required": false,
+        "type": "\"collapse\" | \"elevate\" | \"none\""
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Bar size. Only app-bar mode has large and extra-large two-row sizes.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+      },
+      "sticky": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Keep the bar at the block start of the scroll container and draw a bottom border.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "subtitle": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Supporting text displayed under the screen heading.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "titleAlign": {
+        "default": "'start'",
+        "deprecatedSince": null,
+        "description": "Center a compact single-row title when the app bar has at most one action.",
+        "replacement": null,
+        "required": false,
+        "type": "\"center\" | \"start\""
+      },
+      "variant": {
+        "default": "'header'",
+        "deprecatedSince": null,
+        "description": "Header for primary navigation, or app-bar for the current screen. Defaults to header.",
+        "replacement": null,
+        "required": false,
+        "type": "\"app-bar\" | \"header\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\".",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "brand": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Header mode: the brand link or wordmark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "leading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "App bar: a named Back or Open navigation control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "search": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "App bar: an accessible search control that can shrink inside its row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-top-nav.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-top-nav.d.ts",
+    "symbols": {
+      "KiTopNav": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiTopNav extends Components.KiTopNav, HTMLElement {\n}\nexport const KiTopNav: {\n    prototype: KiTopNav;\n    new (): KiTopNav;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-top-nav.js"
+  }
+}

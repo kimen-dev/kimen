@@ -1,0 +1,16 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TimeInputStories from '../ki-time-input.stories';
+
+<Meta of={TimeInputStories} />
+
+# TimeInput playground
+
+<Canvas of={TimeInputStories.Playground} />
+
+<Controls of={TimeInputStories.Playground} />
+
+<Canvas of={TimeInputStories.Suggestions} />
+
+<Canvas of={TimeInputStories.TwelveHour} />
+
+The Required, Disabled, and RightToLeft stories show the field in those states.

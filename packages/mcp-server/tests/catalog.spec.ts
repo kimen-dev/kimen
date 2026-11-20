@@ -128,7 +128,7 @@ describe('Kimen MCP server: the catalog (038 S1-S4)', () => {
     expect(text).toContain('--ki-button-');
   });
 
-  it.each(['ki-carousel', '__proto__', 'constructor'])(
+  it.each(['ki-unlisted', '__proto__', 'constructor'])(
     'S3: describing "%s", which is outside the catalog, is refused by name',
     async (tag) => {
       const result = await server.client.callTool({

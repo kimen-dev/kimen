@@ -206,7 +206,6 @@ button[part="chip"]:not(:disabled):is(:active, [data-ki-pressed]),
   }
 
   :where([part="chip"], [part="remove"]):focus-visible {
-    outline: var(--ki-focus-ring-width) solid Highlight;
-    outline-offset: var(--ki-focus-ring-offset);
+    outline-color: Highlight;
   }
 }

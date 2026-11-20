@@ -1,0 +1,78 @@
+{
+  "ki": {
+    "rating": {
+      "on-fg": {
+        "$value": "{ki.text.warning-high-em}",
+        "$description": "Ink of a filled glyph."
+      },
+      "on-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Backdrop of a filled glyph."
+      },
+      "off-fg": {
+        "$value": "{ki.outline.control}",
+        "$description": "Ink of an outlined glyph."
+      },
+      "off-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Backdrop of an outlined glyph."
+      },
+      "disabled-fg": {
+        "$value": "{ki.text.low-em}",
+        "$description": "Glyph ink while the rating is unavailable."
+      },
+      "hover-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Surface of the choice under the pointer."
+      },
+      "hover-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image over the hovered choice surface."
+      },
+      "hover-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for the hovered choice."
+      },
+      "label-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Backdrop of the visible question."
+      },
+      "label-fg": {
+        "$value": "{ki.text.base}",
+        "$description": "Ink of the visible question."
+      },
+      "label-gap": {
+        "$value": "{ki.layout.spacing.xs}",
+        "$description": "Space between the question and scale."
+      },
+      "score-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Backdrop of the visible score."
+      },
+      "score-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink of the visible score."
+      },
+      "score-gap": {
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Space between the glyphs and visible score."
+      },
+      "size": {
+        "$value": "{ki.glyph.size.md}",
+        "$description": "Size of a rating glyph."
+      },
+      "gap": {
+        "$value": "{ki.layout.spacing.xxs}",
+        "$description": "Space between rating glyphs or targets."
+      },
+      "target-size": {
+        "$value": "{ki.control.size.sm}",
+        "$description": "Default whole-step target size."
+      },
+      "target-radius": {
+        "$value": "{ki.control.radius.item}",
+        "$description": "Corners of the interactive target."
+      }
+    }
+  }
+}

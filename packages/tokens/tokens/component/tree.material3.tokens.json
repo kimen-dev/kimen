@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "tree": {
+      "radius": {
+        "$value": "{ki.corner.action-frame}",
+        "$description": "Material 3 rounding of the hierarchy surface."
+      }
+    }
+  }
+}

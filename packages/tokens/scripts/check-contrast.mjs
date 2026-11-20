@@ -17,6 +17,8 @@ const NON_TEXT_MIN_RATIO = 3;
 // because the fill happened to be dark enough, and that accident is what hid
 // the checked fill sitting at 2.35:1 against a dark page.
 const NON_TEXT_COMPONENTS = new Set(['checkbox', 'radio']);
+// Rating has both graphic and text pairs. Only the glyphs use WCAG 1.4.11.
+const NON_TEXT_RATING_INKS = new Set(['--ki-rating-on-fg', '--ki-rating-off-fg']);
 // A theme is the default stylesheet plus, for an opt-in theme, the stylesheet of
 // its overrides loaded after it — exactly what a consumer page loads.
 const DEFAULT_STYLESHEET = new URL('../dist/css/tokens.css', import.meta.url);
@@ -42,6 +44,18 @@ const CONTRAST_PAIRS = [
   { text: '--ki-text-danger', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
 ];
+
+// Both variants share the destination inks. Check each ink against both
+// surfaces since the item and its painted background have distinct stems.
+const MOBILE_NAV_SURFACES = ['--ki-mobile-nav-bg', '--ki-mobile-nav-floating-bg'];
+const MOBILE_NAV_TEXT_PAIRS = MOBILE_NAV_SURFACES.flatMap((surface) =>
+  ['--ki-mobile-nav-item-fg', '--ki-mobile-nav-item-current-fg'].map((text) => ({ text, surface })),
+);
+const MOBILE_NAV_STATE_PAIRS = MOBILE_NAV_SURFACES.map((surface) => ({
+  text: '--ki-mobile-nav-indicator-fg',
+  surface,
+  minRatio: NON_TEXT_MIN_RATIO,
+}));
 
 export function parseColor(value) {
   const color = value.trim().toLowerCase();
@@ -317,6 +331,7 @@ const SHARED_SURFACE_FOREGROUNDS = {
     '--ki-stat-delta-success-fg',
     '--ki-stat-delta-danger-fg',
   ],
+  '--ki-tooltip-rich-bg': ['--ki-tooltip-rich-heading-fg'],
 };
 
 export function componentPairs(declarations) {
@@ -334,7 +349,10 @@ export function componentPairs(declarations) {
           component: match[1],
           text,
           surface: name,
-          minRatio: NON_TEXT_COMPONENTS.has(match[1]) ? NON_TEXT_MIN_RATIO : MIN_RATIO,
+          minRatio:
+            NON_TEXT_COMPONENTS.has(match[1]) || NON_TEXT_RATING_INKS.has(text)
+              ? NON_TEXT_MIN_RATIO
+              : MIN_RATIO,
         });
       }
     }
@@ -1100,6 +1118,7 @@ function sweepEnhancedContrast(theme, scheme, declarations) {
   // disabled ink draws from it and stays as it is.
   const textPairs = [
     ...ENHANCED_TEXT_PAIRS,
+    ...MOBILE_NAV_TEXT_PAIRS,
     ...componentPairs(declarations).filter((pair) => pair.minRatio === MIN_RATIO),
   ];
   for (const pair of textPairs) {
@@ -1216,17 +1235,25 @@ function evaluateContext(theme, scheme, declarations) {
   }
 
   // A translucent component cell composites over the page. Inline links
-  // can also sit directly on higher surface levels, including inside cards.
+  // and rating glyphs can also sit directly on higher surface levels, including inside cards.
   // A component's -icon ink sits on its -bg at the non-text minimum.
   const icons = swept.flatMap(({ surface }) => {
     const ink = surface.replace(/-bg$/u, '-icon');
     return declarations.has(ink) ? [{ text: ink, surface, minRatio: NON_TEXT_MIN_RATIO }] : [];
   });
-  for (const pair of [...CONTRAST_PAIRS, ...swept, ...icons]) {
+  for (const pair of [
+    ...CONTRAST_PAIRS,
+    ...MOBILE_NAV_TEXT_PAIRS,
+    ...MOBILE_NAV_STATE_PAIRS,
+    ...swept,
+    ...icons,
+  ]) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
     const backdrops =
-      pair.component === 'link' && rawSurface.a < 1 ? CONTROL_PAGE_SURFACES : ['--ki-surface-s0'];
+      (pair.component === 'link' || pair.component === 'rating') && rawSurface.a < 1
+        ? CONTROL_PAGE_SURFACES
+        : ['--ki-surface-s0'];
     const min = pair.minRatio ?? MIN_RATIO;
 
     for (const backdrop of backdrops) {

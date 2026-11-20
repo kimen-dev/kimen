@@ -1,0 +1,21 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TreeStories from '../ki-tree.stories';
+
+<Meta title="Docs/Recipes/Tree" />
+
+# Tree recipes
+
+## Populate a lazy branch
+
+Open the tokens branch to trigger `ki-load`. The example appends a child
+after a short simulated delay. In an application, append the fetched items
+to `event.detail.item` or clear `lazy` if no items arrive.
+
+<Canvas of={TreeStories.Lazy} />
+
+## Navigate in a right-to-left layout
+
+Tab into the tree, press Left to enter Guides, and press Enter on a link.
+Right returns to the parent branch.
+
+<Canvas of={TreeStories.RTLNavigation} />

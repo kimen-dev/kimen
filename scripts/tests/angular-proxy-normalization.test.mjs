@@ -46,6 +46,35 @@ test('Angular rejects mismatched event metadata', () => {
   );
 });
 
+test('Angular strips unquoted native event fields and their attached documentation', () => {
+  const audio = `import { Component, EventEmitter, Output } from '@angular/core';
+import type { Components } from '@kimen/elements/components';
+import type { KiAudioCustomEvent } from '@kimen/elements/components';
+@Component({
+  outputs: ['play', 'timeupdate'],
+})
+class KiAudio {
+  @Output() play = new EventEmitter<KiAudioCustomEvent<void>>();
+  @Output() timeupdate = new EventEmitter<KiAudioCustomEvent<void>>();
+}
+export declare interface KiAudio extends Components.KiAudio {
+  /** Title of the recording. */
+  title: string;
+  /**
+   * Forwarded when playback starts.
+   */
+  play: EventEmitter<KiAudioCustomEvent<void>>;
+  timeupdate: EventEmitter<KiAudioCustomEvent<void>>;
+}
+`;
+
+  const { source, orphanCount } = normalizeAngularProxies(audio);
+
+  assert.equal(orphanCount, 2);
+  assert.doesNotMatch(source, /outputs:|@Output|EventEmitter|KiAudioCustomEvent|Forwarded/u);
+  assert.match(source, /\/\*\* Title of the recording\. \*\/\n {2}title: string;/u);
+});
+
 test('normalizes each kebab-case output when one directive declares multiple events', (t) => {
   const fixture = realpathSync(mkdtempSync(join(tmpdir(), 'kimen-angular-proxies-')));
   t.after(() => rmSync(fixture, { recursive: true, force: true }));

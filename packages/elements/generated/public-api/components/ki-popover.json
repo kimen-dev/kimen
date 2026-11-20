@@ -1,6 +1,14 @@
 {
   "component": {
     "attributes": {
+      "appearance": {
+        "default": "'default'",
+        "deprecatedSince": null,
+        "description": "Rich shares the tooltip's raised surface, body and heading styles. With\n`kind=\"toggletip\"` it enables actions and moves focus inside on open.",
+        "replacement": null,
+        "required": false,
+        "type": "\"default\" | \"rich\" | undefined"
+      },
       "arrow": {
         "default": "true",
         "deprecatedSince": null,
@@ -20,7 +28,7 @@
       "kind": {
         "default": "'dialog'",
         "deprecatedSince": null,
-        "description": "Use dialog for controls or toggletip for supplemental text.",
+        "description": "Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.",
         "replacement": null,
         "required": false,
         "type": "\"dialog\" | \"toggletip\""
@@ -155,6 +163,158 @@
         "required": false,
         "type": null
       },
+      "--ki-tooltip-rich-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the rich tooltip or rich popover.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layer over the rich surface fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-border-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline ink of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline thickness of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the rich surface body text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body text size of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body text weight of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the rich surface heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the rich surface heading over the shared fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Distance between the rich heading and its body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text size of the rich surface heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text weight of the rich surface heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body text line height of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-max-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum inline size of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block-axis inset of the rich surface, before density scaling.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline-axis inset of the rich surface, before density scaling.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised elevation of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-typography-family-body": {
         "default": null,
         "deprecatedSince": null,
@@ -219,6 +379,14 @@
       }
     },
     "properties": {
+      "appearance": {
+        "default": "'default'",
+        "deprecatedSince": null,
+        "description": "Rich shares the tooltip's raised surface, body and heading styles. With\n`kind=\"toggletip\"` it enables actions and moves focus inside on open.",
+        "replacement": null,
+        "required": false,
+        "type": "\"default\" | \"rich\" | undefined"
+      },
       "arrow": {
         "default": "true",
         "deprecatedSince": null,
@@ -238,7 +406,7 @@
       "kind": {
         "default": "'dialog'",
         "deprecatedSince": null,
-        "description": "Use dialog for controls or toggletip for supplemental text.",
+        "description": "Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.",
         "replacement": null,
         "required": false,
         "type": "\"dialog\" | \"toggletip\""
@@ -272,7 +440,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Dialog content or toggletip text.",
+        "description": "Dialog content or toggletip text. A rich toggletip also accepts actions.",
         "replacement": null,
         "required": false,
         "type": null
@@ -293,6 +461,12 @@
           "value"
         ],
         "signature": "interface KiPopover extends Components.KiPopover, HTMLElement {\n}\nexport const KiPopover: {\n    prototype: KiPopover;\n    new (): KiPopover;\n};"
+      },
+      "KiPopoverAppearance": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiPopoverAppearance = 'default' | 'rich';"
       },
       "KiPopoverKind": {
         "kinds": [

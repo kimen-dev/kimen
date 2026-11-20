@@ -1,0 +1,81 @@
+{
+  "ki": {
+    "markdown": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Answer surface backing. It defaults to transparent so the enclosing surface shows through."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image over the answer's solid backing."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for the answer surface."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink for prose and headings."
+      },
+      "muted-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "Backing of quotes and table headings."
+      },
+      "muted-bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image over the muted backing."
+      },
+      "muted-backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for quotes and table headings."
+      },
+      "muted-fg": {
+        "$type": "color",
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink for quotes and table headings, strengthened under more contrast."
+      },
+      "inline-code-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "Solid backing of an inline code span."
+      },
+      "inline-code-bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image over the inline code backing."
+      },
+      "inline-code-backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for inline code."
+      },
+      "inline-code-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink for source within an inline code span."
+      },
+      "quote-border": {
+        "$type": "color",
+        "$value": "{ki.outline.med-em}",
+        "$description": "Logical start rule of a quotation and the ink of a thematic divider."
+      },
+      "block-gap": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Spacing between Markdown blocks at standard density."
+      },
+      "heading-family": {
+        "$type": "fontFamily",
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Typeface for Markdown headings."
+      }
+    }
+  }
+}

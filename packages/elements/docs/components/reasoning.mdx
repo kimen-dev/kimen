@@ -1,0 +1,24 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/AI/Reasoning" />
+
+# Reasoning
+
+Use `<ki-reasoning>` to give readers access to an assistant's plan or supporting
+steps. It starts collapsed. While it is open, steps added to the default slot
+appear as they arrive.
+
+```html
+<ki-reasoning status="done" duration="12000">
+  <ol>
+    <li>Check the inputs.</li>
+    <li>Compare the available outcomes.</li>
+  </ol>
+</ki-reasoning>
+```
+
+The summary changes from “Thinking…” to “Thought for 12 seconds.” Use `open`
+to expand the disclosure programmatically. Without an elapsed time, a completed
+summary reads “Thought.”
+
+[Component workshop and customization](?path=/docs/docs-components-ki-reasoning--docs)

@@ -1,0 +1,46 @@
+---
+title: Code input
+description: Collect a one-time verification code in one field with a box for each character.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use `ki-code-input` for four to eight digits or ASCII letters and digits. Use
+`ki-input` for passwords, longer codes or free text. The code is one native
+text field, so a person can paste the entire code, edit it with the keyboard
+or use the browser's one-time-code suggestion when available.
+
+<Demo code={`<ki-code-input label="Verification code" name="otp" required help-text="We sent a code to ana@example.com. It is valid for ten minutes."></ki-code-input>`} />
+
+## Alphanumeric codes
+
+Set `type="alphanumeric"` when the code includes letters. Specify the length and
+tell the person which message contains the code.
+
+<Demo code={`<ki-code-input label="Recovery code" length="4" type="alphanumeric" size="sm" help-text="Enter the four characters from your verification email."></ki-code-input>`} />
+
+## Verification and resend
+
+Give the field a visible label. Include the delivery destination and validity
+period in the help text. Place a `ki-button variant="ghost" type="button"` next
+to the field for resending a code. The application tracks expiration and
+handles resend. Let the person know when the code expires and when a new
+code is issued.
+
+Use `error-text` to customize a constraint message. For a code rejected by
+the server, set the error with `setCustomValidity(message)` and call
+`reportValidity()` on the custom-elements build. Clear the error with
+`setCustomValidity('')` when the person edits or requests a new code.
+
+Listen for `ki-input` to follow edits and `ki-complete` to know when all boxes
+are filled. Only submit on completion if the person cannot lose work. A
+named field submits one string, including leading zeroes.
+
+## API reference
+
+<CemApi tag="ki-code-input" />
+
+## Workshop
+
+[Open ki-code-input in Storybook](/storybook/?path=/docs/docs-components-ki-code-input--docs)

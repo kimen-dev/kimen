@@ -1,0 +1,123 @@
+{
+  "ki": {
+    "timeline": {
+      "dot": {
+        "size": {
+          "$type": "dimension",
+          "$value": "{ki.layout.spacing.9xl}",
+          "$description": "Diameter of the timeline marker."
+        },
+        "radius": {
+          "$type": "dimension",
+          "$value": "{ki.corner.activity-mark}",
+          "$description": "Round corners of the timeline marker."
+        },
+        "icon-size": {
+          "$type": "dimension",
+          "$value": "{ki.layout.spacing.2xl}",
+          "$description": "Size of the decorative glyph inside the timeline marker."
+        },
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s2}",
+          "$description": "Fill of the neutral timeline marker."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.med-em}",
+          "$description": "Glyph color on the neutral timeline marker."
+        },
+        "bg-image": {
+          "$type": "other",
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional decorative image over the timeline marker fill."
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$description": "Complete backdrop filter behind a timeline marker, off by default."
+        },
+        "primary": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.primary-low-em}",
+            "$description": "Fill of the primary timeline marker."
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.primary-on-primary-light}",
+            "$description": "Glyph color on the primary timeline marker."
+          }
+        },
+        "success": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.success-tint}",
+            "$description": "Fill of the success timeline marker."
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.success-high-em}",
+            "$description": "Glyph color on the success timeline marker."
+          }
+        },
+        "warning": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.warning-tint}",
+            "$description": "Fill of the warning timeline marker."
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.warning-high-em}",
+            "$description": "Glyph color on the warning timeline marker."
+          }
+        },
+        "danger": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.danger-tint}",
+            "$description": "Fill of the danger timeline marker."
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.danger-high-em}",
+            "$description": "Glyph color on the danger timeline marker."
+          }
+        }
+      },
+      "line": {
+        "$type": "color",
+        "$value": "{ki.outline.low-em}",
+        "$description": "Color of the decorative line connecting timeline markers."
+      },
+      "line-width": {
+        "$type": "dimension",
+        "$value": "{ki.control.border-width}",
+        "$description": "Hairline width of the timeline connector."
+      },
+      "time-bg": {
+        "$type": "color",
+        "$value": "{ki.surface.transparent}",
+        "$description": "The timestamp shows the surrounding surface through its transparent background."
+      },
+      "time-fg": {
+        "$type": "color",
+        "$value": "{ki.text.med-em}",
+        "$description": "Text color of the timeline timestamp."
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Space between marker and text and between timeline entries."
+      },
+      "item": {
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text color of the event summary and details."
+        }
+      }
+    }
+  }
+}

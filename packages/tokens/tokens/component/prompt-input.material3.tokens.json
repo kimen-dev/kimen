@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "prompt-input": {
+      "radius": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Use the Material 3 theme's extra-small large-surface corner for the composer."
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # ki-tooltip
 
-> A transient, text-only description bubble for one slotted trigger.
+> A transient, text-only hint with an optional heading.
 
 ## When to use
 
@@ -11,13 +11,13 @@ elsewhere in the interface.
 ## When not to use
 
 essential or unique information in a tooltip; interactive
-or rich content in a tooltip; form validation messages, disabled controls,
-or touch-primary flows. Use visible layout text or a future `ki-popover`
-pattern for those cases.
+content in a tooltip; form validation messages, disabled controls, or
+touch-primary flows. Use visible layout text or a rich `ki-popover` with
+`kind="toggletip"` when the content includes actions.
 
 ## Examples
 
-`label` is the entire tooltip content, reflected to the slotted trigger's accessible description; the trigger must already carry its own accessible name:
+`label` is the entire plain tooltip content, reflected to the slotted trigger's accessible description; the trigger must already carry its own accessible name:
 
 ```html
 <ki-tooltip label="Copies a shareable link to the clipboard">
@@ -41,14 +41,29 @@ An empty or whitespace-only `label` renders no tooltip and exposes no descriptio
 </ki-tooltip>
 ```
 
+Use a heading and direct text when the explanation needs more structure.
+The external trigger must be in the same document or shadow tree.
+
+```html
+<button id="retention-info" type="button">Retention</button>
+<ki-tooltip for="retention-info" heading="Grace period">
+  Deleted projects stay restorable for 30 days.
+</ki-tooltip>
+```
+
+For an explanation with controls, use `ki-popover` with
+`kind="toggletip"` and `appearance="rich"`.
+
 ## Attributes
 
-- `label` (string, default ''): The entire tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a future popover.
+- `for` (string | undefined): ID of the rich tooltip's external trigger in the same document or shadow tree.
+- `heading` (string | undefined): Rich tooltip heading. Pair it with `for` and optional direct text in the default slot.
+- `label` (string, default ''): The entire plain tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a popover.
 - `placement` ("bottom" | "end" | "start" | "top", default 'top'): Preferred placement for the tooltip. The component may flip or clamp the rendered placement to keep the bubble inside the viewport; unknown runtime values fall back to `top`. When NOT to use: do not depend on placement for meaning or reading order.
 
 ## Slots
 
-- (default): Exactly one interactive trigger. The component reflects `label` to the trigger's `aria-description`.
+- (default): One trigger for a plain tooltip, or direct explanatory text when `for` and `heading` are provided. Rich tooltips accept text only.
 
 ## Parts
 
@@ -89,5 +104,24 @@ None.
 - `--ki-tooltip-padding-block`: dimension used by the tooltip component for padding block (MarsUI card padding Space/xl 12px on all sides).
 - `--ki-tooltip-padding-inline`: dimension used by the tooltip component for padding inline (MarsUI card padding Space/xl 12px on all sides).
 - `--ki-tooltip-radius`: dimension used by the tooltip component for radius (MarsUI Tooltip master 12089:7621 List_wrap: Radius/big_component/radius_xs 16px).
+- `--ki-tooltip-rich-backdrop-filter`: Complete backdrop filter of the rich surface.
+- `--ki-tooltip-rich-bg`: Fill of the rich tooltip or rich popover.
+- `--ki-tooltip-rich-bg-image`: Optional image layer over the rich surface fill.
+- `--ki-tooltip-rich-border-color`: Outline ink of the rich surface.
+- `--ki-tooltip-rich-border-width`: Outline thickness of the rich surface.
+- `--ki-tooltip-rich-fg`: Ink of the rich surface body text.
+- `--ki-tooltip-rich-font-size`: Body text size of the rich surface.
+- `--ki-tooltip-rich-font-weight`: Body text weight of the rich surface.
+- `--ki-tooltip-rich-heading-family`: Typeface of the rich surface heading.
+- `--ki-tooltip-rich-heading-fg`: Ink of the rich surface heading over the shared fill.
+- `--ki-tooltip-rich-heading-gap`: Distance between the rich heading and its body.
+- `--ki-tooltip-rich-heading-size`: Text size of the rich surface heading.
+- `--ki-tooltip-rich-heading-weight`: Text weight of the rich surface heading.
+- `--ki-tooltip-rich-line-height`: Body text line height of the rich surface.
+- `--ki-tooltip-rich-max-width`: Maximum inline size of the rich surface.
+- `--ki-tooltip-rich-padding-block`: Block-axis inset of the rich surface, before density scaling.
+- `--ki-tooltip-rich-padding-inline`: Inline-axis inset of the rich surface, before density scaling.
+- `--ki-tooltip-rich-radius`: Corner radius of the rich surface.
+- `--ki-tooltip-rich-shadow`: Raised elevation of the rich surface.
 - `--ki-tooltip-shadow`: shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap).
 - `--ki-typography-family-body`: semantic font family for typography family body.

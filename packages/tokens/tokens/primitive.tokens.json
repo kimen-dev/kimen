@@ -812,6 +812,16 @@
     },
     "size": {
       "$type": "dimension",
+      "app-bar": {
+        "lg": {
+          "$value": "7rem",
+          "$description": "Height of a large two-row app bar."
+        },
+        "xl": {
+          "$value": "9.5rem",
+          "$description": "Height of an extra-large two-row app bar."
+        }
+      },
       "border": {
         "hairline": {
           "$value": "1px",
@@ -850,9 +860,17 @@
         "$value": "24px",
         "$description": "The smallest pointer target any density may produce: WCAG 2.5.8 (AA) asks for 24 x 24 CSS px. In px on purpose: WCAG measures CSS px, and a page that shrinks its root font size must not shrink the floor."
       },
+      "target-mobile-nav": {
+        "$value": "48px",
+        "$description": "Minimum destination target size in a mobile bottom navigation bar, measured in CSS pixels."
+      },
       "target-touch": {
         "$value": "44px",
         "$description": "The pointer target of the touch density (spec 045 Amendment A1): WCAG 2.5.5 Target Size (Enhanced, AAA) and Apple's Human Interface Guidelines ask for 44 x 44 CSS px. In px for the same reason as target-min."
+      },
+      "prompt-input-max": {
+        "$value": "12rem",
+        "$description": "Height cap for a growing assistant draft before it scrolls."
       },
       "menu-inline-min": {
         "$value": "14rem",
@@ -865,6 +883,10 @@
       "qr": {
         "$value": "8rem",
         "$description": "QR symbol edge: the Figma master's 128x128 symbol frame (nodes 12019:6059 / 16158:27560), as a dedicated surface size decoupled from ki.space (DNA brief section 3). Replaces the interim 120px ki.space.24xl declaration."
+      },
+      "tooltip-rich": {
+        "$value": "19rem",
+        "$description": "Maximum inline size of an anchored help card with a heading and short explanation."
       },
       "toast": {
         "$value": "22.5rem",
@@ -895,6 +917,10 @@
         }
       },
       "surface": {
+        "compact-list": {
+          "$value": "12rem",
+          "$description": "Maximum block size of a compact scrolling list."
+        },
         "xxs": {
           "$value": "18rem",
           "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Floating hint surfaces such as tooltips."
@@ -928,6 +954,20 @@
         "grid-fixed-breakpoint": {
           "$value": "30rem",
           "$description": "Inline size at which a fixed grid can distribute multiple tracks."
+        }
+      },
+      "sidebar": {
+        "width": {
+          "$value": "15rem",
+          "$description": "Expanded sidebar inline size."
+        },
+        "rail-width": {
+          "$value": "4rem",
+          "$description": "Collapsed sidebar inline size."
+        },
+        "row-height": {
+          "$value": "2.25rem",
+          "$description": "Default navigation row block size."
         }
       }
     },

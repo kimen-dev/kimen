@@ -32,14 +32,20 @@ export function normalizeAngularProxies(source) {
 
   const outputLine = /^ {2}@Output\(\) (\w+) = new EventEmitter<.+>\(\);\n/gmu;
   const metadataLine = /^ {2}outputs: \[([^\]]+)\],?\n/gmu;
-  const phantomField = /^ {2}'([a-z][a-z0-9-]*)': EventEmitter<.+>;\n/gmu;
+  // Stencil quotes dashed names and emits lowercase native names (such as
+  // `play`) as identifiers, optionally after a JSDoc block (issue 414).
+  const phantomField =
+    /(?:^ {2}\/\*\*(?:(?!\*\/)[\s\S])*\*\/\n)?^ {2}(?:'([a-z][a-z0-9-]*)'|([a-z][a-z0-9]*)): EventEmitter<.+>;\n/gmu;
   const metadataName = /^'([a-z][a-z0-9-]*)'$/u;
 
   const orphanNames = Array.from(source.matchAll(outputLine), ([, name]) => name);
   const metadataNames = Array.from(source.matchAll(metadataLine), ([, list]) => list)
     .flatMap((list) => list.split(','))
     .map((entry) => metadataName.exec(entry.trim())?.[1]);
-  const phantomNames = Array.from(source.matchAll(phantomField), ([, name]) => name);
+  const phantomNames = Array.from(
+    source.matchAll(phantomField),
+    ([, quoted, bare]) => quoted ?? bare,
+  );
   const camelCase = (name) => name?.replace(/-([a-z])/gu, (_match, letter) => letter.toUpperCase());
   const namesMatch = (left, right) =>
     left.length === right.length && left.toSorted().every((name, index) => name === right[index]);

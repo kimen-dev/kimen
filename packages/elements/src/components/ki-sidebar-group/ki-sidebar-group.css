@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  position: relative;
+  min-inline-size: 0;
+  margin-block-start: var(--ki-sidebar-group-gap);
+  font-family: var(--ki-sidebar-font-family);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="heading"] {
+  position: var(--_ki-sidebar-heading-position, static);
+  clip-path: var(--_ki-sidebar-heading-clip, none);
+  inline-size: var(--_ki-sidebar-heading-size, auto);
+  block-size: var(--_ki-sidebar-heading-size, auto);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  margin: 0;
+  padding-inline: var(--ki-sidebar-item-padding);
+  padding-block-end: var(--ki-sidebar-item-gap);
+  background-color: var(--ki-sidebar-group-bg);
+  background-image: var(--ki-sidebar-group-bg-image);
+  backdrop-filter: var(--ki-sidebar-group-backdrop-filter);
+  color: var(--ki-sidebar-group-fg);
+  font-family: var(--ki-sidebar-group-font-family);
+  font-size: var(--ki-sidebar-group-font-size);
+  font-weight: var(--ki-sidebar-item-weight);
+  line-height: var(--ki-sidebar-group-line-height);
+}
+
+[part="list"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ki-sidebar-item-gap);
+}

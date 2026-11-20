@@ -1,0 +1,26 @@
+{
+  "ki": {
+    "timeline": {
+      "dot": {
+        "success": {
+          "bg": {
+            "$value": "{ki.surface.success-base-em}",
+            "$description": "Material 3 tonal container for a success marker."
+          }
+        },
+        "warning": {
+          "bg": {
+            "$value": "{ki.surface.warning-base-em}",
+            "$description": "Material 3 tonal container for a warning marker."
+          }
+        },
+        "danger": {
+          "bg": {
+            "$value": "{ki.surface.danger-base-em}",
+            "$description": "Material 3 tonal container for a danger marker."
+          }
+        }
+      }
+    }
+  }
+}

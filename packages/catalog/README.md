@@ -192,6 +192,10 @@ written exactly as `URL.origin` prints an origin (`https://cdn.example.com`,
 `https://localhost:8443`) — a host name alone, a trailing slash or a path
 matches nothing, so a typo can only narrow what is accepted.
 
+The renderers pass the same scope to `ki-markdown`. Its links and opt-in
+images use the URL policy when rendering. A blocked destination leaves the
+link label or image alternative text visible and inert.
+
 A prop is URL-typed because its constraint says `format: 'url'`. As a
 backstop, a string prop named like a fetchable native attribute (`src`,
 `href`, `poster`, `srcset`, `action`, `formaction`, `data`, `cite`,

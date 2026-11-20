@@ -32,3 +32,14 @@ default slot when your application displays formatted Markdown.
 ```html
 <ki-message message-role="assistant" streaming>Choose the export format</ki-message>
 ```
+
+## Alternative replies
+
+```html
+<ki-message branch-index="2" branch-count="3">Choose JSON for a readable copy.</ki-message>
+```
+
+Handle `ki-branch-change` to show the requested alternative. Set
+`branchIndex` to `event.detail.index` when replacing the reply content.
+Set `actions-label` when the reply supplies a toolbar. The Conversation
+guide includes the complete Message actions recipe.

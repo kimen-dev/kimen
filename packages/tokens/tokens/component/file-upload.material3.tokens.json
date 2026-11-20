@@ -1,0 +1,18 @@
+{
+  "ki": {
+    "file-upload": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Drop zone corner radius on the Material 3 shape scale."
+      },
+      "row": {
+        "radius": {
+          "$type": "dimension",
+          "$value": "{ki.radius.component.md}",
+          "$description": "File row corner radius on the Material 3 shape scale."
+        }
+      }
+    }
+  }
+}

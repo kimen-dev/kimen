@@ -1,0 +1,26 @@
+---
+title: ki-mobile-nav-item
+description: A labeled link with a decorative icon and optional unread count for MobileNav.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+
+Place this link directly inside `ki-mobile-nav`. Register the glyph referenced
+by `icon-name` and supply short, visible destination text in the default slot.
+Set `current` on the item that matches the route.
+
+```html
+<ki-mobile-nav-item href="/inbox" icon-name="inbox" count="3">Inbox</ki-mobile-nav-item>
+```
+
+The example's link name is “Inbox, 3 new”. The badge displays `99+` for larger
+counts and the accessible name includes the full count. To localize the
+unread suffix, supply a `count-label` with a `{count}` placeholder.
+
+## API reference
+
+<CemApi tag="ki-mobile-nav-item" />
+
+## Workshop
+
+[Open MobileNav item in Storybook](/storybook/?path=/docs/docs-components-ki-mobile-nav-item--docs)

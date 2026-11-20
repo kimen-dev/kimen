@@ -1,0 +1,154 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]),
+[hidden] {
+  display: none;
+}
+
+details {
+  background-color: var(--ki-tool-call-bg);
+  background-image: var(--ki-tool-call-bg-image);
+  backdrop-filter: var(--ki-tool-call-backdrop-filter);
+  color: var(--ki-tool-call-fg);
+  border: var(--ki-tool-call-border-width) solid var(--ki-tool-call-border);
+  border-radius: var(--ki-tool-call-radius);
+  font-size: var(--ki-tool-call-font-size);
+  line-height: var(--ki-tool-call-line-height);
+}
+
+summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) fit-content(50%) auto;
+  align-items: center;
+  gap: var(--ki-tool-call-gap);
+  box-sizing: border-box;
+  min-block-size: var(--ki-density-target-min);
+  padding-block: var(--ki-tool-call-gap);
+  padding-inline: var(--ki-tool-call-padding);
+  border-radius: inherit;
+  list-style: none;
+  cursor: pointer;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+.identity {
+  display: grid;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  gap: var(--ki-tool-call-inline-gap);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+ki-spinner {
+  flex: none;
+}
+
+ki-badge::part(badge) {
+  block-size: auto;
+  min-block-size: var(--ki-badge-sm-height);
+  white-space: normal;
+}
+
+.glyph {
+  color: var(--ki-tool-call-icon);
+  font-size: var(--ki-tool-call-icon-size);
+}
+
+details[open] .chevron {
+  rotate: 180deg;
+}
+
+[part="body"]:not([hidden]) {
+  display: grid;
+  gap: var(--ki-tool-call-gap);
+  padding-block-end: var(--ki-tool-call-padding);
+  padding-inline: var(--ki-tool-call-padding);
+}
+
+details:not([open]) > [part="body"] {
+  display: none;
+}
+
+[part="name"] {
+  font-family: var(--ki-tool-call-mono-family);
+  font-size: var(--ki-tool-call-caption-size);
+}
+
+.caption {
+  margin-block-end: var(--ki-tool-call-inline-gap);
+  font-size: var(--ki-tool-call-caption-size);
+}
+
+[part="payload"] {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  background-color: var(--ki-tool-call-code-bg);
+  color: var(--ki-tool-call-code-fg);
+  border-radius: var(--ki-tool-call-code-radius);
+}
+
+::slotted(ki-code-block) {
+  --ki-code-bg: var(--ki-tool-call-code-bg);
+}
+
+[part="retry"] {
+  justify-self: start;
+  box-sizing: border-box;
+  min-block-size: var(--ki-density-target-min);
+  min-inline-size: var(--ki-density-target-min);
+  padding-inline: var(--ki-tool-call-gap);
+  border: 0;
+  border-radius: var(--ki-tool-call-code-radius);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+summary:focus-visible,
+[part="retry"]:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+@media (hover: hover) {
+  [part="retry"]:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chevron {
+    transition: rotate var(--ki-tool-call-transition-duration) var(--ki-tool-call-transition-easing);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ki-spinner::part(ring) {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  details {
+    border-color: CanvasText;
+  }
+
+  summary:focus-visible,
+  [part="retry"]:focus-visible {
+    outline-color: CanvasText;
+  }
+}
