@@ -8,3 +8,7 @@ cd "$(git rev-parse --show-toplevel)"
 pnpm --filter @kimen/tokens build
 pnpm --filter @kimen/elements build
 pnpm --filter @kimen/catalog build
+# The standalone binary embeds its package version and the compiled surface.
+pnpm --filter @kimen/emitter build
+pnpm --filter @kimen/adapter-mcp-apps build
+pnpm --filter @kimen/mcp-server build

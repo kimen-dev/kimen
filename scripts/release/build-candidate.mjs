@@ -12,11 +12,20 @@ import {
   writeFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { isAbsolute, join, relative, resolve } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { promisify } from 'node:util';
 import { gunzipSync } from 'node:zlib';
 
 import { canonicalJson } from '../lib/canonical-json.mjs';
+import {
+  MCP_BINARY,
+  MCP_PACKAGE,
+  stageMcpPackage,
+  validateMcpPackage,
+  verifyMcpBundleNotices,
+  verifyMcpTarball,
+} from './mcp-tarball.mjs';
+import { releasePackages } from './release-plan.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -27,18 +36,12 @@ const CHECKSUM_FILE = 'SHA256SUMS';
 const REPOSITORY_URL = 'git+https://github.com/kimen-dev/kimen.git';
 const RELEASE_WORKFLOW = '.github/workflows/release.yml';
 const RELEASE_ENVIRONMENT = 'npm';
-const REQUIRED_PACKAGES = Object.freeze([
-  Object.freeze({
-    name: '@kimen/elements',
-    directory: 'elements',
-    fileStem: 'kimen-elements',
-  }),
-  Object.freeze({
-    name: '@kimen/tokens',
-    directory: 'tokens',
-    fileStem: 'kimen-tokens',
-  }),
-]);
+const REQUIRED_PACKAGES = [...releasePackages].map(([name, path]) => ({
+  name,
+  directory: basename(dirname(path)),
+  fileStem: name.slice(1).replace('/', '-'),
+}));
+const PACKAGE_NAMES = [...releasePackages.keys()].join(', ');
 // Apache-2.0 §4 asks every redistribution to carry the licence text and the
 // notices that pertain to it, and the MIT material the bundles embed asks the
 // same of its own notice. npm packs what the package directory holds, so a
@@ -114,7 +117,7 @@ function validatePackageRecord(record, expected, version, index) {
   assertExactKeys(record, ['file', 'integrity', 'name', 'sha256', 'size'], label);
   if (record.name !== expected.name) {
     fail(
-      `Candidate package set must be exactly @kimen/elements and @kimen/tokens in canonical order; found ${String(record.name)}`,
+      `Candidate package set must be exactly ${PACKAGE_NAMES} in canonical order; found ${String(record.name)}`,
     );
   }
   const expectedFile = expectedPackageFile(expected, version);
@@ -155,7 +158,7 @@ export function validateCandidateManifest(manifest) {
     fail('A dry-run candidate tag must be null');
   }
   if (!Array.isArray(manifest.packages) || manifest.packages.length !== REQUIRED_PACKAGES.length) {
-    fail('Candidate exact package set must contain @kimen/elements and @kimen/tokens');
+    fail(`Candidate exact package set must contain ${PACKAGE_NAMES}`);
   }
   for (const [index, expected] of REQUIRED_PACKAGES.entries()) {
     validatePackageRecord(manifest.packages[index], expected, manifest.version, index);
@@ -333,9 +336,7 @@ function validateRepositoryMetadata(manifest, expected) {
 function validateSourcePackageManifest(manifest, expected, { mode, version }) {
   assertPlainObject(manifest, `${expected.name} package manifest`);
   if (manifest.name !== expected.name) {
-    fail(
-      `Candidate package set must be exactly @kimen/elements and @kimen/tokens; found ${String(manifest.name)}`,
-    );
+    fail(`Candidate package set must be exactly ${PACKAGE_NAMES}; found ${String(manifest.name)}`);
   }
   if (manifest.version !== version) {
     fail(`${expected.name} version ${String(manifest.version)} does not match ${version}`);
@@ -344,6 +345,7 @@ function validateSourcePackageManifest(manifest, expected, { mode, version }) {
     fail(`Private release package ${expected.name} is forbidden; private must be false`);
   }
   validateRepositoryMetadata(manifest, expected);
+  if (expected.name === MCP_PACKAGE) validateMcpPackage(manifest);
   const lifecycle = forbiddenLifecycleScripts(manifest);
   if (lifecycle.length > 0) {
     fail(`${expected.name} contains forbidden publish lifecycle scripts: ${lifecycle.join(', ')}`);
@@ -503,7 +505,7 @@ export async function buildCandidate(options) {
     !Array.isArray(packageDirectories) ||
     packageDirectories.length !== REQUIRED_PACKAGES.length
   ) {
-    fail('Candidate package set must be exactly @kimen/elements and @kimen/tokens');
+    fail(`Candidate package set must be exactly ${PACKAGE_NAMES}`);
   }
 
   const packageInputs = [];
@@ -518,7 +520,7 @@ export async function buildCandidate(options) {
     const expected = packageDefinition(manifest.name);
     if (expected === undefined || packageInputs.some((input) => input.expected === expected)) {
       fail(
-        `Candidate package set must be exactly @kimen/elements and @kimen/tokens; unexpected or duplicate ${String(manifest.name)}`,
+        `Candidate package set must be exactly ${PACKAGE_NAMES}; unexpected or duplicate ${String(manifest.name)}`,
       );
     }
     const validatedDirectory = await validatePackageDirectory(repositoryRoot, directory, expected);
@@ -556,14 +558,22 @@ export async function buildCandidate(options) {
       const expectedFile = expectedPackageFile(input.expected, version);
       const isolatedHome = join(temporaryRoot, `home-${input.expected.directory}`);
       await mkdir(isolatedHome, { recursive: true, mode: 0o700 });
+      const isMcp = input.expected.name === MCP_PACKAGE;
+      const directory = isMcp
+        ? await stageMcpPackage(input.directory, join(temporaryRoot, 'mcp-package'), input.manifest)
+        : input.directory;
       const packedPath = await packPackage({
-        directory: input.directory,
+        directory,
         destination: staging,
         isolatedHome,
         expectedFile,
       });
       const bytes = await readFile(packedPath);
       verifyPackedLegalFiles(bytes, input.expected);
+      if (isMcp) {
+        verifyPackedManifest(bytes, input.expected, { mode, version });
+        await verifyMcpTarball(bytes, version);
+      }
       packageFiles.set(expectedFile, bytes);
       records.push(packageRecordFromBytes(input.expected, version, bytes));
     }
@@ -662,6 +672,13 @@ function verifyPackedManifest(bytes, expected, candidateManifest) {
     mode: candidateManifest.mode,
     version: candidateManifest.version,
   });
+  if (expected.name === MCP_PACKAGE) {
+    validateMcpPackage(manifest, { packed: true });
+    const files = entryMap(entries, `${MCP_PACKAGE} tarball`);
+    const bundle = files.get(`package/${MCP_BINARY}`);
+    if (!bundle?.length) fail(`${MCP_PACKAGE} tarball is missing package/${MCP_BINARY}`);
+    verifyMcpBundleNotices(bundle.toString('utf8'), files.get('package/NOTICE').toString('utf8'));
+  }
 }
 
 export async function verifyCandidate({ archivePath, expectedSha256, environment = {} }) {
@@ -722,8 +739,8 @@ export async function verifyCandidate({ archivePath, expectedSha256, environment
     ) {
       fail(`${record.name} tarball digest, integrity or size mismatch`);
     }
-    verifyPackedManifest(bytes, REQUIRED_PACKAGES[index], manifest);
     verifyPackedLegalFiles(bytes, REQUIRED_PACKAGES[index]);
+    verifyPackedManifest(bytes, REQUIRED_PACKAGES[index], manifest);
     sumInputs.set(record.file, bytes);
   }
   const checksums = files.get(CHECKSUM_FILE);
@@ -733,7 +750,9 @@ export async function verifyCandidate({ archivePath, expectedSha256, environment
   ) {
     fail('Candidate SHA256SUMS does not match manifest and package bytes');
   }
-  return { candidateSha256, manifest };
+  const server = manifest.packages.find(({ name }) => name === MCP_PACKAGE);
+  const mcpServer = await verifyMcpTarball(files.get(server.file), manifest.version);
+  return { candidateSha256, manifest, mcpServer };
 }
 
 function validateEvidence(

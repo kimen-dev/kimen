@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, it, onTestFinished } from 'vitest';
 
+import { mcpFixtureFields, writeMcpFixtureFiles } from '../tests/fixtures/mcp-package.mjs';
+
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const candidateCli = join(repositoryRoot, 'scripts/release/candidate-cli.mjs');
 
@@ -33,6 +35,7 @@ async function createRepository() {
   for (const [name, directory] of [
     ['@kimen/elements', 'elements'],
     ['@kimen/tokens', 'tokens'],
+    ['@kimen/mcp-server', 'mcp-server'],
   ]) {
     const packageDirectory = join(root, 'packages', directory);
     await mkdir(packageDirectory, { recursive: true });
@@ -51,6 +54,7 @@ async function createRepository() {
           private: true,
           type: 'module',
           files: ['index.js', 'NOTICE'],
+          ...(directory === 'mcp-server' ? mcpFixtureFields : {}),
           repository: {
             type: 'git',
             url: 'git+https://github.com/kimen-dev/kimen.git',
@@ -61,6 +65,7 @@ async function createRepository() {
         2,
       )}\n`,
     );
+    if (directory === 'mcp-server') await writeMcpFixtureFiles(packageDirectory, '0.0.0');
   }
   mustRun('git', ['add', '.'], root);
   mustRun('git', ['commit', '-m', 'fixture'], root);
@@ -93,6 +98,7 @@ it('S7 CLI builds and independently verifies one dry-run candidate', async () =>
   expect(result.manifest.packages.map(({ name }) => name)).toEqual([
     '@kimen/elements',
     '@kimen/tokens',
+    '@kimen/mcp-server',
   ]);
   expect((await readFile(result.archivePath)).length).toBeGreaterThan(0);
 

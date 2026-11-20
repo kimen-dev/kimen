@@ -23,6 +23,9 @@ import { fileURLToPath } from 'node:url';
 
 import { build } from 'esbuild';
 
+const { bundledNpmPackages, MCP_BUNDLE_INVENTORY_PREFIX, mergeBundledPackages } = await import(
+  new URL('../../../scripts/lib/bundled-package-inventory.mjs', import.meta.url).href
+);
 const { stockSurfaceIconModules } = await import(
   new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href
 );
@@ -31,6 +34,10 @@ const packageRoot = resolve(here, '..');
 const manifestFile = resolve(packageRoot, '../elements/generated/custom-elements.json');
 const generatedFile = resolve(packageRoot, 'src/generated/manifest.ts');
 const outFile = resolve(packageRoot, 'dist/kimen-mcp.mjs');
+const surfaceInventory = resolve(
+  packageRoot,
+  '../adapter-mcp-apps/src/generated/surface-packages.json',
+);
 
 const SHORTHAND = /^[a-z][a-z0-9-]*$/u;
 const CHECK = process.argv.includes('--check');
@@ -116,7 +123,6 @@ async function bundle() {
     // Paths esbuild writes into the bundle are relative to this directory:
     // pin it, so the bytes do not depend on where the build runs from.
     absWorkingDir: packageRoot,
-    banner: { js: '#!/usr/bin/env node' },
     bundle: true,
     stdin: {
       contents: [
@@ -128,13 +134,23 @@ async function bundle() {
     format: 'esm',
     legalComments: 'eof',
     logLevel: 'warning',
+    metafile: true,
     outfile: outFile,
     platform: 'node',
     plugins: [tsExtensionPlugin],
     target: 'node22',
     write: false,
   });
-  return result.outputFiles[0].contents;
+  const packages = mergeBundledPackages(
+    await bundledNpmPackages(result.metafile, packageRoot),
+    JSON.parse(await readFile(surfaceInventory, 'utf8')),
+  );
+  // The nested surface is already bundled into an HTML string when esbuild
+  // sees it here. Carry both inventories in the binary the release packs.
+  return Buffer.concat([
+    Buffer.from(`#!/usr/bin/env node\n${MCP_BUNDLE_INVENTORY_PREFIX}${JSON.stringify(packages)}\n`),
+    result.outputFiles[0].contents,
+  ]);
 }
 
 async function same(file, expected) {
