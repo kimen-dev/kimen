@@ -12,6 +12,10 @@ on:
   push:
     branches: [main]
   pull_request:
+  # The merge queue tests each group against the latest main before it lands.
+  # Any event other than pull_request runs the complete suite (see the scope steps).
+  merge_group:
+    types: [checks_requested]
 
 permissions: {}
 
