@@ -9,7 +9,7 @@ import { expectAccessible, parkPointer } from './axe';
 
 const browserCommands = commands as unknown as {
   ariaSnapshot: (selector: string) => Promise<string>;
-  emulateForcedColors: (mode: 'active' | 'none' | null) => Promise<boolean | undefined>;
+  emulateForcedColors: (mode: 'active' | 'none' | null) => Promise<void>;
   emulateReducedMotion: (mode: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
 
@@ -45,6 +45,15 @@ async function mount(html: string): Promise<HTMLElement> {
 
 function list(mode: 'single' | 'multiple', rows = options, extra = ''): string {
   return `<ki-list selection="${mode}" label="Reviewers" name="reviewers" ${extra}>${rows}</ki-list>`;
+}
+
+async function namedOption(name: string): Promise<HTMLElement> {
+  const option = page.getByRole('option', { name });
+  await expect.element(option).toBeVisible();
+  const row = option.element();
+  if (!(row instanceof HTMLElement)) throw new Error('Missing option host');
+  await expect.poll(() => row.shadowRoot?.querySelector('[part="indicator"]')).toBeTruthy();
+  return row;
 }
 
 function part(host: Element, name: string): HTMLElement {
@@ -117,7 +126,7 @@ it('S3 preserves the trailing control and warns in development when it conflicts
 it('S4 ignores a disabled option click', async () => {
   const main = await mount(list('single'));
   const events = details(main);
-  const disabled = page.getByRole('option', { name: 'Luis' }).element() as HTMLElement;
+  const disabled = await namedOption('Luis');
   await userEvent.click(disabled, { force: true });
   expect(document.activeElement).not.toBe(disabled);
   expect(disabled.getAttribute('aria-selected')).toBe('false');
@@ -148,7 +157,7 @@ it('S5 roves through enabled options and leaves selection on Ana', async () => {
 it('S6 Space toggles the focused option without clearing another choice', async () => {
   const main = await mount(list('multiple', options.replace(' disabled', '')));
   const events = details(main);
-  (page.getByRole('option', { name: 'Luis' }).element() as HTMLElement).focus();
+  (await namedOption('Luis')).focus();
   await userEvent.keyboard(' ');
   await expect
     .element(page.getByRole('option', { name: 'Ana' }))
@@ -162,7 +171,7 @@ it('S6 Space toggles the focused option without clearing another choice', async 
 it('S7 refined type-ahead focuses Sol without selecting it', async () => {
   const main = await mount(list('multiple'));
   const events = details(main);
-  (page.getByRole('option', { name: 'Ana' }).element() as HTMLElement).focus();
+  (await namedOption('Ana')).focus();
   await userEvent.keyboard('xso');
   await expect.element(page.getByRole('option', { name: 'Sol' })).toHaveFocus();
   await expect
@@ -176,30 +185,43 @@ it('S8 exposes a named multiselect listbox, selected and disabled options, and p
   await expect
     .element(page.getByRole('listbox', { name: 'Reviewers' }))
     .toHaveAttribute('aria-multiselectable', 'true');
+  const ana = await namedOption('Ana');
+  await namedOption('Luis');
   const snapshot = await browserCommands.ariaSnapshot('ki-list');
   expect(snapshot).toMatch(/listbox "Reviewers"/u);
   expect(snapshot).toMatch(/option "Ana" \[selected\]/u);
   expect(snapshot).toMatch(/option "Luis" \[disabled\]/u);
   await expectAccessible(main);
+
+  ana.textContent = 'Anita';
+  await expect
+    .element(page.getByRole('option', { name: 'Anita' }))
+    .toHaveAttribute('aria-selected', 'true');
 });
 
 it('S9 tabs into the native switch named by the primary row text', async () => {
   const main = await mount(
     '<button tabindex="0">Before</button><ki-list label="Notifications"><ki-list-item><span>Email digest</span><span slot="secondary">Every Monday</span><ki-switch slot="end"></ki-switch></ki-list-item></ki-list>',
   );
+  const control = page.getByRole('switch', { name: 'Email digest' });
+  await expect.element(control).toHaveAttribute('tabindex', '0');
+  // The transparent native input still needs a rendered focus target.
+  await expect.poll(() => control.element().getBoundingClientRect().width).toBeGreaterThan(0);
+  const switchHost = main.querySelector('ki-switch');
+  if (!switchHost) throw new Error('Missing settings switch');
+  expect(switchHost.parentElement?.hasAttribute('tabindex')).toBe(false);
+  expect(switchHost.hasAttribute('tabindex')).toBe(false);
+
   main.querySelector('button')?.focus();
   await userEvent.tab();
-  const control = page.getByRole('switch', { name: 'Email digest' });
-  await expect.element(control).toBeInTheDocument();
-  const switchHost = main.querySelector('ki-switch');
-  expect(switchHost?.shadowRoot?.activeElement).toBe(control.element());
+  await expect.poll(() => switchHost.shadowRoot?.activeElement === control.element()).toBe(true);
   await userEvent.keyboard(' ');
   await expect.element(control).toBeChecked();
   const primary = main.querySelector('ki-list-item > span');
   if (primary) primary.textContent = 'Weekly digest';
   const renamed = page.getByRole('switch', { name: 'Weekly digest' });
   await expect.element(renamed).toBeInTheDocument();
-  expect(switchHost?.shadowRoot?.activeElement).toBe(renamed.element());
+  expect(switchHost.shadowRoot?.activeElement).toBe(renamed.element());
   await expectAccessible(main);
 });
 
@@ -256,25 +278,40 @@ it('S13 applies selected foreground and background tokens and keeps the mark', a
   const main = await mount(list('multiple'));
   main.style.setProperty('--ki-list-item-selected-bg', 'rgb(220, 230, 240)');
   main.style.setProperty('--ki-list-item-selected-fg', 'rgb(10, 20, 30)');
-  const row = page.getByRole('option', { name: 'Ana' }).element();
+  const row = await namedOption('Ana');
   expect(getComputedStyle(part(row, 'item')).backgroundColor).toBe('rgb(220, 230, 240)');
   expect(getComputedStyle(part(row, 'content')).color).toBe('rgb(10, 20, 30)');
   expect(part(row, 'indicator').querySelector('ki-icon')).toBeTruthy();
 });
 
-it('S14 retains the selection mark and focus ring in forced colors', async (test) => {
-  if ((await browserCommands.emulateForcedColors('active')) === false) {
-    test.skip('this engine cannot emulate forced colors');
-  }
+it('S14 retains the selection mark and focus ring in forced colors', async ({ skip }) => {
+  const main = await mount(`<button tabindex="0">Before</button>${list('multiple')}`);
+  const row = await namedOption('Ana');
+  const indicator = part(row, 'indicator');
+  const witness = document.createElement('div');
+  const authorColor = 'rgb(1, 2, 3)';
+  witness.style.backgroundColor = authorColor;
+  main.append(witness);
+
   try {
-    await mount(`<button tabindex="0">Before</button>${list('multiple')}`);
-    (page.getByRole('button', { name: 'Before' }).element() as HTMLElement).focus();
+    await browserCommands.emulateForcedColors('active');
+    const repaints = () =>
+      matchMedia('(forced-colors: active)').matches &&
+      getComputedStyle(witness).backgroundColor !== authorColor;
+    if (navigator.userAgent.includes('Chrome/')) {
+      await expect.poll(repaints).toBe(true);
+    } else if (!repaints()) {
+      skip('This engine does not repaint author colors with a forced palette.');
+    }
+
+    main.querySelector('button')?.focus();
     await userEvent.tab();
-    await expect.poll(() => matchMedia('(forced-colors: active)').matches).toBe(true);
-    const row = page.getByRole('option', { name: 'Ana' }).element();
+    await expect.element(page.getByRole('option', { name: 'Ana' })).toHaveFocus();
     expect(getComputedStyle(part(row, 'item')).outlineStyle).toBe('solid');
-    expect(getComputedStyle(part(row, 'indicator')).borderBlockStartStyle).toBe('solid');
-    expect(part(row, 'indicator').querySelector('ki-icon')).toBeTruthy();
+    const border = getComputedStyle(indicator);
+    expect(border.borderBlockStartStyle).toBe('solid');
+    expect(border.borderBlockStartColor).not.toBe(getComputedStyle(witness).backgroundColor);
+    expect(indicator.querySelector('ki-icon')).toBeTruthy();
   } finally {
     await browserCommands.emulateForcedColors(null);
   }
@@ -286,21 +323,40 @@ it('S15 moves and mirrors the trailing chevron under RTL', async () => {
   );
   const row = main.querySelector('ki-list-item');
   if (!row) throw new Error('Missing navigation row');
+  await expect.element(page.getByRole('link', { name: 'Account' })).toBeVisible();
   const indicator = part(row, 'indicator');
-  expect(indicator.getBoundingClientRect().right).toBeLessThanOrEqual(
-    part(row, 'content').getBoundingClientRect().left,
-  );
+  const content = part(row, 'content');
+  expect(getComputedStyle(part(row, 'item')).direction).toBe('rtl');
+  await expect
+    .poll(() => {
+      const indicatorRect = indicator.getBoundingClientRect();
+      const contentRect = content.getBoundingClientRect();
+      return (
+        indicatorRect.width > 0 &&
+        contentRect.width > 0 &&
+        indicatorRect.right <= contentRect.left + 0.5
+      );
+    })
+    .toBe(true);
   expect(getComputedStyle(indicator).scale).toBe('-1 1');
 });
 
 it('S16 applies selection with no transitions under reduced motion', async () => {
+  await mount(list('multiple'));
+  const option = page.getByRole('option', { name: 'Sara' });
+  const row = await namedOption('Sara');
+  const surface = part(row, 'item');
+  const indicator = part(row, 'indicator');
+  // WebKit reapplies media emulation to shadow roots present at the change.
   await browserCommands.emulateReducedMotion('reduce');
   try {
-    await mount(list('multiple'));
-    const option = page.getByRole('option', { name: 'Sara' });
+    await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+    await expect.poll(() => getComputedStyle(surface).transitionDuration).toBe('0s');
     await option.click();
     await expect.element(option).toHaveAttribute('aria-selected', 'true');
-    expect(getComputedStyle(part(option.element(), 'item')).transitionDuration).toBe('0s');
+    await expect.poll(() => indicator.querySelector('ki-icon')).toBeTruthy();
+    expect(getComputedStyle(surface).transitionDuration).toBe('0s');
+    expect(getComputedStyle(surface, '::after').transitionDuration).toBe('0s');
   } finally {
     await browserCommands.emulateReducedMotion(null);
   }

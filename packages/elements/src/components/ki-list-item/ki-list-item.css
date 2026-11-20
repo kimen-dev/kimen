@@ -263,7 +263,7 @@
   font-size: var(--ki-list-item-indicator-size);
 }
 
-.chevron:dir(rtl) {
+:host(:dir(rtl)) .chevron {
   scale: -1 1;
 }
 
@@ -295,8 +295,22 @@
     outline-color: Highlight;
   }
 
+  .checkbox,
+  .radio {
+    border-color: CanvasText;
+  }
+
   :host([aria-selected="true"]) .radio::before {
     forced-color-adjust: none;
     background-color: CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [part="item"],
+  [part="item"]::after,
+  .secondary {
+    animation: none;
+    transition: none;
   }
 }

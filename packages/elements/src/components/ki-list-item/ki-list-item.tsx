@@ -10,12 +10,8 @@ type Region = (typeof slotNames)[number];
 
 export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';
 
-function hasAssignedContent(slot: HTMLSlotElement | null, textSlot = false): boolean {
-  if (!slot) {
-    return false;
-  }
-
-  return slot.assignedNodes({ flatten: true }).some((node) => {
+function hasContent(nodes: readonly Node[], textSlot = false): boolean {
+  return nodes.some((node) => {
     if (!textSlot && node.nodeType === Node.ELEMENT_NODE) {
       return true;
     }
@@ -100,6 +96,7 @@ export class KiListItem implements ListRow {
   private primaryText = '';
   private secondaryText = '';
   private staticSemantics: (string | null)[] | undefined;
+  private optionName: string | undefined;
   private warnedConflict = false;
   private namedControl: Element | undefined;
   private suppliedName: string | undefined;
@@ -148,6 +145,10 @@ export class KiListItem implements ListRow {
     const attributes = ['role', 'aria-selected', 'aria-disabled', 'tabindex'];
     if (mode === 'none') {
       if (!this.staticSemantics) return;
+      if (this.optionName && this.host.getAttribute('aria-label') === this.optionName) {
+        this.host.removeAttribute('aria-label');
+      }
+      this.optionName = undefined;
       attributes.forEach((attribute, index) => {
         const original = this.staticSemantics?.[index];
         if (original == null) this.host.removeAttribute(attribute);
@@ -157,6 +158,7 @@ export class KiListItem implements ListRow {
     } else {
       this.staticSemantics ??= attributes.map((name) => this.host.getAttribute(name));
       this.host.setAttribute('role', 'option');
+      this.syncOptionName();
       this.host.setAttribute('aria-selected', String(this.selected));
       if (disabled) {
         this.host.setAttribute('aria-disabled', 'true');
@@ -169,18 +171,30 @@ export class KiListItem implements ListRow {
     if (oldMode !== mode) this.syncSlotState();
   }
 
+  private syncOptionName(): void {
+    const current = this.host.getAttribute('aria-label');
+    if (current !== null && current !== this.optionName) {
+      this.optionName = undefined;
+      return;
+    }
+
+    // The option role lives on the host. Give it a name directly so the
+    // composed text in the shadow slots doesn't have to name it across trees.
+    const name = this.label;
+    if (name && current !== name) this.host.setAttribute('aria-label', name);
+    else if (!name && current !== null) this.host.removeAttribute('aria-label');
+    this.optionName = name || undefined;
+  }
+
   componentWillLoad(): void {
     // Default structural role, set only when the author has not supplied one so
     // an author role still wins (codex review).
     if (!this.host.hasAttribute('role')) {
       this.host.setAttribute('role', 'listitem');
     }
-    // Property writes may match this row before its shadow slots exist.
-    this.primaryText = slotText(
-      Array.from(this.host.childNodes).filter(
-        (node) => !(node instanceof globalThis.Element && node.getAttribute('slot')),
-      ),
-    );
+    // Seed the regions before the first render so text and controls are
+    // available as soon as the row surface appears.
+    this.syncSlotState();
     this.ready = true;
     this.register();
   }
@@ -194,14 +208,15 @@ export class KiListItem implements ListRow {
     // connects again without loading again.
     this.observer?.disconnect();
     this.observer = new MutationObserver((records) => {
-      // The owner reflects option ARIA and tabindex onto the row itself.
-      // Those projection writes must not trigger another owner update.
+      // The owner reflects option state and tabindex onto the row itself.
+      // Ignore those writes, but re-check a label supplied by the author.
       if (
         records.some(
           ({ target, type, attributeName }) =>
             target !== this.host ||
             type !== 'attributes' ||
             attributeName === 'hidden' ||
+            attributeName === 'aria-label' ||
             attributeName === 'slot',
         )
       )
@@ -227,9 +242,8 @@ export class KiListItem implements ListRow {
       ],
     });
     if (this.ready) this.register();
-    // Content written while the item was out of the document. On the first
-    // connection the slots are not rendered yet: componentDidLoad syncs.
-    this.syncSlotState();
+    // Content written while an already initialized item was out of the document.
+    if (this.ready) this.syncSlotState();
   }
 
   componentDidLoad(): void {
@@ -244,27 +258,43 @@ export class KiListItem implements ListRow {
   }
 
   private syncSlotState = (): void => {
+    if (!this.host.isConnected) return;
     const root = this.host.shadowRoot;
-    const start = root?.querySelector<HTMLSlotElement>('slot[name="start"]') ?? null;
-    const primary = root?.querySelector<HTMLSlotElement>('slot:not([name])') ?? null;
-    const secondary = root?.querySelector<HTMLSlotElement>('slot[name="secondary"]') ?? null;
-    const end = root?.querySelector<HTMLSlotElement>('slot[name="end"]') ?? null;
-    const slots = { start, primary, secondary, end };
-    // Removing or moving a row should release its accessible-name fallback.
-    if (!primary || !this.host.isConnected) return;
+    const lightNodes = Array.from(this.host.childNodes).filter(
+      (node) => node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE,
+    );
+    const regionNodes = (region: Region): Node[] => {
+      const name = region === 'primary' ? '' : region;
+      const selector = name ? `slot[name="${name}"]` : 'slot:not([name])';
+      const slot = root?.querySelector<HTMLSlotElement>(selector);
+      return (
+        slot?.assignedNodes({ flatten: true }) ??
+        lightNodes.filter((node) => {
+          const assignedName =
+            node instanceof globalThis.Element ? node.getAttribute('slot') : null;
+          return (assignedName ?? '') === name;
+        })
+      );
+    };
+    const nodes = {
+      start: regionNodes('start'),
+      primary: regionNodes('primary'),
+      secondary: regionNodes('secondary'),
+      end: regionNodes('end'),
+    };
 
-    this.hasStart = hasAssignedContent(start);
-    this.hasPrimary = hasAssignedContent(primary, true);
-    this.hasSecondary = hasAssignedContent(secondary, true);
-    this.hasEnd = hasAssignedContent(end);
-    this.primaryText = slotText(primary.assignedNodes({ flatten: true }));
-    this.secondaryText = slotText(secondary?.assignedNodes({ flatten: true }) ?? []);
+    this.hasStart = hasContent(nodes.start);
+    this.hasPrimary = hasContent(nodes.primary, true);
+    this.hasSecondary = hasContent(nodes.secondary, true);
+    this.hasEnd = hasContent(nodes.end);
+    this.primaryText = slotText(nodes.primary);
+    this.secondaryText = slotText(nodes.secondary);
 
     const blocked = new Set<Region>();
     const endControls: Element[] = [];
     let count = 0;
     for (const name of slotNames) {
-      const elements = slots[name]?.assignedElements({ flatten: true }) ?? [];
+      const elements = nodes[name].filter((node) => node instanceof globalThis.Element);
       const controls = elements.flatMap(rowControls);
       if (controls.length === 0) continue;
       count += controls.length;
@@ -295,7 +325,7 @@ export class KiListItem implements ListRow {
 
     const control = this.mode === 'none' && endControls.length === 1 ? endControls[0] : undefined;
     this.syncControlName(control);
-    this.notifyList();
+    if (this.ready) this.notifyList();
   };
 
   private clearControlName(): void {

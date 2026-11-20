@@ -239,7 +239,7 @@
         },
         "indicator-border-width": {
           "$type": "dimension",
-          "$value": "{ki.glyph.stroke-width}",
+          "$value": "{ki.layout.spacing.xxs}",
           "$description": "Stroke around a visual option indicator."
         },
         "checkbox-radius": {

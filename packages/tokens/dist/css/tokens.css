@@ -1765,7 +1765,7 @@
   --ki-list-item-interactive-backdrop-filter:var(--ki-effect-no-backdrop-filter);
   --ki-list-item-interactive-radius:var(--ki-radius-component-md);
   --ki-list-item-indicator-size:var(--ki-typography-inline-icon-size);
-  --ki-list-item-indicator-border-width:var(--ki-glyph-stroke-width);
+  --ki-list-item-indicator-border-width:var(--ki-layout-spacing-xxs);
   --ki-list-item-checkbox-radius:var(--ki-corner-inline);
   --ki-list-item-radio-radius:var(--ki-corner-activity-mark);
   --ki-note-bg:var(--ki-surface-s2);
