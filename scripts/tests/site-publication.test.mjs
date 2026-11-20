@@ -197,16 +197,18 @@ test('S8 the privacy page is a semantic no-JavaScript page that declares the mea
   assert.match(source, /<footer\b/iu);
   assert.match(source, /umami/iu, 'the page must name the analytics it declares');
   assert.match(source, /cookie/iu, 'the page must state that no cookies are set');
-  assert.doesNotMatch(
+  // Its one control is the shared color-scheme control (#520, item 9), hidden
+  // until the shared module that wires it runs, so it never shows unwired.
+  assert.deepEqual(source.match(/<fieldset\b[^>]*>/giu), [
+    '<fieldset class="seg seg-scheme" data-scheme-control>',
+  ]);
+  assert.match(
     source,
-    /<fieldset\b/iu,
-    'the privacy page ships no module script to wire a control, so it must not ship one',
+    /<div class="header-scheme" data-privacy-scheme hidden>\s*<fieldset class="seg seg-scheme"/u,
+    'the privacy scheme control must stay hidden until pages.js wires it',
   );
-  assert.doesNotMatch(
-    source,
-    /name=["'][^"']*scheme[^"']*["']/iu,
-    'the privacy page must not ship an unwired color-scheme radio',
-  );
+  assert.match(source, /<script type="module" src="\.\.\/pages\.js"><\/script>/u);
+  assert.doesNotMatch(source, /<select\b/iu, 'the site has one scheme control, not a select');
 
   for (const page of ['index.html', 'playground/index.html']) {
     const markup = await readSiteFile(page);
@@ -303,6 +305,72 @@ test('every documentation page reaches the sections, Home and Playground from a 
   assert.match(component, /class="sl-menu-button/u);
   const footer = between(component, 'class="kimen-sidebar-sites"', '</ul>', 'the menu footer');
   assert.deepEqual(linkTexts(footer), ['Home', 'Playground', 'GitHub']);
+});
+
+// The live review of kimen.dev (#520, items 10, 11, 13, 14): code blocks
+// turned light in the light scheme and drew install commands in a terminal
+// window; the docs home index showed raw Markdown backticks; demo options read
+// like group labels; the home title named the brand twice; and no docs page
+// carried theme-color or a social image.
+test('the built documentation keeps its code islands, index, demos and metadata', async () => {
+  const documentationRoot = join(siteRoot, 'docs/dist');
+  const read = (page) =>
+    readFile(join(documentationRoot, page), 'utf8').catch((error) => {
+      assert.fail(
+        `site/docs/dist is missing: run \`pnpm --filter @kimen/docs build\` first (${error.message})`,
+      );
+    });
+  const home = await read('index.html');
+  const button = await read('components/button/index.html');
+
+  assert.match(home, /<title>\s*Documentation \| Kimen\s*<\/title>/u);
+  for (const markup of [home, button]) {
+    assert.match(
+      markup,
+      /<meta name="theme-color" content="#f9f7f4" media="\(prefers-color-scheme: light\)"/u,
+    );
+    assert.match(
+      markup,
+      /<meta name="theme-color" content="#1b1916" media="\(prefers-color-scheme: dark\)"/u,
+    );
+    assert.match(
+      markup,
+      /<meta property="og:image" content="https:\/\/kimen\.dev\/og-image\.png"/u,
+    );
+    assert.match(markup, /<meta property="og:image:width" content="1200"/u);
+    assert.match(markup, /<meta property="og:image:height" content="630"/u);
+    // One dark theme: a second theme would add a second color per token.
+    assert.doesNotMatch(markup, /--1:#/u, 'code blocks render one theme in both page schemes');
+    assert.doesNotMatch(markup, /class="frame is-terminal/u, 'no snippet is framed as a terminal');
+  }
+
+  const index = between(
+    home,
+    'id="docs-components-title"',
+    '</section></section>',
+    'the component index',
+  );
+  assert.doesNotMatch(
+    index.replaceAll(/<code>[^<]*<\/code>/gu, ''),
+    /`/u,
+    'component descriptions show code, not Markdown backticks',
+  );
+  const families = [...home.matchAll(/<h3 id="docs-components-([a-z]+)">([^<]+)<\/h3>/gu)].map(
+    ([, , label]) => label,
+  );
+  assert.deepEqual(families, ['Actions', 'Forms', 'Navigation', 'Feedback', 'Layout', 'Data']);
+
+  const demoBar = between(button, '<form class="ki-demo-bar">', '</form>', 'the first demo bar');
+  assert.deepEqual(
+    [...demoBar.matchAll(/<span>([^<]+)<\/span>/gu)].map(([, label]) => label),
+    ['Same as page', 'onmars', 'Material 3', 'Same as page', 'Light', 'Dark'],
+  );
+  assert.deepEqual(
+    [...demoBar.matchAll(/class="ki-demo-group-label"[^>]*>([^<]+)</gu)].map(([, label]) => label),
+    ['Theme', 'Scheme'],
+  );
+  const firstDemo = between(button, 'class="ki-demo-surface', '</div>', 'the first demo');
+  assert.match(firstDemo, /<ki-button variant="primary">Save changes<\/ki-button>/u);
 });
 
 test('S8 the measured privacy declaration names every category it records, at country level', async () => {
@@ -562,6 +630,56 @@ test('robots.txt and the root sitemaps list only pages the site publishes', asyn
   for (const page of pages) {
     accessSync(publishedFile(page), constants.R_OK);
   }
+});
+
+// The social card (#520, item 14): a real 1200×630 PNG, rendered from the
+// site's own fonts and tokens by scripts/og-image/render.mjs, that every
+// hand-written page names as its og:image.
+test('the hand-written pages share a published 1200×630 og:image', async (t) => {
+  const png = await readFile(join(siteRoot, 'og-image.png'));
+  assert.equal(png.subarray(1, 4).toString('latin1'), 'PNG', 'site/og-image.png must be a PNG');
+  assert.equal(png.subarray(12, 16).toString('latin1'), 'IHDR');
+  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [1200, 630]);
+
+  for (const page of ['index.html', 'playground/index.html', 'privacy/index.html']) {
+    const markup = await readSiteFile(page);
+    for (const meta of [
+      /<meta property="og:image" content="https:\/\/kimen\.dev\/og-image\.png"/u,
+      /<meta property="og:image:width" content="1200"/u,
+      /<meta property="og:image:height" content="630"/u,
+      /<meta name="twitter:card" content="summary_large_image"/u,
+    ]) {
+      assert.match(markup, meta, `${page} must declare the social card`);
+    }
+  }
+
+  const output = await assembleSite(undefined);
+  t.after(() => rm(output, { force: true, recursive: true }));
+  accessSync(join(output, 'og-image.png'), constants.R_OK);
+});
+
+// The landing's "Components" stat (#520, item 15) read "See the live wall"
+// until the wall loaded. The assembler writes the number from the manifest.
+test('the assembled landing states its component count from the manifest', async (t) => {
+  const output = await assembleSite(undefined);
+  t.after(() => rm(output, { force: true, recursive: true }));
+  const manifest = JSON.parse(
+    await readFile(
+      join(repositoryRoot, 'packages/elements/generated/custom-elements.json'),
+      'utf8',
+    ),
+  );
+  const tags = new Set(
+    manifest.modules.flatMap(({ declarations = [] }) =>
+      declarations.flatMap(({ tagName }) => (tagName?.startsWith('ki-') ? [tagName] : [])),
+    ),
+  );
+  const landing = await readFile(join(output, 'index.html'), 'utf8');
+  assert.ok(tags.size > 0);
+  assert.match(
+    landing,
+    new RegExp(`<a href="#components" data-component-count>${tags.size}</a>`, 'u'),
+  );
 });
 
 test('S9 the docs analytics endpoint is read from analytics.json, never inlined', async () => {

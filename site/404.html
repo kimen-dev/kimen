@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-ki-color-scheme="dark">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,29 +17,32 @@
     <link rel="stylesheet" href="/landing.css" />
     <link rel="stylesheet" href="/pages.css" />
     <script>
-      // Keep the initial paint in the saved palette when storage is available.
+      // Paint the saved scheme, or the system's when nothing is saved, before first paint.
       (() => {
+        const root = document.documentElement;
+        let scheme = "auto";
+        let theme = "onmars";
         try {
-          const root = document.documentElement;
-          const scheme = localStorage.getItem("kimen-scheme");
-          if (scheme === "auto") {
-            root.dataset.kiColorScheme = matchMedia("(prefers-color-scheme: light)").matches
-              ? "light"
-              : "dark";
-          } else if (scheme === "light" || scheme === "dark") {
-            root.dataset.kiColorScheme = scheme;
-          }
-          if (localStorage.getItem("kimen-theme") === "material3") {
-            root.dataset.kiTheme = "material3";
-            const link = document.createElement("link");
-            link.id = "material3-css";
-            link.rel = "stylesheet";
-            link.href = "/assets/tokens/tokens.material3.css";
-            link.addEventListener("error", () => link.remove(), { once: true });
-            document.head.append(link);
-          }
+          const saved = localStorage.getItem("kimen-scheme");
+          if (saved === "light" || saved === "dark") scheme = saved;
+          if (localStorage.getItem("kimen-theme") === "material3") theme = "material3";
         } catch {
-          // The default palette also works when storage is unavailable.
+          // Without storage the page follows the system and the default theme.
+        }
+        root.dataset.kiColorScheme =
+          scheme === "auto"
+            ? matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark"
+            : scheme;
+        if (theme === "material3") {
+          root.dataset.kiTheme = "material3";
+          const link = document.createElement("link");
+          link.id = "material3-css";
+          link.rel = "stylesheet";
+          link.href = "/assets/tokens/tokens.material3.css";
+          link.addEventListener("error", () => link.remove(), { once: true });
+          document.head.append(link);
         }
       })();
     </script>

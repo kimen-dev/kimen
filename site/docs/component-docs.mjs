@@ -1,5 +1,6 @@
 import { globSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { groupByFamily } from './component-families.mjs';
 
 export const workspace = new URL('../../', import.meta.url);
 const localDocs = 'site/docs/src/content/docs';
@@ -36,4 +37,14 @@ export function componentSidebarItems(root = workspace) {
     pathsById.set(id, entry);
   }
   return [...pathsById.keys()].sort();
+}
+
+// The Components sidebar group, one collapsed sub-group per family
+// (component-families.mjs). Starlight opens the sub-group of the current page.
+export function componentSidebarGroups(root = workspace) {
+  return groupByFamily(componentSidebarItems(root)).map(([label, items]) => ({
+    label,
+    collapsed: true,
+    items,
+  }));
 }

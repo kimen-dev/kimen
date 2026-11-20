@@ -215,60 +215,6 @@ code {
   stroke: none;
 }
 
-/* Segmented radio groups (native radios: arrow keys move the selection). */
-.seg {
-  display: inline-flex;
-  flex: none;
-  min-inline-size: 0;
-  gap: var(--ki-space-xxs);
-  padding: var(--ki-space-xxs);
-  border: var(--ki-site-unit) solid var(--ki-outline-low-em);
-  border-radius: var(--ki-radius-round);
-  background-color: var(--ki-site-sheet);
-}
-
-.seg label {
-  position: relative;
-  display: inline-flex;
-}
-
-.seg input {
-  position: absolute;
-  inset-block: 0;
-  inset-inline: 0;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.seg span {
-  min-block-size: var(--ki-site-target);
-  padding-block: var(--ki-space-xs);
-  padding-inline: var(--ki-space-xl);
-  border-radius: var(--ki-radius-round);
-  color: var(--ki-text-med-em);
-  font-size: var(--ki-typography-size-caption-2);
-  line-height: var(--ki-typography-line-height-caption-2);
-  white-space: nowrap;
-  transition:
-    background-color var(--ki-duration-fast) var(--ki-site-ease),
-    color var(--ki-duration-fast) var(--ki-site-ease);
-}
-
-.seg input:hover + span {
-  color: var(--ki-text-high-em);
-}
-
-.seg input:checked + span {
-  background-color: var(--ki-surface-primary-high-em);
-  color: var(--ki-text-primary-on-primary);
-}
-
-.seg input:focus-visible + span {
-  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
-  outline-offset: var(--ki-focus-ring-offset);
-}
-
 /* ---- 404 ------------------------------------------------------------------------------- */
 
 .not-found {
@@ -359,22 +305,6 @@ code {
   color: var(--ki-text-high-em);
 }
 
-.scheme-picker select {
-  min-block-size: var(--ki-site-target);
-  padding-block: var(--ki-space-xs);
-  padding-inline: var(--ki-space-xl);
-  border: var(--ki-site-unit) solid var(--ki-outline-control);
-  border-radius: var(--ki-radius-round);
-  background-color: var(--ki-site-sheet);
-  color: var(--ki-text-high-em);
-  font: inherit;
-  font-size: var(--ki-typography-size-caption-2);
-}
-
-.footer-scheme {
-  display: none;
-}
-
 @media (width <= 48rem) {
   .site-header {
     flex-wrap: wrap;
@@ -385,14 +315,6 @@ code {
   .site-nav {
     flex-wrap: wrap;
     gap: var(--ki-space-md) var(--ki-space-3xl);
-  }
-
-  .header-scheme {
-    display: none;
-  }
-
-  .footer-scheme {
-    display: inline-flex;
   }
 }
 
@@ -408,17 +330,5 @@ code {
   *::after {
     transition-duration: 0s !important;
     animation-duration: 0s !important;
-  }
-}
-
-@media (forced-colors: active) {
-  .seg input:focus-visible + span {
-    outline-color: CanvasText;
-  }
-
-  .seg input:checked + span {
-    background-color: Highlight;
-    color: HighlightText;
-    forced-color-adjust: none;
   }
 }
