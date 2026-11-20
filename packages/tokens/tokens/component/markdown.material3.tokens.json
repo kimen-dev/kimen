@@ -1,9 +1,9 @@
 {
   "ki": {
     "markdown": {
-      "text-color": {
+      "fg": {
         "$value": "{ki.text.high-em}",
-        "$description": "Material 3 text color used by the ki-markdown component."
+        "$description": "Markdown prose ink uses the Material 3 semantic palette."
       }
     }
   }

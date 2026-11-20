@@ -17,10 +17,12 @@
 ## Interpretations
 
 - **Source and headings** (agent's choice, pending founder confirmation). A supplied `src-text` wins even when empty. Otherwise the element reads its direct light-DOM text nodes, updating when they change. Heading levels saturate at six. An invalid offset falls back to two.
-- **Rendering** (agent's choice, pending founder confirmation). Use the installed Marked lexer for CommonMark and the requested GFM extensions, then render its tokens as text and known elements. Native tables use Kimen tokens while a Table component is unavailable. A leading `[!NOTE]` marker becomes a Kimen Note. Task indicators are read-only.
+- **Rendering** (agent's choice, pending founder confirmation). Use the installed Marked lexer and named character table to render CommonMark and the requested GFM extensions as text and known elements. Native tables use Kimen tokens while a Table component is unavailable. Their scroll area is reachable by keyboard and alignment follows the reading direction. A leading `[!NOTE]` marker becomes a Kimen Note. Task indicators are read-only.
 - **Destinations** (agent's choice, pending founder confirmation). Cross-origin HTTP(S) links use Link's external mode. Rejected links and unrendered images retain their label or alternative text. Images send no referrer. A guarded renderer's origin allowlist also applies to URLs inside Markdown, including live and streamed catalog surfaces.
 - **Streaming** (agent's choice, pending founder confirmation). Render an open fence as CodeBlock while it grows. Confirm an end-of-source table delimiter before presenting a table. Preserve an existing table as its last row grows. The element does not apply a live region to the answer.
 - **A2UI routing** (agent's choice, pending founder confirmation). Route content Text in both dialects through Markdown. Text flattened into a control label stays literal. Keep the adapter's raw HTML prohibition.
+- **Contrast** (agent's choice, pending founder confirmation). Keep prose backgrounds transparent. Use supporting ink for quotes and table headers so both themes reach the contrast-more target.
+- **API declaration** (agent's choice, pending founder confirmation). Use a major declaration for the regenerated loader type namespaces, following the stacked CodeBlock change.
 - **Guardrail review**. The founder confirms S2, S3 and S6 in review. The component renders those cases through the existing URL rules and does not expose a surface action.
 
 ## Gherkin

@@ -15,13 +15,16 @@ const SECTION_START = new RegExp(`^${RULE}\\nThird-party notices: (.+)\\n${RULE}
 //   (dist/esm, dist/cjs, dist/kimen). Both are MIT, which requires the
 //   copyright and permission notice in every copy.
 // - @kimen/elements also ships Lucide ISC and Feather MIT icon modules.
+// - ki-markdown uses Marked for tokenization and character-entities for named
+//   references. The upstream Marked license includes John Gruber's notice.
 // - @kimen/tokens ships Kimen's stylesheets and the optional onmars fonts.
-// - The MCP Apps adapter and server embed the element runtime, QR encoder
-//   and the stock Lucide icon in the packaged MCP Apps document.
+// - The MCP Apps adapter and server embed the element runtime and its bundled
+//   assets in the packaged MCP Apps document.
 const ELEMENT_BUNDLE_NOTICES = Object.freeze([
   'QR Code generator library (MIT)',
   'Stencil client runtime (MIT)',
   'Lucide 1.63.0 and Feather icons (ISC and MIT)',
+  'Marked 9.1.6 and character-entities 2.0.2 (MIT)',
 ]);
 
 export const PACKAGE_NOTICE_SECTIONS = Object.freeze({

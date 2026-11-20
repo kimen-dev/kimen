@@ -99,6 +99,7 @@ const MAX_TRANSLATION_DEPTH = 256;
 const MAX_TRANSLATED_NODES = 4096;
 
 type Piece = UiSpecNode | string;
+type TextPresentation = 'markdown' | 'literal';
 
 interface WalkContext {
   readonly surfaceId: string;
@@ -164,6 +165,7 @@ class Instance {
     readonly scope: readonly string[],
     readonly depth: number,
     readonly context: WalkContext,
+    readonly textPresentation: TextPresentation = 'markdown',
   ) {}
 
   private get values(): ValueContext {
@@ -250,7 +252,7 @@ class Instance {
   }
 
   /** Resolves a single child reference (`ComponentId`). */
-  child(property: string): Piece[] {
+  child(property: string, textPresentation = this.textPresentation): Piece[] {
     const raw = this.body[property];
     if (raw === undefined) {
       return [];
@@ -258,7 +260,7 @@ class Instance {
     if (typeof raw !== 'string') {
       throw this.malformed(property, `${this.type} property "${property}" must be a component id`);
     }
-    return this.resolve(raw, this.scope);
+    return this.resolve(raw, this.scope, textPresentation);
   }
 
   /** Resolves a `ChildList` into the pieces it contributes, flattened. */
@@ -310,8 +312,12 @@ class Instance {
     throw this.malformed(property, `${this.type} children must be a list of ids or a template`);
   }
 
-  private resolve(childId: string, scope: readonly string[]): Piece[] {
-    const pieces = resolveComponent(childId, scope, this.depth + 1, this.context);
+  private resolve(
+    childId: string,
+    scope: readonly string[],
+    textPresentation = this.textPresentation,
+  ): Piece[] {
+    const pieces = resolveComponent(childId, scope, this.depth + 1, this.context, textPresentation);
     if (pieces === null) {
       throw new Abort(
         this.context.abort ?? {
@@ -488,7 +494,11 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     const mapped = variant === undefined ? undefined : BUTTON_VARIANTS[variant];
     return [
       it.action(
-        node('ki-button', mapped === undefined ? {} : { variant: mapped }, it.child('child')),
+        node(
+          'ki-button',
+          mapped === undefined ? {} : { variant: mapped },
+          it.child('child', 'literal'),
+        ),
       ),
     ];
   },
@@ -639,7 +649,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       throw new Degrade('unsupported-variant', `Modal trigger: ${triggerType}`);
     }
 
-    const [trigger] = it.child('trigger');
+    const [trigger] = it.child('trigger', 'literal');
     if (typeof trigger === 'object' && trigger.component !== 'ki-button') {
       return [trigger];
     }
@@ -710,6 +720,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         it.scope,
         it.depth,
         it.context,
+        it.textPresentation,
       );
       pieces.push(node('ki-tab', { value }, title === '' ? [] : [title]));
       pieces.push(node('ki-tab-panel', { value }, scoped.child('child')));
@@ -718,7 +729,10 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
   },
   Text: (it) => {
     const text = it.text('text');
-    return text === '' ? [] : [text];
+    if (text === '') {
+      return [];
+    }
+    return [it.textPresentation === 'literal' ? text : node('ki-markdown', {}, [text])];
   },
   TextField: (it) => {
     const label = it.text('label');
@@ -807,6 +821,7 @@ function resolveComponent(
   scope: readonly string[],
   depth: number,
   context: WalkContext,
+  textPresentation: TextPresentation = 'markdown',
 ): Piece[] | null {
   if (context.abort !== null) {
     return null;
@@ -886,7 +901,7 @@ function resolveComponent(
   }
   context.ancestors.add(id);
   try {
-    return builder(new Instance(id, type, body, scope, depth, context));
+    return builder(new Instance(id, type, body, scope, depth, context, textPresentation));
   } catch (error) {
     if (error instanceof Degrade) {
       return degrade(error.reason, error.detail);

@@ -91,18 +91,16 @@ basic ids] } }`. The A2UI MIME type is a transport concern: 1.0 names it
 This table is the **A2UI 0.9.1** matrix (spec 029); the 1.0 matrix is under
 [A2UI 1.0](#a2ui-10) below.
 
-`mapped` types render as the listed `ki-*` components. `inline` types carry no
-element of their own. Their resolved string becomes inert text in the parent
-slot. A direct Text child of Row or Column gets a neutral stack to occupy its
-own layout item. `unmapped` types degrade per node to a fixed fallback that carries no
-agent-supplied content (scenarios S4/S11); a type outside the basic catalog
-degrades the same way. `forbidden` types reject the whole message on security
-grounds (scenario S7). A property the basic catalog does not declare for the
-type rejects the message (`unknown-property`, scenario S9).
+`mapped` types render as the listed `ki-*` components. `unmapped` types degrade
+per node to a fixed fallback that carries no agent-supplied content
+(scenarios S4/S11). A type outside the basic catalog degrades the same way.
+`forbidden` types reject the whole message on security grounds (scenario S7).
+A property the basic catalog does not declare for the type rejects the
+message (`unknown-property`, scenario S9).
 
 | A2UI type     | Coverage  | Catalog counterpart           |
 | ------------- | --------- | ----------------------------- |
-| Text          | inline    | —                             |
+| Text          | mapped    | ki-markdown                   |
 | Row           | mapped    | ki-stack                      |
 | Column        | mapped    | ki-stack                      |
 | List          | mapped    | ki-list, ki-list-item         |
@@ -126,9 +124,15 @@ type rejects the message (`unknown-property`, scenario S9).
 | iframe        | forbidden | —                             |
 
 Row maps to `ki-stack direction="row"` and Column uses the default column
-stack. Both retain their children in order at every depth. An inline or
-empty root still uses the `ki-card` fallback to satisfy the guarded renderer's
-single root requirement.
+stack. Both retain their children in order at every depth. An empty root
+uses the `ki-card` fallback to satisfy the guarded renderer's single root
+requirement.
+
+Content `Text` in both dialects passes its resolved source as a text node
+to `ki-markdown`. Markdown links use Kimen's URL policy, images are disabled,
+and raw HTML inside the source appears as literal text. Text used in button
+and modal trigger labels stays literal. The `html` and `RawHtml` component
+types still reject the whole message.
 
 ## Client functions
 
@@ -229,7 +233,7 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 
 | A2UI type     | Coverage  | Catalog counterpart           |
 | ------------- | --------- | ----------------------------- |
-| Text          | inline    | —                             |
+| Text          | mapped    | ki-markdown                   |
 | Row           | mapped    | ki-stack                      |
 | Column        | mapped    | ki-stack                      |
 | List          | mapped    | ki-list, ki-list-item         |
@@ -337,9 +341,9 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
   rejected.
 - **Surface deletion.** `deleteSurface` drops the adapter's state; the host
   owns the teardown of the surface element.
-- **Text and layout primitives (spec 037).** `Text` renders inline, and
-  `Row` and `Column` flatten into their parent slot. Both matrices retain
-  these mappings pending the adapter's adoption of native primitives.
+- **Native primitives (spec 037).** The adapter uses Kimen components for
+  text content, layout and images. Hosts can use native primitives when
+  they author a surface directly through the neutral catalog.
 - **1.0 accessibility attributes.** 1.0 asks renderers to plumb
   `@accessibility` (label, description, live, hidden). The adapter maps
   `Image` label and hidden into the element's image-specific API. Wider

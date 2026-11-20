@@ -92,7 +92,9 @@
     }
   },
   "dependencies": {
-    "@stencil/core": "4.45.3"
+    "@stencil/core": "4.45.3",
+    "character-entities": "2.0.2",
+    "marked": "9.1.6"
   },
   "devDependencies": {
     "@kimen/tokens": "workspace:*",

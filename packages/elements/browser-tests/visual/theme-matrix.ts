@@ -14,6 +14,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-icon',
   'ki-image',
   'ki-link',
+  'ki-markdown',
   'ki-menu',
   'ki-menu-group',
   'ki-menu-item',

@@ -116,6 +116,35 @@ it('S2 preserves raw markup and rejected destinations as text and follows a frag
   }
 });
 
+it('S3 keeps only absolute links and images from the guarded origin', async () => {
+  const localImage = new URL(imageUrl);
+  const outsideImage = new URL(imageUrl);
+  // Browsers block port 1 even if a regression creates the image element.
+  outsideImage.port = '1';
+  const relativeImage = `${localImage.pathname}${localImage.search}`;
+  const host = document.createElement('ki-markdown');
+  host.setAttribute('data-ki-markdown-origins', JSON.stringify([localImage.origin]));
+  host.setAttribute('allow-images', '');
+  host.textContent = [
+    `[Allowed guide](${localImage.origin}/guide)`,
+    `[Outside guide](${outsideImage.origin}/guide)`,
+    '[Relative guide](/guide)',
+    `![Allowed image](${localImage.href})`,
+    `![Outside image](${outsideImage.href})`,
+    `![Relative image](${relativeImage})`,
+  ].join('\n\n');
+  fixture.append(host);
+
+  await expect.element(page.getByRole('link', { name: 'Allowed guide' })).toBeVisible();
+  await expect.element(page.getByRole('img', { name: 'Allowed image' })).toBeVisible();
+  await expect.element(page.getByText('Outside guide', { exact: true })).toBeVisible();
+  await expect.element(page.getByText('Relative guide', { exact: true })).toBeVisible();
+  await expect.element(page.getByText('Outside image', { exact: true })).toBeVisible();
+  await expect.element(page.getByText('Relative image', { exact: true })).toBeVisible();
+  expect(host.shadowRoot?.querySelectorAll('ki-link')).toHaveLength(1);
+  expect(host.shadowRoot?.querySelectorAll('img')).toHaveLength(1);
+});
+
 it('S4 keeps the same open code block and preserves an earlier focused link', async () => {
   const { host, text } = mount('[Details](#details)\n\n```ts\nconst count', true);
   await expect.element(page.getByRole('link', { name: 'Details' })).toBeVisible();

@@ -1,19 +1,52 @@
 ---
 title: ki-markdown
-description: Describe the purpose of ki-markdown from the approved contract.
+description: Render formatted, streamed Markdown with Kimen typography and URL checks.
 ---
 
 import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
 import Demo from '../../../../../../site/docs/src/components/Demo.astro';
 
-{/* TODO(spec): document when to use this component and the accessible usage patterns. */}
+Use Markdown for a formatted answer or a note written by a person or a model.
 
-<Demo code={`<ki-markdown label="Example"></ki-markdown>`} />
+<Demo layout="block" code={`<ki-markdown heading-offset="1"># Validation checklist
+
+- [x] Give each field a label
+- [ ] Explain how to fix each error
+
+> [!NOTE]
+> Put the error beside the field.</ki-markdown>`} />
+
+## Provide source
+
+Set `src-text` for a string supplied as an attribute. In JavaScript, assign
+`srcText` or update the element's direct text nodes. An explicit `srcText`
+value takes precedence, including an empty string. Escape angle brackets when
+writing source into an HTML document so the browser passes them as text.
+
+Set `streaming` while appending chunks to the source and clear it when the
+answer ends. An open code fence stays a code block as lines arrive. A table
+appears when its delimiter is complete and its last row can fill in over time.
+
+## Formatting and destinations
+
+Markdown supports CommonMark and GFM tables, task lists and strikethrough.
+Task checkboxes show their state and stay disabled. Fenced code uses
+[CodeBlock](/docs/components/code-block/) and its language label. Tables have
+native column headings. A blockquote that starts with `[!NOTE]` uses
+[Note](/docs/components/note/).
+
+The default heading offset of 2 renders a top-level Markdown heading as
+`h3`. Set `heading-offset` from 0 to 5 to fit the surrounding page outline.
+The deepest rendered level is `h6`.
+
+HTML in the source is shown as text. Links and enabled images accept HTTP,
+HTTPS and relative references. A guarded surface can restrict both to its
+configured absolute origins. Rejected destinations leave the matching text
+visible. Set `allow-images` to let images load. Cross-origin links use
+[Link](/docs/components/link/) and include its new-tab announcement.
 
 ## API reference
 
 <CemApi tag="ki-markdown" />
-
-## Workshop
 
 [Open ki-markdown in Storybook](/storybook/?path=/docs/docs-components-ki-markdown--docs)

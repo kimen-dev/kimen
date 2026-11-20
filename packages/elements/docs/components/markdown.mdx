@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-markdown" />
+
+# ki-markdown
+
+Render an answer or note as Markdown, with CommonMark, GFM tables and task
+lists, and Kimen links, code blocks and notes.
+
+```html
+<ki-markdown>## Validation checklist
+
+- [x] Give each field a label
+- [ ] Explain how to fix each error
+
+> [!NOTE]
+> Put the error beside the field.</ki-markdown>
+```
+
+Supply source with `src-text`, the `srcText` property or direct text nodes.
+An explicit `srcText` value takes precedence, including an empty string.
+Use an offset from 0 to 5 to keep the answer within the page's heading
+hierarchy. The default offset is 2, so `#` begins at level three.
+
+Set `streaming` while updating the source as text arrives. Open code fences
+stay code blocks and incomplete rows can fill in as the stream continues.
+The surrounding application controls when to announce streamed replies.
+
+Raw markup appears as text. Links accept HTTP, HTTPS and relative references.
+Hosts can apply an origin allowlist when rendering a guarded surface. Set
+`allow-images` to opt into loading policy-approved images. Otherwise Markdown
+shows the image's alternative text.
+
+Tab through links and code controls in document order. Link marks external
+destinations with its new-tab announcement and CodeBlock names each fenced
+sample using its language. Task list indicators display their state and are
+disabled. Tables expose native column headers.
+
+## Customization
+
+The `--ki-markdown-*` tokens control the prose and inline code colors, the
+heading typeface, the quote rule and the space between blocks. The `content`
+part exposes the rendered document's container.

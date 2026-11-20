@@ -150,6 +150,7 @@ const NAMESPACE_NAMES = new Set([
 // auditably free of ANY external origin, so a host's self-containment audit
 // (S2) has nothing to reason about.
 const INERT_REFERENCES = [
+  /https:\/\/github\.com\/markedjs\/marked\b/g,
   /https?:\/\/json-schema\.org[^"'`\s)]*/g,
   /https:\/\/(?:chat\.)?stenciljs\.com[^"'`\s)]*/g,
   /https:\/\/github\.com\/stenciljs\/[^"'`\s)]*/g,
@@ -200,6 +201,9 @@ async function bundleScript() {
   for (const reference of INERT_REFERENCES) {
     script = script.replace(reference, 'urn:kimen:inert-reference');
   }
+  // Marked's lexer recognizes HTML comments with this regexp. Encoding its
+  // opening angle bracket preserves the pattern and the document's script.
+  script = script.replaceAll('/<!--(?!-?>)', '/\\x3c!--(?!-?>)');
   assertInlinable('script', script);
   return script;
 }
