@@ -43,15 +43,17 @@ them: they are the library's design decisions, not suggestions. If the
 
 ## Install and load
 
-Kimen is pre-1.0. Check whether `@kimen/elements` resolves on npm before
-installing (`npm view @kimen/elements version`). If it does:
+Kimen is pre-1.0. Check whether `@kimen/elements` has a release on npm
+before installing (`npm view @kimen/elements version`). If it prints 0.1.0
+or later:
 
 ```sh
 npm install @kimen/elements @kimen/tokens
 ```
 
-If it does not (packages not published yet), build the repository and link
-the packages from it; see `references/install-from-source.md`.
+If it prints `0.0.0` (a name reservation with no components) or nothing,
+build the repository and link the packages from it; see
+`references/install-from-source.md`.
 
 Then, once per page or app entry point:
 

@@ -107,9 +107,22 @@ Or copy the skill folders into the workspace's `.agents/skills/`, or into
 
 ### Other agents
 
-OpenCode, Gemini CLI, GitHub Copilot, Cursor and Devin Desktop read skills
-from `.agents/skills/` in the project, and most also from `~/.agents/skills/`
-for every project. Copy the two folders there:
+For OpenCode, Gemini CLI, GitHub Copilot, Cursor and the other agents the
+open [`skills` CLI](https://skills.sh/) supports, run this in your project
+(Node 22.20 or later):
+
+```sh
+npx skills add kimen-dev/kimen --skill kimen-components --skill kimen-genui
+```
+
+It asks which agents to install for and puts the skills in each one's skills
+folder; add `-g` to install them for every project instead. Name both
+skills: the repository also holds the skills Kimen's own maintainers use,
+and the CLI lists those too.
+
+To install by hand instead: OpenCode, Gemini CLI, GitHub Copilot, Cursor and
+Devin Desktop read skills from `.agents/skills/` in the project, and most
+also from `~/.agents/skills/` for every project. Copy the two folders there:
 
 ```sh
 mkdir -p .agents/skills
