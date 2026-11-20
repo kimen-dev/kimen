@@ -1728,6 +1728,10 @@
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
       },
+      "sheet": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Inner corner radius of an edge-aligned sheet."
+      },
       "activity-mark": {
         "$value": "{ki.radius.round}",
         "$description": "Round corners for rings and typing dots."
@@ -1970,6 +1974,10 @@
     },
     "layout": {
       "$type": "dimension",
+      "sheet-size": {
+        "$value": "{ki.size.surface.xxs}",
+        "$description": "Default inline size or block-size cap of a compact sheet."
+      },
       "spacing": {
         "zero": {
           "$value": "{ki.space.zero}",

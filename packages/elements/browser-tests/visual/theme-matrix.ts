@@ -17,6 +17,8 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-copy-button',
   'ki-counter',
   'ki-details',
+  'ki-drawer',
+  'ki-drawer-bottom',
   'ki-empty-state',
   'ki-fab',
   'ki-feature-icon',
