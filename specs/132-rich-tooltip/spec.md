@@ -1,8 +1,8 @@
 # Rich tooltip and toggletip
 
-**Issue** #406  
-**Branch** `feat/406-rich-tooltip`  
-**Design reference** Kimen design system, Components → Proposed → RichTooltip.
+- **Issue** #406
+- **Branch** `feat/406-rich-tooltip`
+- **Design reference** Kimen design system, Components → Proposed → RichTooltip.
 
 A brief explanation with a heading appears on pointer hover or keyboard focus.
 A click-opened version can contain actions and keeps the same visual treatment.
