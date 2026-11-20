@@ -416,12 +416,7 @@ function liveData(
     const live = readLiveScalar(element, name, constraint);
     if (live !== undefined) {
       data[name] = live;
-    } else if (
-      name === 'value' &&
-      live === undefined &&
-      constraint.required !== true &&
-      'value' in element
-    ) {
+    } else if (name === 'value' && constraint.required !== true && 'value' in element) {
       // A cleared optional value should not resurrect the initial spec prop.
       delete data['value'];
     }
