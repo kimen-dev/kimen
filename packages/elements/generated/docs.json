@@ -6,84 +6,6 @@
   },
   "components": [
     {
-      "filePath": "src/components/ki-accordion/ki-accordion.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-accordion",
-      "docs": "A set of native disclosure panels with a shared frame.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "group related FAQ answers, settings or expandable sections.\nEnable exclusive when readers benefit from one open section at a time."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "switch between views or make the panels advance a workflow."
-        },
-        {
-          "name": "slot",
-          "text": "- Direct ki-details members in reading order."
-        },
-        {
-          "name": "part",
-          "text": "group - The frame around the disclosure rows."
-        }
-      ],
-      "usage": {
-        "examples": "### Workspace FAQ\n\nGroup direct disclosure children. Set `exclusive` when readers should see\none answer at a time.\n\n```html\n<ki-accordion exclusive>\n  <ki-details open summary=\"Who can see my workspace?\">\n    Only people you invite can see it.\n  </ki-details>\n  <ki-details summary=\"Can I export my data?\">\n    Open Settings, then select Data and Export.\n  </ki-details>\n</ki-accordion>\n```\n"
-      },
-      "props": [
-        {
-          "name": "exclusive",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "exclusive",
-          "reflectToAttr": true,
-          "docs": "Whether the accordion allows at most one direct member to be open.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Direct ki-details members in reading order."
-        }
-      ],
-      "parts": [
-        {
-          "name": "group",
-          "docs": "The frame around the disclosure rows."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
       "filePath": "src/components/ki-ai-label/ki-ai-label.tsx",
       "encapsulation": "shadow",
       "tag": "ki-ai-label",
@@ -1637,11 +1559,11 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
         },
         {
           "name": "whenNotToUse",
-          "text": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress)."
+          "text": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress)."
         },
         {
           "name": "slot",
@@ -1669,7 +1591,7 @@
         }
       ],
       "usage": {
-        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\nIn momentary mode `type` defaults to `submit`. Use `type=\"button\"` for an independent action inside a form.\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nUse `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.\n\n```html\n<ki-button id=\"pin\" variant=\"outline\" toggle selected>Pin</ki-button>\n<script type=\"module\">\n  const button = document.getElementById('pin');\n  button.addEventListener('ki-change', ({ detail: { selected } }) => {\n    console.log('Pinned', selected);\n  });\n</script>\n```\n\nProgrammatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
       },
       "props": [
         {
@@ -1864,35 +1786,6 @@
           "setter": false
         },
         {
-          "name": "selected",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "selected",
-          "reflectToAttr": true,
-          "docs": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
           "name": "size",
           "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
           "complexType": {
@@ -1945,35 +1838,6 @@
           "setter": false
         },
         {
-          "name": "toggle",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "toggle",
-          "reflectToAttr": true,
-          "docs": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
           "name": "tone",
           "type": "\"danger\" | \"neutral\" | \"success\"",
           "complexType": {
@@ -1990,7 +1854,7 @@
           "mutable": false,
           "attr": "tone",
           "reflectToAttr": true,
-          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "docsTags": [
             {
               "name": "default",
@@ -2034,7 +1898,7 @@
           "mutable": false,
           "attr": "type",
           "reflectToAttr": true,
-          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "docsTags": [
             {
               "name": "default",
@@ -2089,10 +1953,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
           "complexType": {
             "original": "KiButtonVariant",
-            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
             "references": {
               "KiButtonVariant": {
                 "location": "local",
@@ -2104,7 +1968,7 @@
           "mutable": false,
           "attr": "variant",
           "reflectToAttr": true,
-          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "docsTags": [
             {
               "name": "default",
@@ -2119,10 +1983,6 @@
           "values": [
             {
               "value": "ghost",
-              "type": "string"
-            },
-            {
-              "value": "outline",
               "type": "string"
             },
             {
@@ -2149,22 +2009,7 @@
         }
       ],
       "methods": [],
-      "events": [
-        {
-          "event": "ki-change",
-          "detail": "{ selected: boolean; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ selected: boolean }",
-            "resolved": "{ selected: boolean; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Emitted after toggle activation with the new selected state.",
-          "docsTags": []
-        }
-      ],
+      "events": [],
       "listeners": [],
       "styles": [],
       "slots": [
@@ -2196,19 +2041,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-confirmation",
-        "ki-conversation"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-confirmation": [
-          "ki-button"
-        ],
-        "ki-conversation": [
-          "ki-button"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-button-group/ki-button-group.tsx",
@@ -3726,15 +3561,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-prompt-input"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-prompt-input": [
-          "ki-chip"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-chip-group/ki-chip-group.tsx",
@@ -4420,1392 +4249,6 @@
       }
     },
     {
-      "filePath": "src/components/ki-combobox/ki-combobox.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-combobox",
-      "docs": "An editable, form-associated combobox with local or remote filtering,\nsingle or multiple selection, and optional free entry.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "choose from a long list of options, let people search an option\nsource, or allow multiple selections that remain visible as tags."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "use a select-only control for a short closed set or a plain\ntext field for unrestricted input with no choices."
-        },
-        {
-          "name": "slot",
-          "text": "- Declarative ki-option children. Supply unique values and a human-readable label."
-        },
-        {
-          "name": "part",
-          "text": "label - Visible label of the field and its listbox."
-        },
-        {
-          "name": "part",
-          "text": "field - Container for the text input and selected tags."
-        },
-        {
-          "name": "part",
-          "text": "input - Native text input with the combobox role."
-        },
-        {
-          "name": "part",
-          "text": "listbox - Floating listbox surface."
-        },
-        {
-          "name": "part",
-          "text": "option - A mirrored choice row."
-        },
-        {
-          "name": "part",
-          "text": "description - An option's secondary text."
-        },
-        {
-          "name": "part",
-          "text": "tag - A selected value in multiple mode."
-        },
-        {
-          "name": "part",
-          "text": "remove - A native button that removes a selected tag."
-        },
-        {
-          "name": "part",
-          "text": "help - Help below the field."
-        },
-        {
-          "name": "part",
-          "text": "error - Polite error message shown after failed validation."
-        },
-        {
-          "name": "event",
-          "text": "change - Composed event after a user changes the committed selection.\nRead the committed value from the host."
-        },
-        {
-          "name": "catalogAction",
-          "text": "change"
-        }
-      ],
-      "usage": {
-        "examples": "## Search people\n\nWhen importing custom elements individually, register both\n`@kimen/elements/ki-combobox` and `@kimen/elements/ki-option`.\n\n```html\n<ki-combobox label=\"Assignee\" name=\"assignee\" placeholder=\"Search people\" required>\n  <ki-option value=\"ana\" description=\"ana@example.com\">Ana Ruiz</ki-option>\n  <ki-option value=\"juan\" description=\"juan@example.com\">Juan Antón</ki-option>\n</ki-combobox>\n```\n\n## Pick or create multiple labels\n\n```html\n<ki-combobox label=\"Labels\" name=\"labels\" multiple allow-custom value='[\"bug\",\"search\"]'>\n  <ki-option>bug</ki-option>\n  <ki-option>search</ki-option>\n  <ki-option>documentation</ki-option>\n</ki-combobox>\n```\n\nAssign an array to the JavaScript `value` property to set multiple selections.\nUse a JSON array string in HTML or neutral catalog specs. Each selection\nsubmits under the same form name. Read them all with `FormData.getAll`.\n\n## Request server results\n\nSet `filter=\"none\"` to display the options supplied by your application.\nListen for `ki-input` and use `event.detail.value` as the query. Set `loading`\nwhile fetching, replace the field's `ki-option` children with the latest\nresults, and clear `loading`. Use `change` to respond to a committed selection.\n"
-      },
-      "props": [
-        {
-          "name": "addLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "add-label",
-          "reflectToAttr": false,
-          "docs": "Localizable free-entry offer. {text} is replaced by the trimmed query.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Add “{text}”'"
-            }
-          ],
-          "default": "'Add “{text}”'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "allowCustom",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "allow-custom",
-          "reflectToAttr": true,
-          "docs": "Offers to add trimmed query text when no known or selected choice already matches it.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Disables editing, navigation and form submission.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "emptyLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "empty-label",
-          "reflectToAttr": false,
-          "docs": "Localizable status when there are no choices to display.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'No results'"
-            }
-          ],
-          "default": "'No results'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "errorText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "error-text",
-          "reflectToAttr": false,
-          "docs": "Message used when a required selection is missing, in place of the browser's message.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "filter",
-          "type": "\"contains\" | \"none\" | \"starts-with\"",
-          "complexType": {
-            "original": "ComboboxFilter",
-            "resolved": "\"contains\" | \"none\" | \"starts-with\"",
-            "references": {
-              "ComboboxFilter": {
-                "location": "import",
-                "path": "./ki-combobox.options",
-                "id": "src/components/ki-combobox/ki-combobox.options.ts::ComboboxFilter",
-                "referenceLocation": "ComboboxFilter"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "filter",
-          "reflectToAttr": false,
-          "docs": "Filters by label. Set to none when the application provides results from a remote search.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'contains'"
-            }
-          ],
-          "default": "'contains'",
-          "values": [
-            {
-              "value": "contains",
-              "type": "string"
-            },
-            {
-              "value": "none",
-              "type": "string"
-            },
-            {
-              "value": "starts-with",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "helpText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "help-text",
-          "reflectToAttr": false,
-          "docs": "Guidance shown below the field and read as its description.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Visible label and accessible name. Supply it even when placeholder text is also set.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "loading",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "loading",
-          "reflectToAttr": true,
-          "docs": "Replaces visible options with a loading indicator while a search is pending.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "loadingLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "loading-label",
-          "reflectToAttr": false,
-          "docs": "Localizable status while waiting for a result set.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Loading results'"
-            }
-          ],
-          "default": "'Loading results'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "multiple",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "multiple",
-          "reflectToAttr": true,
-          "docs": "Enables ordered multiple selection and renders selected values as tags.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Form-data key. Multiple choices contribute one entry each under this name.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "placeholder",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "placeholder",
-          "reflectToAttr": false,
-          "docs": "Hint shown in the text input when it is empty.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "''"
-            }
-          ],
-          "default": "''",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "removeLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "remove-label",
-          "reflectToAttr": false,
-          "docs": "Localizable removal button label. {label} is replaced by the selected label.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Remove {label}'"
-            }
-          ],
-          "default": "'Remove {label}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required",
-          "reflectToAttr": true,
-          "docs": "Requires a committed choice to submit the form.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "resultCountLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "result-count-label",
-          "reflectToAttr": false,
-          "docs": "Localizable status for several choices. {count} is replaced by the result count.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{count} results'"
-            }
-          ],
-          "default": "'{count} results'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "resultOneLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "result-one-label",
-          "reflectToAttr": false,
-          "docs": "Localizable status for one available choice.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'1 result'"
-            }
-          ],
-          "default": "'1 result'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "string | string[]",
-          "complexType": {
-            "original": "string | string[]",
-            "resolved": "string | string[]",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Committed value. Use a string for single selection and an array of strings\nfor multiple selection. In HTML and catalog specs, encode multiple values\nas a JSON array string in the value attribute, or supply one literal value.\nAssign a new array to change multiple selections programmatically.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "''"
-            }
-          ],
-          "default": "''",
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "string[]"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-input",
-          "detail": "{ value: string; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ value: string }",
-            "resolved": "{ value: string; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Reports a raw text edit in `detail.value`. Listen to it to request remote results.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [
-        {
-          "event": "invalid",
-          "capture": false,
-          "passive": false
-        }
-      ],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Declarative ki-option children. Supply unique values and a human-readable label."
-        }
-      ],
-      "parts": [
-        {
-          "name": "description",
-          "docs": "An option's secondary text."
-        },
-        {
-          "name": "error",
-          "docs": "Polite error message shown after failed validation."
-        },
-        {
-          "name": "field",
-          "docs": "Container for the text input and selected tags."
-        },
-        {
-          "name": "help",
-          "docs": "Help below the field."
-        },
-        {
-          "name": "input",
-          "docs": "Native text input with the combobox role."
-        },
-        {
-          "name": "label",
-          "docs": "Visible label of the field and its listbox."
-        },
-        {
-          "name": "listbox",
-          "docs": "Floating listbox surface."
-        },
-        {
-          "name": "option",
-          "docs": "A mirrored choice row."
-        },
-        {
-          "name": "remove",
-          "docs": "A native button that removes a selected tag."
-        },
-        {
-          "name": "tag",
-          "docs": "A selected value in multiple mode."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon",
-        "ki-spinner"
-      ],
-      "dependencyGraph": {
-        "ki-combobox": [
-          "ki-icon",
-          "ki-spinner"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-confirmation/ki-confirmation.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-confirmation",
-      "docs": "An inline prompt for a decision about a proposed assistant action.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Show the exact action and the details a person needs before\ngranting permission. A trusted host maps the two decision events to its\ndeclared actions and records the outcome in state."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Report a completed action without a preceding request, or\nblock the rest of the interface with a modal decision (use ki-dialog).\nThe displayed action identifier is text and carries no execution authority."
-        },
-        {
-          "name": "slot",
-          "text": "- Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
-        },
-        {
-          "name": "part",
-          "text": "group - The painted, labelled prompt or outcome surface."
-        },
-        {
-          "name": "part",
-          "text": "heading - The pending question."
-        },
-        {
-          "name": "part",
-          "text": "remember - The label of the conversation preference checkbox."
-        },
-        {
-          "name": "part",
-          "text": "decisions - The row of decision controls."
-        },
-        {
-          "name": "part",
-          "text": "summary - The resolved row."
-        }
-      ],
-      "usage": {
-        "examples": "# Confirm an assistant action\n\n```html\n<ki-confirmation\n  id=\"send-email-prompt\"\n  heading=\"Send this email?\"\n  action=\"send_email\"\n  approve-label=\"Send email\"\n  deny-label=\"Keep draft\"\n  consequence=\"Recipients will get the message immediately.\"\n  remember\n  remember-label=\"Allow sending email for the rest of this conversation\"\n>\n  <dl>\n    <dt>To</dt><dd>Ana Rivera</dd>\n    <dt>Subject</dt><dd>Weekly report</dd>\n  </dl>\n</ki-confirmation>\n```\n\nMap the two decisions in trusted host code. This MCP Apps example uses a\nready `SurfaceBridge` whose rendered spec declares `approve-send-email` and\n`deny-send-email` in its top-level `actions`. Keep a guarded node's scalar\n`action` binding unset because the component declares two events. Its\n`props.action` carries the visible tool identifier. A trusted host that\napplies an origin allowlist can supply that identifier after rendering, since\nguarded spec data under that prop name passes through the URL policy.\n\n```js\nconst prompt = document.querySelector('#send-email-prompt');\n\nprompt.addEventListener('ki-approve', (event) => {\n  if (event.composedPath()[0] !== prompt) return;\n  bridge.dispatch('approve-send-email', {\n    tool: 'send_email',\n    remember: event.detail?.remember === true,\n  });\n});\n\nprompt.addEventListener('ki-deny', (event) => {\n  if (event.composedPath()[0] !== prompt) return;\n  bridge.dispatch('deny-send-email', { tool: 'send_email' });\n});\n```\n\nThe host owns execution, deadlines and any conversation permission. Supply\noutcome metadata and set the resolved state after recording the decision.\n\n```js\nprompt.resolvedBy = 'You';\nprompt.resolvedAt = '10:32';\nprompt.state = 'approved';\n```\n\nCall `await prompt.focusPrompt()` when the person is waiting for the request.\nKeep the proposed inputs stable while the person is deciding. Mount a new\nelement if another request for the same tool replaces a pending one.\n"
-      },
-      "props": [
-        {
-          "name": "action",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "action",
-          "reflectToAttr": false,
-          "docs": "Tool identifier shown to the person and available for reporting by the host.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "approveLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "approve-label",
-          "reflectToAttr": false,
-          "docs": "Verb or short phrase that describes what approval does, such as \"Send email\".",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "approvedLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "approved-label",
-          "reflectToAttr": false,
-          "docs": "Localized outcome text when the host marks the request approved.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Approved'"
-            }
-          ],
-          "default": "'Approved'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "consequence",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "consequence",
-          "reflectToAttr": false,
-          "docs": "Cost or irreversible effect to read before deciding, displayed as a warning note.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "deniedLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "denied-label",
-          "reflectToAttr": false,
-          "docs": "Localized outcome text when the host marks the request denied.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Denied'"
-            }
-          ],
-          "default": "'Denied'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "denyLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "deny-label",
-          "reflectToAttr": false,
-          "docs": "Verb or short phrase for refusal, such as \"Keep draft\".",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "expiredLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "expired-label",
-          "reflectToAttr": false,
-          "docs": "Localized outcome text when the host marks the request expired.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Expired'"
-            }
-          ],
-          "default": "'Expired'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "heading",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "heading",
-          "reflectToAttr": false,
-          "docs": "Question naming the proposed action. Provide it before asking for a decision.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "remember",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "remember",
-          "reflectToAttr": false,
-          "docs": "Offers an unchecked preference limited to this action in the current conversation.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "rememberLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "remember-label",
-          "reflectToAttr": false,
-          "docs": "Localized conversation permission label. Name the specific permission when possible.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Allow this action for the rest of this conversation'"
-            }
-          ],
-          "default": "'Allow this action for the rest of this conversation'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "resolvedAt",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "resolved-at",
-          "reflectToAttr": false,
-          "docs": "Display-ready, localized resolution time from the host, if known.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "resolvedBy",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "resolved-by",
-          "reflectToAttr": false,
-          "docs": "Display-ready name of the person or service that resolved the request, if known.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "state",
-          "type": "\"approved\" | \"denied\" | \"expired\" | \"pending\"",
-          "complexType": {
-            "original": "KiConfirmationState",
-            "resolved": "\"approved\" | \"denied\" | \"expired\" | \"pending\"",
-            "references": {
-              "KiConfirmationState": {
-                "location": "local",
-                "path": "src/components/ki-confirmation/ki-confirmation.tsx",
-                "id": "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationState"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "state",
-          "reflectToAttr": false,
-          "docs": "Host-controlled outcome. Resolve after recording a decision or expiring the request.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'pending'"
-            }
-          ],
-          "default": "'pending'",
-          "values": [
-            {
-              "value": "approved",
-              "type": "string"
-            },
-            {
-              "value": "denied",
-              "type": "string"
-            },
-            {
-              "value": "expired",
-              "type": "string"
-            },
-            {
-              "value": "pending",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "tone",
-          "type": "\"danger\" | \"neutral\"",
-          "complexType": {
-            "original": "KiConfirmationTone",
-            "resolved": "\"danger\" | \"neutral\"",
-            "references": {
-              "KiConfirmationTone": {
-                "location": "local",
-                "path": "src/components/ki-confirmation/ki-confirmation.tsx",
-                "id": "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationTone"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "tone",
-          "reflectToAttr": false,
-          "docs": "Use danger when approval is destructive. Unknown values use neutral.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'neutral'"
-            }
-          ],
-          "default": "'neutral'",
-          "values": [
-            {
-              "value": "danger",
-              "type": "string"
-            },
-            {
-              "value": "neutral",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [
-        {
-          "name": "focusPrompt",
-          "returns": {
-            "type": "Promise<boolean>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "() => Promise<boolean>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<boolean>"
-          },
-          "signature": "focusPrompt() => Promise<boolean>",
-          "parameters": [],
-          "docs": "Moves focus to the pending group and reports success. Call only when the\nhost knows the person was waiting for this request. A focused editor keeps\nits focus, including editors inside open shadow roots.",
-          "docsTags": []
-        }
-      ],
-      "events": [
-        {
-          "event": "ki-approve",
-          "detail": "{ remember: boolean; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ remember: boolean }",
-            "resolved": "{ remember: boolean; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Explicit approval, with the conversation preference at the time of the decision.",
-          "docsTags": []
-        },
-        {
-          "event": "ki-deny",
-          "detail": "void",
-          "bubbles": true,
-          "complexType": {
-            "original": "void",
-            "resolved": "void",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Explicit refusal of the pending request.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
-        }
-      ],
-      "parts": [
-        {
-          "name": "decisions",
-          "docs": "The row of decision controls."
-        },
-        {
-          "name": "group",
-          "docs": "The painted, labelled prompt or outcome surface."
-        },
-        {
-          "name": "heading",
-          "docs": "The pending question."
-        },
-        {
-          "name": "remember",
-          "docs": "The label of the conversation preference checkbox."
-        },
-        {
-          "name": "summary",
-          "docs": "The resolved row."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-button",
-        "ki-note"
-      ],
-      "dependencyGraph": {
-        "ki-confirmation": [
-          "ki-button",
-          "ki-note"
-        ]
-      }
-    },
-    {
-      "filePath": "src/components/ki-conversation/ki-conversation.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-conversation",
-      "docs": "An accessible chat transcript with optional following as messages arrive.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Display chronological user, assistant and event messages. Give\nthe host a block-size constraint to keep scrolling within the transcript."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Collect input, send messages or present a static sequence of\ncards. Place the composer outside the transcript."
-        },
-        {
-          "name": "slot",
-          "text": "- The chronological transcript, normally ki-message elements."
-        },
-        {
-          "name": "part",
-          "text": "log - The named polite live region and keyboard-focusable scrollport."
-        },
-        {
-          "name": "part",
-          "text": "messages - The stack of slotted messages inside the scrollport."
-        },
-        {
-          "name": "part",
-          "text": "jump - The Jump to latest button shown while following is paused."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-conversation examples\n\n## Bounded transcript\n\nSet a block size to make the transcript scroll. Enable `stick-to-bottom` to\nfollow new messages and keep incoming replies in view.\n\n```html\n<ki-conversation id=\"help-chat\" label=\"Component help\" stick-to-bottom style=\"block-size: 20rem\">\n  <ki-message message-role=\"user\">Which inputs handle form errors?</ki-message>\n  <ki-message message-role=\"event\" icon-name=\"search\">Searched the component docs</ki-message>\n  <ki-message message-role=\"assistant\">Input, textarea and select show field errors.</ki-message>\n</ki-conversation>\n<label for=\"prompt\">Message</label>\n<textarea id=\"prompt\"></textarea>\n```\n\n## Pass application chunks to a message\n\nCall this function with the async iterable supplied by your application.\nKeep the composer and any waiting indicator outside the live log.\n\n```js\nasync function appendReply(conversation, chunks) {\n  const reply = document.createElement('ki-message');\n  reply.setAttribute('streaming', '');\n  conversation.append(reply);\n  try {\n    for await (const chunk of chunks) {\n      reply.append(chunk);\n    }\n  } finally {\n    reply.removeAttribute('streaming');\n  }\n}\n```\n\n## Custom-elements entry points\n\n```ts\nimport { defineCustomElement as defineConversation } from '@kimen/elements/ki-conversation';\nimport { defineCustomElement as defineMessage } from '@kimen/elements/ki-message';\n\ndefineConversation();\ndefineMessage();\n```\n"
-      },
-      "props": [
-        {
-          "name": "jumpLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "jump-label",
-          "reflectToAttr": false,
-          "docs": "Visible and accessible label for the control that resumes following.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Jump to latest'"
-            }
-          ],
-          "default": "'Jump to latest'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Conversation'"
-            }
-          ],
-          "default": "'Conversation'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "stickToBottom",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "stick-to-bottom",
-          "reflectToAttr": true,
-          "docs": "Follow new or growing messages until the reader scrolls away from the end.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "The chronological transcript, normally ki-message elements."
-        }
-      ],
-      "parts": [
-        {
-          "name": "jump",
-          "docs": "The Jump to latest button shown while following is paused."
-        },
-        {
-          "name": "log",
-          "docs": "The named polite live region and keyboard-focusable scrollport."
-        },
-        {
-          "name": "messages",
-          "docs": "The stack of slotted messages inside the scrollport."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-button"
-      ],
-      "dependencyGraph": {
-        "ki-conversation": [
-          "ki-button"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-copy-button/ki-copy-button.tsx",
       "encapsulation": "shadow",
       "tag": "ki-copy-button",
@@ -6067,10 +4510,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\"",
+          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
           "complexType": {
             "original": "KiCopyButtonVariant",
-            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\"",
+            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
             "references": {
               "KiCopyButtonVariant": {
                 "location": "local",
@@ -6093,10 +4536,6 @@
           "values": [
             {
               "value": "ghost",
-              "type": "string"
-            },
-            {
-              "value": "outline",
               "type": "string"
             },
             {
@@ -6394,191 +4833,6 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-details/ki-details.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-details",
-      "docs": "A native disclosure for supporting information that can stay collapsed.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "hide the primary action or information needed to complete a task.\nFor script-free HTML, author native details and summary directly."
-        },
-        {
-          "name": "slot",
-          "text": "summary - Rich summary text or an authored heading, replacing the summary prop."
-        },
-        {
-          "name": "slot",
-          "text": "- Content shown when the disclosure is open."
-        }
-      ],
-      "usage": {
-        "examples": "### Workspace permissions\n\nUse one disclosure for an explanation the reader can reveal on demand.\nUse the plain `summary` prop for text or a heading in the `summary` slot.\nThe default slot contains the answer.\n\n```html\n<ki-details summary=\"Who can see my workspace?\">\n  <p>Only people you invite can see it.</p>\n</ki-details>\n```\n\nListen for `ki-toggle` on the disclosure to read `event.detail.open`.\nIn a catalog surface, bind the action to the individual Details node.\n"
-      },
-      "props": [
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Disables summary activation. The page can still set open.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Nonempty name for exclusive disclosures in the same document or shadow root.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "open",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "open",
-          "reflectToAttr": true,
-          "docs": "Whether the panel is open. Native changes reflect back to this property.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "summary",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "summary",
-          "reflectToAttr": false,
-          "docs": "Plain label for the control. Supply the summary slot for a rich label.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-toggle",
-          "detail": "KiDetailsToggleDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiDetailsToggleDetail",
-            "resolved": "KiDetailsToggleDetail",
-            "references": {
-              "KiDetailsToggleDetail": {
-                "location": "local",
-                "path": "src/components/ki-details/ki-details.tsx",
-                "id": "src/components/ki-details/ki-details.tsx::KiDetailsToggleDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Emitted when the native disclosure toggles or an exclusive peer closes it.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Content shown when the disclosure is open."
-        },
-        {
-          "name": "summary",
-          "docs": "Rich summary text or an authored heading, replacing the summary prop."
-        }
-      ],
-      "parts": [],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-details": [
-          "ki-icon"
-        ]
-      }
     },
     {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
@@ -8607,13 +6861,9 @@
       "dependents": [
         "ki-ai-label",
         "ki-breadcrumb",
-        "ki-combobox",
         "ki-copy-button",
-        "ki-details",
         "ki-empty-state",
         "ki-fab",
-        "ki-message",
-        "ki-prompt-input",
         "ki-stat",
         "ki-stepper",
         "ki-table"
@@ -8626,25 +6876,13 @@
         "ki-breadcrumb": [
           "ki-icon"
         ],
-        "ki-combobox": [
-          "ki-icon"
-        ],
         "ki-copy-button": [
-          "ki-icon"
-        ],
-        "ki-details": [
           "ki-icon"
         ],
         "ki-empty-state": [
           "ki-icon"
         ],
         "ki-fab": [
-          "ki-icon"
-        ],
-        "ki-message": [
-          "ki-icon"
-        ],
-        "ki-prompt-input": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -8666,19 +6904,15 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. Enable `toggle` for persistent actions such as\nBookmark. While the action it started is in progress, set `loading`."
+          "text": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
         },
         {
           "name": "whenNotToUse",
-          "text": "whenever a visible label fits (use ki-button),\nnavigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
+          "text": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence)."
         },
         {
           "name": "slot",
           "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
-        },
-        {
-          "name": "slot",
-          "text": "selected - Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
         },
         {
           "name": "slot",
@@ -8698,7 +6932,7 @@
         }
       ],
       "usage": {
-        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`). In the original momentary variants, `tone` (default `neutral`) carries semantic intent such as success or danger.\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nAdd `toggle` for an action such as Bookmark that stays pressed until the next activation. `variant=\"outline\"` uses an outline at rest and a fill when selected. Give the pressed version a decorative icon in the `selected` slot.\n\n```html\n<ki-icon-button toggle variant=\"outline\" label=\"Bookmark\">\n  <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" stroke=\"currentColor\" stroke-width=\"2\" />\n  </svg>\n  <svg slot=\"selected\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" />\n  </svg>\n</ki-icon-button>\n```\n\nWith an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
+        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
       },
       "props": [
         {
@@ -8926,7 +7160,7 @@
           "mutable": false,
           "attr": "pressed",
           "reflectToAttr": false,
-          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action.",
+          "docs": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action.",
           "docsTags": [],
           "values": [
             {
@@ -8937,35 +7171,6 @@
             }
           ],
           "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "selected",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "selected",
-          "reflectToAttr": true,
-          "docs": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
           "required": false,
           "getter": false,
           "setter": false
@@ -9023,35 +7228,6 @@
           "setter": false
         },
         {
-          "name": "toggle",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "toggle",
-          "reflectToAttr": true,
-          "docs": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
           "name": "tone",
           "type": "\"danger\" | \"neutral\" | \"success\"",
           "complexType": {
@@ -9068,7 +7244,7 @@
           "mutable": false,
           "attr": "tone",
           "reflectToAttr": true,
-          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "docs": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "docsTags": [
             {
               "name": "default",
@@ -9097,10 +7273,10 @@
         },
         {
           "name": "variant",
-          "type": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
           "complexType": {
             "original": "KiIconButtonVariant",
-            "resolved": "\"ghost\" | \"outline\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
+            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\"",
             "references": {
               "KiIconButtonVariant": {
                 "location": "local",
@@ -9112,7 +7288,7 @@
           "mutable": false,
           "attr": "variant",
           "reflectToAttr": true,
-          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "docs": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "docsTags": [
             {
               "name": "default",
@@ -9127,10 +7303,6 @@
           "values": [
             {
               "value": "ghost",
-              "type": "string"
-            },
-            {
-              "value": "outline",
               "type": "string"
             },
             {
@@ -9157,22 +7329,7 @@
         }
       ],
       "methods": [],
-      "events": [
-        {
-          "event": "ki-change",
-          "detail": "{ selected: boolean; }",
-          "bubbles": true,
-          "complexType": {
-            "original": "{ selected: boolean }",
-            "resolved": "{ selected: boolean; }",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Emitted after toggle activation with the new selected state.",
-          "docsTags": []
-        }
-      ],
+      "events": [],
       "listeners": [],
       "styles": [],
       "slots": [
@@ -9183,10 +7340,6 @@
         {
           "name": "counter",
           "docs": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
-        },
-        {
-          "name": "selected",
-          "docs": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
         }
       ],
       "parts": [
@@ -9783,10 +7936,6 @@
           "text": "end - Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI."
         },
         {
-          "name": "slot",
-          "text": "action - One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls."
-        },
-        {
           "name": "part",
           "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
         },
@@ -9816,7 +7965,7 @@
         }
       ],
       "usage": {
-        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nPlace a one-field form's only submit action inside the field.\n\n```html\n<form role=\"search\">\n  <ki-input type=\"search\" name=\"q\" label=\"Search docs\" placeholder=\"Components, tokens…\">\n    <ki-button slot=\"action\" size=\"sm\" variant=\"secondary\" type=\"submit\">Search</ki-button>\n  </ki-input>\n</form>\n```\n\nThe action has a separate tab stop. Enter in the entry also submits the form.\nFor an icon-only action, give `ki-icon-button size=\"sm\"` a `label` and call\n`form.requestSubmit()` from its click handler.\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
+        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
       },
       "props": [
         {
@@ -10263,10 +8412,6 @@
       ],
       "styles": [],
       "slots": [
-        {
-          "name": "action",
-          "docs": "One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls."
-        },
         {
           "name": "end",
           "docs": "Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI."
@@ -10786,6 +8931,176 @@
         {
           "name": "start",
           "docs": "Leading region wrapper."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-markdown/ki-markdown.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-markdown",
+      "docs": "Displays Markdown as Kimen components and native HTML semantics.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Show a formatted reply, readme excerpt or progressively received text from a person or model."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Present an editable document or apply trusted authored HTML. Use native markup for structured page content."
+        },
+        {
+          "name": "slot",
+          "text": "- Literal Markdown source. Set a text node or escape markup when writing HTML."
+        },
+        {
+          "name": "part",
+          "text": "content - Box containing the formatted blocks."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-markdown examples\n\nThe supported Markdown subset includes headings, paragraphs, emphasis,\nstrikethrough, inline and fenced code, links, opt-in images, ordered and\nunordered lists, task items, blockquotes, tables and hard breaks.\nUse `> [!NOTE]` to display a Kimen Note.\n\nThe package loader registers Markdown, Link, CodeBlock and Note. Register the\nchild elements your content uses when using direct imports or framework\nwrappers.\n\n```js\nimport { defineCustomElement as defineCodeBlock } from '@kimen/elements/ki-code-block';\nimport { defineCustomElement as defineLink } from '@kimen/elements/ki-link';\nimport { defineCustomElement as defineNote } from '@kimen/elements/ki-note';\nimport { defineCustomElement as defineMarkdown } from '@kimen/elements/ki-markdown';\n\ndefineCodeBlock();\ndefineLink();\ndefineNote();\ndefineMarkdown();\n```\n\nWith a framework wrapper, use the first three registrations. The wrapper\nregisters Markdown.\n\nRender a short note as static text.\n\n```html\n<ki-markdown src-text=\"## Release notes\"></ki-markdown>\n\n<ki-markdown>Check the **release date** and the [upgrade guide](/guides/upgrade).</ki-markdown>\n```\n\nUpdate the source while chunks arrive. When all text has arrived, finish the\nstream so the component renders the complete Markdown document.\n\n```html\n<ki-markdown id=\"answer\" streaming></ki-markdown>\n```\n\n```js\nconst answer = document.querySelector('#answer');\nlet source = '';\nfor await (const chunk of answerChunks) {\n  source += chunk;\n  answer.srcText = source;\n}\nanswer.streaming = false;\n```\n\nAssign untrusted strings to `srcText`. In a static HTML example, escape angle\nbrackets before passing them as text.\n\n```html\n<ki-markdown>&lt;aside&gt;This markup is shown as text.&lt;/aside&gt;</ki-markdown>\n```\n\nA guarded surface can pass the source as a string in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-markdown\",\n    \"props\": { \"heading-offset\": 1 },\n    \"slots\": { \"\": [\"# Release notes\\n\\nRead the [upgrade guide](/guides/upgrade).\"] }\n  }\n}\n```\n"
+      },
+      "props": [
+        {
+          "name": "allowImages",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "allow-images",
+          "reflectToAttr": false,
+          "docs": "Render Markdown images that pass the URL policy. Otherwise show their alternative text.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "headingOffset",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading-offset",
+          "reflectToAttr": false,
+          "docs": "Add zero through five levels to source headings. The output stops at level six. Invalid values use two.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "5"
+            },
+            {
+              "name": "default",
+              "text": "2"
+            }
+          ],
+          "default": "2",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "srcText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "src-text",
+          "reflectToAttr": false,
+          "docs": "Markdown source. A supplied value, including an empty string, takes precedence over the default text slot.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "streaming",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "streaming",
+          "reflectToAttr": false,
+          "docs": "Keep established blocks mounted while an answer grows. Turn it off when the source is complete.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Literal Markdown source. Set a text node or escape markup when writing HTML."
+        }
+      ],
+      "parts": [
+        {
+          "name": "content",
+          "docs": "Box containing the formatted blocks."
         }
       ],
       "states": [],
@@ -11429,236 +9744,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-message/ki-message.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-message",
-      "docs": "A named chat article styled as a person’s message, assistant reply or event.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Collect a prompt, announce a page alert, or execute a tool."
-        },
-        {
-          "name": "slot",
-          "text": "- Message content, including text or formatted elements."
-        },
-        {
-          "name": "slot",
-          "text": "avatar - Optional avatar replacing the assistant’s decorative default."
-        },
-        {
-          "name": "slot",
-          "text": "actions - Follow-up controls supplied by the consumer after the content."
-        },
-        {
-          "name": "part",
-          "text": "message - The named article and role-specific layout."
-        },
-        {
-          "name": "part",
-          "text": "avatar - The leading assistant avatar container."
-        },
-        {
-          "name": "part",
-          "text": "content - The body of the article, including any event icon."
-        },
-        {
-          "name": "part",
-          "text": "actions - The group containing slotted follow-up controls."
-        },
-        {
-          "name": "part",
-          "text": "caret - The decorative marker displayed while a message is streaming."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-message examples\n\n## User and event messages\n\n```html\n<ki-message message-role=\"user\">Can I export my settings?</ki-message>\n<ki-message message-role=\"event\" icon-name=\"search\">Found the export guide</ki-message>\n```\n\n## Assistant reply with an avatar and action\n\nThe `author` prop names the article. Put formatted content in the default\nslot and application controls in `actions`.\n\n```html\n<ki-message message-role=\"assistant\" author=\"Ava said\">\n  <ki-avatar slot=\"avatar\" size=\"xs\" initials=\"AV\"></ki-avatar>\n  <strong>Yes.</strong> Choose <code>JSON</code> from the export menu.\n  <details slot=\"actions\">\n    <summary>View source</summary>\n    Settings export guide\n  </details>\n</ki-message>\n```\n\n## Streaming reply\n\nAdd `streaming` while the content is arriving, then remove it when the\ncomplete reply is available. Use a registered Markdown component in the\ndefault slot when your application displays formatted Markdown.\n\n```html\n<ki-message message-role=\"assistant\" streaming>Choose the export format</ki-message>\n```\n"
-      },
-      "props": [
-        {
-          "name": "author",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "author",
-          "reflectToAttr": false,
-          "docs": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "iconName",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "icon-name",
-          "reflectToAttr": false,
-          "docs": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "messageRole",
-          "type": "\"assistant\" | \"event\" | \"user\" | undefined",
-          "complexType": {
-            "original": "KiMessageRole",
-            "resolved": "\"assistant\" | \"event\" | \"user\" | undefined",
-            "references": {
-              "KiMessageRole": {
-                "location": "local",
-                "path": "src/components/ki-message/ki-message.tsx",
-                "id": "src/components/ki-message/ki-message.tsx::KiMessageRole"
-              }
-            }
-          },
-          "mutable": true,
-          "attr": "message-role",
-          "reflectToAttr": true,
-          "docs": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'assistant'"
-            }
-          ],
-          "values": [
-            {
-              "value": "assistant",
-              "type": "string"
-            },
-            {
-              "value": "event",
-              "type": "string"
-            },
-            {
-              "value": "user",
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "streaming",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "streaming",
-          "reflectToAttr": true,
-          "docs": "Show the caret and mark the article busy until this message is complete.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "",
-          "docs": "Message content, including text or formatted elements."
-        },
-        {
-          "name": "actions",
-          "docs": "Follow-up controls supplied by the consumer after the content."
-        },
-        {
-          "name": "avatar",
-          "docs": "Optional avatar replacing the assistant’s decorative default."
-        }
-      ],
-      "parts": [
-        {
-          "name": "actions",
-          "docs": "The group containing slotted follow-up controls."
-        },
-        {
-          "name": "avatar",
-          "docs": "The leading assistant avatar container."
-        },
-        {
-          "name": "caret",
-          "docs": "The decorative marker displayed while a message is streaming."
-        },
-        {
-          "name": "content",
-          "docs": "The body of the article, including any event icon."
-        },
-        {
-          "name": "message",
-          "docs": "The named article and role-specific layout."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-message": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-note/ki-note.tsx",
       "encapsulation": "shadow",
       "tag": "ki-note",
@@ -11853,25 +9938,19 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-confirmation"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-confirmation": [
-          "ki-note"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-option/ki-option.tsx",
       "encapsulation": "shadow",
       "tag": "ki-option",
-      "docs": "A declarative data option rendered by its owning `ki-select` or `ki-combobox`.",
+      "docs": "A declarative data option rendered by its owning `ki-select`.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "declare one choice inside a `ki-select` or `ki-combobox`; its text is the\nhuman-facing label and its `value` is the submitted value."
+          "text": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
         },
         {
           "name": "whenNotToUse",
@@ -11879,43 +9958,13 @@
         },
         {
           "name": "slot",
-          "text": "- Text label mirrored by the owning choice field."
-        },
-        {
-          "name": "slot",
-          "text": "start - Decorative content shown before the label in a combobox row."
+          "text": "- Text label mirrored by the owning select."
         }
       ],
       "usage": {
         "examples": "An option is meaningful only inside `ki-select`: it does not paint itself — the trimmed text is the visible label the select mirrors into its popup listbox, and `value` is what the form submits:\n\n```html\n<ki-select label=\"Language\" name=\"language\" placeholder=\"Choose a language\">\n  <ki-option value=\"en\">English</ki-option>\n  <ki-option value=\"es\">Spanish</ki-option>\n  <ki-option value=\"pt\">Portuguese</ki-option>\n</ki-select>\n```\n\nOmitting `value` submits the trimmed option text (native `<option>` parity); `disabled` options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select:\n\n```html\n<ki-select label=\"Priority\" name=\"priority\">\n  <ki-option>Low</ki-option>\n  <ki-option>Medium</ki-option>\n  <ki-option disabled>Urgent</ki-option>\n</ki-select>\n```\n\nNever author selection on the option — assign `ki-select.value` and the first matching option is selected silently:\n\n```html\n<ki-select id=\"language\" label=\"Language\" name=\"language\">\n  <ki-option value=\"en\">English</ki-option>\n  <ki-option value=\"es\">Spanish</ki-option>\n</ki-select>\n\n<script type=\"module\">\n  document.getElementById('language').value = 'es';\n</script>\n```\n"
       },
       "props": [
-        {
-          "name": "description",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "description",
-          "reflectToAttr": true,
-          "docs": "Secondary text shown below the label in a combobox choice row.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
         {
           "name": "disabled",
           "type": "boolean",
@@ -11979,11 +10028,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Text label mirrored by the owning choice field."
-        },
-        {
-          "name": "start",
-          "docs": "Decorative content shown before the label in a combobox row."
+          "docs": "Text label mirrored by the owning select."
         }
       ],
       "parts": [],
@@ -12511,746 +10556,6 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-prompt-input/ki-prompt-input.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-prompt-input",
-      "docs": "A multiline assistant composer with local file attachments and send and stop requests.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Compose a message to an assistant, optionally attach local files, and let people interrupt the assistant's response."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Ordinary multiline form input without a send or stop interaction (`ki-textarea`), file uploads, or rich text editing."
-        },
-        {
-          "name": "slot",
-          "text": "tools - Application-owned toolbar controls, such as a model-picker trigger. Use non-submitting controls."
-        },
-        {
-          "name": "slot",
-          "text": "attachments - Supplemental list items, visible when accept is set. Composer-managed files appear in the same list and alone contribute to ki-submit."
-        },
-        {
-          "name": "part",
-          "text": "field - The painted composer enclosure."
-        },
-        {
-          "name": "part",
-          "text": "textarea - The native growing text control."
-        },
-        {
-          "name": "part",
-          "text": "attachments - The labelled attachment list."
-        },
-        {
-          "name": "part",
-          "text": "tools - The container for the tools slot."
-        },
-        {
-          "name": "part",
-          "text": "actions - The toolbar with attachment, tool and message actions."
-        },
-        {
-          "name": "part",
-          "text": "attach - The native file-picker button."
-        },
-        {
-          "name": "part",
-          "text": "send - The native Send button."
-        },
-        {
-          "name": "part",
-          "text": "stop - The native Stop button, visible while streaming."
-        },
-        {
-          "name": "part",
-          "text": "status - The polite announcement for the streaming state."
-        },
-        {
-          "name": "part",
-          "text": "feedback - The polite announcement for rejected attachments."
-        }
-      ],
-      "usage": {
-        "examples": "# PromptInput examples\n\nUse a composer when a person can send a message to an assistant and stop its response. Provide a `label` even when there is a placeholder.\n\n## Text and attachments\n\n```html\n<ki-prompt-input\n  label=\"Message Kimen Assistant\"\n  placeholder=\"Ask anything, or drop a file\"\n  accept=\".csv,.pdf,image/*\"\n  max-files=\"5\"\n  max-size=\"5000000\"\n></ki-prompt-input>\n```\n\nThe file picker, drop area and clipboard share the same checks. `max-size` is the number of bytes allowed per file. An empty `accept` hides the attachment UI. The host receives a `ki-submit` event with `detail.text` and `detail.files`.\n\n## Model selection and keyboard shortcuts\n\n```html\n<ki-prompt-input label=\"Message assistant\" submit-on=\"mod-enter\">\n  <select slot=\"tools\" aria-label=\"Assistant model\">\n    <option value=\"standard\">Standard</option>\n    <option value=\"careful\">Careful</option>\n  </select>\n</ki-prompt-input>\n```\n\nIn modifier mode, Control+Enter and Command+Enter send. Shift+Enter always inserts a newline. A model picker built with a menu can use the same slot. Read model selection from that control when handling `ki-submit`.\n\nThe application sets `status` to `submitted` while awaiting a response and to `streaming` when output begins. It handles `ki-stop` and sets `status` to `idle` when the response ends or stops.\n"
-      },
-      "props": [
-        {
-          "name": "accept",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "accept",
-          "reflectToAttr": false,
-          "docs": "Comma-separated extensions or MIME types. Empty hides the attachment surface.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "''"
-            }
-          ],
-          "default": "''",
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "attachLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "attach-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the file picker button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Attach files'"
-            }
-          ],
-          "default": "'Attach files'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "attachmentsLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "attachments-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the attachment list.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Attachments'"
-            }
-          ],
-          "default": "'Attachments'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Excludes the composer from interaction and native form data.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "fileCountMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "file-count-message",
-          "reflectToAttr": false,
-          "docs": "Localized count rejection. The {name} marker is replaced with the file name.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{name} exceeds the maximum number of attachments.'"
-            }
-          ],
-          "default": "'{name} exceeds the maximum number of attachments.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "fileSizeMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "file-size-message",
-          "reflectToAttr": false,
-          "docs": "Localized size rejection. The {name} marker is replaced with the file name.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{name} exceeds the file size limit.'"
-            }
-          ],
-          "default": "'{name} exceeds the file size limit.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "fileTypeMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "file-type-message",
-          "reflectToAttr": false,
-          "docs": "Localized type rejection. The {name} marker is replaced with the file name.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'{name} has an unsupported file type.'"
-            }
-          ],
-          "default": "'{name} has an unsupported file type.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Required accessible name of the text field. Supply it even with a placeholder.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "maxFiles",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max-files",
-          "reflectToAttr": false,
-          "docs": "Maximum count of attached files. Omit for no count limit.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "maxSize",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max-size",
-          "reflectToAttr": false,
-          "docs": "Maximum attachment size in bytes per file. Omit for no size limit.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Optional key for the text in native form data. Files are carried by ki-submit.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "placeholder",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "placeholder",
-          "reflectToAttr": false,
-          "docs": "Hint displayed while the text field is empty.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "removeLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "remove-label",
-          "reflectToAttr": false,
-          "docs": "Prefix of an attachment's remove button name, followed by the file name.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Remove'"
-            }
-          ],
-          "default": "'Remove'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "sendLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "send-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the Send button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Send'"
-            }
-          ],
-          "default": "'Send'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "status",
-          "type": "\"idle\" | \"streaming\" | \"submitted\" | undefined",
-          "complexType": {
-            "original": "KiPromptInputStatus",
-            "resolved": "\"idle\" | \"streaming\" | \"submitted\" | undefined",
-            "references": {
-              "KiPromptInputStatus": {
-                "location": "local",
-                "path": "src/components/ki-prompt-input/ki-prompt-input.tsx",
-                "id": "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputStatus"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "status",
-          "reflectToAttr": false,
-          "docs": "Application-owned request state. Only idle can send; streaming exposes Stop.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'idle'"
-            }
-          ],
-          "default": "'idle'",
-          "values": [
-            {
-              "value": "idle",
-              "type": "string"
-            },
-            {
-              "value": "streaming",
-              "type": "string"
-            },
-            {
-              "value": "submitted",
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "stopLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "stop-label",
-          "reflectToAttr": false,
-          "docs": "Accessible name of the Stop button.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Stop generating'"
-            }
-          ],
-          "default": "'Stop generating'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "submitOn",
-          "type": "\"enter\" | \"mod-enter\"",
-          "complexType": {
-            "original": "KiPromptInputSubmitOn",
-            "resolved": "\"enter\" | \"mod-enter\"",
-            "references": {
-              "KiPromptInputSubmitOn": {
-                "location": "local",
-                "path": "src/components/ki-prompt-input/ki-prompt-input.tsx",
-                "id": "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputSubmitOn"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "submit-on",
-          "reflectToAttr": false,
-          "docs": "Send with Enter or with Control/Command+Enter. Shift+Enter always adds a line.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'enter'"
-            }
-          ],
-          "default": "'enter'",
-          "values": [
-            {
-              "value": "enter",
-              "type": "string"
-            },
-            {
-              "value": "mod-enter",
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Current draft text; the value attribute provides the form reset default.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "''"
-            }
-          ],
-          "default": "''",
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "writingMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "writing-message",
-          "reflectToAttr": false,
-          "docs": "Visible polite status while the assistant streams.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Writing…'"
-            }
-          ],
-          "default": "'Writing…'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [
-        {
-          "event": "ki-stop",
-          "detail": "void",
-          "bubbles": true,
-          "complexType": {
-            "original": "void",
-            "resolved": "void",
-            "references": {}
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Requests that the application stop its streaming response.",
-          "docsTags": []
-        },
-        {
-          "event": "ki-submit",
-          "detail": "KiPromptInputSubmitDetail",
-          "bubbles": true,
-          "complexType": {
-            "original": "KiPromptInputSubmitDetail",
-            "resolved": "KiPromptInputSubmitDetail",
-            "references": {
-              "KiPromptInputSubmitDetail": {
-                "location": "local",
-                "path": "src/components/ki-prompt-input/ki-prompt-input.tsx",
-                "id": "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputSubmitDetail"
-              }
-            }
-          },
-          "cancelable": false,
-          "composed": true,
-          "docs": "Requests a send with original text and a snapshot of accepted local files.",
-          "docsTags": []
-        }
-      ],
-      "listeners": [],
-      "styles": [],
-      "slots": [
-        {
-          "name": "attachments",
-          "docs": "Supplemental list items, visible when accept is set. Composer-managed files appear in the same list and alone contribute to ki-submit."
-        },
-        {
-          "name": "tools",
-          "docs": "Application-owned toolbar controls, such as a model-picker trigger. Use non-submitting controls."
-        }
-      ],
-      "parts": [
-        {
-          "name": "actions",
-          "docs": "The toolbar with attachment, tool and message actions."
-        },
-        {
-          "name": "attach",
-          "docs": "The native file-picker button."
-        },
-        {
-          "name": "attachments",
-          "docs": "The labelled attachment list."
-        },
-        {
-          "name": "feedback",
-          "docs": "The polite announcement for rejected attachments."
-        },
-        {
-          "name": "field",
-          "docs": "The painted composer enclosure."
-        },
-        {
-          "name": "send",
-          "docs": "The native Send button."
-        },
-        {
-          "name": "status",
-          "docs": "The polite announcement for the streaming state."
-        },
-        {
-          "name": "stop",
-          "docs": "The native Stop button, visible while streaming."
-        },
-        {
-          "name": "textarea",
-          "docs": "The native growing text control."
-        },
-        {
-          "name": "tools",
-          "docs": "The container for the tools slot."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-chip",
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-prompt-input": [
-          "ki-chip",
-          "ki-icon"
-        ]
-      }
     },
     {
       "filePath": "src/components/ki-qr/ki-qr.tsx",
@@ -15816,15 +13121,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-combobox"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-combobox": [
-          "ki-spinner"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-stack/ki-stack.tsx",
@@ -19584,7 +16883,7 @@
       "path": "src/components/ki-badge/ki-badge.tsx"
     },
     "src/components/ki-button/ki-button.tsx::KiButtonVariant": {
-      "declaration": "export type KiButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'tertiary'\n  | 'quaternary'\n  | 'ghost'\n  | 'outline';",
+      "declaration": "export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
     },
@@ -19638,16 +16937,6 @@
       "docstring": "",
       "path": "src/components/ki-chip-group/ki-chip-group.tsx"
     },
-    "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationTone": {
-      "declaration": "export type KiConfirmationTone = 'neutral' | 'danger';",
-      "docstring": "",
-      "path": "src/components/ki-confirmation/ki-confirmation.tsx"
-    },
-    "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationState": {
-      "declaration": "export type KiConfirmationState = 'pending' | 'approved' | 'denied' | 'expired';",
-      "docstring": "",
-      "path": "src/components/ki-confirmation/ki-confirmation.tsx"
-    },
     "src/components/ki-copy-button/ki-copy-button.tsx::KiCopyButtonVariant": {
       "declaration": "export type KiCopyButtonVariant = Exclude<KiButtonVariant, 'tertiary'>;",
       "docstring": "",
@@ -19657,11 +16946,6 @@
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
       "docstring": "",
       "path": "src/components/ki-counter/ki-counter.tsx"
-    },
-    "src/components/ki-details/ki-details.tsx::KiDetailsToggleDetail": {
-      "declaration": "export interface KiDetailsToggleDetail {\n  open: boolean;\n}",
-      "docstring": "The resulting open state of a native disclosure.",
-      "path": "src/components/ki-details/ki-details.tsx"
     },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
       "declaration": "export interface KiDialogCloseDetail {\n  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. */\n  reason: KiDialogCloseReason;\n}",
@@ -19709,7 +16993,7 @@
       "path": "src/components/ki-icon/ki-icon.tsx"
     },
     "src/components/ki-icon-button/ki-icon-button.tsx::KiIconButtonVariant": {
-      "declaration": "export type KiIconButtonVariant =\n  | 'primary'\n  | 'secondary'\n  | 'tertiary'\n  | 'quaternary'\n  | 'ghost'\n  | 'outline';",
+      "declaration": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
       "docstring": "",
       "path": "src/components/ki-icon-button/ki-icon-button.tsx"
     },
@@ -19788,11 +17072,6 @@
       "docstring": "",
       "path": "src/components/ki-menu/ki-menu.tsx"
     },
-    "src/components/ki-message/ki-message.tsx::KiMessageRole": {
-      "declaration": "export type KiMessageRole = 'user' | 'assistant' | 'event';",
-      "docstring": "",
-      "path": "src/components/ki-message/ki-message.tsx"
-    },
     "src/components/ki-note/ki-note.icons.ts::KiNoteTone": {
       "declaration": "export type KiNoteTone = 'neutral' | 'primary' | 'info' | 'success' | 'warning' | 'danger';",
       "docstring": "",
@@ -19817,21 +17096,6 @@
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",
       "docstring": "",
       "path": "src/components/ki-progress/ki-progress.tsx"
-    },
-    "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputStatus": {
-      "declaration": "export type KiPromptInputStatus = 'idle' | 'submitted' | 'streaming';",
-      "docstring": "",
-      "path": "src/components/ki-prompt-input/ki-prompt-input.tsx"
-    },
-    "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputSubmitOn": {
-      "declaration": "export type KiPromptInputSubmitOn = 'enter' | 'mod-enter';",
-      "docstring": "",
-      "path": "src/components/ki-prompt-input/ki-prompt-input.tsx"
-    },
-    "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputSubmitDetail": {
-      "declaration": "export interface KiPromptInputSubmitDetail {\n  text: string;\n  files: File[];\n}",
-      "docstring": "",
-      "path": "src/components/ki-prompt-input/ki-prompt-input.tsx"
     },
     "src/components/ki-radio-group/ki-radio-group.tsx::KiRadioGroupSize": {
       "declaration": "export type KiRadioGroupSize = 'sm' | 'md';",
@@ -19937,11 +17201,6 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
-    },
-    "src/components/ki-combobox/ki-combobox.options.ts::ComboboxFilter": {
-      "declaration": "export type ComboboxFilter = 'contains' | 'starts-with' | 'none';",
-      "docstring": "",
-      "path": "src/components/ki-combobox/ki-combobox.options.ts"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",

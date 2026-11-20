@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 500 semantic
-and 1823 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 483 semantic
+and 1725 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -69,9 +69,6 @@ every component at once.
 | `--ki-control-compact-pill-inset-sm` | `0.5rem` | Small inline padding of a compact pill. |
 | `--ki-control-compact-pill-radius` | `1000px` | Fully rounded compact pill shape. |
 | `--ki-control-icon-gap` | `0.375rem` | Separation between a control label and its leading icon. |
-| `--ki-control-multiline-border-width` | `1px` | Outline thickness for a multiline draft enclosure. |
-| `--ki-control-multiline-max-size` | `12rem` | Block size at which a growing multiline draft scrolls. |
-| `--ki-control-multiline-min-size` | `3rem` | Minimum block size for a growing multiline draft. |
 | `--ki-control-radius-item` | `8px` | Corner radius of an individual control inside a track. |
 | `--ki-control-radius-track` | `10px` | Corner radius of a track containing adjacent controls. |
 | `--ki-control-size-md` | `2.5rem` | Medium control track height, 40 CSS px at the default root size. |
@@ -95,10 +92,7 @@ every component at once.
 | `--ki-corner-feature-tile-sm` | `8px` | Corner radius of a small square feature tile. |
 | `--ki-corner-feature-tile-xl` | `16px` | Corner radius of an extra-large square feature tile. |
 | `--ki-corner-feature-tile-xs` | `6px` | Corner radius of an extra-small square feature tile. |
-| `--ki-corner-field-item` | `8px` | Corner radius for choices and tokens inside an editable field. |
-| `--ki-corner-field-surface` | `10px` | Corner radius for an editable field and its floating choice surface. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
-| `--ki-corner-panel` | `12px` | Corner radius for an outlined content panel. |
 
 ### `ki.density`
 
@@ -212,14 +206,6 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-layout-conversation-avatar-radius` | `1000px` | Round corner radius of the fallback assistant avatar. |
-| `--ki-layout-conversation-bubble-end-radius` | `6px` | Smaller radius of the end corner of a user bubble. |
-| `--ki-layout-conversation-bubble-padding` | `0.5rem 0.75rem` | Block and inline insets for a user bubble. |
-| `--ki-layout-conversation-bubble-radius` | `16px` | Standard corner radius of a user bubble. |
-| `--ki-layout-conversation-caret-block-size` | `1em` | Block size of a streaming caret. |
-| `--ki-layout-conversation-caret-inline-size` | `0.5em` | Inline size of a streaming caret. |
-| `--ki-layout-conversation-max-width` | `42rem` | Maximum inline size for a conversation transcript. |
-| `--ki-layout-conversation-user-max-width` | `80%` | Maximum width of a user bubble relative to the transcript. |
 | `--ki-layout-floating-action-lg` | `5rem` | Medium floating action footprint (80px at the default root size). |
 | `--ki-layout-floating-action-lg-icon` | `1.75rem` | Medium floating action glyph (28px at the default root size). |
 | `--ki-layout-floating-action-md` | `3.5rem` | Default floating action footprint (56px at the default root size). |
@@ -431,11 +417,8 @@ every component at once.
 | `--ki-spacing-activity-dot-gap` | `0.25rem` | Gap between typing dots. |
 | `--ki-spacing-activity-label-gap` | `0.5rem` | Gap between an inline activity mark and its label. |
 | `--ki-spacing-block` | `0.75rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. |
-| `--ki-spacing-compact-inset` | `0.625rem` | Compact content inset. |
-| `--ki-spacing-floating-surface-max-block` | `20rem` | Maximum block size of a compact floating surface before it scrolls. |
 | `--ki-spacing-inline` | `0.5rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. |
 | `--ki-spacing-media-caption` | `0.25rem` | Block spacing between a media frame and its caption. |
-| `--ki-spacing-standard-inset` | `0.75rem` | Standard content inset. |
 
 ### `ki.state-layer`
 
@@ -678,12 +661,6 @@ every component at once.
 
 The public styling contract of each element. Reassign them on `:root` for a
 theme-wide change or on any subtree for a scoped one.
-
-### `ki-accordion`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-accordion-divider-width` | `1px` | Width of the separator between accordion rows. |
 
 ### `ki-ai-label`
 
@@ -947,8 +924,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-ghost-neutral-rest-border` | `rgba(255, 255, 255, 0)` | color used by the button component for ghost neutral rest border. |
 | `--ki-button-ghost-neutral-rest-fg` | `#ad411c` | color used by the button component for ghost neutral rest foreground. |
 | `--ki-button-ghost-rest-shadow` | `none` | value used by the button component for ghost rest shadow. |
-| `--ki-button-ghost-selected-bg` | `#ad411c` | Background of the selected ghost button toggle. |
-| `--ki-button-ghost-selected-fg` | `#ffffff` | Foreground of the selected ghost button toggle. |
 | `--ki-button-ghost-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-bg. color used by the button component for ghost success active background. |
 | `--ki-button-ghost-success-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-border. color used by the button component for ghost success active border. |
 | `--ki-button-ghost-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-fg. color used by the button component for ghost success active foreground. |
@@ -980,11 +955,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-md-padding-inline` | `0.625rem` | dimension used by the button component for md padding inline. |
 | `--ki-button-md-radius` | `10px` | dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns). |
 | `--ki-button-md-spinner-size` | `1.125rem` | dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
-| `--ki-button-outline-rest-bg` | `rgba(0, 0, 0, 0)` | Background of the outline variant at rest. |
-| `--ki-button-outline-rest-border` | `#86827b` | Visible outline of the outline variant at rest. |
-| `--ki-button-outline-rest-fg` | `#181613` | Foreground of the outline variant at rest. |
-| `--ki-button-outline-selected-bg` | `#000000` | Background of the selected outline button toggle. |
-| `--ki-button-outline-selected-fg` | `#ffffff` | Foreground of the selected outline button toggle. |
 | `--ki-button-padding-block` | `0.25rem` | dimension used by the button component for padding block (MarsUI: 4px in every size). |
 | `--ki-button-primary-active-overlay` | `rgba(255, 255, 255, 0.08)` | Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
 | `--ki-button-primary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-rest-shadow. shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest). |
@@ -1017,8 +987,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-primary-neutral-rest-fg` | `#ffffff` | color used by the button component for primary neutral rest foreground. |
 | `--ki-button-primary-rest-border-bottom` | `rgba(0, 0, 0, 0)` | color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom). |
 | `--ki-button-primary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
-| `--ki-button-primary-selected-bg` | `#1d1a16` | Background of the selected primary button toggle. |
-| `--ki-button-primary-selected-fg` | `#ffffff` | Foreground of the selected primary button toggle. |
 | `--ki-button-primary-success-active-bg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-bg. color used by the button component for primary success active background. |
 | `--ki-button-primary-success-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-border. color used by the button component for primary success active border (MarsUI bevel top/inline edge). |
 | `--ki-button-primary-success-active-fg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-fg. color used by the button component for primary success active foreground. |
@@ -1059,8 +1027,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-quaternary-neutral-rest-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-neutral-rest-fg` | `#5e5953` | color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis). |
 | `--ki-button-quaternary-rest-shadow` | `none` | value used by the button component for quaternary rest shadow. |
-| `--ki-button-quaternary-selected-bg` | `#0f0d0a` | Background of the selected quaternary button toggle. |
-| `--ki-button-quaternary-selected-fg` | `#ffffff` | Foreground of the selected quaternary button toggle. |
 | `--ki-button-quaternary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-bg. color used by the button component for quaternary success active background. |
 | `--ki-button-quaternary-success-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-border. color used by the button component for quaternary success active border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-fg. color used by the button component for quaternary success active foreground. |
@@ -1104,8 +1070,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-secondary-neutral-rest-fg` | `#181613` | color used by the button component for secondary neutral rest foreground (MarsUI text/high_em). |
 | `--ki-button-secondary-rest-border-bottom` | `rgba(24, 22, 19, 0.14)` | color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom). |
 | `--ki-button-secondary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default). |
-| `--ki-button-secondary-selected-bg` | `#1d1a16` | Background of the selected secondary button toggle. |
-| `--ki-button-secondary-selected-fg` | `#ffffff` | Foreground of the selected secondary button toggle. |
 | `--ki-button-secondary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-bg. color used by the button component for secondary success active background. |
 | `--ki-button-secondary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-border. color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait). |
 | `--ki-button-secondary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-fg. color used by the button component for secondary success active foreground. |
@@ -1171,12 +1135,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-tertiary-success-rest-bg` | `#f4faf3` | Tertiary alias of the secondary success rest background. |
 | `--ki-button-tertiary-success-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-rest-fg` | `#2c6a2b` | color used by the button component for tertiary success rest foreground. |
-| `--ki-button-toggle-quiet-bg` | `rgba(0, 0, 0, 0)` | Background of unselected ghost and quaternary toggle buttons. |
-| `--ki-button-toggle-quiet-fg` | `#181613` | Foreground of unselected ghost toggle buttons. |
-| `--ki-button-toggle-radius` | `10px` | Rounded rectangle shape for an unselected text toggle button. |
-| `--ki-button-toggle-selected-radius` | `1000px` | Pill shape for a selected text toggle button. |
-| `--ki-button-toggle-unselected-bg` | `#f3f0eb` | Background of unselected filled toggle buttons. |
-| `--ki-button-toggle-unselected-fg` | `#181613` | Foreground of unselected filled toggle buttons. |
 | `--ki-button-xl-font-size` | `1.125rem` | dimension used by the button component for xl font size. |
 | `--ki-button-xl-gap` | `0.5rem` | dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px). |
 | `--ki-button-xl-height` | `3.5rem` | dimension used by the button component for xl height. |
@@ -1396,65 +1354,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-code-radius` | `12px` | Corner radius of the figure. |
 | `--ki-code-string` | `#2c6a2b` | Syntax ink for strings. |
 
-### `ki-combobox`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-combobox-field-bg` | `#f9f7f4` | Fill for the editable field. |
-| `--ki-combobox-field-border` | `#86827b` | Outline around the editable field. |
-| `--ki-combobox-field-fg` | `#181613` | Text on the editable field. |
-| `--ki-combobox-field-height` | `2.5rem` | Resting minimum block size of the field. |
-| `--ki-combobox-icon-size` | `1rem` | Size of search, selection and remove glyphs. |
-| `--ki-combobox-input-basis` | `3.5rem` | Preferred text-entry width before a row of tags wraps. |
-| `--ki-combobox-input-touch-font-size` | `1rem` | Minimum editable text size for coarse-pointer input. |
-| `--ki-combobox-listbox-backdrop-filter` | `none` | Complete backdrop filter for the floating listbox. |
-| `--ki-combobox-listbox-bg` | `#f9f7f4` | Fill for the floating listbox. |
-| `--ki-combobox-listbox-bg-image` | `none` | Optional image layered over the floating listbox. |
-| `--ki-combobox-listbox-border` | `rgba(24, 22, 19, 0.1)` | Outline around the floating listbox. |
-| `--ki-combobox-listbox-fg` | `#181613` | Text on the floating listbox. |
-| `--ki-combobox-listbox-max-block-size` | `20rem` | Maximum listbox block size before options scroll. |
-| `--ki-combobox-listbox-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the floating listbox. |
-| `--ki-combobox-match-fg` | `#181613` | Foreground of the first bolded query match. |
-| `--ki-combobox-option-active-bg` | `#f3f0eb` | Fill for the active option. |
-| `--ki-combobox-option-active-fg` | `#181613` | Text on the active option. |
-| `--ki-combobox-tag-bg` | `#f3f0eb` | Fill for the selected tag. |
-| `--ki-combobox-tag-fg` | `#181613` | Text on the selected tag. |
-
-### `ki-confirmation`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-confirmation-backdrop-filter` | `none` | Complete backdrop effect behind the confirmation. |
-| `--ki-confirmation-bg` | `#f9f7f4` | Solid raised background of the confirmation prompt and summary. |
-| `--ki-confirmation-bg-image` | `none` | Optional image painted over the solid confirmation background. |
-| `--ki-confirmation-border` | `rgba(24, 22, 19, 0.16)` | Boundary of the confirmation surface. |
-| `--ki-confirmation-border-width` | `1px` | Stroke width of the confirmation boundary. |
-| `--ki-confirmation-fg` | `#181613` | Text on the confirmation surface. |
-| `--ki-confirmation-gap` | `0.75rem` | Block separation between confirmation rows. |
-| `--ki-confirmation-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the pending question. |
-| `--ki-confirmation-inline-gap` | `0.5rem` | Space between text and controls in a row. |
-| `--ki-confirmation-padding` | `1rem` | Space between the prompt's edge and its content. |
-| `--ki-confirmation-radius` | `16px` | Corner radius of the confirmation surface. |
-
-### `ki-conversation`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-conversation-gap` | `1rem` | Space between messages in the transcript. |
-| `--ki-conversation-max-width` | `42rem` | Maximum inline size of the transcript. |
-| `--ki-message-assistant-fg` | `#181613` | Text ink of an assistant reply on the page surface. |
-| `--ki-message-avatar-backdrop-filter` | `none` | Complete filter behind the default assistant avatar. |
-| `--ki-message-avatar-bg` | `#ffebe5` | Solid primary container of the default assistant avatar. |
-| `--ki-message-avatar-bg-image` | `none` | Optional image over the default assistant avatar background. |
-| `--ki-message-avatar-fg` | `#9a3715` | Glyph ink inside the default assistant avatar. |
-| `--ki-message-event-fg` | `#5e5953` | Text and icon ink of a system event on the page surface. |
-| `--ki-message-padding` | `0.5rem 0.75rem` | Block and inline padding inside a user bubble, in that order. |
-| `--ki-message-radius` | `16px` | Radius of the user bubble corners. |
-| `--ki-message-user-backdrop-filter` | `none` | Complete filter behind the user bubble. |
-| `--ki-message-user-bg` | `#f3f0eb` | Solid background of a user bubble. |
-| `--ki-message-user-bg-image` | `none` | Optional image over the user bubble background. |
-| `--ki-message-user-fg` | `#181613` | Text ink in a user bubble. |
-
 ### `ki-copy-button`
 
 | Token | Value (onmars light) | Description |
@@ -1487,27 +1386,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-counter-size` | `1.125rem` | Minimum width and height of a count pill. |
 | `--ki-counter-success-bg` | `#2c6a2b` | Success notification indicator fill. |
 | `--ki-counter-success-fg` | `#ffffff` | Success notification count text. |
-
-### `ki-details`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-details-backdrop-filter` | `none` | Complete filter for the backdrop behind the disclosure surface. |
-| `--ki-details-bg` | `#ffffff` | Color of the disclosure surface. |
-| `--ki-details-bg-image` | `none` | Optional image painted over the disclosure surface. |
-| `--ki-details-body-bg` | `#ffffff` | Surface color of the disclosure body. |
-| `--ki-details-body-fg` | `#5e5953` | Supporting text color of the disclosure body. |
-| `--ki-details-border` | `rgba(24, 22, 19, 0.1)` | Color of the disclosure frame and accordion separators. |
-| `--ki-details-border-width` | `1px` | Width of the disclosure or accordion frame. |
-| `--ki-details-disabled-fg` | `#5e5953` | Text and icon color of a disabled summary. |
-| `--ki-details-fg` | `#181613` | Text color on the disclosure surface. |
-| `--ki-details-motion-duration` | `150ms` | Duration of the chevron rotation. |
-| `--ki-details-motion-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the chevron rotation. |
-| `--ki-details-padding` | `0.75rem` | Inline inset of the summary and inset of the panel body. |
-| `--ki-details-radius` | `12px` | Corners of a standalone disclosure or the accordion frame. |
-| `--ki-details-summary-hover-bg` | `#f9f7f4` | Surface color of a hovered summary. |
-| `--ki-details-summary-hover-fg` | `#181613` | Text and icon color of a hovered summary. |
-| `--ki-details-summary-padding-block` | `0.625rem` | Block inset of the summary. |
 
 ### `ki-dialog`
 
@@ -1688,30 +1566,15 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-icon-button-ghost-selected-bg` | `#ad411c` | Background of the selected ghost icon button toggle. |
-| `--ki-icon-button-ghost-selected-fg` | `#ffffff` | Foreground of the selected ghost icon button toggle. |
 | `--ki-icon-button-lg-icon-size` | `1.5rem` | dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px). |
 | `--ki-icon-button-lg-size` | `3rem` | dimension used by the icon button component for lg box (48px square). |
 | `--ki-icon-button-lg-spinner-size` | `1.5rem` | dimension used by the icon button component for the lg loading spinner box (24px, the lg icon size; spec 046 D5: the spinner takes the place of the icon). |
 | `--ki-icon-button-md-icon-size` | `1.25rem` | dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3). |
 | `--ki-icon-button-md-size` | `2.5rem` | dimension used by the icon button component for md box (40px square, Figma node 10078:3129). |
 | `--ki-icon-button-md-spinner-size` | `1.25rem` | dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon). |
-| `--ki-icon-button-outline-rest-bg` | `rgba(0, 0, 0, 0)` | Background of the outline variant at rest. |
-| `--ki-icon-button-outline-rest-border` | `#86827b` | Visible outline of the outline variant at rest. |
-| `--ki-icon-button-outline-rest-fg` | `#181613` | Foreground of the outline variant at rest. |
-| `--ki-icon-button-outline-selected-bg` | `#000000` | Background of the selected outline icon button toggle. |
-| `--ki-icon-button-outline-selected-fg` | `#ffffff` | Foreground of the selected outline icon button toggle. |
-| `--ki-icon-button-primary-selected-bg` | `#1d1a16` | Background of the selected primary icon button toggle. |
-| `--ki-icon-button-primary-selected-fg` | `#ffffff` | Foreground of the selected primary icon button toggle. |
-| `--ki-icon-button-quaternary-selected-bg` | `#0f0d0a` | Background of the selected quaternary icon button toggle. |
-| `--ki-icon-button-quaternary-selected-fg` | `#ffffff` | Foreground of the selected quaternary icon button toggle. |
-| `--ki-icon-button-secondary-selected-bg` | `#1d1a16` | Background of the selected secondary icon button toggle. |
-| `--ki-icon-button-secondary-selected-fg` | `#ffffff` | Foreground of the selected secondary icon button toggle. |
 | `--ki-icon-button-sm-icon-size` | `1.125rem` | dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px). |
 | `--ki-icon-button-sm-size` | `2rem` | dimension used by the icon button component for sm box (32px square). |
 | `--ki-icon-button-sm-spinner-size` | `1.125rem` | dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon). |
-| `--ki-icon-button-toggle-radius` | `1000px` | Round shape for an unselected icon toggle button. |
-| `--ki-icon-button-toggle-selected-radius` | `10px` | Rounded square shape for a selected icon toggle button. |
 | `--ki-icon-button-xl-icon-size` | `1.75rem` | dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px). |
 | `--ki-icon-button-xl-size` | `3.5rem` | dimension used by the icon button component for xl box (56px square). |
 | `--ki-icon-button-xl-spinner-size` | `1.75rem` | dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon). |
@@ -1758,8 +1621,6 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-input-action-gap` | `0.25rem` | Gap between the input action and the preceding control or adornment. |
-| `--ki-input-action-padding-end` | `0.25rem` | Inline-end inset between the input action and the inside edge of the field border. |
 | `--ki-input-border-block-end-width` | `1px` | dimension used by the input component for border block end width. |
 | `--ki-input-border-block-start-width` | `1px` | dimension used by the input component for border block start width. |
 | `--ki-input-border-inline-end-width` | `1px` | dimension used by the input component for border inline end width. |
@@ -1930,6 +1791,26 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-list-item-xl-secondary-line-height` | `1.25rem` | dimension used by the list component for xl secondary line height (List 10063:2066 xl). |
 | `--ki-list-padding` | `0rem` | dimension used by the list component for padding. |
 
+### `ki-markdown`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-markdown-backdrop-filter` | `none` | Complete backdrop filter for the answer surface. |
+| `--ki-markdown-bg` | `rgba(0, 0, 0, 0)` | Answer surface backing. It defaults to transparent so the enclosing surface shows through. |
+| `--ki-markdown-bg-image` | `none` | Optional image over the answer's solid backing. |
+| `--ki-markdown-block-gap` | `0.75rem` | Spacing between Markdown blocks at standard density. |
+| `--ki-markdown-fg` | `#181613` | Ink for prose and headings. |
+| `--ki-markdown-heading-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface for Markdown headings. |
+| `--ki-markdown-inline-code-backdrop-filter` | `none` | Complete backdrop filter for inline code. |
+| `--ki-markdown-inline-code-bg` | `#f3f0eb` | Solid backing of an inline code span. |
+| `--ki-markdown-inline-code-bg-image` | `none` | Optional image over the inline code backing. |
+| `--ki-markdown-inline-code-fg` | `#181613` | Ink for source within an inline code span. |
+| `--ki-markdown-muted-backdrop-filter` | `none` | Complete backdrop filter for quotes and table headings. |
+| `--ki-markdown-muted-bg` | `rgba(0, 0, 0, 0)` | Backing of quotes and table headings. |
+| `--ki-markdown-muted-bg-image` | `none` | Optional image over the muted backing. |
+| `--ki-markdown-muted-fg` | `#5e5953` | Ink for quotes and table headings, strengthened under more contrast. |
+| `--ki-markdown-quote-border` | `rgba(24, 22, 19, 0.16)` | Logical start rule of a quotation and the ink of a thematic divider. |
+
 ### `ki-menu`
 
 | Token | Value (onmars light) | Description |
@@ -2065,27 +1946,6 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-progress-linear-radius` | `1000px` | dimension used by the progress component for linear radius. |
 | `--ki-progress-linear-thickness` | `0.25rem` | dimension used by the progress component for linear thickness. |
 | `--ki-progress-track-color` | `#ebe7e1` | color used by the progress component for track color. |
-
-### `ki-prompt-input`
-
-| Token | Value (onmars light) | Description |
-| --- | --- | --- |
-| `--ki-prompt-input-action-gap` | `0.375rem` | Default spacing between attachments and toolbar controls. |
-| `--ki-prompt-input-backdrop-filter` | `none` | Optional whole backdrop filter behind the composer. |
-| `--ki-prompt-input-bg` | `#f9f7f4` | Raised surface behind the prompt composer. |
-| `--ki-prompt-input-bg-image` | `none` | Optional background image painted above the composer surface. |
-| `--ki-prompt-input-border` | `#86827b` | Outline around the composer. |
-| `--ki-prompt-input-border-width` | `1px` | Outline thickness around the composer. |
-| `--ki-prompt-input-editor-padding-block` | `0.25rem` | Block inset for the native text field and its sizer. |
-| `--ki-prompt-input-editor-padding-inline` | `0.5rem` | Inline inset for the native text field and its sizer. |
-| `--ki-prompt-input-feedback-bg` | `#f9f7f4` | Surface immediately behind attachment rejection text. |
-| `--ki-prompt-input-feedback-fg` | `#c21a45` | Attachment rejection text on the composer surface. |
-| `--ki-prompt-input-fg` | `#181613` | Draft text on the composer surface. |
-| `--ki-prompt-input-max-height` | `12rem` | Maximum height of the draft before the textarea scrolls. |
-| `--ki-prompt-input-min-height` | `3rem` | Minimum height of the editable draft. |
-| `--ki-prompt-input-padding` | `0.5rem` | Inset and spacing between rows in the composer. |
-| `--ki-prompt-input-placeholder-fg` | `#5e5953` | Placeholder and writing status on the composer surface. |
-| `--ki-prompt-input-radius` | `16px` | Corner radius of the composer surface. |
 
 ### `ki-qr`
 

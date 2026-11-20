@@ -93,8 +93,10 @@ version (`name`, `surfaceId`, `sourceComponentId`, `timestamp`, resolved
 `sendDataModel`. `A2UI_RENDERER_CAPABILITIES` lists what to advertise per
 version, 1.0 first.
 
-The basic catalog maps `Image` to `ki-image`, `Icon` to `ki-icon`, `Slider` to
-`ki-slider`, and `Modal` to a `ki-button` linked to a `ki-dialog`.
+The basic catalog maps content `Text` to `ki-markdown`, `Image` to `ki-image`,
+`Icon` to `ki-icon`, `Slider` to `ki-slider`, and `Modal` to a `ki-button`
+linked to a `ki-dialog`.
+Text used as a control label stays literal.
 
 An A2UI message is data, never code. Basic-catalog types without a catalog
 counterpart (Video, DateTimeInput, …) degrade per node to a fixed fallback that

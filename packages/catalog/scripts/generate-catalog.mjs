@@ -335,12 +335,10 @@ if (
   const outputDir = join(repoRoot, 'packages/catalog/src/generated');
   mkdirSync(outputDir, { recursive: true });
   writeFileSync(join(outputDir, 'catalog.ts'), output, 'utf8');
-  // The default scheme rules are shared with the element; the catalog adds
-  // host origin rules without importing the built elements package. Expose
-  // the control-character predicate here for the catalog-only origin check.
+  // Share the scheme and origin checks without a runtime dependency on elements.
   writeFileSync(
     join(outputDir, 'url-scheme.ts'),
-    `// GENERATED from packages/elements/src/utils/url-scheme.ts.\n${schemePolicy}\nexport { isControlOrSpace };\n`,
+    `// GENERATED from packages/elements/src/utils/url-scheme.ts.\n${schemePolicy}`,
     'utf8',
   );
   process.stdout.write(

@@ -96,9 +96,9 @@ export interface LiveSurfaceOptions {
   /** The catalog in use, fixed for the surface's life (032 S16); default built-in. */
   readonly catalog?: Catalog;
   /**
-   * The allowed origins of URL props, fixed for the surface's life: absent,
-   * the scheme allowlist alone; present, every URL prop value in the
-   * resulting state must be an absolute http(s) URL of a listed origin
+   * The allowed origins of URL props and Markdown destinations, fixed for
+   * the surface's life. Absent, the scheme allowlist applies. Present, a URL
+   * must be absolute HTTP(S) and belong to a listed origin
    * (see `RenderOptions.allowedUrlOrigins`).
    */
   readonly allowedUrlOrigins?: readonly string[];
@@ -925,7 +925,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     slot: string,
     dialogIdFor: DialogIdFor,
   ): MNode => {
-    const element = createNodeElement(doc, node.component);
+    const element = createNodeElement(doc, node.component, context.allowedUrlOrigins);
     const model: MNode = {
       action: node.action,
       component: node.component,

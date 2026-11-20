@@ -164,7 +164,7 @@ const CHECKS = 'checks';
  * `unmapped` one.
  */
 export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
-  Text: { kind: 'inline', properties: ['text', 'variant'] },
+  Text: { catalog: ['ki-markdown'], kind: 'mapped', properties: ['text', 'variant'] },
   Row: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   Column: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   List: {
@@ -329,7 +329,7 @@ const V1_CHECKS = '@checks';
  * `TextField.placeholder`, no `validationRegexp`).
  */
 export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
-  Text: { kind: 'inline', properties: ['text', 'variant'] },
+  Text: { catalog: ['ki-markdown'], kind: 'mapped', properties: ['text', 'variant'] },
   Row: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   Column: { catalog: ['ki-stack'], kind: 'mapped', properties: ['children', 'justify', 'align'] },
   List: {

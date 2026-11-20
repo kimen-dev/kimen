@@ -137,11 +137,12 @@ until it arrives, components are buffered and nothing renders.
     ] } }
 ```
 
-The adapter translates the tree into one neutral spec — `Card` becomes
+The adapter translates the tree into one neutral spec. `Card` becomes
 `ki-card`, `Column` becomes `ki-stack` and `Row` becomes `ki-stack direction="row"`.
-Both stacks keep their children in order. `TextField` with `longText` becomes `ki-textarea`,
-`Button` becomes `ki-button` with its child text as label, `Text` becomes inert
-text in the parent's slot — and hands it to the guarded renderer. A property
+Both stacks keep their children in order. `TextField` with `longText` becomes
+`ki-textarea`, and `Button` becomes `ki-button` with literal text as its label.
+Content `Text` becomes `ki-markdown` with images disabled. The adapter hands
+the resulting spec to the guarded renderer. A property
 the basic catalog does not declare for the type rejects the message
 (`unknown-property`), naming the offender. A later `updateComponents` upserts
 by id and re-renders; previously delivered components persist, and a child id
@@ -270,8 +271,8 @@ the two ever drift. Five classes, five behaviors:
 
 | Class | Behavior |
 | --- | --- |
-| `mapped` (Card, Button, TextField, Image, Icon, Slider, List, Tabs, Row, Column, Modal, …) | Renders as its neutral `ki-*` counterpart(s) |
-| `inline` (Text) | No element of its own; its resolved string becomes inert text in the parent slot |
+| `mapped` (Text, Card, Button, TextField, Image, Icon, Slider, List, Tabs, Row, Column, Modal, …) | Renders as its neutral `ki-*` counterpart(s) |
+| `inline` | Its resolved string becomes inert text in the parent slot |
 | `layout` | No element of its own; its children join the parent slot in order |
 | `unmapped` (DateTimeInput, Video, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
 | `forbidden` (`html`, `RawHtml`, `script`, `iframe`) | The **whole message** is rejected (`forbidden-type`) — across every updated component, reachable from the root or not |

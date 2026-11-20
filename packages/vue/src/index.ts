@@ -5,7 +5,6 @@
  * Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export { KiAccordion } from './ki-accordion.js';
 export { KiAiLabel } from './ki-ai-label.js';
 export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
@@ -21,12 +20,8 @@ export { KiCheckboxGroup } from './ki-checkbox-group.js';
 export { KiChip } from './ki-chip.js';
 export { KiChipGroup } from './ki-chip-group.js';
 export { KiCodeBlock } from './ki-code-block.js';
-export { KiCombobox } from './ki-combobox.js';
-export { KiConfirmation } from './ki-confirmation.js';
-export { KiConversation } from './ki-conversation.js';
 export { KiCopyButton } from './ki-copy-button.js';
 export { KiCounter } from './ki-counter.js';
-export { KiDetails } from './ki-details.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
 export { KiEmptyState } from './ki-empty-state.js';
@@ -43,15 +38,14 @@ export { KiInput } from './ki-input.js';
 export { KiLink } from './ki-link.js';
 export { KiList } from './ki-list.js';
 export { KiListItem } from './ki-list-item.js';
+export { KiMarkdown } from './ki-markdown.js';
 export { KiMenu } from './ki-menu.js';
 export { KiMenuGroup } from './ki-menu-group.js';
 export { KiMenuItem } from './ki-menu-item.js';
-export { KiMessage } from './ki-message.js';
 export { KiNote } from './ki-note.js';
 export { KiOption } from './ki-option.js';
 export { KiPopover } from './ki-popover.js';
 export { KiProgress } from './ki-progress.js';
-export { KiPromptInput } from './ki-prompt-input.js';
 export { KiQr } from './ki-qr.js';
 export { KiRadio } from './ki-radio.js';
 export { KiRadioGroup } from './ki-radio-group.js';

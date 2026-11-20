@@ -1,7 +1,6 @@
 /**
- * The URL policy of the GenUI boundary (027 FR-018, 028 FR-004): ONE
- * implementation, read by catalog validation and therefore by every render
- * path. Internal module — not part of the package's public surface.
+ * The URL policy of the GenUI boundary (027 FR-018, 028 FR-004). Catalog
+ * validation uses the scheme and origin rules shared with Markdown.
  *
  * A URL prop is a value the browser may load or navigate to the moment the
  * attribute is set, so two rules apply to it and to nothing else:
@@ -20,7 +19,7 @@
  * a consumer definition written before the field existed, or a hand-built
  * `Catalog` value — so a missing declaration can never open the policy.
  */
-import { isControlOrSpace, offendingScheme } from './generated/url-scheme.js';
+import { absoluteHttpOrigin, offendingScheme } from './generated/url-scheme.js';
 
 import type { CatalogPropConstraint } from './validate.js';
 
@@ -46,47 +45,6 @@ const URL_PROP_NAMES: ReadonlySet<string> = new Set([
 /** Whether the policy applies to the prop `name` under `constraint`. */
 export function isUrlProp(name: string, constraint: CatalogPropConstraint): boolean {
   return constraint.format === 'url' || URL_PROP_NAMES.has(name.toLowerCase());
-}
-
-/**
- * The origin of `value` when it is an unambiguous absolute http(s) URL, or
- * null. Unambiguous means a browser resolves it to the same origin whatever
- * the document's base URL is:
- *
- * - it starts with `http://` or `https://` literally — `https:host`,
- *   `https:/host` and backslash forms resolve against the base under the
- *   WHATWG parser, and `//host` borrows the base's scheme;
- * - it carries no inner white space or control character — the parser would
- *   silently drop a tab or newline, and a multi-URL value (`srcset`) names
- *   more than one origin.
- *
- * The origin itself comes from the platform's own URL parser, so userinfo
- * (`https://allowed@evil/`), default ports, case and IDNA are resolved
- * exactly as the browser will resolve them.
- */
-function absoluteHttpOrigin(value: string): string | null {
-  let start = 0;
-  let end = value.length;
-  while (start < end && value.charCodeAt(start) <= 0x20) {
-    start += 1;
-  }
-  while (end > start && value.charCodeAt(end - 1) <= 0x20) {
-    end -= 1;
-  }
-  const trimmed = value.slice(start, end);
-  for (const character of trimmed) {
-    if (isControlOrSpace(character.codePointAt(0) ?? 0)) {
-      return null;
-    }
-  }
-  if (!/^https?:\/\//iu.test(trimmed)) {
-    return null;
-  }
-  try {
-    return new URL(trimmed).origin;
-  } catch {
-    return null;
-  }
 }
 
 /** One rejected URL value: the rule and the reason the message states. */

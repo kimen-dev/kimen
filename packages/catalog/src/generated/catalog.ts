@@ -146,23 +146,6 @@ export const catalogData = {
       "whenNotToUse": "Do not use it for avatars (ki-avatar), for icons inside controls, for text set as an image, or as a button. Never bind an action.",
       "whenToUse": "Show a chart, a photo or an illustration that carries content (describe it in alt) or decoration (alt \"\")."
     },
-    "ki-accordion": {
-      "description": "A set of native disclosure panels with a shared frame.",
-      "events": {},
-      "props": {
-        "exclusive": {
-          "type": "boolean",
-          "description": "Whether the accordion allows at most one direct member to be open.",
-          "default": false
-        }
-      },
-      "slots": {
-        "": "Direct ki-details members in reading order."
-      },
-      "tag": "ki-accordion",
-      "whenNotToUse": "switch between views or make the panels advance a workflow.",
-      "whenToUse": "group related FAQ answers, settings or expandable sections.\nEnable exclusive when readers benefit from one open section at a time."
-    },
     "ki-ai-label": {
       "description": "A compact provenance mark for AI-generated content, with optional details\nand a user-initiated request to restore their original text.",
       "events": {
@@ -429,9 +412,7 @@ export const catalogData = {
     },
     "ki-button": {
       "description": "A token-styled action button with native button semantics.",
-      "events": {
-        "ki-change": "Emitted after toggle activation with the new selected state."
-      },
+      "events": {},
       "props": {
         "command": {
           "type": "enum",
@@ -465,11 +446,6 @@ export const catalogData = {
           "type": "string",
           "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent."
         },
-        "selected": {
-          "type": "boolean",
-          "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-          "default": false
-        },
         "size": {
           "type": "enum",
           "values": [
@@ -482,11 +458,6 @@ export const catalogData = {
           "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls.",
           "default": "md"
         },
-        "toggle": {
-          "type": "boolean",
-          "description": "Enables persistent press state for an action such as Bold. The native\nbutton exposes `aria-pressed` and each activation switches `selected`.\nUse the same label in both states. A toggle does not submit or reset a form.",
-          "default": false
-        },
         "tone": {
           "type": "enum",
           "values": [
@@ -494,7 +465,7 @@ export const catalogData = {
             "neutral",
             "success"
           ],
-          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "default": "neutral"
         },
         "type": {
@@ -504,7 +475,7 @@ export const catalogData = {
             "reset",
             "submit"
           ],
-          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "default": "submit"
         },
         "value": {
@@ -515,12 +486,11 @@ export const catalogData = {
           "type": "enum",
           "values": [
             "ghost",
-            "outline",
             "primary",
             "quaternary",
             "secondary"
           ],
-          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, `ghost` for accent text actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral text actions, and `ghost` for accent text actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "default": "secondary",
           "deprecatedValues": [
             "tertiary"
@@ -533,8 +503,8 @@ export const catalogData = {
         "start": "Leading icon or media. Follows writing direction."
       },
       "tag": "ki-button",
-      "whenNotToUse": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress).",
-      "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+      "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
+      "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
     "ki-button-group": {
       "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
@@ -898,233 +868,6 @@ export const catalogData = {
       "whenNotToUse": "when the reader should edit the source or when the code belongs\ninline in a sentence. Use an editor or a native inline code element.",
       "whenToUse": "display a multiline example, generated code or a tool result that\nreaders should be able to inspect and copy."
     },
-    "ki-combobox": {
-      "description": "An editable, form-associated combobox with local or remote filtering,\nsingle or multiple selection, and optional free entry.",
-      "activationEvent": "change",
-      "events": {
-        "change": "Composed event after a user changes the committed selection.\nRead the committed value from the host.",
-        "ki-input": "Reports a raw text edit in `detail.value`. Listen to it to request remote results."
-      },
-      "props": {
-        "add-label": {
-          "type": "string",
-          "description": "Localizable free-entry offer. {text} is replaced by the trimmed query.",
-          "default": "Add “{text}”"
-        },
-        "allow-custom": {
-          "type": "boolean",
-          "description": "Offers to add trimmed query text when no known or selected choice already matches it.",
-          "default": false
-        },
-        "disabled": {
-          "type": "boolean",
-          "description": "Disables editing, navigation and form submission.",
-          "default": false
-        },
-        "empty-label": {
-          "type": "string",
-          "description": "Localizable status when there are no choices to display.",
-          "default": "No results"
-        },
-        "error-text": {
-          "type": "string",
-          "description": "Message used when a required selection is missing, in place of the browser's message."
-        },
-        "filter": {
-          "type": "enum",
-          "values": [
-            "contains",
-            "none",
-            "starts-with"
-          ],
-          "description": "Filters by label. Set to none when the application provides results from a remote search.",
-          "default": "contains"
-        },
-        "help-text": {
-          "type": "string",
-          "description": "Guidance shown below the field and read as its description."
-        },
-        "label": {
-          "type": "string",
-          "description": "Visible label and accessible name. Supply it even when placeholder text is also set.",
-          "required": true
-        },
-        "loading": {
-          "type": "boolean",
-          "description": "Replaces visible options with a loading indicator while a search is pending.",
-          "default": false
-        },
-        "loading-label": {
-          "type": "string",
-          "description": "Localizable status while waiting for a result set.",
-          "default": "Loading results"
-        },
-        "multiple": {
-          "type": "boolean",
-          "description": "Enables ordered multiple selection and renders selected values as tags.",
-          "default": false
-        },
-        "name": {
-          "type": "string",
-          "description": "Form-data key. Multiple choices contribute one entry each under this name."
-        },
-        "placeholder": {
-          "type": "string",
-          "description": "Hint shown in the text input when it is empty.",
-          "default": ""
-        },
-        "remove-label": {
-          "type": "string",
-          "description": "Localizable removal button label. {label} is replaced by the selected label.",
-          "default": "Remove {label}"
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Requires a committed choice to submit the form.",
-          "default": false
-        },
-        "result-count-label": {
-          "type": "string",
-          "description": "Localizable status for several choices. {count} is replaced by the result count.",
-          "default": "{count} results"
-        },
-        "result-one-label": {
-          "type": "string",
-          "description": "Localizable status for one available choice.",
-          "default": "1 result"
-        },
-        "value": {
-          "type": "string",
-          "description": "Committed value. Use a string for single selection and an array of strings\nfor multiple selection. In HTML and catalog specs, encode multiple values\nas a JSON array string in the value attribute, or supply one literal value.\nAssign a new array to change multiple selections programmatically.",
-          "default": ""
-        }
-      },
-      "slots": {
-        "": "Declarative ki-option children. Supply unique values and a human-readable label."
-      },
-      "tag": "ki-combobox",
-      "whenNotToUse": "use a select-only control for a short closed set or a plain\ntext field for unrestricted input with no choices.",
-      "whenToUse": "choose from a long list of options, let people search an option\nsource, or allow multiple selections that remain visible as tags."
-    },
-    "ki-confirmation": {
-      "description": "An inline prompt for a decision about a proposed assistant action.",
-      "events": {
-        "ki-approve": "Explicit approval, with the conversation preference at the time of the decision.",
-        "ki-deny": "Explicit refusal of the pending request."
-      },
-      "props": {
-        "action": {
-          "type": "string",
-          "description": "Tool identifier shown to the person and available for reporting by the host.",
-          "required": true
-        },
-        "approve-label": {
-          "type": "string",
-          "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
-          "required": true
-        },
-        "approved-label": {
-          "type": "string",
-          "description": "Localized outcome text when the host marks the request approved.",
-          "default": "Approved"
-        },
-        "consequence": {
-          "type": "string",
-          "description": "Cost or irreversible effect to read before deciding, displayed as a warning note."
-        },
-        "denied-label": {
-          "type": "string",
-          "description": "Localized outcome text when the host marks the request denied.",
-          "default": "Denied"
-        },
-        "deny-label": {
-          "type": "string",
-          "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
-          "required": true
-        },
-        "expired-label": {
-          "type": "string",
-          "description": "Localized outcome text when the host marks the request expired.",
-          "default": "Expired"
-        },
-        "heading": {
-          "type": "string",
-          "description": "Question naming the proposed action. Provide it before asking for a decision.",
-          "required": true
-        },
-        "remember": {
-          "type": "boolean",
-          "description": "Offers an unchecked preference limited to this action in the current conversation.",
-          "default": false
-        },
-        "remember-label": {
-          "type": "string",
-          "description": "Localized conversation permission label. Name the specific permission when possible.",
-          "default": "Allow this action for the rest of this conversation"
-        },
-        "resolved-at": {
-          "type": "string",
-          "description": "Display-ready, localized resolution time from the host, if known."
-        },
-        "resolved-by": {
-          "type": "string",
-          "description": "Display-ready name of the person or service that resolved the request, if known."
-        },
-        "state": {
-          "type": "enum",
-          "values": [
-            "approved",
-            "denied",
-            "expired",
-            "pending"
-          ],
-          "description": "Host-controlled outcome. Resolve after recording a decision or expiring the request.",
-          "default": "pending"
-        },
-        "tone": {
-          "type": "enum",
-          "values": [
-            "danger",
-            "neutral"
-          ],
-          "description": "Use danger when approval is destructive. Unknown values use neutral.",
-          "default": "neutral"
-        }
-      },
-      "slots": {
-        "": "Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
-      },
-      "tag": "ki-confirmation",
-      "whenNotToUse": "Report a completed action without a preceding request, or\nblock the rest of the interface with a modal decision (use ki-dialog).\nThe displayed action identifier is text and carries no execution authority.",
-      "whenToUse": "Show the exact action and the details a person needs before\ngranting permission. A trusted host maps the two decision events to its\ndeclared actions and records the outcome in state."
-    },
-    "ki-conversation": {
-      "description": "An accessible chat transcript with optional following as messages arrive.",
-      "events": {},
-      "props": {
-        "jump-label": {
-          "type": "string",
-          "description": "Visible and accessible label for the control that resumes following.",
-          "default": "Jump to latest"
-        },
-        "label": {
-          "type": "string",
-          "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
-          "default": "Conversation"
-        },
-        "stick-to-bottom": {
-          "type": "boolean",
-          "description": "Follow new or growing messages until the reader scrolls away from the end.",
-          "default": false
-        }
-      },
-      "slots": {
-        "": "The chronological transcript, normally ki-message elements."
-      },
-      "tag": "ki-conversation",
-      "whenNotToUse": "Collect input, send messages or present a static sequence of\ncards. Place the composer outside the transcript.",
-      "whenToUse": "Display chronological user, assistant and event messages. Give\nthe host a block-size constraint to keep scrolling within the transcript."
-    },
     "ki-copy-button": {
       "description": "Copies text to the clipboard and confirms the result in the same button.",
       "events": {
@@ -1176,7 +919,6 @@ export const catalogData = {
           "type": "enum",
           "values": [
             "ghost",
-            "outline",
             "primary",
             "quaternary",
             "secondary"
@@ -1230,39 +972,6 @@ export const catalogData = {
       "tag": "ki-counter",
       "whenNotToUse": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics.",
       "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
-    },
-    "ki-details": {
-      "description": "A native disclosure for supporting information that can stay collapsed.",
-      "events": {
-        "ki-toggle": "Emitted when the native disclosure toggles or an exclusive peer closes it."
-      },
-      "props": {
-        "disabled": {
-          "type": "boolean",
-          "description": "Disables summary activation. The page can still set open.",
-          "default": false
-        },
-        "name": {
-          "type": "string",
-          "description": "Nonempty name for exclusive disclosures in the same document or shadow root."
-        },
-        "open": {
-          "type": "boolean",
-          "description": "Whether the panel is open. Native changes reflect back to this property.",
-          "default": false
-        },
-        "summary": {
-          "type": "string",
-          "description": "Plain label for the control. Supply the summary slot for a rich label."
-        }
-      },
-      "slots": {
-        "": "Content shown when the disclosure is open.",
-        "summary": "Rich summary text or an authored heading, replacing the summary prop."
-      },
-      "tag": "ki-details",
-      "whenNotToUse": "hide the primary action or information needed to complete a task.\nFor script-free HTML, author native details and summary directly.",
-      "whenToUse": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
     },
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
@@ -1668,9 +1377,7 @@ export const catalogData = {
     },
     "ki-icon-button": {
       "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
-      "events": {
-        "ki-change": "Emitted after toggle activation with the new selected state."
-      },
+      "events": {},
       "props": {
         "command": {
           "type": "enum",
@@ -1711,12 +1418,7 @@ export const catalogData = {
         },
         "pressed": {
           "type": "boolean",
-          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed` when `toggle` is off. Omit for a momentary action."
-        },
-        "selected": {
-          "type": "boolean",
-          "description": "Current press state in toggle mode. Set this to initialize or synchronize\nthe state programmatically without emitting a change.",
-          "default": false
+          "description": "Application-owned toggle state. The native icon button exposes this as\n`aria-pressed`. Omit for a momentary action."
         },
         "size": {
           "type": "enum",
@@ -1730,11 +1432,6 @@ export const catalogData = {
           "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor.",
           "default": "md"
         },
-        "toggle": {
-          "type": "boolean",
-          "description": "Enables persistent press state for an action such as Bookmark. The\nnative button exposes `aria-pressed` and each activation switches\n`selected`. Keep the same accessible label in both states.",
-          "default": false
-        },
         "tone": {
           "type": "enum",
           "values": [
@@ -1742,19 +1439,18 @@ export const catalogData = {
             "neutral",
             "success"
           ],
-          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions. Toggle\npalettes are specific to the variant.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+          "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
           "default": "neutral"
         },
         "variant": {
           "type": "enum",
           "values": [
             "ghost",
-            "outline",
             "primary",
             "quaternary",
             "secondary"
           ],
-          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+          "description": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, and `ghost` for accent icon actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
           "default": "secondary",
           "deprecatedValues": [
             "tertiary"
@@ -1763,12 +1459,11 @@ export const catalogData = {
       },
       "slots": {
         "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
-        "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
-        "selected": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
+        "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
       },
       "tag": "ki-icon-button",
-      "whenNotToUse": "whenever a visible label fits (use ki-button),\nnavigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
-      "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. Enable `toggle` for persistent actions such as\nBookmark. While the action it started is in progress, set `loading`."
+      "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+      "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability. While the action it started is in progress, set\n`loading` instead of disabling it."
     },
     "ki-image": {
       "description": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",
@@ -1958,7 +1653,6 @@ export const catalogData = {
         }
       },
       "slots": {
-        "action": "One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls.",
         "end": "Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI.",
         "start": "Leading icon or text affix inside the field. Follows writing direction."
       },
@@ -2060,6 +1754,39 @@ export const catalogData = {
       "tag": "ki-list-item",
       "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
       "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+    },
+    "ki-markdown": {
+      "description": "Displays Markdown as Kimen components and native HTML semantics.",
+      "events": {},
+      "props": {
+        "allow-images": {
+          "type": "boolean",
+          "description": "Render Markdown images that pass the URL policy. Otherwise show their alternative text.",
+          "default": false
+        },
+        "heading-offset": {
+          "type": "number",
+          "description": "Add zero through five levels to source headings. The output stops at level six. Invalid values use two.",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 5
+        },
+        "src-text": {
+          "type": "string",
+          "description": "Markdown source. A supplied value, including an empty string, takes precedence over the default text slot."
+        },
+        "streaming": {
+          "type": "boolean",
+          "description": "Keep established blocks mounted while an answer grows. Turn it off when the source is complete.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Literal Markdown source. Set a text node or escape markup when writing HTML."
+      },
+      "tag": "ki-markdown",
+      "whenNotToUse": "Present an editable document or apply trusted authored HTML. Use native markup for structured page content.",
+      "whenToUse": "Show a formatted reply, readme excerpt or progressively received text from a person or model."
     },
     "ki-menu": {
       "description": "A popup of actions opened by a button in the same document or shadow root.",
@@ -2176,42 +1903,6 @@ export const catalogData = {
       "whenNotToUse": "standalone controls, navigational links, or form options.",
       "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu."
     },
-    "ki-message": {
-      "description": "A named chat article styled as a person’s message, assistant reply or event.",
-      "events": {},
-      "props": {
-        "author": {
-          "type": "string",
-          "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
-        },
-        "icon-name": {
-          "type": "string",
-          "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names."
-        },
-        "message-role": {
-          "type": "enum",
-          "values": [
-            "assistant",
-            "event",
-            "user"
-          ],
-          "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
-        },
-        "streaming": {
-          "type": "boolean",
-          "description": "Show the caret and mark the article busy until this message is complete.",
-          "default": false
-        }
-      },
-      "slots": {
-        "": "Message content, including text or formatted elements.",
-        "actions": "Follow-up controls supplied by the consumer after the content.",
-        "avatar": "Optional avatar replacing the assistant’s decorative default."
-      },
-      "tag": "ki-message",
-      "whenNotToUse": "Collect a prompt, announce a page alert, or execute a tool.",
-      "whenToUse": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply."
-    },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",
       "events": {},
@@ -2253,13 +1944,9 @@ export const catalogData = {
       "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
     },
     "ki-option": {
-      "description": "A declarative data option rendered by its owning `ki-select` or `ki-combobox`.",
+      "description": "A declarative data option rendered by its owning `ki-select`.",
       "events": {},
       "props": {
-        "description": {
-          "type": "string",
-          "description": "Secondary text shown below the label in a combobox choice row."
-        },
         "disabled": {
           "type": "boolean",
           "description": "Makes this option unavailable. Disabled options cannot be selected, are\nskipped by keyboard highlight, and are exposed unavailable by the select.",
@@ -2271,12 +1958,11 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Text label mirrored by the owning choice field.",
-        "start": "Decorative content shown before the label in a combobox row."
+        "": "Text label mirrored by the owning select."
       },
       "tag": "ki-option",
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
-      "whenToUse": "declare one choice inside a `ki-select` or `ki-combobox`; its text is the\nhuman-facing label and its `value` is the submitted value."
+      "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
     "ki-popover": {
       "description": "A non-modal popover anchored to a button.",
@@ -2378,122 +2064,6 @@ export const catalogData = {
       "tag": "ki-progress",
       "whenNotToUse": "static measurements within a known range such as disk\nusage or scores (gauge/meter), step-by-step wizard navigation (stepper),\nskeleton placeholders while content loads, or operations that finish in\nunder about one second.",
       "whenToUse": "communicate advancement of an ongoing task such as upload,\ndownload, installation or multi-step processing. Use `value`/`max` when\nthe completed fraction is known; use `indeterminate` when work is ongoing\nbut its duration cannot be measured, including loading-indicator use cases.\nChoose `linear` in page flows and lists, and `circular` in compact or\ncentered placements. Always set `label` to what is progressing."
-    },
-    "ki-prompt-input": {
-      "description": "A multiline assistant composer with local file attachments and send and stop requests.",
-      "events": {
-        "ki-stop": "Requests that the application stop its streaming response.",
-        "ki-submit": "Requests a send with original text and a snapshot of accepted local files."
-      },
-      "props": {
-        "accept": {
-          "type": "string",
-          "description": "Comma-separated extensions or MIME types. Empty hides the attachment surface.",
-          "default": ""
-        },
-        "attach-label": {
-          "type": "string",
-          "description": "Accessible name of the file picker button.",
-          "default": "Attach files"
-        },
-        "attachments-label": {
-          "type": "string",
-          "description": "Accessible name of the attachment list.",
-          "default": "Attachments"
-        },
-        "disabled": {
-          "type": "boolean",
-          "description": "Excludes the composer from interaction and native form data.",
-          "default": false
-        },
-        "file-count-message": {
-          "type": "string",
-          "description": "Localized count rejection. The {name} marker is replaced with the file name.",
-          "default": "{name} exceeds the maximum number of attachments."
-        },
-        "file-size-message": {
-          "type": "string",
-          "description": "Localized size rejection. The {name} marker is replaced with the file name.",
-          "default": "{name} exceeds the file size limit."
-        },
-        "file-type-message": {
-          "type": "string",
-          "description": "Localized type rejection. The {name} marker is replaced with the file name.",
-          "default": "{name} has an unsupported file type."
-        },
-        "label": {
-          "type": "string",
-          "description": "Required accessible name of the text field. Supply it even with a placeholder.",
-          "required": true
-        },
-        "max-files": {
-          "type": "number",
-          "description": "Maximum count of attached files. Omit for no count limit."
-        },
-        "max-size": {
-          "type": "number",
-          "description": "Maximum attachment size in bytes per file. Omit for no size limit."
-        },
-        "name": {
-          "type": "string",
-          "description": "Optional key for the text in native form data. Files are carried by ki-submit."
-        },
-        "placeholder": {
-          "type": "string",
-          "description": "Hint displayed while the text field is empty."
-        },
-        "remove-label": {
-          "type": "string",
-          "description": "Prefix of an attachment's remove button name, followed by the file name.",
-          "default": "Remove"
-        },
-        "send-label": {
-          "type": "string",
-          "description": "Accessible name of the Send button.",
-          "default": "Send"
-        },
-        "status": {
-          "type": "enum",
-          "values": [
-            "idle",
-            "streaming",
-            "submitted"
-          ],
-          "description": "Application-owned request state. Only idle can send; streaming exposes Stop.",
-          "default": "idle"
-        },
-        "stop-label": {
-          "type": "string",
-          "description": "Accessible name of the Stop button.",
-          "default": "Stop generating"
-        },
-        "submit-on": {
-          "type": "enum",
-          "values": [
-            "enter",
-            "mod-enter"
-          ],
-          "description": "Send with Enter or with Control/Command+Enter. Shift+Enter always adds a line.",
-          "default": "enter"
-        },
-        "value": {
-          "type": "string",
-          "description": "Current draft text; the value attribute provides the form reset default.",
-          "default": ""
-        },
-        "writing-message": {
-          "type": "string",
-          "description": "Visible polite status while the assistant streams.",
-          "default": "Writing…"
-        }
-      },
-      "slots": {
-        "attachments": "Supplemental list items, visible when accept is set. Composer-managed files appear in the same list and alone contribute to ki-submit.",
-        "tools": "Application-owned toolbar controls, such as a model-picker trigger. Use non-submitting controls."
-      },
-      "tag": "ki-prompt-input",
-      "whenNotToUse": "Ordinary multiline form input without a send or stop interaction (`ki-textarea`), file uploads, or rich text editing.",
-      "whenToUse": "Compose a message to an assistant, optionally attach local files, and let people interrupt the assistant's response."
     },
     "ki-qr": {
       "description": "A machine-scannable QR code that hands a declared value — a link, a\npairing payload — from the screen to a nearby camera, encoded locally\nand restyled entirely through tokens.",

@@ -20,6 +20,7 @@ import {
   writeDialogId,
 } from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
+import { MARKDOWN_ORIGINS_ATTRIBUTE } from './generated/url-scheme.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
 import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
@@ -120,9 +121,9 @@ export interface RenderOptions {
    */
   readonly catalog?: Catalog;
   /**
-   * The allowed origins of URL props (FR-004, S23). Absent, URL props are
-   * held to the scheme allowlist alone. Present — even empty — every URL
-   * prop value must be an absolute http(s) URL whose origin is listed
+   * The allowed origins of URL props (FR-004, S23) and Markdown destinations.
+   * Absent, URLs are held to the scheme allowlist alone. Present — even empty —
+   * each URL must be an absolute http(s) URL whose origin is listed
    * exactly as `URL.origin` prints it (`https://cdn.example.com`); relative
    * references are rejected, and an entry in any other form matches nothing.
    */
@@ -316,10 +317,8 @@ export function guardNode(
     // Renderer-native name guard (defence in depth for hand-built catalogs that
     // never crossed createCatalog), the same grammar registration applies
     // (prop-names.ts): an on* name would compile into a live inline handler, a
-    // reserved name (style, class, slot, id; 032 FR-015) is never written from
-    // spec data, and an exotic name would throw InvalidCharacterError out of
-    // setAttribute — reject all three fail-closed before buildNode touches the
-    // DOM.
+    // reserved name (032 FR-015) is never written from spec data, and an
+    // exotic name would throw InvalidCharacterError out of setAttribute.
     const violation = propNameViolation(name);
     if (violation !== null) {
       state.diagnostics.push({
@@ -539,11 +538,23 @@ export function writeProp(
 /**
  * Creates the element of one validated, guarded node: a catalog component
  * or a native primitive (spec 037), the latter with what the renderer pins
- * on it (an image's referrer policy and container-fit sizing).
+ * on it (an image's referrer policy and container-fit sizing). Markdown
+ * receives the host's scope before any source is attached.
  */
-export function createNodeElement(doc: Document, component: string): Element {
+export function createNodeElement(
+  doc: Document,
+  component: string,
+  allowedUrlOrigins: readonly string[] | undefined,
+): Element {
   const element = doc.createElement(component);
   pinNative(element, component);
+  if (component === 'ki-markdown' && allowedUrlOrigins !== undefined) {
+    const origins = Array.isArray(allowedUrlOrigins) ? Array.from<unknown>(allowedUrlOrigins) : [];
+    element.setAttribute(
+      MARKDOWN_ORIGINS_ATTRIBUTE,
+      JSON.stringify(origins.every((origin) => typeof origin === 'string') ? origins : []),
+    );
+  }
   return element;
 }
 
@@ -695,8 +706,9 @@ function buildNode(
   onAction: ((event: ActionEvent) => void) | undefined,
   entries: Readonly<Record<string, CatalogEntry>>,
   idFor: DialogIdFor,
+  allowedUrlOrigins: readonly string[] | undefined,
 ): Element {
-  const element = createNodeElement(doc, node.component);
+  const element = createNodeElement(doc, node.component, allowedUrlOrigins);
   const props = node.props ?? {};
   writeProps(element, node.component, props, idFor);
   writeDialogId(element, node.id, idFor);
@@ -723,6 +735,7 @@ function buildNode(
           onAction,
           entries,
           idFor,
+          allowedUrlOrigins,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -907,6 +920,7 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
       options.onAction,
       catalog.components,
       scopedDialogIds(options.surface),
+      options.allowedUrlOrigins,
     ),
   );
   return { diagnostics: [], ok: true };
@@ -1029,6 +1043,7 @@ export function createStreamingRenderer(
           options.onAction,
           catalog.components,
           scopedDialogIds(options.surface),
+          context.allowedUrlOrigins,
         ),
       );
       return { diagnostics: [], ok: true };
