@@ -1,0 +1,193 @@
+{
+  "ki": {
+    "note": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "Background of a neutral note."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Text ink of a neutral note."
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{ki.text.med-em}",
+        "$description": "Decorative icon ink of a neutral note."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image over the note's solid background."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete filter behind the note."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.component.md}",
+        "$description": "Note surface corner radius."
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.space.md}",
+        "$description": "Space between the icon and the text."
+      },
+      "padding-block": {
+        "$type": "dimension",
+        "$value": "{ki.space.md}",
+        "$description": "Medium note block padding."
+      },
+      "padding-inline": {
+        "$type": "dimension",
+        "$value": "{ki.space.xl}",
+        "$description": "Medium note inline padding."
+      },
+      "font-family": {
+        "$type": "fontFamily",
+        "$value": "{ki.typography.family.body}",
+        "$description": "Note text font family."
+      },
+      "font-size": {
+        "$type": "dimension",
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Medium note text size."
+      },
+      "line-height": {
+        "$type": "dimension",
+        "$value": "{ki.typography.line-height.para}",
+        "$description": "Medium note text line height."
+      },
+      "icon-size": {
+        "$type": "dimension",
+        "$value": "{ki.space.3xl}",
+        "$description": "Medium note icon size."
+      },
+      "icon-offset": {
+        "$type": "dimension",
+        "$value": "{ki.space.xxs}",
+        "$description": "Medium icon offset from the first line's block start."
+      },
+      "sm": {
+        "padding-block": {
+          "$type": "dimension",
+          "$value": "{ki.space.xs}",
+          "$description": "Small note block padding."
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$value": "{ki.space.md}",
+          "$description": "Small note inline padding."
+        },
+        "font-size": {
+          "$type": "dimension",
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "Small note caption size."
+        },
+        "line-height": {
+          "$type": "dimension",
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "Small note caption line height."
+        },
+        "icon-size": {
+          "$type": "dimension",
+          "$value": "{ki.space.2xl}",
+          "$description": "Small note icon size."
+        },
+        "icon-offset": {
+          "$type": "dimension",
+          "$value": "{ki.size.border.hairline}",
+          "$description": "Small icon offset from the first line's block start."
+        }
+      },
+      "primary": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-tint}",
+          "$description": "Background of a primary note."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text ink of a primary note."
+        },
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.primary-high-em}",
+          "$description": "Decorative icon ink of a primary note."
+        }
+      },
+      "info": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.info-tint}",
+          "$description": "Background of an info note."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text ink of an info note."
+        },
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.info-high-em}",
+          "$description": "Decorative icon ink of an info note."
+        }
+      },
+      "success": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.success-tint}",
+          "$description": "Background of a success note."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text ink of a success note."
+        },
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.success-high-em}",
+          "$description": "Decorative icon ink of a success note."
+        }
+      },
+      "warning": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.warning-tint}",
+          "$description": "Background of a warning note."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text ink of a warning note."
+        },
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.warning-high-em}",
+          "$description": "Decorative icon ink of a warning note."
+        }
+      },
+      "danger": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.danger-tint}",
+          "$description": "Background of a danger note."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text ink of a danger note."
+        },
+        "icon": {
+          "$type": "color",
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "Decorative icon ink of a danger note."
+        }
+      }
+    }
+  }
+}

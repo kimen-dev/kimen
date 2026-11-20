@@ -1,0 +1,22 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Feedback and data/EmptyState" />
+
+# EmptyState
+
+Use `<ki-empty-state>` to explain an empty list, table, search result or
+first-run view. Describe what happened in the heading and default slot. Put
+the next step in `actions`.
+
+```html
+<ki-empty-state heading="No projects yet" icon-name="folder-plus" tone="primary-light">
+  Projects hold your surfaces, catalogs and themes.
+  <ki-button slot="actions" variant="primary">New project</ki-button>
+</ki-empty-state>
+```
+
+Import the selected glyph from `@kimen/elements/icons/<name>` or supply a
+decorative illustration through `media`. Add `announce` for changing search
+results and `size="sm"` for compact panels.
+
+[Component workshop and customization](?path=/docs/docs-components-ki-empty-state--docs)

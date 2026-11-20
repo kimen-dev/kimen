@@ -1,0 +1,26 @@
+---
+title: ki-relative-time
+description: Display a localized timestamp relative to the current time.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Pass an ISO timestamp. `numeric="auto"` can display words like “yesterday”.
+Set `numeric="always"` to use numeric wording. Add `sync` to refresh the text
+as time passes, and set `threshold` in seconds to switch to an absolute
+timestamp when the distance reaches the cutoff.
+
+<Demo layout="block" code={`<ki-relative-time date="2026-11-19T08:41:00Z" sync threshold="86400"></ki-relative-time>`} />
+
+The result uses native `time` semantics. Its absolute timestamp is available
+to assistive technology and in the tooltip. The visible wording changes
+without a live announcement.
+
+## API reference
+
+<CemApi tag="ki-relative-time" />
+
+## Workshop
+
+[Open ki-relative-time in Storybook](/storybook/?path=/docs/docs-components-ki-relative-time--docs)

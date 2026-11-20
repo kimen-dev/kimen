@@ -21,7 +21,15 @@ v1: interactive elements compose inside the card's slots."
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is complete. Behavior enters the system exactly once, here (Art. II).
 
-## Design-source analysis (Figma)
+## CardVariants extension
+
+[#379](../079-card-variants/spec.md) adds opt-in surface variants and
+whole-card interactivity. Use `href` or `interactive` with a text heading in
+the `header` slot. The heading link or button is the primary tab stop. Other
+controls remain separately focusable and operable. The host stays a
+semantically transparent grouping surface.
+
+## Original design-source analysis (Figma)
 
 The API below is the union of patterns found in both reference designs, so
 that neither theme lacks expressive power (and future themes inherit the same
@@ -87,7 +95,7 @@ and observe the layout collapse cleanly with no reserved space.
 ### User Story 2 - Contain interactive content without interfering (Priority: P2)
 
 A person operating with a keyboard or assistive technology uses the buttons
-and links placed inside a card exactly as if the card were not there: the card
+and links placed inside a card exactly as if the card were not there: a passive card
 adds no Tab stop, no role, no announcement of its own. The container is
 behaviorally transparent.
 
@@ -143,7 +151,7 @@ repeat under the forced dark scheme.
 
 A GenUI agent reading only the generated contract (docs, catalog metadata)
 picks the card to group related content, fills any subset of its regions, and
-knows when NOT to reach for it (never as a button or link). Malformed
+knows how to supply a title and an optional destination or action. Malformed
 attributes — for example vocabulary copied from another design system — do
 not break rendering.
 
@@ -162,8 +170,7 @@ observe default rendering.
 
 ### Edge Cases
 
-- Unknown attributes or attribute values (e.g. `variant="elevated"` copied
-  from M3 vocabulary) are ignored: the card renders its content with the
+- Unknown attributes or attribute values (e.g. `variant="foreign"`) are ignored: the card renders its content with the
   default appearance (agent-generated markup is not trusted to be valid).
 - A completely empty `<ki-card>` renders an empty surface; catalog guidance
   treats it as an authoring mistake, not an error state.
@@ -187,8 +194,8 @@ observe default rendering.
 ```gherkin
 Feature: Card
   A card groups related content — media, header, body and footer — on one
-  distinct surface that any brand restyles through tokens alone, without the
-  card ever competing with the interactive content placed inside it.
+  distinct surface that any brand restyles through tokens alone. A card may
+  also offer a primary action while its inner controls remain independent.
 
   # Family: core behavior
   # S1
@@ -211,14 +218,14 @@ Feature: Card
 
   # S8
   Scenario: The card leaves its content's events untouched
-    Given a card whose footer holds a button labeled "Download" on a page that counts activations
+    Given a passive card whose footer holds a button labeled "Download" on a page that counts activations
     When the user clicks the button
     Then the page observes exactly one activation
 
   # Family: keyboard path
   # S4
-  Scenario: The card never takes focus away from its content
-    Given a card whose footer holds a button labeled "Renew subscription"
+  Scenario: A passive card leaves focus to its contents
+    Given a passive card whose footer holds a button labeled "Renew subscription"
     When the user presses Tab
     Then focus lands on the "Renew subscription" button and never on the card itself
 
@@ -229,9 +236,8 @@ Feature: Card
     When the accessibility tree is queried
     Then the heading and body text are exposed and the card contributes no role, name or state of its own
 
-  # Family: form participation — N/A for ki-card: a non-interactive grouping
-  # container is not a form control and contributes no entry to submitted
-  # form data (justified in spec.md's Scenario Family Coverage table).
+  # Family: form participation — a passive card has no form value.
+  # The action card test is part of the CardVariants contract.
 
   # Family: theming
   # S6
@@ -263,16 +269,16 @@ Feature: Card
 | Core behavior | S1, S2, S3, S8 | |
 | Keyboard path | S4 | |
 | Assistive-tech outcome | S5 | |
-| Form participation | | N/A — ki-card is a non-interactive grouping container: it is not a form control, holds no value and contributes no entry to submitted form data (charter-listed valid N/A). |
+| Form participation | | The passive card holds no form value. See CardVariants S7 for activation inside a form. |
 | Theming | S6, S7 | |
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: The card MUST be a non-interactive grouping container: never
-  focusable, never present in the tab order, and emitting no activation or
-  component events of its own.
+- **FR-001**: The host MUST stay out of the tab order. A passive card
+  contributes no tab stop or activation event. The opt-in primary control
+  follows the CardVariants contract.
 - **FR-002**: Content MUST compose through four regions: `media` slot
   (leading visual), `header` slot, default slot (body), `footer` slot. Any
   subset — including a single region — MUST produce a sensible layout with
@@ -292,10 +298,9 @@ Feature: Card
   elevation, per-region padding, inter-region gap) MUST resolve from
   `--ki-card-*` component tokens layered over the semantic token layer; zero
   hardcoded visual values.
-- **FR-008**: The M3 elevated/filled/outlined style axis MUST be expressed
-  exclusively through theme token values (elevation and border tokens); no
-  style or variant attribute exists (002 Round/Square precedent, charter
-  rule on pure-appearance axes).
+- **FR-008**: The default style MUST resolve from the theme. Explicit
+  elevated, filled and outlined treatments follow the CardVariants contract
+  and resolve from theme tokens.
 - **FR-009**: Region padding MUST live on the regions, never on the card
   surface: each region resolves its own component token
   (`--ki-card-{media|header|body|footer}-padding`). Whether the `media`
@@ -310,16 +315,11 @@ Feature: Card
   per-region parts `media`, `header`, `body`, `footer`.
 - **FR-012**: All internal spacing and layout MUST use logical properties so
   RTL documents mirror correctly (Art. IV).
-- **FR-013**: The public contract MUST carry agent-readable
-  when-to-use/when-NOT-to-use guidance (never as a button or link — slot the
-  interactive element inside instead; whole-card interactivity is a possible
-  future feature, not a v1 behavior). The generated guidance MUST state that
-  the author supplies the heading element in the `header` slot (e.g.
-  `h2`/`h3`, at the level the surrounding document outline requires): the
-  card neither generates nor wraps a heading, so plain text slotted into
-  `header` carries no heading semantics.
+- **FR-013**: The public contract MUST document optional whole-card
+  activation and the author-supplied title at the appropriate document
+  heading level. A passive card keeps the heading supplied by its author.
 
-## Constitutional Surface *(mandatory)*
+## Original constitutional surface (before CardVariants)
 
 - **Public API delta** (Art. IX): new element `ki-card` (attributes: none in
   v1; events: none; slots: default, `media`, `header`, `footer`; parts:
@@ -373,13 +373,13 @@ Feature: Card
 - **SC-003**: zero accessibility violations in automated auditing across
   region combinations, themes and schemes, and the card contributes no role,
   name or state of its own to the accessibility tree in 100% of them.
-- **SC-004**: the card introduces zero additional keyboard stops; 100% of the
+- **SC-004**: a passive card introduces zero additional keyboard stops; 100% of the
   interactive content slotted inside it remains reachable and operable by
   keyboard alone.
 - **SC-005**: the component's marginal cost stays in low single-digit KB
   (gzipped) and within the declared budget gate.
 
-## Assumptions
+## Original assumptions (before CardVariants)
 
 - No `variant`/style attribute: elevated vs filled vs outlined is a
   pure-appearance axis each theme decides through component tokens (charter

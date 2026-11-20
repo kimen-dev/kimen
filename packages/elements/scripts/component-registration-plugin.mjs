@@ -32,8 +32,9 @@ export function componentRegistrationPlugin({
           return `import gallery${index} from ${JSON.stringify(gallery)};`;
         });
         const entries = components.map(({ tag, metadata }, index) => {
-          const { barePage, pointer } = metadata;
-          return `${JSON.stringify(tag)}: { gallery: gallery${index}, barePage: ${JSON.stringify(barePage)}, pointer: ${JSON.stringify(pointer)} }`;
+          const { barePage, pointer, visual } = metadata;
+          const material3Dark = visual?.material3Dark === true;
+          return `${JSON.stringify(tag)}: { gallery: gallery${index}, barePage: ${JSON.stringify(barePage)}, pointer: ${JSON.stringify(pointer)}, material3Dark: ${material3Dark} }`;
         });
         return [...imports, `export const componentFixtures = { ${entries.join(',\n')} };`].join(
           '\n',

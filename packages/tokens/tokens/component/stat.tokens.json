@@ -1,0 +1,102 @@
+{
+  "ki": {
+    "stat": {
+      "bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Raised surface of the metric card."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image layered over the metric surface."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete optional filter behind the metric surface."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Subtle metric card outline."
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of the metric card outline."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of the metric card."
+      },
+      "padding": {
+        "$value": "{ki.space.xl}",
+        "$description": "Insets around the metric and chart."
+      },
+      "gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "Space between the reading and comparison or chart."
+      },
+      "trend-gap": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Space between the trend glyph and comparison magnitude."
+      },
+      "label-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink of the metric label and comparison period."
+      },
+      "label-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Text size of the metric label."
+      },
+      "label-line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Line height of the metric label."
+      },
+      "value-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink of the main reading."
+      },
+      "value-font-family": {
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Typeface of the main reading."
+      },
+      "value-size": {
+        "$value": "{ki.typography.size.heading-1}",
+        "$description": "Size of the main reading."
+      },
+      "value-line-height": {
+        "$value": "{ki.typography.line-height.heading-1}",
+        "$description": "Line height of the main reading."
+      },
+      "value-letter-spacing": {
+        "$value": "{ki.typography.letter-spacing.md}",
+        "$description": "Spacing between digits in the main reading."
+      },
+      "emphasis-weight": {
+        "$value": "{ki.typography.weight.body.semibold}",
+        "$description": "Weight of the main reading and comparison magnitude."
+      },
+      "delta-size": {
+        "$value": "{ki.typography.size.caption-2}",
+        "$description": "Text size of the comparison."
+      },
+      "delta-line-height": {
+        "$value": "{ki.typography.line-height.caption-2}",
+        "$description": "Line height of the comparison."
+      },
+      "delta-neutral-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink of an unchanged or ungraded comparison."
+      },
+      "delta-success-fg": {
+        "$value": "{ki.text.success-high-em}",
+        "$description": "Ink of a favorable comparison."
+      },
+      "delta-danger-fg": {
+        "$value": "{ki.text.danger-high-em}",
+        "$description": "Ink of an unfavorable comparison."
+      },
+      "trend-size": {
+        "$value": "{ki.glyph.size.sm}",
+        "$description": "Size of the rising or falling trend glyph."
+      }
+    }
+  }
+}

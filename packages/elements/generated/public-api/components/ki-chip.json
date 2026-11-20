@@ -1,0 +1,584 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents activation, removal and moving the chip.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "removable": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Gives an input chip a trailing remove button and keyboard deletion.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "remove-label": {
+        "default": "'Remove'",
+        "deprecatedSince": null,
+        "description": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "The pressed state of a filter chip. The user can toggle it in place.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "type": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.",
+        "replacement": null,
+        "required": false,
+        "type": "\"assist\" | \"filter\" | \"input\" | undefined"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Value sent with removal, contextual activation and reorder events.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-chip-assist-icon-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative glyph in an assist chip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default compact pill surface leaves the backdrop unfiltered.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting filter and assist surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default compact pill surface uses a solid color.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline of an unselected filter or assist chip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default thickness of a compact pill border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline of a disabled chip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-disabled-ink": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label on a disabled chip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting filter and assist label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font family for the visible chip label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default chip label size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-font-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small chip label size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight for a chip label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between content in a compact pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default height of a compact pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-height-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small height of a compact pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface under the hovering pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label over the hover surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Icon size inside a compact pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-input-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface of a picked value.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-input-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label of a picked value.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default inline padding of a compact pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-inset-action": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing inset beside a pill action.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-inset-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small inline padding of a compact pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default line height of the chip label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-line-height-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small line height of the chip label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-pressed-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface while the activation is held.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-pressed-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label while the activation is held.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fully rounded compact pill shape.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-remove-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Remove button surface inside an input chip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-remove-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting remove glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-remove-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Remove button hover surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-remove-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Remove glyph over the hover surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Selected filter surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-selected-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible boundary of a selected filter.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-chip-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Selected filter label and check.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A compact filter toggle, removable picked value, or contextual action.",
+    "events": {
+      "ki-activate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted by an assist chip when its native button is activated.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{\n    value: string;\n  }>"
+      },
+      "ki-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted after a filter chip changes its pressed state.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{\n    selected: boolean;\n  }>"
+      },
+      "ki-remove": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Remove request for an input chip. Cancel it to keep application ownership of the chip.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ value: string }>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "chip": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The painted pill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "drag-handle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The grip enabled by a reorderable parent group.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The text wrapper around the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "remove": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native remove button on a removable input chip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "selection-icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The selected filter check.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The decorative leading content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Prevents activation, removal and moving the chip.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "removable": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Gives an input chip a trailing remove button and keyboard deletion.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "removeLabel": {
+        "default": "'Remove'",
+        "deprecatedSince": null,
+        "description": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "The pressed state of a filter chip. The user can toggle it in place.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "size": {
+        "default": "'md'",
+        "deprecatedSince": null,
+        "description": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+        "replacement": null,
+        "required": false,
+        "type": "\"md\" | \"sm\""
+      },
+      "type": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.",
+        "replacement": null,
+        "required": false,
+        "type": "\"assist\" | \"filter\" | \"input\" | undefined"
+      },
+      "value": {
+        "default": "''",
+        "deprecatedSince": null,
+        "description": "Value sent with removal, contextual activation and reorder events.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The visible text label. Use text or non-interactive markup.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-chip.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-chip.d.ts",
+    "symbols": {
+      "KiChip": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiChip extends Components.KiChip, HTMLElement {\n}\nexport const KiChip: {\n    prototype: KiChip;\n    new (): KiChip;\n};"
+      },
+      "KiChipSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiChipSize = 'sm' | 'md';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-chip.js"
+  }
+}
