@@ -57,23 +57,24 @@ export class KiSuggestion {
           <slot />
         </span>
         {this.promptTitle && (
-          <button
-            type="button"
-            part="button"
-            tabIndex={0}
-            aria-label={this.promptTitle}
-            aria-describedby={description ? 'description' : undefined}
-            onKeyDown={startKeyboardPress}
-            onKeyUp={releaseKeyboardPress}
-            onBlur={endKeyboardPress}
-          >
-            <span>{this.promptTitle}</span>
+          <div class="surface">
+            <button
+              type="button"
+              part="button"
+              tabIndex={0}
+              aria-describedby={description ? 'description' : undefined}
+              onKeyDown={startKeyboardPress}
+              onKeyUp={releaseKeyboardPress}
+              onBlur={endKeyboardPress}
+            >
+              <span>{this.promptTitle}</span>
+            </button>
             {description && (
               <span id="description" part="description">
                 {description}
               </span>
             )}
-          </button>
+          </div>
         )}
       </Host>
     );

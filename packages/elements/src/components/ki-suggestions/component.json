@@ -4,6 +4,6 @@
   "catalog": true,
   "budgetGroup": { "members": ["ki-suggestions", "ki-suggestion"] },
   "sizeBudget": {
-    "mcpServer": { "raw": 18624, "gzip": 4140 }
+    "mcpServer": { "raw": 20067, "gzip": 4422 }
   }
 }

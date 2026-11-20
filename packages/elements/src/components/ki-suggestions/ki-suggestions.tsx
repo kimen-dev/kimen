@@ -64,8 +64,8 @@ export class KiSuggestions {
     }
 
     const button = item.shadowRoot?.querySelector('button');
-    const text = button?.getAttribute('aria-label');
-    if (!text || !button || !event.composedPath().includes(button)) return;
+    const text = button?.textContent;
+    if (!text || !event.composedPath().includes(button)) return;
 
     const selection = this.kiSelect.emit({ text });
     const composer = this.composer;

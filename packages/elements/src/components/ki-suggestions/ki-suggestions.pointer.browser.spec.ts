@@ -48,15 +48,17 @@ it.for(['chips', 'cards'])(
     fixture.innerHTML = `
       <div data-ki-density="touch" style="padding: 16px">
         <ki-suggestions label="Prompt starters" variant="${variant}">
-          <ki-suggestion>I</ki-suggestion>
+          <ki-suggestion description="On-call reports">I</ki-suggestion>
         </ki-suggestions>
       </div>`;
     const option = page.getByRole('button', { name: 'I', exact: true });
     await expect.element(option).toBeVisible();
     const control = option.element();
-    const rect = control.getBoundingClientRect();
     const root = control.getRootNode();
     if (!(root instanceof ShadowRoot)) throw new Error('Missing suggestion shadow root');
+    const surface = variant === 'chips' ? control : control.parentElement;
+    if (!surface) throw new Error('Missing card surface');
+    const rect = surface.getBoundingClientRect();
 
     if (variant === 'chips') {
       expect(rect.height).toBeCloseTo(32, 0);
@@ -71,5 +73,16 @@ it.for(['chips', 'cards'])(
     expect(control.contains(root.elementFromPoint(x, y + halfTarget))).toBe(true);
     expect(control.contains(root.elementFromPoint(x - halfTarget, y))).toBe(true);
     expect(control.contains(root.elementFromPoint(x + halfTarget, y))).toBe(true);
+
+    if (variant === 'cards') {
+      const description = page.getByText('On-call reports', { exact: true });
+      await expect.element(description).toBeVisible();
+      const text = description.element().getBoundingClientRect();
+      expect(
+        control.contains(
+          root.elementFromPoint(text.left + text.width / 2, text.top + text.height / 2),
+        ),
+      ).toBe(true);
+    }
   },
 );

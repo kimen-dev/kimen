@@ -35,5 +35,11 @@
   --_ki-suggestion-block-inset: var(--ki-suggestion-card-inset);
   --_ki-suggestion-weight: var(--ki-suggestion-card-weight);
   --_ki-suggestion-align: stretch;
+  --_ki-suggestion-surface-display: grid;
   --_ki-suggestion-description-display: block;
+  --_ki-suggestion-button-position: static;
+  --_ki-suggestion-button-line-width: 0;
+  --_ki-suggestion-button-bg: transparent;
+  --_ki-suggestion-button-effect: none;
+  --_ki-suggestion-hit-layer: -1;
 }

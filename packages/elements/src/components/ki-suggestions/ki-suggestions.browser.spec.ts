@@ -25,6 +25,12 @@ const composerMarkup =
 
 const button = (name: string) => page.getByRole('button', { name, exact: true });
 
+function paintedSurface(control: Element, variant: string): Element {
+  if (variant === 'chips') return control;
+  if (!control.parentElement) throw new Error('Missing card surface');
+  return control.parentElement;
+}
+
 beforeAll(() => {
   defineSuggestion();
   defineSuggestions();
@@ -141,7 +147,10 @@ it('S4 exposes a named group of title-only buttons with a separate card descript
   const option = button(secondText);
   await expect.element(option).toBeVisible();
   await expect.element(option).toHaveAccessibleDescription(description);
-  await expect.element(page.getByText(description, { exact: true })).toBeVisible();
+  const supportingText = page.getByText(description, { exact: true });
+  await expect.element(supportingText).toBeVisible();
+  expect(option.element().textContent).toBe(secondText);
+  expect(option.element().contains(supportingText.element())).toBe(false);
 
   const tree = await media.ariaSnapshotByRole('group', 'Start a conversation');
   expect(tree).toContain('group "Start a conversation"');
@@ -170,11 +179,13 @@ it('S6 paints the card with the overridden surface token', async () => {
   const option = button(secondText);
   await expect.element(option).toBeVisible();
 
-  expect(getComputedStyle(option.element()).backgroundColor).toBe('rgb(233, 235, 237)');
+  expect(getComputedStyle(paintedSurface(option.element(), 'cards')).backgroundColor).toBe(
+    'rgb(233, 235, 237)',
+  );
 });
 
 it.for(['chips', 'cards'])(
-  'S7 keeps the %s button border and keyboard focus visible in forced colours',
+  'S7 keeps the %s control border and keyboard focus visible in forced colours',
   async (variant, { skip }) => {
     fixture.innerHTML = `<button tabindex="0">Before</button>${group(`variant="${variant}"`)}`;
     const witness = document.createElement('span');
@@ -200,7 +211,7 @@ it.for(['chips', 'cards'])(
 
       const control = option.element();
       await expect.poll(() => control.matches(':focus-visible')).toBe(true);
-      const paint = getComputedStyle(control);
+      const paint = getComputedStyle(paintedSurface(control, variant));
       expect(paint.borderBlockStartStyle).not.toBe('none');
       expect(Number.parseFloat(paint.borderBlockStartWidth)).toBeGreaterThan(0);
       expect(paint.borderBlockStartColor).not.toBe(paint.backgroundColor);
