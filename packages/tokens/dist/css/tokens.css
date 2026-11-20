@@ -1641,6 +1641,12 @@
   --ki-counter-success-fg:var(--ki-surface-s0);
   --ki-counter-neutral-bg:var(--ki-surface-inverse-white);
   --ki-counter-neutral-fg:var(--ki-text-inverse-black);
+  --ki-dialog-fullscreen-bg:var(--ki-surface-s1);
+  --ki-dialog-fullscreen-fg:var(--ki-text-high-em);
+  --ki-dialog-fullscreen-bg-image:var(--ki-surface-image-none);
+  --ki-dialog-fullscreen-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-dialog-fullscreen-header-height:var(--ki-layout-spacing-16xl);
+  --ki-dialog-fullscreen-header-border:var(--ki-outline-low-em);
   --ki-dialog-radius:var(--ki-radius-component-3xl);
   --ki-dialog-padding:var(--ki-space-7xl);
   --ki-dialog-gap:var(--ki-space-xl);

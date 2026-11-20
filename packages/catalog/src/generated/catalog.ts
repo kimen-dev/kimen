@@ -726,15 +726,35 @@ export const catalogData = {
       "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
     },
     "ki-dialog": {
-      "description": "A modal dialog for one interrupting decision or short focused task.",
+      "description": "A modal dialog for an interrupting decision or a focused task.",
       "events": {
-        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+        "ki-close": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
+        "ki-confirm": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application."
       },
       "props": {
+        "close-label": {
+          "type": "string",
+          "description": "Accessible name for the fullscreen close button. Localize it or describe\nthe effect of dismissing, for example \"Discard and close\".",
+          "default": "Close"
+        },
         "close-on-backdrop": {
           "type": "boolean",
           "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
           "default": false
+        },
+        "confirm-label": {
+          "type": "string",
+          "description": "Label for the optional confirmation button. Use an action verb such as\n\"Save\". The button is in the fullscreen header or the centered footer."
+        },
+        "fullscreen": {
+          "type": "enum",
+          "values": [
+            "always",
+            "compact",
+            "never"
+          ],
+          "description": "Layout for the native modal. Use `compact` to fill windows narrower than\n600 CSS pixels, or `always` to fill any window. Use `never` for a centered\ndialog at every width.",
+          "default": "never"
         },
         "heading": {
           "type": "string",
@@ -752,8 +772,8 @@ export const catalogData = {
         "footer": "Dialog actions. Dismiss using an invoker command or `close()`."
       },
       "tag": "ki-dialog",
-      "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
-      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+      "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), multi-step flows that need their own\npage, menus, or pickers.",
+      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action. Use `fullscreen=\"compact\"` for longer tasks\nthat need the whole window on compact screens."
     },
     "ki-divider": {
       "description": "A static, decorative rule that visually separates adjacent content.",

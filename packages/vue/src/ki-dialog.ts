@@ -13,8 +13,13 @@ export const KiDialog: StencilVueComponent<JSX.KiDialog> = /*@__PURE__*/ defineC
   'open',
   'heading',
   'closeOnBackdrop',
-  'ki-close'
+  'fullscreen',
+  'confirmLabel',
+  'closeLabel',
+  'ki-close',
+  'ki-confirm'
 ], [
-  'ki-close'
+  'ki-close',
+  'ki-confirm'
 ]);
 

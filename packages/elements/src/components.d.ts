@@ -554,15 +554,16 @@ export namespace Components {
         "value"?: number;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface KiDialog {
         /**
@@ -570,10 +571,24 @@ export namespace Components {
          */
         "close": () => Promise<void>;
         /**
+          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
+          * @default 'Close'
+         */
+        "closeLabel": string;
+        /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop": boolean;
+        /**
+          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+         */
+        "confirmLabel"?: string;
+        /**
+          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
+          * @default 'never'
+         */
+        "fullscreen": 'never' | 'compact' | 'always';
         /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
@@ -2194,17 +2209,19 @@ declare global {
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
+        "ki-confirm": void;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface HTMLKiDialogElement extends Components.KiDialog, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -3473,30 +3490,49 @@ declare namespace LocalJSX {
         "value"?: number;
     }
     /**
-     * A modal dialog for one interrupting decision or short focused task.
+     * A modal dialog for an interrupting decision or a focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action.
+     * the least destructive action. Use `fullscreen="compact"` for longer tasks
+     * that need the whole window on compact screens.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-     * (navigate or use a future full-screen variant), menus, or pickers.
+     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+     * page, menus, or pickers.
      */
     interface KiDialog {
+        /**
+          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
+          * @default 'Close'
+         */
+        "closeLabel"?: string;
         /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop"?: boolean;
         /**
+          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
+         */
+        "confirmLabel"?: string;
+        /**
+          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
+          * @default 'never'
+         */
+        "fullscreen"?: 'never' | 'compact' | 'always';
+        /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
         "heading": string;
         /**
-          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+          * Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
          */
         "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
+        /**
+          * The user activated the confirmation button. Handle validation, submission and dismissal in the application.
+         */
+        "onKi-confirm"?: (event: KiDialogCustomEvent<void>) => void;
         /**
           * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
           * @default false
@@ -4935,6 +4971,9 @@ declare namespace LocalJSX {
         "open": boolean;
         "heading": string;
         "closeOnBackdrop": boolean;
+        "fullscreen": 'never' | 'compact' | 'always';
+        "confirmLabel": string;
+        "closeLabel": string;
     }
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
@@ -5373,15 +5412,16 @@ declare module "@stencil/core" {
              */
             "ki-counter": LocalJSX.IntrinsicElements["ki-counter"] & JSXBase.HTMLAttributes<HTMLKiCounterElement>;
             /**
-             * A modal dialog for one interrupting decision or short focused task.
+             * A modal dialog for an interrupting decision or a focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
              * provide a `heading`, place actions in the `footer` slot, wire each
              * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-             * the least destructive action.
+             * the least destructive action. Use `fullscreen="compact"` for longer tasks
+             * that need the whole window on compact screens.
              * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-             * supplementary hints (`ki-tooltip`), long forms or multi-step flows
-             * (navigate or use a future full-screen variant), menus, or pickers.
+             * supplementary hints (`ki-tooltip`), multi-step flows that need their own
+             * page, menus, or pickers.
              */
             "ki-dialog": LocalJSX.IntrinsicElements["ki-dialog"] & JSXBase.HTMLAttributes<HTMLKiDialogElement>;
             /**

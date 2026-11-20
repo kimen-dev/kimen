@@ -3303,15 +3303,15 @@
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
       "encapsulation": "shadow",
       "tag": "ki-dialog",
-      "docs": "A modal dialog for one interrupting decision or short focused task.",
+      "docs": "A modal dialog for an interrupting decision or a focused task.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action. Use `fullscreen=\"compact\"` for longer tasks\nthat need the whole window on compact screens."
         },
         {
           "name": "whenNotToUse",
-          "text": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers."
+          "text": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), multi-step flows that need their own\npage, menus, or pickers."
         },
         {
           "name": "slot",
@@ -3327,6 +3327,10 @@
         },
         {
           "name": "part",
+          "text": "header - Fullscreen bar with the title and its controls."
+        },
+        {
+          "name": "part",
           "text": "heading - Visible h2 title, rendered only when `heading` is non-empty."
         },
         {
@@ -3339,9 +3343,38 @@
         }
       ],
       "usage": {
-        "examples": "A modal confirmation. `heading` names the dialog and actions go in the `footer`\nslot. Each invoker uses the dialog's ID within the same document or shadow root.\n\n```html\n<ki-button commandfor=\"confirm-dialog\" command=\"show-modal\" tone=\"danger\">Delete draft</ki-button>\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"request-close\" autofocus>Cancel</ki-button>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"close\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\n`close` dismisses the dialog. `request-close` first gives the dialog a chance\nto cancel the request. After an accepted close command, the opening button\nregains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and\n`close()` remain available for programmatic control.\n"
+        "examples": "A modal confirmation. `heading` names the dialog and actions go in the `footer`\nslot. Each invoker uses the dialog's ID within the same document or shadow root.\n\n```html\n<ki-button commandfor=\"confirm-dialog\" command=\"show-modal\" tone=\"danger\">Delete draft</ki-button>\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"request-close\" autofocus>Cancel</ki-button>\n  <ki-button slot=\"footer\" commandfor=\"confirm-dialog\" command=\"close\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\n`close` dismisses the dialog. `request-close` first gives the dialog a chance\nto cancel the request. After an accepted close command, the opening button\nregains focus and `ki-close` reports `detail.reason: 'command'`. `show()` and\n`close()` remain available for programmatic control.\n\n\n## Edit a longer form\n\n```html\n<ki-button commandfor=\"event-details\" command=\"show-modal\">Add event</ki-button>\n<ki-dialog id=\"event-details\" heading=\"New event\" fullscreen=\"compact\"\n  confirm-label=\"Save\" close-label=\"Discard and close\">\n  <ki-input label=\"Title\"></ki-input>\n  <ki-input label=\"Date\"></ki-input>\n</ki-dialog>\n```\n\nBelow 600 CSS pixels the modal fills the window and keeps its heading and\nactions visible above the scrollable body. At wider widths `Save` moves to\nthe centered dialog's footer. Handle `ki-confirm` to save the form and call\n`close()` after success. In fullscreen, call `preventDefault()` on\n`ki-close` to veto Escape or the header close button while editing.\n\nWhen importing the dialog directly, register `ki-button` to use the themed\nconfirmation button. A single-element import still provides a native\nconfirmation button with the same label and event.\n"
       },
       "props": [
+        {
+          "name": "closeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "close-label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the fullscreen close button. Localize it or describe\nthe effect of dismissing, for example \"Discard and close\".",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Close'"
+            }
+          ],
+          "default": "'Close'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "closeOnBackdrop",
           "type": "boolean",
@@ -3364,6 +3397,70 @@
           "values": [
             {
               "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "confirm-label",
+          "reflectToAttr": true,
+          "docs": "Label for the optional confirmation button. Use an action verb such as\n\"Save\". The button is in the fullscreen header or the centered footer.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "fullscreen",
+          "type": "\"always\" | \"compact\" | \"never\"",
+          "complexType": {
+            "original": "'never' | 'compact' | 'always'",
+            "resolved": "\"always\" | \"compact\" | \"never\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "fullscreen",
+          "reflectToAttr": true,
+          "docs": "Layout for the native modal. Use `compact` to fill windows narrower than\n600 CSS pixels, or `always` to fill any window. Use `never` for a centered\ndialog at every width.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'never'"
+            }
+          ],
+          "default": "'never'",
+          "values": [
+            {
+              "value": "always",
+              "type": "string"
+            },
+            {
+              "value": "compact",
+              "type": "string"
+            },
+            {
+              "value": "never",
+              "type": "string"
             }
           ],
           "optional": false,
@@ -3488,7 +3585,21 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
+          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-confirm",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application.",
           "docsTags": []
         }
       ],
@@ -3524,14 +3635,24 @@
           "docs": "Action row, collapsed when empty."
         },
         {
+          "name": "header",
+          "docs": "Fullscreen bar with the title and its controls."
+        },
+        {
           "name": "heading",
           "docs": "Visible h2 title, rendered only when `heading` is non-empty."
         }
       ],
       "states": [],
       "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-dialog": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-divider/ki-divider.tsx",
@@ -4016,10 +4137,14 @@
       "parts": [],
       "states": [],
       "dependents": [
+        "ki-dialog",
         "ki-stat"
       ],
       "dependencies": [],
       "dependencyGraph": {
+        "ki-dialog": [
+          "ki-icon"
+        ],
         "ki-stat": [
           "ki-icon"
         ]
@@ -11903,8 +12028,8 @@
       "path": "src/components/ki-counter/ki-counter.tsx"
     },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
-      "declaration": "export interface KiDialogCloseDetail {\n  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. */\n  reason: KiDialogCloseReason;\n}",
-      "docstring": "Event payload for the post-close `ki-close` notification.",
+      "declaration": "export interface KiDialogCloseDetail {\n  /** Dismissal path: programmatic, Escape, opt-in backdrop, or an invoker command. The fullscreen close button uses `method`. */\n  reason: KiDialogCloseReason;\n}",
+      "docstring": "Event payload for `ki-close`.",
       "path": "src/components/ki-dialog/ki-dialog.tsx"
     },
     "src/components/ki-divider/ki-divider.tsx::KiDividerOrientation": {

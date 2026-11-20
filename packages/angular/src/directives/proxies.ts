@@ -371,7 +371,7 @@ export declare interface KiCounter extends Components.KiCounter {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiDialog,
-  inputs: ['closeOnBackdrop', 'heading', 'open'],
+  inputs: ['closeLabel', 'closeOnBackdrop', 'confirmLabel', 'fullscreen', 'heading', 'open'],
   methods: ['show', 'close']
 })
 @Component({
@@ -379,7 +379,7 @@ export declare interface KiCounter extends Components.KiCounter {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['closeOnBackdrop', { name: 'heading', required: true }, 'open'],
+  inputs: ['closeLabel', 'closeOnBackdrop', 'confirmLabel', 'fullscreen', { name: 'heading', required: true }, 'open'],
 })
 export class KiDialog {
   protected el: HTMLKiDialogElement;
@@ -393,13 +393,15 @@ export class KiDialog {
 
 export declare interface KiDialog extends Components.KiDialog {
   /**
-   * Post-close notification for every close path. Footer actions report
-`method` when they call `close()`, Escape reports `escape`, and opt-in
-backdrop dismissal reports `backdrop`. Invoker dismissals report `command`.
-When to use: update application state after the dialog is already closed
-and focus has returned through the native mechanism.
-When NOT to use: do not expect this event to veto closing; it is not
-cancelable in v1.
+   * Requests dismissal on fullscreen Escape or activation of the header
+close button. Prevent the default on that cancelable event to keep the
+modal open. The button reports `method` and Escape reports `escape`.
+Every other dismissal path emits a noncancelable notification after close
+and focus restoration. Use `open` to observe the modal's live state.
+   */
+  /**
+   * The user activated the confirmation button. Handle validation, submission
+and dismissal in the application.
    */
 }
 

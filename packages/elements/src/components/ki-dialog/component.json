@@ -13,9 +13,9 @@
       "brotli": 1615
     },
     "mcpServer": {
-      "raw": 9392,
-      "gzip": 2664,
-      "brotli": 1711
+      "raw": 20045,
+      "gzip": 5328,
+      "brotli": 3310
     }
   }
 }
