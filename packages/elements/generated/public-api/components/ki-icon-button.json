@@ -1187,6 +1187,14 @@
         "required": false,
         "type": null
       },
+      "--ki-counter-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the separating ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-density-control-offset": {
         "default": null,
         "deprecatedSince": null,
@@ -1440,6 +1448,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "counter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
         "replacement": null,
         "required": false,
         "type": null

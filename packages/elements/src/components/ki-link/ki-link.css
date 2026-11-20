@@ -1,0 +1,71 @@
+:host {
+  font-family: var(--ki-link-font-family);
+}
+
+a[href] {
+  background-color: var(--ki-link-bg);
+  background-image: var(--ki-link-bg-image);
+  border-radius: var(--ki-link-radius);
+  color: var(--ki-link-fg);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--ki-link-underline-thickness);
+  text-underline-offset: var(--ki-link-underline-offset);
+}
+
+:host([variant="neutral"]) a[href] {
+  background-color: var(--ki-link-neutral-bg);
+  color: var(--ki-link-neutral-fg);
+}
+
+a:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+/* Inline links flow with the paragraph. Standalone navigation has room
+ * to meet the target floor of the surrounding density region. */
+:host([underline="hover"]) a[href] {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: var(--ki-density-target-min);
+  min-block-size: var(--ki-density-target-min);
+}
+
+@media (hover: hover) {
+  a[href]:hover {
+    text-decoration-thickness: var(--ki-link-underline-thickness-hover);
+  }
+
+  :host([underline="hover"]) a[href]:not(:hover, :focus-visible) {
+    text-decoration-line: none;
+  }
+}
+
+.external-icon {
+  display: inline-block;
+  flex: none;
+  inline-size: var(--ki-link-icon-size);
+  block-size: var(--ki-link-icon-size);
+  margin-inline-start: var(--ki-link-icon-gap);
+  vertical-align: middle;
+}
+
+.external-label {
+  position: absolute;
+  inline-size: var(--ki-typography-visually-hidden-size);
+  block-size: var(--ki-typography-visually-hidden-size);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  a[href],
+  :host([variant="neutral"]) a[href] {
+    color: LinkText;
+  }
+
+  a:focus-visible {
+    outline-color: Highlight;
+  }
+}

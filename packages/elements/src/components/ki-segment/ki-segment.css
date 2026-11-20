@@ -1,0 +1,115 @@
+:host {
+  --_ki-segmented-target-size: max(
+    var(--ki-density-target-min),
+    calc(
+      var(--_ki-segmented-track-size, var(--ki-segmented-control-track-size-md)) -
+      2 *
+      var(--_ki-segmented-track-padding, var(--ki-segmented-track-padding)) +
+      var(--ki-density-control-offset)
+    )
+  );
+
+  display: flex;
+  min-inline-size: var(--_ki-segmented-target-size);
+  font-family: var(--ki-typography-family-body);
+  font-size: var(--_ki-segmented-font-size, var(--ki-segment-font-size));
+  font-weight: var(--ki-segment-font-weight);
+  line-height: var(--_ki-segmented-line-height, var(--ki-segment-line-height));
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.tooltip {
+  display: flex;
+  flex: 1;
+  min-inline-size: 0;
+}
+
+button {
+  appearance: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ki-segment-gap);
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--_ki-segmented-target-size);
+  padding-block: 0;
+  padding-inline: var(--_ki-segmented-padding-inline, var(--ki-segment-padding-inline));
+  overflow: hidden;
+  border: var(--ki-segmented-selected-border-width) solid transparent;
+  border-radius: var(--ki-segmented-item-radius);
+  background-color: var(--ki-segmented-item-bg);
+  background-image: var(--ki-segmented-item-bg-image);
+  backdrop-filter: var(--ki-segmented-item-backdrop-filter);
+  color: var(--ki-segmented-item-fg);
+  font: inherit;
+  cursor: pointer;
+}
+
+.icon {
+  display: contents;
+}
+
+.icon ::slotted(*) {
+  flex: none;
+  inline-size: var(--ki-segment-icon-size);
+  block-size: var(--ki-segment-icon-size);
+  pointer-events: none;
+}
+
+.label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  button:hover:not(:disabled) {
+    color: var(--ki-segmented-selected-fg);
+  }
+}
+
+button[aria-checked="true"] {
+  border-color: var(--ki-segmented-selected-border-color);
+  background-color: var(--ki-segmented-selected-bg);
+  background-image: var(--ki-segmented-selected-bg-image);
+  backdrop-filter: var(--ki-segmented-selected-backdrop-filter);
+  color: var(--ki-segmented-selected-fg);
+  box-shadow: var(--ki-segmented-selected-shadow);
+}
+
+button:disabled {
+  color: var(--ki-segmented-item-disabled-fg);
+  cursor: default;
+}
+
+button:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(
+    0px -
+    var(--ki-focus-ring-width) -
+    var(--ki-segmented-selected-border-width)
+  );
+}
+
+@media (forced-colors: active) {
+  button[aria-checked="true"] {
+    /* Keep the Highlight boundary and use the same user palette for its fill and ink. */
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background-color: ButtonFace;
+    background-image: none;
+    backdrop-filter: none;
+    color: ButtonText;
+    box-shadow: none;
+  }
+
+  button:focus-visible {
+    outline-color: ButtonText;
+  }
+}

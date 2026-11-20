@@ -1,0 +1,362 @@
+{
+  "component": {
+    "attributes": {
+      "alt": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "decorative": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Hide the media from assistive technology when it conveys no information.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "fallback-label": {
+        "default": "'Image unavailable'",
+        "deprecatedSince": null,
+        "description": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "fit": {
+        "default": "'cover'",
+        "deprecatedSince": null,
+        "description": "Cover fills the frame. Contain preserves the whole image in it.",
+        "replacement": null,
+        "required": false,
+        "type": "\"contain\" | \"cover\""
+      },
+      "loading": {
+        "default": "'lazy'",
+        "deprecatedSince": null,
+        "description": "Native loading hint. Use eager for a critical image above the fold.",
+        "replacement": null,
+        "required": false,
+        "type": "\"eager\" | \"lazy\""
+      },
+      "radius": {
+        "default": "'lg'",
+        "deprecatedSince": null,
+        "description": "Corner radius of the media frame.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"none\""
+      },
+      "ratio": {
+        "default": "'auto'",
+        "deprecatedSince": null,
+        "description": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load.",
+        "replacement": null,
+        "required": false,
+        "type": "\"16:9\" | \"1:1\" | \"3:2\" | \"4:3\" | \"auto\""
+      },
+      "src": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-image-caption-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text colour of the visible caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-caption-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the visible caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-caption-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Type size of the visible caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-caption-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the image frame and its caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-caption-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the visible caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-fallback-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter applied behind the media surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-fallback-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Solid fill behind the image and fallback symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-fallback-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional background image over the media fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-fallback-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the fallback symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-fallback-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline and block size of the unavailable-image symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-fallback-icon-stroke-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the unavailable-image symbol.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the default media frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-image-radius-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the medium media frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",
+    "events": {
+      "ki-error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Reports a load failure or rejected URL once per source attempt. Bubbles\nand crosses shadow boundaries so consumers can observe it on a surface.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "caption": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The figcaption carrying the slotted caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "fallback": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The unavailable-image indicator inside the frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "figure": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The figure containing the frame and optional caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "frame": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The reserved media box and its shape and backing surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native image and its fit within the frame.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "alt": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "decorative": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Hide the media from assistive technology when it conveys no information.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "fallbackLabel": {
+        "default": "'Image unavailable'",
+        "deprecatedSince": null,
+        "description": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "fit": {
+        "default": "'cover'",
+        "deprecatedSince": null,
+        "description": "Cover fills the frame. Contain preserves the whole image in it.",
+        "replacement": null,
+        "required": false,
+        "type": "\"contain\" | \"cover\""
+      },
+      "loading": {
+        "default": "'lazy'",
+        "deprecatedSince": null,
+        "description": "Native loading hint. Use eager for a critical image above the fold.",
+        "replacement": null,
+        "required": false,
+        "type": "\"eager\" | \"lazy\""
+      },
+      "radius": {
+        "default": "'lg'",
+        "deprecatedSince": null,
+        "description": "Corner radius of the media frame.",
+        "replacement": null,
+        "required": false,
+        "type": "\"lg\" | \"md\" | \"none\""
+      },
+      "ratio": {
+        "default": "'auto'",
+        "deprecatedSince": null,
+        "description": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load.",
+        "replacement": null,
+        "required": false,
+        "type": "\"16:9\" | \"1:1\" | \"3:2\" | \"4:3\" | \"auto\""
+      },
+      "src": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "caption": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional visible context displayed below the media in a figcaption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-image.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-image.d.ts",
+    "symbols": {
+      "KiImage": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiImage extends Components.KiImage, HTMLElement {\n}\nexport const KiImage: {\n    prototype: KiImage;\n    new (): KiImage;\n};"
+      },
+      "KiImageFit": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiImageFit = 'cover' | 'contain';"
+      },
+      "KiImageLoading": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiImageLoading = 'lazy' | 'eager';"
+      },
+      "KiImageRadius": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiImageRadius = 'none' | 'md' | 'lg';"
+      },
+      "KiImageRatio": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiImageRatio = 'auto' | '1:1' | '4:3' | '3:2' | '16:9';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-image.js"
+  }
+}

@@ -1,0 +1,44 @@
+---
+title: ki-toaster
+description: The one place toasts appear, stacked in arrival order, the newest shown and the older queued.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+
+The one place toasts appear: it paints its [`ki-toast`](../toast/) children
+in the top layer at a corner of the viewport, stacks them from the top down
+in arrival order, shows the newest `max` (3 by default) and queues the older
+ones, without covering the page beside them.
+
+```html
+<ki-toaster placement="bottom-end"></ki-toaster>
+<script>
+  document.querySelector('ki-toaster').show({
+    tone: 'success',
+    title: 'Changes saved',
+    message: 'Workspace settings are up to date.',
+  });
+</script>
+```
+
+## Placement
+
+`placement` accepts `top-center`, `top-end`, `bottom-center` and
+`bottom-end` (default); `end` follows the writing direction, and a narrow
+touch screen always uses the bottom center. The distance from the edges and
+the gap between toasts are the `--ki-toaster-*` tokens.
+
+## API reference
+
+<CemApi tag="ki-toaster" />
+
+## Accessibility
+
+While it shows toasts the toaster is a group named by `label`
+(`Notifications` by default), not a landmark: keep it inside one of the
+page's landmarks. F6 moves focus into it and Escape on a toast returns focus
+to where it was; an empty toaster exposes nothing.
+
+## Workshop
+
+[Open ki-toaster in Storybook](/storybook/?path=/docs/docs-components-ki-toaster--docs)
