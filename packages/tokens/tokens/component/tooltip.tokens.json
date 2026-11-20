@@ -141,7 +141,7 @@
           "$description": "Ink of the rich surface heading over the shared fill."
         },
         "radius": {
-          "$value": "{ki.radius.component.lg}",
+          "$value": "{ki.anchored-surface.radius}",
           "$description": "Corner radius of the rich surface."
         },
         "shadow": {
@@ -161,11 +161,11 @@
           "$description": "Outline ink of the rich surface."
         },
         "padding-block": {
-          "$value": "{ki.space.xl}",
+          "$value": "{ki.anchored-surface.padding}",
           "$description": "Block-axis inset of the rich surface, before density scaling."
         },
         "padding-inline": {
-          "$value": "{ki.space.3xl}",
+          "$value": "{ki.layout.spacing.3xl}",
           "$description": "Inline-axis inset of the rich surface, before density scaling."
         },
         "font-size": {
@@ -193,7 +193,7 @@
           "$description": "Text weight of the rich surface heading."
         },
         "heading-gap": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.layout.spacing.xxs}",
           "$description": "Distance between the rich heading and its body."
         }
       }
