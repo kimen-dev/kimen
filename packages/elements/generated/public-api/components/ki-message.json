@@ -1,18 +1,58 @@
 {
   "component": {
     "attributes": {
-      "author": {
+      "actions-label": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+        "description": "Names and enables the assistant toolbar.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
       },
+      "author": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible article name. Defaults by role.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "branch-count": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Total replies. Shows a picker for two or more.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "branch-index": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "One-based reply index. Update after accepting a branch request.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "branch-status-label": {
+        "default": "'Response {index} of {count}'",
+        "deprecatedSince": null,
+        "description": "Branch announcement template with {index} and {count}.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "feedback": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Good or bad rating. Restore it when switching branches.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bad\" | \"good\" | undefined"
+      },
       "icon-name": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+        "description": "Decorative event icon. Search is built in. Import other icons before use.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -20,25 +60,169 @@
       "message-role": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+        "description": "Trailing user bubble, leading assistant avatar or centered event.",
         "replacement": null,
         "required": false,
         "type": "\"assistant\" | \"event\" | \"user\" | undefined"
       },
+      "next-branch-label": {
+        "default": "'Next response'",
+        "deprecatedSince": null,
+        "description": "Next branch button label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "previous-branch-label": {
+        "default": "'Previous response'",
+        "deprecatedSince": null,
+        "description": "Previous branch button label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "streaming": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Show the caret and mark the article busy until this message is complete.",
+        "description": "Show a caret and mark the article busy.",
         "replacement": null,
         "required": false,
         "type": "boolean"
       }
     },
     "cssProperties": {
+      "--ki-button-ghost-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-xs-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-control-border-width": {
         "default": null,
         "deprecatedSince": null,
         "description": "Stroke width of the boundary of a compact control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-xs-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-xs-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the icon button component for xs box (24px square, Figma Space/7xl).",
         "replacement": null,
         "required": false,
         "type": null
@@ -292,14 +476,39 @@
         "type": null
       }
     },
-    "description": "A named chat article styled as a person’s message, assistant reply or event.",
-    "events": {},
+    "description": "A user message, assistant reply or event.",
+    "events": {
+      "ki-branch-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Requests a branch by its one-based index.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ index: number }>"
+      },
+      "ki-feedback": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Reports the selected rating.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ value: KiMessageFeedback }>"
+      },
+      "ki-regenerate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Requests a new reply on Regenerate.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      }
+    },
     "methods": {},
     "parts": {
       "actions": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The group containing slotted follow-up controls.",
+        "description": "Follow-up controls.",
         "replacement": null,
         "required": false,
         "type": null
@@ -307,7 +516,15 @@
       "avatar": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The leading assistant avatar container.",
+        "description": "Assistant avatar.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "branches": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Branch picker and position.",
         "replacement": null,
         "required": false,
         "type": null
@@ -315,7 +532,7 @@
       "caret": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The decorative marker displayed while a message is streaming.",
+        "description": "Decorative streaming marker.",
         "replacement": null,
         "required": false,
         "type": null
@@ -323,7 +540,7 @@
       "content": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The body of the article, including any event icon.",
+        "description": "Body and optional event icon.",
         "replacement": null,
         "required": false,
         "type": null
@@ -331,25 +548,65 @@
       "message": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The named article and role-specific layout.",
+        "description": "Named article.",
         "replacement": null,
         "required": false,
         "type": null
       }
     },
     "properties": {
-      "author": {
+      "actionsLabel": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
+        "description": "Names and enables the assistant toolbar.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
       },
+      "author": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible article name. Defaults by role.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "branchCount": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Total replies. Shows a picker for two or more.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "branchIndex": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "One-based reply index. Update after accepting a branch request.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "branchStatusLabel": {
+        "default": "'Response {index} of {count}'",
+        "deprecatedSince": null,
+        "description": "Branch announcement template with {index} and {count}.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "feedback": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Good or bad rating. Restore it when switching branches.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bad\" | \"good\" | undefined"
+      },
       "iconName": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names.",
+        "description": "Decorative event icon. Search is built in. Import other icons before use.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -357,15 +614,31 @@
       "messageRole": {
         "default": null,
         "deprecatedSince": null,
-        "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note.",
+        "description": "Trailing user bubble, leading assistant avatar or centered event.",
         "replacement": null,
         "required": false,
         "type": "\"assistant\" | \"event\" | \"user\" | undefined"
       },
+      "nextBranchLabel": {
+        "default": "'Next response'",
+        "deprecatedSince": null,
+        "description": "Next branch button label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "previousBranchLabel": {
+        "default": "'Previous response'",
+        "deprecatedSince": null,
+        "description": "Previous branch button label.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "streaming": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Show the caret and mark the article busy until this message is complete.",
+        "description": "Show a caret and mark the article busy.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -375,7 +648,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Message content, including text or formatted elements.",
+        "description": "Text or formatted content.",
         "replacement": null,
         "required": false,
         "type": null
@@ -383,7 +656,7 @@
       "actions": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Follow-up controls supplied by the consumer after the content.",
+        "description": "App controls. With actions-label, use direct buttons or a layout-only\nki-button-group. Mark regenerate and rating buttons with data-message-action.",
         "replacement": null,
         "required": false,
         "type": null
@@ -391,7 +664,7 @@
       "avatar": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Optional avatar replacing the assistant’s decorative default.",
+        "description": "Overrides the decorative assistant avatar.",
         "replacement": null,
         "required": false,
         "type": null
@@ -412,6 +685,12 @@
           "value"
         ],
         "signature": "interface KiMessage extends Components.KiMessage, HTMLElement {\n}\nexport const KiMessage: {\n    prototype: KiMessage;\n    new (): KiMessage;\n};"
+      },
+      "KiMessageFeedback": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiMessageFeedback = 'good' | 'bad';"
       },
       "KiMessageRole": {
         "kinds": [

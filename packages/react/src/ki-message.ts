@@ -11,15 +11,24 @@ import React from 'react';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import type { Components } from '@kimen/elements/components';
 import { KiMessage as KiMessageElement, defineCustomElement as defineKiMessage } from '@kimen/elements/components/ki-message.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { KiMessageFeedback, KiMessageCustomEvent } from '@kimen/elements/components';
+import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
-export type KiMessageEvents = NonNullable<unknown>;
+export type KiMessageEvents = {
+  onKiBranchChange: EventName<KiMessageCustomEvent<{ index: number }>>,
+  onKiFeedback: EventName<KiMessageCustomEvent<{ value: KiMessageFeedback }>>,
+  onKiRegenerate: EventName<KiMessageCustomEvent<void>>
+};
 
 export const KiMessage: StencilReactComponent<KiMessageElement, KiMessageEvents, Components.KiMessage> = /*@__PURE__*/ createComponent<KiMessageElement, KiMessageEvents, Components.KiMessage>({
     tagName: 'ki-message',
     elementClass: KiMessageElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: {} as KiMessageEvents,
+    events: {
+      onKiBranchChange: 'ki-branch-change',
+      onKiFeedback: 'ki-feedback',
+      onKiRegenerate: 'ki-regenerate'
+    } as KiMessageEvents,
     defineCustomElement: defineKiMessage,
 });

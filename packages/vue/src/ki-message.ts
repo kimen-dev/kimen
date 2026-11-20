@@ -13,6 +13,20 @@ export const KiMessage: StencilVueComponent<JSX.KiMessage> = /*@__PURE__*/ defin
   'messageRole',
   'streaming',
   'author',
-  'iconName'
+  'iconName',
+  'actionsLabel',
+  'feedback',
+  'branchIndex',
+  'branchCount',
+  'previousBranchLabel',
+  'nextBranchLabel',
+  'branchStatusLabel',
+  'ki-branch-change',
+  'ki-feedback',
+  'ki-regenerate'
+], [
+  'ki-branch-change',
+  'ki-feedback',
+  'ki-regenerate'
 ]);
 

@@ -1,15 +1,14 @@
 # ki-message
 
-> A named chat article styled as a person’s message, assistant reply or event.
+> A user message, assistant reply or event.
 
 ## When to use
 
-Display a transcript entry inside ki-conversation. Pass
-formatted content through the default slot and set streaming during a reply.
+Display an entry in ki-conversation.
 
 ## When not to use
 
-Collect a prompt, announce a page alert, or execute a tool.
+Prompt input, page alerts or tool execution.
 
 ## Examples
 
@@ -48,30 +47,51 @@ default slot when your application displays formatted Markdown.
 <ki-message message-role="assistant" streaming>Choose the export format</ki-message>
 ```
 
+## Alternative replies
+
+```html
+<ki-message branch-index="2" branch-count="3">Choose JSON for a readable copy.</ki-message>
+```
+
+Handle `ki-branch-change` to show the requested alternative. Set
+`branchIndex` to `event.detail.index` when replacing the reply content.
+Set `actions-label` when the reply supplies a toolbar. The Conversation
+guide includes the complete Message actions recipe.
+
 ## Attributes
 
-- `author` (string | undefined): Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
-- `icon-name` (string | undefined): Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
-- `message-role` ("assistant" | "event" | "user" | undefined): The speaker or event kind. The user has a trailing bubble, the assistant has a leading avatar, and an event is a centered note.
-- `streaming` (boolean, default false): Show the caret and mark the article busy until this message is complete.
+- `actions-label` (string | undefined): Names and enables the assistant toolbar.
+- `author` (string | undefined): Accessible article name. Defaults by role.
+- `branch-count` (number | undefined, default 1): Total replies. Shows a picker for two or more.
+- `branch-index` (number | undefined, default 1): One-based reply index. Update after accepting a branch request.
+- `branch-status-label` (string | undefined, default 'Response {index} of {count}'): Branch announcement template with {index} and {count}.
+- `feedback` ("bad" | "good" | undefined): Good or bad rating. Restore it when switching branches.
+- `icon-name` (string | undefined): Decorative event icon. Search is built in. Import other icons before use.
+- `message-role` ("assistant" | "event" | "user" | undefined): Trailing user bubble, leading assistant avatar or centered event.
+- `next-branch-label` (string | undefined, default 'Next response'): Next branch button label.
+- `previous-branch-label` (string | undefined, default 'Previous response'): Previous branch button label.
+- `streaming` (boolean, default false): Show a caret and mark the article busy.
 
 ## Slots
 
-- (default): Message content, including text or formatted elements.
-- `actions`: Follow-up controls supplied by the consumer after the content.
-- `avatar`: Optional avatar replacing the assistant’s decorative default.
+- (default): Text or formatted content.
+- `actions`: App controls. With actions-label, use direct buttons or a layout-only ki-button-group. Mark regenerate and rating buttons with data-message-action.
+- `avatar`: Overrides the decorative assistant avatar.
 
 ## Parts
 
-- `actions`: The group containing slotted follow-up controls.
-- `avatar`: The leading assistant avatar container.
-- `caret`: The decorative marker displayed while a message is streaming.
-- `content`: The body of the article, including any event icon.
-- `message`: The named article and role-specific layout.
+- `actions`: Follow-up controls.
+- `avatar`: Assistant avatar.
+- `branches`: Branch picker and position.
+- `caret`: Decorative streaming marker.
+- `content`: Body and optional event icon.
+- `message`: Named article.
 
 ## Events
 
-None.
+- `ki-branch-change` (CustomEvent<{ index: number }>): Requests a branch by its one-based index.
+- `ki-feedback` (CustomEvent<{ value: KiMessageFeedback }>): Reports the selected rating.
+- `ki-regenerate` (CustomEvent<void>): Requests a new reply on Regenerate.
 
 ## Methods
 
@@ -79,7 +99,23 @@ None.
 
 ## CSS custom properties
 
+- `--ki-button-ghost-neutral-disabled-bg`: color used by the button component for ghost neutral disabled background.
+- `--ki-button-ghost-neutral-disabled-border`: color used by the button component for ghost neutral disabled border.
+- `--ki-button-ghost-neutral-disabled-fg`: color used by the button component for ghost neutral disabled foreground.
+- `--ki-button-ghost-neutral-hover-bg`: color used by the button component for ghost neutral hover background.
+- `--ki-button-ghost-neutral-hover-border`: color used by the button component for ghost neutral hover border.
+- `--ki-button-ghost-neutral-hover-fg`: color used by the button component for ghost neutral hover foreground.
+- `--ki-button-ghost-neutral-rest-bg`: color used by the button component for ghost neutral rest background.
+- `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border.
+- `--ki-button-ghost-neutral-rest-fg`: color used by the button component for ghost neutral rest foreground.
+- `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
 - `--ki-control-border-width`: Stroke width of the boundary of a compact control.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-icon-button-xs-icon-size`: dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon).
+- `--ki-icon-button-xs-size`: dimension used by the icon button component for xs box (24px square, Figma Space/7xl).
 - `--ki-layout-conversation-avatar-radius`: Round corner radius of the fallback assistant avatar.
 - `--ki-layout-conversation-bubble-end-radius`: Smaller radius of the end corner of a user bubble.
 - `--ki-layout-conversation-caret-block-size`: Block size of a streaming caret.
