@@ -1,16 +1,15 @@
 # ki-list-item
 
-> A non-interactive item inside `ki-list`, composed from leading media, primary text, optional secondary text and trailing media or meta.
+> A row inside `ki-list`, composed from leading media, primary text, optional secondary text and trailing content.
 
 ## When to use
 
-only as a child of `ki-list`, for one read-only entry in a
-similar vertical collection.
+as a direct child of `ki-list`, for a static entry, link,
+selection option, or a settings row with one control.
 
 ## When not to use
 
-outside `ki-list`, as a menu item, selectable option,
-tabular row, navigation link or whole-item clickable control.
+as a menu item, tabular row, or row with several actions.
 
 ## Examples
 
@@ -33,10 +32,10 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 </ki-list>
 ```
 
-`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while a slotted control needs its own accessible name:
+`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while an unlabeled trailing control receives its name from the row:
 
 ```html
-<ki-list>
+<ki-list label="Contacts">
   <ki-list-item>
     <ki-avatar slot="start" initials="GH" size="sm"></ki-avatar>
     Grace Hopper
@@ -48,14 +47,27 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 </ki-list>
 ```
 
+```html
+<ki-list label="Settings">
+  <ki-list-item href="/settings/account">
+    Account
+    <span slot="secondary">Name, email, password</span>
+  </ki-list-item>
+</ki-list>
+```
+
 ## Attributes
 
+- `disabled` (boolean, default false): Excludes this option from focus, selection by the user, and form data.
+- `href` (string | undefined, URL): Native row link destination. Use outside selection lists, with no slotted interactive content.
+- `selected` (boolean, default false): Whether this row is selected in a single- or multiple-selection list.
 - `size` ("lg" | "md" | "sm" | "xl", default 'md'): Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
+- `value` (string | undefined): Submitted option value. The primary row text supplies the default.
 
 ## Slots
 
 - (default): Primary text line.
-- `end`: Trailing media, meta text or a slotted control.
+- `end`: Trailing media, meta text or the only control of a settings row.
 - `secondary`: Supporting text below the primary line. Its presence selects the multi-line min-height token.
 - `start`: Leading media such as an icon, avatar or image.
 
@@ -63,6 +75,7 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 
 - `content`: Text column containing primary and secondary lines.
 - `end`: Trailing region wrapper.
+- `indicator`: Decorative navigation or selection indicator.
 - `item`: Item row surface and layout container.
 - `start`: Leading region wrapper.
 
@@ -79,9 +92,20 @@ None.
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
 - `--ki-inverse-white-alpha-3`: semantic color for inverse white alpha 3.
 - `--ki-inverse-white-alpha-6`: semantic color for inverse white alpha 6.
+- `--ki-list-item-checkbox-radius`: Corner radius of a multiple-selection indicator.
 - `--ki-list-item-gap`: dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).
+- `--ki-list-item-hover-bg`: Background of an unselected hovered interactive list row.
+- `--ki-list-item-hover-fg`: Text and indicator on an unselected hovered interactive list row.
+- `--ki-list-item-indicator-border-width`: Stroke around a visual option indicator.
+- `--ki-list-item-indicator-size`: Edge of the trailing selection or navigation mark.
+- `--ki-list-item-interactive-backdrop-filter`: Complete backdrop filter for an interactive list row.
+- `--ki-list-item-interactive-bg`: Resting fill of an unselected interactive list row.
+- `--ki-list-item-interactive-bg-image`: Optional image layered over interactive list row fills.
+- `--ki-list-item-interactive-radius`: Corner radius of link and option rows.
 - `--ki-list-item-lg-gap`: dimension used by the list component for lg item gap (List 10063:2066 lg binds Space/xl, 12px).
 - `--ki-list-item-lg-min-height`: dimension used by the list component for the lg one-line item min height (two List 10063:2066 lg block paddings plus the primary line: 48px).
 - `--ki-list-item-lg-min-height-multiline`: dimension used by the list component for the lg two-line item min height (List 10063:2066 lg measures 64px).
@@ -99,11 +123,14 @@ None.
 - `--ki-list-item-primary-font-size`: dimension used by the list component for item primary font size.
 - `--ki-list-item-primary-font-weight`: font weight used by the list component for item primary font weight.
 - `--ki-list-item-primary-line-height`: dimension used by the list component for primary line height (MarsUI primary is UI/Para/medium 13/20, not UI/Body 1 13/24).
+- `--ki-list-item-radio-radius`: Corner radius of a single-selection indicator.
 - `--ki-list-item-radius`: dimension used by the list component for item radius.
 - `--ki-list-item-secondary-fg`: color used by the list component for item secondary foreground.
 - `--ki-list-item-secondary-font-size`: dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px).
 - `--ki-list-item-secondary-font-weight`: font weight used by the list component for item secondary font weight.
 - `--ki-list-item-secondary-line-height`: dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance).
+- `--ki-list-item-selected-bg`: Background of a selected list option.
+- `--ki-list-item-selected-fg`: Text and indicator on a selected list option.
 - `--ki-list-item-sm-gap`: dimension used by the list component for sm item gap (List 10063:2066 sm binds Space/lg, 10px).
 - `--ki-list-item-sm-min-height`: dimension used by the list component for the sm one-line item min height (two List 10063:2066 sm block paddings plus the primary line: 32px).
 - `--ki-list-item-sm-min-height-multiline`: dimension used by the list component for the sm two-line item min height (List 10063:2066 sm measures 48px).

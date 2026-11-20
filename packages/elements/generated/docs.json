@@ -2993,9 +2993,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-list-item"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-list-item": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -3013,7 +3019,7 @@
         },
         {
           "name": "slot",
-          "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+          "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — supply `label` or a named list row."
         },
         {
           "name": "slot",
@@ -3076,7 +3082,7 @@
           "mutable": false,
           "attr": "label",
           "reflectToAttr": true,
-          "docs": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+          "docs": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract. An end slot in a named list can supply\nthe optional fallback from the row text. Use ki-button when the button\nhas a visible label.",
           "docsTags": [],
           "values": [
             {
@@ -3306,7 +3312,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+          "docs": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — supply `label` or a named list row."
         },
         {
           "name": "counter",
@@ -4691,43 +4697,251 @@
       "filePath": "src/components/ki-list/ki-list.tsx",
       "encapsulation": "shadow",
       "tag": "ki-list",
-      "docs": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
+      "docs": "A vertical list of read-only entries, navigation links, settings controls,\nor options in a single- or multiple-selection listbox.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "settings, contacts, results or activity feeds where each item\ncomposes leading media, primary text, optional secondary text and trailing\nmeta or a slotted control."
+          "text": "settings, contacts, results, navigation or visible choices composed\nfrom primary text, supporting text and optional media. Name interactive lists."
         },
         {
           "name": "whenNotToUse",
-          "text": "menus, selectable option lists, tabular data, navigation,\nwhole-item clickable rows or lone items outside a list."
+          "text": "popup action menus, tabular data, or rows with several actions."
         },
         {
           "name": "slot",
-          "text": "- `ki-list-item` children. Other children are unsupported."
+          "text": "- Direct `ki-list-item` children."
         },
         {
           "name": "part",
-          "text": "list - List surface that owns background, padding, item gap and\nbetween-item divider styling."
+          "text": "list - List surface that owns background, padding, gap and dividers."
         }
       ],
       "usage": {
-        "examples": "The list accepts only `ki-list-item` children (other children are unsupported); each item's default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Ada Lovelace</ki-list-item>\n  <ki-list-item>Grace Hopper</ki-list-item>\n  <ki-list-item>Margaret Hamilton</ki-list-item>\n</ki-list>\n```\n\nFull item composition — `start` for leading media (decorative beside the visible name, so the avatar carries no `label`), `secondary` for supporting text and `end` for trailing meta:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"AL\" size=\"sm\"></ki-avatar>\n    Ada Lovelace\n    <span slot=\"secondary\">Analytical engine programs</span>\n    <ki-badge slot=\"end\" tone=\"success\">Active</ki-badge>\n  </ki-list-item>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <span slot=\"end\">1906–1992</span>\n  </ki-list-item>\n</ki-list>\n```\n\nRows are never click targets; interactivity lives in controls slotted into a region, which keep their own semantics and focus behavior:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Two-factor authentication\n    <span slot=\"secondary\">Enabled via authenticator app</span>\n    <ki-button slot=\"end\" size=\"sm\" variant=\"secondary\" type=\"button\">Manage</ki-button>\n  </ki-list-item>\n</ki-list>\n```\n"
+        "examples": "The list accepts only `ki-list-item` children (other children are unsupported); each item's default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Ada Lovelace</ki-list-item>\n  <ki-list-item>Grace Hopper</ki-list-item>\n  <ki-list-item>Margaret Hamilton</ki-list-item>\n</ki-list>\n```\n\nFull item composition — `start` for leading media (decorative beside the visible name, so the avatar carries no `label`), `secondary` for supporting text and `end` for trailing meta:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"AL\" size=\"sm\"></ki-avatar>\n    Ada Lovelace\n    <span slot=\"secondary\">Analytical engine programs</span>\n    <ki-badge slot=\"end\" tone=\"success\">Active</ki-badge>\n  </ki-list-item>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <span slot=\"end\">1906–1992</span>\n  </ki-list-item>\n</ki-list>\n```\n\n```html\n<ki-list label=\"Settings\">\n  <ki-list-item href=\"/settings/account\">\n    Account\n    <span slot=\"secondary\">Name, email, password</span>\n  </ki-list-item>\n</ki-list>\n```\n\n```html\n<ki-list label=\"Reviewers\" selection=\"multiple\" name=\"reviewers\" required>\n  <ki-list-item value=\"ana\" selected>Ana Garcia</ki-list-item>\n  <ki-list-item value=\"luis\">Luis Perez</ki-list-item>\n</ki-list>\n```\n\n```html\n<ki-list label=\"Notifications\">\n  <ki-list-item>\n    Email digest\n    <span slot=\"secondary\">Every Monday</span>\n    <ki-switch slot=\"end\" checked></ki-switch>\n  </ki-list-item>\n</ki-list>\n```\n"
       },
-      "props": [],
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for a list with links, options or trailing controls.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form field name. Multiple selection submits repeated entries under this name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires at least one enabled choice in a selection list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selection",
+          "type": "\"multiple\" | \"none\" | \"single\"",
+          "complexType": {
+            "original": "KiListSelection",
+            "resolved": "\"multiple\" | \"none\" | \"single\"",
+            "references": {
+              "KiListSelection": {
+                "location": "local",
+                "path": "src/components/ki-list/ki-list.tsx",
+                "id": "src/components/ki-list/ki-list.tsx::KiListSelection"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "selection",
+          "reflectToAttr": true,
+          "docs": "Enables single or multiple selection. The default supports static, link and control rows.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'none'"
+            }
+          ],
+          "default": "'none'",
+          "values": [
+            {
+              "value": "multiple",
+              "type": "string"
+            },
+            {
+              "value": "none",
+              "type": "string"
+            },
+            {
+              "value": "single",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "null | string & {} | string[]",
+          "complexType": {
+            "original": "KiListValue",
+            "resolved": "null | string & {} | string[]",
+            "references": {
+              "KiListValue": {
+                "location": "local",
+                "path": "src/components/ki-list/ki-list.tsx",
+                "id": "src/components/ki-list/ki-list.tsx::KiListValue"
+              }
+            }
+          },
+          "mutable": true,
+          "reflectToAttr": false,
+          "docs": "Selected value or null in single selection, or selected values in source\norder in multiple selection. Assign a fresh array to change multiple\nselection. In HTML or catalog specs, set `selected` on the initial rows.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "null"
+            }
+          ],
+          "default": "null",
+          "values": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string & {}"
+            },
+            {
+              "type": "string[]"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
       "methods": [],
-      "events": [],
-      "listeners": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "KiListChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiListChangeDetail",
+            "resolved": "KiListChangeDetail",
+            "references": {
+              "KiListChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-list/ki-list.tsx",
+                "id": "src/components/ki-list/ki-list.tsx::KiListChangeDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fires once per user selection change, after updating the form value.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "focusin",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "focusout",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        }
+      ],
       "styles": [],
       "slots": [
         {
           "name": "",
-          "docs": "`ki-list-item` children. Other children are unsupported."
+          "docs": "Direct `ki-list-item` children."
         }
       ],
       "parts": [
         {
           "name": "list",
-          "docs": "List surface that owns background, padding, item gap and\nbetween-item divider styling."
+          "docs": "List surface that owns background, padding, gap and dividers."
         }
       ],
       "states": [],
@@ -4739,15 +4953,15 @@
       "filePath": "src/components/ki-list-item/ki-list-item.tsx",
       "encapsulation": "shadow",
       "tag": "ki-list-item",
-      "docs": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+      "docs": "A row inside `ki-list`, composed from leading media, primary text,\noptional secondary text and trailing content.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+          "text": "as a direct child of `ki-list`, for a static entry, link,\nselection option, or a settings row with one control."
         },
         {
           "name": "whenNotToUse",
-          "text": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control."
+          "text": "as a menu item, tabular row, or row with several actions."
         },
         {
           "name": "slot",
@@ -4763,7 +4977,7 @@
         },
         {
           "name": "slot",
-          "text": "end - Trailing media, meta text or a slotted control."
+          "text": "end - Trailing media, meta text or the only control of a settings row."
         },
         {
           "name": "part",
@@ -4780,12 +4994,125 @@
         {
           "name": "part",
           "text": "end - Trailing region wrapper."
+        },
+        {
+          "name": "part",
+          "text": "indicator - Decorative navigation or selection indicator."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-hover-bg - Interactive row hover fill."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-hover-fg - Text and indicator on an unselected hovered row."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-selected-bg - Selected option fill."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-selected-fg - Text and indicator on a selected option."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-list-item-interactive-radius - Corner radius of links and options."
         }
       ],
       "usage": {
-        "examples": "Valid only as a child of `ki-list`; the default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Release 1.4 shipped</ki-list-item>\n</ki-list>\n```\n\n`secondary` adds a supporting line below the primary text; its presence selects the multi-line min-height token:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Backups\n    <span slot=\"secondary\">Last run 2 hours ago</span>\n  </ki-list-item>\n</ki-list>\n```\n\n`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while a slotted control needs its own accessible name:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <ki-icon-button slot=\"end\" size=\"sm\" label=\"Edit Grace Hopper\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 20l1-4L16 5l3 3L8 19l-4 1z\" fill=\"currentColor\" /></svg>\n    </ki-icon-button>\n  </ki-list-item>\n</ki-list>\n```\n"
+        "examples": "Valid only as a child of `ki-list`; the default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Release 1.4 shipped</ki-list-item>\n</ki-list>\n```\n\n`secondary` adds a supporting line below the primary text; its presence selects the multi-line min-height token:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Backups\n    <span slot=\"secondary\">Last run 2 hours ago</span>\n  </ki-list-item>\n</ki-list>\n```\n\n`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while an unlabeled trailing control receives its name from the row:\n\n```html\n<ki-list label=\"Contacts\">\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <ki-icon-button slot=\"end\" size=\"sm\" label=\"Edit Grace Hopper\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 20l1-4L16 5l3 3L8 19l-4 1z\" fill=\"currentColor\" /></svg>\n    </ki-icon-button>\n  </ki-list-item>\n</ki-list>\n```\n\n```html\n<ki-list label=\"Settings\">\n  <ki-list-item href=\"/settings/account\">\n    Account\n    <span slot=\"secondary\">Name, email, password</span>\n  </ki-list-item>\n</ki-list>\n```\n"
       },
       "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Excludes this option from focus, selection by the user, and form data.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": true,
+          "docs": "Native row link destination. Use outside selection lists, with no\nslotted interactive content.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "selected",
+          "reflectToAttr": true,
+          "docs": "Whether this row is selected in a single- or multiple-selection list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "size",
           "type": "\"lg\" | \"md\" | \"sm\" | \"xl\"",
@@ -4833,6 +5160,32 @@
           "required": false,
           "getter": false,
           "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Submitted option value. The primary row text supplies the default.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
         }
       ],
       "methods": [],
@@ -4846,7 +5199,7 @@
         },
         {
           "name": "end",
-          "docs": "Trailing media, meta text or a slotted control."
+          "docs": "Trailing media, meta text or the only control of a settings row."
         },
         {
           "name": "secondary",
@@ -4867,6 +5220,10 @@
           "docs": "Trailing region wrapper."
         },
         {
+          "name": "indicator",
+          "docs": "Decorative navigation or selection indicator."
+        },
+        {
           "name": "item",
           "docs": "Item row surface and layout container."
         },
@@ -4877,8 +5234,14 @@
       ],
       "states": [],
       "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-list-item": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-note/ki-note.tsx",
@@ -9229,6 +9592,21 @@
       "declaration": "export type KiLinkUnderline = 'always' | 'hover';",
       "docstring": "",
       "path": "src/components/ki-link/ki-link.tsx"
+    },
+    "src/components/ki-list/ki-list.tsx::KiListSelection": {
+      "declaration": "export type KiListSelection = 'none' | 'single' | 'multiple';",
+      "docstring": "",
+      "path": "src/components/ki-list/ki-list.tsx"
+    },
+    "src/components/ki-list/ki-list.tsx::KiListValue": {
+      "declaration": "export type KiListValue = (string & {}) | string[] | null;",
+      "docstring": "",
+      "path": "src/components/ki-list/ki-list.tsx"
+    },
+    "src/components/ki-list/ki-list.tsx::KiListChangeDetail": {
+      "declaration": "export interface KiListChangeDetail {\n  value: KiListValue;\n}",
+      "docstring": "",
+      "path": "src/components/ki-list/ki-list.tsx"
     },
     "src/components/ki-list-item/ki-list-item.tsx::KiListItemSize": {
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",

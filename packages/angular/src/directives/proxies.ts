@@ -494,14 +494,15 @@ export declare interface KiLink extends Components.KiLink {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiList
+  defineCustomElementFn: defineKiList,
+  inputs: ['label', 'name', 'required', 'selection', 'value']
 })
 @Component({
   selector: 'ki-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['label', 'name', 'required', 'selection', 'value'],
 })
 export class KiList {
   protected el: HTMLKiListElement;
@@ -512,19 +513,24 @@ export class KiList {
 }
 
 
-export declare interface KiList extends Components.KiList {}
+
+export declare interface KiList extends Components.KiList {
+  /**
+   * Fires once per user selection change, after updating the form value.
+   */
+}
 
 
 @ProxyCmp({
   defineCustomElementFn: defineKiListItem,
-  inputs: ['size']
+  inputs: ['disabled', 'href', 'selected', 'size', 'value']
 })
 @Component({
   selector: 'ki-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['size'],
+  inputs: ['disabled', 'href', 'selected', 'size', 'value'],
 })
 export class KiListItem {
   protected el: HTMLKiListItemElement;

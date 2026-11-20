@@ -1,6 +1,30 @@
 {
   "component": {
     "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Excludes this option from focus, selection by the user, and form data.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native row link destination. Use outside selection lists, with no\nslotted interactive content.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether this row is selected in a single- or multiple-selection list.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
@@ -8,6 +32,14 @@
         "replacement": null,
         "required": false,
         "type": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Submitted option value. The primary row text supplies the default.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
       }
     },
     "cssProperties": {
@@ -35,6 +67,22 @@
         "required": false,
         "type": null
       },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-inverse-white-alpha-3": {
         "default": null,
         "deprecatedSince": null,
@@ -51,10 +99,82 @@
         "required": false,
         "type": null
       },
+      "--ki-list-item-checkbox-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a multiple-selection indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-list-item-gap": {
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of an unselected hovered interactive list row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text and indicator on an unselected hovered interactive list row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-indicator-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke around a visual option indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-indicator-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge of the trailing selection or navigation mark.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-interactive-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for an interactive list row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-interactive-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting fill of an unselected interactive list row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-interactive-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over interactive list row fills.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-interactive-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of link and option rows.",
         "replacement": null,
         "required": false,
         "type": null
@@ -195,6 +315,14 @@
         "required": false,
         "type": null
       },
+      "--ki-list-item-radio-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a single-selection indicator.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-list-item-radius": {
         "default": null,
         "deprecatedSince": null,
@@ -231,6 +359,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-selected-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of a selected list option.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-list-item-selected-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text and indicator on a selected list option.",
         "replacement": null,
         "required": false,
         "type": null
@@ -404,7 +548,7 @@
         "type": null
       }
     },
-    "description": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+    "description": "A row inside `ki-list`, composed from leading media, primary text,\noptional secondary text and trailing content.",
     "events": {},
     "methods": {},
     "parts": {
@@ -420,6 +564,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Trailing region wrapper.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "indicator": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative navigation or selection indicator.",
         "replacement": null,
         "required": false,
         "type": null
@@ -442,6 +594,30 @@
       }
     },
     "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Excludes this option from focus, selection by the user, and form data.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native row link destination. Use outside selection lists, with no\nslotted interactive content.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "selected": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether this row is selected in a single- or multiple-selection list.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "size": {
         "default": "'md'",
         "deprecatedSince": null,
@@ -449,6 +625,14 @@
         "replacement": null,
         "required": false,
         "type": "\"lg\" | \"md\" | \"sm\" | \"xl\""
+      },
+      "value": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Submitted option value. The primary row text supplies the default.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
       }
     },
     "slots": {
@@ -463,7 +647,7 @@
       "end": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Trailing media, meta text or a slotted control.",
+        "description": "Trailing media, meta text or the only control of a settings row.",
         "replacement": null,
         "required": false,
         "type": null

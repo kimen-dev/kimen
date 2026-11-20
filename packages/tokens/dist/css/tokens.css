@@ -1756,6 +1756,18 @@
   --ki-list-item-xl-primary-line-height:var(--ki-typography-line-height-title-2);
   --ki-list-item-xl-secondary-font-size:var(--ki-typography-size-body-1);
   --ki-list-item-xl-secondary-line-height:var(--ki-typography-line-height-para);
+  --ki-list-item-hover-bg:var(--ki-surface-s2);
+  --ki-list-item-hover-fg:var(--ki-text-high-em);
+  --ki-list-item-selected-bg:var(--ki-surface-primary-low-em);
+  --ki-list-item-selected-fg:var(--ki-text-primary-on-primary-light);
+  --ki-list-item-interactive-bg:var(--ki-surface-transparent);
+  --ki-list-item-interactive-bg-image:var(--ki-surface-image-none);
+  --ki-list-item-interactive-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-list-item-interactive-radius:var(--ki-radius-component-md);
+  --ki-list-item-indicator-size:var(--ki-typography-inline-icon-size);
+  --ki-list-item-indicator-border-width:var(--ki-glyph-stroke-width);
+  --ki-list-item-checkbox-radius:var(--ki-corner-inline);
+  --ki-list-item-radio-radius:var(--ki-corner-activity-mark);
   --ki-note-bg:var(--ki-surface-s2);
   --ki-note-fg:var(--ki-text-high-em);
   --ki-note-icon:var(--ki-text-med-em);

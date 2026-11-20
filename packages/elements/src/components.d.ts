@@ -21,6 +21,7 @@ import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./compo
 import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
+import { KiListChangeDetail, KiListSelection, KiListValue } from "./components/ki-list/ki-list";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
@@ -53,6 +54,7 @@ export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./compo
 export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
+export { KiListChangeDetail, KiListSelection, KiListValue } from "./components/ki-list/ki-list";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
@@ -534,7 +536,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract. An end slot in a named list can supply the optional fallback from the row text. Use ki-button when the button has a visible label.
          */
         "label": string;
         /**
@@ -775,30 +777,74 @@ export namespace Components {
         "variant": KiLinkVariant;
     }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface KiList {
+        /**
+          * Accessible name for a list with links, options or trailing controls.
+         */
+        "label"?: string;
+        /**
+          * Form field name. Multiple selection submits repeated entries under this name.
+         */
+        "name"?: string;
+        /**
+          * Requires at least one enabled choice in a selection list.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Enables single or multiple selection. The default supports static, link and control rows.
+          * @default 'none'
+         */
+        "selection": KiListSelection;
+        /**
+          * Selected value or null in single selection, or selected values in source order in multiple selection. Assign a fresh array to change multiple selection. In HTML or catalog specs, set `selected` on the initial rows.
+          * @default null
+         */
+        "value": KiListValue;
     }
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface KiListItem {
+        /**
+          * Excludes this option from focus, selection by the user, and form data.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Native row link destination. Use outside selection lists, with no slotted interactive content.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Whether this row is selected in a single- or multiple-selection list.
+          * @default false
+         */
+        "selected": boolean;
         /**
           * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
          */
         "size": KiListItemSize;
+        /**
+          * Submitted option value. The primary row text supplies the default.
+         */
+        "value"?: string;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -1527,6 +1573,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
+export interface KiListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiListElement;
+}
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiTabsElement;
@@ -1895,28 +1945,41 @@ declare global {
         prototype: HTMLKiLinkElement;
         new (): HTMLKiLinkElement;
     };
+    interface HTMLKiListElementEventMap {
+        "ki-change": KiListChangeDetail;
+    }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface HTMLKiListElement extends Components.KiList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiListElementEventMap>(type: K, listener: (this: HTMLKiListElement, ev: KiListCustomEvent<HTMLKiListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiListElementEventMap>(type: K, listener: (this: HTMLKiListElement, ev: KiListCustomEvent<HTMLKiListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiListElement: {
         prototype: HTMLKiListElement;
         new (): HTMLKiListElement;
     };
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface HTMLKiListItemElement extends Components.KiListItem, HTMLStencilElement {
     }
@@ -2851,7 +2914,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract. An end slot in a named list can supply the optional fallback from the row text. Use ki-button when the button has a visible label.
          */
         "label": string;
         /**
@@ -3100,30 +3163,86 @@ declare namespace LocalJSX {
         "variant"?: KiLinkVariant;
     }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface KiList {
+        /**
+          * If `true`, the user cannot interact with the element.
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Accessible name for a list with links, options or trailing controls.
+         */
+        "label"?: string;
+        /**
+          * Form field name. Multiple selection submits repeated entries under this name.
+         */
+        "name"?: string;
+        /**
+          * Fires once per user selection change, after updating the form value.
+         */
+        "onKi-change"?: (event: KiListCustomEvent<KiListChangeDetail>) => void;
+        /**
+          * Requires at least one enabled choice in a selection list.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Enables single or multiple selection. The default supports static, link and control rows.
+          * @default 'none'
+         */
+        "selection"?: KiListSelection;
+        /**
+          * Selected value or null in single selection, or selected values in source order in multiple selection. Assign a fresh array to change multiple selection. In HTML or catalog specs, set `selected` on the initial rows.
+          * @default null
+         */
+        "value"?: KiListValue;
     }
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface KiListItem {
+        /**
+          * Excludes this option from focus, selection by the user, and form data.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Native row link destination. Use outside selection lists, with no slotted interactive content.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Whether this row is selected in a single- or multiple-selection list.
+          * @default false
+         */
+        "selected"?: boolean;
         /**
           * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
          */
         "size"?: KiListItemSize;
+        /**
+          * Submitted option value. The primary row text supplies the default.
+         */
+        "value"?: string;
     }
     /**
      * A compact, static explanation beside a control or inside a card.
@@ -3984,8 +4103,18 @@ declare namespace LocalJSX {
         "target": string;
         "rel": string;
     }
+    interface KiListAttributes {
+        "selection": KiListSelection;
+        "label": string;
+        "name": string;
+        "required": boolean;
+    }
     interface KiListItemAttributes {
         "size": KiListItemSize;
+        "href": string;
+        "value": string;
+        "selected": boolean;
+        "disabled": boolean;
     }
     interface KiNoteAttributes {
         "tone": KiNoteTone;
@@ -4133,7 +4262,7 @@ declare namespace LocalJSX {
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
         "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
-        "ki-list": KiList;
+        "ki-list": Omit<KiList, keyof KiListAttributes> & { [K in keyof KiList & keyof KiListAttributes]?: KiList[K] } & { [K in keyof KiList & keyof KiListAttributes as `attr:${K}`]?: KiListAttributes[K] } & { [K in keyof KiList & keyof KiListAttributes as `prop:${K}`]?: KiList[K] };
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
@@ -4387,22 +4516,24 @@ declare module "@stencil/core" {
              */
             "ki-link": LocalJSX.IntrinsicElements["ki-link"] & JSXBase.HTMLAttributes<HTMLKiLinkElement>;
             /**
-             * A non-interactive vertical list container for read-only collections of
-             * similar entries composed with `ki-list-item` children.
-             * @whenToUse settings, contacts, results or activity feeds where each item
-             * composes leading media, primary text, optional secondary text and trailing
-             * meta or a slotted control.
-             * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-             * whole-item clickable rows or lone items outside a list.
+             * A vertical list of read-only entries, navigation links, settings controls,
+             * or options in a single- or multiple-selection listbox.
+             * @whenToUse settings, contacts, results, navigation or visible choices composed
+             * from primary text, supporting text and optional media. Name interactive lists.
+             * @whenNotToUse popup action menus, tabular data, or rows with several actions.
              */
             "ki-list": LocalJSX.IntrinsicElements["ki-list"] & JSXBase.HTMLAttributes<HTMLKiListElement>;
             /**
-             * A non-interactive item inside `ki-list`, composed from leading media,
-             * primary text, optional secondary text and trailing media or meta.
-             * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-             * similar vertical collection.
-             * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-             * tabular row, navigation link or whole-item clickable control.
+             * A row inside `ki-list`, composed from leading media, primary text,
+             * optional secondary text and trailing content.
+             * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+             * selection option, or a settings row with one control.
+             * @whenNotToUse as a menu item, tabular row, or row with several actions.
+             * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+             * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+             * @cssprop --ki-list-item-selected-bg - Selected option fill.
+             * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+             * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
             /**
