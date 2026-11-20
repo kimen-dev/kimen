@@ -1301,6 +1301,22 @@
           "whenNotToUse": "navigation, icon-only actions, persistent toggles, or the\nprogress of a page or region (use ki-progress).",
           "attributes": [
             {
+              "name": "command",
+              "fieldName": "command",
+              "type": {
+                "text": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
+              },
+              "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
+            },
+            {
+              "name": "commandfor",
+              "fieldName": "commandfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
+            },
+            {
               "name": "disabled",
               "fieldName": "disabled",
               "type": {
@@ -1360,7 +1376,7 @@
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
               "default": "'submit'",
-              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
             },
             {
               "name": "value",
@@ -1384,6 +1400,28 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "command",
+              "privacy": "public",
+              "type": {
+                "text": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
+              },
+              "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
+              "attribute": "command",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "commandfor",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
+              "attribute": "commandfor",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "disabled",
@@ -1463,7 +1501,7 @@
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
               "default": "'submit'",
-              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nA configured dialog command takes precedence over the form action.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
               "attribute": "type",
               "reflects": true
             },
@@ -4508,7 +4546,7 @@
           "customElement": true,
           "tagName": "ki-dialog",
           "description": "A modal dialog for one interrupting decision or short focused task.",
-          "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action.",
+          "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action.",
           "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
           "attributes": [
             {
@@ -4580,7 +4618,7 @@
               "kind": "method",
               "name": "close",
               "privacy": "public",
-              "description": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
+              "description": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method or an invoker command.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
               "return": {
                 "type": {
                   "text": "Promise<void>"
@@ -4609,7 +4647,7 @@
               "type": {
                 "text": "CustomEvent<KiDialogCloseDetail>"
               },
-              "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+              "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
             }
           ],
           "slots": [
@@ -4619,7 +4657,7 @@
             },
             {
               "name": "footer",
-              "description": "Dialog actions; applications wire every action to `close()`."
+              "description": "Dialog actions. Dismiss using an invoker command or `close()`."
             }
           ],
           "cssParts": [
@@ -4927,6 +4965,354 @@
           "declaration": {
             "name": "KiDivider",
             "module": "dist/components/ki-divider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-empty-state.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiEmptyState",
+          "customElement": true,
+          "tagName": "ki-empty-state",
+          "description": "A short explanation and next step for an empty view.",
+          "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction.",
+          "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
+          "attributes": [
+            {
+              "name": "announce",
+              "fieldName": "announce",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results."
+            },
+            {
+              "name": "heading",
+              "fieldName": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
+              "required": true
+            },
+            {
+              "name": "heading-level",
+              "fieldName": "headingLevel",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
+              "minimum": 2,
+              "maximum": 6
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "FeatureIcon tone. Unrecognized tones use the neutral tile."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "announce",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Put the heading and description in a polite status, with actions outside\nthe region. Set before mounting a message that reports changed results.",
+              "attribute": "announce",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized heading that identifies the empty view. Blank text omits the heading.",
+              "attribute": "heading",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "headingLevel",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "Native heading level for the surrounding document outline. Only integers\nfrom 2 through 6 are valid; unsupported values use level 3.",
+              "attribute": "heading-level",
+              "reflects": false,
+              "minimum": 2,
+              "maximum": 6
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional decorative Lucide glyph. Register it with a per-icon import before\nmounting. A supplied illustration takes precedence.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "FeatureIcon tone. Unrecognized tones use the neutral tile.",
+              "attribute": "tone",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Localized supporting text with a reason or recovery advice."
+            },
+            {
+              "name": "actions",
+              "description": "Optional controls for the next step, with at most one\nprimary action. In a guarded surface, bind actions to these controls."
+            },
+            {
+              "name": "media",
+              "description": "Optional decorative illustration in place of the icon. Use\nan image with empty alt text or a decorative SVG. Keep this slot free of controls."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "actions",
+              "description": "Wrapping row of consumer-supplied controls."
+            },
+            {
+              "name": "container",
+              "description": "Centered layout for the illustration, message and actions."
+            },
+            {
+              "name": "description",
+              "description": "Wrapper for the default slot."
+            },
+            {
+              "name": "heading",
+              "description": "Native heading at the selected document level."
+            },
+            {
+              "name": "media",
+              "description": "Decorative illustration or FeatureIcon tile."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-empty-state-backdrop-filter",
+              "description": "Complete filter applied behind the empty view."
+            },
+            {
+              "name": "--ki-empty-state-bg",
+              "description": "Background behind the empty view."
+            },
+            {
+              "name": "--ki-empty-state-bg-image",
+              "description": "Optional image above the background color."
+            },
+            {
+              "name": "--ki-empty-state-description-bg",
+              "description": "Background layer behind the supporting copy."
+            },
+            {
+              "name": "--ki-empty-state-description-fg",
+              "description": "Supporting text ink, strengthened in contrast-more mode."
+            },
+            {
+              "name": "--ki-empty-state-description-line-height",
+              "description": "Line height of the supporting copy."
+            },
+            {
+              "name": "--ki-empty-state-description-size",
+              "description": "Font size of the supporting copy."
+            },
+            {
+              "name": "--ki-empty-state-fg",
+              "description": "Foreground ink for the heading."
+            },
+            {
+              "name": "--ki-empty-state-gap",
+              "description": "Gap between the decorative media, message and action row."
+            },
+            {
+              "name": "--ki-empty-state-gap-sm",
+              "description": "Gap between regions in a compact empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-font-family",
+              "description": "Typeface for the native heading."
+            },
+            {
+              "name": "--ki-empty-state-heading-line-height",
+              "description": "Heading line height in a regular empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-line-height-sm",
+              "description": "Heading line height in a compact empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-size",
+              "description": "Heading font size in a regular empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-size-sm",
+              "description": "Heading font size in a compact empty view."
+            },
+            {
+              "name": "--ki-empty-state-heading-weight",
+              "description": "Weight of the heading."
+            },
+            {
+              "name": "--ki-empty-state-max-width",
+              "description": "Maximum inline size of the centered content."
+            },
+            {
+              "name": "--ki-empty-state-tile-danger-bg",
+              "description": "Background of the danger decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-danger-fg",
+              "description": "Glyph ink on the danger decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-info-bg",
+              "description": "Background of the info decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-info-fg",
+              "description": "Glyph ink on the info decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-neutral-bg",
+              "description": "Background of the neutral decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-neutral-fg",
+              "description": "Glyph ink on the neutral decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-primary-bg",
+              "description": "Background of the primary decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-primary-fg",
+              "description": "Glyph ink on the primary decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-primary-light-bg",
+              "description": "Background of the primary-light decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-primary-light-fg",
+              "description": "Glyph ink on the primary-light decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-radius",
+              "description": "Corner radius of the regular fallback tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-radius-sm",
+              "description": "Corner radius of the compact fallback tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-size",
+              "description": "Regular FeatureIcon fallback tile size."
+            },
+            {
+              "name": "--ki-empty-state-tile-size-sm",
+              "description": "Compact FeatureIcon fallback tile size."
+            },
+            {
+              "name": "--ki-empty-state-tile-success-bg",
+              "description": "Background of the success decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-success-fg",
+              "description": "Glyph ink on the success decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-warning-bg",
+              "description": "Background of the warning decorative tile."
+            },
+            {
+              "name": "--ki-empty-state-tile-warning-fg",
+              "description": "Glyph ink on the warning decorative tile."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiEmptyState",
+          "declaration": {
+            "name": "KiEmptyState",
+            "module": "dist/components/ki-empty-state.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-empty-state",
+          "declaration": {
+            "name": "KiEmptyState",
+            "module": "dist/components/ki-empty-state.js"
           }
         }
       ]
@@ -5531,6 +5917,22 @@
           "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate without supplying `pressed`, navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
           "attributes": [
             {
+              "name": "command",
+              "fieldName": "command",
+              "type": {
+                "text": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
+              },
+              "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions."
+            },
+            {
+              "name": "commandfor",
+              "fieldName": "commandfor",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively."
+            },
+            {
               "name": "disabled",
               "fieldName": "disabled",
               "type": {
@@ -5614,6 +6016,28 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "command",
+              "privacy": "public",
+              "type": {
+                "text": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
+              },
+              "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
+              "attribute": "command",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "commandfor",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
+              "attribute": "commandfor",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "disabled",

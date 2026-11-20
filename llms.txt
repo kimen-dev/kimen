@@ -56,6 +56,7 @@ methods, CSS custom properties and examples.
 - [ki-counter](https://kimen.dev/llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
 - [ki-dialog](https://kimen.dev/llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](https://kimen.dev/llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
+- [ki-empty-state](https://kimen.dev/llms/ki-empty-state.md): explain an empty list, table, search result, or first-run view.
 - [ki-format-date](https://kimen.dev/llms/ki-format-date.md): For raw date and timestamp values in tables, records and prose.
 - [ki-format-number](https://kimen.dev/llms/ki-format-number.md): For numeric data, currency amounts, ratios and measurements in content.
 - [ki-grid](https://kimen.dev/llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.

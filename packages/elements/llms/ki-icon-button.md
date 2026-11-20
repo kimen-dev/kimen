@@ -59,6 +59,15 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 </ki-tooltip>
 ```
 
+An icon button in the dialog footer can dismiss it by ID. The dialog must be
+in the same document or shadow root as the icon button.
+
+```html
+<ki-icon-button slot="footer" label="Close details" commandfor="details" command="close">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+</ki-icon-button>
+```
+
 While the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default "Loading") as a polite status message:
 
 ```html
@@ -69,6 +78,8 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 
 ## Attributes
 
+- `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+- `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
 - `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).

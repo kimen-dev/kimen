@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "empty-state": {
+      "heading-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "Material 3 heading weight for the empty view."
+      }
+    }
+  }
+}

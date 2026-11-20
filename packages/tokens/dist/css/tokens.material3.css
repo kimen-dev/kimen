@@ -483,6 +483,7 @@
   --ki-divider-color:var(--ki-outline-med-em);
   --ki-divider-radius:var(--ki-radius-0);
   --ki-divider-spacing:var(--ki-space-zero);
+  --ki-empty-state-heading-weight:var(--ki-typography-weight-body-medium);
   --ki-indicator-gap:var(--ki-space-md);
   --ki-indicator-dot-color:var(--ki-outline-control);
   --ki-indicator-dot-current-inline-size:var(--ki-space-md);

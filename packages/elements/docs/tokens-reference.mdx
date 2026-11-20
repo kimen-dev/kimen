@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 448 semantic
-and 1456 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 451 semantic
+and 1491 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -114,6 +114,14 @@ every component at once.
 | `--ki-elevation-shadow` | `rgba(0, 0, 0, 0.03)` | semantic color for elevation shadow. |
 | `--ki-elevation-shadow-dark` | `rgba(0, 0, 0, 0.32)` | semantic color for elevation shadow dark. |
 | `--ki-elevation-shadow-med` | `rgba(0, 0, 0, 0.05)` | semantic color for elevation shadow med. |
+
+### `ki.empty-layout`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-empty-layout-max-width` | `24rem` | Readable maximum line length for a short message in an empty view. |
+| `--ki-empty-layout-tile-compact` | `2.5rem` | Size of the decorative tile in a compact empty view. |
+| `--ki-empty-layout-tile-regular` | `3rem` | Size of the decorative tile in a regular empty view. |
 
 ### `ki.focus`
 
@@ -1283,6 +1291,46 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-divider-radius` | `1000px` | dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps). |
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
 | `--ki-divider-thickness` | `1px` | dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). |
+
+### `ki-empty-state`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-empty-state-backdrop-filter` | `none` | Complete filter applied behind the empty view. |
+| `--ki-empty-state-bg` | `#ffffff` | Background behind the empty view. |
+| `--ki-empty-state-bg-image` | `none` | Optional image above the background color. |
+| `--ki-empty-state-description-bg` | `rgba(0, 0, 0, 0)` | Background layer behind the supporting copy. |
+| `--ki-empty-state-description-fg` | `#5e5953` | Supporting text ink, strengthened in contrast-more mode. |
+| `--ki-empty-state-description-line-height` | `1.25rem` | Line height of the supporting copy. |
+| `--ki-empty-state-description-size` | `0.8125rem` | Font size of the supporting copy. |
+| `--ki-empty-state-fg` | `#181613` | Foreground ink for the heading. |
+| `--ki-empty-state-gap` | `0.5rem` | Gap between the decorative media, message and action row. |
+| `--ki-empty-state-gap-sm` | `0.25rem` | Gap between regions in a compact empty view. |
+| `--ki-empty-state-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface for the native heading. |
+| `--ki-empty-state-heading-line-height` | `1.75rem` | Heading line height in a regular empty view. |
+| `--ki-empty-state-heading-line-height-sm` | `1.5rem` | Heading line height in a compact empty view. |
+| `--ki-empty-state-heading-size` | `1.375rem` | Heading font size in a regular empty view. |
+| `--ki-empty-state-heading-size-sm` | `0.9375rem` | Heading font size in a compact empty view. |
+| `--ki-empty-state-heading-weight` | `700` | Weight of the heading. |
+| `--ki-empty-state-max-width` | `24rem` | Maximum inline size of the centered content. |
+| `--ki-empty-state-tile-danger-bg` | `#ffebeb` | Background of the danger decorative tile. |
+| `--ki-empty-state-tile-danger-fg` | `#c21a45` | Glyph ink on the danger decorative tile. |
+| `--ki-empty-state-tile-info-bg` | `#e6f1fb` | Background of the info decorative tile. |
+| `--ki-empty-state-tile-info-fg` | `#085268` | Glyph ink on the info decorative tile. |
+| `--ki-empty-state-tile-neutral-bg` | `#f3f0eb` | Background of the neutral decorative tile. |
+| `--ki-empty-state-tile-neutral-fg` | `#181613` | Glyph ink on the neutral decorative tile. |
+| `--ki-empty-state-tile-primary-bg` | `#1d1a16` | Background of the primary decorative tile. |
+| `--ki-empty-state-tile-primary-fg` | `#ffffff` | Glyph ink on the primary decorative tile. |
+| `--ki-empty-state-tile-primary-light-bg` | `#ffebe5` | Background of the primary-light decorative tile. |
+| `--ki-empty-state-tile-primary-light-fg` | `#9a3715` | Glyph ink on the primary-light decorative tile. |
+| `--ki-empty-state-tile-radius` | `12px` | Corner radius of the regular fallback tile. |
+| `--ki-empty-state-tile-radius-sm` | `10px` | Corner radius of the compact fallback tile. |
+| `--ki-empty-state-tile-size` | `3rem` | Regular FeatureIcon fallback tile size. |
+| `--ki-empty-state-tile-size-sm` | `2.5rem` | Compact FeatureIcon fallback tile size. |
+| `--ki-empty-state-tile-success-bg` | `#e4f4ea` | Background of the success decorative tile. |
+| `--ki-empty-state-tile-success-fg` | `#2c6a2b` | Glyph ink on the success decorative tile. |
+| `--ki-empty-state-tile-warning-bg` | `#fcf0dc` | Background of the warning decorative tile. |
+| `--ki-empty-state-tile-warning-fg` | `#945b05` | Glyph ink on the warning decorative tile. |
 
 ### `ki-format`
 

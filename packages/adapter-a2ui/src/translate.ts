@@ -424,6 +424,15 @@ function layout(it: Instance, direction?: 'row'): UiSpecNode {
   );
 }
 
+/** Reads the label leaves while keeping the rendered Row and Column stacks intact. */
+function modalLabelContent(label: readonly Piece[]): Piece[] {
+  return label.flatMap((piece) =>
+    typeof piece !== 'string' && piece.component === 'ki-stack'
+      ? modalLabelContent(piece.slots?.[''] ?? [])
+      : [piece],
+  );
+}
+
 /** Basic-catalog Icon names whose Lucide names differ, in both A2UI versions. */
 const ICON_NAMES: Readonly<Record<string, string>> = {
   accountCircle: 'circle-user-round',
@@ -611,6 +620,72 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         .map((group) => node('ki-list-item', {}, group)),
     ),
   ],
+  Modal: (it) => {
+    const triggerId = it.literal('trigger');
+    const contentId = it.literal('content');
+    if (!triggerId || !contentId) {
+      throw it.malformed(
+        triggerId ? 'content' : 'trigger',
+        'Modal requires trigger and content component ids',
+      );
+    }
+    const { actionNodes, components, nodes } = it.context;
+    const triggerType = components.get(triggerId)?.component;
+    if (triggerType === undefined || !components.has(contentId)) {
+      // Progressive updates can deliver either reference in a later message.
+      return [];
+    }
+    if (triggerType !== 'Button' && triggerType !== 'Text') {
+      throw new Degrade('unsupported-variant', `Modal trigger: ${triggerType}`);
+    }
+
+    const [trigger] = it.child('trigger');
+    if (typeof trigger === 'object' && trigger.component !== 'ki-button') {
+      return [trigger];
+    }
+    const button = typeof trigger === 'object' ? trigger : undefined;
+    const label = typeof trigger === 'string' ? [trigger] : (button?.slots?.[''] ?? []);
+    const content = modalLabelContent(label);
+    const text = content
+      .filter((piece): piece is string => typeof piece === 'string')
+      .join('')
+      .trim();
+    // The adapter's icons are decorative. Keep their glyphs and name the opener.
+    const needsFallback =
+      text === '' &&
+      content.every((piece) => typeof piece === 'string' || piece.component === 'ki-icon');
+    const openerLabel = needsFallback
+      ? [...label.filter((piece) => typeof piece !== 'string'), 'Open dialog']
+      : label;
+    // The visit number is unique even when a ChildList repeats the A2UI id.
+    const id = `a2ui-modal-${String(nodes)}`;
+    const opener = {
+      ...button,
+      ...node(
+        'ki-button',
+        { ...button?.props, command: 'show-modal', commandfor: id, type: 'button' },
+        openerLabel,
+      ),
+    };
+    const binding = button === undefined ? undefined : actionNodes.get(button);
+    if (binding !== undefined) {
+      actionNodes.set(opener, binding);
+    }
+    return [
+      opener,
+      {
+        component: 'ki-dialog',
+        id,
+        props: { heading: text || 'Dialog' },
+        slots: {
+          '': it.child('content'),
+          footer: [
+            node('ki-button', { command: 'close', commandfor: id, type: 'button' }, ['Close']),
+          ],
+        },
+      },
+    ];
+  },
   Row: (it) => [layout(it, 'row')],
   Tabs: (it) => {
     const tabs = it.body['tabs'];

@@ -82,6 +82,26 @@ export const Disabled: Story = {
   parameters: { slots: { default: 'Unavailable' } },
 };
 
+/** The invoker and footer action control a modal by ID. */
+export const DialogTrigger: Story = {
+  render: (args, { id }) => {
+    const dialogId = `${id}-dialog`;
+    return (
+      <div>
+        <ki-button {...args} commandfor={dialogId} command="show-modal">
+          Preview draft
+        </ki-button>
+        <ki-dialog id={dialogId} heading="Draft preview">
+          <p>This draft is visible only to you.</p>
+          <ki-button slot="footer" commandfor={dialogId} command="close">
+            Done
+          </ki-button>
+        </ki-dialog>
+      </div>
+    );
+  },
+};
+
 /**
  * Leading and trailing media through the `start` and `end` slots. The start
  * media is a directly slotted SVG so the component's slotted-icon box (18px

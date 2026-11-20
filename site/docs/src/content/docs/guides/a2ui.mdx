@@ -68,17 +68,22 @@ version that created it. The surface's data model (bindings, `updateDataModel`,
 list templates) is resolved inside the adapter; the catalog never learns about
 it.
 
+`Modal` uses its `trigger` and `content` references to render a button and a
+dialog linked within the surface. Users can open and close it through the
+rendered controls in both protocol versions.
+
 ## Degradation rules
 
 An A2UI message is data, never code:
 
 - **Basic-catalog types without a catalog counterpart degrade per node**
-  (Icon, Modal and others) to a fixed fallback that never carries agent
+  (Slider, DateTimeInput and others) to a fixed fallback that never carries agent
   content.
 - **`Image` maps to `ki-image`.** Supply the alternative text in
   `@accessibility.label` on 1.0 or `accessibility.label` on 0.9.1. Set
   `hidden: true` in that object for decorative images. An informative image
   with an empty or missing label degrades per node (`missing-image-alt`).
+- **`Icon` maps to `ki-icon`.**
 - **Forbidden types reject the whole message** — a type the compatibility
   matrix declares `forbidden` (e.g. raw `html`) is never partially rendered;
   so do undeclared properties and client functions that reach a browser

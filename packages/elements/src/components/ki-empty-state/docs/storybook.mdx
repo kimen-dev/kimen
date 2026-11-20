@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-empty-state" />
+
+# ki-empty-state
+
+Use EmptyState to tell people why a list or table is empty, then offer a next
+step. Set the heading level to match the page outline and use small size in a
+compact panel. Use `announce` for changing search results. The heading and
+description are announced politely while focus stays with the current control.
+
+```html
+<ki-empty-state heading="No results for webhok" size="sm" announce>
+  Check the spelling or remove a filter.
+  <ki-button slot="actions" variant="secondary">Clear filters</ki-button>
+</ki-empty-state>
+```
+
+Import `@kimen/elements/icons/<name>` before using `icon-name` or supply an
+illustration in `media`. Both are decorative. The component supports a single
+primary action and an optional secondary action in the action row. Bind each
+guarded surface action to its control.
+
+Use `--ki-empty-state-gap`, `--ki-empty-state-max-width`, and
+`--ki-empty-state-description-fg` to change the spacing, width, or supporting
+ink. The heading follows the theme's heading family.

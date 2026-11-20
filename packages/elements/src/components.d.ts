@@ -10,6 +10,7 @@ import { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiDialogCommand } from "./utils/dialog-invoker";
 import { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
@@ -49,6 +50,7 @@ export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
 export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiDialogCommand } from "./utils/dialog-invoker";
 export { KiButtonSize as KiButtonSize1 } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
@@ -220,6 +222,16 @@ export namespace Components {
      */
     interface KiButton {
         /**
+          * Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+          * @default undefined
+         */
+        "command"?: KiDialogCommand;
+        /**
+          * ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
+          * @default undefined
+         */
+        "commandfor"?: string;
+        /**
           * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
          */
@@ -249,7 +261,7 @@ export namespace Components {
          */
         "tone": KiButtonTone;
         /**
-          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
           * @default 'submit'
          */
         "type": KiButtonType;
@@ -545,8 +557,8 @@ export namespace Components {
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
-     * provide a `heading`, place actions in the `footer` slot, wire each footer
-     * action to `close()`, and in destructive confirmations put `autofocus` on
+     * provide a `heading`, place actions in the `footer` slot, wire each
+     * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
      * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -554,7 +566,7 @@ export namespace Components {
      */
     interface KiDialog {
         /**
-          * Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
+          * Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method or an invoker command. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
          */
         "close": () => Promise<void>;
         /**
@@ -595,6 +607,52 @@ export namespace Components {
           * @default 'horizontal'
          */
         "orientation": KiDividerOrientation;
+    }
+    /**
+     * A short explanation and next step for an empty view.
+     * @whenToUse explain an empty list, table, search result, or first-run view.
+     * Supply a localized heading that names what is empty and a short next step.
+     * Use announce for results that change after an interaction.
+     * @whenNotToUse signal that results are loading or draw attention to an error
+     * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+     */
+    interface KiEmptyState {
+        /**
+          * Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.
+          * @default false
+         */
+        "announce": boolean;
+        /**
+          * Localized heading that identifies the empty view. Blank text omits the heading.
+         */
+        "heading": string;
+        /**
+          * Native heading level for the surrounding document outline. Only integers from 2 through 6 are valid; unsupported values use level 3.
+          * @minimum 2
+          * @maximum 6
+          * @default 3
+         */
+        "headingLevel": number;
+        /**
+          * Optional decorative Lucide glyph. Register it with a per-icon import before mounting. A supplied illustration takes precedence.
+         */
+        "iconName"?: string;
+        /**
+          * Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.
+          * @default 'md'
+         */
+        "size": 'sm' | 'md';
+        /**
+          * FeatureIcon tone. Unrecognized tones use the neutral tile.
+          * @default 'neutral'
+         */
+        "tone": | 'neutral'
+    | 'primary'
+    | 'primary-light'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'danger';
     }
     /**
      * Displays an ISO date or timestamp in the reader's language.
@@ -723,6 +781,16 @@ export namespace Components {
      * visible label communicates the consequence).
      */
     interface KiIconButton {
+        /**
+          * Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+          * @default undefined
+         */
+        "command"?: KiDialogCommand;
+        /**
+          * ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
+          * @default undefined
+         */
+        "commandfor"?: string;
         /**
           * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
@@ -2270,8 +2338,8 @@ declare global {
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
-     * provide a `heading`, place actions in the `footer` slot, wire each footer
-     * action to `close()`, and in destructive confirmations put `autofocus` on
+     * provide a `heading`, place actions in the `footer` slot, wire each
+     * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
      * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -2309,6 +2377,20 @@ declare global {
     var HTMLKiDividerElement: {
         prototype: HTMLKiDividerElement;
         new (): HTMLKiDividerElement;
+    };
+    /**
+     * A short explanation and next step for an empty view.
+     * @whenToUse explain an empty list, table, search result, or first-run view.
+     * Supply a localized heading that names what is empty and a short next step.
+     * Use announce for results that change after an interaction.
+     * @whenNotToUse signal that results are loading or draw attention to an error
+     * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+     */
+    interface HTMLKiEmptyStateElement extends Components.KiEmptyState, HTMLStencilElement {
+    }
+    var HTMLKiEmptyStateElement: {
+        prototype: HTMLKiEmptyStateElement;
+        new (): HTMLKiEmptyStateElement;
     };
     /**
      * Displays an ISO date or timestamp in the reader's language.
@@ -3027,6 +3109,7 @@ declare global {
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
+        "ki-empty-state": HTMLKiEmptyStateElement;
         "ki-format-date": HTMLKiFormatDateElement;
         "ki-format-number": HTMLKiFormatNumberElement;
         "ki-grid": HTMLKiGridElement;
@@ -3211,6 +3294,16 @@ declare namespace LocalJSX {
      */
     interface KiButton {
         /**
+          * Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+          * @default undefined
+         */
+        "command"?: KiDialogCommand;
+        /**
+          * ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
+          * @default undefined
+         */
+        "commandfor"?: string;
+        /**
           * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
          */
@@ -3244,7 +3337,7 @@ declare namespace LocalJSX {
          */
         "tone"?: KiButtonTone;
         /**
-          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. A configured dialog command takes precedence over the form action. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
           * @default 'submit'
          */
         "type"?: KiButtonType;
@@ -3576,8 +3669,8 @@ declare namespace LocalJSX {
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
-     * provide a `heading`, place actions in the `footer` slot, wire each footer
-     * action to `close()`, and in destructive confirmations put `autofocus` on
+     * provide a `heading`, place actions in the `footer` slot, wire each
+     * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
      * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -3594,7 +3687,7 @@ declare namespace LocalJSX {
          */
         "heading": string;
         /**
-          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
          */
         "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
         /**
@@ -3622,6 +3715,52 @@ declare namespace LocalJSX {
           * @default 'horizontal'
          */
         "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * A short explanation and next step for an empty view.
+     * @whenToUse explain an empty list, table, search result, or first-run view.
+     * Supply a localized heading that names what is empty and a short next step.
+     * Use announce for results that change after an interaction.
+     * @whenNotToUse signal that results are loading or draw attention to an error
+     * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+     */
+    interface KiEmptyState {
+        /**
+          * Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.
+          * @default false
+         */
+        "announce"?: boolean;
+        /**
+          * Localized heading that identifies the empty view. Blank text omits the heading.
+         */
+        "heading": string;
+        /**
+          * Native heading level for the surrounding document outline. Only integers from 2 through 6 are valid; unsupported values use level 3.
+          * @minimum 2
+          * @maximum 6
+          * @default 3
+         */
+        "headingLevel"?: number;
+        /**
+          * Optional decorative Lucide glyph. Register it with a per-icon import before mounting. A supplied illustration takes precedence.
+         */
+        "iconName"?: string;
+        /**
+          * Use small inside a table or narrow panel. Unrecognized sizes use the medium layout.
+          * @default 'md'
+         */
+        "size"?: 'sm' | 'md';
+        /**
+          * FeatureIcon tone. Unrecognized tones use the neutral tile.
+          * @default 'neutral'
+         */
+        "tone"?: | 'neutral'
+    | 'primary'
+    | 'primary-light'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'danger';
     }
     /**
      * Displays an ISO date or timestamp in the reader's language.
@@ -3750,6 +3889,16 @@ declare namespace LocalJSX {
      * visible label communicates the consequence).
      */
     interface KiIconButton {
+        /**
+          * Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
+          * @default undefined
+         */
+        "command"?: KiDialogCommand;
+        /**
+          * ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
+          * @default undefined
+         */
+        "commandfor"?: string;
         /**
           * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
           * @default false
@@ -5052,6 +5201,8 @@ declare namespace LocalJSX {
         "type": KiButtonType;
         "name": string;
         "value": string;
+        "commandfor": string;
+        "command": KiDialogCommand;
         "disabled": boolean;
         "loading": boolean;
         "loadingLabel": string;
@@ -5120,6 +5271,20 @@ declare namespace LocalJSX {
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
     }
+    interface KiEmptyStateAttributes {
+        "heading": string;
+        "iconName": string;
+        "tone": | 'neutral'
+    | 'primary'
+    | 'primary-light'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'danger';
+        "size": 'sm' | 'md';
+        "headingLevel": number;
+        "announce": boolean;
+    }
     interface KiFormatDateAttributes {
         "date": string;
         "dateStyle": 'full' | 'long' | 'medium' | 'short';
@@ -5151,6 +5316,8 @@ declare namespace LocalJSX {
         "tone": KiIconButtonTone;
         "size": KiIconButtonSize;
         "label": string;
+        "commandfor": string;
+        "command": KiDialogCommand;
         "disabled": boolean;
         "loading": boolean;
         "loadingLabel": string;
@@ -5395,6 +5562,7 @@ declare namespace LocalJSX {
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-empty-state": Omit<KiEmptyState, keyof KiEmptyStateAttributes> & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes]?: KiEmptyState[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `attr:${K}`]?: KiEmptyStateAttributes[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `prop:${K}`]?: KiEmptyState[K] } & OneOf<"heading", KiEmptyState["heading"], KiEmptyStateAttributes["heading"]>;
         "ki-format-date": Omit<KiFormatDate, keyof KiFormatDateAttributes> & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes]?: KiFormatDate[K] } & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes as `attr:${K}`]?: KiFormatDateAttributes[K] } & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes as `prop:${K}`]?: KiFormatDate[K] };
         "ki-format-number": Omit<KiFormatNumber, keyof KiFormatNumberAttributes> & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes]?: KiFormatNumber[K] } & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes as `attr:${K}`]?: KiFormatNumberAttributes[K] } & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes as `prop:${K}`]?: KiFormatNumber[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
@@ -5580,8 +5748,8 @@ declare module "@stencil/core" {
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
-             * provide a `heading`, place actions in the `footer` slot, wire each footer
-             * action to `close()`, and in destructive confirmations put `autofocus` on
+             * provide a `heading`, place actions in the `footer` slot, wire each
+             * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
              * the least destructive action.
              * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
              * supplementary hints (`ki-tooltip`), long forms or multi-step flows
@@ -5602,6 +5770,15 @@ declare module "@stencil/core" {
              * (prefer white space).
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
+            /**
+             * A short explanation and next step for an empty view.
+             * @whenToUse explain an empty list, table, search result, or first-run view.
+             * Supply a localized heading that names what is empty and a short next step.
+             * Use announce for results that change after an interaction.
+             * @whenNotToUse signal that results are loading or draw attention to an error
+             * that needs acknowledgement. Use ki-spinner or ki-alert for those states.
+             */
+            "ki-empty-state": LocalJSX.IntrinsicElements["ki-empty-state"] & JSXBase.HTMLAttributes<HTMLKiEmptyStateElement>;
             /**
              * Displays an ISO date or timestamp in the reader's language.
              * @whenToUse For raw date and timestamp values in tables, records and prose.

@@ -580,11 +580,14 @@ describe('ki-icon-button in a real browser', () => {
   it('S14 keeps a disabled icon button out of the tab order', async () => {
     cleanup();
     const main = landmark();
+    // macOS WebKit can omit native buttons without explicit sequential focus.
     const first = document.createElement('button');
+    first.tabIndex = 0;
     first.textContent = 'first';
     main.append(first);
     await mount('Close', { disabled: true });
     const second = document.createElement('button');
+    second.tabIndex = 0;
     second.textContent = 'second';
     main.append(second);
 
