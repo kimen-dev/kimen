@@ -1,9 +1,12 @@
 import type { VisualGallery } from '../../../browser-tests/visual/galleries';
 
-// Seven cards: two columns keep the clickable modes inside the 700px capture.
+// Seven cards: two columns in the 640px capture keep the clickable modes
+// inside its 700px height. The contract audit's 414px viewport gets one
+// column, so no card sits outside the viewport axe measures.
 export default {
   html: [
-    '<div style="display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:16px;">',
+    '<style>.card-gallery{display:grid;align-items:start;gap:16px}@media (min-width:600px){.card-gallery{grid-template-columns:1fr 1fr}}</style>',
+    '<div class="card-gallery">',
     '<ki-card>',
     '<div slot="media" style="block-size:96px;background:linear-gradient(135deg,#334155,#94a3b8);"></div>',
     '<h3 slot="header" style="margin:0;">Monthly report</h3>',
