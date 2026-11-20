@@ -1,0 +1,194 @@
+{
+  "ki": {
+    "menu": {
+      "bg": {
+        "$value": "{ki.surface.raised}",
+        "$description": "Base fill of the popup surface."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text over the popup surface."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.menu}",
+        "$description": "Optional image composited over the popup fill."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.menu-backdrop-filter}",
+        "$description": "Complete backdrop filter applied to the popup."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Popup edge and the filter divider."
+      },
+      "border-width": {
+        "$value": "{ki.menu-layout.edge-width}",
+        "$description": "Thickness of menu border and dividers."
+      },
+      "shadow": {
+        "$value": "{ki.elevation.e3}",
+        "$description": "Popup elevation shadow."
+      },
+      "radius": {
+        "$value": "{ki.menu-layout.surface-radius}",
+        "$description": "Popup corner radius."
+      },
+      "padding": {
+        "$value": "{ki.menu-layout.surface-padding}",
+        "$description": "Space inside the popup."
+      },
+      "gap": {
+        "$value": "{ki.menu-layout.inline-space}",
+        "$description": "Inline space between the parts of a row."
+      },
+      "inline-padding": {
+        "$value": "{ki.menu-layout.inline-space}",
+        "$description": "Start and end inset of an action, group label, or filter."
+      },
+      "min-inline-size": {
+        "$value": "{ki.menu-layout.inline-min}",
+        "$description": "Default minimum popup width, bounded by the viewport."
+      },
+      "max-inline-size": {
+        "$value": "{ki.menu-layout.inline-max}",
+        "$description": "Maximum popup width, bounded by the viewport."
+      },
+      "max-block-size": {
+        "$value": "{ki.menu-layout.block-max}",
+        "$description": "Maximum popup height, bounded by the viewport."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Family for action labels and the filter."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Text size for action labels and the filter."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Line height for action labels and the filter."
+      },
+      "filter-icon-size": {
+        "$value": "{ki.glyph.size.md}",
+        "$description": "Size of the search icon."
+      },
+      "focus-width": {
+        "$value": "{ki.focus.ring-width}",
+        "$description": "Width of a visible keyboard focus outline."
+      },
+      "focus-color": {
+        "$value": "{ki.focus.ring-color}",
+        "$description": "Color of a visible keyboard focus outline."
+      },
+      "touch-target": {
+        "$value": "{ki.menu-layout.touch-row-min}",
+        "$description": "Minimum action and filter height for coarse pointers."
+      },
+      "meta": {
+        "bg": {
+          "$value": "{ki.surface.raised}",
+          "$description": "Background behind shortcut hints and the filter placeholder."
+        },
+        "fg": {
+          "$value": "{ki.text.supporting}",
+          "$description": "Foreground for shortcut hints and the filter placeholder."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "Size of metadata and group labels."
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "Line height of metadata and group labels."
+        },
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.s3}",
+            "$description": "Background behind shortcut hints on a hovered or focused action."
+          },
+          "fg": {
+            "$value": "{ki.text.supporting}",
+            "$description": "Foreground for shortcut hints on a hovered or focused action."
+          }
+        }
+      },
+      "group": {
+        "bg": {
+          "$value": "{ki.surface.raised}",
+          "$description": "Background behind group labels."
+        },
+        "fg": {
+          "$value": "{ki.text.supporting}",
+          "$description": "Foreground for group labels."
+        },
+        "label-weight": {
+          "$value": "{ki.typography.weight.body.medium}",
+          "$description": "Weight of group labels."
+        }
+      },
+      "item": {
+        "bg": {
+          "$value": "{ki.surface.raised}",
+          "$description": "Background behind resting actions."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Foreground for resting actions."
+        },
+        "height": {
+          "$value": "{ki.menu-layout.row-min}",
+          "$description": "Default action row minimum height."
+        },
+        "radius": {
+          "$value": "{ki.menu-layout.row-radius}",
+          "$description": "Action row corner radius."
+        },
+        "padding": {
+          "$value": "{ki.menu-layout.row-block-padding}",
+          "$description": "Vertical inset used when an action wraps."
+        },
+        "icon-size": {
+          "$value": "{ki.glyph.size.sm}",
+          "$description": "Size of an action glyph and the check indicator."
+        },
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.s3}",
+            "$description": "Background behind hovered or keyboard-focused actions."
+          },
+          "fg": {
+            "$value": "{ki.text.high-em}",
+            "$description": "Foreground for hovered or keyboard-focused actions."
+          }
+        },
+        "danger": {
+          "bg": {
+            "$value": "{ki.surface.raised}",
+            "$description": "Background behind destructive actions."
+          },
+          "fg": {
+            "$value": "{ki.text.danger-high-em}",
+            "$description": "Foreground for destructive actions."
+          },
+          "hover": {
+            "bg": {
+              "$value": "{ki.surface.s3}",
+              "$description": "Background behind hovered or keyboard-focused destructive actions."
+            },
+            "fg": {
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "Foreground for hovered or keyboard-focused destructive actions."
+            }
+          }
+        },
+        "disabled": {
+          "fg": {
+            "$value": "{ki.text.base-em}",
+            "$description": "Muted ink of disabled actions."
+          }
+        }
+      }
+    }
+  }
+}

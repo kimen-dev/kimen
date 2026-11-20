@@ -1,0 +1,125 @@
+:host {
+  display: block;
+  font-family: var(--ki-menu-font-family);
+}
+
+:host([hidden]),
+:host([data-menu-filtered]) {
+  display: none;
+}
+
+button {
+  --_ki-menu-meta-fg: var(--ki-menu-meta-fg);
+
+  display: flex;
+  inline-size: 100%;
+  min-inline-size: var(--ki-density-target-min);
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-menu-item-height) + var(--ki-density-control-offset))
+  );
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--ki-menu-gap);
+  padding-block: var(--ki-menu-item-padding);
+  padding-inline: var(--ki-menu-inline-padding);
+  border: 0;
+  border-radius: var(--ki-menu-item-radius);
+  background-color: transparent;
+  color: var(--ki-menu-item-fg);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.label {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.start {
+  display: contents;
+  color: var(--_ki-menu-meta-fg);
+}
+
+::slotted(svg),
+[part="check"] {
+  flex: none;
+  inline-size: var(--ki-menu-item-icon-size);
+  block-size: var(--ki-menu-item-icon-size);
+}
+
+[part="shortcut"] {
+  flex: none;
+  color: var(--_ki-menu-meta-fg);
+  font: inherit;
+  font-size: var(--ki-menu-meta-font-size);
+}
+
+[part="check"] {
+  visibility: hidden;
+}
+
+[part="check"].checked {
+  visibility: visible;
+}
+
+button:focus-visible {
+  outline: var(--ki-menu-focus-width) solid var(--ki-menu-focus-color);
+  outline-offset: calc(-1 * var(--ki-menu-focus-width));
+}
+
+:host([tone="danger"]) button,
+:host([tone="danger"]) .start {
+  color: var(--ki-menu-item-danger-fg);
+}
+
+:host([disabled]) button,
+:host([disabled]) .start,
+:host([disabled]) [part="shortcut"] {
+  color: var(--ki-menu-item-disabled-fg);
+  cursor: default;
+}
+
+:host(:not([disabled])) button:focus-visible {
+  --_ki-menu-meta-fg: var(--ki-menu-meta-hover-fg);
+
+  background-color: var(--ki-menu-item-hover-bg);
+  color: var(--ki-menu-item-hover-fg);
+}
+
+:host([tone="danger"]:not([disabled])) button:focus-visible {
+  color: var(--ki-menu-item-danger-hover-fg);
+}
+
+@media (hover: hover) {
+  :host(:not([disabled])) button:hover {
+    --_ki-menu-meta-fg: var(--ki-menu-meta-hover-fg);
+
+    background-color: var(--ki-menu-item-hover-bg);
+    color: var(--ki-menu-item-hover-fg);
+  }
+
+  :host([tone="danger"]:not([disabled])) button:hover {
+    color: var(--ki-menu-item-danger-hover-fg);
+  }
+}
+
+@media (pointer: coarse) {
+  button {
+    min-block-size: max(var(--ki-menu-touch-target), var(--ki-density-target-min));
+  }
+}
+
+@media (forced-colors: active) {
+  button:focus-visible {
+    outline-color: Highlight;
+  }
+
+  :host([disabled]) button,
+  :host([disabled]) .start,
+  :host([disabled]) [part="shortcut"] {
+    color: GrayText;
+  }
+}

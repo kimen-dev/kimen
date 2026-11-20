@@ -1,0 +1,48 @@
+:host {
+  --_ki-segmented-track-size: var(--ki-segmented-control-track-size-md);
+  --_ki-segmented-track-padding: calc(
+    var(--ki-segmented-track-padding) *
+    var(--ki-density-space-scale)
+  );
+
+  box-sizing: border-box;
+  display: inline-block;
+  max-inline-size: 100%;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([size="xs"]) {
+  --_ki-segmented-track-size: var(--ki-segmented-control-track-size-xs);
+  --_ki-segmented-padding-inline: var(--ki-segment-padding-inline-xs);
+  --_ki-segmented-font-size: var(--ki-segment-font-size-xs);
+  --_ki-segmented-line-height: var(--ki-segment-line-height-xs);
+}
+
+:host([size="sm"]) {
+  --_ki-segmented-track-size: var(--ki-segmented-control-track-size-sm);
+}
+
+:host([full-width]) {
+  display: block;
+  inline-size: 100%;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="track"] {
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  gap: calc(var(--ki-segmented-track-gap) * var(--ki-density-space-scale));
+  padding: var(--_ki-segmented-track-padding);
+  border-radius: var(--ki-segmented-radius);
+  background-color: var(--ki-segmented-track-bg);
+  background-image: var(--ki-segmented-track-bg-image);
+  backdrop-filter: var(--ki-segmented-track-backdrop-filter);
+}
+
+:host([full-width]) ::slotted(*) {
+  flex: 1 1 0;
+}

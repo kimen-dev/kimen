@@ -1,0 +1,137 @@
+:host {
+  --_ki-empty-state-gap: var(--ki-empty-state-gap);
+  --_ki-empty-state-heading-size: var(--ki-empty-state-heading-size);
+  --_ki-empty-state-heading-line-height: var(--ki-empty-state-heading-line-height);
+  --_ki-empty-state-tile-size: var(--ki-empty-state-tile-size);
+  --_ki-empty-state-tile-radius: var(--ki-empty-state-tile-radius);
+
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]),
+[hidden] {
+  display: none;
+}
+
+:host([size="sm"]) {
+  --_ki-empty-state-gap: var(--ki-empty-state-gap-sm);
+  --_ki-empty-state-heading-size: var(--ki-empty-state-heading-size-sm);
+  --_ki-empty-state-heading-line-height: var(--ki-empty-state-heading-line-height-sm);
+  --_ki-empty-state-tile-size: var(--ki-empty-state-tile-size-sm);
+  --_ki-empty-state-tile-radius: var(--ki-empty-state-tile-radius-sm);
+}
+
+[part="container"] {
+  box-sizing: border-box;
+  display: grid;
+  min-inline-size: 0;
+  max-inline-size: var(--ki-empty-state-max-width);
+  justify-items: center;
+  margin-inline: auto;
+  gap: var(--_ki-empty-state-gap);
+  background-color: var(--ki-empty-state-bg);
+  background-image: var(--ki-empty-state-bg-image);
+  color: var(--ki-empty-state-fg);
+  text-align: center;
+  overflow-wrap: anywhere;
+  backdrop-filter: var(--ki-empty-state-backdrop-filter);
+}
+
+.message {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.message[role="status"]:empty {
+  min-block-size: var(--_ki-empty-state-heading-line-height);
+}
+
+[part="heading"] {
+  margin: 0;
+  font-family: var(--ki-empty-state-heading-font-family);
+  font-size: var(--_ki-empty-state-heading-size);
+  font-weight: var(--ki-empty-state-heading-weight);
+  line-height: var(--_ki-empty-state-heading-line-height);
+}
+
+[part="description"] {
+  background-color: var(--ki-empty-state-description-bg);
+  color: var(--ki-empty-state-description-fg);
+  font-size: var(--ki-empty-state-description-size);
+  line-height: var(--ki-empty-state-description-line-height);
+}
+
+[part="description"] ::slotted(p) {
+  margin-block: 0;
+}
+
+[part="media"] {
+  max-inline-size: 100%;
+}
+
+[part="media"] ::slotted(*) {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+[part="actions"]:not([hidden]) {
+  display: flex;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--_ki-empty-state-gap);
+}
+
+/* FeatureIcon owns the tile after registration. Keep the glyph usable with older loaders. */
+ki-feature-icon:not(:defined) {
+  display: grid;
+  inline-size: var(--_ki-empty-state-tile-size);
+  block-size: var(--_ki-empty-state-tile-size);
+  place-items: center;
+  border-radius: var(--_ki-empty-state-tile-radius);
+  background-color: var(--_ki-empty-state-tile-bg, var(--ki-empty-state-tile-neutral-bg));
+  background-image: var(--ki-empty-state-bg-image);
+  color: var(--_ki-empty-state-tile-fg, var(--ki-empty-state-tile-neutral-fg));
+  backdrop-filter: var(--ki-empty-state-backdrop-filter);
+}
+
+ki-feature-icon[data-tone="primary"] {
+  --_ki-empty-state-tile-bg: var(--ki-empty-state-tile-primary-bg);
+  --_ki-empty-state-tile-fg: var(--ki-empty-state-tile-primary-fg);
+}
+
+ki-feature-icon[data-tone="primary-light"] {
+  --_ki-empty-state-tile-bg: var(--ki-empty-state-tile-primary-light-bg);
+  --_ki-empty-state-tile-fg: var(--ki-empty-state-tile-primary-light-fg);
+}
+
+ki-feature-icon[data-tone="info"] {
+  --_ki-empty-state-tile-bg: var(--ki-empty-state-tile-info-bg);
+  --_ki-empty-state-tile-fg: var(--ki-empty-state-tile-info-fg);
+}
+
+ki-feature-icon[data-tone="success"] {
+  --_ki-empty-state-tile-bg: var(--ki-empty-state-tile-success-bg);
+  --_ki-empty-state-tile-fg: var(--ki-empty-state-tile-success-fg);
+}
+
+ki-feature-icon[data-tone="warning"] {
+  --_ki-empty-state-tile-bg: var(--ki-empty-state-tile-warning-bg);
+  --_ki-empty-state-tile-fg: var(--ki-empty-state-tile-warning-fg);
+}
+
+ki-feature-icon[data-tone="danger"] {
+  --_ki-empty-state-tile-bg: var(--ki-empty-state-tile-danger-bg);
+  --_ki-empty-state-tile-fg: var(--ki-empty-state-tile-danger-fg);
+}
+
+@media (forced-colors: active) {
+  [part="container"],
+  ki-feature-icon:not(:defined) {
+    background-image: none;
+    backdrop-filter: none;
+  }
+}

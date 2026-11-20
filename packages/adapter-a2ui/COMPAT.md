@@ -112,12 +112,12 @@ type rejects the message (`unknown-property`, scenario S9).
 | Button        | mapped    | ki-button                     |
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
-| ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
+| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-checkbox-group, ki-checkbox |
 | Image         | mapped    | ki-image                      |
 | Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
-| Modal         | unmapped  | —                             |
+| Modal         | mapped    | ki-button, ki-dialog          |
 | Slider        | mapped    | ki-slider                     |
 | DateTimeInput | unmapped  | —                             |
 | html          | forbidden | —                             |
@@ -188,14 +188,23 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
   values and the `variant` size hint use the `ki-image` defaults.
 - `Button.variant`: `primary` becomes `variant="primary"`, `borderless`
   becomes `variant="ghost"`, `default` keeps the catalog default.
+- `Modal`: a `Button` or `Text` trigger opens a `ki-dialog` using
+  `show-modal`. The referenced content becomes the dialog body and a
+  `Close` button in the footer dismisses it. The heading uses the trigger's
+  resolved text or defaults to `Dialog`. An empty trigger label defaults to
+  `Open dialog`. Other trigger types degrade (`unsupported-variant`).
+  An explicitly declared Button action is still relayed.
 - `TextField.variant`: `longText` becomes `ki-textarea`, `obscured` becomes
   `ki-input type="password"`, `number` and `shortText` become `ki-input`;
   `validationRegexp` is not evaluated.
 - `Slider` maps the label, limits and current value to `ki-slider` and uses
   the component's default step.
 - `ChoicePicker`: `mutuallyExclusive` becomes `ki-radio-group` with the first
-  selected value; `multipleSelection` degrades (reason `unsupported-variant`);
-  `displayStyle` and `filterable` are not rendered.
+  selected value. `multipleSelection` becomes a `ki-checkbox-group` with
+  a checkbox per option and checked states from the selected value list.
+  Provide a label to name either group. An unlabeled multiple-selection
+  picker uses the accessible fallback. `displayStyle` and `filterable`
+  are not rendered.
 - `Image` consumes the accessibility label and hidden flag. All types
   accept the remaining accessibility metadata. `createSurface.theme` is
   accepted and appearance stays token-driven (Art. VI).
@@ -232,12 +241,12 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | Button        | mapped    | ki-button                     |
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
-| ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
+| ChoicePicker  | mapped    | ki-radio-group, ki-radio, ki-checkbox-group, ki-checkbox |
 | Image         | mapped    | ki-image                      |
 | Icon          | mapped    | ki-icon                       |
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
-| Modal         | unmapped  | —                             |
+| Modal         | mapped    | ki-button, ki-dialog          |
 | Slider        | mapped    | ki-slider                     |
 | DateTimeInput | unmapped  | —                             |
 | html          | forbidden | —                             |
@@ -306,12 +315,11 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
 - `Image` reads its label and hidden flag from `@accessibility`. The
   remaining `@accessibility` attributes and `@metadata` are accepted as
   metadata. The adapter accepts `@checks` without evaluating them.
-- `Slider.steps` divides the span into the requested number of intervals.
-  Both versions map the label, limits and current value. When a division
-  count is omitted the component uses its default step. Slider edits stay
-  local, as with the other mapped fields.
-- `Text.variant` (`caption`, `body`; 1.0 dropped the headings), `weight` and
+- `Text.variant` (`caption`, `body`; 1.0 dropped the headings), `weight`,
   `Video.posterUrl`: not rendered.
+- `Slider.steps` divides the span into the requested number of intervals.
+  Both versions map the label, limits and value. Slider edits stay local
+  to the rendered control.
 - `sendDataModel` metadata travels under `a2uiRendererDataModel` with
   `version: "1.0"`.
 - The remaining 0.9.1 lossy mappings apply unchanged.
@@ -319,9 +327,10 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
 ## Declared gaps
 
 - **User input does not flow back into the data model.** The adapter keeps
-  edits to `TextField`, `CheckBox` and `Slider` local to the rendered control.
-  An A2UI action's context and the `sendDataModel` metadata use the values the
-  agent last set. Model writeback requires an adapter input channel.
+  edits to `TextField`, `CheckBox`, `ChoicePicker` and `Slider` local to the
+  rendered control. An A2UI action's context and the `sendDataModel` metadata
+  use the values the agent last set. Model writeback requires an adapter
+  input channel.
 - **Full re-render per update.** Every accepted `updateComponents` or
   `updateDataModel` re-renders the whole surface through `renderUiSpec`, so
   scroll, focus and in-progress input are lost, and degradations are

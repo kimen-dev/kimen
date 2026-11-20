@@ -15,7 +15,7 @@
           "$description": "Optional image painted on the inactive rail."
         },
         "backdrop-filter": {
-          "$value": "{ki.effect.no-backdrop-filter}",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
           "$description": "Optional effect behind the inactive rail."
         }
       },
@@ -29,13 +29,13 @@
           "$description": "Optional image painted on the active rail."
         },
         "backdrop-filter": {
-          "$value": "{ki.effect.no-backdrop-filter}",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
           "$description": "Optional effect behind the active rail."
         }
       },
       "thumb": {
         "size": {
-          "$value": "{ki.scale-control.thumb-size}",
+          "$value": "{ki.glyph.size.md}",
           "$description": "Diameter of the visible grip within the pointer target."
         },
         "bg": { "$value": "{ki.surface.s0}", "$description": "Grip surface behind the outline." },
@@ -44,7 +44,7 @@
           "$description": "Optional image painted on the grip."
         },
         "backdrop-filter": {
-          "$value": "{ki.effect.no-backdrop-filter}",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
           "$description": "Optional effect behind the grip."
         },
         "border": {
