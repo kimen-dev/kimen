@@ -22,6 +22,10 @@ are explicitly out of v1 scope per roadmap."
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is complete. Behavior enters the system exactly once, here (Art. II).
 
+## Scope after #377
+
+This contract covers the shipped default-mode layout. [InteractiveList](../107-interactive-list/spec.md) adds native whole-row links, single and multiple selection, and accessible names for trailing controls. Each row supports at most one interactive element. Development builds warn when the rule is broken.
+
 ## Design-source analysis (Figma)
 
 The API below is the union of patterns found in both reference designs, so
@@ -204,7 +208,7 @@ observe default rendering.
 
 ```gherkin
 Feature: List
-  A list presents a read-only collection of similar items — leading media,
+  Default-mode lists present similar items — leading media,
   primary and secondary text, trailing meta — in one consistent vertical
   structure that any brand restyles through tokens alone.
 
@@ -260,10 +264,8 @@ Feature: List
     Then it exposes a list of exactly three items
     And each item exposes its text content and no interactive role
 
-  # Family: form participation — N/A for ki-list: a non-interactive data
-  # display container is not a form control, holds no value and contributes
-  # no entry to submitted form data (justified in spec.md's Scenario Family
-  # Coverage table).
+  # Family: form participation — selection-mode scenarios are in
+  # 107-interactive-list. Default-mode lists contribute no form data.
 
   # Family: theming
   # S7
@@ -301,7 +303,7 @@ Feature: List
 | Core behavior | S1, S2, S3, S4, S10 | |
 | Keyboard path | S5, S11 | |
 | Assistive-tech outcome | S6 | |
-| Form participation | | N/A — ki-list is a non-interactive data-display container: it is not a form control, holds no value and contributes no entry to submitted form data (charter-listed valid N/A). Controls slotted inside items (e.g. ki-switch) participate in forms on their own. |
+| Form participation | | Default-mode lists contribute no form data. Controls slotted in a default-mode row participate independently. See #377 for selection-mode form participation. |
 | Theming | S7, S8, S9 | |
 
 ## Requirements *(mandatory)*

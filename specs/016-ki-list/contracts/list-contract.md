@@ -6,6 +6,8 @@ tags: `ki-list-item` is a sub-component of `ki-list` and the two ship,
 version and document together (FR-012). Any deviation discovered during
 implementation re-enters through the spec, not through code (Art. II).
 
+The guarantees below describe the default static pattern. [InteractiveList](../../107-interactive-list/contracts/list-contract.md) adds native whole-row links and selection. Each interactive row has one link, one option interaction, or one trailing control. Development builds warn for conflicts.
+
 ## Elements
 
 `<ki-list>` — non-interactive, non-virtualized list container for
