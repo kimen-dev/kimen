@@ -5,15 +5,14 @@
 // - disarmed -> the README must document the two-step bootstrap that leads
 //   to arming, so the disarmed state is always a documented transition and
 //   never a silent permanent hole.
+// @spec:069-ki-icon
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import captureMatrix from '../../packages/elements/browser-tests/visual/capture-matrix.json' with {
-  type: 'json',
-};
+import { visualGalleryThemes } from '../../packages/elements/browser-tests/visual/theme-matrix.ts';
 import { discoverComponents } from '../lib/component-inventory.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -42,14 +41,14 @@ function parseArmedMarker(content) {
   return value === 'true';
 }
 
-// Uses the harness's dark-theme selection and screenshot naming convention.
+// The harness and audit read the same matrix. The screenshot matcher appends
+// the browser and platform to the capture name.
 function expectedLinuxBaselines(specFileName, engine = 'chromium') {
-  const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
+  const scheme = specFileName.endsWith('.visual.dark.browser.spec.ts') ? 'dark' : 'light';
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
-  const scheme = dark ? 'dark' : 'light';
-  const themes =
-    !dark || captureMatrix.material3Dark.includes(component) ? ['onmars', 'material3'] : ['onmars'];
-  return themes.map((theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`);
+  return visualGalleryThemes(component, scheme).map(
+    (theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
+  );
 }
 
 function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines = ENGINES) {
@@ -102,12 +101,17 @@ test('the expected baseline names mirror the harness capture matrix', () => {
     'ki-button-onmars-light-gallery-webkit-linux.png',
     'ki-button-material3-light-gallery-webkit-linux.png',
   ]);
-  for (const component of ['ki-chip', 'ki-chip-group']) {
-    assert.deepEqual(expectedLinuxBaselines(`${component}.visual.dark.browser.spec.ts`), [
-      `${component}-onmars-dark-gallery-chromium-linux.png`,
-      `${component}-material3-dark-gallery-chromium-linux.png`,
-    ]);
-  }
+});
+
+test('S12 the icon gallery requires both themes in both schemes', () => {
+  assert.deepEqual(expectedLinuxBaselines('ki-icon.visual.browser.spec.ts'), [
+    'ki-icon-onmars-light-gallery-chromium-linux.png',
+    'ki-icon-material3-light-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-icon.visual.dark.browser.spec.ts'), [
+    'ki-icon-onmars-dark-gallery-chromium-linux.png',
+    'ki-icon-material3-dark-gallery-chromium-linux.png',
+  ]);
 });
 
 test('a deleted linux baseline is detected by the armed audit', () => {

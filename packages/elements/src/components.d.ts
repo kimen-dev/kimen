@@ -11,22 +11,34 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 import { KiChipSize } from "./components/ki-chip/ki-chip";
 import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+import { KiLayoutGap } from "./utils/layout-gap";
+import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
+import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
+import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+import { KiNoteTone } from "./components/ki-note/ki-note.icons";
+import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 import { KiSelectSize } from "./components/ki-select/ki-select";
+import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
+import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
+import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
+import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
@@ -34,22 +46,34 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 export { KiChipSize } from "./components/ki-chip/ki-chip";
 export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+export { KiLayoutGap } from "./utils/layout-gap";
+export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
+export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
+export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
+export { KiNoteTone } from "./components/ki-note/ki-note.icons";
+export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 export { KiSelectSize } from "./components/ki-select/ki-select";
+export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
+export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
+export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
+export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
     /**
@@ -59,9 +83,9 @@ export namespace Components {
      * remains until the condition is resolved or the person dismisses it. Express
      * severity with `tone`, never custom styling.
      * @whenNotToUse transient confirmations that expire on their own belong to
-     * the future `ki-toast`; tiny status descriptors attached to another element
-     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
-     * field-level validation belongs to the form control.
+     * `ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to
+     * another element belong to `ki-badge`; blocking decisions belong to
+     * `ki-dialog`; inline field-level validation belongs to the form control.
      * Assistive technology note: alerts that must be announced should be inserted
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
@@ -81,7 +105,7 @@ export namespace Components {
          */
         "dismissed": boolean;
         /**
-          * Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop.  When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; that is future `ki-toast` behavior.
+          * Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop.  When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; those belong to `ki-toast`.
           * @default false
          */
         "dismissible": boolean;
@@ -105,9 +129,8 @@ export namespace Components {
      * stack with overflow.
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
-     * (plain `img`), for presence/verification adornments overlaid on the corner
-     * (a future overlay concern shared with the nav badge), or unlabeled when no
-     * adjacent text names the identity.
+     * (plain `img`), or unlabeled when no adjacent text names the identity.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface KiAvatar {
         /**
@@ -164,7 +187,7 @@ export namespace Components {
      * @whenNotToUse feedback that must be announced (that is
      * ki-alert's job — the badge has no live region), an interactive
      * chip, filter or button, empty content (the label IS the meaning), or a
-     * notification-counter overlay (a future, separate concern).
+     * notification-counter overlay (use ki-counter).
      */
     interface KiBadge {
         /**
@@ -234,17 +257,31 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * A non-interactive card surface for grouping related content.
-     * @whenToUse group related media, heading, supporting text and actions into
-     * one scannable surface visually distinct from the page; fill any subset of
-     * regions. Supply the heading element yourself in the `header` slot — plain
-     * text slotted there carries no heading semantics for assistive technology.
-     * @whenNotToUse as a button or link target, form control, fieldset, page
-     * landmark, section replacement or nested card. For an interactive card, slot
-     * the button or link INSIDE a region (whole-card interactivity is a future
-     * feature, not this component).
+     * A card surface for grouping related content, with an optional primary link or action.
+     * @whenToUse group related media, a title, supporting text and actions into
+     * one scannable surface. Set `href` for navigation or `interactive` for a
+     * declared action. Give a clickable card one text heading in the header
+     * slot and place secondary controls in the body or footer.
+     * @whenNotToUse as a form field, fieldset, page landmark, section replacement
+     * or nested card. Use a standalone button or link for a control without
+     * supporting content.
      */
     interface KiCard {
+        /**
+          * Destination for the card's title link. Supply a text heading in the header slot. A nonblank href takes precedence over interactive.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Gives a titled card a primary button that emits ki-activate. Use href for navigation. Keep other actions in separate controls in the card.
+          * @default false
+         */
+        "interactive"?: boolean;
+        /**
+          * Surface treatment. Choose elevated for a raised panel, filled for a tinted group or outlined for a bordered surface. Use default to follow the theme's existing card treatment.
+          * @default 'default'
+         */
+        "variant"?: 'default' | 'elevated' | 'filled' | 'outlined';
     }
     /**
      * A form-associated checkbox for selecting independent options.
@@ -310,6 +347,55 @@ export namespace Components {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface KiCheckboxGroup {
+        /**
+          * Makes the group unavailable and excludes it from form submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Localized message displayed for a failing selection limit.
+         */
+        "errorText"?: string;
+        /**
+          * One line of guidance displayed under the choices.
+         */
+        "helpText"?: string;
+        /**
+          * Visible legend and accessible name for these choices.
+         */
+        "label": string;
+        /**
+          * Maximum number of checked options, as a nonnegative integer.
+         */
+        "max"?: number;
+        /**
+          * Minimum number of checked options, as a nonnegative integer.
+         */
+        "min"?: number;
+        /**
+          * Form-data key repeated for each selected option.
+         */
+        "name"?: string;
+        /**
+          * Lays choices out vertically or in a wrapping horizontal row.
+          * @default 'vertical'
+         */
+        "orientation": KiCheckboxGroupOrientation;
+        /**
+          * Selected values in option order. Assign a fresh array to update selection silently. Initial checked options seed the group when this property is omitted. In HTML and catalog specs use `checked` on each selected option.
+          * @default []
+         */
+        "value": string[];
     }
     /**
      * A compact filter toggle, removable picked value, or contextual action.
@@ -386,13 +472,48 @@ export namespace Components {
         "type": KiChipType;
     }
     /**
+     * A decorative count or dot over a trigger or avatar.
+     * @whenToUse mark unread or pending items on a trigger, or presence on an
+     * avatar. Supply the full meaning in the host's accessible name and use a
+     * page-owned polite live region for important updates.
+     * @whenNotToUse for an object's status (use ki-badge), a count inside a list
+     * row (use text or ki-badge), or an announcement that needs its own semantics.
+     */
+    interface KiCounter {
+        /**
+          * Show a dot independently of the count, including when the value is zero.
+          * @default false
+         */
+        "dot": boolean;
+        /**
+          * Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
+          * @default undefined
+         */
+        "for"?: string;
+        /**
+          * Largest count displayed in full. Higher values display the cap with a plus sign. Fractional caps round down; invalid caps use 99.
+          * @default 99
+         */
+        "max": number;
+        /**
+          * Semantic palette of the pill or dot. An unknown tone uses danger.
+          * @default 'danger'
+         */
+        "tone": KiCounterTone;
+        /**
+          * Count of unread or pending items. Finite values are rounded down. Values below one and non-finite values hide the count.
+          * @default undefined
+         */
+        "value"?: number;
+    }
+    /**
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each footer
      * action to `close()`, and in destructive confirmations put `autofocus` on
      * the least destructive action.
-     * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+     * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
      * (navigate or use a future full-screen variant), menus, or pickers.
      */
@@ -439,6 +560,53 @@ export namespace Components {
           * @default 'horizontal'
          */
         "orientation": KiDividerOrientation;
+    }
+    /**
+     * A passive responsive grid for content items.
+     * @whenToUse lay out items on responsive tracks with consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
+     * @cssprop --ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     * @cssprop --ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode.
+     */
+    interface KiGrid {
+        /**
+          * Positive whole track count. Below 30rem of available inline size the fixed grid uses one column. Omit columns for automatic tracks.
+          * @minimum 1
+         */
+        "columns"?: number;
+        /**
+          * Kimen spacing step, xl by default. Unsupported values keep the default gap.
+          * @default 'xl'
+         */
+        "gap": KiLayoutGap;
+        /**
+          * Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.
+          * @default '15rem'
+         */
+        "minColumn": string;
+    }
+    /**
+     * A static Lucide glyph selected by name from the application's per-icon imports.
+     * @whenToUse show a named glyph next to text, or give a standalone meaningful
+     * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+     * mounting the component or rendering a guarded surface.
+     * @whenNotToUse make an icon interactive, accept arbitrary SVG or URLs, or
+     * replace the accessible name of a control. Use the control's own label.
+     */
+    interface KiIcon {
+        /**
+          * Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.
+         */
+        "label"?: string;
+        /**
+          * Lucide name made available by a per-icon import. An unavailable name draws no glyph.
+         */
+        "name": string;
+        /**
+          * Glyph size. Inherit follows the surrounding text at 1em.
+          * @default 'inherit'
+         */
+        "size": KiIconSize;
     }
     /**
      * A token-styled, icon-only action button with native button semantics and a
@@ -489,6 +657,57 @@ export namespace Components {
           * @deprecatedValue tertiary
          */
         "variant": KiIconButtonVariant;
+    }
+    /**
+     * Displays one accessible image in a reserved frame, with an optional caption
+     * and a fallback if the source is refused or fails to load.
+     * @whenToUse to show a photo, illustration, or diagram with a predictable
+     * layout. Supply task-relevant alt text, or mark purely decorative media as
+     * decorative. Set an explicit ratio when the layout must stay fixed.
+     * @whenNotToUse for a background decoration, a video, or an interactive
+     * control. Use a separate control to open or otherwise act on an image.
+     */
+    interface KiImage {
+        /**
+          * Describe what the image shows for the task at hand. Required and nonblank for an informative image. Omit it for a decorative image.
+          * @default undefined
+         */
+        "alt"?: string;
+        /**
+          * Hide the media from assistive technology when it conveys no information.
+          * @default false
+         */
+        "decorative": boolean;
+        /**
+          * Localizable fallback label. An informative fallback appends the image's description, when available, to this label.
+          * @default 'Image unavailable'
+         */
+        "fallbackLabel": string;
+        /**
+          * Cover fills the frame. Contain preserves the whole image in it.
+          * @default 'cover'
+         */
+        "fit": KiImageFit;
+        /**
+          * Native loading hint. Use eager for a critical image above the fold.
+          * @default 'lazy'
+         */
+        "loading": KiImageLoading;
+        /**
+          * Corner radius of the media frame.
+          * @default 'lg'
+         */
+        "radius": KiImageRadius;
+        /**
+          * An explicit ratio reserves the same frame before load and on failure. Auto reserves 16:9 first and uses the intrinsic ratio after load.
+          * @default 'auto'
+         */
+        "ratio": KiImageRatio;
+        /**
+          * Relative or HTTP(S) image URL. Refused sources are left unloaded.
+          * @format url
+         */
+        "src": string;
     }
     /**
      * A non-interactive page-position indicator: one dot per position of a
@@ -606,6 +825,50 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A native navigation link with Kimen ink, underline, and focus styles.
+     * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+     * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
+     */
+    interface KiLink {
+        /**
+          * Native download attribute. Set it to an empty string to let the browser choose the file name, or supply a suggested file name.
+         */
+        "download"?: string;
+        /**
+          * Requests a new tab with noopener and adds an icon and an accessible announcement. An explicit download still follows native download rules.
+          * @default false
+         */
+        "external": boolean;
+        /**
+          * Localizable text appended to the accessible name in external mode.
+          * @default '(opens in a new tab)'
+         */
+        "externalLabel": string;
+        /**
+          * Destination URL. Relative URLs and fragments use native anchor resolution.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Space-separated native link relationships. External links always include noopener.
+         */
+        "rel"?: string;
+        /**
+          * Native browsing-context name. External links use _blank.
+         */
+        "target"?: string;
+        /**
+          * Keep the underline in running text. Use hover for standalone navigation, where placement identifies the link and keyboard focus still underlines it.
+          * @default 'always'
+         */
+        "underline": KiLinkUnderline;
+        /**
+          * Ink role. Primary uses accent ink and neutral uses body ink.
+          * @default 'primary'
+         */
+        "variant": KiLinkVariant;
+    }
+    /**
      * A non-interactive vertical list container for read-only collections of
      * similar entries composed with `ki-list-item` children.
      * @whenToUse settings, contacts, results or activity feeds where each item
@@ -630,6 +893,30 @@ export namespace Components {
           * @default 'md'
          */
         "size": KiListItemSize;
+    }
+    /**
+     * A compact, static explanation beside a control or inside a card.
+     * @whenToUse Add a short constraint, tip or consequence next to the content
+     * it explains. Put the consequence first when warning the reader.
+     * @whenNotToUse For updates that must be announced, use ki-alert. Use Toast
+     * for transient confirmations and the field's help-text for field guidance.
+     */
+    interface KiNote {
+        /**
+          * Shows the decorative icon. Set icon="false" in HTML to hide it.
+          * @default true
+         */
+        "icon": boolean;
+        /**
+          * Uses caption text at sm and body text at md. Unknown values use md.
+          * @default 'md'
+         */
+        "size": KiNoteSize;
+        /**
+          * Selects the background tint and decorative icon. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone": KiNoteTone;
     }
     /**
      * A declarative data option rendered by its owning `ki-select`.
@@ -891,6 +1178,69 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A compact status for an indeterminate wait.
+     * @whenToUse show brief inline activity such as saving a change or running a
+     * tool. Choose typing dots for an assistant that is thinking. Set a localized
+     * label that names the activity and mount the spinner when the wait starts.
+     * @whenNotToUse use ki-progress for page-level work or a known fraction of
+     * a task. Use ki-alert for persistent notices.
+     */
+    interface KiSpinner {
+        /**
+          * Localized name of the ongoing activity, such as "Saving changes". Supply a meaningful label for every spinner, even when the text is hidden. Use the activity's name whenever it can be more specific than "Loading".
+         */
+        "label": string;
+        /**
+          * Display the label beside the graphic when sighted users also need the activity description. The same text names the status in either case.
+          * @default false
+         */
+        "showLabel": boolean;
+        /**
+          * Diameter of the ring. Choose the size that fits the surrounding content. Dots use a fixed size. Unrecognized values draw the medium ring.
+          * @default 'md'
+         */
+        "size": 'sm' | 'md' | 'lg';
+        /**
+          * Use a ring for general inline activity and dots for assistant typing or thinking. Unrecognized values draw a ring.
+          * @default 'ring'
+         */
+        "variant": 'ring' | 'dots';
+    }
+    /**
+     * A passive flex layout for content on one axis.
+     * @whenToUse arrange content in a vertical sequence or a horizontal row with
+     * consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or tabular data.
+     * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     */
+    interface KiStack {
+        /**
+          * Cross-axis alignment, stretch by default.
+          * @default 'stretch'
+         */
+        "align": KiStackAlign;
+        /**
+          * Main axis, column by default.
+          * @default 'column'
+         */
+        "direction": KiStackDirection;
+        /**
+          * Kimen spacing step, md by default. Unsupported values keep the default gap.
+          * @default 'md'
+         */
+        "gap": KiLayoutGap;
+        /**
+          * Main-axis distribution, start by default. Use between to distribute spare space.
+          * @default 'start'
+         */
+        "justify": KiStackJustify;
+        /**
+          * Allow items to continue on a new line. Defaults to false.
+          * @default false
+         */
+        "wrap": boolean;
+    }
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -1115,6 +1465,97 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A short, transient message about something the person just did, shown
+     * without blocking the page. It leaves on its own after its time, which stops
+     * while the person points at the toaster, works inside it or is away from the
+     * page; a toast with an action, or reporting an error, waits for the person.
+     * @whenToUse confirm an action that happened elsewhere on screen ("Changes
+     * saved", "Link copied"), report a background result ("Export ready"), or
+     * offer a quick undo. Raise it into a `ki-toaster`, in markup or with its
+     * `show()` method; express urgency with `tone`.
+     * @whenNotToUse anything the person must read or act on to continue belongs
+     * to `ki-dialog`; form validation belongs to the field's error text; a lasting
+     * condition of the page belongs to `ki-alert`, which stays inline.
+     * Assistive technology note: a toast announces as it appears, so append it
+     * when the event happens; a toast present at initial page load is exposed with
+     * its role but its announcement is not guaranteed. The heading and the message
+     * are the whole announcement: the icon, the action and the dismiss button
+     * stay outside the live region.
+     */
+    interface KiToast {
+        /**
+          * Accessible name of the dismiss button. Override for localization; the default English word is the component's only built-in text.  When to use: whenever the document language is not English. When NOT to use: do not put the message here; use the default slot.
+          * @default 'Dismiss'
+         */
+        "dismissLabel": string;
+        /**
+          * Reflected state: true once the toast has left. The timer, the dismiss button, Escape and the action set it; the page may set or clear it. While true the host stays in the document but renders nothing and leaves the accessibility tree. Clearing it shows the toast again with its full time.  When to use: show a toast again, or close it from the page. When NOT to use: do not read programmatic changes as dismissals; `ki-dismiss` reports only the timer and the person.
+          * @default false
+         */
+        "dismissed": boolean;
+        /**
+          * Shows the dismiss button, a ghost `ki-icon-button` named by `dismiss-label`. Escape still dismisses a focused toast without it.  When to use: keep it on unless the toast leaves on its own and the page offers no other way to read it again. When NOT to use: do not turn it off on a toast that waits for the person.
+          * @default true
+         */
+        "dismissible": boolean;
+        /**
+          * How long the toast stays, in milliseconds, before it leaves on its own; `0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast holds an action or its tone is `danger`. Unset, or not a finite number of zero or more, it is 5000. The time stops while the pointer rests on the toaster, while focus is inside it, or while the page is hidden, and continues with what was left. Changing it restarts the time.  When to use: give a longer message more time. When NOT to use: do not shorten it below what a person needs to read the message.
+          * @minimum 0
+         */
+        "duration"?: number;
+        /**
+          * Optional bold first line, inside the live region. Empty strings render no heading. It is a `strong` element, never a document heading.  When to use: a short label for the event ("Changes saved"). When NOT to use: do not use it for page structure.
+         */
+        "heading"?: string;
+        /**
+          * Output-only state written by an enclosing `ki-toaster`: true while the toast waits for a place. A queued toast renders nothing, is absent from the accessibility tree and its time does not run. Authors do not set it; the toaster overwrites it.
+          * @default false
+         */
+        "queued": boolean;
+        /**
+          * Picks the icon and its ink, and the live-region urgency: `danger` exposes `role="alert"` and never leaves on its own; `neutral`, `info`, `success`, `warning`, absent and unrecognized values expose `role="status"`. The surface and the text look the same in every tone. Unknown values render neutral.  When to use: choose the tone that describes what happened. When NOT to use: do not use tone for emphasis; a lasting failure belongs in `ki-alert`.
+          * @default 'neutral'
+         */
+        "tone": KiToastTone | (string & {});
+    }
+    /**
+     * The one place toasts appear: it paints its `ki-toast` children in the top
+     * layer at a corner of the viewport, stacks them in arrival order, shows the
+     * newest few and queues the older ones, without covering the page beside
+     * them.
+     * @whenToUse once per page (or once inside a modal `ki-dialog`), as the place
+     * every `ki-toast` of the application appears in: append toasts to it, or call
+     * `show()`. Choose the corner with `placement`.
+     * @whenNotToUse do not put anything but `ki-toast` elements in it; do not use
+     * it for persistent content, which belongs in the page or in `ki-alert`.
+     * Assistive technology note: while it shows toasts the toaster is a group
+     * named by `label`, never a landmark; F6 moves focus into it and Escape on a
+     * toast returns focus to where it was. An empty toaster exposes nothing and
+     * covers nothing.
+     */
+    interface KiToaster {
+        /**
+          * Accessible name of the group the toaster exposes while it shows toasts. Override for localization.  When to use: provide the name in the document language. When NOT to use: do not put a message here.
+          * @default 'Notifications'
+         */
+        "label": string;
+        /**
+          * How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A toast holding focus keeps its place until focus leaves the toaster; the oldest other one waits instead. A value below 1 or not a whole number shows 3.  When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
+          * @default 3
+          * @minimum 1
+         */
+        "max": number;
+        /**
+          * Corner or edge of the viewport the stack sits against; `end` follows the writing direction. On a coarse pointer and a viewport narrower than 40rem the stack always sits at the bottom center. Unknown values place the stack at the bottom end.  When to use: keep toasts away from where the page's own controls live. When NOT to use: do not change it per toast; one toaster keeps one place.
+          * @default 'bottom-end'
+         */
+        "placement": KiToasterPlacement | (string & {});
+        /**
+          * Raises a toast: creates a `ki-toast` from `tone`, `title` (its heading), `message`, `duration`, `dismissible` and `action` (a ghost `ki-button size="sm"` in its `action` slot that calls `onClick`), appends it to the toaster and resolves with it. Once the toast has left it is removed from the page. The toaster does not bundle `ki-toast` or `ki-button`: define them, as for toasts written in markup. When to use: raise a toast from script without writing its markup. When NOT to use: a toast written in markup stays the page's own: append it instead, and it is never removed.
+         */
+        "show": (options: KiToastShowOptions) => Promise<HTMLElement>;
+    }
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -1168,6 +1609,14 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiCardCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCardElement;
+}
+export interface KiCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCheckboxGroupElement;
+}
 export interface KiChipCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiChipElement;
@@ -1180,9 +1629,17 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
 }
+export interface KiImageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiImageElement;
+}
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiTabsElement;
+}
+export interface KiToastCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiToastElement;
 }
 declare global {
     interface HTMLKiAlertElementEventMap {
@@ -1195,9 +1652,9 @@ declare global {
      * remains until the condition is resolved or the person dismisses it. Express
      * severity with `tone`, never custom styling.
      * @whenNotToUse transient confirmations that expire on their own belong to
-     * the future `ki-toast`; tiny status descriptors attached to another element
-     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
-     * field-level validation belongs to the form control.
+     * `ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to
+     * another element belong to `ki-badge`; blocking decisions belong to
+     * `ki-dialog`; inline field-level validation belongs to the form control.
      * Assistive technology note: alerts that must be announced should be inserted
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
@@ -1229,9 +1686,8 @@ declare global {
      * stack with overflow.
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
-     * (plain `img`), for presence/verification adornments overlaid on the corner
-     * (a future overlay concern shared with the nav badge), or unlabeled when no
-     * adjacent text names the identity.
+     * (plain `img`), or unlabeled when no adjacent text names the identity.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface HTMLKiAvatarElement extends Components.KiAvatar, HTMLStencilElement {
     }
@@ -1265,7 +1721,7 @@ declare global {
      * @whenNotToUse feedback that must be announced (that is
      * ki-alert's job — the badge has no live region), an interactive
      * chip, filter or button, empty content (the label IS the meaning), or a
-     * notification-counter overlay (a future, separate concern).
+     * notification-counter overlay (use ki-counter).
      */
     interface HTMLKiBadgeElement extends Components.KiBadge, HTMLStencilElement {
     }
@@ -1288,18 +1744,28 @@ declare global {
         prototype: HTMLKiButtonElement;
         new (): HTMLKiButtonElement;
     };
+    interface HTMLKiCardElementEventMap {
+        "ki-activate": void;
+    }
     /**
-     * A non-interactive card surface for grouping related content.
-     * @whenToUse group related media, heading, supporting text and actions into
-     * one scannable surface visually distinct from the page; fill any subset of
-     * regions. Supply the heading element yourself in the `header` slot — plain
-     * text slotted there carries no heading semantics for assistive technology.
-     * @whenNotToUse as a button or link target, form control, fieldset, page
-     * landmark, section replacement or nested card. For an interactive card, slot
-     * the button or link INSIDE a region (whole-card interactivity is a future
-     * feature, not this component).
+     * A card surface for grouping related content, with an optional primary link or action.
+     * @whenToUse group related media, a title, supporting text and actions into
+     * one scannable surface. Set `href` for navigation or `interactive` for a
+     * declared action. Give a clickable card one text heading in the header
+     * slot and place secondary controls in the body or footer.
+     * @whenNotToUse as a form field, fieldset, page landmark, section replacement
+     * or nested card. Use a standalone button or link for a control without
+     * supporting content.
      */
     interface HTMLKiCardElement extends Components.KiCard, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCardElementEventMap>(type: K, listener: (this: HTMLKiCardElement, ev: KiCardCustomEvent<HTMLKiCardElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCardElementEventMap>(type: K, listener: (this: HTMLKiCardElement, ev: KiCardCustomEvent<HTMLKiCardElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiCardElement: {
         prototype: HTMLKiCardElement;
@@ -1328,6 +1794,31 @@ declare global {
     var HTMLKiCheckboxElement: {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
+    };
+    interface HTMLKiCheckboxGroupElementEventMap {
+        "ki-change": KiCheckboxGroupChangeDetail;
+    }
+    /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface HTMLKiCheckboxGroupElement extends Components.KiCheckboxGroup, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCheckboxGroupElementEventMap>(type: K, listener: (this: HTMLKiCheckboxGroupElement, ev: KiCheckboxGroupCustomEvent<HTMLKiCheckboxGroupElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCheckboxGroupElementEventMap>(type: K, listener: (this: HTMLKiCheckboxGroupElement, ev: KiCheckboxGroupCustomEvent<HTMLKiCheckboxGroupElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCheckboxGroupElement: {
+        prototype: HTMLKiCheckboxGroupElement;
+        new (): HTMLKiCheckboxGroupElement;
     };
     interface HTMLKiChipElementEventMap {
         "ki-change": {
@@ -1381,6 +1872,20 @@ declare global {
         prototype: HTMLKiChipGroupElement;
         new (): HTMLKiChipGroupElement;
     };
+    /**
+     * A decorative count or dot over a trigger or avatar.
+     * @whenToUse mark unread or pending items on a trigger, or presence on an
+     * avatar. Supply the full meaning in the host's accessible name and use a
+     * page-owned polite live region for important updates.
+     * @whenNotToUse for an object's status (use ki-badge), a count inside a list
+     * row (use text or ki-badge), or an announcement that needs its own semantics.
+     */
+    interface HTMLKiCounterElement extends Components.KiCounter, HTMLStencilElement {
+    }
+    var HTMLKiCounterElement: {
+        prototype: HTMLKiCounterElement;
+        new (): HTMLKiCounterElement;
+    };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
     }
@@ -1391,7 +1896,7 @@ declare global {
      * provide a `heading`, place actions in the `footer` slot, wire each footer
      * action to `close()`, and in destructive confirmations put `autofocus` on
      * the least destructive action.
-     * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+     * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
      * (navigate or use a future full-screen variant), menus, or pickers.
      */
@@ -1429,6 +1934,33 @@ declare global {
         new (): HTMLKiDividerElement;
     };
     /**
+     * A passive responsive grid for content items.
+     * @whenToUse lay out items on responsive tracks with consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
+     * @cssprop --ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     * @cssprop --ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode.
+     */
+    interface HTMLKiGridElement extends Components.KiGrid, HTMLStencilElement {
+    }
+    var HTMLKiGridElement: {
+        prototype: HTMLKiGridElement;
+        new (): HTMLKiGridElement;
+    };
+    /**
+     * A static Lucide glyph selected by name from the application's per-icon imports.
+     * @whenToUse show a named glyph next to text, or give a standalone meaningful
+     * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+     * mounting the component or rendering a guarded surface.
+     * @whenNotToUse make an icon interactive, accept arbitrary SVG or URLs, or
+     * replace the accessible name of a control. Use the control's own label.
+     */
+    interface HTMLKiIconElement extends Components.KiIcon, HTMLStencilElement {
+    }
+    var HTMLKiIconElement: {
+        prototype: HTMLKiIconElement;
+        new (): HTMLKiIconElement;
+    };
+    /**
      * A token-styled, icon-only action button with native button semantics and a
      * mandatory accessible name.
      * @whenToUse a compact, widely understood action where space precludes a
@@ -1446,6 +1978,32 @@ declare global {
     var HTMLKiIconButtonElement: {
         prototype: HTMLKiIconButtonElement;
         new (): HTMLKiIconButtonElement;
+    };
+    interface HTMLKiImageElementEventMap {
+        "ki-error": void;
+    }
+    /**
+     * Displays one accessible image in a reserved frame, with an optional caption
+     * and a fallback if the source is refused or fails to load.
+     * @whenToUse to show a photo, illustration, or diagram with a predictable
+     * layout. Supply task-relevant alt text, or mark purely decorative media as
+     * decorative. Set an explicit ratio when the layout must stay fixed.
+     * @whenNotToUse for a background decoration, a video, or an interactive
+     * control. Use a separate control to open or otherwise act on an image.
+     */
+    interface HTMLKiImageElement extends Components.KiImage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiImageElementEventMap>(type: K, listener: (this: HTMLKiImageElement, ev: KiImageCustomEvent<HTMLKiImageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiImageElementEventMap>(type: K, listener: (this: HTMLKiImageElement, ev: KiImageCustomEvent<HTMLKiImageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiImageElement: {
+        prototype: HTMLKiImageElement;
+        new (): HTMLKiImageElement;
     };
     /**
      * A non-interactive page-position indicator: one dot per position of a
@@ -1495,6 +2053,17 @@ declare global {
         new (): HTMLKiInputElement;
     };
     /**
+     * A native navigation link with Kimen ink, underline, and focus styles.
+     * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+     * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
+     */
+    interface HTMLKiLinkElement extends Components.KiLink, HTMLStencilElement {
+    }
+    var HTMLKiLinkElement: {
+        prototype: HTMLKiLinkElement;
+        new (): HTMLKiLinkElement;
+    };
+    /**
      * A non-interactive vertical list container for read-only collections of
      * similar entries composed with `ki-list-item` children.
      * @whenToUse settings, contacts, results or activity feeds where each item
@@ -1522,6 +2091,19 @@ declare global {
     var HTMLKiListItemElement: {
         prototype: HTMLKiListItemElement;
         new (): HTMLKiListItemElement;
+    };
+    /**
+     * A compact, static explanation beside a control or inside a card.
+     * @whenToUse Add a short constraint, tip or consequence next to the content
+     * it explains. Put the consequence first when warning the reader.
+     * @whenNotToUse For updates that must be announced, use ki-alert. Use Toast
+     * for transient confirmations and the field's help-text for field guidance.
+     */
+    interface HTMLKiNoteElement extends Components.KiNote, HTMLStencilElement {
+    }
+    var HTMLKiNoteElement: {
+        prototype: HTMLKiNoteElement;
+        new (): HTMLKiNoteElement;
     };
     /**
      * A declarative data option rendered by its owning `ki-select`.
@@ -1664,6 +2246,33 @@ declare global {
         new (): HTMLKiSelectElement;
     };
     /**
+     * A compact status for an indeterminate wait.
+     * @whenToUse show brief inline activity such as saving a change or running a
+     * tool. Choose typing dots for an assistant that is thinking. Set a localized
+     * label that names the activity and mount the spinner when the wait starts.
+     * @whenNotToUse use ki-progress for page-level work or a known fraction of
+     * a task. Use ki-alert for persistent notices.
+     */
+    interface HTMLKiSpinnerElement extends Components.KiSpinner, HTMLStencilElement {
+    }
+    var HTMLKiSpinnerElement: {
+        prototype: HTMLKiSpinnerElement;
+        new (): HTMLKiSpinnerElement;
+    };
+    /**
+     * A passive flex layout for content on one axis.
+     * @whenToUse arrange content in a vertical sequence or a horizontal row with
+     * consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or tabular data.
+     * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     */
+    interface HTMLKiStackElement extends Components.KiStack, HTMLStencilElement {
+    }
+    var HTMLKiStackElement: {
+        prototype: HTMLKiStackElement;
+        new (): HTMLKiStackElement;
+    };
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -1785,6 +2394,62 @@ declare global {
         prototype: HTMLKiTextareaElement;
         new (): HTMLKiTextareaElement;
     };
+    interface HTMLKiToastElementEventMap {
+        "ki-dismiss": KiToastDismissDetail;
+    }
+    /**
+     * A short, transient message about something the person just did, shown
+     * without blocking the page. It leaves on its own after its time, which stops
+     * while the person points at the toaster, works inside it or is away from the
+     * page; a toast with an action, or reporting an error, waits for the person.
+     * @whenToUse confirm an action that happened elsewhere on screen ("Changes
+     * saved", "Link copied"), report a background result ("Export ready"), or
+     * offer a quick undo. Raise it into a `ki-toaster`, in markup or with its
+     * `show()` method; express urgency with `tone`.
+     * @whenNotToUse anything the person must read or act on to continue belongs
+     * to `ki-dialog`; form validation belongs to the field's error text; a lasting
+     * condition of the page belongs to `ki-alert`, which stays inline.
+     * Assistive technology note: a toast announces as it appears, so append it
+     * when the event happens; a toast present at initial page load is exposed with
+     * its role but its announcement is not guaranteed. The heading and the message
+     * are the whole announcement: the icon, the action and the dismiss button
+     * stay outside the live region.
+     */
+    interface HTMLKiToastElement extends Components.KiToast, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiToastElementEventMap>(type: K, listener: (this: HTMLKiToastElement, ev: KiToastCustomEvent<HTMLKiToastElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiToastElementEventMap>(type: K, listener: (this: HTMLKiToastElement, ev: KiToastCustomEvent<HTMLKiToastElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiToastElement: {
+        prototype: HTMLKiToastElement;
+        new (): HTMLKiToastElement;
+    };
+    /**
+     * The one place toasts appear: it paints its `ki-toast` children in the top
+     * layer at a corner of the viewport, stacks them in arrival order, shows the
+     * newest few and queues the older ones, without covering the page beside
+     * them.
+     * @whenToUse once per page (or once inside a modal `ki-dialog`), as the place
+     * every `ki-toast` of the application appears in: append toasts to it, or call
+     * `show()`. Choose the corner with `placement`.
+     * @whenNotToUse do not put anything but `ki-toast` elements in it; do not use
+     * it for persistent content, which belongs in the page or in `ki-alert`.
+     * Assistive technology note: while it shows toasts the toaster is a group
+     * named by `label`, never a landmark; F6 moves focus into it and Escape on a
+     * toast returns focus to where it was. An empty toaster exposes nothing and
+     * covers nothing.
+     */
+    interface HTMLKiToasterElement extends Components.KiToaster, HTMLStencilElement {
+    }
+    var HTMLKiToasterElement: {
+        prototype: HTMLKiToasterElement;
+        new (): HTMLKiToasterElement;
+    };
     /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
@@ -1836,15 +2501,22 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
+        "ki-grid": HTMLKiGridElement;
+        "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
+        "ki-image": HTMLKiImageElement;
         "ki-indicator": HTMLKiIndicatorElement;
         "ki-input": HTMLKiInputElement;
+        "ki-link": HTMLKiLinkElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
+        "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
         "ki-qr": HTMLKiQrElement;
@@ -1852,12 +2524,16 @@ declare global {
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-select": HTMLKiSelectElement;
+        "ki-spinner": HTMLKiSpinnerElement;
+        "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
         "ki-tab-panel": HTMLKiTabPanelElement;
         "ki-tabs": HTMLKiTabsElement;
         "ki-textarea": HTMLKiTextareaElement;
+        "ki-toast": HTMLKiToastElement;
+        "ki-toaster": HTMLKiToasterElement;
         "ki-tooltip": HTMLKiTooltipElement;
         "ki-video": HTMLKiVideoElement;
     }
@@ -1872,9 +2548,9 @@ declare namespace LocalJSX {
      * remains until the condition is resolved or the person dismisses it. Express
      * severity with `tone`, never custom styling.
      * @whenNotToUse transient confirmations that expire on their own belong to
-     * the future `ki-toast`; tiny status descriptors attached to another element
-     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
-     * field-level validation belongs to the form control.
+     * `ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to
+     * another element belong to `ki-badge`; blocking decisions belong to
+     * `ki-dialog`; inline field-level validation belongs to the form control.
      * Assistive technology note: alerts that must be announced should be inserted
      * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
      * page load are exposed with their role but platform announcement is not
@@ -1894,7 +2570,7 @@ declare namespace LocalJSX {
          */
         "dismissed"?: boolean;
         /**
-          * Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop.  When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; that is future `ki-toast` behavior.
+          * Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop.  When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; those belong to `ki-toast`.
           * @default false
          */
         "dismissible"?: boolean;
@@ -1922,9 +2598,8 @@ declare namespace LocalJSX {
      * stack with overflow.
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
-     * (plain `img`), for presence/verification adornments overlaid on the corner
-     * (a future overlay concern shared with the nav badge), or unlabeled when no
-     * adjacent text names the identity.
+     * (plain `img`), or unlabeled when no adjacent text names the identity.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface KiAvatar {
         /**
@@ -1981,7 +2656,7 @@ declare namespace LocalJSX {
      * @whenNotToUse feedback that must be announced (that is
      * ki-alert's job — the badge has no live region), an interactive
      * chip, filter or button, empty content (the label IS the meaning), or a
-     * notification-counter overlay (a future, separate concern).
+     * notification-counter overlay (use ki-counter).
      */
     interface KiBadge {
         /**
@@ -2055,17 +2730,35 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * A non-interactive card surface for grouping related content.
-     * @whenToUse group related media, heading, supporting text and actions into
-     * one scannable surface visually distinct from the page; fill any subset of
-     * regions. Supply the heading element yourself in the `header` slot — plain
-     * text slotted there carries no heading semantics for assistive technology.
-     * @whenNotToUse as a button or link target, form control, fieldset, page
-     * landmark, section replacement or nested card. For an interactive card, slot
-     * the button or link INSIDE a region (whole-card interactivity is a future
-     * feature, not this component).
+     * A card surface for grouping related content, with an optional primary link or action.
+     * @whenToUse group related media, a title, supporting text and actions into
+     * one scannable surface. Set `href` for navigation or `interactive` for a
+     * declared action. Give a clickable card one text heading in the header
+     * slot and place secondary controls in the body or footer.
+     * @whenNotToUse as a form field, fieldset, page landmark, section replacement
+     * or nested card. Use a standalone button or link for a control without
+     * supporting content.
      */
     interface KiCard {
+        /**
+          * Destination for the card's title link. Supply a text heading in the header slot. A nonblank href takes precedence over interactive.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Gives a titled card a primary button that emits ki-activate. Use href for navigation. Keep other actions in separate controls in the card.
+          * @default false
+         */
+        "interactive"?: boolean;
+        /**
+          * Fires once when the user activates an action card by pointer or keyboard.
+         */
+        "onKi-activate"?: (event: KiCardCustomEvent<void>) => void;
+        /**
+          * Surface treatment. Choose elevated for a raised panel, filled for a tinted group or outlined for a bordered surface. Use default to follow the theme's existing card treatment.
+          * @default 'default'
+         */
+        "variant"?: 'default' | 'elevated' | 'filled' | 'outlined';
     }
     /**
      * A form-associated checkbox for selecting independent options.
@@ -2135,6 +2828,63 @@ declare namespace LocalJSX {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface KiCheckboxGroup {
+        /**
+          * Makes the group unavailable and excludes it from form submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Localized message displayed for a failing selection limit.
+         */
+        "errorText"?: string;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * One line of guidance displayed under the choices.
+         */
+        "helpText"?: string;
+        /**
+          * Visible legend and accessible name for these choices.
+         */
+        "label": string;
+        /**
+          * Maximum number of checked options, as a nonnegative integer.
+         */
+        "max"?: number;
+        /**
+          * Minimum number of checked options, as a nonnegative integer.
+         */
+        "min"?: number;
+        /**
+          * Form-data key repeated for each selected option.
+         */
+        "name"?: string;
+        /**
+          * Fires once for a committed user toggle with a copy of the current selection.
+         */
+        "onKi-change"?: (event: KiCheckboxGroupCustomEvent<KiCheckboxGroupChangeDetail>) => void;
+        /**
+          * Lays choices out vertically or in a wrapping horizontal row.
+          * @default 'vertical'
+         */
+        "orientation"?: KiCheckboxGroupOrientation;
+        /**
+          * Selected values in option order. Assign a fresh array to update selection silently. Initial checked options seed the group when this property is omitted. In HTML and catalog specs use `checked` on each selected option.
+          * @default []
+         */
+        "value"?: string[];
     }
     /**
      * A compact filter toggle, removable picked value, or contextual action.
@@ -2231,13 +2981,48 @@ declare namespace LocalJSX {
         "type"?: KiChipType;
     }
     /**
+     * A decorative count or dot over a trigger or avatar.
+     * @whenToUse mark unread or pending items on a trigger, or presence on an
+     * avatar. Supply the full meaning in the host's accessible name and use a
+     * page-owned polite live region for important updates.
+     * @whenNotToUse for an object's status (use ki-badge), a count inside a list
+     * row (use text or ki-badge), or an announcement that needs its own semantics.
+     */
+    interface KiCounter {
+        /**
+          * Show a dot independently of the count, including when the value is zero.
+          * @default false
+         */
+        "dot"?: boolean;
+        /**
+          * Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
+          * @default undefined
+         */
+        "for"?: string;
+        /**
+          * Largest count displayed in full. Higher values display the cap with a plus sign. Fractional caps round down; invalid caps use 99.
+          * @default 99
+         */
+        "max"?: number;
+        /**
+          * Semantic palette of the pill or dot. An unknown tone uses danger.
+          * @default 'danger'
+         */
+        "tone"?: KiCounterTone;
+        /**
+          * Count of unread or pending items. Finite values are rounded down. Values below one and non-finite values hide the count.
+          * @default undefined
+         */
+        "value"?: number;
+    }
+    /**
      * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each footer
      * action to `close()`, and in destructive confirmations put `autofocus` on
      * the least destructive action.
-     * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+     * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
      * supplementary hints (`ki-tooltip`), long forms or multi-step flows
      * (navigate or use a future full-screen variant), menus, or pickers.
      */
@@ -2280,6 +3065,53 @@ declare namespace LocalJSX {
           * @default 'horizontal'
          */
         "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * A passive responsive grid for content items.
+     * @whenToUse lay out items on responsive tracks with consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
+     * @cssprop --ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     * @cssprop --ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode.
+     */
+    interface KiGrid {
+        /**
+          * Positive whole track count. Below 30rem of available inline size the fixed grid uses one column. Omit columns for automatic tracks.
+          * @minimum 1
+         */
+        "columns"?: number;
+        /**
+          * Kimen spacing step, xl by default. Unsupported values keep the default gap.
+          * @default 'xl'
+         */
+        "gap"?: KiLayoutGap;
+        /**
+          * Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.
+          * @default '15rem'
+         */
+        "minColumn"?: string;
+    }
+    /**
+     * A static Lucide glyph selected by name from the application's per-icon imports.
+     * @whenToUse show a named glyph next to text, or give a standalone meaningful
+     * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+     * mounting the component or rendering a guarded surface.
+     * @whenNotToUse make an icon interactive, accept arbitrary SVG or URLs, or
+     * replace the accessible name of a control. Use the control's own label.
+     */
+    interface KiIcon {
+        /**
+          * Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.
+         */
+        "label"?: string;
+        /**
+          * Lucide name made available by a per-icon import. An unavailable name draws no glyph.
+         */
+        "name": string;
+        /**
+          * Glyph size. Inherit follows the surrounding text at 1em.
+          * @default 'inherit'
+         */
+        "size"?: KiIconSize;
     }
     /**
      * A token-styled, icon-only action button with native button semantics and a
@@ -2330,6 +3162,61 @@ declare namespace LocalJSX {
           * @deprecatedValue tertiary
          */
         "variant"?: KiIconButtonVariant;
+    }
+    /**
+     * Displays one accessible image in a reserved frame, with an optional caption
+     * and a fallback if the source is refused or fails to load.
+     * @whenToUse to show a photo, illustration, or diagram with a predictable
+     * layout. Supply task-relevant alt text, or mark purely decorative media as
+     * decorative. Set an explicit ratio when the layout must stay fixed.
+     * @whenNotToUse for a background decoration, a video, or an interactive
+     * control. Use a separate control to open or otherwise act on an image.
+     */
+    interface KiImage {
+        /**
+          * Describe what the image shows for the task at hand. Required and nonblank for an informative image. Omit it for a decorative image.
+          * @default undefined
+         */
+        "alt"?: string;
+        /**
+          * Hide the media from assistive technology when it conveys no information.
+          * @default false
+         */
+        "decorative"?: boolean;
+        /**
+          * Localizable fallback label. An informative fallback appends the image's description, when available, to this label.
+          * @default 'Image unavailable'
+         */
+        "fallbackLabel"?: string;
+        /**
+          * Cover fills the frame. Contain preserves the whole image in it.
+          * @default 'cover'
+         */
+        "fit"?: KiImageFit;
+        /**
+          * Native loading hint. Use eager for a critical image above the fold.
+          * @default 'lazy'
+         */
+        "loading"?: KiImageLoading;
+        /**
+          * Reports a load failure or rejected URL once per source attempt. Bubbles and crosses shadow boundaries so consumers can observe it on a surface.
+         */
+        "onKi-error"?: (event: KiImageCustomEvent<void>) => void;
+        /**
+          * Corner radius of the media frame.
+          * @default 'lg'
+         */
+        "radius"?: KiImageRadius;
+        /**
+          * An explicit ratio reserves the same frame before load and on failure. Auto reserves 16:9 first and uses the intrinsic ratio after load.
+          * @default 'auto'
+         */
+        "ratio"?: KiImageRatio;
+        /**
+          * Relative or HTTP(S) image URL. Refused sources are left unloaded.
+          * @format url
+         */
+        "src": string;
     }
     /**
      * A non-interactive page-position indicator: one dot per position of a
@@ -2451,6 +3338,50 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A native navigation link with Kimen ink, underline, and focus styles.
+     * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+     * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
+     */
+    interface KiLink {
+        /**
+          * Native download attribute. Set it to an empty string to let the browser choose the file name, or supply a suggested file name.
+         */
+        "download"?: string;
+        /**
+          * Requests a new tab with noopener and adds an icon and an accessible announcement. An explicit download still follows native download rules.
+          * @default false
+         */
+        "external"?: boolean;
+        /**
+          * Localizable text appended to the accessible name in external mode.
+          * @default '(opens in a new tab)'
+         */
+        "externalLabel"?: string;
+        /**
+          * Destination URL. Relative URLs and fragments use native anchor resolution.
+          * @format url
+         */
+        "href": string;
+        /**
+          * Space-separated native link relationships. External links always include noopener.
+         */
+        "rel"?: string;
+        /**
+          * Native browsing-context name. External links use _blank.
+         */
+        "target"?: string;
+        /**
+          * Keep the underline in running text. Use hover for standalone navigation, where placement identifies the link and keyboard focus still underlines it.
+          * @default 'always'
+         */
+        "underline"?: KiLinkUnderline;
+        /**
+          * Ink role. Primary uses accent ink and neutral uses body ink.
+          * @default 'primary'
+         */
+        "variant"?: KiLinkVariant;
+    }
+    /**
      * A non-interactive vertical list container for read-only collections of
      * similar entries composed with `ki-list-item` children.
      * @whenToUse settings, contacts, results or activity feeds where each item
@@ -2475,6 +3406,30 @@ declare namespace LocalJSX {
           * @default 'md'
          */
         "size"?: KiListItemSize;
+    }
+    /**
+     * A compact, static explanation beside a control or inside a card.
+     * @whenToUse Add a short constraint, tip or consequence next to the content
+     * it explains. Put the consequence first when warning the reader.
+     * @whenNotToUse For updates that must be announced, use ki-alert. Use Toast
+     * for transient confirmations and the field's help-text for field guidance.
+     */
+    interface KiNote {
+        /**
+          * Shows the decorative icon. Set icon="false" in HTML to hide it.
+          * @default true
+         */
+        "icon"?: boolean;
+        /**
+          * Uses caption text at sm and body text at md. Unknown values use md.
+          * @default 'md'
+         */
+        "size"?: KiNoteSize;
+        /**
+          * Selects the background tint and decorative icon. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone"?: KiNoteTone;
     }
     /**
      * A declarative data option rendered by its owning `ki-select`.
@@ -2744,6 +3699,69 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A compact status for an indeterminate wait.
+     * @whenToUse show brief inline activity such as saving a change or running a
+     * tool. Choose typing dots for an assistant that is thinking. Set a localized
+     * label that names the activity and mount the spinner when the wait starts.
+     * @whenNotToUse use ki-progress for page-level work or a known fraction of
+     * a task. Use ki-alert for persistent notices.
+     */
+    interface KiSpinner {
+        /**
+          * Localized name of the ongoing activity, such as "Saving changes". Supply a meaningful label for every spinner, even when the text is hidden. Use the activity's name whenever it can be more specific than "Loading".
+         */
+        "label": string;
+        /**
+          * Display the label beside the graphic when sighted users also need the activity description. The same text names the status in either case.
+          * @default false
+         */
+        "showLabel"?: boolean;
+        /**
+          * Diameter of the ring. Choose the size that fits the surrounding content. Dots use a fixed size. Unrecognized values draw the medium ring.
+          * @default 'md'
+         */
+        "size"?: 'sm' | 'md' | 'lg';
+        /**
+          * Use a ring for general inline activity and dots for assistant typing or thinking. Unrecognized values draw a ring.
+          * @default 'ring'
+         */
+        "variant"?: 'ring' | 'dots';
+    }
+    /**
+     * A passive flex layout for content on one axis.
+     * @whenToUse arrange content in a vertical sequence or a horizontal row with
+     * consistent token spacing.
+     * @whenNotToUse for page shells, painted grouping (use ki-card), or tabular data.
+     * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+     */
+    interface KiStack {
+        /**
+          * Cross-axis alignment, stretch by default.
+          * @default 'stretch'
+         */
+        "align"?: KiStackAlign;
+        /**
+          * Main axis, column by default.
+          * @default 'column'
+         */
+        "direction"?: KiStackDirection;
+        /**
+          * Kimen spacing step, md by default. Unsupported values keep the default gap.
+          * @default 'md'
+         */
+        "gap"?: KiLayoutGap;
+        /**
+          * Main-axis distribution, start by default. Use between to distribute spare space.
+          * @default 'start'
+         */
+        "justify"?: KiStackJustify;
+        /**
+          * Allow items to continue on a new line. Defaults to false.
+          * @default false
+         */
+        "wrap"?: boolean;
+    }
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -2980,6 +3998,97 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A short, transient message about something the person just did, shown
+     * without blocking the page. It leaves on its own after its time, which stops
+     * while the person points at the toaster, works inside it or is away from the
+     * page; a toast with an action, or reporting an error, waits for the person.
+     * @whenToUse confirm an action that happened elsewhere on screen ("Changes
+     * saved", "Link copied"), report a background result ("Export ready"), or
+     * offer a quick undo. Raise it into a `ki-toaster`, in markup or with its
+     * `show()` method; express urgency with `tone`.
+     * @whenNotToUse anything the person must read or act on to continue belongs
+     * to `ki-dialog`; form validation belongs to the field's error text; a lasting
+     * condition of the page belongs to `ki-alert`, which stays inline.
+     * Assistive technology note: a toast announces as it appears, so append it
+     * when the event happens; a toast present at initial page load is exposed with
+     * its role but its announcement is not guaranteed. The heading and the message
+     * are the whole announcement: the icon, the action and the dismiss button
+     * stay outside the live region.
+     */
+    interface KiToast {
+        /**
+          * Accessible name of the dismiss button. Override for localization; the default English word is the component's only built-in text.  When to use: whenever the document language is not English. When NOT to use: do not put the message here; use the default slot.
+          * @default 'Dismiss'
+         */
+        "dismissLabel"?: string;
+        /**
+          * Reflected state: true once the toast has left. The timer, the dismiss button, Escape and the action set it; the page may set or clear it. While true the host stays in the document but renders nothing and leaves the accessibility tree. Clearing it shows the toast again with its full time.  When to use: show a toast again, or close it from the page. When NOT to use: do not read programmatic changes as dismissals; `ki-dismiss` reports only the timer and the person.
+          * @default false
+         */
+        "dismissed"?: boolean;
+        /**
+          * Shows the dismiss button, a ghost `ki-icon-button` named by `dismiss-label`. Escape still dismisses a focused toast without it.  When to use: keep it on unless the toast leaves on its own and the page offers no other way to read it again. When NOT to use: do not turn it off on a toast that waits for the person.
+          * @default true
+         */
+        "dismissible"?: boolean;
+        /**
+          * How long the toast stays, in milliseconds, before it leaves on its own; `0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast holds an action or its tone is `danger`. Unset, or not a finite number of zero or more, it is 5000. The time stops while the pointer rests on the toaster, while focus is inside it, or while the page is hidden, and continues with what was left. Changing it restarts the time.  When to use: give a longer message more time. When NOT to use: do not shorten it below what a person needs to read the message.
+          * @minimum 0
+         */
+        "duration"?: number;
+        /**
+          * Optional bold first line, inside the live region. Empty strings render no heading. It is a `strong` element, never a document heading.  When to use: a short label for the event ("Changes saved"). When NOT to use: do not use it for page structure.
+         */
+        "heading"?: string;
+        /**
+          * Fired once when the toast leaves because its time ran out (`reason: "timeout"`), the person used the dismiss button (`"button"`), pressed Escape inside it (`"escape"`) or activated its action (`"action"`), after it is hidden and focus has been handed on. Not cancelable. When to use: remove the element, or record that the message was seen. When NOT to use: do not expect it for programmatic `dismissed` changes.
+         */
+        "onKi-dismiss"?: (event: KiToastCustomEvent<KiToastDismissDetail>) => void;
+        /**
+          * Output-only state written by an enclosing `ki-toaster`: true while the toast waits for a place. A queued toast renders nothing, is absent from the accessibility tree and its time does not run. Authors do not set it; the toaster overwrites it.
+          * @default false
+         */
+        "queued"?: boolean;
+        /**
+          * Picks the icon and its ink, and the live-region urgency: `danger` exposes `role="alert"` and never leaves on its own; `neutral`, `info`, `success`, `warning`, absent and unrecognized values expose `role="status"`. The surface and the text look the same in every tone. Unknown values render neutral.  When to use: choose the tone that describes what happened. When NOT to use: do not use tone for emphasis; a lasting failure belongs in `ki-alert`.
+          * @default 'neutral'
+         */
+        "tone"?: KiToastTone | (string & {});
+    }
+    /**
+     * The one place toasts appear: it paints its `ki-toast` children in the top
+     * layer at a corner of the viewport, stacks them in arrival order, shows the
+     * newest few and queues the older ones, without covering the page beside
+     * them.
+     * @whenToUse once per page (or once inside a modal `ki-dialog`), as the place
+     * every `ki-toast` of the application appears in: append toasts to it, or call
+     * `show()`. Choose the corner with `placement`.
+     * @whenNotToUse do not put anything but `ki-toast` elements in it; do not use
+     * it for persistent content, which belongs in the page or in `ki-alert`.
+     * Assistive technology note: while it shows toasts the toaster is a group
+     * named by `label`, never a landmark; F6 moves focus into it and Escape on a
+     * toast returns focus to where it was. An empty toaster exposes nothing and
+     * covers nothing.
+     */
+    interface KiToaster {
+        /**
+          * Accessible name of the group the toaster exposes while it shows toasts. Override for localization.  When to use: provide the name in the document language. When NOT to use: do not put a message here.
+          * @default 'Notifications'
+         */
+        "label"?: string;
+        /**
+          * How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A toast holding focus keeps its place until focus leaves the toaster; the oldest other one waits instead. A value below 1 or not a whole number shows 3.  When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
+          * @default 3
+          * @minimum 1
+         */
+        "max"?: number;
+        /**
+          * Corner or edge of the viewport the stack sits against; `end` follows the writing direction. On a coarse pointer and a viewport narrower than 40rem the stack always sits at the bottom center. Unknown values place the stack at the bottom end.  When to use: keep toasts away from where the page's own controls live. When NOT to use: do not change it per toast; one toaster keeps one place.
+          * @default 'bottom-end'
+         */
+        "placement"?: KiToasterPlacement | (string & {});
+    }
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -3061,6 +4170,11 @@ declare namespace LocalJSX {
         "loading": boolean;
         "loadingLabel": string;
     }
+    interface KiCardAttributes {
+        "variant": 'default' | 'elevated' | 'filled' | 'outlined';
+        "href": string;
+        "interactive": boolean;
+    }
     interface KiCheckboxAttributes {
         "checked": boolean;
         "indeterminate": boolean;
@@ -3072,6 +4186,16 @@ declare namespace LocalJSX {
         "labelHint": string;
         "helpText": string;
         "errorText": string;
+    }
+    interface KiCheckboxGroupAttributes {
+        "label": string;
+        "name": string;
+        "helpText": string;
+        "errorText": string;
+        "disabled": boolean;
+        "min": number;
+        "max": number;
+        "orientation": KiCheckboxGroupOrientation;
     }
     interface KiChipAttributes {
         "type": KiChipType;
@@ -3089,6 +4213,13 @@ declare namespace LocalJSX {
         "focusTarget": string;
         "reorderAnnouncement": string;
     }
+    interface KiCounterAttributes {
+        "value": number;
+        "max": number;
+        "dot": boolean;
+        "tone": KiCounterTone;
+        "for": string;
+    }
     interface KiDialogAttributes {
         "open": boolean;
         "heading": string;
@@ -3096,6 +4227,16 @@ declare namespace LocalJSX {
     }
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
+    }
+    interface KiGridAttributes {
+        "columns": number;
+        "minColumn": string;
+        "gap": KiLayoutGap;
+    }
+    interface KiIconAttributes {
+        "name": string;
+        "size": KiIconSize;
+        "label": string;
     }
     interface KiIconButtonAttributes {
         "variant": KiIconButtonVariant;
@@ -3105,6 +4246,16 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "loading": boolean;
         "loadingLabel": string;
+    }
+    interface KiImageAttributes {
+        "src": string;
+        "alt": string;
+        "decorative": boolean;
+        "ratio": KiImageRatio;
+        "fit": KiImageFit;
+        "radius": KiImageRadius;
+        "loading": KiImageLoading;
+        "fallbackLabel": string;
     }
     interface KiIndicatorAttributes {
         "count": number;
@@ -3126,8 +4277,23 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiLinkAttributes {
+        "href": string;
+        "variant": KiLinkVariant;
+        "underline": KiLinkUnderline;
+        "external": boolean;
+        "externalLabel": string;
+        "download": string;
+        "target": string;
+        "rel": string;
+    }
     interface KiListItemAttributes {
         "size": KiListItemSize;
+    }
+    interface KiNoteAttributes {
+        "tone": KiNoteTone;
+        "size": KiNoteSize;
+        "icon": boolean;
     }
     interface KiOptionAttributes {
         "value": string;
@@ -3175,6 +4341,19 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiSpinnerAttributes {
+        "label": string;
+        "variant": 'ring' | 'dots';
+        "size": 'sm' | 'md' | 'lg';
+        "showLabel": boolean;
+    }
+    interface KiStackAttributes {
+        "direction": KiStackDirection;
+        "gap": KiLayoutGap;
+        "align": KiStackAlign;
+        "justify": KiStackJustify;
+        "wrap": boolean;
+    }
     interface KiStatusAttributes {
         "tone": KiStatusTone;
         "ring": boolean;
@@ -3216,6 +4395,20 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiToastAttributes {
+        "tone": KiToastTone | (string & {});
+        "heading": string;
+        "duration": number;
+        "dismissible": boolean;
+        "dismissLabel": string;
+        "dismissed": boolean;
+        "queued": boolean;
+    }
+    interface KiToasterAttributes {
+        "placement": KiToasterPlacement | (string & {});
+        "max": number;
+        "label": string;
+    }
     interface KiTooltipAttributes {
         "label": string;
         "placement": KiTooltipPlacement;
@@ -3230,17 +4423,24 @@ declare namespace LocalJSX {
         "ki-avatar-group": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K] };
         "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
-        "ki-card": KiCard;
+        "ki-card": Omit<KiCard, keyof KiCardAttributes> & { [K in keyof KiCard & keyof KiCardAttributes]?: KiCard[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `attr:${K}`]?: KiCardAttributes[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `prop:${K}`]?: KiCard[K] };
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
+        "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
+        "ki-image": Omit<KiImage, keyof KiImageAttributes> & { [K in keyof KiImage & keyof KiImageAttributes]?: KiImage[K] } & { [K in keyof KiImage & keyof KiImageAttributes as `attr:${K}`]?: KiImageAttributes[K] } & { [K in keyof KiImage & keyof KiImageAttributes as `prop:${K}`]?: KiImage[K] } & OneOf<"src", KiImage["src"], KiImageAttributes["src"]>;
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
+        "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
         "ki-list": KiList;
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
+        "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
@@ -3248,12 +4448,16 @@ declare namespace LocalJSX {
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
+        "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
+        "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
         "ki-tabs": Omit<KiTabs, keyof KiTabsAttributes> & { [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
+        "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
+        "ki-toaster": Omit<KiToaster, keyof KiToasterAttributes> & { [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K] };
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
         "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] } & OneOf<"label", KiVideo["label"], KiVideoAttributes["label"]>;
     }
@@ -3269,9 +4473,9 @@ declare module "@stencil/core" {
              * remains until the condition is resolved or the person dismisses it. Express
              * severity with `tone`, never custom styling.
              * @whenNotToUse transient confirmations that expire on their own belong to
-             * the future `ki-toast`; tiny status descriptors attached to another element
-             * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
-             * field-level validation belongs to the form control.
+             * `ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to
+             * another element belong to `ki-badge`; blocking decisions belong to
+             * `ki-dialog`; inline field-level validation belongs to the form control.
              * Assistive technology note: alerts that must be announced should be inserted
              * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
              * page load are exposed with their role but platform announcement is not
@@ -3290,9 +4494,8 @@ declare module "@stencil/core" {
              * stack with overflow.
              * @whenNotToUse as a clickable control (compose the avatar inside an
              * interactive host such as ki-button), for logos or arbitrary illustrations
-             * (plain `img`), for presence/verification adornments overlaid on the corner
-             * (a future overlay concern shared with the nav badge), or unlabeled when no
-             * adjacent text names the identity.
+             * (plain `img`), or unlabeled when no adjacent text names the identity.
+             * Use the counter slot for a decorative count or presence dot.
              */
             "ki-avatar": LocalJSX.IntrinsicElements["ki-avatar"] & JSXBase.HTMLAttributes<HTMLKiAvatarElement>;
             /**
@@ -3316,7 +4519,7 @@ declare module "@stencil/core" {
              * @whenNotToUse feedback that must be announced (that is
              * ki-alert's job — the badge has no live region), an interactive
              * chip, filter or button, empty content (the label IS the meaning), or a
-             * notification-counter overlay (a future, separate concern).
+             * notification-counter overlay (use ki-counter).
              */
             "ki-badge": LocalJSX.IntrinsicElements["ki-badge"] & JSXBase.HTMLAttributes<HTMLKiBadgeElement>;
             /**
@@ -3330,15 +4533,14 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * A non-interactive card surface for grouping related content.
-             * @whenToUse group related media, heading, supporting text and actions into
-             * one scannable surface visually distinct from the page; fill any subset of
-             * regions. Supply the heading element yourself in the `header` slot — plain
-             * text slotted there carries no heading semantics for assistive technology.
-             * @whenNotToUse as a button or link target, form control, fieldset, page
-             * landmark, section replacement or nested card. For an interactive card, slot
-             * the button or link INSIDE a region (whole-card interactivity is a future
-             * feature, not this component).
+             * A card surface for grouping related content, with an optional primary link or action.
+             * @whenToUse group related media, a title, supporting text and actions into
+             * one scannable surface. Set `href` for navigation or `interactive` for a
+             * declared action. Give a clickable card one text heading in the header
+             * slot and place secondary controls in the body or footer.
+             * @whenNotToUse as a form field, fieldset, page landmark, section replacement
+             * or nested card. Use a standalone button or link for a control without
+             * supporting content.
              */
             "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
             /**
@@ -3361,6 +4563,15 @@ declare module "@stencil/core" {
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
             /**
+             * A form-associated group of independently selectable checkboxes.
+             * @whenToUse people may select several visible options that share a question,
+             * form field, and optional selection limits.
+             * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+             * immediate on/off setting (use `ki-switch`). Provide a group label.
+             * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+             */
+            "ki-checkbox-group": LocalJSX.IntrinsicElements["ki-checkbox-group"] & JSXBase.HTMLAttributes<HTMLKiCheckboxGroupElement>;
+            /**
              * A compact filter toggle, removable picked value, or contextual action.
              * @whenToUse apply independent filters, represent values selected in an entry
              * field, or offer a small contextual action alongside content.
@@ -3375,13 +4586,22 @@ declare module "@stencil/core" {
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
             /**
+             * A decorative count or dot over a trigger or avatar.
+             * @whenToUse mark unread or pending items on a trigger, or presence on an
+             * avatar. Supply the full meaning in the host's accessible name and use a
+             * page-owned polite live region for important updates.
+             * @whenNotToUse for an object's status (use ki-badge), a count inside a list
+             * row (use text or ki-badge), or an announcement that needs its own semantics.
+             */
+            "ki-counter": LocalJSX.IntrinsicElements["ki-counter"] & JSXBase.HTMLAttributes<HTMLKiCounterElement>;
+            /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
              * provide a `heading`, place actions in the `footer` slot, wire each footer
              * action to `close()`, and in destructive confirmations put `autofocus` on
              * the least destructive action.
-             * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+             * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
              * supplementary hints (`ki-tooltip`), long forms or multi-step flows
              * (navigate or use a future full-screen variant), menus, or pickers.
              */
@@ -3401,6 +4621,23 @@ declare module "@stencil/core" {
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
             /**
+             * A passive responsive grid for content items.
+             * @whenToUse lay out items on responsive tracks with consistent token spacing.
+             * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
+             * @cssprop --ki-grid-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+             * @cssprop --ki-grid-min - The default minimum width of an automatic track. Ignored in fixed mode.
+             */
+            "ki-grid": LocalJSX.IntrinsicElements["ki-grid"] & JSXBase.HTMLAttributes<HTMLKiGridElement>;
+            /**
+             * A static Lucide glyph selected by name from the application's per-icon imports.
+             * @whenToUse show a named glyph next to text, or give a standalone meaningful
+             * glyph an accessible label. Import `@kimen/elements/icons/<name>` before
+             * mounting the component or rendering a guarded surface.
+             * @whenNotToUse make an icon interactive, accept arbitrary SVG or URLs, or
+             * replace the accessible name of a control. Use the control's own label.
+             */
+            "ki-icon": LocalJSX.IntrinsicElements["ki-icon"] & JSXBase.HTMLAttributes<HTMLKiIconElement>;
+            /**
              * A token-styled, icon-only action button with native button semantics and a
              * mandatory accessible name.
              * @whenToUse a compact, widely understood action where space precludes a
@@ -3414,6 +4651,16 @@ declare module "@stencil/core" {
              * visible label communicates the consequence).
              */
             "ki-icon-button": LocalJSX.IntrinsicElements["ki-icon-button"] & JSXBase.HTMLAttributes<HTMLKiIconButtonElement>;
+            /**
+             * Displays one accessible image in a reserved frame, with an optional caption
+             * and a fallback if the source is refused or fails to load.
+             * @whenToUse to show a photo, illustration, or diagram with a predictable
+             * layout. Supply task-relevant alt text, or mark purely decorative media as
+             * decorative. Set an explicit ratio when the layout must stay fixed.
+             * @whenNotToUse for a background decoration, a video, or an interactive
+             * control. Use a separate control to open or otherwise act on an image.
+             */
+            "ki-image": LocalJSX.IntrinsicElements["ki-image"] & JSXBase.HTMLAttributes<HTMLKiImageElement>;
             /**
              * A non-interactive page-position indicator: one dot per position of a
              * bounded sequence, exactly one highlighted as current.
@@ -3452,6 +4699,12 @@ declare module "@stencil/core" {
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
             /**
+             * A native navigation link with Kimen ink, underline, and focus styles.
+             * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
+             * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
+             */
+            "ki-link": LocalJSX.IntrinsicElements["ki-link"] & JSXBase.HTMLAttributes<HTMLKiLinkElement>;
+            /**
              * A non-interactive vertical list container for read-only collections of
              * similar entries composed with `ki-list-item` children.
              * @whenToUse settings, contacts, results or activity feeds where each item
@@ -3470,6 +4723,14 @@ declare module "@stencil/core" {
              * tabular row, navigation link or whole-item clickable control.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
+            /**
+             * A compact, static explanation beside a control or inside a card.
+             * @whenToUse Add a short constraint, tip or consequence next to the content
+             * it explains. Put the consequence first when warning the reader.
+             * @whenNotToUse For updates that must be announced, use ki-alert. Use Toast
+             * for transient confirmations and the field's help-text for field guidance.
+             */
+            "ki-note": LocalJSX.IntrinsicElements["ki-note"] & JSXBase.HTMLAttributes<HTMLKiNoteElement>;
             /**
              * A declarative data option rendered by its owning `ki-select`.
              * @whenToUse declare one choice inside a `ki-select`; its text is the
@@ -3576,6 +4837,23 @@ declare module "@stencil/core" {
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
             /**
+             * A compact status for an indeterminate wait.
+             * @whenToUse show brief inline activity such as saving a change or running a
+             * tool. Choose typing dots for an assistant that is thinking. Set a localized
+             * label that names the activity and mount the spinner when the wait starts.
+             * @whenNotToUse use ki-progress for page-level work or a known fraction of
+             * a task. Use ki-alert for persistent notices.
+             */
+            "ki-spinner": LocalJSX.IntrinsicElements["ki-spinner"] & JSXBase.HTMLAttributes<HTMLKiSpinnerElement>;
+            /**
+             * A passive flex layout for content on one axis.
+             * @whenToUse arrange content in a vertical sequence or a horizontal row with
+             * consistent token spacing.
+             * @whenNotToUse for page shells, painted grouping (use ki-card), or tabular data.
+             * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
+             */
+            "ki-stack": LocalJSX.IntrinsicElements["ki-stack"] & JSXBase.HTMLAttributes<HTMLKiStackElement>;
+            /**
              * A tiny, non-interactive status dot that marks the state of a nearby item.
              * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
              * on) the item it describes: presence on an avatar, health of a service
@@ -3656,6 +4934,41 @@ declare module "@stencil/core" {
              * event carries those.
              */
             "ki-textarea": LocalJSX.IntrinsicElements["ki-textarea"] & JSXBase.HTMLAttributes<HTMLKiTextareaElement>;
+            /**
+             * A short, transient message about something the person just did, shown
+             * without blocking the page. It leaves on its own after its time, which stops
+             * while the person points at the toaster, works inside it or is away from the
+             * page; a toast with an action, or reporting an error, waits for the person.
+             * @whenToUse confirm an action that happened elsewhere on screen ("Changes
+             * saved", "Link copied"), report a background result ("Export ready"), or
+             * offer a quick undo. Raise it into a `ki-toaster`, in markup or with its
+             * `show()` method; express urgency with `tone`.
+             * @whenNotToUse anything the person must read or act on to continue belongs
+             * to `ki-dialog`; form validation belongs to the field's error text; a lasting
+             * condition of the page belongs to `ki-alert`, which stays inline.
+             * Assistive technology note: a toast announces as it appears, so append it
+             * when the event happens; a toast present at initial page load is exposed with
+             * its role but its announcement is not guaranteed. The heading and the message
+             * are the whole announcement: the icon, the action and the dismiss button
+             * stay outside the live region.
+             */
+            "ki-toast": LocalJSX.IntrinsicElements["ki-toast"] & JSXBase.HTMLAttributes<HTMLKiToastElement>;
+            /**
+             * The one place toasts appear: it paints its `ki-toast` children in the top
+             * layer at a corner of the viewport, stacks them in arrival order, shows the
+             * newest few and queues the older ones, without covering the page beside
+             * them.
+             * @whenToUse once per page (or once inside a modal `ki-dialog`), as the place
+             * every `ki-toast` of the application appears in: append toasts to it, or call
+             * `show()`. Choose the corner with `placement`.
+             * @whenNotToUse do not put anything but `ki-toast` elements in it; do not use
+             * it for persistent content, which belongs in the page or in `ki-alert`.
+             * Assistive technology note: while it shows toasts the toaster is a group
+             * named by `label`, never a landmark; F6 moves focus into it and Escape on a
+             * toast returns focus to where it was. An empty toaster exposes nothing and
+             * covers nothing.
+             */
+            "ki-toaster": LocalJSX.IntrinsicElements["ki-toaster"] & JSXBase.HTMLAttributes<HTMLKiToasterElement>;
             /**
              * A transient, text-only description bubble for one slotted trigger.
              * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or

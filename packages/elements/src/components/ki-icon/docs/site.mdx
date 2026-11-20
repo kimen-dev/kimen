@@ -1,0 +1,41 @@
+---
+title: ki-icon
+description: Display one imported Lucide glyph by name.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import IconDemo from '../../../../../../site/docs/src/components/IconDemo.astro';
+
+Import each glyph your application uses before the page mounts. The public
+subpaths support Lucide's names and aliases. Use the same spelling in the
+import and in the `name` attribute.
+
+```js
+import '@kimen/elements/icons/circle-check';
+import '@kimen/elements/icons/triangle-alert';
+import { defineCustomElement } from '@kimen/elements/ki-icon';
+
+defineCustomElement();
+```
+
+<IconDemo />
+
+Leave off `label` when the adjacent text already conveys the meaning. Supply
+a localized `label` when the glyph stands on its own. For an icon-only button,
+put the label on the button and leave the slotted icon decorative.
+
+The SVG follows the surrounding text ink and defaults to `1em`. Use
+`sm`, `md` or `lg` for the theme's 16, 20 or 24px size, respectively, at a
+16px root. Meaningful icons need at least 3:1 contrast on their background.
+Use a semantic high-emphasis text ink on the page surface. Check the contrast
+if you choose a medium-emphasis ink or a different background.
+
+Guarded applications import the glyph names they allow. A name with no import
+produces a catalog diagnostic. Standalone icons with unavailable names render
+empty.
+
+## API reference
+
+<CemApi tag="ki-icon" />
+
+[Open ki-icon in Storybook](/storybook/?path=/docs/docs-components-ki-icon--docs)

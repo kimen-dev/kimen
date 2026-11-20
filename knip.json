@@ -53,6 +53,7 @@
       "stencil": false
     },
     "site/docs": {
+      "entry": ["src/components/IconDemo.astro"],
       "ignoreDependencies": ["@kimen/elements"]
     },
     "packages/kimen": {
