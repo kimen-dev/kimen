@@ -92,11 +92,11 @@ export class KiConfirmation {
 
   @State() private decided = false;
 
-  private revision = 0;
-  private surface: HTMLElement | undefined;
-  private status: HTMLElement | undefined;
+  #revision = 0;
+  #surface: HTMLElement | undefined;
+  #status: HTMLElement | undefined;
 
-  private get outcome(): string | undefined {
+  get #outcome(): string | undefined {
     switch (this.state) {
       case 'approved':
         return this.approvedLabel;
@@ -112,9 +112,9 @@ export class KiConfirmation {
   @Watch('action')
   @Watch('state')
   protected resetDecision(): void {
-    this.revision += 1;
+    this.#revision += 1;
     this.decided = false;
-    if (this.status) this.status.textContent = '';
+    if (this.#status) this.#status.textContent = '';
   }
 
   /**
@@ -124,54 +124,54 @@ export class KiConfirmation {
    */
   @Method()
   focusPrompt(): Promise<boolean> {
-    const surface = this.surface;
+    const surface = this.#surface;
     let active = this.host.ownerDocument.activeElement;
     while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
     const editing =
       active instanceof HTMLElement &&
       (active.matches('input, textarea, [role="textbox"]') || active.isContentEditable);
 
-    if (!surface || editing || this.decided || !isDecisionAvailable(this)) {
-      return Promise.resolve(false);
+    let focused = false;
+    if (surface && !editing && !this.decided && isDecisionAvailable(this)) {
+      surface.focus();
+      focused = surface.matches(':focus');
     }
-
-    surface.focus();
-    return Promise.resolve(surface.matches(':focus'));
+    return Promise.resolve(focused);
   }
 
   componentDidRender(): void {
-    const status = this.status;
+    const status = this.#status;
     if (!status) return;
 
     // Give assistive technology a frame to register the empty live region.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const text = this.outcome ?? this.heading;
+        const text = this.#outcome ?? this.heading;
         if (status.isConnected && status.textContent !== text) status.textContent = text;
       });
     });
   }
 
-  private report(event: MouseEvent, revision: number, approved: boolean): void {
+  #report(event: MouseEvent, revision: number, approved: boolean): void {
     // Only the named decision event may reach an enclosing action listener.
     event.stopPropagation();
-    if (revision !== this.revision || this.decided || !isDecisionAvailable(this)) return;
+    if (revision !== this.#revision || this.decided || !isDecisionAvailable(this)) return;
 
     this.decided = true;
     if (approved) {
-      const remember = this.remember && this.surface?.querySelector('input')?.checked === true;
+      const remember = this.remember && this.#surface?.querySelector('input')?.checked === true;
       this.kiApprove.emit({ remember });
     } else {
       this.kiDeny.emit();
     }
 
     // Keep a keyboard user's place when the controls become disabled.
-    if (this.host.shadowRoot?.activeElement) this.surface?.focus({ preventScroll: true });
+    if (this.host.shadowRoot?.activeElement) this.#surface?.focus({ preventScroll: true });
   }
 
-  private renderDecisions() {
+  #renderDecisions() {
     // Ignore events from an old control while the replacement is rendering.
-    const revision = this.revision;
+    const revision = this.#revision;
     return [
       this.remember && (
         <label
@@ -187,58 +187,65 @@ export class KiConfirmation {
         </label>
       ),
       <div key="decisions" part="decisions">
-        {[false, true].map((approved) => (
-          <ki-button
-            key={approved ? 'approve' : 'deny'}
-            variant={approved ? 'primary' : 'secondary'}
-            type="button"
-            tone={approved && this.tone === 'danger' ? 'danger' : 'neutral'}
-            disabled={this.decided}
-            onClick={(event) => {
-              this.report(event, revision, approved);
-            }}
-          >
-            {approved ? this.approveLabel : this.denyLabel}
-          </ki-button>
-        ))}
+        {(['secondary', 'primary'] as const).map((variant) => {
+          const approved = variant === 'primary';
+          return (
+            <ki-button
+              key={variant}
+              variant={variant}
+              type="button"
+              tone={approved && this.tone === 'danger' ? 'danger' : 'neutral'}
+              disabled={this.decided}
+              onClick={(event) => {
+                this.#report(event, revision, approved);
+              }}
+            >
+              {approved ? this.approveLabel : this.denyLabel}
+            </ki-button>
+          );
+        })}
       </div>,
     ];
   }
 
-  private renderSummary(outcome: string) {
+  #renderAction() {
+    return (
+      <code key="action" dir="auto">
+        {this.action}
+      </code>
+    );
+  }
+
+  #renderSummary(outcome: string) {
     return (
       <div key="summary" part="summary">
         <span>{outcome}</span>
-        <code dir="auto">{this.action}</code>
+        {this.#renderAction()}
         {this.resolvedBy && <span>{this.resolvedBy}</span>}
         {this.resolvedAt && <span>{this.resolvedAt}</span>}
       </div>
     );
   }
 
-  private renderPrompt() {
+  #renderPrompt() {
     return [
       <h3 key="heading" part="heading">
         {this.heading}
       </h3>,
-      this.action && (
-        <code key="action" dir="auto">
-          {this.action}
-        </code>
-      ),
+      this.action && this.#renderAction(),
       <slot key="details" />,
       this.consequence && (
         <ki-note key="consequence" tone="warning">
           {this.consequence}
         </ki-note>
       ),
-      isDecisionAvailable(this) && this.renderDecisions(),
+      isDecisionAvailable(this) && this.#renderDecisions(),
     ];
   }
 
   render() {
     if (!hasText(this.heading)) return null;
-    const outcome = this.outcome;
+    const outcome = this.#outcome;
 
     return (
       <section
@@ -247,16 +254,15 @@ export class KiConfirmation {
         tabIndex={-1}
         aria-label={this.heading}
         ref={(element) => {
-          this.surface = element;
+          this.#surface = element;
         }}
       >
-        {outcome === undefined ? this.renderPrompt() : this.renderSummary(outcome)}
+        {outcome === undefined ? this.#renderPrompt() : this.#renderSummary(outcome)}
         <div
           key="status"
-          class="announcement"
           role="status"
           ref={(element) => {
-            this.status = element;
+            this.#status = element;
           }}
         />
       </section>

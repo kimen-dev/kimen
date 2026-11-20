@@ -27,11 +27,16 @@
 }
 
 [part="summary"],
-[part="decisions"] {
+[part="decisions"],
+[part="remember"] {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: calc(var(--ki-confirmation-inline-gap) * var(--ki-density-space-scale));
+}
+
+[part="summary"],
+[part="decisions"] {
+  flex-wrap: wrap;
 }
 
 [part="heading"] {
@@ -53,10 +58,7 @@ code {
 }
 
 [part="remember"] {
-  display: flex;
-  align-items: center;
   min-inline-size: 0;
-  gap: calc(var(--ki-confirmation-inline-gap) * var(--ki-density-space-scale));
 }
 
 input {
@@ -72,7 +74,7 @@ input {
   margin: 0;
 }
 
-.announcement {
+[role="status"] {
   position: absolute;
   inline-size: var(--ki-typography-visually-hidden-size);
   block-size: var(--ki-typography-visually-hidden-size);
