@@ -206,3 +206,131 @@
     opacity: 0;
   }
 }
+
+[part="item"].interactive {
+  background-color: var(--ki-list-item-interactive-bg);
+  background-image: var(--ki-list-item-interactive-bg-image);
+  backdrop-filter: var(--ki-list-item-interactive-backdrop-filter);
+  border-radius: var(--ki-list-item-interactive-radius);
+  color: var(--_ki-list-item-primary-fg);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+[part="item"].interactive::after {
+  display: none;
+}
+
+:host([aria-disabled="true"]) .option {
+  cursor: default;
+  transform: none;
+}
+
+.link:focus-visible,
+:host(:focus-visible) .option {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-focus-ring-width));
+}
+
+@media (hover: hover) {
+  .link:hover,
+  :host(:not([aria-disabled="true"], [aria-selected="true"])) .option:hover {
+    --_ki-list-item-primary-fg: var(--ki-list-item-hover-fg);
+    --_ki-list-item-secondary-fg: var(--ki-list-item-hover-fg);
+
+    background-color: var(--ki-list-item-hover-bg);
+  }
+}
+
+:host([aria-selected="true"]) .option {
+  --_ki-list-item-primary-fg: var(--ki-list-item-selected-fg);
+  --_ki-list-item-secondary-fg: var(--ki-list-item-selected-fg);
+
+  background-color: var(--ki-list-item-selected-bg);
+}
+
+[part="indicator"] {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--ki-list-item-indicator-size);
+  block-size: var(--ki-list-item-indicator-size);
+  box-sizing: border-box;
+  color: var(--_ki-list-item-primary-fg);
+}
+
+.chevron {
+  font-size: var(--ki-list-item-indicator-size);
+}
+
+:host(:dir(rtl)) .chevron {
+  scale: -1 1;
+}
+
+.checkbox,
+.radio {
+  border: var(--ki-list-item-indicator-border-width) solid currentcolor;
+}
+
+.checkbox {
+  border-radius: var(--ki-list-item-checkbox-radius);
+}
+
+.checkbox > ki-icon {
+  /* Size the glyph independently of the em-sized box and keep it inside both edges. */
+  font-size: min(
+    calc(var(--ki-list-item-indicator-size) * 0.75),
+    calc(var(--ki-list-item-indicator-size) - 2 * var(--ki-list-item-indicator-border-width))
+  );
+}
+
+:host([aria-selected="true"]) .checkbox {
+  background-color: var(--ki-list-item-checkbox-selected-bg);
+  border-color: var(--ki-list-item-checkbox-selected-bg);
+  color: var(--ki-list-item-checkbox-selected-fg);
+}
+
+.radio {
+  border-radius: var(--ki-list-item-radio-radius);
+}
+
+:host([aria-selected="true"]) .radio::before {
+  content: "";
+  inline-size: calc(var(--ki-list-item-indicator-size) / 2);
+  block-size: calc(var(--ki-list-item-indicator-size) / 2);
+  border-radius: inherit;
+  background-color: var(--ki-list-item-selected-fg);
+}
+
+@media (forced-colors: active) {
+  .link:focus-visible,
+  :host(:focus-visible) .option {
+    outline-color: Highlight;
+  }
+
+  .checkbox,
+  .radio {
+    border-color: CanvasText;
+  }
+
+  :host([aria-selected="true"]) .checkbox {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+    border-color: CanvasText;
+    color: Canvas;
+  }
+
+  :host([aria-selected="true"]) .radio::before {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [part="item"],
+  [part="item"]::after,
+  .secondary {
+    animation: none;
+    transition: none;
+  }
+}

@@ -25,6 +25,7 @@ import { MARKDOWN_ORIGINS_ATTRIBUTE } from './generated/url-scheme.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
 import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
+import { sourceTags } from './source-reference.js';
 import { renderableTagViolation } from './tag-grammar.js';
 import type {
   Catalog,
@@ -153,6 +154,10 @@ export interface GuardState {
  */
 const DEFAULT_ACTIVATION_EVENT = 'click';
 
+// Source references are local to one guarded render, even on a shared page.
+// The elements package reads this mark before joining a citation to a URL.
+const sourceScopeKey = Symbol.for('kimen.sources.render-scope.v1');
+
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
  * bound node activates through a declared event or falls back to a platform
@@ -206,6 +211,23 @@ function chipActivation(
     default:
       return 'ki-change';
   }
+}
+
+const DIALOG_ACTIVATIONS = ['ki-close', 'ki-confirm'] as const;
+
+function dialogActivations(tag: string, events: readonly string[]): boolean {
+  return (
+    tag === DIALOG_TAG &&
+    events.length === DIALOG_ACTIVATIONS.length &&
+    DIALOG_ACTIVATIONS.every((event) => events.includes(event))
+  );
+}
+
+function dialogActivation(
+  props: Readonly<Record<string, Scalar>>,
+): (typeof DIALOG_ACTIVATIONS)[number] {
+  const label = props['confirm-label'];
+  return typeof label === 'string' && label.trim() !== '' ? 'ki-confirm' : 'ki-close';
 }
 
 /**
@@ -270,8 +292,9 @@ export function guardNode(
     }
   }
   // Renderer-native activation guard (FR-003, S19): a bound action needs one
-  // event in its current mode. Chip type and composer status select that
-  // event. Other multi-event entries must identify their activation event.
+  // event in its current mode. Chip type, composer status, and a dialog
+  // confirm label select that event. Other multi-event entries must identify
+  // their activation event.
   if (node.action !== undefined) {
     const entry = ownEntry(state.components, node.component);
     const events = declaredEvents(entry);
@@ -305,7 +328,11 @@ export function guardNode(
           value: node.action,
         });
       }
-    } else if (events.length > 1 && !promptInputActivations(node.component, events)) {
+    } else if (
+      events.length > 1 &&
+      !promptInputActivations(node.component, events) &&
+      !dialogActivations(node.component, events)
+    ) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
@@ -555,9 +582,13 @@ export function createNodeElement(
   doc: Document,
   component: string,
   allowedUrlOrigins: readonly string[] | undefined,
+  sourceScope: symbol,
 ): Element {
   const element = doc.createElement(component);
   pinNative(element, component);
+  if (sourceTags.has(component)) {
+    Object.defineProperty(element, sourceScopeKey, { value: sourceScope });
+  }
   if (component === 'ki-markdown' && allowedUrlOrigins !== undefined) {
     const origins = Array.isArray(allowedUrlOrigins) ? Array.from<unknown>(allowedUrlOrigins) : [];
     element.setAttribute(
@@ -681,9 +712,14 @@ export function wireActivation(
     declaredActivation === undefined && chipActivations(element.localName, events);
   const composerActivation =
     declaredActivation === undefined && promptInputActivations(element.localName, events);
+  const hasDialogActivation =
+    declaredActivation === undefined && dialogActivations(element.localName, events);
   const activation = declaredActivation ?? events[0] ?? DEFAULT_ACTIVATION_EVENT;
   const clickActivated =
-    !variantActivation && !composerActivation && activation === DEFAULT_ACTIVATION_EVENT;
+    !variantActivation &&
+    !composerActivation &&
+    !hasDialogActivation &&
+    activation === DEFAULT_ACTIVATION_EVENT;
   const toggleActivation = hasToggleActivation(entry);
   const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
   const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
@@ -717,7 +753,9 @@ export function wireActivation(
     ? CHIP_ACTIVATIONS
     : composerActivation
       ? PROMPT_INPUT_ACTIVATIONS
-      : [activation];
+      : hasDialogActivation
+        ? DIALOG_ACTIVATIONS
+        : [activation];
   for (const name of activationEvents) {
     element.addEventListener(name, (event: Event) => {
       if (event.target !== element || !claim(event)) return;
@@ -725,6 +763,7 @@ export function wireActivation(
       if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
       if (variantActivation && chipActivation(element, props) !== name) return;
       if (toggleActivation && props['toggle'] !== true) return;
+      if (hasDialogActivation && dialogActivation(props) !== name) return;
       const data = liveData(element, props, entry, event);
       if (composerActivation) {
         const status: unknown = Reflect.get(element, 'status') ?? props['status'] ?? 'idle';
@@ -758,8 +797,9 @@ function buildNode(
   entries: Readonly<Record<string, CatalogEntry>>,
   idFor: DialogIdFor,
   allowedUrlOrigins: readonly string[] | undefined,
+  sourceScope: symbol,
 ): Element {
-  const element = createNodeElement(doc, node.component, allowedUrlOrigins);
+  const element = createNodeElement(doc, node.component, allowedUrlOrigins, sourceScope);
   const props = node.props ?? {};
   writeProps(element, node.component, props, idFor, ownEntry(entries, node.component));
   writeDialogId(element, node.id, idFor);
@@ -787,6 +827,7 @@ function buildNode(
           entries,
           idFor,
           allowedUrlOrigins,
+          sourceScope,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -976,6 +1017,7 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
       catalog.components,
       scopedDialogIds(options.surface, referenceTargets(prepared.spec.root, catalog.components)),
       options.allowedUrlOrigins,
+      Symbol(),
     ),
   );
   return { diagnostics: [], ok: true };
@@ -1012,6 +1054,7 @@ export function createStreamingRenderer(
   const context: ValidationContext = { allowedUrlOrigins: options.allowedUrlOrigins, catalog };
   const doc = ownerDocument(options.surface);
   const declaredActions = options.actions ?? [];
+  const sourceScope = Symbol();
   let accumulatedBytes = 0;
   let accumulatedNodes = 0;
   // Attach order of the next chunk: each top-level chunk is addressed as
@@ -1099,6 +1142,7 @@ export function createStreamingRenderer(
           catalog.components,
           scopedDialogIds(options.surface, referenceTargets(report.spec.root, catalog.components)),
           context.allowedUrlOrigins,
+          sourceScope,
         ),
       );
       return { diagnostics: [], ok: true };

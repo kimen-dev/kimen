@@ -1,13 +1,15 @@
 import { AttachInternals, Component, Element, Listen, Prop, State, Watch, h } from '@stencil/core';
 import {
-  FieldMessage,
-  fieldDescribedBy,
-  fieldInvalid,
-  fieldText,
-  fieldValidationMessage,
-} from '../../utils/field-message';
+  applyFieldLengthLimit,
+  CountedFieldMessage,
+  countedFieldDescription,
+} from '../../utils/counted-field-message';
+import { fieldCountAnnouncement, normalizeLengthLimit } from '../../utils/field-count';
+import { fieldInvalid, fieldText, fieldValidationMessage } from '../../utils/field-message';
 import { LabelHint } from '../../utils/label-hint';
 import { normalizeKiTextareaRows } from './ki-textarea.form';
+
+const defaultMaxlengthErrorText = 'Shorten the text to fit the character limit.';
 
 export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -29,6 +31,7 @@ export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * text content is ignored. Enter inserts a line break and never submits the
  * enclosing form, the inverse of `ki-input`.
  *
+ * @part count - Current character count and maximum at the end of the field message row.
  * @part error - Error line shown in place of the help text while the field is invalid
  * after the person answered or submitted; a polite live region, starting with a
  * decorative error symbol.
@@ -46,13 +49,65 @@ export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  */
 @Component({
   tag: 'ki-textarea',
-  styleUrls: ['../../utils/field-message.css', '../../utils/label-hint.css', 'ki-textarea.css'],
+  styleUrls: [
+    '../../utils/field-message.css',
+    '../../utils/label-hint.css',
+    'ki-textarea.css',
+    '../../utils/field-appearance.css',
+    '../../utils/field-count.css',
+  ],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
 export class KiTextarea {
   @Element() private readonly host!: HTMLElement;
   @AttachInternals() private readonly internals!: ElementInternals;
+
+  /**
+   * Field appearance. `default` uses the current theme, `outlined` draws a
+   * full border, and `filled` uses a tinted surface and bottom indicator.
+   * The visible label stays above the field.
+   * When to use: set an explicit appearance when fields must share a shape
+   * across themes.
+   *
+   * @default 'default'
+   */
+  @Prop({ reflect: true }) appearance?: 'default' | 'outlined' | 'filled' = 'default';
+
+  /**
+   * Soft maximum in UTF-16 code units. Longer user edits and assigned values
+   * are preserved and fail form validation with `validity.tooLong`.
+   * When to use: let people revise an over-limit draft without losing text.
+   *
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  @Prop({ reflect: true }) maxlength?: number;
+
+  /**
+   * Native minimum length in UTF-16 code units for a nonempty user edit.
+   * When to use: require a minimum number of characters in an answer.
+   *
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  @Prop({ reflect: true }) minlength?: number;
+
+  /**
+   * Shows the current count and maximum next to the help or error text and
+   * announces reaching or exceeding the limit. Requires `maxlength`.
+   * When to use: give people feedback while writing to a limit.
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) showCount?: boolean = false;
+
+  /**
+   * Localized message for an over-limit value. `error-text` and
+   * `setCustomValidity()` take precedence.
+   * When to use: translate the soft maximum message for the page language.
+   */
+  @Prop({ reflect: true }) maxlengthErrorText?: string = defaultMaxlengthErrorText;
 
   /**
    * Visible label rendered by the component and used as the accessible name.
@@ -167,7 +222,7 @@ export class KiTextarea {
 
   /**
    * Message shown in place of the help text once the person's answer fails a
-   * constraint (`required`), and the field's `validationMessage`. Say how to
+   * constraint (`required` or a length limit), and the field's `validationMessage`. Say how to
    * fix the answer. Without it the browser's own message shows, in the
    * browser's language. An error set with `setCustomValidity` outranks it.
    * When NOT to use: do not use it for server-side or cross-field errors; call
@@ -180,6 +235,7 @@ export class KiTextarea {
   @State() private userInvalid = false;
   // The validation message last handed to ElementInternals (D4).
   @State() private message = '';
+  @State() private countAnnouncement = '';
 
   private controlId = `ki-textarea-${Math.random().toString(36).slice(2)}`;
   private textarea: HTMLTextAreaElement | undefined;
@@ -193,17 +249,30 @@ export class KiTextarea {
   }
 
   @Watch('value')
-  protected valueChanged(): void {
+  protected valueChanged(value = this.value, previous = value): void {
+    if (this.announcementFor(previous, value) !== undefined) {
+      this.countAnnouncement = '';
+    }
     this.syncTextareaValue();
     this.syncFormValue();
     this.syncValidity();
   }
 
+  @Watch('showCount')
+  @Watch('maxlength')
+  protected countSettingsChanged(): void {
+    this.countAnnouncement = '';
+  }
+
   @Watch('errorText')
+  @Watch('maxlengthErrorText')
+  @Watch('maxlength')
+  @Watch('minlength')
   @Watch('required')
   @Watch('readonly')
   @Watch('disabled')
   protected validityChanged(): void {
+    this.applyTextareaConstraints();
     this.syncDisabledFocus();
     this.syncValidity();
   }
@@ -227,8 +296,8 @@ export class KiTextarea {
   }
 
   /**
-   * Validation message for the current validity state: the browser's, or the
-   * error set with `setCustomValidity`. Empty when the control is valid.
+   * Validation message for the current validity state. Empty when the control
+   * is valid.
    * Custom-elements build only.
    * When NOT to use: do not parse or localize the browser's message in
    * application code.
@@ -302,7 +371,9 @@ export class KiTextarea {
 
   formDisabledCallback(disabled: boolean): void {
     this.formDisabled = disabled;
+    this.applyTextareaConstraints();
     this.syncDisabledFocus();
+    this.syncValidity();
   }
 
   @Listen('invalid')
@@ -315,7 +386,12 @@ export class KiTextarea {
       return;
     }
 
-    this.value = this.textarea.value;
+    const value = this.textarea.value;
+    const announcement = this.announcementFor(this.value, value);
+    this.value = value;
+    if (announcement !== undefined) {
+      this.countAnnouncement = announcement;
+    }
     this.syncFormValue();
     this.syncValidity();
   };
@@ -333,9 +409,18 @@ export class KiTextarea {
   };
 
   private syncTextareaValue(): void {
-    if (this.textarea && this.textarea.value !== this.value) {
-      this.textarea.value = this.value;
+    const value = this.withNativeNewlines(this.value);
+    if (this.textarea && this.textarea.value !== value) {
+      this.textarea.value = value;
     }
+  }
+
+  private applyTextareaConstraints(): void {
+    if (!this.textarea) return;
+    this.textarea.required = this.required;
+    this.textarea.readOnly = this.readonly;
+    this.textarea.disabled = this.effectiveDisabled;
+    applyFieldLengthLimit(this.textarea, 'minlength', this.minlength);
   }
 
   private syncFormValue(): void {
@@ -348,15 +433,23 @@ export class KiTextarea {
     }
 
     this.textarea.setCustomValidity(this.customValidity);
+    const validity = this.textarea.validity;
+    const tooLong = this.isOverLimit(this.textarea.value.length);
+    const flags = tooLong
+      ? { tooLong, tooShort: validity.tooShort, customError: validity.customError }
+      : validity;
+    const message = tooLong
+      ? fieldText(this.maxlengthErrorText) || defaultMaxlengthErrorText
+      : this.textarea.validationMessage;
 
     this.internals.setValidity(
-      this.textarea.validity,
-      fieldValidationMessage(this.customValidity, this.errorText, this.textarea.validationMessage),
+      flags,
+      fieldValidationMessage(this.customValidity, this.errorText, message),
       this.textarea,
     );
     this.message = this.internals.validationMessage;
 
-    if (this.textarea.validity.valid) {
+    if (this.internals.validity.valid) {
       this.deleteUserInvalidState();
     }
   }
@@ -366,7 +459,7 @@ export class KiTextarea {
       return;
     }
 
-    if (this.textarea.validity.valid) {
+    if (this.internals.validity.valid) {
       this.deleteUserInvalidState();
     } else {
       this.addUserInvalidState();
@@ -389,7 +482,30 @@ export class KiTextarea {
     }
   }
 
+  private get countLimit(): number | undefined {
+    return this.showCount ? normalizeLengthLimit(this.maxlength) : undefined;
+  }
+
+  private withNativeNewlines(value: string | null | undefined): string {
+    return (value ?? '').replace(/\r\n?/gu, '\n');
+  }
+
+  private isOverLimit(length: number): boolean {
+    const maximum = normalizeLengthLimit(this.maxlength);
+    return maximum !== undefined && length > maximum && !this.effectiveDisabled && !this.readonly;
+  }
+
+  private announcementFor(previous: string, value: string): string | undefined {
+    return fieldCountAnnouncement(
+      this.withNativeNewlines(previous).length,
+      this.withNativeNewlines(value).length,
+      this.countLimit,
+    );
+  }
+
   render() {
+    const minimum = normalizeLengthLimit(this.minlength);
+    const length = this.withNativeNewlines(this.value).length;
     const messages = {
       help: fieldText(this.helpText),
       error: this.userInvalid && !this.effectiveDisabled ? this.message : '',
@@ -414,17 +530,23 @@ export class KiTextarea {
             id={this.controlId}
             value={this.value}
             rows={this.normalizedRows}
+            {...(minimum === undefined ? {} : { minlength: minimum })}
             required={this.required}
             readOnly={this.readonly}
             disabled={this.effectiveDisabled}
-            aria-describedby={fieldDescribedBy(messages)}
-            aria-invalid={fieldInvalid(messages)}
+            aria-describedby={countedFieldDescription(messages, this.countLimit)}
+            aria-invalid={this.isOverLimit(length) ? 'true' : fieldInvalid(messages)}
             onInput={this.handleInput}
             onChange={this.handleChange}
             {...optionalTextareaAttributes}
           />
         </div>
-        <FieldMessage {...messages} />
+        <CountedFieldMessage
+          {...messages}
+          length={length}
+          limit={this.countLimit}
+          announcement={this.countAnnouncement}
+        />
       </div>
     );
   }

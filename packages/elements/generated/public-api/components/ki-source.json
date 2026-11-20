@@ -1,0 +1,111 @@
+{
+  "component": {
+    "attributes": {
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "snippet": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional plain-text excerpt displayed in the source card.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "source-id": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "title": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required plain-text source title. In HTML use the `title` attribute.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Declares one named web source for a `ki-sources` list.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source destination. Accepts HTTP(S) URLs and relative web references.\nThe source list shows the resolved hostname.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "snippet": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional plain-text excerpt displayed in the source card.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "sourceId": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source identifier in this document or shadow root. Overrides the native\nHTML `id` when set. Use this value in guarded specs and in citation refs.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "sourceTitle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Required plain-text source title. In HTML use the `title` attribute.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-source.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-source.d.ts",
+    "symbols": {
+      "KiSource": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSource extends Components.KiSource, HTMLElement {\n}\nexport const KiSource: {\n    prototype: KiSource;\n    new (): KiSource;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-source.js"
+  }
+}

@@ -78,7 +78,7 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Getting Started',
-          items: ['getting-started'],
+          items: ['getting-started', 'guides/connect-agents'],
         },
         {
           label: 'Guides',

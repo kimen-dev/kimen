@@ -1,0 +1,28 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { Expanded } from '../../src/components/ki-sources/ki-sources.stories';
+
+<Meta title="Docs/Components/Sources" />
+
+# Sources
+
+Cite a claim with `ki-citation` and provide its evidence in an expandable
+`ki-sources` list. Each `ki-source` supplies a title, destination, and
+optional snippet. The list derives the hostname from the destination.
+
+<Canvas of={Expanded} />
+
+```html
+<p>The study design<ki-citation ref="methods"></ki-citation> explains the results.</p>
+<ki-sources>
+  <ki-source id="methods" title="Study design" href="https://example.org/methods"></ki-source>
+</ki-sources>
+```
+
+Use a unique ID in the same document or shadow root for each source.
+The first citation determines its number and position. A later citation
+reuses the number. Use `open` to set the initial disclosure state and
+`source-id` to supply a reference identifier in a guarded spec.
+
+Citations can be previewed with hover or keyboard focus. Activating a
+citation expands the list and focuses the named source link. The links
+inside the source list remain the direct route to each destination.

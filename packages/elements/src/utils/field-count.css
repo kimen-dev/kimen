@@ -1,0 +1,42 @@
+.field-feedback {
+  display: contents;
+}
+
+.field-feedback.has-count {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ki-input-label-gap);
+}
+
+.has-count [part="help"],
+.has-count [part="error"] {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+[part="count"] {
+  min-inline-size: 0;
+  margin-inline-start: auto;
+  padding-inline: var(--_ki-field-count-inset);
+  color: var(--ki-input-count-fg);
+  background-color: var(--ki-input-count-bg);
+  font-size: var(--_ki-field-message-font-size, var(--ki-typography-size-caption-2));
+  line-height: var(--_ki-field-message-line-height, var(--ki-typography-line-height-caption-2));
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+[part="count"][data-over] {
+  color: var(--ki-input-count-over-fg);
+  background-color: var(--ki-input-count-over-bg);
+  font-weight: var(--ki-typography-weight-body-semibold);
+}
+
+.count-announcement {
+  position: absolute;
+  inline-size: var(--ki-typography-visually-hidden-size);
+  block-size: var(--ki-typography-visually-hidden-size);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

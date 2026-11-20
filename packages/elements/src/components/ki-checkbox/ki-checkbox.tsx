@@ -1,4 +1,14 @@
-import { AttachInternals, Component, Element, h, Listen, Prop, State, Watch } from '@stencil/core';
+import {
+  AttachInternals,
+  Component,
+  forceUpdate,
+  Element,
+  h,
+  Listen,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
 import {
   booleanFromAttributePresence,
   observeAttributePresence,
@@ -472,6 +482,12 @@ export class KiCheckbox {
     }
   }
 
+  @Watch('aria-label')
+  private hostLabelChanged(): void {
+    // The native control owns the accessible name inside the shadow root.
+    forceUpdate(this.host);
+  }
+
   render() {
     const messages = {
       help: fieldText(this.helpText),
@@ -481,6 +497,7 @@ export class KiCheckbox {
       <label htmlFor="ki-checkbox-control">
         <input
           id="ki-checkbox-control"
+          aria-label={this.host.getAttribute('aria-label') ?? undefined}
           ref={this.setInput}
           type="checkbox"
           tabIndex={this.effectiveDisabled ? -1 : 0}

@@ -1,6 +1,34 @@
 {
   "ki": {
     "dialog": {
+      "fullscreen": {
+        "bg": {
+          "$value": "{ki.surface.s1}",
+          "$description": "Solid raised surface for the fullscreen dialog."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Foreground for the fullscreen dialog."
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$type": "other",
+          "$description": "Optional image over the fullscreen fill."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$type": "other",
+          "$description": "Complete backdrop filter for the fullscreen surface."
+        },
+        "header-height": {
+          "$value": "{ki.layout.spacing.16xl}",
+          "$description": "Minimum block size of the fullscreen header."
+        },
+        "header-border": {
+          "$value": "{ki.outline.low-em}",
+          "$description": "Divider beneath the fullscreen header."
+        }
+      },
       "radius": {
         "$value": "{ki.radius.big-component.sm}",
         "$description": "dimension used by the dialog component for radius (MarsUI compact Modal master 16414:19665: Radius/big_component/radius_sm 20px; the large variant anchors 24px big_component/radius_md)."

@@ -1,6 +1,10 @@
 {
   "ki": {
     "input": {
+      "filled-radius": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Material 3 top corner shape for the explicit filled field."
+      },
       "height": {
         "$value": "{ki.space.14xl}",
         "$description": "Material 3 dimension used by the input component for height."

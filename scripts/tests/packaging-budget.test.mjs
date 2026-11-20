@@ -87,7 +87,7 @@ test('S4: a component with no size allowance leaves every shipped limit unchange
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
     mcpApps: { raw: 781_383, gzip: 177_349, brotli: 140_306 },
     mcpServer: { raw: 2_573_176, gzip: 484_697, brotli: 380_341 },
-    tokenStylesheets: { onmars: 12_850, material3: 5_600, base: 250 },
+    tokenStylesheets: { onmars: 12_930, material3: 5_600, base: 250 },
   });
 });
 
@@ -110,7 +110,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
     mcpApps: { raw: 783_583, gzip: 177_529, brotli: 140_471 },
     mcpServer: { raw: 2_574_476, gzip: 484_887, brotli: 380_516 },
-    tokenStylesheets: { onmars: 13_020, material3: 5_650, base: 250 },
+    tokenStylesheets: { onmars: 13_100, material3: 5_650, base: 250 },
   });
 });
 

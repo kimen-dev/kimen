@@ -1,0 +1,62 @@
+/* Both text fields use the same explicit outlines and filled indicators.
+   Theme defaults use each field's original state and size tokens, even
+   when an input hosts another field in a slot. */
+:host {
+  --_ki-field-border-block-start: initial;
+  --_ki-field-border-block-end: initial;
+  --_ki-field-border-inline: initial;
+  --_ki-field-appearance-fg: initial;
+  --_ki-field-appearance-placeholder-fg: initial;
+}
+
+:host([appearance="outlined"]) {
+  --_ki-field-border-block-start: var(--ki-input-appearance-border-width);
+  --_ki-field-border-block-end: var(--ki-input-appearance-border-width);
+  --_ki-field-border-inline: var(--ki-input-appearance-border-width);
+}
+
+:host([appearance="outlined"]) [part="field"] {
+  border-radius: var(--ki-input-outlined-radius);
+}
+
+:host([appearance="filled"]) {
+  --_ki-field-border-block-start: 0;
+  --_ki-field-border-block-end: var(--ki-input-appearance-border-width);
+  --_ki-field-border-inline: 0;
+}
+
+:host([appearance="filled"]) [part="field"] {
+  border-radius: 0;
+  border-start-start-radius: var(--ki-input-filled-radius);
+  border-start-end-radius: var(--ki-input-filled-radius);
+  background-image: var(--ki-input-filled-bg-image);
+  backdrop-filter: var(--ki-input-filled-backdrop-filter);
+}
+
+:host([appearance="outlined"]:not(:disabled, :state(user-invalid))) {
+  --_ki-field-appearance-fg: var(--ki-input-outlined-fg);
+  --_ki-field-appearance-placeholder-fg: var(--ki-input-outlined-placeholder-fg);
+}
+
+:host([appearance="outlined"]:not(:disabled, :state(user-invalid))) [part="field"] {
+  background-color: var(--ki-input-outlined-bg);
+  border-color: var(--ki-input-outlined-border);
+}
+
+:host([appearance="filled"]:not(:disabled, :state(user-invalid))) {
+  --_ki-field-appearance-fg: var(--ki-input-filled-fg);
+  --_ki-field-appearance-placeholder-fg: var(--ki-input-filled-placeholder-fg);
+}
+
+:host([appearance="filled"]:not(:disabled, :state(user-invalid))) [part="field"] {
+  background-color: var(--ki-input-filled-bg);
+  border-color: var(--ki-input-filled-indicator);
+}
+
+:host([appearance="filled"]:focus-within) {
+  --_ki-field-border-block-end: var(--ki-input-filled-focus-width);
+}
+
+:host([appearance="filled"]:focus-within) [part="field"] {
+  border-block-end-color: var(--_ki-field-appearance-ring-color);
+}

@@ -66,6 +66,13 @@
           "{projectRoot}/dist",
           "{projectRoot}/src/generated"
         ]
+      },
+      "test": {
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/packages/elements/src/components/*/usage/examples.md"
+        ]
       }
     }
   },

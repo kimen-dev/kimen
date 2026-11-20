@@ -11,15 +11,20 @@ import React from 'react';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import type { Components } from '@kimen/elements/components';
 import { KiList as KiListElement, defineCustomElement as defineKiList } from '@kimen/elements/components/ki-list.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { KiListChangeDetail, KiListCustomEvent } from '@kimen/elements/components';
+import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
-export type KiListEvents = NonNullable<unknown>;
+export type KiListEvents = {
+  onKiChange: EventName<KiListCustomEvent<KiListChangeDetail>>
+};
 
 export const KiList: StencilReactComponent<KiListElement, KiListEvents, Components.KiList> = /*@__PURE__*/ createComponent<KiListElement, KiListEvents, Components.KiList>({
     tagName: 'ki-list',
     elementClass: KiListElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: {} as KiListEvents,
+    events: {
+      onKiChange: 'ki-change'
+    } as KiListEvents,
     defineCustomElement: defineKiList,
 });

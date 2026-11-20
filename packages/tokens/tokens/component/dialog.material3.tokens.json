@@ -1,6 +1,34 @@
 {
   "ki": {
     "dialog": {
+      "fullscreen": {
+        "bg": {
+          "$value": "{ki.surface.s1}",
+          "$description": "Solid raised surface for the fullscreen dialog."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Foreground for the fullscreen dialog."
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$type": "other",
+          "$description": "Optional image over the fullscreen fill."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$type": "other",
+          "$description": "Complete backdrop filter for the fullscreen surface."
+        },
+        "header-height": {
+          "$value": "{ki.layout.spacing.16xl}",
+          "$description": "Minimum block size of the fullscreen header."
+        },
+        "header-border": {
+          "$value": "{ki.outline.low-em}",
+          "$description": "Divider beneath the fullscreen header."
+        }
+      },
       "radius": {
         "$value": "{ki.radius.big-component.lg}",
         "$description": "M3 dialog container shape: md.sys.shape.corner.extra-large (28dp) via the material3 radius scale."

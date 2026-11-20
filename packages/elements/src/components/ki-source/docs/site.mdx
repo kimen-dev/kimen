@@ -1,0 +1,14 @@
+---
+title: ki-source
+description: Declare one web reference for a Sources disclosure.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+
+Put `ki-source` directly inside a [Sources disclosure](../ki-sources/).
+Give it an `id` or guarded `source-id`, a web `href`, and a readable `title`.
+The optional `snippet` adds a short plain-text excerpt. The disclosure
+derives the hostname from the resolved destination and shows the title
+as the link's name. Use `sourceTitle` for the title prop in JSX.
+
+<CemApi tag="ki-source" />

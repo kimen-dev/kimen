@@ -6,25 +6,21 @@ tags: `ki-list-item` is a sub-component of `ki-list` and the two ship,
 version and document together (FR-012). Any deviation discovered during
 implementation re-enters through the spec, not through code (Art. II).
 
+The guarantees below describe the default static pattern. [InteractiveList](../../107-interactive-list/contracts/list-contract.md) adds native whole-row links and selection. Each interactive row has one link, one option interaction, or one trailing control. Development builds warn for conflicts.
+
 ## Elements
 
-`<ki-list>` — non-interactive, non-virtualized list container for
-`ki-list-item` children. Not form-associated, never focusable, no activation
-behavior. Registered by `@kimen/elements`; per-component export
+`<ki-list>` — non-virtualized list container for
+`ki-list-item` children. The static mode contributes no form data and takes no keyboard focus. Registered by `@kimen/elements`; per-component export
 `dist/components/ki-list.js` (tree-shakable custom element build).
 
 `<ki-list-item>` — one entry of a `ki-list`; carries meaning only inside its
-parent (usage outside a `ki-list` is unsupported — when-NOT-to-use). Same
-non-interactive guarantees. Per-component export
+parent. A static row takes no keyboard focus. Per-component export
 `dist/components/ki-list-item.js`.
 
 ## Attributes / properties
 
-None on either element in v1. Neither element observes any attribute, so any
-attribute — including vocabulary copied from other design systems (e.g.
-`variant="two-line"`, `dense`, `divider`) — is ignored and the list renders
-its items with the default appearance (S4, FR-009, fallback by
-construction).
+The interactive API is in [InteractiveList](../../107-interactive-list/contracts/list-contract.md). An unknown property such as `variant="two-line"` leaves the list at its default appearance (S4, FR-009).
 
 ## Slots
 
@@ -46,7 +42,7 @@ contribution (S3, FR-003).
 | `start` | Leading media (icon, avatar, image). Leads in LTR, follows the writing direction in RTL (S9, FR-010). |
 | *(default)* | Primary text line. Styled by the `--ki-list-item-primary-*` tokens. |
 | `secondary` | Supporting text line, below the primary line. Its presence — not rendered wrapping — switches the item to the multi-line min-height token (FR-003). Wrapped secondary text is the v1 answer to M3 three-line items. |
-| `end` | Trailing media or meta (icon, timestamp, or a slotted control such as `ki-switch` — the supported v1 pattern for interactivity). |
+| `end` | Trailing media or meta (icon, timestamp, or a slotted control such as `ki-switch`). |
 
 ## Parts
 
@@ -62,16 +58,14 @@ Customization ladder: tokens first, then parts, then slots.
 
 ## Events
 
-No custom events on either element, and no interception: pointer and
-keyboard events from slotted content pass through untouched — a page
+Pointer and keyboard events from a settings control pass through untouched — a page
 listening to a slotted switch observes exactly one toggle per activation
 (S11, FR-006).
 
 ## Accessibility contract
 
 - `ki-list` exposes the structural role `list` and `ki-list-item` the
-  structural role `listitem`, both as **default semantics via
-  `ElementInternals.role`** (research D1): the accessibility tree reports a
+  structural role `listitem`, both as default host attributes: the accessibility tree reports a
   list whose item count matches the rendered items (S6), and an author-set
   `role` attribute on a host still wins (default semantics are
   overridable — the component never fights the author).
@@ -132,12 +126,8 @@ Guarantees:
   leading media, up to two text lines and trailing meta or a slotted
   control (e.g. a settings list with trailing `ki-switch` controls). Fill
   any subset of an item's four regions.
-- **When NOT to use**: menus or command lists (future menu component);
-  selectable option lists (use `ki-select`); multi-column tabular data (the
-  complex data table is a separate roadmap item, explicitly out of v1);
-  navigation; a single `ki-list-item` outside a `ki-list`; anything that
-  needs the whole item clickable or selectable (interactive list patterns
-  are future features).
+- **When NOT to use**: popup command menus, tabular data, an item outside
+  its list, or a row with several actions.
 
 ## Compatibility
 
