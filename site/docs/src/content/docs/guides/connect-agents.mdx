@@ -340,10 +340,3 @@ The `kimen-genui` skill carries a short recipe for each of the three.
   names (`line-numbers`, not `lineNumbers`).
 - **`url-scheme` or a refused URL.** `kimen-mcp` surfaces cannot load URLs.
   Render images and links from your own page or server instead.
-- **Known issue: built-in glyphs missing.** Some components draw an icon of
-  their own: the close ×, select and tree chevrons, the number input's + and
-  −, the AI label's sparkles. Today those glyphs are dropped from the live
-  surface, and from app bundles whose bundler honours `sideEffects`, so the
-  buttons keep their accessible names but render without the glyph. A fix is
-  in progress. In your own app, import the glyphs explicitly, for example
-  `import '@kimen/elements/icons/x';`.

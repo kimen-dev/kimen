@@ -19,8 +19,11 @@ const BASE_BUDGETS = {
   // main 61eb8d2b: the reference and form-action checks in the shared catalog
   // code add 1,383 / 349 / 306 B to the MCP Apps document and 3,176 / 697 /
   // 341 B to kimen-mcp.
-  mcpApps: { raw: 781_383, gzip: 177_349, brotli: 140_306 },
-  mcpServer: { raw: 2_573_176, gzip: 484_697, brotli: 380_341 },
+  // The glyphs components draw themselves had been dropped from both by an undeclared
+  // side effect; restoring them (2026-11-20) measured +859 B raw for the document and
+  // +879 B raw for kimen-mcp, which the raw bases absorb. The compressed growth fits.
+  mcpApps: { raw: 782_242, gzip: 177_349, brotli: 140_306 },
+  mcpServer: { raw: 2_574_055, gzip: 484_697, brotli: 380_341 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.

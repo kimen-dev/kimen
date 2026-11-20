@@ -1,6 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 const packageRoot = fileURLToPath(new URL('..', import.meta.url));
@@ -47,6 +48,47 @@ describe('declarations shipped by @kimen/elements', () => {
       }
 
       expect(offenders).toEqual([]);
+    },
+  );
+
+  // The release packaging gate (attw) fails the package on a declaration
+  // import that does not resolve, and pull requests never run it. Stencil
+  // copies src/ into dist/types/ one directory deeper and keeps every
+  // specifier as written, so a component's glyph import
+  // (`../../../icons/x.js`) pointed at a dist/icons/ that does not exist.
+  // TypeScript's own resolver is the oracle: what it cannot resolve, a
+  // consumer cannot either.
+  it.each(['dist/types', 'dist/components', 'loader'])(
+    'every relative import in %s resolves for a consumer on nodenext',
+    async (directory) => {
+      const options = {
+        module: ts.ModuleKind.NodeNext,
+        moduleResolution: ts.ModuleResolutionKind.NodeNext,
+      };
+      const files = await declarationFiles(join(packageRoot, directory));
+      expect(files.length).toBeGreaterThan(0);
+
+      const unresolved: string[] = [];
+      for (const file of files) {
+        const { importedFiles } = ts.preProcessFile(await readFile(file, 'utf8'), true, true);
+        for (const { fileName: specifier } of importedFiles) {
+          if (!specifier.startsWith('./') && !specifier.startsWith('../')) continue;
+          const { resolvedModule } = ts.resolveModuleName(
+            specifier,
+            file,
+            options,
+            ts.sys,
+            undefined,
+            undefined,
+            ts.ModuleKind.ESNext,
+          );
+          if (resolvedModule === undefined) {
+            unresolved.push(`${relative(packageRoot, file)} → ${specifier}`);
+          }
+        }
+      }
+
+      expect(unresolved).toEqual([]);
     },
   );
 });
