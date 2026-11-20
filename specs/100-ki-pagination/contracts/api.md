@@ -5,7 +5,7 @@
 | `page` | Number, 1-based | 1 |
 | `pages` | Number of result pages | Unset |
 | `variant` | `pages\|compact\|load-more` | `pages` |
-| `siblings`, `boundaries` | Nonnegative numbers | 1 each |
+| `siblings`, `boundaries` | Nonnegative numbers up to 10 | 1 each |
 | `shown`, `total` | Nonnegative counts | Unset |
 | `label` | Navigation landmark name | Pagination |
 | `href-template` | HTTP(S) or relative URL template with `{page}` | Unset |

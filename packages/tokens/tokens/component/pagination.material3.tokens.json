@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "pagination": {
+      "item-radius": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner radius of numbered page controls and direction links."
+      }
+    }
+  }
+}

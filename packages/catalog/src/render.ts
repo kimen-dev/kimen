@@ -141,11 +141,22 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
  * bound node activates on the only one (FR-003, S17) or, when there is none,
- * on the platform click; more than one is ambiguous and the guard rejects
- * the binding before any listener exists (S19).
+ * on the platform click. Multiple events require an explicit selection rule.
  */
 export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
+}
+
+const PAGINATION_EVENTS = ['ki-page-change', 'ki-load-more'] as const;
+
+// The two pagination events describe mutually exclusive variants of one
+// control. Match its published event set before bypassing ambiguity.
+function hasPaginationEvents(entry: CatalogEntry | undefined, events: readonly string[]): boolean {
+  return (
+    entry?.tag === 'ki-pagination' &&
+    events.length === PAGINATION_EVENTS.length &&
+    PAGINATION_EVENTS.every((type) => events.includes(type))
+  );
 }
 
 /**
@@ -203,14 +214,19 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
       });
     }
   }
-  // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
-  // activation event. An entry declaring several gives the spec no way to
-  // say which, so the binding is rejected fail-closed instead of guessing.
+  // Renderer-native activation guard (FR-003, S19): a bound action needs an
+  // unambiguous activation event. The pagination variant supplies that choice
+  // in button mode, where activation does not also navigate natively.
   if (node.action !== undefined) {
-    const events = declaredEvents(ownEntry(state.components, node.component));
-    if (events.length > 1) {
+    const entry = ownEntry(state.components, node.component);
+    const events = declaredEvents(entry);
+    const pagination = hasPaginationEvents(entry, events);
+    const urlMode = pagination && ownEntry(node.props, 'href-template') !== undefined;
+    if (events.length > 1 && (!pagination || urlMode)) {
       state.diagnostics.push({
-        message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
+        message: urlMode
+          ? 'ki-pagination uses native navigation when href-template is supplied; omit the URL template to bind an action'
+          : `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
         rule: 'ambiguous-activation-event',
         value: node.action,
@@ -422,8 +438,8 @@ export function wireActivation(
   currentProps: () => Readonly<Record<string, Scalar>>,
   dispatch: (data: Readonly<Record<string, Scalar>>) => void,
 ): void {
-  // The guard admitted at most one declared event (S19).
-  const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
+  const events = declaredEvents(entry);
+  const activation = events[0] ?? DEFAULT_ACTIVATION_EVENT;
   if (activation === DEFAULT_ACTIVATION_EVENT) {
     // A click-activated node (S4) dispatches the spec's data payload and
     // suppresses the native default (a submit button's form submission)
@@ -448,6 +464,32 @@ export function wireActivation(
   element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
     claim(event);
   });
+  if (hasPaginationEvents(entry, events)) {
+    element.addEventListener('ki-page-change', (event: Event) => {
+      const props = currentProps();
+      if (
+        event.target !== element ||
+        props['variant'] === 'load-more' ||
+        !('detail' in event) ||
+        !claim(event)
+      ) {
+        return;
+      }
+      const detail: unknown = event.detail;
+      const page: unknown =
+        typeof detail === 'object' && detail !== null && 'page' in detail ? detail.page : undefined;
+      if (typeof page === 'number' && Number.isSafeInteger(page) && page >= 1) {
+        dispatch({ ...props, page });
+      }
+    });
+    element.addEventListener('ki-load-more', (event: Event) => {
+      const props = currentProps();
+      if (event.target === element && props['variant'] === 'load-more' && claim(event)) {
+        dispatch({ ...props });
+      }
+    });
+    return;
+  }
   element.addEventListener(activation, (event: Event) => {
     if (event.target !== element || !claim(event)) {
       return;

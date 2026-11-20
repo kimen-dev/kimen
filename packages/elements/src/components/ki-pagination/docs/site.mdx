@@ -1,0 +1,42 @@
+---
+title: ki-pagination
+description: Move through pages of results or append another batch.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use pagination for long tables, search results, and lists. Use numbered
+pages for direct access, compact pagination for a previous/next stepper,
+and Load more to append results in place. Show short lists in full and
+use a stepper for the steps of a task.
+
+<Demo code={`<ki-pagination page="5" pages="12" label="Search results pages"></ki-pagination>
+<ki-pagination page="5" pages="12" variant="compact" label="Table pages"></ki-pagination>
+<ki-pagination variant="load-more" shown="20" total="240" label="More search results"></ki-pagination>`} />
+
+Numbered pagination switches to compact when its available inline size
+is below 480 CSS pixels. Previous and next stay visible at the ends.
+Set `siblings` and `boundaries` to adjust the numbered window.
+
+## Result updates and focus
+
+Listen for `ki-page-change` to retrieve the requested page. Once the new
+results are rendered, set the component's `page` and focus the results
+heading. Give the heading `tabindex="-1"` so it can receive focus without
+adding a Tab stop. When appending results in response to `ki-load-more`,
+keep focus on the button and set `shown` to the new count. The existing
+polite status announces the update.
+
+Use `href-template="?page={page}"` for server navigation. Page numbers
+and available direction controls become links. With multiple paging
+regions, use distinct landmark labels. Translate the button labels and
+the text templates together.
+
+## API reference
+
+<CemApi tag="ki-pagination" />
+
+## Workshop
+
+[Open ki-pagination in Storybook](/storybook/?path=/docs/docs-components-ki-pagination--docs)

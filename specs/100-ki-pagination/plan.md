@@ -3,8 +3,9 @@
 Use the Kimen component generator once the contract passes lint. Build a shadow
 element using native page controls, the shipped icon buttons and button, and
 registered direction icons. Keep page range and URL template logic in a small
-pure helper. Measure the container to switch layout while keeping the direction
-controls in place.
+pure helper. Use an inline-size container query to switch between the numbered
+and compact layouts. The inactive layout is hidden from focus and assistive
+technology.
 
 | Obligation | Implementation |
 | --- | --- |

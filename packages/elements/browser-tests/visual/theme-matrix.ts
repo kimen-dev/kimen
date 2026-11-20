@@ -5,6 +5,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-icon',
   'ki-link',
   'ki-note',
+  'ki-pagination',
   'ki-spinner',
   'ki-stack',
 ]);
