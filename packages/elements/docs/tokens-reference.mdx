@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 400 semantic
-and 1274 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 405 semantic
+and 1318 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -47,6 +47,8 @@ every component at once.
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
+| `--ki-corner-navigation-panel` | `12px` | Corner of a side navigation panel. |
+| `--ki-corner-navigation-row` | `8px` | Corner of a side navigation row. |
 
 ### `ki.density`
 
@@ -293,6 +295,14 @@ every component at once.
 | `--ki-overlay-high-em-inverse` | `rgba(255, 255, 255, 0.12)` | semantic color for overlay high em inverse. |
 | `--ki-overlay-med-em` | `rgba(0, 0, 0, 0.24)` | semantic color for overlay med em. |
 | `--ki-overlay-med-em-inverse` | `rgba(255, 255, 255, 0.03)` | semantic color for overlay med em inverse. |
+
+### `ki.side-navigation`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-side-navigation-rail-width` | `4rem` | Inline size of side navigation in its compact mode. |
+| `--ki-side-navigation-row-height` | `2.25rem` | Base navigation target height before density adjustment. |
+| `--ki-side-navigation-width` | `15rem` | Inline size of the expanded side navigation. |
 
 ### `ki.spacing`
 
@@ -1627,6 +1637,55 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-xs-line-height` | `1rem` | dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595). |
 | `--ki-select-xs-padding-inline` | `0.375rem` | dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px). |
 | `--ki-select-xs-radius` | `6px` | dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs). |
+
+### `ki-sidebar`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-sidebar-backdrop-filter` | `none` | Complete backdrop filter for the panel. |
+| `--ki-sidebar-bg` | `#f9f7f4` | Navigation panel background. |
+| `--ki-sidebar-bg-image` | `none` | Optional image over the panel background. |
+| `--ki-sidebar-border` | `rgba(24, 22, 19, 0.1)` | Navigation panel outline. |
+| `--ki-sidebar-border-width` | `1px` | Width of the panel outline. |
+| `--ki-sidebar-brand-weight` | `500` | Weight of the optional brand label. |
+| `--ki-sidebar-collapsed-width` | `4rem` | Compact rail inline size. |
+| `--ki-sidebar-fg` | `#181613` | Navigation panel text and brand ink. |
+| `--ki-sidebar-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of sidebar controls and copy. |
+| `--ki-sidebar-font-size` | `0.8125rem` | Font size of navigation labels. |
+| `--ki-sidebar-gap` | `0.5rem` | Space between panel regions and between row contents. |
+| `--ki-sidebar-group-backdrop-filter` | `none` | Complete backdrop filter behind the group heading. |
+| `--ki-sidebar-group-bg` | `#f9f7f4` | Group heading background. |
+| `--ki-sidebar-group-bg-image` | `none` | Optional image over the heading background. |
+| `--ki-sidebar-group-fg` | `#5e5953` | Group heading ink, with contrast-more support. |
+| `--ki-sidebar-group-font-family` | `'Instrument Sans', system-ui, sans-serif` | Group heading typeface. |
+| `--ki-sidebar-group-font-size` | `0.75rem` | Group heading font size. |
+| `--ki-sidebar-group-gap` | `0.375rem` | Space before a group of routes. |
+| `--ki-sidebar-group-line-height` | `1rem` | Group heading line height. |
+| `--ki-sidebar-icon-size` | `1.25rem` | Leading and toggle icon edge. |
+| `--ki-sidebar-item-backdrop-filter` | `none` | Complete backdrop filter for the row or toggle. |
+| `--ki-sidebar-item-bg` | `#f9f7f4` | Resting row background. |
+| `--ki-sidebar-item-bg-image` | `none` | Optional image over navigation row and toggle backgrounds. |
+| `--ki-sidebar-item-count-backdrop-filter` | `none` | Complete backdrop filter behind the count. |
+| `--ki-sidebar-item-count-bg` | `#ebe7e1` | Expanded count pill background. |
+| `--ki-sidebar-item-count-bg-image` | `none` | Optional image over the count background. |
+| `--ki-sidebar-item-count-fg` | `#181613` | Expanded count digits. |
+| `--ki-sidebar-item-current-bg` | `#ffebe5` | Current destination background. |
+| `--ki-sidebar-item-current-fg` | `#9a3715` | Current destination ink. |
+| `--ki-sidebar-item-dot-bg` | `#181613` | Unread dot fill in rail mode. |
+| `--ki-sidebar-item-dot-offset` | `0.125rem` | Inset of the dot from the row block-start and inline-end edges. |
+| `--ki-sidebar-item-dot-ring` | `#f9f7f4` | Outer ring that separates the rail dot from the row. |
+| `--ki-sidebar-item-fg` | `#5e5953` | Resting row ink, with contrast-more support. |
+| `--ki-sidebar-item-gap` | `0.125rem` | Gap between rows. |
+| `--ki-sidebar-item-height` | `2.25rem` | Base row and toggle height before density adjustment. |
+| `--ki-sidebar-item-hover-bg` | `#ebe7e1` | Hovered navigation row background. |
+| `--ki-sidebar-item-hover-fg` | `#181613` | Hovered navigation row ink. |
+| `--ki-sidebar-item-padding` | `0.5rem` | Inline inset of an expanded row. |
+| `--ki-sidebar-item-radius` | `8px` | Corner of a row or toggle. |
+| `--ki-sidebar-item-weight` | `600` | Weight of the navigation label. |
+| `--ki-sidebar-line-height` | `1.5rem` | Line height of navigation labels. |
+| `--ki-sidebar-padding` | `0.5rem` | Inset between the panel border and its content. |
+| `--ki-sidebar-radius` | `12px` | Navigation panel corner. |
+| `--ki-sidebar-width` | `15rem` | Expanded navigation panel inline size. |
 
 ### `ki-spinner`
 

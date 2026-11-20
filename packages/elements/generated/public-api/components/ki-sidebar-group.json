@@ -1,0 +1,177 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible group heading and accessible name of the nested list.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-sidebar-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of sidebar controls and copy.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-group-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the group heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-group-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Group heading background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-group-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the heading background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-group-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Group heading ink, with contrast-more support.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-group-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Group heading typeface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-group-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Group heading font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-group-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space before a group of routes.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-group-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Group heading line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between rows.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline inset of an expanded row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of the navigation label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A named list of routes within sidebar navigation.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Group heading, visually hidden in the rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "list": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "List named by the group heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible group heading and accessible name of the nested list.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One or more ki-sidebar-item routes.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-sidebar-group.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-sidebar-group.d.ts",
+    "symbols": {
+      "KiSidebarGroup": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSidebarGroup extends Components.KiSidebarGroup, HTMLElement {\n}\nexport const KiSidebarGroup: {\n    prototype: KiSidebarGroup;\n    new (): KiSidebarGroup;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-sidebar-group.js"
+  }
+}

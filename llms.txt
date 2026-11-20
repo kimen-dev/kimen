@@ -70,6 +70,9 @@ methods, CSS custom properties and examples.
 - [ki-radio-group](https://kimen.dev/llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
 - [ki-scroller](https://kimen.dev/llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
 - [ki-select](https://kimen.dev/llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
+- [ki-sidebar](https://kimen.dev/llms/ki-sidebar.md): navigate more than five top-level destinations or organize application destinations in named groups.
+- [ki-sidebar-group](https://kimen.dev/llms/ki-sidebar-group.md): give related sidebar destinations a common heading.
+- [ki-sidebar-item](https://kimen.dev/llms/ki-sidebar-item.md): link to a named destination in ki-sidebar or ki-sidebar-group.
 - [ki-spinner](https://kimen.dev/llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](https://kimen.dev/llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-status](https://kimen.dev/llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.

@@ -2279,9 +2279,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-sidebar-item"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-sidebar-item": [
+          "ki-counter"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
@@ -2993,9 +2999,19 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-sidebar",
+        "ki-sidebar-item"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-sidebar": [
+          "ki-icon"
+        ],
+        "ki-sidebar-item": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -6449,6 +6465,612 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-sidebar/ki-sidebar.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-sidebar",
+      "docs": "Side navigation with an expanded panel and an optional icon rail.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "navigate more than five top-level destinations or organize\napplication destinations in named groups."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for a few destinations, use top navigation. For mobile\nnavigation, use a mobile navigation pattern or a drawer."
+        },
+        {
+          "name": "slot",
+          "text": "- Navigation routes and groups, in reading order."
+        },
+        {
+          "name": "slot",
+          "text": "brand - Presentational brand content for the expanded panel."
+        },
+        {
+          "name": "slot",
+          "text": "footer - Account trigger or other app-owned content available in both modes."
+        },
+        {
+          "name": "part",
+          "text": "nav - Navigation landmark and surface."
+        },
+        {
+          "name": "part",
+          "text": "header - Brand and toggle layout."
+        },
+        {
+          "name": "part",
+          "text": "brand - Expanded brand region."
+        },
+        {
+          "name": "part",
+          "text": "toggle - Native expand and collapse button."
+        },
+        {
+          "name": "part",
+          "text": "list - List of top-level items and groups."
+        },
+        {
+          "name": "part",
+          "text": "footer - Region at the foot of the sidebar."
+        }
+      ],
+      "usage": {
+        "examples": "# Sidebar examples\n\n## Grouped navigation\n\n```js\nimport { defineCustomElement as defineSidebar } from '@kimen/elements/ki-sidebar';\nimport { defineCustomElement as defineGroup } from '@kimen/elements/ki-sidebar-group';\nimport { defineCustomElement as defineItem } from '@kimen/elements/ki-sidebar-item';\nimport { defineCustomElement as defineTooltip } from '@kimen/elements/ki-tooltip';\nimport '@kimen/elements/icons/house';\nimport '@kimen/elements/icons/inbox';\nimport '@kimen/elements/icons/users';\n\nconst sidebar = document.querySelector('#main-sidebar');\nsidebar.preference = { storageKey: 'sample-app:profile-42:main-sidebar' };\n\ndefineTooltip();\ndefineSidebar();\ndefineGroup();\ndefineItem();\n```\n\n```html\n<ki-sidebar label=\"Main\" collapsible id=\"main-sidebar\">\n  <span slot=\"brand\">Kimen</span>\n  <ki-sidebar-item href=\"/\" icon-name=\"house\" current>Home</ki-sidebar-item>\n  <ki-sidebar-item href=\"/inbox\" icon-name=\"inbox\" count=\"12\">Inbox</ki-sidebar-item>\n  <ki-sidebar-group label=\"Workspace\">\n    <ki-sidebar-item href=\"/members\" icon-name=\"users\">Members</ki-sidebar-item>\n  </ki-sidebar-group>\n  <button slot=\"footer\" type=\"button\" aria-label=\"Account: Ana Garcia\">AG</button>\n</ki-sidebar>\n```\n\nSet the `preference` property before mounting or upgrading the element to\nrestore the saved mode.\nWire the footer trigger to your application's account menu. Use an app-owned\nopaque profile identifier in the storage key, or omit the key and persist\n`event.detail.collapsed` through your own preferences service.\n\n## Localized count\n\n```html\n<ki-sidebar label=\"Principal\" collapsible collapse-label=\"Contraer\" expand-label=\"Expandir\">\n  <ki-sidebar-item href=\"/bandeja\" count=\"12\" count-label=\"{label}, {count} sin leer\">\n    Bandeja\n  </ki-sidebar-item>\n</ki-sidebar>\n```\n"
+      },
+      "props": [
+        {
+          "name": "collapseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "collapse-label",
+          "reflectToAttr": false,
+          "docs": "Accessible toggle name while the sidebar is expanded.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Collapse sidebar'"
+            }
+          ],
+          "default": "'Collapse sidebar'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "collapsed",
+          "reflectToAttr": true,
+          "docs": "Display the icon rail. May also be assigned by the application.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "collapsible",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "collapsible",
+          "reflectToAttr": false,
+          "docs": "Show the expand and collapse control.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "expandLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "expand-label",
+          "reflectToAttr": false,
+          "docs": "Accessible toggle name while the sidebar is collapsed.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Expand sidebar'"
+            }
+          ],
+          "default": "'Expand sidebar'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the navigation landmark.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Main'"
+            }
+          ],
+          "default": "'Main'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "preference",
+          "type": "undefined | { storageKey: string; }",
+          "complexType": {
+            "original": "{ storageKey: string }",
+            "resolved": "undefined | { storageKey: string; }",
+            "references": {}
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Optional local storage key scoped by the application to one profile and\nsidebar. The saved state is restored at initialization. User toggles write\nthe preference. Use a stable key for the lifetime of the element.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "undefined"
+            },
+            {
+              "type": "{ storageKey: string; }"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-sidebar-change",
+          "detail": "{ collapsed: boolean; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ collapsed: boolean }",
+            "resolved": "{ collapsed: boolean; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports the new collapsed state after a user toggle. Programmatic writes are silent.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Navigation routes and groups, in reading order."
+        },
+        {
+          "name": "brand",
+          "docs": "Presentational brand content for the expanded panel."
+        },
+        {
+          "name": "footer",
+          "docs": "Account trigger or other app-owned content available in both modes."
+        }
+      ],
+      "parts": [
+        {
+          "name": "brand",
+          "docs": "Expanded brand region."
+        },
+        {
+          "name": "footer",
+          "docs": "Region at the foot of the sidebar."
+        },
+        {
+          "name": "header",
+          "docs": "Brand and toggle layout."
+        },
+        {
+          "name": "list",
+          "docs": "List of top-level items and groups."
+        },
+        {
+          "name": "nav",
+          "docs": "Navigation landmark and surface."
+        },
+        {
+          "name": "toggle",
+          "docs": "Native expand and collapse button."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-sidebar": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-sidebar-group/ki-sidebar-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-sidebar-group",
+      "docs": "A named list of routes within sidebar navigation.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "give related sidebar destinations a common heading."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "as a destination or outside ki-sidebar."
+        },
+        {
+          "name": "slot",
+          "text": "- One or more ki-sidebar-item routes."
+        },
+        {
+          "name": "part",
+          "text": "heading - Group heading, visually hidden in the rail."
+        },
+        {
+          "name": "part",
+          "text": "list - List named by the group heading."
+        }
+      ],
+      "usage": {
+        "examples": "# Sidebar group example\n\n```html\n<ki-sidebar label=\"Project\">\n  <ki-sidebar-group label=\"Workspace\">\n    <ki-sidebar-item href=\"/members\">Members</ki-sidebar-item>\n    <ki-sidebar-item href=\"/settings\" current>Settings</ki-sidebar-item>\n  </ki-sidebar-group>\n</ki-sidebar>\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible group heading and accessible name of the nested list.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "One or more ki-sidebar-item routes."
+        }
+      ],
+      "parts": [
+        {
+          "name": "heading",
+          "docs": "Group heading, visually hidden in the rail."
+        },
+        {
+          "name": "list",
+          "docs": "List named by the group heading."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-sidebar-item/ki-sidebar-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-sidebar-item",
+      "docs": "One destination in a sidebar.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "link to a named destination in ki-sidebar or ki-sidebar-group.\nRegister ki-tooltip once when using direct component imports for a rail."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for commands, nested controls, or standalone links outside the sidebar."
+        },
+        {
+          "name": "slot",
+          "text": "- The destination name as text or static inline content."
+        },
+        {
+          "name": "slot",
+          "text": "start - One decorative icon that overrides icon-name."
+        },
+        {
+          "name": "part",
+          "text": "item - Navigation link or static row."
+        },
+        {
+          "name": "part",
+          "text": "start - Leading icon holder."
+        },
+        {
+          "name": "part",
+          "text": "label - Destination text."
+        },
+        {
+          "name": "part",
+          "text": "count - Expanded pill or rail dot."
+        }
+      ],
+      "usage": {
+        "examples": "# Sidebar item example\n\nLoad `@kimen/elements/icons/inbox` to use the named icon.\n\n```html\n<ki-sidebar label=\"Main\" collapsed>\n  <ki-sidebar-item href=\"/inbox\" icon-name=\"inbox\" count=\"12\" current>Inbox</ki-sidebar-item>\n</ki-sidebar>\n```\n"
+      },
+      "props": [
+        {
+          "name": "count",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count",
+          "reflectToAttr": false,
+          "docs": "Positive unread count. Fractional values round down.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "countLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count-label",
+          "reflectToAttr": false,
+          "docs": "Accessible count template, using the {label} and {count} placeholders.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{label}, {count} new'"
+            }
+          ],
+          "default": "'{label}, {count} new'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "current",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "current",
+          "reflectToAttr": true,
+          "docs": "Mark this destination as the current page.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "Destination resolved by a native link. Omit for a static row.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Name of a registered Lucide glyph. Import its per-icon entry point first.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The destination name as text or static inline content."
+        },
+        {
+          "name": "start",
+          "docs": "One decorative icon that overrides icon-name."
+        }
+      ],
+      "parts": [
+        {
+          "name": "count",
+          "docs": "Expanded pill or rail dot."
+        },
+        {
+          "name": "item",
+          "docs": "Navigation link or static row."
+        },
+        {
+          "name": "label",
+          "docs": "Destination text."
+        },
+        {
+          "name": "start",
+          "docs": "Leading icon holder."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon",
+        "ki-counter"
+      ],
+      "dependencyGraph": {
+        "ki-sidebar-item": [
+          "ki-icon",
+          "ki-counter"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",

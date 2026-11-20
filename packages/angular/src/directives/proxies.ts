@@ -34,6 +34,9 @@ import { defineCustomElement as defineKiRadio } from '@kimen/elements/components
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
+import { defineCustomElement as defineKiSidebar } from '@kimen/elements/components/ki-sidebar.js';
+import { defineCustomElement as defineKiSidebarGroup } from '@kimen/elements/components/ki-sidebar-group.js';
+import { defineCustomElement as defineKiSidebarItem } from '@kimen/elements/components/ki-sidebar-item.js';
 import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
@@ -720,6 +723,80 @@ export class KiSelect {
 
 
 export declare interface KiSelect extends Components.KiSelect {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSidebar,
+  inputs: ['collapseLabel', 'collapsed', 'collapsible', 'expandLabel', 'label', 'preference']
+})
+@Component({
+  selector: 'ki-sidebar',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseLabel', 'collapsed', 'collapsible', 'expandLabel', 'label', 'preference'],
+})
+export class KiSidebar {
+  protected el: HTMLKiSidebarElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiSidebar extends Components.KiSidebar {
+  /**
+   * Reports the new collapsed state after a user toggle. Programmatic writes are silent.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSidebarGroup,
+  inputs: ['label']
+})
+@Component({
+  selector: 'ki-sidebar-group',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [{ name: 'label', required: true }],
+})
+export class KiSidebarGroup {
+  protected el: HTMLKiSidebarGroupElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSidebarGroup extends Components.KiSidebarGroup {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSidebarItem,
+  inputs: ['count', 'countLabel', 'current', 'href', 'iconName']
+})
+@Component({
+  selector: 'ki-sidebar-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['count', 'countLabel', 'current', 'href', 'iconName'],
+})
+export class KiSidebarItem {
+  protected el: HTMLKiSidebarItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSidebarItem extends Components.KiSidebarItem {}
 
 
 @ProxyCmp({

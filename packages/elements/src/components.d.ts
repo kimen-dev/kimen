@@ -1084,6 +1084,86 @@ export namespace Components {
         "value": string;
     }
     /**
+     * Side navigation with an expanded panel and an optional icon rail.
+     * @whenToUse navigate more than five top-level destinations or organize
+     * application destinations in named groups.
+     * @whenNotToUse for a few destinations, use top navigation. For mobile
+     * navigation, use a mobile navigation pattern or a drawer.
+     */
+    interface KiSidebar {
+        /**
+          * Accessible toggle name while the sidebar is expanded.
+          * @default 'Collapse sidebar'
+         */
+        "collapseLabel": string;
+        /**
+          * Display the icon rail. May also be assigned by the application.
+          * @default false
+         */
+        "collapsed": boolean;
+        /**
+          * Show the expand and collapse control.
+          * @default false
+         */
+        "collapsible": boolean;
+        /**
+          * Accessible toggle name while the sidebar is collapsed.
+          * @default 'Expand sidebar'
+         */
+        "expandLabel": string;
+        /**
+          * Accessible name for the navigation landmark.
+          * @default 'Main'
+         */
+        "label": string;
+        /**
+          * Optional local storage key scoped by the application to one profile and sidebar. The saved state is restored at initialization. User toggles write the preference. Use a stable key for the lifetime of the element.
+         */
+        "preference"?: { storageKey: string };
+    }
+    /**
+     * A named list of routes within sidebar navigation.
+     * @whenToUse give related sidebar destinations a common heading.
+     * @whenNotToUse as a destination or outside ki-sidebar.
+     */
+    interface KiSidebarGroup {
+        /**
+          * Visible group heading and accessible name of the nested list.
+         */
+        "label": string;
+    }
+    /**
+     * One destination in a sidebar.
+     * @whenToUse link to a named destination in ki-sidebar or ki-sidebar-group.
+     * Register ki-tooltip once when using direct component imports for a rail.
+     * @whenNotToUse for commands, nested controls, or standalone links outside the sidebar.
+     */
+    interface KiSidebarItem {
+        /**
+          * Positive unread count. Fractional values round down.
+         */
+        "count"?: number;
+        /**
+          * Accessible count template, using the {label} and {count} placeholders.
+          * @default '{label}, {count} new'
+         */
+        "countLabel": string;
+        /**
+          * Mark this destination as the current page.
+          * @default false
+         */
+        "current": boolean;
+        /**
+          * Destination resolved by a native link. Omit for a static row.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Name of a registered Lucide glyph. Import its per-icon entry point first.
+         */
+        "iconName"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -1526,6 +1606,10 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
 export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
+}
+export interface KiSidebarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiSidebarElement;
 }
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2077,6 +2161,53 @@ declare global {
         prototype: HTMLKiSelectElement;
         new (): HTMLKiSelectElement;
     };
+    interface HTMLKiSidebarElementEventMap {
+        "ki-sidebar-change": { collapsed: boolean };
+    }
+    /**
+     * Side navigation with an expanded panel and an optional icon rail.
+     * @whenToUse navigate more than five top-level destinations or organize
+     * application destinations in named groups.
+     * @whenNotToUse for a few destinations, use top navigation. For mobile
+     * navigation, use a mobile navigation pattern or a drawer.
+     */
+    interface HTMLKiSidebarElement extends Components.KiSidebar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiSidebarElementEventMap>(type: K, listener: (this: HTMLKiSidebarElement, ev: KiSidebarCustomEvent<HTMLKiSidebarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiSidebarElementEventMap>(type: K, listener: (this: HTMLKiSidebarElement, ev: KiSidebarCustomEvent<HTMLKiSidebarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiSidebarElement: {
+        prototype: HTMLKiSidebarElement;
+        new (): HTMLKiSidebarElement;
+    };
+    /**
+     * A named list of routes within sidebar navigation.
+     * @whenToUse give related sidebar destinations a common heading.
+     * @whenNotToUse as a destination or outside ki-sidebar.
+     */
+    interface HTMLKiSidebarGroupElement extends Components.KiSidebarGroup, HTMLStencilElement {
+    }
+    var HTMLKiSidebarGroupElement: {
+        prototype: HTMLKiSidebarGroupElement;
+        new (): HTMLKiSidebarGroupElement;
+    };
+    /**
+     * One destination in a sidebar.
+     * @whenToUse link to a named destination in ki-sidebar or ki-sidebar-group.
+     * Register ki-tooltip once when using direct component imports for a rail.
+     * @whenNotToUse for commands, nested controls, or standalone links outside the sidebar.
+     */
+    interface HTMLKiSidebarItemElement extends Components.KiSidebarItem, HTMLStencilElement {
+    }
+    var HTMLKiSidebarItemElement: {
+        prototype: HTMLKiSidebarItemElement;
+        new (): HTMLKiSidebarItemElement;
+    };
     /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
@@ -2354,6 +2485,9 @@ declare global {
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-select": HTMLKiSelectElement;
+        "ki-sidebar": HTMLKiSidebarElement;
+        "ki-sidebar-group": HTMLKiSidebarGroupElement;
+        "ki-sidebar-item": HTMLKiSidebarItemElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
@@ -3417,6 +3551,90 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * Side navigation with an expanded panel and an optional icon rail.
+     * @whenToUse navigate more than five top-level destinations or organize
+     * application destinations in named groups.
+     * @whenNotToUse for a few destinations, use top navigation. For mobile
+     * navigation, use a mobile navigation pattern or a drawer.
+     */
+    interface KiSidebar {
+        /**
+          * Accessible toggle name while the sidebar is expanded.
+          * @default 'Collapse sidebar'
+         */
+        "collapseLabel"?: string;
+        /**
+          * Display the icon rail. May also be assigned by the application.
+          * @default false
+         */
+        "collapsed"?: boolean;
+        /**
+          * Show the expand and collapse control.
+          * @default false
+         */
+        "collapsible"?: boolean;
+        /**
+          * Accessible toggle name while the sidebar is collapsed.
+          * @default 'Expand sidebar'
+         */
+        "expandLabel"?: string;
+        /**
+          * Accessible name for the navigation landmark.
+          * @default 'Main'
+         */
+        "label"?: string;
+        /**
+          * Reports the new collapsed state after a user toggle. Programmatic writes are silent.
+         */
+        "onKi-sidebar-change"?: (event: KiSidebarCustomEvent<{ collapsed: boolean }>) => void;
+        /**
+          * Optional local storage key scoped by the application to one profile and sidebar. The saved state is restored at initialization. User toggles write the preference. Use a stable key for the lifetime of the element.
+         */
+        "preference"?: { storageKey: string };
+    }
+    /**
+     * A named list of routes within sidebar navigation.
+     * @whenToUse give related sidebar destinations a common heading.
+     * @whenNotToUse as a destination or outside ki-sidebar.
+     */
+    interface KiSidebarGroup {
+        /**
+          * Visible group heading and accessible name of the nested list.
+         */
+        "label": string;
+    }
+    /**
+     * One destination in a sidebar.
+     * @whenToUse link to a named destination in ki-sidebar or ki-sidebar-group.
+     * Register ki-tooltip once when using direct component imports for a rail.
+     * @whenNotToUse for commands, nested controls, or standalone links outside the sidebar.
+     */
+    interface KiSidebarItem {
+        /**
+          * Positive unread count. Fractional values round down.
+         */
+        "count"?: number;
+        /**
+          * Accessible count template, using the {label} and {count} placeholders.
+          * @default '{label}, {count} new'
+         */
+        "countLabel"?: string;
+        /**
+          * Mark this destination as the current page.
+          * @default false
+         */
+        "current"?: boolean;
+        /**
+          * Destination resolved by a native link. Omit for a static row.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Name of a registered Lucide glyph. Import its per-icon entry point first.
+         */
+        "iconName"?: string;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -4038,6 +4256,23 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiSidebarAttributes {
+        "label": string;
+        "collapsible": boolean;
+        "collapsed": boolean;
+        "collapseLabel": string;
+        "expandLabel": string;
+    }
+    interface KiSidebarGroupAttributes {
+        "label": string;
+    }
+    interface KiSidebarItemAttributes {
+        "href": string;
+        "current": boolean;
+        "count": number;
+        "countLabel": string;
+        "iconName": string;
+    }
     interface KiSpinnerAttributes {
         "label": string;
         "variant": 'ring' | 'dots';
@@ -4143,6 +4378,9 @@ declare namespace LocalJSX {
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
+        "ki-sidebar": Omit<KiSidebar, keyof KiSidebarAttributes> & { [K in keyof KiSidebar & keyof KiSidebarAttributes]?: KiSidebar[K] } & { [K in keyof KiSidebar & keyof KiSidebarAttributes as `attr:${K}`]?: KiSidebarAttributes[K] } & { [K in keyof KiSidebar & keyof KiSidebarAttributes as `prop:${K}`]?: KiSidebar[K] };
+        "ki-sidebar-group": Omit<KiSidebarGroup, keyof KiSidebarGroupAttributes> & { [K in keyof KiSidebarGroup & keyof KiSidebarGroupAttributes]?: KiSidebarGroup[K] } & { [K in keyof KiSidebarGroup & keyof KiSidebarGroupAttributes as `attr:${K}`]?: KiSidebarGroupAttributes[K] } & { [K in keyof KiSidebarGroup & keyof KiSidebarGroupAttributes as `prop:${K}`]?: KiSidebarGroup[K] } & OneOf<"label", KiSidebarGroup["label"], KiSidebarGroupAttributes["label"]>;
+        "ki-sidebar-item": Omit<KiSidebarItem, keyof KiSidebarItemAttributes> & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes]?: KiSidebarItem[K] } & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes as `attr:${K}`]?: KiSidebarItemAttributes[K] } & { [K in keyof KiSidebarItem & keyof KiSidebarItemAttributes as `prop:${K}`]?: KiSidebarItem[K] };
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
@@ -4518,6 +4756,27 @@ declare module "@stencil/core" {
              * are silent.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
+            /**
+             * Side navigation with an expanded panel and an optional icon rail.
+             * @whenToUse navigate more than five top-level destinations or organize
+             * application destinations in named groups.
+             * @whenNotToUse for a few destinations, use top navigation. For mobile
+             * navigation, use a mobile navigation pattern or a drawer.
+             */
+            "ki-sidebar": LocalJSX.IntrinsicElements["ki-sidebar"] & JSXBase.HTMLAttributes<HTMLKiSidebarElement>;
+            /**
+             * A named list of routes within sidebar navigation.
+             * @whenToUse give related sidebar destinations a common heading.
+             * @whenNotToUse as a destination or outside ki-sidebar.
+             */
+            "ki-sidebar-group": LocalJSX.IntrinsicElements["ki-sidebar-group"] & JSXBase.HTMLAttributes<HTMLKiSidebarGroupElement>;
+            /**
+             * One destination in a sidebar.
+             * @whenToUse link to a named destination in ki-sidebar or ki-sidebar-group.
+             * Register ki-tooltip once when using direct component imports for a rail.
+             * @whenNotToUse for commands, nested controls, or standalone links outside the sidebar.
+             */
+            "ki-sidebar-item": LocalJSX.IntrinsicElements["ki-sidebar-item"] & JSXBase.HTMLAttributes<HTMLKiSidebarItemElement>;
             /**
              * A compact status for an indeterminate wait.
              * @whenToUse show brief inline activity such as saving a change or running a

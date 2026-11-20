@@ -1333,6 +1333,100 @@ export const catalogData = {
       "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
       "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited."
     },
+    "ki-sidebar": {
+      "description": "Side navigation with an expanded panel and an optional icon rail.",
+      "events": {
+        "ki-sidebar-change": "Reports the new collapsed state after a user toggle. Programmatic writes are silent."
+      },
+      "props": {
+        "collapse-label": {
+          "type": "string",
+          "description": "Accessible toggle name while the sidebar is expanded.",
+          "default": "Collapse sidebar"
+        },
+        "collapsed": {
+          "type": "boolean",
+          "description": "Display the icon rail. May also be assigned by the application.",
+          "default": false
+        },
+        "collapsible": {
+          "type": "boolean",
+          "description": "Show the expand and collapse control.",
+          "default": false
+        },
+        "expand-label": {
+          "type": "string",
+          "description": "Accessible toggle name while the sidebar is collapsed.",
+          "default": "Expand sidebar"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the navigation landmark.",
+          "default": "Main"
+        }
+      },
+      "slots": {
+        "": "Navigation routes and groups, in reading order.",
+        "brand": "Presentational brand content for the expanded panel.",
+        "footer": "Account trigger or other app-owned content available in both modes."
+      },
+      "tag": "ki-sidebar",
+      "whenNotToUse": "for a few destinations, use top navigation. For mobile\nnavigation, use a mobile navigation pattern or a drawer.",
+      "whenToUse": "navigate more than five top-level destinations or organize\napplication destinations in named groups."
+    },
+    "ki-sidebar-group": {
+      "description": "A named list of routes within sidebar navigation.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Visible group heading and accessible name of the nested list.",
+          "required": true
+        }
+      },
+      "slots": {
+        "": "One or more ki-sidebar-item routes."
+      },
+      "tag": "ki-sidebar-group",
+      "whenNotToUse": "as a destination or outside ki-sidebar.",
+      "whenToUse": "give related sidebar destinations a common heading."
+    },
+    "ki-sidebar-item": {
+      "description": "One destination in a sidebar.",
+      "events": {},
+      "props": {
+        "count": {
+          "type": "number",
+          "description": "Positive unread count. Fractional values round down."
+        },
+        "count-label": {
+          "type": "string",
+          "description": "Accessible count template, using the {label} and {count} placeholders.",
+          "default": "{label}, {count} new"
+        },
+        "current": {
+          "type": "boolean",
+          "description": "Mark this destination as the current page.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Destination resolved by a native link. Omit for a static row.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Name of a registered Lucide glyph. Import its per-icon entry point first."
+        }
+      },
+      "slots": {
+        "": "The destination name as text or static inline content.",
+        "start": "One decorative icon that overrides icon-name."
+      },
+      "tag": "ki-sidebar-item",
+      "whenNotToUse": "for commands, nested controls, or standalone links outside the sidebar.",
+      "whenToUse": "link to a named destination in ki-sidebar or ki-sidebar-group.\nRegister ki-tooltip once when using direct component imports for a rail."
+    },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",
       "events": {},
