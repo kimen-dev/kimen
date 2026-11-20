@@ -26,7 +26,7 @@ export class KiSuggestion {
   /** Optional accessible description, visible below the title in cards. */
   @Prop() description?: string;
 
-  @State() private title = '';
+  @State() private promptTitle = '';
 
   private titleObserver?: MutationObserver;
 
@@ -45,29 +45,29 @@ export class KiSuggestion {
       .filter((node) => node.nodeType === Node.TEXT_NODE)
       .map((node) => node.textContent)
       .join('');
-    this.title = normalizeSuggestionTitle(text);
+    this.promptTitle = normalizeSuggestionTitle(text);
   };
 
   render() {
     const description = this.description && normalizeSuggestionTitle(this.description);
 
     return (
-      <Host data-ki-suggestion-empty={this.title ? undefined : ''}>
+      <Host data-ki-suggestion-empty={this.promptTitle ? undefined : ''}>
         <span hidden>
           <slot />
         </span>
-        {this.title && (
+        {this.promptTitle && (
           <button
             type="button"
             part="button"
             tabIndex={0}
-            aria-label={this.title}
+            aria-label={this.promptTitle}
             aria-describedby={description ? 'description' : undefined}
             onKeyDown={startKeyboardPress}
             onKeyUp={releaseKeyboardPress}
             onBlur={endKeyboardPress}
           >
-            <span>{this.title}</span>
+            <span>{this.promptTitle}</span>
             {description && (
               <span id="description" part="description">
                 {description}

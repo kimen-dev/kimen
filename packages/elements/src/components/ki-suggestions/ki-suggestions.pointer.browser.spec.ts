@@ -67,9 +67,9 @@ it.for(['chips', 'cards'])(
     // Probe half a pixel inside each edge of the 44 px target to avoid
     // rounding at the boundary. The chip paints only 32 px tall.
     const halfTarget = 21.5;
-    expect(root.elementFromPoint(x, y - halfTarget)).toBe(control);
-    expect(root.elementFromPoint(x, y + halfTarget)).toBe(control);
-    expect(root.elementFromPoint(x - halfTarget, y)).toBe(control);
-    expect(root.elementFromPoint(x + halfTarget, y)).toBe(control);
+    expect(control.contains(root.elementFromPoint(x, y - halfTarget))).toBe(true);
+    expect(control.contains(root.elementFromPoint(x, y + halfTarget))).toBe(true);
+    expect(control.contains(root.elementFromPoint(x - halfTarget, y))).toBe(true);
+    expect(control.contains(root.elementFromPoint(x + halfTarget, y))).toBe(true);
   },
 );

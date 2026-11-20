@@ -36,3 +36,13 @@ it('removes the native button when its prompt becomes blank', async () => {
 
   await expect.element(page.getByRole('button')).not.toBeInTheDocument();
 });
+
+it('preserves the host title attribute independently of the prompt text', async () => {
+  fixture.innerHTML = '<ki-suggestion title="Editorial note">Review changes</ki-suggestion>';
+  const button = page.getByRole('button', { name: 'Review changes' });
+  await expect.element(button).toBeVisible();
+
+  const suggestion = fixture.querySelector('ki-suggestion');
+  if (!suggestion) throw new Error('Missing suggestion');
+  expect(suggestion.title).toBe('Editorial note');
+});
