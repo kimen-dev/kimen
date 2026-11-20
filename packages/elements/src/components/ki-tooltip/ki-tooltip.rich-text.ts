@@ -2,10 +2,9 @@
 export function readRichTooltipText(
   nodes: Iterable<Pick<Node, 'nodeName' | 'textContent'>>,
 ): string {
-  return Array.from(nodes)
-    .filter((node) => node.nodeName === '#text')
-    .map((node) => node.textContent)
-    .join('')
-    .replace(/[\t\n\f\r ]+/gu, ' ')
-    .trim();
+  let text = '';
+  for (const node of nodes) {
+    if (node.nodeName === '#text') text += node.textContent ?? '';
+  }
+  return text.replace(/[\t\n\f\r ]+/gu, ' ').trim();
 }

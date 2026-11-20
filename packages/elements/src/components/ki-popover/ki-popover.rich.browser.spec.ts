@@ -39,14 +39,14 @@ async function mount(
     <ki-popover for="contrast" label="About contrast mode" kind="toggletip" appearance="rich" placement="${placement}">
       <strong>Contrast mode</strong><p>Kimen follows the system setting.</p>${content}
     </ki-popover>
-    <button type="button" tabindex="0">Next</button>
+    <input aria-label="Search" tabindex="0">
   `;
   const trigger = page.getByRole('button', { name: 'Contrast', exact: true });
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
   return {
     trigger,
     action: page.getByRole('button', { name: 'Learn more' }),
-    next: page.getByRole('button', { name: 'Next' }),
+    search: page.getByRole('textbox', { name: 'Search' }),
     dialog: page.getByRole('dialog', { name: 'About contrast mode' }),
   };
 }
@@ -64,13 +64,13 @@ it('S3 click opens the rich toggletip and focuses the action', async () => {
 });
 
 it('S4 outside click dismisses and leaves focus on the outside control', async () => {
-  const { trigger, next, dialog } = await mount();
+  const { trigger, search, dialog } = await mount();
   await trigger.click();
 
-  await next.click();
+  await search.click();
 
   await expect.element(dialog).not.toBeInTheDocument();
-  await expect.element(next).toHaveFocus();
+  await expect.element(search).toHaveFocus();
 });
 
 it('S7 Enter from the trigger opens the rich toggletip and focuses its action', async () => {

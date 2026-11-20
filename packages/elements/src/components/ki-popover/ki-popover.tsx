@@ -83,7 +83,7 @@ export class KiPopover {
    * Rich shares the tooltip's raised surface, body and heading styles. With
    * `kind="toggletip"` it enables actions and moves focus inside on open.
    */
-  @Prop() appearance: KiPopoverAppearance = 'default';
+  @Prop() appearance?: KiPopoverAppearance = 'default';
 
   /** Emitted when the popover opens. */
   @Event({ eventName: 'ki-open', cancelable: false }) kiOpen!: EventEmitter<void>;

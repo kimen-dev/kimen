@@ -1,7 +1,6 @@
 /* Tokens only (Art. VI): every visual value resolves from --ki-tooltip-*.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
-  --_ki-tooltip-radius: var(--ki-tooltip-radius);
   --_ki-tooltip-padding-inline: calc(
     var(--ki-tooltip-padding-inline) *
     var(--ki-density-space-scale)
@@ -10,16 +9,8 @@
     var(--ki-tooltip-padding-block) *
     var(--ki-density-space-scale)
   );
-  --_ki-tooltip-max-inline-size: var(--ki-tooltip-max-inline-size);
-  --_ki-tooltip-offset: var(--ki-tooltip-offset);
-  --_ki-tooltip-bg: var(--ki-tooltip-bg);
-  --_ki-tooltip-arrow-bg-start: var(--ki-surface-image-tooltip-arrow-start, var(--_ki-tooltip-bg));
-  --_ki-tooltip-arrow-bg-end: var(--ki-surface-image-tooltip-arrow-end, var(--_ki-tooltip-bg));
-  --_ki-tooltip-fg: var(--ki-tooltip-fg);
-  --_ki-tooltip-font-size: var(--ki-tooltip-font-size);
-  --_ki-tooltip-font-weight: var(--ki-tooltip-font-weight);
-  --_ki-tooltip-line-height: var(--ki-tooltip-line-height);
-  --_ki-tooltip-shadow: var(--ki-tooltip-shadow);
+  --_ki-tooltip-arrow-bg-start: var(--ki-surface-image-tooltip-arrow-start, var(--ki-tooltip-bg));
+  --_ki-tooltip-arrow-bg-end: var(--ki-surface-image-tooltip-arrow-end, var(--ki-tooltip-bg));
   --_ki-tooltip-cross-shift: 0px;
 
   /* Inline direction as a sign. `translate` and the measured cross shift are
@@ -54,24 +45,25 @@
   position-anchor: --ki-tooltip-anchor;
   inset: auto;
   margin: 0;
+  scroll-margin-block: var(--ki-tooltip-offset);
   overflow: visible;
   box-sizing: border-box;
   inline-size: max-content;
-  max-inline-size: var(--_ki-tooltip-max-inline-size);
+  max-inline-size: var(--ki-tooltip-max-inline-size);
   padding-block: var(--_ki-tooltip-padding-block);
   padding-inline: var(--_ki-tooltip-padding-inline);
-  border-radius: var(--_ki-tooltip-radius);
-  background-color: var(--_ki-tooltip-bg);
+  border-radius: var(--ki-tooltip-radius);
+  background-color: var(--ki-tooltip-bg);
   background-image: var(--ki-tooltip-bg-image, none);
   backdrop-filter: var(--_ki-tooltip-backdrop-filter, var(--ki-tooltip-backdrop-filter));
 
   /* Bevel hairline: Outline/secondary_button_top on all four sides. */
   border: var(--ki-tooltip-border-width) solid var(--ki-tooltip-border-color);
-  box-shadow: var(--_ki-tooltip-shadow);
-  color: var(--_ki-tooltip-fg);
-  font-size: var(--_ki-tooltip-font-size);
-  font-weight: var(--_ki-tooltip-font-weight);
-  line-height: var(--_ki-tooltip-line-height);
+  box-shadow: var(--ki-tooltip-shadow);
+  color: var(--ki-tooltip-fg);
+  font-size: var(--ki-tooltip-font-size);
+  font-weight: var(--ki-tooltip-font-weight);
+  line-height: var(--ki-tooltip-line-height);
   overflow-wrap: break-word;
   pointer-events: auto;
   visibility: hidden;
@@ -116,11 +108,11 @@
 }
 
 .tooltip.placement-top {
-  inset-block-end: calc(anchor(self-start) + var(--_ki-tooltip-offset));
+  inset-block-end: calc(anchor(self-start) + var(--ki-tooltip-offset));
 }
 
 .tooltip.placement-bottom {
-  inset-block-start: calc(anchor(self-end) + var(--_ki-tooltip-offset));
+  inset-block-start: calc(anchor(self-end) + var(--ki-tooltip-offset));
 }
 
 .tooltip.placement-start,
@@ -130,11 +122,11 @@
 }
 
 .tooltip.placement-start {
-  inset-inline-end: calc(anchor(self-start) + var(--_ki-tooltip-offset));
+  inset-inline-end: calc(anchor(self-start) + var(--ki-tooltip-offset));
 }
 
 .tooltip.placement-end {
-  inset-inline-start: calc(anchor(self-end) + var(--_ki-tooltip-offset));
+  inset-inline-start: calc(anchor(self-end) + var(--ki-tooltip-offset));
 }
 
 /* The arrow of the Tooltip master (12089:7621): 16px across and 8px deep in
@@ -263,20 +255,6 @@
   display: none;
 }
 
-/* The forced palette replaces the image with an opaque Canvas fill.
- * The browser's thin border keeps the surface edge visible in that palette. */
-@media (forced-colors: active) {
-  .tooltip {
-    background: Canvas;
-    border: thin solid CanvasText;
-  }
-
-  /* On Canvas, the arrow is drawn in the text colour or it is not drawn. */
-  .tooltip > .arrow {
-    background: CanvasText;
-  }
-}
-
 /* Compatibility with the deprecated length while the full filter uses its default. */
 @container style(--ki-tooltip-backdrop-filter: var(--_ki-backdrop-filter-default)) {
   [part="tooltip"] {
@@ -284,9 +262,8 @@
   }
 }
 
-.tooltip.rich {
+.tooltip:where(.rich) {
   position-anchor: auto;
-  scroll-margin-block: var(--ki-tooltip-offset);
   max-inline-size: min(var(--ki-tooltip-rich-max-width), 100dvi);
   padding-block: calc(var(--ki-tooltip-rich-padding-block) * var(--ki-density-space-scale));
   padding-inline: calc(var(--ki-tooltip-rich-padding-inline) * var(--ki-density-space-scale));
@@ -330,50 +307,51 @@
   margin-block-end: var(--ki-tooltip-rich-heading-gap);
 }
 
-/* Bridge the pointer gap so slow travel toward the tooltip stays hoverable. */
+/* Extend the invisible hit area across the gap facing the trigger. */
 .tooltip.rich::after {
-  position: absolute;
-  content: "";
-}
+  --_ki-tooltip-bridge: calc(-1 * (var(--ki-tooltip-offset) + var(--ki-tooltip-rich-border-width)));
 
-.rich[data-side="top"]::after,
-.rich[data-side="bottom"]::after {
-  inset-inline: 0;
-  block-size: calc(var(--ki-tooltip-offset) + var(--ki-tooltip-rich-border-width));
+  position: absolute;
+  inset: 0;
+  content: "";
+  z-index: -1;
 }
 
 .rich[data-side="top"]::after {
-  inset-block-start: 100%;
+  inset-block-end: var(--_ki-tooltip-bridge);
 }
 
 .rich[data-side="bottom"]::after {
-  inset-block-end: 100%;
-}
-
-.rich[data-side="start"]::after,
-.rich[data-side="end"]::after {
-  inset-block: 0;
-  inline-size: calc(var(--ki-tooltip-offset) + var(--ki-tooltip-rich-border-width));
+  inset-block-start: var(--_ki-tooltip-bridge);
 }
 
 .rich[data-side="start"]::after {
-  inset-inline-start: 100%;
+  inset-inline-end: var(--_ki-tooltip-bridge);
 }
 
 .rich[data-side="end"]::after {
-  inset-inline-end: 100%;
+  inset-inline-start: var(--_ki-tooltip-bridge);
 }
 
+/* The forced palette replaces the image with an opaque Canvas fill.
+ * The browser's thin border keeps the surface edge visible in that palette. */
 @media (forced-colors: active) {
-  .tooltip.rich {
-    border-color: CanvasText;
-    background-color: Canvas;
-    background-image: none;
+  .tooltip {
+    background: Canvas;
+    border: thin solid CanvasText;
+  }
+
+  .tooltip:where(.rich) {
     backdrop-filter: none;
     color: CanvasText;
   }
 
   .rich-heading {
-    color: CanvasText;
+    color: inherit;
+  }
+
+  /* On Canvas, the arrow is drawn in the text colour or it is not drawn. */
+  .tooltip > .arrow {
+    background: CanvasText;
   }
 }

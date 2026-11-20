@@ -38,8 +38,8 @@ Feature: Rich tooltip and toggletip
   # S4
   Scenario: A rich toggletip closes by outside click
     Given an open rich toggletip
-    When the user clicks another button outside it
-    Then the panel closes and the other button keeps focus
+    When the user clicks a text field outside it
+    Then the panel closes and the text field keeps focus
 
   # Family: keyboard path
   # S5

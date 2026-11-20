@@ -41,11 +41,12 @@ it('S14 opens with a coarse pointer and follows the inherited compact density', 
     </ki-popover>`;
   document.body.append(fixture);
 
-  await expect.element(page.getByRole('button', { name: 'Help', exact: true })).toBeVisible();
+  const trigger = page.getByRole('button', { name: 'Help', exact: true });
+  await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
   if (emulated) {
     await pointer.tapWithCoarsePointer('#touch-help');
   } else {
-    await page.getByRole('button', { name: 'Help', exact: true }).click();
+    await trigger.click();
   }
 
   const surface = await page.getByRole('dialog', { name: 'About help' }).findElement();

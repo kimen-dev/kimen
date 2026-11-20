@@ -16,14 +16,18 @@ export function createTooltipDescription(host: HTMLElement): HTMLSpanElement {
 export function attachTooltipDescription(element: Element, description: Element): () => void {
   // Stencil's bundled DOM declarations predate reflected ARIA element references.
   const target = element as Element & { ariaDescribedByElements: readonly Element[] | null };
+  const attribute = target.getAttribute('aria-describedby');
+  const authored = target.ariaDescribedByElements ?? [];
   if (
     target.getRootNode() === description.getRootNode() &&
-    (target.hasAttribute('aria-describedby') || !target.ariaDescribedByElements?.length)
+    (attribute?.trim() || authored.length === 0)
   ) {
-    const ids = () => target.getAttribute('aria-describedby')?.match(/\S+/gu) ?? [];
+    const ids = (): string[] => target.getAttribute('aria-describedby')?.match(/\S+/gu) ?? [];
     target.setAttribute('aria-describedby', [...ids(), description.id].join(' '));
     return () => {
-      const remaining = ids().filter((id) => id !== description.id);
+      const current = ids();
+      if (!current.includes(description.id)) return;
+      const remaining = current.filter((id) => id !== description.id);
       if (remaining.length > 0) {
         target.setAttribute('aria-describedby', remaining.join(' '));
       } else {
@@ -34,15 +38,13 @@ export function attachTooltipDescription(element: Element, description: Element)
 
   // The real focus control in a custom trigger's shadow can reference an
   // element in an ancestor tree through ARIA element reflection.
-  const attribute = target.getAttribute('aria-describedby');
-  const authored = target.ariaDescribedByElements ?? [];
   target.ariaDescribedByElements = [...authored, description];
   return () => {
     const refs = target.ariaDescribedByElements;
     if (!refs?.includes(description)) return;
     const remaining = refs.filter((ref) => ref !== description);
     if (
-      attribute !== null &&
+      attribute?.trim() &&
       remaining.length === authored.length &&
       remaining.every((ref, index) => ref === authored[index])
     ) {

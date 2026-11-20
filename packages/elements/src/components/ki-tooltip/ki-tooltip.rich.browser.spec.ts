@@ -60,6 +60,7 @@ function mountTooltip(content = body, placement = 'top', describedBy = '') {
 
 it('S1 stays open when the pointer crosses from the external trigger onto the bubble', async () => {
   const { trigger, tip } = mountTooltip();
+  fixture.style.setProperty('--ki-tooltip-hide-delay', '0ms');
   await expect.element(trigger).toHaveAccessibleDescription(tooltipDescription);
   try {
     await clock.installClock();
@@ -100,6 +101,20 @@ it('S5 opens on Tab and leaves focus on the trigger', async () => {
 
   await expect.element(trigger).toHaveFocus();
   await expect.element(tip).toBeVisible();
+});
+
+it('S5 shows a rich tooltip added after its trigger took focus', async () => {
+  fixture.innerHTML = '<button id="retention" type="button" tabindex="0">Retention</button>';
+  const trigger = page.getByRole('button', { name: 'Retention' });
+  trigger.element().focus();
+
+  fixture.insertAdjacentHTML(
+    'beforeend',
+    `<ki-tooltip for="retention" heading="Grace period">${body}</ki-tooltip>`,
+  );
+
+  await expect.element(page.getByRole('tooltip')).toBeVisible();
+  await expect.element(trigger).toHaveFocus();
 });
 
 it('S6 Escape closes the focused tooltip and leaves the trigger focused', async () => {
@@ -144,6 +159,26 @@ it('S9 follows late trigger replacement and body edits', async () => {
     .element(trigger)
     .toHaveAccessibleDescription('Grace period Restorable for one month.');
   await expect.element(previous).not.toHaveAttribute('aria-describedby');
+});
+
+it('S9 preserves existing reflected description references when a tooltip is removed', async () => {
+  fixture.innerHTML =
+    '<button id="retention" type="button">Retention</button><span hidden>Policy</span>';
+  const trigger = page.getByRole('button', { name: 'Retention' }).element();
+  const authored = fixture.querySelector('span');
+  if (!authored) throw new Error('Description fixture missing');
+  trigger.ariaDescribedByElements = [authored];
+
+  fixture.insertAdjacentHTML(
+    'beforeend',
+    `<ki-tooltip for="retention" heading="Grace period">${body}</ki-tooltip>`,
+  );
+
+  await expect
+    .poll(() => trigger.ariaDescribedByElements?.map((element) => element.textContent))
+    .toEqual(['Policy', tooltipDescription]);
+  fixture.querySelector('ki-tooltip')?.remove();
+  expect(trigger.ariaDescribedByElements).toEqual([authored]);
 });
 
 it('S9 describes the shadow button inside a Kimen trigger', async () => {
