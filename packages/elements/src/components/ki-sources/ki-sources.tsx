@@ -123,7 +123,6 @@ export class KiSources {
                 part="source"
                 data-source-id={source.id}
                 href={source.href}
-                aria-labelledby={`title-${String(source.number)}`}
                 aria-describedby={`details-${String(source.number)}`}
                 tabIndex={0}
               >
@@ -131,10 +130,9 @@ export class KiSources {
                   {source.number}
                 </span>
                 <span class="description">
-                  <span part="title" id={`title-${String(source.number)}`}>
-                    {source.title}
-                  </span>
-                  <span class="details" id={`details-${String(source.number)}`}>
+                  <span part="title">{source.title}</span>
+                  {/* Keep metadata in the directly referenced description. */}
+                  <span class="details" id={`details-${String(source.number)}`} aria-hidden="true">
                     <span part="domain">{source.domain}</span>
                     {source.snippet && <span part="snippet">{source.snippet}</span>}
                   </span>

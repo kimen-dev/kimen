@@ -32,9 +32,13 @@ it('S1 uses first citation order, reuses numbers and lists uncited sources last'
 
 it('S2 opens native disclosure and shows source domains and snippets', async () => {
   fixture.innerHTML = `<ki-sources>${definitions}</ki-sources>`;
-  await expect.element(page.getByRole('link', { name: /Methods/ })).not.toBeVisible();
-  await page.getByText('2 sources', { exact: true }).click();
-  await expect.element(page.getByRole('link', { name: 'Methods', exact: true })).toBeVisible();
+  const summary = page.getByText('2 sources', { exact: true });
+  const method = page.getByRole('link', { name: 'Methods', exact: true });
+  await expect.element(summary).toBeVisible();
+  expect(method.query()).toBeNull();
+
+  await summary.click();
+  await expect.element(method).toBeVisible();
   await expect.element(page.getByText('example.org', { exact: true })).toBeVisible();
   await expect.element(page.getByText('How the study ran.', { exact: true })).toBeVisible();
   await expect.poll(() => fixture.querySelector('ki-sources')?.hasAttribute('open')).toBe(true);
@@ -66,9 +70,9 @@ it('S9 discloses an ordered list of named links and passes axe', async () => {
   await expect.element(page.getByRole('link', { name: 'Source 1: Methods' })).toBeVisible();
   const items = page.getByRole('list').getByRole('listitem');
   expect(items.elements()).toHaveLength(2);
-  await expect
-    .element(items.nth(0).getByRole('link', { name: 'Methods', exact: true }))
-    .toBeVisible();
+  const method = items.nth(0).getByRole('link', { name: 'Methods', exact: true });
+  await expect.element(method).toBeVisible();
+  await expect.element(method).toHaveAccessibleDescription('example.org How the study ran.');
   await expect
     .element(items.nth(1).getByRole('link', { name: 'Findings', exact: true }))
     .toBeVisible();

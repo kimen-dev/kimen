@@ -32,12 +32,14 @@ async function tabToCitation(): Promise<void> {
 it('S3 shows the referenced title and hostname on hover and remains open over the preview', async () => {
   answer();
   await link().hover();
+  await expect.element(preview()).toBeVisible();
+  expect(preview().element().matches(':popover-open')).toBe(true);
   await expect.element(preview()).toHaveTextContent('Methods');
   await expect.element(preview()).toHaveTextContent('example.org');
   await preview().hover();
   await expect.element(preview()).toBeVisible();
   await page.getByRole('button', { name: 'First control' }).hover();
-  await expect.element(preview()).not.toBeInTheDocument();
+  await expect.poll(() => preview().query()).toBeNull();
 });
 
 it('S7 displays the preview and visible focus on Tab and dismisses on Escape', async () => {
@@ -46,7 +48,7 @@ it('S7 displays the preview and visible focus on Tab and dismisses on Escape', a
   expect(getComputedStyle(link().element()).outlineStyle).toBe('solid');
   await expect.element(preview()).toBeVisible();
   await userEvent.keyboard('{Escape}');
-  await expect.element(preview()).not.toBeInTheDocument();
+  await expect.poll(() => preview().query()).toBeNull();
   await expect.poll(() => shadowLinkHasFocus(link().query())).toBe(true);
 });
 
@@ -57,7 +59,7 @@ it('S8 opens the closed list and focuses the named link on Enter', async () => {
   const source = page.getByRole('link', { name: 'Methods', exact: true });
   await expect.poll(() => shadowLinkHasFocus(source.query())).toBe(true);
   await expect.element(source).toHaveAttribute('href', 'https://example.org/methods');
-  await expect.element(preview()).not.toBeInTheDocument();
+  await expect.poll(() => preview().query()).toBeNull();
 });
 
 it('S10 paints the citation with the semantic second surface override', async () => {
@@ -116,4 +118,21 @@ it('restores the English link and disclosure labels when custom templates are re
   sources?.removeAttribute('sources-count-label');
   await expect.element(link()).toBeVisible();
   await expect.element(page.getByText('2 sources', { exact: true })).toBeVisible();
+});
+
+it('resolves and mirrors the citation property before and after mount', async () => {
+  fixture.innerHTML = `<p>Study</p><ki-sources>${definitions}</ki-sources>`;
+  const citation = document.createElement('ki-citation');
+  citation.citationRef = 'methods';
+  fixture.querySelector('p')?.append(citation);
+  await expect.element(link()).toBeVisible();
+  expect(citation.getAttribute('ref')).toBe('methods');
+
+  citation.citationRef = 'findings';
+  const updated = page.getByRole('link', { name: 'Source 1: Findings', exact: true });
+  await expect.element(updated).toBeVisible();
+  expect(citation.getAttribute('ref')).toBe('findings');
+
+  await updated.hover();
+  await expect.element(preview()).toHaveTextContent('Findings');
 });

@@ -47,22 +47,22 @@ title, domain, and optional snippet.
 
 ## Bundle measurements
 
-The comparison uses the branch fork point (`6e0d8ea`) and the candidate with
-Node 26.5.0 and the same installed dependencies. The baseline is a Git
+The comparison uses the merged `origin/main` (`f87e8d8`) and the candidate
+with Node 26.5.0 and the same installed dependencies. The baseline is a Git
 archive built inside this worktree with the package layout preserved.
 
 | Artifact | Metric | Baseline (bytes) | Candidate (bytes) | Increase (bytes) |
 | --- | --- | ---: | ---: | ---: |
-| MCP Apps document | Raw | 729159 | 748449 | 19290 |
-| MCP Apps document | Gzip level 9 | 170411 | 175652 | 5241 |
-| MCP Apps document | Brotli | 136858 | 140842 | 3984 |
-| MCP server binary | Raw | 2646711 | 2679625 | 32914 |
-| MCP server binary | Gzip level 9 | 502006 | 509543 | 7537 |
-| MCP server binary | Brotli | 370573 | 375391 | 4818 |
-| Onmars token stylesheet | Size Limit | 13330 | 13589 | 259 |
+| MCP Apps document | Raw | 762207 | 781749 | 19542 |
+| MCP Apps document | Gzip level 9 | 179013 | 184243 | 5230 |
+| MCP Apps document | Brotli | 143418 | 147120 | 3702 |
+| MCP server binary | Raw | 2701229 | 2734395 | 33166 |
+| MCP server binary | Gzip level 9 | 514106 | 521978 | 7872 |
+| MCP server binary | Brotli | 378389 | 383079 | 4690 |
+| Onmars token stylesheet | Size Limit | 13803 | 14073 | 270 |
 | Material 3 token stylesheet | Size Limit | 5331 | 5350 | 19 |
 
-The Sources composite measures 5.68 kB marginal and 24.48 kB including the
+The Sources composite measures 5.75 kB marginal and 24.55 kB including the
 Stencil runtime. The aggregate allowance in `ki-sources/component.json`
 records the measured increases and is pending founder confirmation.
 

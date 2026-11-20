@@ -1,4 +1,4 @@
-import { Component, Element, Host, Prop, State, h } from '@stencil/core';
+import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
 import { anchoredOverlayPosition } from '../../utils/anchored-overlay-layout';
 import { AnchoredOverlay } from '../../utils/anchored-overlay';
 import { formatSourceLabel } from '../ki-sources/sources-model';
@@ -27,7 +27,7 @@ export class KiCitation {
    * ID or source-id of the source. Use the `ref` attribute in HTML and
    * `citationRef` in JSX so framework refs remain available.
    */
-  @Prop({ attribute: 'ref', reflect: true }) citationRef!: string;
+  @Prop({ attribute: 'ref' }) citationRef!: string;
 
   /**
    * Localized link name with `{number}` and `{title}` placeholders.
@@ -57,6 +57,10 @@ export class KiCitation {
     this.disconnect = connectCitation(this.host, this.update);
   }
 
+  componentWillLoad(): void {
+    this.syncCitationRef(this.citationRef);
+  }
+
   disconnectedCallback(): void {
     this.disconnect?.();
     this.overlay.hide();
@@ -68,6 +72,21 @@ export class KiCitation {
 
   componentDidRender(): void {
     this.updatePreview();
+  }
+
+  @Watch('citationRef')
+  protected syncCitationRef(value: string | null | undefined): void {
+    // Stencil reserves the VDOM ref key for callbacks. Keep the HTML attribute
+    // in sync outside render so the Sources scope can observe property writes.
+    const reference = value ?? null;
+    if (this.host.getAttribute('ref') === reference) {
+      return;
+    }
+    if (reference === null) {
+      this.host.removeAttribute('ref');
+    } else {
+      this.host.setAttribute('ref', reference);
+    }
   }
 
   private update = (target: CitationTarget | undefined): void => {

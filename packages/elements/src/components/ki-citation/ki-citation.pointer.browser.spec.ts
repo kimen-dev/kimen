@@ -33,7 +33,8 @@ it('S14 activates on a coarse pointer without a hover preview and sizes list con
     expect(opening).not.toHaveBeenCalled();
     const source = page.getByRole('link', { name: 'Methods', exact: true });
     await expect.element(source).toBeVisible();
-    await expect.element(page.getByRole('tooltip')).not.toBeVisible();
+    expect(popup?.matches(':popover-open')).toBe(false);
+    expect(page.getByRole('tooltip').query()).toBeNull();
     const summary = page.getByText('2 sources', { exact: true }).element();
     expect(summary.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
     expect(source.element().getBoundingClientRect().height).toBeGreaterThanOrEqual(44);

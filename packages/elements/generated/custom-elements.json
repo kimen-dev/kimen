@@ -4118,7 +4118,7 @@
               },
               "description": "ID or source-id of the source. Use the `ref` attribute in HTML and\n`citationRef` in JSX so framework refs remain available.",
               "attribute": "ref",
-              "reflects": true,
+              "reflects": false,
               "required": true
             },
             {
