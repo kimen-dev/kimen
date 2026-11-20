@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "kimen": {
+      "command": "npx",
+      "args": ["-y", "-p", "@kimen/mcp-server", "kimen-mcp"]
+    }
+  }
+}

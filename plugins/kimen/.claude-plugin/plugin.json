@@ -6,5 +6,6 @@
   "homepage": "https://kimen.dev/docs/guides/connect-agents/",
   "repository": "https://github.com/kimen-dev/kimen",
   "license": "Apache-2.0",
-  "keywords": ["kimen", "web-components", "design-tokens", "generative-ui", "mcp-apps", "a2ui"]
+  "keywords": ["kimen", "web-components", "design-tokens", "generative-ui", "mcp-apps", "a2ui"],
+  "mcpServers": "./mcp_config.json"
 }
