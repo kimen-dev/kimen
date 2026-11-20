@@ -17,10 +17,13 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
+import { defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
+import { defineCustomElement as defineKiFormatDate } from '@kimen/elements/components/ki-format-date.js';
+import { defineCustomElement as defineKiFormatNumber } from '@kimen/elements/components/ki-format-number.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
 import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
@@ -40,6 +43,7 @@ import { defineCustomElement as defineKiProgress } from '@kimen/elements/compone
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
+import { defineCustomElement as defineKiRelativeTime } from '@kimen/elements/components/ki-relative-time.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
@@ -349,6 +353,37 @@ export declare interface KiChipGroup extends Components.KiChipGroup {
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiCopyButton,
+  inputs: ['copiedLabel', 'copyErrorLabel', 'feedbackDuration', 'from', 'label', 'size', 'value', 'variant']
+})
+@Component({
+  selector: 'ki-copy-button',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['copiedLabel', 'copyErrorLabel', 'feedbackDuration', 'from', 'label', 'size', 'value', 'variant'],
+})
+export class KiCopyButton {
+  protected el: HTMLKiCopyButtonElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCopyButton extends Components.KiCopyButton {
+  /**
+   * Fired after a successful clipboard write. The detail carries the exact text copied.
+   */
+  /**
+   * Fired when the source cannot be read or clipboard writing is unavailable or fails.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiCounter,
   inputs: ['dot', 'for', 'max', 'tone', 'value']
 })
@@ -450,6 +485,52 @@ export class KiEmptyState {
 
 
 export declare interface KiEmptyState extends Components.KiEmptyState {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFormatDate,
+  inputs: ['date', 'dateStyle', 'locale', 'timeStyle', 'timeZone']
+})
+@Component({
+  selector: 'ki-format-date',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['date', 'dateStyle', 'locale', 'timeStyle', 'timeZone'],
+})
+export class KiFormatDate {
+  protected el: HTMLKiFormatDateElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiFormatDate extends Components.KiFormatDate {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFormatNumber,
+  inputs: ['currency', 'formatStyle', 'maximumFractionDigits', 'minimumFractionDigits', 'notation', 'unit', 'value']
+})
+@Component({
+  selector: 'ki-format-number',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['currency', 'formatStyle', 'maximumFractionDigits', 'minimumFractionDigits', 'notation', 'unit', 'value'],
+})
+export class KiFormatNumber {
+  protected el: HTMLKiFormatNumberElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiFormatNumber extends Components.KiFormatNumber {}
 
 
 @ProxyCmp({
@@ -905,6 +986,29 @@ export class KiRadioGroup {
 
 
 export declare interface KiRadioGroup extends Components.KiRadioGroup {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiRelativeTime,
+  inputs: ['date', 'numeric', 'sync', 'threshold']
+})
+@Component({
+  selector: 'ki-relative-time',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['date', 'numeric', 'sync', 'threshold'],
+})
+export class KiRelativeTime {
+  protected el: HTMLKiRelativeTimeElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiRelativeTime extends Components.KiRelativeTime {}
 
 
 @ProxyCmp({
