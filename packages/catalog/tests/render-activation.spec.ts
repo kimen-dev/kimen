@@ -1,4 +1,5 @@
 // @spec:028-guarded-renderer
+// @spec:126-fullscreen-dialog
 // Activation events of bound actions (FR-003, S4, S17-S19): a bound action
 // fires on the activation event its catalog entry declares — never by
 // cancelling the control's own change — and carries the control's live,
@@ -334,5 +335,49 @@ describe('chip variant actions', () => {
     expect(onAction).not.toHaveBeenCalled();
     change(chip, 'ki-remove');
     expect(onAction).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('dialog confirmation', () => {
+  it('S10 binds the declared action to confirmation when a confirm label is present', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    renderUiSpec(
+      {
+        version: 1,
+        actions: ['save'],
+        root: {
+          component: 'ki-dialog',
+          action: 'save',
+          props: { heading: 'New event', fullscreen: 'compact', 'confirm-label': 'Save' },
+        },
+      },
+      { surface, onAction },
+    );
+    const dialog = rendered('ki-dialog');
+    change(dialog, 'ki-close');
+    expect(onAction).not.toHaveBeenCalled();
+
+    change(dialog, 'ki-confirm');
+    expect(onAction).toHaveBeenCalledTimes(1);
+    expect(onAction.mock.calls[0]?.[0]?.action).toBe('save');
+  });
+
+  it('keeps the existing dismissal binding when there is no confirm label', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    renderUiSpec(
+      {
+        version: 1,
+        actions: ['dismiss'],
+        root: { component: 'ki-dialog', action: 'dismiss', props: { heading: 'New event' } },
+      },
+      { surface, onAction },
+    );
+    const dialog = rendered('ki-dialog');
+    change(dialog, 'ki-confirm');
+    expect(onAction).not.toHaveBeenCalled();
+
+    change(dialog, 'ki-close');
+    expect(onAction).toHaveBeenCalledTimes(1);
+    expect(onAction.mock.calls[0]?.[0]?.action).toBe('dismiss');
   });
 });

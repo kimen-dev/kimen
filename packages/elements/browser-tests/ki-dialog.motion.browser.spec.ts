@@ -1,5 +1,6 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:012-ki-dialog
+// @spec:126-fullscreen-dialog
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
@@ -62,4 +63,18 @@ describe('ki-dialog with reduced motion', () => {
     expect(styles.transitionDuration).toBe('0s');
     expect(styles.opacity).toBe('1');
   });
+});
+
+it('S11 opens a fullscreen dialog without motion when reduced motion is preferred', async () => {
+  const el = await mount();
+  el.setAttribute('fullscreen', 'always');
+  await el.show();
+
+  const dialog = internalDialog(el);
+  await expect.poll(() => dialog.matches(':modal')).toBe(true);
+  const styles = getComputedStyle(dialog);
+  expect(styles.transitionDuration).toBe('0s');
+  expect(styles.animationName).toBe('none');
+  expect(styles.opacity).toBe('1');
+  expect(dialog.getBoundingClientRect().width).toBeCloseTo(document.documentElement.clientWidth);
 });
