@@ -680,7 +680,9 @@ const APPROVED_LANDING = {
 
 const APPROVED_PLAYGROUND = {
   header: [0, 0, 1440, 60],
-  brand: [32, 17.5, 143.1, 24],
+  // The stage tag is set in caption-1, 11px since the design-system review
+  // of 2026-11-20 (10px before), which widens the brand by 3.6px.
+  brand: [32, 17.5, 146.7, 24],
   navEnd: 1408,
   toolbar: [0, 60, 1440, 64],
   title: [32, 77.5, 169.2, 28],
