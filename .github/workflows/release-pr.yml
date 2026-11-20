@@ -68,7 +68,7 @@ jobs:
         id: plan
         run: node scripts/release/prepare-release.mjs
 
-      - name: Regenerate versioned API and catalog metadata
+      - name: Regenerate versioned API, catalog and MCP artifacts
         if: steps.plan.outputs.version != ''
         run: pnpm regen
 

@@ -1,24 +1,21 @@
 # Releasing Kimen
 
-Kimen publishes exactly `@kimen/elements` and `@kimen/tokens` from one
-immutable `release-candidate-v1` archive. Validation builds the bytes once;
-browser jobs and the publisher only consume that artifact. Versioning and
-GitHub writes happen in separate jobs before the publisher starts.
+Kimen publishes `@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server`
+from one immutable `release-candidate-v1` archive. Validation builds the
+bytes once. Browser jobs and the publisher consume that artifact.
+Versioning and GitHub writes happen in separate jobs before publication.
 
 ## v1 publication scope
 
-The current release contract covers exactly two packages: `@kimen/elements`
-and `@kimen/tokens`. The candidate archive packs those two, and every
-validation job binds to that two-package shape.
+The first automated release, `v0.1.0`, publishes all three packages at a
+single fixed version. The candidate records `@kimen/elements` first,
+`@kimen/tokens` second and `@kimen/mcp-server` third.
 
 `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui`,
 `@kimen/adapter-mcp-apps` and the framework wrappers `@kimen/react`,
 `@kimen/vue` and `@kimen/angular` are implemented in this repository but
-remain `private: true` and are not part of the candidate. Whether they
-publish — and under which versioning contract — is an **open founder
-decision**. Until that decision is made, do not add them to the candidate and
-do not weaken the two-package validation to accommodate them. Extending the
-scope requires changing the release-candidate contract, the release workflow
+remain `private: true`. Their publication and versioning require a founder
+decision. A scope change updates the release-candidate contract, workflow
 tests and this document together.
 
 **Internal-dependency rewrite (wrappers/adapters).** These packages depend on
@@ -38,7 +35,7 @@ package still carries a `workspace:` runtime range.
 | Mode | Entry point | Package state | Authority | Result |
 |---|---|---|---|---|
 | Dry run | Manual `release` workflow dispatch at the revision to validate | Current exact versions; `private: true` is accepted | Read-only repository token; no OIDC publisher runs | Core, candidate, independent verification and Chromium/Firefox/WebKit all execute; nothing is published |
-| Release | The release App pushes an annotated `vX.Y.Z` tag after the release PR is merged | Both packages are version `X.Y.Z`, `private: false`, and carry exact repository metadata | Only `publish`, after every validation job, receives `id-token: write` in the protected `npm` environment | Missing versions publish; byte-identical existing versions are skipped |
+| Release | The release App pushes an annotated `vX.Y.Z` tag after the release PR is merged | All three packages are version `X.Y.Z`, `private: false`, and carry exact repository metadata | Only `publish`, after every validation job, receives `id-token: write` in the protected `npm` environment | Missing versions publish; byte-identical existing versions are skipped |
 
 Dry run never creates tags, changes versions or carries dormant publication
 authority. A non-tag dispatch always emits a manifest whose `mode` is
@@ -53,18 +50,18 @@ authority. A non-tag dispatch always emits a manifest whose `mode` is
    raises the minor version before `1.0.0` and the major version thereafter.
 2. For a release-worthy change, the dedicated App opens or refreshes one
    pull request on `release/next`, titled `chore(release): vX.Y.Z`. The PR
-   sets both package versions, sets `private: false` if needed, and preserves
-   the required `repository` metadata. It adds a dated workspace changelog
+   sets all three package versions and flips `private: false` where needed.
+   It preserves the required `repository` metadata. It adds a dated workspace changelog
    entry that includes the existing `[Unreleased]` notes on the first
    automated release. The normal generators refresh the API index and the
-   catalog's embedded elements version. Private package manifests keep their
-   existing versions and visibility. A push with nothing to release or the
-   release commit itself needs no new PR.
+   catalog's embedded elements version, then rebuild the MCP binary with the
+   proposed version. Git ignores the generated MCP version module and bundle.
+   The workflow only proposes a PR for release-worthy commits.
 3. Once required checks pass, the founder squash-merges the release PR,
    keeping its title as the commit title: `release-tag.yml` only runs for a
    push whose commit title starts with `chore(release): v`.
    `release-tag.yml` verifies that the PR merged at the exact pushed commit
-   and that both package versions match its title. It pushes an annotated
+   and that all three package versions match its title. It pushes an annotated
    `vX.Y.Z` tag on that commit and creates the GitHub Release from that
    version's changelog entry. A retry can complete missing GitHub Release
    metadata for a matching tag. A conflicting tag fails the run and keeps
@@ -96,13 +93,15 @@ scripts. The publisher runner must provide npm `>=11.5.1`.
 
 Complete these steps before merging the first release PR.
 
-1. Bootstrap both npm package names. Trusted publishing cannot create a
+1. Bootstrap all three npm package names. Trusted publishing cannot create a
    package. In a local checkout, keep `0.0.0`, set `private: false` on
-   `@kimen/elements` and `@kimen/tokens`, and build and validate their
-   tarballs. Manually publish each tarball using your npm account with
+   `@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server`, and
+   build and validate their tarballs with the local dry-run candidate CLI.
+   Extract the three validated tarballs from `candidate.tar`. Manually publish
+   each tarball using your npm account with
    `npm publish <tarball> --access public --tag bootstrap --ignore-scripts`.
-   The placeholder only reserves the names; the first automated release
-   publishes under `latest` and replaces it there. Keep these local manifest
+   The bootstrap versions reserve the names. The first automated release
+   sets `latest` to `0.1.0`. Keep these local manifest
    edits out of `main`.
 2. Create and install a dedicated GitHub App on `kimen-dev/kimen` with
    repository permissions **Contents: Read and write** and **Pull requests:
@@ -111,11 +110,11 @@ Complete these steps before merging the first release PR.
 3. Create the GitHub environment `npm` and choose its deployment policy.
    Require founder approval to review each publication, or leave approval
    disabled for fully automatic publication after the release PR merges.
-4. Configure the npm trusted publisher on each package for repository
-   `kimen-dev/kimen`, workflow `release.yml`, and environment `npm`. Do this
-   last, when the first release PR is green and ready to merge: npm expires a
-   new trusted publisher configuration that has not completed a successful
-   publication within two days, and it must then be deleted and recreated.
+4. Configure a separate npm trusted publisher for each of the three names.
+   Use repository `kimen-dev/kimen`, workflow `release.yml` and environment
+   `npm`. Do this last, when the first release PR is green and ready to merge.
+   npm expires a new configuration after two days without a successful
+   publication. Delete and recreate an expired configuration.
 
 GitHub Actions uses OIDC for npm. Keep `NPM_TOKEN` and `NODE_AUTH_TOKEN` out
 of Actions. For the external steps, see the
@@ -124,17 +123,25 @@ of Actions. For the external steps, see the
 ## Immutable handoff and authority boundaries
 
 `validate-core` has `contents: read`, runs frozen deterministic gates, packs
-the exact two packages and uploads one non-overwriting artifact. It exports
+the exact three packages and uploads one non-overwriting artifact. It exports
 the GitHub artifact ID/digest plus an independently computed SHA-256 of
 `candidate.tar`.
 
 Each browser matrix job downloads by that artifact ID, recomputes the candidate
-SHA, verifies its manifest and checksums, installs the tarballs in a clean
-consumer and runs exactly one of Chromium, Firefox or WebKit. Matrix
-`fail-fast` is disabled so every engine leaves an outcome.
+SHA, verifies its manifest and checksums, installs the elements and tokens
+tarballs in a clean browser consumer and runs exactly one of Chromium,
+Firefox or WebKit. The matrix records an outcome for every engine.
 
 `verify-candidate` independently downloads and verifies the same artifact with
-no OIDC authority. `publish` needs `validate-core`, all browser jobs and
+no OIDC authority. The candidate builder and verifiers install the packed MCP
+tarball offline in a temporary npm project, then launch the installed
+`kimen-mcp` bin. A legacy MCP handshake must return the candidate version
+and list the five Kimen tools. They also verify that the packed NOTICE covers
+the npm code recorded in both the server bundle and its embedded browser
+surface. The release builder omits the MCP package's development dependencies
+from the packed manifest.
+
+`publish` needs `validate-core`, all browser jobs and
 `verify-candidate`; it runs only for release manifests. The publisher has no
 checkout and performs no dependency install, build, versioning or repository
 script execution. Its only elevated permission is short-lived OIDC
@@ -164,9 +171,9 @@ the publisher follows this closed decision table:
 | Version exists with the same `dist.integrity` | Skip it as already complete |
 | Version exists with different or missing integrity | Fail as a security conflict |
 
-If one of two packages publishes and the other fails, re-run only against the
-same source/tag and retained immutable artifact. The identical package is
-skipped and only the missing tarball is attempted. Never rebuild candidate
+If publication fails partway, re-run only against the same source/tag and
+retained immutable artifact. The publisher skips byte-identical versions and
+attempts each missing tarball. Never rebuild candidate
 bytes or advance the tag to recover a partial release. An integrity conflict
 requires investigation and the constitutional roll-forward procedure, not an
 overwrite (npm versions are immutable).

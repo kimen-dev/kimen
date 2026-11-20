@@ -21,10 +21,18 @@ things with Kimen:
 
 The exact MCP and MCP Apps revisions it serves are in [`COMPAT.md`](./COMPAT.md).
 
-## Run it
+## Install from npm
 
-The package is not published yet. Build it from the repository, then point
-your host at the binary:
+Available from the first release, `v0.1.0`. With Node.js 22 or later, use
+this command to install and start the stdio server:
+
+```bash
+npx -y -p @kimen/mcp-server kimen-mcp
+```
+
+## Run from the repository
+
+Build the server locally and point your host at the binary.
 
 ```bash
 pnpm exec nx run @kimen/mcp-server:build

@@ -23,7 +23,7 @@ import {
 const RULE = '='.repeat(80);
 const bundleNotices = [
   'QR Code generator library (MIT)',
-  'Stencil client runtime (MIT)',
+  '@stencil/core (MIT)',
   'Lucide 1.63.0 and Feather icons (ISC and MIT)',
 ];
 const fixtureNotice = [
@@ -102,6 +102,12 @@ it('a notice file with two sections of the same title is rejected', () => {
   assert.throws(() => noticeSections(duplicated), /Alpha \(MIT\).*twice/iu);
 });
 
+const mcpNotices = [
+  '@modelcontextprotocol/core (Apache-2.0)',
+  '@modelcontextprotocol/server (Apache-2.0)',
+  'zod (MIT)',
+];
+
 it('names exactly the sections each published package answers for', () => {
   assert.deepEqual(
     Object.fromEntries(
@@ -111,7 +117,7 @@ it('names exactly the sections each published package answers for', () => {
       '@kimen/elements': bundleNotices,
       '@kimen/tokens': ['onmars theme fonts (SIL OFL 1.1)'],
       '@kimen/adapter-mcp-apps': bundleNotices,
-      '@kimen/mcp-server': bundleNotices,
+      '@kimen/mcp-server': [...bundleNotices, ...mcpNotices],
     },
   );
   assert.equal(Object.isFrozen(PACKAGE_NOTICE_SECTIONS), true);
@@ -207,7 +213,7 @@ const repositoryNotice = [
   'QR body.',
   '',
   RULE,
-  'Third-party notices: Stencil client runtime (MIT)',
+  'Third-party notices: @stencil/core (MIT)',
   RULE,
   '',
   'Stencil body.',
@@ -224,6 +230,7 @@ const repositoryNotice = [
   '',
   'Fonts body.',
   '',
+  ...mcpNotices.flatMap((title) => [RULE, `Third-party notices: ${title}`, RULE, '', title, '']),
 ].join('\n');
 
 async function repositoryFixture(notice) {
@@ -266,16 +273,17 @@ it('writes a byte copy of the licence and the derived notice into each published
       'Apache License\nVersion 2.0 (fixture)\n',
     );
   }
-  for (const directory of [
-    'packages/elements',
-    'packages/adapter-mcp-apps',
-    'packages/mcp-server',
-  ]) {
-    assert.equal(
-      await readFile(join(root, directory, 'NOTICE'), 'utf8'),
-      `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: QR Code generator library (MIT)\n${RULE}\n\nQR body.\n\n${RULE}\nThird-party notices: Stencil client runtime (MIT)\n${RULE}\n\nStencil body.\n\n${RULE}\nThird-party notices: Lucide 1.63.0 and Feather icons (ISC and MIT)\n${RULE}\n\nIcon body.\n`,
-    );
+  const elementNotice = `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: QR Code generator library (MIT)\n${RULE}\n\nQR body.\n\n${RULE}\nThird-party notices: @stencil/core (MIT)\n${RULE}\n\nStencil body.\n\n${RULE}\nThird-party notices: Lucide 1.63.0 and Feather icons (ISC and MIT)\n${RULE}\n\nIcon body.\n`;
+  for (const directory of ['packages/elements', 'packages/adapter-mcp-apps']) {
+    assert.equal(await readFile(join(root, directory, 'NOTICE'), 'utf8'), elementNotice);
   }
+  assert.equal(
+    await readFile(join(root, 'packages/mcp-server/NOTICE'), 'utf8'),
+    elementNotice +
+      mcpNotices
+        .map((title) => `\n${RULE}\nThird-party notices: ${title}\n${RULE}\n\n${title}\n`)
+        .join(''),
+  );
   assert.equal(
     await readFile(join(root, 'packages/tokens/NOTICE'), 'utf8'),
     `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: onmars theme fonts (SIL OFL 1.1)\n${RULE}\n\nFonts body.\n`,

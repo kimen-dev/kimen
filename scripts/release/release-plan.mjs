@@ -3,6 +3,7 @@ import { isDeepStrictEqual } from 'node:util';
 export const releasePackages = new Map([
   ['@kimen/elements', 'packages/elements/package.json'],
   ['@kimen/tokens', 'packages/tokens/package.json'],
+  ['@kimen/mcp-server', 'packages/mcp-server/package.json'],
 ]);
 const versionPattern = '(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)';
 export const releaseVersionPattern = new RegExp(`^${versionPattern}$`, 'u');
@@ -97,9 +98,10 @@ export function releaseNotes(changelog, version) {
 export function releaseProposal(changelog, version) {
   const notes = releaseNotes(changelog, version);
   if (!notes) throw new Error(`Changelog entry for ${version} is missing or empty`);
+  const packages = [...releasePackages.keys()].map((name) => `\`${name}\``);
   return {
     title: `chore(release): v${version}`,
-    body: `Release \`@kimen/elements\` and \`@kimen/tokens\` at \`${version}\`. Merging this pull request starts tag creation and candidate validation.\n\n${notes}`,
+    body: `Release ${packages.slice(0, -1).join(', ')} and ${packages.at(-1)} at \`${version}\`. Merging this pull request starts tag creation and candidate validation.\n\n${notes}`,
   };
 }
 

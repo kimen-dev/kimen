@@ -22,6 +22,7 @@ import {
   validateCandidateManifest,
   verifyCandidate,
 } from '../release/build-candidate.mjs';
+import { mcpFixtureFields, writeMcpFixtureFiles } from '../tests/fixtures/mcp-package.mjs';
 
 // @spec:018-project-integrity-hardening#S7
 
@@ -32,6 +33,9 @@ const candidateSha256 = 'a'.repeat(64);
 const repositoryUrl = 'git+https://github.com/kimen-dev/kimen.git';
 const elementsIntegrity = `sha512-${Buffer.alloc(64, 1).toString('base64')}`;
 const tokensIntegrity = `sha512-${Buffer.alloc(64, 2).toString('base64')}`;
+
+const mcpName = '@kimen/mcp-server';
+const mcpIntegrity = `sha512-${Buffer.alloc(64, 3).toString('base64')}`;
 
 const hash = (algorithm, bytes, encoding = 'hex') =>
   createHash(algorithm).update(bytes).digest(encoding);
@@ -67,6 +71,7 @@ const aManifest = (overrides = {}) => ({
   packages: [
     packageRecord('@kimen/elements', `kimen-elements-${version}.tgz`, elementsIntegrity),
     packageRecord('@kimen/tokens', `kimen-tokens-${version}.tgz`, tokensIntegrity),
+    packageRecord(mcpName, `kimen-mcp-server-${version}.tgz`, mcpIntegrity),
   ],
   ...overrides,
 });
@@ -101,6 +106,7 @@ const publicationInput = (overrides = {}) => {
     registry: {
       '@kimen/elements': { exists: true, versions: {} },
       '@kimen/tokens': { exists: true, versions: {} },
+      [mcpName]: { exists: true, versions: {} },
     },
     trustedPublishers: {
       '@kimen/elements': {
@@ -109,6 +115,11 @@ const publicationInput = (overrides = {}) => {
         environment: 'npm',
       },
       '@kimen/tokens': {
+        configured: true,
+        workflow: '.github/workflows/release.yml',
+        environment: 'npm',
+      },
+      [mcpName]: {
         configured: true,
         workflow: '.github/workflows/release.yml',
         environment: 'npm',
@@ -134,6 +145,7 @@ const writePackage = async (root, name, directory, options) => {
     license: 'Apache-2.0',
     repository: repositoryMetadata(directory, options.repositoryOverrides[name]),
     files: ['dist', 'NOTICE'],
+    ...(name === mcpName ? mcpFixtureFields : {}),
     ...(options.scripts[name] === undefined ? {} : { scripts: options.scripts[name] }),
   };
   // A published package carries its licence and its notices. `null` leaves a
@@ -151,6 +163,7 @@ const writePackage = async (root, name, directory, options) => {
       .filter(([, contents]) => contents !== null)
       .map(([file, contents]) => writeFile(join(packageDirectory, file), contents)),
   ]);
+  if (name === mcpName) await writeMcpFixtureFiles(packageDirectory, manifest.version);
   return { directory: packageDirectory, manifest };
 };
 
@@ -172,6 +185,7 @@ const createRepositoryFixture = async (overrides = {}) => {
   const packageInputs = await Promise.all([
     writePackage(root, '@kimen/elements', 'elements', options),
     writePackage(root, '@kimen/tokens', 'tokens', options),
+    writePackage(root, mcpName, 'mcp-server', options),
     ...options.extraPackages.map(({ name, directory }) =>
       writePackage(root, name, directory, options),
     ),
@@ -237,7 +251,7 @@ const firstTarSize = (bytes) =>
   Number.parseInt(bytes.subarray(124, 136).toString('ascii').replaceAll('\0', '').trim(), 8);
 
 describe('release candidate manifest mutation boundary', () => {
-  it('S7 accepts only the canonical exact-two-package manifest', () => {
+  it('S7 accepts only the canonical exact three-package manifest', () => {
     const manifest = aManifest();
 
     expect(validateCandidateManifest(manifest)).toBe(manifest);
@@ -314,6 +328,7 @@ describe('release candidate build and verification mutation boundary', () => {
     expect(result.manifest.packages.map(({ name }) => name)).toEqual([
       '@kimen/elements',
       '@kimen/tokens',
+      mcpName,
     ]);
     expect({
       elements: await readFile(join(fixture.packages['@kimen/elements'], 'package.json'), 'utf8'),
@@ -356,6 +371,7 @@ describe('release candidate build and verification mutation boundary', () => {
     expect(extracted.listing).toEqual([
       'SHA256SUMS',
       `kimen-elements-${version}.tgz`,
+      `kimen-mcp-server-${version}.tgz`,
       `kimen-tokens-${version}.tgz`,
       'manifest.json',
     ]);
@@ -465,7 +481,7 @@ describe('release candidate build and verification mutation boundary', () => {
     ).rejects.toThrow(/@kimen\/tokens tarball is missing package\/NOTICE/u);
   });
 
-  it('S7 packs LICENSE and NOTICE into both tarballs of a complete candidate', async () => {
+  it('S7 packs LICENSE and NOTICE into all three tarballs of a complete candidate', async () => {
     const fixture = await createRepositoryFixture();
     const candidate = await buildFixture(fixture);
     const directory = await mkdtemp(join(tmpdir(), 'kimen-release-mutation-legal-'));
@@ -500,7 +516,11 @@ describe('release candidate build and verification mutation boundary', () => {
     ).rejects.toThrow(/exactly.*elements.*tokens/i);
     await expect(
       buildFixture(fixture, {
-        packageDirectories: [fixture.packageDirectories[0], fixture.packageDirectories[0]],
+        packageDirectories: [
+          fixture.packageDirectories[0],
+          fixture.packageDirectories[0],
+          fixture.packageDirectories[2],
+        ],
       }),
     ).rejects.toThrow(/unexpected or duplicate/i);
 
@@ -545,6 +565,7 @@ describe('release candidate build and verification mutation boundary', () => {
     ).resolves.toEqual({
       candidateSha256: candidate.candidateSha256,
       manifest: candidate.manifest,
+      mcpServer: { name: mcpName, source: 'tarball', workspaceLinked: false },
     });
   });
 
@@ -657,6 +678,12 @@ describe('release publication evaluation mutation boundary', () => {
           action: 'publish',
           file: `kimen-tokens-${version}.tgz`,
           integrity: tokensIntegrity,
+        },
+        {
+          name: mcpName,
+          action: 'publish',
+          file: `kimen-mcp-server-${version}.tgz`,
+          integrity: mcpIntegrity,
         },
       ],
     });
@@ -825,6 +852,7 @@ describe('release publication evaluation mutation boundary', () => {
       actions: [
         { name: '@kimen/elements', action: 'skip' },
         { name: '@kimen/tokens', action: 'publish' },
+        { name: mcpName, action: 'publish' },
       ],
     });
 
@@ -833,6 +861,7 @@ describe('release publication evaluation mutation boundary', () => {
       actions: [
         { name: '@kimen/elements', action: 'skip' },
         { name: '@kimen/tokens', action: 'skip' },
+        { name: mcpName, action: 'publish' },
       ],
     });
   });
