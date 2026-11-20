@@ -8248,6 +8248,293 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-suggestion/ki-suggestion.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-suggestion",
+      "docs": "A native prompt button displayed by a ki-suggestions group.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "offer one short, actionable prompt in a suggestion group."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "navigation, static content, or a submitted form value."
+        },
+        {
+          "name": "slot",
+          "text": "- Plain text forming the visible and accessible prompt title."
+        },
+        {
+          "name": "part",
+          "text": "button - The native suggestion button."
+        },
+        {
+          "name": "part",
+          "text": "description - Optional supporting text shown in cards."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-suggestion examples\n\n## Add context to a prompt\n\n```html\n<ki-suggestions label=\"Start a conversation\" variant=\"cards\">\n  <ki-suggestion description=\"For the merged pull requests\">Draft release notes</ki-suggestion>\n  <ki-suggestion>Plan the next release</ki-suggestion>\n</ki-suggestions>\n```\n\nPut the prompt in the default slot as plain text. The title supplies the\nbutton's accessible name. Use `description` for separate context.\n\nRegister both tags for direct imports. Listen to `ki-select` on the group\nfor the chosen title.\n"
+      },
+      "props": [
+        {
+          "name": "description",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "description",
+          "reflectToAttr": false,
+          "docs": "Optional accessible description, visible below the title in cards.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Plain text forming the visible and accessible prompt title."
+        }
+      ],
+      "parts": [
+        {
+          "name": "button",
+          "docs": "The native suggestion button."
+        },
+        {
+          "name": "description",
+          "docs": "Optional supporting text shown in cards."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-suggestions/ki-suggestions.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-suggestions",
+      "docs": "A labelled group of prompt starters or follow-up suggestions.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "offer suggested prompts to start or continue an assistant conversation."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "choose a form value, switch views, or display static example text."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-suggestion children in reading order."
+        },
+        {
+          "name": "part",
+          "text": "group - The container that lays out the suggested prompts."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-suggestions examples\n\n## Fill a draft for editing\n\n```html\n<ki-suggestions id=\"starters\" label=\"Start a conversation\" variant=\"cards\" mode=\"fill\">\n  <ki-suggestion description=\"For the merged pull requests\">Draft release notes</ki-suggestion>\n  <ki-suggestion description=\"From the on-call reports\">Summarise the incidents</ki-suggestion>\n</ki-suggestions>\n<label for=\"draft\">Message</label>\n<textarea id=\"draft\"></textarea>\n```\n\n```js\nimport { defineCustomElement as defineSuggestions } from '@kimen/elements/ki-suggestions';\nimport { defineCustomElement as defineSuggestion } from '@kimen/elements/ki-suggestion';\n\ndefineSuggestions();\ndefineSuggestion();\n\ndocument.querySelector('#starters').composer = document.querySelector('#draft');\n```\n\nThe group replaces the draft and focuses the textarea. A custom composer can\nexpose the same writable string `value` and `focus()` interface.\n\n## Send a follow-up\n\n```html\n<ki-suggestions id=\"follow-ups\" label=\"Follow-up suggestions\">\n  <ki-suggestion>Which ones recur?</ki-suggestion>\n  <ki-suggestion>Group them by service</ki-suggestion>\n</ki-suggestions>\n```\n\n```js\nconst followUps = document.querySelector('#follow-ups');\nfollowUps.composer = document.querySelector('#draft');\nfollowUps.addEventListener('ki-select', ({ detail }) => {\n  sendPrompt(detail.text);\n});\n```\n\nHere `sendPrompt` is the application's conversation handler. After dispatch,\nthe group focuses the composer and preserves its draft. Cancel the event to\nmanage value and focus in the application handler.\n"
+      },
+      "props": [
+        {
+          "name": "composer",
+          "type": "KiSuggestionsComposer | undefined",
+          "complexType": {
+            "original": "KiSuggestionsComposer",
+            "resolved": "KiSuggestionsComposer | undefined",
+            "references": {
+              "KiSuggestionsComposer": {
+                "location": "local",
+                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
+                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsComposer"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "Optional composer supplied by application code. Fill mode sets its value.\nBoth modes focus it after an uncancelled selection.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "KiSuggestionsComposer"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Required accessible name for the group.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "mode",
+          "type": "\"fill\" | \"send\"",
+          "complexType": {
+            "original": "KiSuggestionsMode",
+            "resolved": "\"fill\" | \"send\"",
+            "references": {
+              "KiSuggestionsMode": {
+                "location": "local",
+                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
+                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsMode"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "mode",
+          "reflectToAttr": false,
+          "docs": "Send through the application or fill its attached editor for revision.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'send'"
+            }
+          ],
+          "default": "'send'",
+          "values": [
+            {
+              "value": "fill",
+              "type": "string"
+            },
+            {
+              "value": "send",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"cards\" | \"chips\"",
+          "complexType": {
+            "original": "KiSuggestionsVariant",
+            "resolved": "\"cards\" | \"chips\"",
+            "references": {
+              "KiSuggestionsVariant": {
+                "location": "local",
+                "path": "src/components/ki-suggestions/ki-suggestions.tsx",
+                "id": "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Wrapping chips for follow-ups or cards with room for a description.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'chips'"
+            }
+          ],
+          "default": "'chips'",
+          "values": [
+            {
+              "value": "cards",
+              "type": "string"
+            },
+            {
+              "value": "chips",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-select",
+          "detail": "{ text: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ text: string }",
+            "resolved": "{ text: string; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Reports the chosen prompt title. Use this event to send the prompt in\nsend mode. Cancel it to take over the default composer write and focus.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "click",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-suggestion children in reading order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "group",
+          "docs": "The container that lays out the suggested prompts."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-switch/ki-switch.tsx",
       "encapsulation": "shadow",
       "tag": "ki-switch",
@@ -10416,6 +10703,21 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
+    },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsVariant": {
+      "declaration": "export type KiSuggestionsVariant = 'chips' | 'cards';",
+      "docstring": "",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
+    },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsMode": {
+      "declaration": "export type KiSuggestionsMode = 'send' | 'fill';",
+      "docstring": "",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
+    },
+    "src/components/ki-suggestions/ki-suggestions.tsx::KiSuggestionsComposer": {
+      "declaration": "export interface KiSuggestionsComposer {\n  value: string;\n  focus(): void;\n}",
+      "docstring": "Application-owned editor used by a suggestions group.",
+      "path": "src/components/ki-suggestions/ki-suggestions.tsx"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",

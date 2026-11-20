@@ -34,6 +34,7 @@ import { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-seg
 import { KiSelectSize } from "./components/ki-select/ki-select";
 import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 import { KiStatusTone } from "./components/ki-status/ki-status";
+import { KiSuggestionsComposer, KiSuggestionsMode, KiSuggestionsVariant } from "./components/ki-suggestions/ki-suggestions";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
@@ -70,6 +71,7 @@ export { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-seg
 export { KiSelectSize } from "./components/ki-select/ki-select";
 export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 export { KiStatusTone } from "./components/ki-status/ki-status";
+export { KiSuggestionsComposer, KiSuggestionsMode, KiSuggestionsVariant } from "./components/ki-suggestions/ki-suggestions";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
 export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
@@ -1321,6 +1323,42 @@ export namespace Components {
         "tone": KiStatusTone;
     }
     /**
+     * A native prompt button displayed by a ki-suggestions group.
+     * @whenToUse offer one short, actionable prompt in a suggestion group.
+     * @whenNotToUse navigation, static content, or a submitted form value.
+     */
+    interface KiSuggestion {
+        /**
+          * Optional accessible description, visible below the title in cards.
+         */
+        "description"?: string;
+    }
+    /**
+     * A labelled group of prompt starters or follow-up suggestions.
+     * @whenToUse offer suggested prompts to start or continue an assistant conversation.
+     * @whenNotToUse choose a form value, switch views, or display static example text.
+     */
+    interface KiSuggestions {
+        /**
+          * Optional composer supplied by application code. Fill mode sets its value. Both modes focus it after an uncancelled selection.
+         */
+        "composer"?: KiSuggestionsComposer;
+        /**
+          * Required accessible name for the group.
+         */
+        "label": string;
+        /**
+          * Send through the application or fill its attached editor for revision.
+          * @default 'send'
+         */
+        "mode": KiSuggestionsMode;
+        /**
+          * Wrapping chips for follow-ups or cards with room for a description.
+          * @default 'chips'
+         */
+        "variant": KiSuggestionsVariant;
+    }
+    /**
      * A token-styled switch for immediate on/off settings.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
      * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -1685,6 +1723,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiSegmentedControlElement;
+}
+export interface KiSuggestionsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiSuggestionsElement;
 }
 export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2380,6 +2422,39 @@ declare global {
         new (): HTMLKiStatusElement;
     };
     /**
+     * A native prompt button displayed by a ki-suggestions group.
+     * @whenToUse offer one short, actionable prompt in a suggestion group.
+     * @whenNotToUse navigation, static content, or a submitted form value.
+     */
+    interface HTMLKiSuggestionElement extends Components.KiSuggestion, HTMLStencilElement {
+    }
+    var HTMLKiSuggestionElement: {
+        prototype: HTMLKiSuggestionElement;
+        new (): HTMLKiSuggestionElement;
+    };
+    interface HTMLKiSuggestionsElementEventMap {
+        "ki-select": { text: string };
+    }
+    /**
+     * A labelled group of prompt starters or follow-up suggestions.
+     * @whenToUse offer suggested prompts to start or continue an assistant conversation.
+     * @whenNotToUse choose a form value, switch views, or display static example text.
+     */
+    interface HTMLKiSuggestionsElement extends Components.KiSuggestions, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiSuggestionsElementEventMap>(type: K, listener: (this: HTMLKiSuggestionsElement, ev: KiSuggestionsCustomEvent<HTMLKiSuggestionsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiSuggestionsElementEventMap>(type: K, listener: (this: HTMLKiSuggestionsElement, ev: KiSuggestionsCustomEvent<HTMLKiSuggestionsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiSuggestionsElement: {
+        prototype: HTMLKiSuggestionsElement;
+        new (): HTMLKiSuggestionsElement;
+    };
+    /**
      * A token-styled switch for immediate on/off settings.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
      * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -2616,6 +2691,8 @@ declare global {
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
+        "ki-suggestion": HTMLKiSuggestionElement;
+        "ki-suggestions": HTMLKiSuggestionsElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
         "ki-tab-panel": HTMLKiTabPanelElement;
@@ -3933,6 +4010,46 @@ declare namespace LocalJSX {
         "tone"?: KiStatusTone;
     }
     /**
+     * A native prompt button displayed by a ki-suggestions group.
+     * @whenToUse offer one short, actionable prompt in a suggestion group.
+     * @whenNotToUse navigation, static content, or a submitted form value.
+     */
+    interface KiSuggestion {
+        /**
+          * Optional accessible description, visible below the title in cards.
+         */
+        "description"?: string;
+    }
+    /**
+     * A labelled group of prompt starters or follow-up suggestions.
+     * @whenToUse offer suggested prompts to start or continue an assistant conversation.
+     * @whenNotToUse choose a form value, switch views, or display static example text.
+     */
+    interface KiSuggestions {
+        /**
+          * Optional composer supplied by application code. Fill mode sets its value. Both modes focus it after an uncancelled selection.
+         */
+        "composer"?: KiSuggestionsComposer;
+        /**
+          * Required accessible name for the group.
+         */
+        "label": string;
+        /**
+          * Send through the application or fill its attached editor for revision.
+          * @default 'send'
+         */
+        "mode"?: KiSuggestionsMode;
+        /**
+          * Reports the chosen prompt title. Use this event to send the prompt in send mode. Cancel it to take over the default composer write and focus.
+         */
+        "onKi-select"?: (event: KiSuggestionsCustomEvent<{ text: string }>) => void;
+        /**
+          * Wrapping chips for follow-ups or cards with room for a description.
+          * @default 'chips'
+         */
+        "variant"?: KiSuggestionsVariant;
+    }
+    /**
      * A token-styled switch for immediate on/off settings.
      * Like a native field, it answers `checkValidity()`, `reportValidity()`,
      * `setCustomValidity(message)`, `validity`, `validationMessage` and
@@ -4510,6 +4627,14 @@ declare namespace LocalJSX {
         "ring": boolean;
         "label": string;
     }
+    interface KiSuggestionAttributes {
+        "description": string;
+    }
+    interface KiSuggestionsAttributes {
+        "label": string;
+        "variant": KiSuggestionsVariant;
+        "mode": KiSuggestionsMode;
+    }
     interface KiSwitchAttributes {
         "checked": boolean;
         "size": KiSwitchSize;
@@ -4604,6 +4729,8 @@ declare namespace LocalJSX {
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
+        "ki-suggestion": Omit<KiSuggestion, keyof KiSuggestionAttributes> & { [K in keyof KiSuggestion & keyof KiSuggestionAttributes]?: KiSuggestion[K] } & { [K in keyof KiSuggestion & keyof KiSuggestionAttributes as `attr:${K}`]?: KiSuggestionAttributes[K] } & { [K in keyof KiSuggestion & keyof KiSuggestionAttributes as `prop:${K}`]?: KiSuggestion[K] };
+        "ki-suggestions": Omit<KiSuggestions, keyof KiSuggestionsAttributes> & { [K in keyof KiSuggestions & keyof KiSuggestionsAttributes]?: KiSuggestions[K] } & { [K in keyof KiSuggestions & keyof KiSuggestionsAttributes as `attr:${K}`]?: KiSuggestionsAttributes[K] } & { [K in keyof KiSuggestions & keyof KiSuggestionsAttributes as `prop:${K}`]?: KiSuggestions[K] } & OneOf<"label", KiSuggestions["label"], KiSuggestionsAttributes["label"]>;
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
@@ -5034,6 +5161,18 @@ declare module "@stencil/core" {
              * visible text is an authoring mistake (WCAG 1.4.1).
              */
             "ki-status": LocalJSX.IntrinsicElements["ki-status"] & JSXBase.HTMLAttributes<HTMLKiStatusElement>;
+            /**
+             * A native prompt button displayed by a ki-suggestions group.
+             * @whenToUse offer one short, actionable prompt in a suggestion group.
+             * @whenNotToUse navigation, static content, or a submitted form value.
+             */
+            "ki-suggestion": LocalJSX.IntrinsicElements["ki-suggestion"] & JSXBase.HTMLAttributes<HTMLKiSuggestionElement>;
+            /**
+             * A labelled group of prompt starters or follow-up suggestions.
+             * @whenToUse offer suggested prompts to start or continue an assistant conversation.
+             * @whenNotToUse choose a form value, switch views, or display static example text.
+             */
+            "ki-suggestions": LocalJSX.IntrinsicElements["ki-suggestions"] & JSXBase.HTMLAttributes<HTMLKiSuggestionsElement>;
             /**
              * A token-styled switch for immediate on/off settings.
              * Like a native field, it answers `checkValidity()`, `reportValidity()`,

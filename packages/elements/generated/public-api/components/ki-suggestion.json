@@ -1,0 +1,297 @@
+{
+  "component": {
+    "attributes": {
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional accessible description, visible below the title in cards.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Filter behind the chip surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting chip surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Image layered over the chip surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting chip boundary.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Boundary width for either suggestion variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-description-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting card description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the card title and description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-hover-description-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Description over the card hover surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-pressed-description-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Description over the pressed card surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-description-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the card description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-description-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Type size of the card description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting chip title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the suggestion text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Type size of the prompt title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum painted height of a chip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Chip surface on a hovering device.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Title over the chip hover surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline padding for either variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of the prompt title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-pressed-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Chip surface while a pointer or key holds activation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-pressed-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Title over the pressed chip surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Rounded outline of a chip.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of chip titles and card descriptions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A native prompt button displayed by a ki-suggestions group.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "button": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native suggestion button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional supporting text shown in cards.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional accessible description, visible below the title in cards.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Plain text forming the visible and accessible prompt title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-suggestion.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-suggestion.d.ts",
+    "symbols": {
+      "KiSuggestion": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSuggestion extends Components.KiSuggestion, HTMLElement {\n}\nexport const KiSuggestion: {\n    prototype: KiSuggestion;\n    new (): KiSuggestion;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-suggestion.js"
+  }
+}

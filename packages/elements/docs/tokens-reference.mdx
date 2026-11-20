@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 420 semantic
-and 1357 component tokens. Values are the resolved **onmars light**
+and 1398 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1793,6 +1793,52 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-status-size` | `0.5rem` | dimension used by the status component for the dot: the MarsUI 4px dot, Space/xs bound to every Status variant (specs/021-ki-status/design-extraction.md). One size per theme, never an attribute (FR-006). |
 | `--ki-status-success-color` | `#409b3f` | color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500). |
 | `--ki-status-warning-color` | `#945b05` | color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008). |
+
+### `ki-suggestions`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-suggestion-backdrop-filter` | `none` | Filter behind the chip surface. |
+| `--ki-suggestion-bg` | `rgba(0, 0, 0, 0)` | Resting chip surface. |
+| `--ki-suggestion-bg-image` | `none` | Image layered over the chip surface. |
+| `--ki-suggestion-border` | `#86827b` | Resting chip boundary. |
+| `--ki-suggestion-border-width` | `1px` | Boundary width for either suggestion variant. |
+| `--ki-suggestion-card-backdrop-filter` | `none` | Filter behind the card surface. |
+| `--ki-suggestion-card-bg` | `#ffffff` | Resting card surface. |
+| `--ki-suggestion-card-bg-image` | `none` | Image layered over the card surface. |
+| `--ki-suggestion-card-border` | `rgba(24, 22, 19, 0.1)` | Resting card boundary. |
+| `--ki-suggestion-card-description-bg` | `#ffffff` | Resting card surface beneath the description. |
+| `--ki-suggestion-card-description-fg` | `#5e5953` | Resting card description. |
+| `--ki-suggestion-card-fg` | `#181613` | Resting card title. |
+| `--ki-suggestion-card-gap` | `0.125rem` | Space between the card title and description. |
+| `--ki-suggestion-card-hover-bg` | `#f9f7f4` | Card surface on a hovering device. |
+| `--ki-suggestion-card-hover-description-bg` | `#f9f7f4` | Hover card surface beneath the description. |
+| `--ki-suggestion-card-hover-description-fg` | `#5e5953` | Description over the card hover surface. |
+| `--ki-suggestion-card-hover-fg` | `#181613` | Title over the card hover surface. |
+| `--ki-suggestion-card-inset` | `0.75rem` | Block padding of each starter card. |
+| `--ki-suggestion-card-pressed-bg` | `#f3f0eb` | Card surface while a pointer or key holds activation. |
+| `--ki-suggestion-card-pressed-description-bg` | `#f3f0eb` | Pressed card surface beneath the description. |
+| `--ki-suggestion-card-pressed-description-fg` | `#5e5953` | Description over the pressed card surface. |
+| `--ki-suggestion-card-pressed-fg` | `#181613` | Title over the pressed card surface. |
+| `--ki-suggestion-card-radius` | `12px` | Corners of a starter card. |
+| `--ki-suggestion-card-weight` | `600` | Weight of the card title. |
+| `--ki-suggestion-description-line-height` | `1rem` | Line height of the card description. |
+| `--ki-suggestion-description-size` | `0.75rem` | Type size of the card description. |
+| `--ki-suggestion-fg` | `#181613` | Resting chip title. |
+| `--ki-suggestion-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the suggestion text. |
+| `--ki-suggestion-font-size` | `0.8125rem` | Type size of the prompt title. |
+| `--ki-suggestion-height` | `2rem` | Minimum painted height of a chip. |
+| `--ki-suggestion-hover-bg` | `#f3f0eb` | Chip surface on a hovering device. |
+| `--ki-suggestion-hover-fg` | `#181613` | Title over the chip hover surface. |
+| `--ki-suggestion-inset` | `0.75rem` | Inline padding for either variant. |
+| `--ki-suggestion-line-height` | `1.5rem` | Line height of the prompt title. |
+| `--ki-suggestion-pressed-bg` | `#ebe7e1` | Chip surface while a pointer or key holds activation. |
+| `--ki-suggestion-pressed-fg` | `#181613` | Title over the pressed chip surface. |
+| `--ki-suggestion-radius` | `1000px` | Rounded outline of a chip. |
+| `--ki-suggestion-weight` | `500` | Weight of chip titles and card descriptions. |
+| `--ki-suggestions-card-width` | `15rem` | Maximum inline size of each starter card. |
+| `--ki-suggestions-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface inherited by the suggestion group. |
+| `--ki-suggestions-gap` | `0.5rem` | Spacing between suggestions. |
 
 ### `ki-switch`
 

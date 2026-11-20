@@ -40,6 +40,8 @@ export { KiSelect } from './ki-select.js';
 export { KiSpinner } from './ki-spinner.js';
 export { KiStack } from './ki-stack.js';
 export { KiStatus } from './ki-status.js';
+export { KiSuggestion } from './ki-suggestion.js';
+export { KiSuggestions } from './ki-suggestions.js';
 export { KiSwitch } from './ki-switch.js';
 export { KiTab } from './ki-tab.js';
 export { KiTabPanel } from './ki-tab-panel.js';

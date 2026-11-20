@@ -37,6 +37,8 @@ export const DIRECTIVES = [
   d.KiSpinner,
   d.KiStack,
   d.KiStatus,
+  d.KiSuggestion,
+  d.KiSuggestions,
   d.KiSwitch,
   d.KiTab,
   d.KiTabPanel,
