@@ -61,6 +61,7 @@ it('S8 opens the closed list and focuses the named link on Enter', async () => {
 });
 
 it('S10 paints the citation with the semantic second surface override', async () => {
+  fixture.setAttribute('data-ki-theme', 'onmars');
   fixture.style.setProperty('--ki-surface-s2', 'rgb(219, 233, 255)');
   answer();
   await expect.element(link()).toBeVisible();

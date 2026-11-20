@@ -24,6 +24,7 @@ export function sourcesFixture(): HTMLElement {
   afterEach(async () => {
     fixture.removeAttribute('dir');
     fixture.removeAttribute('data-ki-density');
+    fixture.removeAttribute('data-ki-theme');
     fixture.removeAttribute('style');
     fixture.replaceChildren();
     await parkPointer();
