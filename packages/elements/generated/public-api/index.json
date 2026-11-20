@@ -82,7 +82,7 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiButton {\n    variant: KiButtonVariant;\n    tone: KiButtonTone;\n    size: KiButtonSize;\n    type: KiButtonType;\n    name?: string;\n    value?: string;\n    commandfor?: string;\n    command?: KiDialogCommand;\n    disabled: boolean;\n    loading: boolean;\n    loadingLabel: string;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    protected warnDeprecatedVariant(variant: KiButtonVariant): void;\n    componentDidLoad(): void;\n    componentDidRender(): void;\n    disconnectedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any[];\n}"
+                "signature": "export declare class KiButton {\n    variant: KiButtonVariant;\n    tone: KiButtonTone;\n    size: KiButtonSize;\n    type: KiButtonType;\n    name?: string;\n    value?: string;\n    commandfor?: string;\n    command?: KiDialogCommand;\n    disabled: boolean;\n    loading: boolean;\n    loadingLabel: string;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    protected warnDeprecatedVariant(variant: KiButtonVariant): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any[];\n}"
               },
               "KiButtonSize": {
                 "kinds": [
@@ -50203,5 +50203,5 @@
       }
     }
   },
-  "surfaceSha256": "6a4937fe35a20a1512229ac3ef67c835c83dbec8bf05021508c40b0d67849cba"
+  "surfaceSha256": "b1bac118511a974614aed964c7de43ba0e3c1025251926e7c01c2e641f63bc9b"
 }

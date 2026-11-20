@@ -1,5 +1,5 @@
 import { Component, Element, h, Prop, Watch } from '@stencil/core';
-import { DialogInvokerState, invokeDialog, type KiDialogCommand } from '../../utils/dialog-invoker';
+import type { KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -145,7 +145,6 @@ export class KiIconButton {
 
   private button: HTMLButtonElement | undefined;
   private descriptionObserver?: MutationObserver;
-  private readonly dialogInvoker = new DialogInvokerState();
 
   connectedCallback(): void {
     // Armed on every connection, not once on load: disconnectedCallback
@@ -162,7 +161,6 @@ export class KiIconButton {
     // A description written while the button was out of the document. On the
     // first connection there is no inner button yet: componentDidLoad syncs.
     this.syncForwardedDescription();
-    this.syncDialogInvoker();
   }
 
   componentWillLoad(): void {
@@ -183,17 +181,8 @@ export class KiIconButton {
     this.syncForwardedDescription();
   }
 
-  componentDidRender(): void {
-    this.syncDialogInvoker();
-  }
-
   disconnectedCallback(): void {
     this.descriptionObserver?.disconnect();
-    this.dialogInvoker.disconnect();
-  }
-
-  private syncDialogInvoker(): void {
-    this.dialogInvoker.sync(this.host, this.button, this.commandfor, this.command);
   }
 
   // Assistive tech announces the DELEGATED inner button, not this focus-
@@ -227,10 +216,7 @@ export class KiIconButton {
     if (this.disabled || this.effectiveLoading) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      return;
     }
-
-    invokeDialog(this.host, this.commandfor, this.command, event);
   };
 
   render() {

@@ -261,6 +261,36 @@ describe('dialog invoker commands', () => {
     expect(reasons).toEqual(['command']);
   });
 
+  it('opens before a host click action stops propagation', async () => {
+    const fixture = await mount(trigger + dialog);
+    const host = fixture.querySelector('#opener');
+    if (!host) {
+      throw new Error('Missing opening control');
+    }
+    const seen: boolean[] = [];
+    host.addEventListener('click', (event) => {
+      event.stopPropagation();
+      seen.push(dialogPart(fixture).open);
+    });
+
+    await openWithPointer();
+    expect(seen).toEqual([true]);
+  });
+
+  it('tracks an opener added after the dialog and clears a removed target', async () => {
+    const fixture = await mount(dialog);
+    fixture.insertAdjacentHTML('afterbegin', trigger);
+    await expect
+      .element(page.getByRole('button', { name: 'Delete project…', expanded: false }))
+      .toHaveAttribute('aria-haspopup', 'dialog');
+    const button = buttonPart(fixture);
+
+    fixture.querySelector('#delete')?.remove();
+
+    await expect.poll(() => button.getAttribute('aria-expanded')).toBeNull();
+    expect(button.hasAttribute('aria-haspopup')).toBe(false);
+  });
+
   it('keeps lookup in the invoker tree and follows a late target', async () => {
     const fixture = await mount(dialog);
     const region = document.createElement('section');

@@ -1,6 +1,6 @@
 import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
-import { DialogInvokerState, invokeDialog, type KiDialogCommand } from '../../utils/dialog-invoker';
+import type { KiDialogCommand } from '../../utils/dialog-invoker';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -160,7 +160,6 @@ export class KiButton {
   @State() private formDisabled = false;
   private button: HTMLButtonElement | undefined;
   private descriptionObserver?: MutationObserver;
-  private readonly dialogInvoker = new DialogInvokerState();
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -186,7 +185,6 @@ export class KiButton {
     // A description written while the button was out of the document. On the
     // first connection there is no inner button yet: componentDidLoad syncs.
     this.syncForwardedDescription();
-    this.syncDialogInvoker();
   }
 
   componentWillLoad(): void {
@@ -207,17 +205,8 @@ export class KiButton {
     this.syncForwardedDescription();
   }
 
-  componentDidRender(): void {
-    this.syncDialogInvoker();
-  }
-
   disconnectedCallback(): void {
     this.descriptionObserver?.disconnect();
-    this.dialogInvoker.disconnect();
-  }
-
-  private syncDialogInvoker(): void {
-    this.dialogInvoker.sync(this.host, this.button, this.commandfor, this.command);
   }
 
   // Assistive tech announces the DELEGATED inner button, not this focus-
@@ -246,9 +235,7 @@ export class KiButton {
       return;
     }
 
-    if (!invokeDialog(this.host, this.commandfor, this.command, event)) {
-      this.activateFormAction();
-    }
+    this.activateFormAction();
   };
 
   formDisabledCallback(disabled: boolean): void {
@@ -262,7 +249,12 @@ export class KiButton {
     }
 
     const type = normalizeKiButtonType(this.type);
-    if (type === 'button') {
+    // A configured invoker takes precedence over a form submit or reset.
+    const command = this.command;
+    const invokes =
+      this.commandfor &&
+      (command === 'show-modal' || command === 'close' || command === 'request-close');
+    if (type === 'button' || invokes) {
       return;
     }
 

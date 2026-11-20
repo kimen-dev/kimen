@@ -1,6 +1,7 @@
 import { Component, Element, Event, h, Listen, Method, Prop, State, Watch } from '@stencil/core';
 import { booleanFromAttributePresence } from '../../utils/boolean-presence';
 import {
+  connectDialogInvokers,
   type DialogCommandEvent,
   hasDialogAncestor,
   isDialogCommand,
@@ -107,6 +108,7 @@ export class KiDialog {
   private openObserver?: MutationObserver;
   private pendingReason: KiDialogCloseReason = 'method';
   private commandInvoker: HTMLElement | undefined;
+  private disconnectInvokers: (() => void) | undefined;
 
   @Watch('open')
   protected handleOpenChange(): void {
@@ -128,6 +130,7 @@ export class KiDialog {
   }
 
   connectedCallback(): void {
+    this.disconnectInvokers = connectDialogInvokers(this.host);
     // Back in the document after a move or a removal: disconnectedCallback
     // released the observer and the document listener, and the dialog loads
     // only once. On the first connection there is no native dialog yet:
@@ -142,6 +145,8 @@ export class KiDialog {
   }
 
   disconnectedCallback(): void {
+    this.disconnectInvokers?.();
+    this.disconnectInvokers = undefined;
     this.backdropArmed = false;
     this.openObserver?.disconnect();
     this.bodyObserver?.disconnect();
