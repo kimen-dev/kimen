@@ -10444,7 +10444,7 @@ Attributes:
 - `datetime` (string | undefined): ISO date or date-time. Invalid or missing dates have no time label.
 - `details-label` (string | undefined, default 'Details'): Label of the details control when the details slot is populated.
 - `icon-name` (string | undefined): Decorative Lucide icon name, registered by the caller's per-icon import.
-- `tone` ("danger" | "neutral" | "primary" | "success" | "warning", default 'neutral'): Marker tone. The event text carries the meaning.
+- `tone` ("danger" | "neutral" | "primary" | "success" | "warning", default 'neutral'): Marker tone. The event text carries the meaning. Without an icon, a non-neutral tone draws a solid dot in its ink.
 
 Slots:
 - (default): Event summary. Include important status information in the text.
@@ -10467,6 +10467,7 @@ CSS custom properties:
 - `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
 - `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
 - `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap.
 - `--ki-timeline-dot-backdrop-filter`: Complete backdrop filter behind a timeline marker, off by default.

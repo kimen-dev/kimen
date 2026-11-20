@@ -9,6 +9,10 @@ const DEFAULT_DETAILS_LABEL = 'Details';
 
 export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger';
 
+// A toned marker with no icon draws a solid dot in the tone's ink, so the
+// marker carries its status at 3:1 or more (design-system review 2026-11-20).
+const TONED: ReadonlySet<string> = new Set(['primary', 'success', 'warning', 'danger']);
+
 /**
  * One event in a timeline, with an optional time and details disclosure.
  *
@@ -47,7 +51,8 @@ export class KiTimelineItem {
   @Prop() iconName?: string;
 
   /**
-   * Marker tone. The event text carries the meaning.
+   * Marker tone. The event text carries the meaning. Without an icon, a
+   * non-neutral tone draws a solid dot in its ink.
    * @default 'neutral'
    */
   @Prop() tone: TimelineTone = 'neutral';
@@ -123,6 +128,7 @@ export class KiTimelineItem {
       <span key="marker" part="dot" data-tone={this.tone} aria-hidden="true" inert>
         <slot name="start">
           {!this.hasStart && this.iconName && <ki-icon name={this.iconName} />}
+          {!this.hasStart && !this.iconName && TONED.has(this.tone) && <span class="tone-mark" />}
         </slot>
       </span>,
       <div key="content" part="content">

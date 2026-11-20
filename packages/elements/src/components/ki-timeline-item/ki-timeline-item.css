@@ -48,6 +48,15 @@
   --_ki-timeline-dot-fg: var(--ki-timeline-dot-danger-fg);
 }
 
+/* A toned event without an icon: a solid dot in the tone's high-emphasis ink,
+ * at 3:1 or more against the page where the pale tint alone is not. */
+.tone-mark {
+  inline-size: var(--ki-layout-spacing-md);
+  block-size: var(--ki-layout-spacing-md);
+  border-radius: var(--ki-timeline-dot-radius);
+  background-color: var(--_ki-timeline-dot-fg, var(--ki-timeline-dot-fg));
+}
+
 [part="dot"] ::slotted(*) {
   max-inline-size: 100%;
   max-block-size: 100%;
@@ -85,6 +94,11 @@ details:not([open]) .details-content {
 }
 
 @media (forced-colors: active) {
+  .tone-mark {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+
   [part="dot"] {
     outline: var(--ki-timeline-line-width) solid CanvasText;
     outline-offset: calc(-1 * var(--ki-timeline-line-width));

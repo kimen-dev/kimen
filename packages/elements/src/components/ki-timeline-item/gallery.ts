@@ -13,6 +13,7 @@ export default {
       <strong>Mina Lee</strong> packed the order
     </ki-timeline-item>
     <ki-timeline-item>Delivery pending</ki-timeline-item>
+    <ki-timeline-item tone="warning">Delivery delayed</ki-timeline-item>
   </ki-timeline>`,
   prepare: async (wrapper) => {
     const item = wrapper.querySelector('ki-timeline-item[data-open-details]');

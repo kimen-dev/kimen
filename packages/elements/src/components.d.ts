@@ -4445,7 +4445,7 @@ export namespace Components {
          */
         "iconName"?: string;
         /**
-          * Marker tone. The event text carries the meaning.
+          * Marker tone. The event text carries the meaning. Without an icon, a non-neutral tone draws a solid dot in its ink.
           * @default 'neutral'
          */
         "tone": TimelineTone;
@@ -11830,7 +11830,7 @@ declare namespace LocalJSX {
          */
         "iconName"?: string;
         /**
-          * Marker tone. The event text carries the meaning.
+          * Marker tone. The event text carries the meaning. Without an icon, a non-neutral tone draws a solid dot in its ink.
           * @default 'neutral'
          */
         "tone"?: TimelineTone;

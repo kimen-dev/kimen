@@ -30089,7 +30089,7 @@
           "mutable": false,
           "attr": "tone",
           "reflectToAttr": false,
-          "docs": "Marker tone. The event text carries the meaning.",
+          "docs": "Marker tone. The event text carries the meaning. Without an icon, a\nnon-neutral tone draws a solid dot in its ink.",
           "docsTags": [
             {
               "name": "default",

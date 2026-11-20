@@ -5234,7 +5234,7 @@ export const catalogData = {
             "success",
             "warning"
           ],
-          "description": "Marker tone. The event text carries the meaning.",
+          "description": "Marker tone. The event text carries the meaning. Without an icon, a\nnon-neutral tone draws a solid dot in its ink.",
           "default": "neutral"
         }
       },
