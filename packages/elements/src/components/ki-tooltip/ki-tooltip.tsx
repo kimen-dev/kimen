@@ -1,15 +1,12 @@
 import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
-import {
-  AnchoredOverlay,
-  type OverlayPositioner,
-  resolveOverlayAnchor,
-} from '../../utils/anchored-overlay.js';
+import { resolveOverlayAnchor } from '../../utils/anchored-overlay.js';
 import { measureCssAnchor } from '../../utils/anchored-overlay-layout.js';
 import { resolveOverlayPosition } from '../../utils/anchored-overlay-position.js';
 import { shadowFocusTarget } from '../../utils/shadow-focus.js';
 import { attachTooltipDescription, createTooltipDescription } from './ki-tooltip.description.js';
 import { readRichTooltipText } from './ki-tooltip.rich-text.js';
 import { parseDelay } from './ki-tooltip.delay.js';
+import { TooltipOverlay, type TooltipOverlayOptions } from './ki-tooltip.overlay.js';
 import {
   normalizePlacement,
   resolveAnchorCorrection,
@@ -115,17 +112,12 @@ export class KiTooltip {
   });
   private tooltipEl: HTMLDivElement | undefined;
   private timer: ReturnType<typeof setTimeout> | undefined;
-  private readonly overlay = new AnchoredOverlay();
-  private readonly overlayOptions = {
-    escape: 'capture',
-    onDismiss: () => {
-      this.hideNow();
-    },
-  } as const;
+  private readonly overlay = new TooltipOverlay(() => {
+    this.hideNow();
+  });
 
-  private readonly richOverlayOptions = {
-    ...this.overlayOptions,
-    position: ((panel, trigger, view, move) => {
+  private readonly richOverlayOptions: TooltipOverlayOptions = {
+    position: (panel, trigger, view, move) => {
       const events = new AbortController();
       const options = { capture: true, passive: true, signal: events.signal };
       // Scroll events stay within their shadow root, including when the
@@ -166,7 +158,7 @@ export class KiTooltip {
           panel.dataset.side = effectivePlacement;
         },
       };
-    }) satisfies OverlayPositioner,
+    },
   };
 
   private get normalizedLabel(): string {
@@ -478,7 +470,7 @@ export class KiTooltip {
 
     this.positionTooltip();
     this.visible = true;
-    this.overlay.show(this.tooltipEl, this.host, this.overlayOptions);
+    this.overlay.show(this.tooltipEl, this.host);
   }
 
   private showRichTooltip(): void {
@@ -610,7 +602,7 @@ export class KiTooltip {
       : { style: tooltipStyle };
 
     return (
-      <Host>
+      <Host key="root">
         {rich ? null : <slot onSlotchange={this.handleSlotChange} />}
         {(rich ? this.richHeading : this.normalizedLabel) ? (
           <div
