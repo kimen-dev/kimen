@@ -84,6 +84,7 @@ methods, CSS custom properties and examples.
 - [ki-segmented-control](https://kimen.dev/llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
 - [ki-select](https://kimen.dev/llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.
 - [ki-skeleton](https://kimen.dev/llms/ki-skeleton.md): Reserve the expected layout of a card, list, or assistant reply while it loads.
+- [ki-slider](https://kimen.dev/llms/ki-slider.md): coarse adjustments such as volume, balance or a price filter, with a descriptive label.
 - [ki-spinner](https://kimen.dev/llms/ki-spinner.md): show brief inline activity such as saving a change or running a tool.
 - [ki-stack](https://kimen.dev/llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-stat](https://kimen.dev/llms/ki-stat.md): Summarize one numeric metric in a dashboard or report.

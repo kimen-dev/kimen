@@ -48,6 +48,7 @@ import { defineCustomElement as defineKiSegment } from '@kimen/elements/componen
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
 import { defineCustomElement as defineKiSkeleton } from '@kimen/elements/components/ki-skeleton.js';
+import { defineCustomElement as defineKiSlider } from '@kimen/elements/components/ki-slider.js';
 import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStat } from '@kimen/elements/components/ki-stat.js';
@@ -1097,6 +1098,29 @@ export class KiSkeleton {
 
 
 export declare interface KiSkeleton extends Components.KiSkeleton {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSlider,
+  inputs: ['centered', 'currency', 'disabled', 'format', 'helpText', 'label', 'marks', 'max', 'maximumLabel', 'min', 'minimumLabel', 'name', 'orientation', 'range', 'step', 'value']
+})
+@Component({
+  selector: 'ki-slider',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['centered', 'currency', 'disabled', 'format', 'helpText', 'label', 'marks', 'max', 'maximumLabel', 'min', 'minimumLabel', 'name', 'orientation', 'range', 'step', 'value'],
+})
+export class KiSlider {
+  protected el: HTMLKiSliderElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSlider extends Components.KiSlider {}
 
 
 @ProxyCmp({

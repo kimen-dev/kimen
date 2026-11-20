@@ -3,7 +3,7 @@
 // Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.4.0",
+  "catalogSchemaVersion": "1.5.0",
   "components": {
     "div": {
       "description": "A native layout container (`<div>`) that lays its children out as a flex column or row, separated by a spacing token. It has no visual identity of its own: no background, border or padding.",
@@ -2003,6 +2003,106 @@ export const catalogData = {
       "tag": "ki-skeleton",
       "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
       "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
+    },
+    "ki-slider": {
+      "description": "Adjusts a value or an interval on a bounded scale.",
+      "events": {
+        "change": "Bubbles once when a pointer operation commits a different\nselection or a keyboard action changes it. Read the current host value.\nFor updates during a drag, listen for the standard bubbling `input` event.\nProgrammatic updates and form resets are silent."
+      },
+      "props": {
+        "centered": {
+          "type": "boolean",
+          "description": "Shows a midpoint tick and fills from that point to a single thumb.",
+          "default": false
+        },
+        "currency": {
+          "type": "string",
+          "description": "ISO 4217 code used with currency format.",
+          "default": "EUR"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Makes the slider unavailable for pointer, keyboard and form submission.",
+          "default": false
+        },
+        "format": {
+          "type": "enum",
+          "values": [
+            "currency",
+            "number",
+            "percent"
+          ],
+          "description": "Display format for the readout and accessible values.",
+          "default": "number"
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Optional supporting text, read as the description of each thumb."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible base name. Use a task-specific, localized label.",
+          "default": "Slider"
+        },
+        "marks": {
+          "type": "number",
+          "description": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 100
+        },
+        "max": {
+          "type": "number",
+          "description": "Inclusive upper bound. A maximum below min collapses the scale.",
+          "default": 100
+        },
+        "maximum-label": {
+          "type": "string",
+          "description": "Localized suffix for the upper thumb's accessible name.",
+          "default": "maximum"
+        },
+        "min": {
+          "type": "number",
+          "description": "Inclusive lower bound and step origin.",
+          "default": 0
+        },
+        "minimum-label": {
+          "type": "string",
+          "description": "Localized suffix for the lower thumb's accessible name.",
+          "default": "minimum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Native form key. Omit when the value should remain local to the control."
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Axis of the scale. A vertical scale increases towards the top.",
+          "default": "horizontal"
+        },
+        "range": {
+          "type": "boolean",
+          "description": "Enables two non-crossing thumbs in minimum then maximum tab order.",
+          "default": false
+        },
+        "step": {
+          "type": "number",
+          "description": "Positive increment. Values snap from min and max is always reachable.",
+          "default": 1
+        },
+        "value": {
+          "type": "number-or-string",
+          "description": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized."
+        }
+      },
+      "slots": {},
+      "tag": "ki-slider",
+      "whenNotToUse": "when people need to enter exact numbers or choose among a\nfew named options. Use a number input or radio group for those tasks.",
+      "whenToUse": "coarse adjustments such as volume, balance or a price filter,\nwith a descriptive label."
     },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",

@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 451 semantic
-and 1495 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 456 semantic
+and 1518 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -358,6 +358,16 @@ every component at once.
 | `--ki-placeholder-rect-size` | `6rem` | Default block size of a loading media placeholder. |
 | `--ki-placeholder-shimmer-duration` | `1400ms` | Duration of one loading highlight sweep. |
 | `--ki-placeholder-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | A soft currentColor highlight that can sweep across a loading placeholder. |
+
+### `ki.scale-control`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-scale-control-coarse-target` | `44px` | Minimum grip target when a value scale has a coarse primary pointer. |
+| `--ki-scale-control-mark-width` | `1px` | Thickness of a tick marking an interval. |
+| `--ki-scale-control-thumb-border-width` | `0.125rem` | Outline thickness of the visible grip. |
+| `--ki-scale-control-track-height` | `0.25rem` | Thickness of the inactive rail of a value scale. |
+| `--ki-scale-control-vertical-length` | `8rem` | Length of a vertical value scale. |
 
 ### `ki.spacing`
 
@@ -1940,6 +1950,34 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-skeleton-shimmer-duration` | `1400ms` | Duration of a shimmer sweep. |
 | `--ki-skeleton-shimmer-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the shimmer sweep. |
 | `--ki-skeleton-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | Image of the moving highlight. Use currentColor to inherit the highlight colour. |
+
+### `ki-slider`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-slider-coarse-target` | `44px` | Minimum target size on a coarse pointer. |
+| `--ki-slider-fill-backdrop-filter` | `none` | Optional effect behind the active rail. |
+| `--ki-slider-fill-bg` | `#1d1a16` | Colour of the active section of the rail. |
+| `--ki-slider-fill-bg-image` | `none` | Optional image painted on the active rail. |
+| `--ki-slider-gap` | `0.5rem` | Gap between the slider control and its labels. |
+| `--ki-slider-label-bg` | `rgba(0, 0, 0, 0)` | Background beneath the field label. |
+| `--ki-slider-label-fg` | `#181613` | Ink of the field label. |
+| `--ki-slider-mark-width` | `1px` | Thickness of each interval tick. |
+| `--ki-slider-radius` | `1000px` | Round rail, grip and midpoint tick corners. |
+| `--ki-slider-text-bg` | `rgba(0, 0, 0, 0)` | Background beneath the value readout and help. |
+| `--ki-slider-text-fg` | `#181613` | Ink of the value readout and help. |
+| `--ki-slider-thumb-backdrop-filter` | `none` | Optional effect behind the grip. |
+| `--ki-slider-thumb-bg` | `#ffffff` | Grip surface behind the outline. |
+| `--ki-slider-thumb-bg-image` | `none` | Optional image painted on the grip. |
+| `--ki-slider-thumb-border` | `#1d1a16` | Outline colour of the visible grip. |
+| `--ki-slider-thumb-border-width` | `0.125rem` | Outline thickness of the visible grip. |
+| `--ki-slider-thumb-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Optional grip elevation. |
+| `--ki-slider-thumb-size` | `1.25rem` | Diameter of the visible grip within the pointer target. |
+| `--ki-slider-track-backdrop-filter` | `none` | Optional effect behind the inactive rail. |
+| `--ki-slider-track-bg` | `#86827b` | Inactive rail colour against the surrounding surface. |
+| `--ki-slider-track-bg-image` | `none` | Optional image painted on the inactive rail. |
+| `--ki-slider-track-height` | `0.25rem` | Inactive rail thickness. |
+| `--ki-slider-vertical-length` | `8rem` | Length of the vertical rail. |
 
 ### `ki-spinner`
 
