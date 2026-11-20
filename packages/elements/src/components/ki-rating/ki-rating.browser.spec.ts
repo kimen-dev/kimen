@@ -285,19 +285,31 @@ it('S11 blocks required submission until the rating has a selection', async () =
 });
 
 it('S12 resets the selected radio and submitted value silently', async () => {
-  const { rating } = await mount(
+  const { rating, shadow } = await mount(
     '<form><ki-rating label="Usefulness" name="usefulness" value="2"></ki-rating></form>',
     'Usefulness',
   );
-  await radio('4 stars').click();
-  const events = changes(rating);
   const form = formFixture();
+  const events = changes(rating);
 
+  // Reset in the same task as the native click so Stencil can coalesce the renders.
+  (radio('4 stars').element() as HTMLInputElement).click();
+  expect(rating.value).toBe(4);
   form.reset();
 
-  await expect.element(radio('2 stars')).toBeChecked();
-  expect(new FormData(form).getAll('usefulness')).toEqual(['2']);
-  expect(events).toEqual([]);
+  await expect
+    .poll(async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      return {
+        checked: Array.from(
+          shadow.querySelectorAll<HTMLInputElement>('input:checked'),
+          ({ value }) => value,
+        ),
+        submitted: new FormData(form).getAll('usefulness'),
+      };
+    })
+    .toEqual({ checked: ['2'], submitted: ['2'] });
+  expect(events).toEqual([{ value: 4 }]);
 });
 
 it('S13 disabled fieldsets remove choices from focus and submission', async () => {
@@ -352,12 +364,19 @@ it('S15 keeps filled and outlined glyphs distinct in forced colours', async (tes
     await expect.poll(() => filledCounts(shadow)).toEqual([1, 1, 1, 0, 0]);
     const [filled, , , empty] = glyphs(shadow);
     if (!filled || !empty) throw new Error('Expected a filled and empty glyph');
-    const fill = glyphPaint(filled).at(-1)?.fill ?? 'transparent';
-    const outline = glyphPaint(empty)[0]?.stroke ?? 'transparent';
     witness.style.backgroundColor = 'Canvas';
-    const canvas = getComputedStyle(witness).backgroundColor;
-    expect(paintContrast(fill, canvas)).toBeGreaterThanOrEqual(3);
-    expect(paintContrast(outline, canvas)).toBeGreaterThanOrEqual(3);
+    await expect
+      .poll(() => {
+        const canvas = getComputedStyle(witness).backgroundColor;
+        const selected = glyphPaint(filled).at(-1);
+        const unselected = glyphPaint(empty)[0];
+        return Math.min(
+          paintContrast(selected?.fill ?? 'transparent', canvas),
+          paintContrast(selected?.stroke ?? 'transparent', canvas),
+          paintContrast(unselected?.stroke ?? 'transparent', canvas),
+        );
+      })
+      .toBeGreaterThanOrEqual(3);
     await expect.element(page.getByText('3 of 5', { exact: true })).toBeVisible();
   } finally {
     await browserCommands.emulateForcedColors(null);

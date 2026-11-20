@@ -132,6 +132,14 @@ export class KiRating {
 
   formResetCallback(): void {
     this.value = this.initialValue;
+    // Reapply the live score after the browser resets native checked state.
+    // Stencil can coalesce a selection and its reset into the same render.
+    requestAnimationFrame(() => {
+      const selected = String(this.value);
+      this.host.shadowRoot?.querySelectorAll('input').forEach((radio) => {
+        radio.checked = radio.value === selected;
+      });
+    });
   }
 
   formDisabledCallback(disabled: boolean): void {

@@ -145,4 +145,4 @@ Feature: Rating displays a score or collects a choice on a small scale
 
 - **Agent's choice, pending founder confirmation.** Declare the API change as major because the protected API comparator classifies additions to the generated loader namespaces that way.
 
-- **Agent's choice, pending founder confirmation.** The same local build with and without Rating measured MCP server growth of 19,644 bytes raw and 4,275 bytes gzip. Record those two measured allowances in Rating metadata. The existing Brotli and MCP Apps limits cover the resulting bundles.
+- **Agent's choice, pending founder confirmation.** The same local build with and without Rating measured 19,787 raw bytes of MCP server growth after the Firefox fixes. Record that raw allowance and retain the original 4,275-byte gzip allowance. The existing gzip, Brotli, and MCP Apps limits cover the resulting bundles.
