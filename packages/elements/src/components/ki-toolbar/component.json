@@ -8,5 +8,10 @@
   "visual": {
     "material3Dark": true
   },
-  "catalog": true
+  "catalog": true,
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 14897
+    }
+  }
 }
