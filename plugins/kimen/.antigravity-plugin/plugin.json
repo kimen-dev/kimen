@@ -1,0 +1,17 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "kimen",
+  "displayName": "Kimen",
+  "version": "0.1.0",
+  "description": "Skills for building with Kimen: the ki-* web components and design tokens for ordinary pages, and the guarded generative UI layer (kimen-mcp, MCP Apps, A2UI, UI specs).",
+  "suggestedPrompts": [
+    "Build a settings page with Kimen components and dark mode",
+    "Render a UI spec from my agent with the Kimen catalog",
+    "Return an interactive Kimen surface from my MCP server"
+  ],
+  "author": { "name": "Kimen", "url": "https://kimen.dev" },
+  "homepage": "https://kimen.dev/docs/guides/connect-agents/",
+  "repository": "https://github.com/kimen-dev/kimen",
+  "license": "Apache-2.0",
+  "keywords": ["kimen", "web-components", "design-tokens", "generative-ui", "mcp-apps", "a2ui"]
+}

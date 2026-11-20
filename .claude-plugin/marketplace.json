@@ -1,0 +1,12 @@
+{
+  "name": "kimen",
+  "owner": { "name": "Kimen", "url": "https://kimen.dev" },
+  "description": "Agent plugins for building with Kimen.",
+  "plugins": [
+    {
+      "name": "kimen",
+      "source": "./plugins/kimen",
+      "description": "Skills for Kimen components and Kimen generative UI (kimen-components, kimen-genui)."
+    }
+  ]
+}
