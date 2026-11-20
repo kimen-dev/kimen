@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 408 semantic
-and 1319 component tokens. Values are the resolved **onmars light**
+and 1335 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -2015,6 +2015,27 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-toaster-gap` | `0.75rem` | dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014). |
 | `--ki-toaster-inset-block` | `1rem` | dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014). |
 | `--ki-toaster-inset-inline` | `1rem` | dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014). |
+
+### `ki-toolbar`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-toolbar-backdrop-filter` | `none` | Complete backdrop filter behind the surface. |
+| `--ki-toolbar-bg` | `#f3f0eb` | Background of the standard toolbar. |
+| `--ki-toolbar-bg-image` | `none` | Optional image above the solid surface color. |
+| `--ki-toolbar-docked-padding-inline` | `0.75rem` | Inline insets for docked actions. |
+| `--ki-toolbar-docked-radius` | `0rem` | Corner radius of the docked toolbar. |
+| `--ki-toolbar-fab-gap` | `0.5rem` | Gap between a floating pill and its companion FAB. |
+| `--ki-toolbar-fg` | `#181613` | Foreground of the standard toolbar. |
+| `--ki-toolbar-gap` | `0.25rem` | Gap between toolbar actions. |
+| `--ki-toolbar-height` | `4rem` | Minimum height of the docked toolbar before its safe area. |
+| `--ki-toolbar-padding` | `0.5rem` | Toolbar surface padding. |
+| `--ki-toolbar-radius` | `1000px` | Radius of the floating pill. |
+| `--ki-toolbar-scroll-duration` | `260ms` | Duration of the scroll visibility transition. |
+| `--ki-toolbar-scroll-easing` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Easing of the scroll visibility transition. |
+| `--ki-toolbar-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Resting elevation of the floating pill. |
+| `--ki-toolbar-vibrant-bg` | `#ffebe5` | Accent background of the vibrant toolbar. |
+| `--ki-toolbar-vibrant-fg` | `#9a3715` | Foreground on the vibrant toolbar. |
 
 ### `ki-tooltip`
 

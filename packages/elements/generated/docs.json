@@ -9353,6 +9353,241 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-toolbar/ki-toolbar.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-toolbar",
+      "docs": "Brings frequent page actions together in a floating pill or docked surface.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "group a small set of related page actions, such as text\nformatting or the commands on a compact message screen."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for site navigation, mutually exclusive choices, or a docked\nbar on a screen already using MobileNav."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-button, ki-icon-button (including toggles), native button\nand ki-divider children. Give every icon-only action an accessible name."
+        },
+        {
+          "name": "slot",
+          "text": "fab - A companion ki-fab for the floating variant. It follows the\ntoolbar and has its own Tab stop."
+        },
+        {
+          "name": "part",
+          "text": "toolbar - The named surface containing the grouped actions."
+        }
+      ],
+      "usage": {
+        "examples": "# Toolbar examples\n\n## Formatting controls\n\n```html\n<ki-toolbar label=\"Formatting\">\n  <ki-button variant=\"ghost\">Bold</ki-button>\n  <ki-divider orientation=\"vertical\"></ki-divider>\n  <ki-button variant=\"ghost\">Insert link</ki-button>\n</ki-toolbar>\n```\n\nGive icon-only actions their own label. With ToggleIconButton available, a\n`ki-icon-button` with `toggle`, `selected` and `label=\"Bold\"` owns the\npressed state and activation of the Bold command.\n\n## Docked message actions\n\n```html\n<ki-toolbar label=\"Message actions\" variant=\"docked\" tone=\"vibrant\" hide-on-scroll>\n  <ki-button variant=\"ghost\">Archive</ki-button>\n  <ki-button variant=\"ghost\">Mark unread</ki-button>\n</ki-toolbar>\n```\n\nReserve the bottom edge for the toolbar and leave space for its minimum\nheight plus `env(safe-area-inset-bottom, 0px)` below page content. Use this\nvariant on compact pages without MobileNav.\n\n## Floating with a FAB\n\nWhen `ki-fab` is available, register it alongside the toolbar and buttons\nwhen using direct imports. Give the FAB a label and use its named slot.\n\n```html\n<ki-toolbar label=\"Message actions\" tone=\"vibrant\">\n  <ki-button variant=\"ghost\">Archive</ki-button>\n  <ki-fab slot=\"fab\" label=\"Reply\"></ki-fab>\n</ki-toolbar>\n```\n\nThis companion action follows the pill in the Tab sequence. Handle actions\non the slotted controls. The toolbar coordinates navigation and placement.\n"
+      },
+      "props": [
+        {
+          "name": "hideOnScroll",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "hide-on-scroll",
+          "reflectToAttr": true,
+          "docs": "Hides on downward page scroll and reveals on upward scroll or when an\naction receives focus. Use for secondary actions where content needs room.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the group, such as \"Formatting\". Supply it in the page's language.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "complexType": {
+            "original": "KiToolbarOrientation",
+            "resolved": "\"horizontal\" | \"vertical\"",
+            "references": {
+              "KiToolbarOrientation": {
+                "location": "local",
+                "path": "src/components/ki-toolbar/ki-toolbar.tsx",
+                "id": "src/components/ki-toolbar/ki-toolbar.tsx::KiToolbarOrientation"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "orientation",
+          "reflectToAttr": true,
+          "docs": "Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'horizontal'"
+            }
+          ],
+          "default": "'horizontal'",
+          "values": [
+            {
+              "value": "horizontal",
+              "type": "string"
+            },
+            {
+              "value": "vertical",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"standard\" | \"vibrant\"",
+          "complexType": {
+            "original": "KiToolbarTone",
+            "resolved": "\"standard\" | \"vibrant\"",
+            "references": {
+              "KiToolbarTone": {
+                "location": "local",
+                "path": "src/components/ki-toolbar/ki-toolbar.tsx",
+                "id": "src/components/ki-toolbar/ki-toolbar.tsx::KiToolbarTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Surface palette. Use vibrant to emphasize the toolbar with an accent tint.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'standard'"
+            }
+          ],
+          "default": "'standard'",
+          "values": [
+            {
+              "value": "standard",
+              "type": "string"
+            },
+            {
+              "value": "vibrant",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"docked\" | \"floating\"",
+          "complexType": {
+            "original": "KiToolbarVariant",
+            "resolved": "\"docked\" | \"floating\"",
+            "references": {
+              "KiToolbarVariant": {
+                "location": "local",
+                "path": "src/components/ki-toolbar/ki-toolbar.tsx",
+                "id": "src/components/ki-toolbar/ki-toolbar.tsx::KiToolbarVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Floating leaves placement to the page. Docked fixes the surface to the\nviewport's bottom edge. Reserve space below the content when docking.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'floating'"
+            }
+          ],
+          "default": "'floating'",
+          "values": [
+            {
+              "value": "docked",
+              "type": "string"
+            },
+            {
+              "value": "floating",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [
+        {
+          "event": "focusin",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-button, ki-icon-button (including toggles), native button\nand ki-divider children. Give every icon-only action an accessible name."
+        },
+        {
+          "name": "fab",
+          "docs": "A companion ki-fab for the floating variant. It follows the\ntoolbar and has its own Tab stop."
+        }
+      ],
+      "parts": [
+        {
+          "name": "toolbar",
+          "docs": "The named surface containing the grouped actions."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-tooltip/ki-tooltip.tsx",
       "encapsulation": "shadow",
       "tag": "ki-tooltip",
@@ -9765,6 +10000,21 @@
       "declaration": "export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-textarea/ki-textarea.tsx"
+    },
+    "src/components/ki-toolbar/ki-toolbar.tsx::KiToolbarVariant": {
+      "declaration": "export type KiToolbarVariant = 'floating' | 'docked';",
+      "docstring": "",
+      "path": "src/components/ki-toolbar/ki-toolbar.tsx"
+    },
+    "src/components/ki-toolbar/ki-toolbar.tsx::KiToolbarOrientation": {
+      "declaration": "export type KiToolbarOrientation = 'horizontal' | 'vertical';",
+      "docstring": "",
+      "path": "src/components/ki-toolbar/ki-toolbar.tsx"
+    },
+    "src/components/ki-toolbar/ki-toolbar.tsx::KiToolbarTone": {
+      "declaration": "export type KiToolbarTone = 'standard' | 'vibrant';",
+      "docstring": "",
+      "path": "src/components/ki-toolbar/ki-toolbar.tsx"
     },
     "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",

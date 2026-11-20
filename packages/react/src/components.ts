@@ -44,5 +44,6 @@ export { KiTabs } from './ki-tabs.js';
 export { KiTextarea } from './ki-textarea.js';
 export { KiToast } from './ki-toast.js';
 export { KiToaster } from './ki-toaster.js';
+export { KiToolbar } from './ki-toolbar.js';
 export { KiTooltip } from './ki-tooltip.js';
 export { KiVideo } from './ki-video.js';

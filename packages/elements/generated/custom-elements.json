@@ -12822,6 +12822,243 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-toolbar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiToolbar",
+          "customElement": true,
+          "tagName": "ki-toolbar",
+          "description": "Brings frequent page actions together in a floating pill or docked surface.",
+          "whenToUse": "group a small set of related page actions, such as text\nformatting or the commands on a compact message screen.",
+          "whenNotToUse": "for site navigation, mutually exclusive choices, or a docked\nbar on a screen already using MobileNav.",
+          "attributes": [
+            {
+              "name": "hide-on-scroll",
+              "fieldName": "hideOnScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides on downward page scroll and reveals on upward scroll or when an\naction receives focus. Use for secondary actions where content needs room."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name for the group, such as \"Formatting\". Supply it in the page's language.",
+              "required": true
+            },
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'horizontal'",
+              "description": "Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"standard\" | \"vibrant\""
+              },
+              "default": "'standard'",
+              "description": "Surface palette. Use vibrant to emphasize the toolbar with an accent tint."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"docked\" | \"floating\""
+              },
+              "default": "'floating'",
+              "description": "Floating leaves placement to the page. Docked fixes the surface to the\nviewport's bottom edge. Reserve space below the content when docking."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hideOnScroll",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides on downward page scroll and reveals on upward scroll or when an\naction receives focus. Use for secondary actions where content needs room.",
+              "attribute": "hide-on-scroll",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name for the group, such as \"Formatting\". Supply it in the page's language.",
+              "attribute": "label",
+              "reflects": true,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "privacy": "public",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'horizontal'",
+              "description": "Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"standard\" | \"vibrant\""
+              },
+              "default": "'standard'",
+              "description": "Surface palette. Use vibrant to emphasize the toolbar with an accent tint.",
+              "attribute": "tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"docked\" | \"floating\""
+              },
+              "default": "'floating'",
+              "description": "Floating leaves placement to the page. Docked fixes the surface to the\nviewport's bottom edge. Reserve space below the content when docking.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Direct ki-button, ki-icon-button (including toggles), native button\nand ki-divider children. Give every icon-only action an accessible name."
+            },
+            {
+              "name": "fab",
+              "description": "A companion ki-fab for the floating variant. It follows the\ntoolbar and has its own Tab stop."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "toolbar",
+              "description": "The named surface containing the grouped actions."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-toolbar-backdrop-filter",
+              "description": "Complete backdrop filter behind the surface."
+            },
+            {
+              "name": "--ki-toolbar-bg",
+              "description": "Background of the standard toolbar."
+            },
+            {
+              "name": "--ki-toolbar-bg-image",
+              "description": "Optional image above the solid surface color."
+            },
+            {
+              "name": "--ki-toolbar-docked-padding-inline",
+              "description": "Inline insets for docked actions."
+            },
+            {
+              "name": "--ki-toolbar-docked-radius",
+              "description": "Corner radius of the docked toolbar."
+            },
+            {
+              "name": "--ki-toolbar-fab-gap",
+              "description": "Gap between a floating pill and its companion FAB."
+            },
+            {
+              "name": "--ki-toolbar-fg",
+              "description": "Foreground of the standard toolbar."
+            },
+            {
+              "name": "--ki-toolbar-gap",
+              "description": "Gap between toolbar actions."
+            },
+            {
+              "name": "--ki-toolbar-height",
+              "description": "Minimum height of the docked toolbar before its safe area."
+            },
+            {
+              "name": "--ki-toolbar-padding",
+              "description": "Toolbar surface padding."
+            },
+            {
+              "name": "--ki-toolbar-radius",
+              "description": "Radius of the floating pill."
+            },
+            {
+              "name": "--ki-toolbar-scroll-duration",
+              "description": "Duration of the scroll visibility transition."
+            },
+            {
+              "name": "--ki-toolbar-scroll-easing",
+              "description": "Easing of the scroll visibility transition."
+            },
+            {
+              "name": "--ki-toolbar-shadow",
+              "description": "Resting elevation of the floating pill."
+            },
+            {
+              "name": "--ki-toolbar-vibrant-bg",
+              "description": "Accent background of the vibrant toolbar."
+            },
+            {
+              "name": "--ki-toolbar-vibrant-fg",
+              "description": "Foreground on the vibrant toolbar."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiToolbar",
+          "declaration": {
+            "name": "KiToolbar",
+            "module": "dist/components/ki-toolbar.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-toolbar",
+          "declaration": {
+            "name": "KiToolbar",
+            "module": "dist/components/ki-toolbar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-tooltip.js",
       "declarations": [
         {

@@ -37,6 +37,7 @@ import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
+import { KiToolbarOrientation, KiToolbarTone, KiToolbarVariant } from "./components/ki-toolbar/ki-toolbar";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
@@ -70,6 +71,7 @@ export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
+export { KiToolbarOrientation, KiToolbarTone, KiToolbarVariant } from "./components/ki-toolbar/ki-toolbar";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
     /**
@@ -1525,6 +1527,39 @@ export namespace Components {
         "show": (options: KiToastShowOptions) => Promise<HTMLElement>;
     }
     /**
+     * Brings frequent page actions together in a floating pill or docked surface.
+     * @whenToUse group a small set of related page actions, such as text
+     * formatting or the commands on a compact message screen.
+     * @whenNotToUse for site navigation, mutually exclusive choices, or a docked
+     * bar on a screen already using MobileNav.
+     */
+    interface KiToolbar {
+        /**
+          * Hides on downward page scroll and reveals on upward scroll or when an action receives focus. Use for secondary actions where content needs room.
+          * @default false
+         */
+        "hideOnScroll": boolean;
+        /**
+          * Accessible name for the group, such as "Formatting". Supply it in the page's language.
+         */
+        "label": string;
+        /**
+          * Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.
+          * @default 'horizontal'
+         */
+        "orientation": KiToolbarOrientation;
+        /**
+          * Surface palette. Use vibrant to emphasize the toolbar with an accent tint.
+          * @default 'standard'
+         */
+        "tone": KiToolbarTone;
+        /**
+          * Floating leaves placement to the page. Docked fixes the surface to the viewport's bottom edge. Reserve space below the content when docking.
+          * @default 'floating'
+         */
+        "variant": KiToolbarVariant;
+    }
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -2398,6 +2433,19 @@ declare global {
         new (): HTMLKiToasterElement;
     };
     /**
+     * Brings frequent page actions together in a floating pill or docked surface.
+     * @whenToUse group a small set of related page actions, such as text
+     * formatting or the commands on a compact message screen.
+     * @whenNotToUse for site navigation, mutually exclusive choices, or a docked
+     * bar on a screen already using MobileNav.
+     */
+    interface HTMLKiToolbarElement extends Components.KiToolbar, HTMLStencilElement {
+    }
+    var HTMLKiToolbarElement: {
+        prototype: HTMLKiToolbarElement;
+        new (): HTMLKiToolbarElement;
+    };
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -2481,6 +2529,7 @@ declare global {
         "ki-textarea": HTMLKiTextareaElement;
         "ki-toast": HTMLKiToastElement;
         "ki-toaster": HTMLKiToasterElement;
+        "ki-toolbar": HTMLKiToolbarElement;
         "ki-tooltip": HTMLKiTooltipElement;
         "ki-video": HTMLKiVideoElement;
     }
@@ -3993,6 +4042,39 @@ declare namespace LocalJSX {
         "placement"?: KiToasterPlacement | (string & {});
     }
     /**
+     * Brings frequent page actions together in a floating pill or docked surface.
+     * @whenToUse group a small set of related page actions, such as text
+     * formatting or the commands on a compact message screen.
+     * @whenNotToUse for site navigation, mutually exclusive choices, or a docked
+     * bar on a screen already using MobileNav.
+     */
+    interface KiToolbar {
+        /**
+          * Hides on downward page scroll and reveals on upward scroll or when an action receives focus. Use for secondary actions where content needs room.
+          * @default false
+         */
+        "hideOnScroll"?: boolean;
+        /**
+          * Accessible name for the group, such as "Formatting". Supply it in the page's language.
+         */
+        "label": string;
+        /**
+          * Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.
+          * @default 'horizontal'
+         */
+        "orientation"?: KiToolbarOrientation;
+        /**
+          * Surface palette. Use vibrant to emphasize the toolbar with an accent tint.
+          * @default 'standard'
+         */
+        "tone"?: KiToolbarTone;
+        /**
+          * Floating leaves placement to the page. Docked fixes the surface to the viewport's bottom edge. Reserve space below the content when docking.
+          * @default 'floating'
+         */
+        "variant"?: KiToolbarVariant;
+    }
+    /**
      * A transient, text-only description bubble for one slotted trigger.
      * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
      * otherwise ambiguous control when the same information is discoverable
@@ -4308,6 +4390,13 @@ declare namespace LocalJSX {
         "max": number;
         "label": string;
     }
+    interface KiToolbarAttributes {
+        "label": string;
+        "variant": KiToolbarVariant;
+        "orientation": KiToolbarOrientation;
+        "tone": KiToolbarTone;
+        "hideOnScroll": boolean;
+    }
     interface KiTooltipAttributes {
         "label": string;
         "placement": KiTooltipPlacement;
@@ -4357,6 +4446,7 @@ declare namespace LocalJSX {
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
         "ki-toast": Omit<KiToast, keyof KiToastAttributes> & { [K in keyof KiToast & keyof KiToastAttributes]?: KiToast[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `attr:${K}`]?: KiToastAttributes[K] } & { [K in keyof KiToast & keyof KiToastAttributes as `prop:${K}`]?: KiToast[K] };
         "ki-toaster": Omit<KiToaster, keyof KiToasterAttributes> & { [K in keyof KiToaster & keyof KiToasterAttributes]?: KiToaster[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `attr:${K}`]?: KiToasterAttributes[K] } & { [K in keyof KiToaster & keyof KiToasterAttributes as `prop:${K}`]?: KiToaster[K] };
+        "ki-toolbar": Omit<KiToolbar, keyof KiToolbarAttributes> & { [K in keyof KiToolbar & keyof KiToolbarAttributes]?: KiToolbar[K] } & { [K in keyof KiToolbar & keyof KiToolbarAttributes as `attr:${K}`]?: KiToolbarAttributes[K] } & { [K in keyof KiToolbar & keyof KiToolbarAttributes as `prop:${K}`]?: KiToolbar[K] } & OneOf<"label", KiToolbar["label"], KiToolbarAttributes["label"]>;
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
         "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] } & OneOf<"label", KiVideo["label"], KiVideoAttributes["label"]>;
     }
@@ -4867,6 +4957,14 @@ declare module "@stencil/core" {
              * covers nothing.
              */
             "ki-toaster": LocalJSX.IntrinsicElements["ki-toaster"] & JSXBase.HTMLAttributes<HTMLKiToasterElement>;
+            /**
+             * Brings frequent page actions together in a floating pill or docked surface.
+             * @whenToUse group a small set of related page actions, such as text
+             * formatting or the commands on a compact message screen.
+             * @whenNotToUse for site navigation, mutually exclusive choices, or a docked
+             * bar on a screen already using MobileNav.
+             */
+            "ki-toolbar": LocalJSX.IntrinsicElements["ki-toolbar"] & JSXBase.HTMLAttributes<HTMLKiToolbarElement>;
             /**
              * A transient, text-only description bubble for one slotted trigger.
              * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or

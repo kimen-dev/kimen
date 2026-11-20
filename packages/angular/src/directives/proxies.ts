@@ -46,6 +46,7 @@ import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
+import { defineCustomElement as defineKiToolbar } from '@kimen/elements/components/ki-toolbar.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
 @ProxyCmp({
@@ -1029,6 +1030,29 @@ export class KiToaster {
 
 
 export declare interface KiToaster extends Components.KiToaster {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiToolbar,
+  inputs: ['hideOnScroll', 'label', 'orientation', 'tone', 'variant']
+})
+@Component({
+  selector: 'ki-toolbar',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['hideOnScroll', { name: 'label', required: true }, 'orientation', 'tone', 'variant'],
+})
+export class KiToolbar {
+  protected el: HTMLKiToolbarElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiToolbar extends Components.KiToolbar {}
 
 
 @ProxyCmp({

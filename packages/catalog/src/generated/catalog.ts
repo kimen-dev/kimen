@@ -1877,6 +1877,56 @@ export const catalogData = {
       "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
       "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`."
     },
+    "ki-toolbar": {
+      "description": "Brings frequent page actions together in a floating pill or docked surface.",
+      "events": {},
+      "props": {
+        "hide-on-scroll": {
+          "type": "boolean",
+          "description": "Hides on downward page scroll and reveals on upward scroll or when an\naction receives focus. Use for secondary actions where content needs room.",
+          "default": false
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the group, such as \"Formatting\". Supply it in the page's language.",
+          "required": true
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Layout and keyboard axis. Set vertical for a floating column. Docked is always horizontal.",
+          "default": "horizontal"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "standard",
+            "vibrant"
+          ],
+          "description": "Surface palette. Use vibrant to emphasize the toolbar with an accent tint.",
+          "default": "standard"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "docked",
+            "floating"
+          ],
+          "description": "Floating leaves placement to the page. Docked fixes the surface to the\nviewport's bottom edge. Reserve space below the content when docking.",
+          "default": "floating"
+        }
+      },
+      "slots": {
+        "": "Direct ki-button, ki-icon-button (including toggles), native button\nand ki-divider children. Give every icon-only action an accessible name.",
+        "fab": "A companion ki-fab for the floating variant. It follows the\ntoolbar and has its own Tab stop."
+      },
+      "tag": "ki-toolbar",
+      "whenNotToUse": "for site navigation, mutually exclusive choices, or a docked\nbar on a screen already using MobileNav.",
+      "whenToUse": "group a small set of related page actions, such as text\nformatting or the commands on a compact message screen."
+    },
     "ki-tooltip": {
       "description": "A transient, text-only description bubble for one slotted trigger.",
       "events": {},
