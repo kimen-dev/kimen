@@ -35,12 +35,13 @@ describe('numbered page ranges', () => {
 });
 
 describe('page links', () => {
+  const base = 'https://example.test/results';
   it.each([
     ['?page={page}', '?page=6'],
     ['/results/{page}#page-{page}', '/results/6#page-6'],
     ['https://example.test/results?page={page}', 'https://example.test/results?page=6'],
   ])('expands a page within %s', (template, expected) => {
-    expect(pageHref(template, 6)).toBe(expected);
+    expect(pageHref(template, 6, base)).toBe(expected);
   });
 
   it.each([
@@ -51,6 +52,6 @@ describe('page links', () => {
     'https://example.test:{page}/',
     'https://[unclosed/{page}',
   ])('falls back to a button for an invalid template (%j)', (template) => {
-    expect(pageHref(template, 6)).toBeUndefined();
+    expect(pageHref(template, 6, base)).toBeUndefined();
   });
 });

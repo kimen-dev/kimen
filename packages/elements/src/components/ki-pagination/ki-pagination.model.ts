@@ -42,11 +42,14 @@ export function pageItems(
   return items;
 }
 
-/** Relative references are tested against a neutral base and returned verbatim. */
-export function pageHref(template: string | undefined, page: number): string | undefined {
+/** Validate against the document base and preserve relative references. */
+export function pageHref(
+  template: string | undefined,
+  page: number,
+  base: string,
+): string | undefined {
   if (!template?.includes('{page}')) return undefined;
   const href = template.replaceAll('{page}', String(page));
-  const base = 'https://pagination.invalid';
   const destination = URL.parse(href, base);
   return destination &&
     /^https?:$/u.test(destination.protocol) &&

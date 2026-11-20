@@ -1,4 +1,4 @@
-import { Component, Event, type EventEmitter, h, Prop } from '@stencil/core';
+import { Component, Element, Event, type EventEmitter, h, Prop } from '@stencil/core';
 
 import '../../../icons/chevron-right.js';
 import { nonnegativeInteger, pageHref, pageItems, paginationState } from './ki-pagination.model';
@@ -27,6 +27,8 @@ import { nonnegativeInteger, pageHref, pageItems, paginationState } from './ki-p
   shadow: true,
 })
 export class KiPagination {
+  @Element() private readonly host!: HTMLElement;
+
   /**
    * Current 1-based page. Update it when the requested results are ready.
    * @default 1
@@ -149,7 +151,7 @@ export class KiPagination {
     const target = page + (previous ? -1 : 1);
     const disabled = target < 1 || target > pages;
     const label = previous ? this.previousLabel : this.nextLabel;
-    const href = disabled ? undefined : pageHref(this.hrefTemplate, target);
+    const href = disabled ? undefined : pageHref(this.hrefTemplate, target, this.host.baseURI);
 
     if (href !== undefined) {
       return this.#renderNative(direction, target, label, href);
@@ -225,7 +227,7 @@ export class KiPagination {
                     'page',
                     item,
                     this.pageLabel.replaceAll('{page}', String(item)),
-                    pageHref(this.hrefTemplate, item),
+                    pageHref(this.hrefTemplate, item, this.host.baseURI),
                     item === page,
                   )}
                 </li>
