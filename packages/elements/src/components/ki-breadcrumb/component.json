@@ -1,9 +1,28 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
   "sizeBudget": {
-    "mcpServer": { "raw": 22593, "gzip": 5076, "brotli": 3728 }
+    "mcpApps": {
+      "raw": 12433,
+      "gzip": 3112,
+      "brotli": 2007
+    },
+    "mcpServer": {
+      "raw": 20740,
+      "gzip": 4692,
+      "brotli": 2964
+    },
+    "tokenStylesheets": {
+      "onmars": 120,
+      "material3": 6
+    }
   },
-  "budgetGroup": { "members": ["ki-breadcrumb", "ki-breadcrumb-item"] }
+  "budgetGroup": {
+    "members": ["ki-breadcrumb", "ki-breadcrumb-item"]
+  }
 }
