@@ -3,7 +3,7 @@
 // Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.5.0",
+  "catalogSchemaVersion": "1.6.0",
   "components": {
     "div": {
       "description": "A native layout container (`<div>`) that lays its children out as a flex column or row, separated by a spacing token. It has no visual identity of its own: no background, border or padding.",
@@ -578,12 +578,10 @@ export const catalogData = {
         "type": {
           "type": "enum",
           "values": [
-            "button",
-            "reset",
-            "submit"
+            "button"
           ],
           "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, and `button` leaves the form alone.\nToggle mode and configured dialog commands take precedence over form actions.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
-          "default": "submit"
+          "default": "button"
         },
         "value": {
           "type": "string",
@@ -997,7 +995,8 @@ export const catalogData = {
       "props": {
         "focus-target": {
           "type": "string",
-          "description": "ID of the entry field in the same document or shadow root for focus after the last chip."
+          "description": "ID of the entry field in the same document or shadow root for focus after the last chip.",
+          "format": "idref"
         },
         "label": {
           "type": "string",
@@ -1419,7 +1418,8 @@ export const catalogData = {
         },
         "from": {
           "type": "string",
-          "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
+          "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
+          "format": "idref"
         },
         "label": {
           "type": "string",
@@ -1473,7 +1473,8 @@ export const catalogData = {
         },
         "for": {
           "type": "string",
-          "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property."
+          "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property.",
+          "format": "idref"
         },
         "max": {
           "type": "number",
@@ -2749,7 +2750,8 @@ export const catalogData = {
         "anchor": {
           "type": "string",
           "description": "Literal ID of the menu button in the same document or containing shadow root.",
-          "default": ""
+          "default": "",
+          "format": "idref"
         },
         "filter-label": {
           "type": "string",
@@ -3277,7 +3279,8 @@ export const catalogData = {
         },
         "for": {
           "type": "string",
-          "description": "ID of the button in the same document or shadow tree."
+          "description": "ID of the button in the same document or shadow tree.",
+          "format": "idref"
         },
         "kind": {
           "type": "enum",
@@ -5291,7 +5294,8 @@ export const catalogData = {
       "props": {
         "for": {
           "type": "string",
-          "description": "ID of the rich tooltip's external trigger in the same document or shadow tree."
+          "description": "ID of the rich tooltip's external trigger in the same document or shadow tree.",
+          "format": "idref"
         },
         "heading": {
           "type": "string",

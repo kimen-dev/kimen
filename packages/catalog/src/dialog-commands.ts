@@ -32,12 +32,18 @@ export function allocateDialogId(surface: Element): string {
 
 export type DialogIdFor = (id: string) => string | undefined;
 
+/**
+ * Writes the renderer-allocated DOM id of a node another node targets: a
+ * dialog a command opens, or a node a reference prop names (spec 152). The
+ * allocator decides which nodes are targets; it yields nothing for the rest,
+ * so a node no one references never carries an id.
+ */
 export function writeDialogId(
   element: Element,
   nodeId: string | undefined,
   idFor: DialogIdFor,
 ): void {
-  if (element.localName === DIALOG_TAG && nodeId !== undefined) {
+  if (nodeId !== undefined) {
     const id = idFor(nodeId);
     if (id !== undefined) {
       element.setAttribute('id', id);

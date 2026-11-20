@@ -202,27 +202,34 @@ describe('the delivered document is a complete Kimen surface', () => {
   it('renders the default Popover arrow when omitted and restores it after a live unset', async () => {
     const { view } = await embed();
     const surface = view.document.createElement('main');
-    const trigger = view.document.createElement('button');
-    trigger.id = 'filter-trigger';
-    trigger.type = 'button';
-    trigger.textContent = 'Filters';
-    view.document.body.append(trigger, surface);
+    view.document.body.append(surface);
+    // The trigger is a node of the same spec: a reference never names a
+    // host element (spec 152).
+    const trigger = { component: 'ki-button', id: 'filter-trigger', slots: { '': ['Filters'] } };
     const node = {
       component: 'ki-popover',
       id: 'filters',
       props: { for: trigger.id, label: 'Incident filters', open: true },
       slots: { '': ['Open incidents'] },
     };
+    const root = { component: 'ki-stack', slots: { '': [trigger, node] } };
     const panel = () => surface.querySelector('ki-popover')?.shadowRoot;
     const arrowWidth = () =>
       panel()?.querySelector('[part="arrow"]')?.getBoundingClientRect().width ?? 0;
 
-    expect(renderUiSpec({ root: node, version: 1 }, { surface }).ok).toBe(true);
+    expect(renderUiSpec({ root, version: 1 }, { surface }).ok).toBe(true);
     await expect.poll(arrowWidth).toBeGreaterThan(0);
 
     surface.replaceChildren();
     const live = createLiveSurface({ actions: [], surface });
-    expect(live.apply({ ops: [{ node, op: 'insert' }] }).ok).toBe(true);
+    expect(
+      live.apply({
+        ops: [
+          { node: trigger, op: 'insert' },
+          { node, op: 'insert' },
+        ],
+      }).ok,
+    ).toBe(true);
     await expect.poll(arrowWidth).toBeGreaterThan(0);
 
     expect(live.apply({ ops: [{ id: node.id, op: 'set', props: { arrow: false } }] }).ok).toBe(

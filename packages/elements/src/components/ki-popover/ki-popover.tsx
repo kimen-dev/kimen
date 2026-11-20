@@ -56,7 +56,10 @@ function restoreTrigger(state: TriggerState): void {
 export class KiPopover {
   @Element() private host!: HTMLElement;
 
-  /** ID of the button in the same document or shadow tree. */
+  /**
+   * ID of the button in the same document or shadow tree.
+   * @format idref
+   */
   @Prop() for?: string;
 
   /** Preferred side and logical alignment. Flips when room is limited. */

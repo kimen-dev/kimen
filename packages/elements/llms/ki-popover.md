@@ -48,7 +48,7 @@ Use `open` to drive visibility and listen for `ki-open` and `ki-close` to observ
 
 - `appearance` ("default" | "rich" | undefined, default 'default'): Rich shares the tooltip's raised surface, body and heading styles. With `kind="toggletip"` it enables actions and moves focus inside on open.
 - `arrow` (boolean, default true): Shows the arrow toward the trigger.
-- `for` (string | undefined): ID of the button in the same document or shadow tree.
+- `for` (string | undefined, ID of another element of the same spec): ID of the button in the same document or shadow tree.
 - `kind` ("dialog" | "toggletip", default 'dialog'): Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions.
 - `label` (string | undefined, default 'Popover'): Accessible name of a dialog popover.
 - `open` (boolean, default false): Visibility. Reflects activation and native dismissal.

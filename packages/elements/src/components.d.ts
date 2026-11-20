@@ -878,6 +878,7 @@ export namespace Components {
     interface KiChipGroup {
         /**
           * ID of the entry field in the same document or shadow root for focus after the last chip.
+          * @format idref
          */
         "focusTarget"?: string;
         /**
@@ -1245,6 +1246,7 @@ export namespace Components {
         "feedbackDuration": number;
         /**
           * ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+          * @format idref
          */
         "from"?: string;
         /**
@@ -1284,6 +1286,7 @@ export namespace Components {
         /**
           * Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
           * @default undefined
+          * @format idref
          */
         "for"?: string;
         /**
@@ -2312,6 +2315,7 @@ export namespace Components {
     interface KiMenu {
         /**
           * Literal ID of the menu button in the same document or containing shadow root.
+          * @format idref
           * @default ''
          */
         "anchor": string;
@@ -2737,6 +2741,7 @@ export namespace Components {
         "arrow": boolean;
         /**
           * ID of the button in the same document or shadow tree.
+          * @format idref
          */
         "for"?: string;
         /**
@@ -4487,6 +4492,7 @@ export namespace Components {
     interface KiTooltip {
         /**
           * ID of the rich tooltip's external trigger in the same document or shadow tree.
+          * @format idref
          */
         "for"?: string;
         /**
@@ -7770,6 +7776,7 @@ declare namespace LocalJSX {
     interface KiChipGroup {
         /**
           * ID of the entry field in the same document or shadow root for focus after the last chip.
+          * @format idref
          */
         "focusTarget"?: string;
         /**
@@ -8173,6 +8180,7 @@ declare namespace LocalJSX {
         "feedbackDuration"?: number;
         /**
           * ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+          * @format idref
          */
         "from"?: string;
         /**
@@ -8220,6 +8228,7 @@ declare namespace LocalJSX {
         /**
           * Literal ID of a trigger in the same document or shadow root. Places the indicator at its block-start inline-end corner and hides it while the trigger is unavailable. For a named host slot, omit this property.
           * @default undefined
+          * @format idref
          */
         "for"?: string;
         /**
@@ -9296,6 +9305,7 @@ declare namespace LocalJSX {
     interface KiMenu {
         /**
           * Literal ID of the menu button in the same document or containing shadow root.
+          * @format idref
           * @default ''
          */
         "anchor"?: string;
@@ -9751,6 +9761,7 @@ declare namespace LocalJSX {
         "arrow"?: boolean;
         /**
           * ID of the button in the same document or shadow tree.
+          * @format idref
          */
         "for"?: string;
         /**
@@ -11617,6 +11628,7 @@ declare namespace LocalJSX {
     interface KiTooltip {
         /**
           * ID of the rich tooltip's external trigger in the same document or shadow tree.
+          * @format idref
          */
         "for"?: string;
         /**

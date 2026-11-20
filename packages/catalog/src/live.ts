@@ -22,6 +22,7 @@ import {
   allocateDialogId,
   DIALOG_TAG,
   type DialogIdFor,
+  isDialogInvoker,
   writeDialogId,
 } from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
@@ -36,7 +37,6 @@ import {
   declaredEvents,
   type GuardState,
   guardNode,
-  hasToggleActivation,
   payloadBytes,
   pinButtonType,
   readLiveScalar,
@@ -59,6 +59,7 @@ import type {
 } from './validate.js';
 import {
   checkCommandTargets,
+  createValidationScope,
   FORBIDDEN_KEYS,
   ownEntry,
   toPlainData,
@@ -638,6 +639,46 @@ function userStateConflict(
   return null;
 }
 
+/**
+ * The ids a live state names as targets (spec 152): values of a dialog
+ * invoker's `commandfor` and of props the catalog marks `format: "idref"`.
+ */
+function stateTargets(
+  state: MState,
+  components: Readonly<Record<string, CatalogEntry>>,
+): Set<string> {
+  const targets = new Set<string>();
+  const pending: MNode[] = [...state.roots];
+  for (let node = pending.pop(); node !== undefined; node = pending.pop()) {
+    collectTargets(node, components, targets);
+    for (const children of node.slots.values()) {
+      for (const child of children) {
+        if (child.kind === 'node') {
+          pending.push(child);
+        }
+      }
+    }
+  }
+  return targets;
+}
+
+function collectTargets(
+  node: MNode,
+  components: Readonly<Record<string, CatalogEntry>>,
+  targets: Set<string>,
+): void {
+  const entry = ownEntry(components, node.component);
+  for (const [name, value] of Object.entries(node.props)) {
+    if (
+      typeof value === 'string' &&
+      ((name === 'commandfor' && isDialogInvoker(node.component)) ||
+        ownEntry(entry?.props, name)?.format === 'idref')
+    ) {
+      targets.add(value);
+    }
+  }
+}
+
 function applySet(
   state: MState,
   op: Extract<LiveOp, { op: 'set' }>,
@@ -684,7 +725,7 @@ function applySet(
     // A native layout element's props are CSSOM layout (spec 037 D4): the
     // whole layout is re-derived and only changed style properties written.
     if (previous !== current && !writeNativeLayout(element, node.component, node.props)) {
-      writeProp(element, node.component, name, current, ctx.dom.dialogIdFor);
+      writeProp(element, node.component, name, current, ctx.dom.dialogIdFor, entry);
     }
     if (overriding) {
       const live = current ?? ownEntry(entry?.props, name)?.default;
@@ -695,15 +736,9 @@ function applySet(
       node.touched = false;
     }
   }
-  // Unsetting `type` on a click-bound node re-pins the declarative
-  // no-submit default, exactly as a fresh build would.
-  if (
-    ctx.dom !== null &&
-    node.dom !== undefined &&
-    node.action !== undefined &&
-    Object.hasOwn(op.props, 'type') &&
-    (declaredEvents(entry).length === 0 || hasToggleActivation(entry))
-  ) {
+  // Unsetting `type` re-pins the declarative no-submit default on every
+  // node, bound or not, exactly as a fresh build would (spec 152 FR-007).
+  if (ctx.dom !== null && node.dom !== undefined && Object.hasOwn(op.props, 'type')) {
     pinButtonType(node.dom, entry, node.props);
   }
   return null;
@@ -938,9 +973,9 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       slots: new Map(),
       touched: false,
     };
-    writeProps(element, node.component, model.props, dialogIdFor);
-    writeDialogId(element, node.id, dialogIdFor);
     const entry = ownEntry(components, node.component);
+    writeProps(element, node.component, model.props, dialogIdFor, entry);
+    writeDialogId(element, node.id, dialogIdFor);
     if (node.component === 'ki-chip') {
       // Live membership belongs to the patch model. The host can answer the
       // removal request with a remove operation, with or without a binding.
@@ -1017,10 +1052,11 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     at: string,
   ): { node?: UiSpecNode; diagnostics: RenderDiagnostic[] } => {
     // The prospective target can be in another root, or a later op.
-    const report = validatePlainData({ actions, root: raw, version: 1 }, context, {
-      commandTargets: [],
-      ids: new Map(),
-    });
+    const report = validatePlainData(
+      { actions, root: raw, version: 1 },
+      context,
+      createValidationScope(),
+    );
     if (!report.ok || report.spec === undefined) {
       return { diagnostics: report.issues.map((issue) => rebase(issue, `${at}.node`)) };
     }
@@ -1037,7 +1073,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   /** Validates the resulting state as a whole (FR-004). */
   const validateState = (state: MState): RenderDiagnostic[] => {
     const plain = state.roots.map(toPlain);
-    const scope: NodeValidationScope = { commandTargets: [], ids: new Map() };
+    const scope: NodeValidationScope = createValidationScope();
     const guard: GuardState = { budgets, components, diagnostics: [], nodes: 0 };
     const diagnostics: RenderDiagnostic[] = [];
     plain.forEach((root, index) => {
@@ -1217,9 +1253,13 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     }
     // 7. New subtrees built detached first: a component constructor that
     // throws rejects the batch before any attached node changes.
+    // Target nodes of the resulting state (spec 152): every dialog, and
+    // every node a command or a reference names. Each keeps the DOM id it
+    // already had; a new target gets a fresh one the host page does not use.
+    const targets = stateTargets(shadow, components);
     const nextDialogIds = new Map<string, string>();
     for (const [id, node] of shadow.ids) {
-      if (node.component === DIALOG_TAG) {
+      if (node.component === DIALOG_TAG || targets.has(id)) {
         nextDialogIds.set(id, dialogIds.get(id) ?? allocateDialogId(surface));
       }
     }
@@ -1251,6 +1291,16 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     });
     if (diverged !== null) {
       throw new Error(`live surface: commit diverged from validation at ${diverged.path}`);
+    }
+    // A node that was already on the surface and is now a target receives
+    // its id; one that stopped being a target loses the id it was given.
+    for (const [id, node] of live.ids) {
+      const target = nextDialogIds.get(id);
+      if (target !== undefined && node.dom?.getAttribute('id') !== target) {
+        node.dom?.setAttribute('id', target);
+      } else if (target === undefined && dialogIds.has(id)) {
+        node.dom?.removeAttribute('id');
+      }
     }
     dialogIds = nextDialogIds;
     revision += 1;
