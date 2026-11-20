@@ -41,7 +41,7 @@ const browserSpecPatterns = (suffix: string): string[] =>
 const inputDeviceSpecs = [
   pointerCapabilitySpec,
   'src/components/ki-icon/ki-icon.browser.spec.ts',
-  'src/components/ki-skeleton/ki-skeleton.pointer.browser.spec.ts',
+  'src/components/ki-segment/ki-segment.browser.spec.ts',
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
   ...browserSpecPatterns('*.pointer'),

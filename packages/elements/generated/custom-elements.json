@@ -3488,6 +3488,596 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-chip.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiChip",
+          "customElement": true,
+          "tagName": "ki-chip",
+          "description": "A compact filter toggle, removable picked value, or contextual action.",
+          "whenToUse": "apply independent filters, represent values selected in an entry\nfield, or offer a small contextual action alongside content.",
+          "whenNotToUse": "static status (ki-badge), primary actions (ki-button), suggested\nprompts, or mutually exclusive choices (ki-radio-group).",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents activation, removal and moving the chip."
+            },
+            {
+              "name": "removable",
+              "fieldName": "removable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Gives an input chip a trailing remove button and keyboard deletion."
+            },
+            {
+              "name": "remove-label",
+              "fieldName": "removeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Remove'",
+              "description": "Localized action prefix in the remove button's accessible name, followed by the chip label."
+            },
+            {
+              "name": "selected",
+              "fieldName": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The pressed state of a filter chip. The user can toggle it in place."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing."
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "\"assist\" | \"filter\" | \"input\" | undefined"
+              },
+              "description": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Value sent with removal, contextual activation and reorder events."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents activation, removal and moving the chip.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "removable",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Gives an input chip a trailing remove button and keyboard deletion.",
+              "attribute": "removable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "removeLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Remove'",
+              "description": "Localized action prefix in the remove button's accessible name, followed by the chip label.",
+              "attribute": "remove-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The pressed state of a filter chip. The user can toggle it in place.",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Visual size of the pill, 24 CSS px for sm and 32 CSS px for md at standard text spacing.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "type": {
+                "text": "\"assist\" | \"filter\" | \"input\" | undefined"
+              },
+              "description": "Chip kind. Inherits the immediate chip group's type when omitted. Standalone chips default to filter.",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Value sent with removal, contextual activation and reorder events.",
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-activate",
+              "type": {
+                "text": "CustomEvent<{\n    value: string;\n  }>"
+              },
+              "description": "Emitted by an assist chip when its native button is activated."
+            },
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<{\n    selected: boolean;\n  }>"
+              },
+              "description": "Emitted after a filter chip changes its pressed state."
+            },
+            {
+              "name": "ki-remove",
+              "type": {
+                "text": "CustomEvent<{ value: string }>"
+              },
+              "description": "Remove request for an input chip. Cancel it to keep application ownership of the chip."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The visible text label. Use text or non-interactive markup."
+            },
+            {
+              "name": "start",
+              "description": "One decorative glyph or extra-extra-small avatar. A filter check\nreplaces it when selected. Do not slot controls."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "chip",
+              "description": "The painted pill."
+            },
+            {
+              "name": "drag-handle",
+              "description": "The grip enabled by a reorderable parent group."
+            },
+            {
+              "name": "label",
+              "description": "The text wrapper around the default slot."
+            },
+            {
+              "name": "remove",
+              "description": "The native remove button on a removable input chip."
+            },
+            {
+              "name": "selection-icon",
+              "description": "The selected filter check."
+            },
+            {
+              "name": "start",
+              "description": "The decorative leading content."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-chip-assist-icon-fg",
+              "description": "Decorative glyph in an assist chip."
+            },
+            {
+              "name": "--ki-chip-backdrop-filter",
+              "description": "Default compact pill surface leaves the backdrop unfiltered."
+            },
+            {
+              "name": "--ki-chip-bg",
+              "description": "Resting filter and assist surface."
+            },
+            {
+              "name": "--ki-chip-bg-image",
+              "description": "Default compact pill surface uses a solid color."
+            },
+            {
+              "name": "--ki-chip-border",
+              "description": "Outline of an unselected filter or assist chip."
+            },
+            {
+              "name": "--ki-chip-border-width",
+              "description": "Default thickness of a compact pill border."
+            },
+            {
+              "name": "--ki-chip-disabled-border",
+              "description": "Outline of a disabled chip."
+            },
+            {
+              "name": "--ki-chip-disabled-ink",
+              "description": "Label on a disabled chip."
+            },
+            {
+              "name": "--ki-chip-fg",
+              "description": "Resting filter and assist label."
+            },
+            {
+              "name": "--ki-chip-font-family",
+              "description": "Font family for the visible chip label."
+            },
+            {
+              "name": "--ki-chip-font-size",
+              "description": "Default chip label size."
+            },
+            {
+              "name": "--ki-chip-font-size-sm",
+              "description": "Small chip label size."
+            },
+            {
+              "name": "--ki-chip-font-weight",
+              "description": "Weight for a chip label."
+            },
+            {
+              "name": "--ki-chip-gap",
+              "description": "Gap between content in a compact pill."
+            },
+            {
+              "name": "--ki-chip-height",
+              "description": "Default height of a compact pill."
+            },
+            {
+              "name": "--ki-chip-height-sm",
+              "description": "Small height of a compact pill."
+            },
+            {
+              "name": "--ki-chip-hover-bg",
+              "description": "Surface under the hovering pointer."
+            },
+            {
+              "name": "--ki-chip-hover-fg",
+              "description": "Label over the hover surface."
+            },
+            {
+              "name": "--ki-chip-icon-size",
+              "description": "Icon size inside a compact pill."
+            },
+            {
+              "name": "--ki-chip-input-bg",
+              "description": "Surface of a picked value."
+            },
+            {
+              "name": "--ki-chip-input-fg",
+              "description": "Label of a picked value."
+            },
+            {
+              "name": "--ki-chip-inset",
+              "description": "Default inline padding of a compact pill."
+            },
+            {
+              "name": "--ki-chip-inset-action",
+              "description": "Trailing inset beside a pill action."
+            },
+            {
+              "name": "--ki-chip-inset-sm",
+              "description": "Small inline padding of a compact pill."
+            },
+            {
+              "name": "--ki-chip-line-height",
+              "description": "Default line height of the chip label."
+            },
+            {
+              "name": "--ki-chip-line-height-sm",
+              "description": "Small line height of the chip label."
+            },
+            {
+              "name": "--ki-chip-pressed-bg",
+              "description": "Surface while the activation is held."
+            },
+            {
+              "name": "--ki-chip-pressed-fg",
+              "description": "Label while the activation is held."
+            },
+            {
+              "name": "--ki-chip-radius",
+              "description": "Fully rounded compact pill shape."
+            },
+            {
+              "name": "--ki-chip-remove-bg",
+              "description": "Remove button surface inside an input chip."
+            },
+            {
+              "name": "--ki-chip-remove-fg",
+              "description": "Resting remove glyph."
+            },
+            {
+              "name": "--ki-chip-remove-hover-bg",
+              "description": "Remove button hover surface."
+            },
+            {
+              "name": "--ki-chip-remove-hover-fg",
+              "description": "Remove glyph over the hover surface."
+            },
+            {
+              "name": "--ki-chip-selected-bg",
+              "description": "Selected filter surface."
+            },
+            {
+              "name": "--ki-chip-selected-border",
+              "description": "Accessible boundary of a selected filter."
+            },
+            {
+              "name": "--ki-chip-selected-fg",
+              "description": "Selected filter label and check."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiChip",
+          "declaration": {
+            "name": "KiChip",
+            "module": "dist/components/ki-chip.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-chip",
+          "declaration": {
+            "name": "KiChip",
+            "module": "dist/components/ki-chip.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-chip-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiChipGroup",
+          "customElement": true,
+          "tagName": "ki-chip-group",
+          "description": "A named collection of filter, input or assist chips, with optional ordering.",
+          "whenToUse": "label related chips or let people change their reading order.",
+          "whenNotToUse": "choose exactly one option or submit a form value.",
+          "attributes": [
+            {
+              "name": "focus-target",
+              "fieldName": "focusTarget",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of the entry field in the same document or shadow root for focus after the last chip."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name for the group or list."
+            },
+            {
+              "name": "reorder-announcement",
+              "fieldName": "reorderAnnouncement",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{label} moved to position {position} of {total}.'",
+              "description": "Localized polite message using {label}, {position} and {total}. Position is one-based."
+            },
+            {
+              "name": "reorderable",
+              "fieldName": "reorderable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips."
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "\"assist\" | \"filter\" | \"input\""
+              },
+              "default": "'filter'",
+              "description": "Shared chip kind and collection semantics. Input chips are presented as a list."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "focusTarget",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of the entry field in the same document or shadow root for focus after the last chip.",
+              "attribute": "focus-target",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Accessible name for the group or list.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "reorderAnnouncement",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{label} moved to position {position} of {total}.'",
+              "description": "Localized polite message using {label}, {position} and {total}. Position is one-based.",
+              "attribute": "reorder-announcement",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "reorderable",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables dragging, pointer pick-and-place and Alt+Left/Right to move chips.",
+              "attribute": "reorderable",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "type": {
+                "text": "\"assist\" | \"filter\" | \"input\""
+              },
+              "default": "'filter'",
+              "description": "Shared chip kind and collection semantics. Input chips are presented as a list.",
+              "attribute": "type",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-reorder",
+              "type": {
+                "text": "CustomEvent<KiChipReorderDetail>"
+              },
+              "description": "Emitted after moving a chip. Indices are zero-based positions in the visible chip collection."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Direct ki-chip children in reading order."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "group",
+              "description": "The wrapping chip layout."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-chip-group-font-family",
+              "description": "Font family inherited by chip group content."
+            },
+            {
+              "name": "--ki-chip-group-gap",
+              "description": "Gap between adjacent chips and rows."
+            },
+            {
+              "name": "--ki-chip-height-sm",
+              "description": "Small height of a compact pill."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiChipGroup",
+          "declaration": {
+            "name": "KiChipGroup",
+            "module": "dist/components/ki-chip-group.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-chip-group",
+          "declaration": {
+            "name": "KiChipGroup",
+            "module": "dist/components/ki-chip-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-counter.js",
       "declarations": [
         {
@@ -8651,6 +9241,427 @@
           "declaration": {
             "name": "KiScroller",
             "module": "dist/components/ki-scroller.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-segment.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSegment",
+          "customElement": true,
+          "tagName": "ki-segment",
+          "description": "A single choice in a ki-segmented-control.",
+          "whenToUse": "offer one mutually exclusive choice with text or a named icon.",
+          "whenNotToUse": "standalone, for navigation, or for form submission.",
+          "attributes": [
+            {
+              "name": "aria-label",
+              "fieldName": "accessibleLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label."
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Excludes the option from selection and keyboard navigation."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required nonempty option identifier. Each value must be unique in its group.",
+              "required": true
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "accessibleLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label.",
+              "attribute": "aria-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Excludes the option from selection and keyboard navigation.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required nonempty option identifier. Each value must be unique in its group.",
+              "attribute": "value",
+              "reflects": true,
+              "required": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Noninteractive visible option label."
+            },
+            {
+              "name": "start",
+              "description": "Decorative leading icon. Supply aria-label for an icon-only option."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "button",
+              "description": "The native option surface with radio semantics."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-segment-font-size",
+              "description": "Text size of medium and small segments."
+            },
+            {
+              "name": "--ki-segment-font-weight",
+              "description": "Font weight of segment labels."
+            },
+            {
+              "name": "--ki-segment-gap",
+              "description": "Gap between the leading icon and label."
+            },
+            {
+              "name": "--ki-segment-icon-size",
+              "description": "Size of leading artwork."
+            },
+            {
+              "name": "--ki-segment-line-height",
+              "description": "Line height of medium and small segments."
+            },
+            {
+              "name": "--ki-segment-padding-inline",
+              "description": "Inline padding of a medium or small segment."
+            },
+            {
+              "name": "--ki-segmented-control-track-size-md",
+              "description": "Medium track height before density adjustment."
+            },
+            {
+              "name": "--ki-segmented-item-backdrop-filter",
+              "description": "Complete CSS backdrop filter behind an unselected segment."
+            },
+            {
+              "name": "--ki-segmented-item-bg",
+              "description": "Resting surface of an unselected segment, matching the track by default."
+            },
+            {
+              "name": "--ki-segmented-item-bg-image",
+              "description": "Optional image layered over an unselected segment surface."
+            },
+            {
+              "name": "--ki-segmented-item-disabled-fg",
+              "description": "Ink of an unavailable segment."
+            },
+            {
+              "name": "--ki-segmented-item-fg",
+              "description": "Resting ink of an unselected segment, strengthened in contrast-more."
+            },
+            {
+              "name": "--ki-segmented-item-radius",
+              "description": "Corner radius of each segment."
+            },
+            {
+              "name": "--ki-segmented-selected-backdrop-filter",
+              "description": "Complete CSS backdrop filter behind the selected segment."
+            },
+            {
+              "name": "--ki-segmented-selected-bg",
+              "description": "Raised selected surface, lighter than the track in both schemes."
+            },
+            {
+              "name": "--ki-segmented-selected-bg-image",
+              "description": "Optional image layered over the selected segment."
+            },
+            {
+              "name": "--ki-segmented-selected-border-color",
+              "description": "High-contrast selection boundary when elevation or surface differences are subtle."
+            },
+            {
+              "name": "--ki-segmented-selected-border-width",
+              "description": "Width of the selection boundary."
+            },
+            {
+              "name": "--ki-segmented-selected-fg",
+              "description": "Ink of the selected segment."
+            },
+            {
+              "name": "--ki-segmented-selected-shadow",
+              "description": "Elevation of the selected segment."
+            },
+            {
+              "name": "--ki-segmented-track-padding",
+              "description": "Inset between the track and its segments."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSegment",
+          "declaration": {
+            "name": "KiSegment",
+            "module": "dist/components/ki-segment.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-segment",
+          "declaration": {
+            "name": "KiSegment",
+            "module": "dist/components/ki-segment.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-segmented-control.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSegmentedControl",
+          "customElement": true,
+          "tagName": "ki-segmented-control",
+          "description": "A compact control for one in-place choice among two to five options.",
+          "whenToUse": "apply a chart range, view mode, or another immediate setting.",
+          "whenNotToUse": "switching between panels (ki-tabs), submitted form choices\n(ki-radio-group), or more than five options (ki-select).",
+          "attributes": [
+            {
+              "name": "full-width",
+              "fieldName": "fullWidth",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Distribute the available inline space evenly among all segments."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required accessible name of the group. Use a short name for the setting.",
+              "required": true
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"md\" | \"sm\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Track size. The default heights are 28, 32 and 40 CSS px respectively;\nsurrounding density settings can increase or decrease targets."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Resolved selected value. Set it to choose an option programmatically.\nOmit it to select the first available option. The value is empty when\nthere are no available options. Programmatic changes are silent."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "fullWidth",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Distribute the available inline space evenly among all segments.",
+              "attribute": "full-width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required accessible name of the group. Use a short name for the setting.",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"md\" | \"sm\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Track size. The default heights are 28, 32 and 40 CSS px respectively;\nsurrounding density settings can increase or decrease targets.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Resolved selected value. Set it to choose an option programmatically.\nOmit it to select the first available option. The value is empty when\nthere are no available options. Programmatic changes are silent.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<{ value: string }>"
+              },
+              "description": "Emitted once per changed user choice with the new resolved value."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Two to five direct ki-segment children with distinct nonempty values."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "track",
+              "description": "Surface containing the radiogroup and its options."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-segment-font-size-xs",
+              "description": "Text size of extra-small segments."
+            },
+            {
+              "name": "--ki-segment-line-height-xs",
+              "description": "Line height of extra-small segments."
+            },
+            {
+              "name": "--ki-segment-padding-inline-xs",
+              "description": "Inline padding of an extra-small segment."
+            },
+            {
+              "name": "--ki-segmented-control-track-size-md",
+              "description": "Medium track height before density adjustment."
+            },
+            {
+              "name": "--ki-segmented-control-track-size-sm",
+              "description": "Small track height before density adjustment."
+            },
+            {
+              "name": "--ki-segmented-control-track-size-xs",
+              "description": "Extra-small track height before density adjustment."
+            },
+            {
+              "name": "--ki-segmented-radius",
+              "description": "Corner radius of the control track."
+            },
+            {
+              "name": "--ki-segmented-track-backdrop-filter",
+              "description": "Complete CSS backdrop filter behind the track."
+            },
+            {
+              "name": "--ki-segmented-track-bg",
+              "description": "Solid surface for the segment track."
+            },
+            {
+              "name": "--ki-segmented-track-bg-image",
+              "description": "Optional image layered over the track surface."
+            },
+            {
+              "name": "--ki-segmented-track-gap",
+              "description": "Gap between adjacent segments."
+            },
+            {
+              "name": "--ki-segmented-track-padding",
+              "description": "Inset between the track and its segments."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSegmentedControl",
+          "declaration": {
+            "name": "KiSegmentedControl",
+            "module": "dist/components/ki-segmented-control.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-segmented-control",
+          "declaration": {
+            "name": "KiSegmentedControl",
+            "module": "dist/components/ki-segmented-control.js"
           }
         }
       ]
