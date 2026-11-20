@@ -77,6 +77,11 @@ defineCustomElements();
   `import '@kimen/elements/icons/triangle-alert';` then
   `<ki-icon name="triangle-alert"></ki-icon>`. A name that was not imported
   draws nothing.
+- Known issue (pre-1.0): bundlers that honour `sideEffects` drop the glyphs
+  some components draw themselves (close `x`, `chevron-down`,
+  `chevron-right`, `plus`, `minus`, `check`, `search`, `sparkles`,
+  `arrow-up`, `circle-alert`). If a close button or a select chevron renders
+  empty, import those names from `@kimen/elements/icons/<name>` too.
 
 ## Choosing components
 

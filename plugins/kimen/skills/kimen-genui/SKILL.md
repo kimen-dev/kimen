@@ -118,7 +118,9 @@ followed by JSON; read it as data.
 
 - **`kimen-mcp` surfaces** refuse URL props (no images, links or audio), ship
   one icon (`circle-check`), and always paint the default Kimen theme in
-  light or dark as the host asks.
+  light or dark as the host asks. Known issue: the glyphs components draw
+  themselves (close ×, chevrons, + and −) are currently missing from the
+  live surface; the controls still work and keep their accessible names.
 - **A2UI** reaches the 18 types of A2UI's basic catalog only (Text, Button,
   Card, TextField, …); the rest of the Kimen catalog is not reachable through
   A2UI yet. User input does not flow back into the A2UI data model, and every
