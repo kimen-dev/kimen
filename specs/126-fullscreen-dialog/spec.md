@@ -22,7 +22,10 @@ Each item is an agent's choice, pending founder confirmation.
 - The default and unrecognized `fullscreen` values use the centered layout. An explicitly supplied, nonblank `confirm-label` provides a confirm button even in the centered layout. Slotted footer actions remain in the footer.
 - Confirmation emits a bubbling, composed `ki-confirm` signal. Applications own validation, submission and dismissal. A blank `close-label` falls back to `Close` so the icon button stays named.
 - Existing explicit autofocus takes precedence over first-field focus. If no body control is focusable, entry uses the existing footer focus policy, with the fullscreen close control as a fallback.
-- Fullscreen uses the raised surface with contrasting text and a solid default fill. The header can grow past its 3.5rem minimum to fit its controls and wrapping text.
+- Fullscreen uses the raised `surface.s1` token with contrasting text and a solid default fill. The header can grow past its 3.5rem minimum to fit its controls and wrapping text.
+- The close control is a native button with a decorative `ki-icon`. The dialog reuses the ghost treatment and density tokens to fit the component bundle budget. Confirm uses the registered `ki-button`. A native fallback keeps it operable when a direct consumer only registers `ki-dialog`.
+- A catalog node with a declared action and a nonblank confirm label binds that action to `ki-confirm`. Without a label, the action keeps its existing `ki-close` binding.
+- The API gate classifies the changed published TypeScript signatures as major. The API declaration records that classification.
 
 ## Gherkin
 

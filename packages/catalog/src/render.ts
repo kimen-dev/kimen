@@ -15,6 +15,7 @@
 import {
   allocateDialogId,
   type DialogIdFor,
+  DIALOG_TAG,
   isDialogCommand,
   isDialogInvoker,
   writeDialogId,
@@ -155,6 +156,23 @@ export function declaredEvents(entry: CatalogEntry | undefined): readonly string
   return Object.keys(entry?.events ?? {});
 }
 
+const DIALOG_ACTIVATIONS = ['ki-close', 'ki-confirm'] as const;
+
+function dialogActivations(tag: string, events: readonly string[]): boolean {
+  return (
+    tag === DIALOG_TAG &&
+    events.length === DIALOG_ACTIVATIONS.length &&
+    DIALOG_ACTIVATIONS.every((event) => events.includes(event))
+  );
+}
+
+function dialogActivation(
+  props: Readonly<Record<string, Scalar>>,
+): (typeof DIALOG_ACTIVATIONS)[number] {
+  const label = props['confirm-label'];
+  return typeof label === 'string' && label.trim() !== '' ? 'ki-confirm' : 'ki-close';
+}
+
 const CHIP_ACTIVATIONS = ['ki-change', 'ki-remove', 'ki-activate'] as const;
 
 function chipActivations(tag: string, events: readonly string[]): boolean {
@@ -244,8 +262,8 @@ export function guardNode(
     }
   }
   // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
-  // activation event. Chip type supplies an explicit discriminator. Other
-  // ambiguous entries are rejected before the binding is built.
+  // activation event. Chip type or a dialog confirm label selects one.
+  // Unexpected event combinations fail closed.
   if (node.action !== undefined) {
     const events = declaredEvents(ownEntry(state.components, node.component));
     if (chipActivations(node.component, events)) {
@@ -260,7 +278,7 @@ export function guardNode(
           value: node.action,
         });
       }
-    } else if (events.length > 1) {
+    } else if (events.length > 1 && !dialogActivations(node.component, events)) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
@@ -498,6 +516,7 @@ export function wireActivation(
   }
   const events = declaredEvents(entry);
   const variantActivation = chipActivations(element.localName, events);
+  const hasDialogActivation = dialogActivations(element.localName, events);
   const activation = events[0] ?? DEFAULT_ACTIVATION_EVENT;
   const clickActivated = !variantActivation && activation === DEFAULT_ACTIVATION_EVENT;
   const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
@@ -529,12 +548,18 @@ export function wireActivation(
 
   // Accept only the component's own event for its current mode (S17–S19).
   // The control's default behavior remains intact, and actions carry its live state.
-  for (const name of variantActivation ? CHIP_ACTIVATIONS : [activation]) {
+  const activationEvents = variantActivation
+    ? CHIP_ACTIVATIONS
+    : hasDialogActivation
+      ? DIALOG_ACTIVATIONS
+      : [activation];
+  for (const name of activationEvents) {
     element.addEventListener(name, (event: Event) => {
       if (event.target !== element || !claim(event)) return;
       const props = currentProps();
       if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
       if (variantActivation && chipActivation(element, props) !== name) return;
+      if (hasDialogActivation && dialogActivation(props) !== name) return;
       dispatch(liveData(element, props, entry));
     });
   }

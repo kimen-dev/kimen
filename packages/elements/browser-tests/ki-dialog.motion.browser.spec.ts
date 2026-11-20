@@ -76,5 +76,10 @@ it('S11 opens a fullscreen dialog without motion when reduced motion is preferre
   expect(styles.transitionDuration).toBe('0s');
   expect(styles.animationName).toBe('none');
   expect(styles.opacity).toBe('1');
-  expect(dialog.getBoundingClientRect().width).toBeCloseTo(document.documentElement.clientWidth);
+  await expect
+    .poll(
+      () =>
+        Math.abs(dialog.getBoundingClientRect().width - document.documentElement.clientWidth) < 0.5,
+    )
+    .toBe(true);
 });

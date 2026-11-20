@@ -1,6 +1,6 @@
 // @spec:126-fullscreen-dialog
 import tokensCss from '@kimen/tokens/css?raw';
-import { afterEach, beforeAll, expect, it } from 'vitest';
+import { afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { commands, page } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { parkPointer } from './axe';
@@ -37,19 +37,30 @@ it('S14 gives both fullscreen header actions at least a 44px touch target', asyn
     for (const name of ['Close', 'Save']) {
       const button = page.getByRole('button', { name, exact: true });
       await expect.element(button).toBeVisible();
-      const element = button.element();
-      const hitArea = getComputedStyle(element, '::before');
       await expect
         .poll(() => {
-          const { width, height } = element.getBoundingClientRect();
-
-          const targetWidth = width - 2 * Math.min(0, Number.parseFloat(hitArea.insetInlineStart));
-          const targetHeight = height - 2 * Math.min(0, Number.parseFloat(hitArea.insetBlockStart));
-          return targetWidth >= 44 && targetHeight >= 44;
+          const { width, height } = button.element().getBoundingClientRect();
+          return width >= 44 && height >= 44;
         })
         .toBe(true);
     }
   } finally {
     await browserCommands.emulateHoverCapability(null);
   }
+});
+
+it('S10 a direct dialog registration keeps confirmation operable', async () => {
+  document.body.innerHTML =
+    '<ki-dialog open heading="New event" fullscreen="always" confirm-label="Save"></ki-dialog>';
+  const dialog = document.querySelector('ki-dialog');
+  const confirmed = vi.fn();
+  dialog?.addEventListener('ki-confirm', confirmed);
+
+  const save = page.getByRole('button', { name: 'Save', exact: true });
+  await expect.element(save).toBeVisible();
+  expect(save.element().getRootNode()).toBe(dialog?.shadowRoot);
+  await save.click();
+
+  expect(confirmed).toHaveBeenCalledTimes(1);
+  await expect.element(page.getByRole('dialog', { name: 'New event' })).toBeVisible();
 });

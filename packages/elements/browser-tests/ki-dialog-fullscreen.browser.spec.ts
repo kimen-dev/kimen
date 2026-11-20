@@ -3,8 +3,9 @@ import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
+import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
-import { expectAccessible, parkPointer } from './axe';
+import { expectAccessible, parkPointer, settleEntryMotion } from './axe';
 
 const browserCommands = commands as unknown as {
   emulateForcedColors: (value: 'active' | null) => Promise<void>;
@@ -20,6 +21,7 @@ const trigger = () => page.getByRole('button', { name: 'Add event' });
 type TestDialog = HTMLElement & { open: boolean; show: () => Promise<void> };
 
 beforeAll(() => {
+  defineKiButton();
   defineCustomElement();
   const style = document.createElement('style');
   style.textContent = `${tokensCss}\n${material3Css}`;
@@ -205,6 +207,7 @@ it.each([
     await expect.element(modal()).not.toBeInTheDocument();
     await expect.element(trigger()).toHaveFocus();
     await expect.poll(() => dialog.open).toBe(false);
+    await settleEntryMotion();
     expect(listener).toHaveBeenCalledTimes(1);
   },
 );
@@ -231,10 +234,13 @@ it.each(['never', 'always'] as const)(
   async (mode) => {
     const dialog = mount(mode, 'Save');
     const listener = vi.fn();
-    const submit = vi.fn((event: Event) => { event.preventDefault(); });
+    const submit = vi.fn((event: Event) => {
+      event.preventDefault();
+    });
     dialog.querySelector('form')?.addEventListener('submit', submit);
     document.body.addEventListener('ki-confirm', listener, { once: true });
     await openDialog();
+    expect(confirm().element()).toHaveAttribute('type', 'button');
     await confirm().click();
 
     expect(listener).toHaveBeenCalledTimes(1);
@@ -307,6 +313,7 @@ it.each([
   await expect.element(confirm()).toBeVisible();
 
   await page.viewport(1024, 650);
+  await expect.poll(() => dialog.shadowRoot?.querySelector('[part~="header"]')).toBeNull();
   await expect.poll(() => fillsViewport(dialog)).toBe(false);
   await expect.element(confirm()).toBeVisible();
   expect(part(dialog, 'footer').querySelector('ki-button')).toHaveAttribute('variant', 'primary');
