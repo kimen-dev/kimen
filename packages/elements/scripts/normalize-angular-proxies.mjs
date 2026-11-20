@@ -8,12 +8,13 @@
 // it declares `outputs: ['ki-dismiss']` with no backing member (Angular 22
 // throws "@Output ki-dismiss not initialized" on the template binding),
 // emits an orphan camelCase `@Output() kiDismiss` that nothing ever fires,
-// and types a phantom quoted EventEmitter field on the declare-interface.
+// and types a phantom EventEmitter field on the declare-interface. Native
+// event names such as `play` also have a phantom field, without quotes.
 // Runtime measurement (adversarial review + regression test): a DECLARED
 // output ALSO double-fires under Ivy, because modern Angular attaches the
 // native DOM listener alongside the output subscription.
 //
-// Kebab-case custom events need none of that machinery: an Angular
+// DOM events need none of that machinery: an Angular
 // template binds any DOM event by name, so `(ki-dismiss)` on the host
 // works natively, exactly once, with no directive involvement. This pass
 // therefore REMOVES the broken output surface entirely — metadata
@@ -32,7 +33,10 @@ export function normalizeAngularProxies(source) {
 
   const outputLine = /^ {2}@Output\(\) \w+ = new EventEmitter<.+>\(\);\n/gmu;
   const metadataLine = /^ {2}outputs: \[('[a-z-]+'(?:, '[a-z-]+')*)\],?\n/gmu;
-  const phantomField = /^ {2}'[a-z-]+': EventEmitter<.+>;\n/gmu;
+  // Stencil quotes dashed names and emits lowercase native names as identifiers.
+  // Match the unquoted event's optional JSDoc through its first closing delimiter.
+  const phantomField =
+    /(?:^ {2}'[a-z-]+'|(?:^ {2}\/\*\*(?:(?!\*\/)[\s\S])*\*\/\n)?^ {2}[a-z]+): EventEmitter<.+>;\n/gmu;
 
   const orphanCount = [...source.matchAll(outputLine)].length;
   // One metadata list can describe several outputs from the same component.
@@ -92,7 +96,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   } else {
     writeFileSync(proxiesPath, normalized.source, 'utf8');
     process.stdout.write(
-      `angular proxies: removed ${String(normalized.orphanCount)} broken output surfaces and ${String(normalized.strippedTypeImports)} dangling event-type imports — kebab-case ki-* events bind natively\n`,
+      `angular proxies: removed ${String(normalized.orphanCount)} broken output surfaces and ${String(normalized.strippedTypeImports)} dangling event-type imports — host events bind natively\n`,
     );
   }
 }

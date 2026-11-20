@@ -21,7 +21,7 @@ beforeAll(() => {
 
 afterEach(async () => {
   fixture.replaceChildren();
-  fixture.style.removeProperty('--ki-surface-raised');
+  document.documentElement.style.removeProperty('--ki-surface-raised');
   await parkPointer();
 });
 
@@ -53,10 +53,10 @@ function part(host: HTMLElement, name: string): HTMLElement {
 const playButton = () => page.getByRole('button', { name: 'Play', exact: true });
 const pauseButton = () => page.getByRole('button', { name: 'Pause', exact: true });
 const seek = () => page.getByRole('slider', { name: 'Seek' });
+const speedControl = () => page.getByRole('combobox', { name: 'Playback speed' });
 
-function seekPart(host: HTMLElement, name: string): HTMLElement {
-  const slider = host.shadowRoot?.querySelector('ki-slider');
-  return required(slider?.shadowRoot?.querySelector<HTMLElement>(`[part~="${name}"]`));
+function seekInput(host: HTMLElement): HTMLInputElement {
+  return required(host.shadowRoot?.querySelector<HTMLInputElement>('input[part~="seek"]'));
 }
 
 /** Substitute only the media resource and its timeline. Controls, focus, and events run in the browser. */
@@ -124,7 +124,8 @@ async function mountRecording({
   media.dispatchEvent(new Event('loadedmetadata'));
   media.currentTime = currentTime;
   await expect.element(playButton()).toBeEnabled();
-  await expect.element(seek()).toHaveAttribute('aria-valuemax', String(duration));
+  await expect.element(seek()).toHaveAttribute('max', String(duration));
+  await expect.element(seek()).toBeEnabled();
   return { host, media, ...recording };
 }
 
@@ -143,23 +144,71 @@ it('S1 stays paused until Play is activated and forwards one play event', async 
   expect(event).toHaveBeenCalledTimes(1);
 });
 
-it('S2 chooses a playback speed with the keyboard and returns focus to its trigger', async () => {
+it('plays and pauses the local recording through the native media element', async () => {
+  const source = new URL('./fixtures/three-tones.wav', import.meta.url).href;
+  const host = await mount({ src: source });
+  const findAudio = () => host.shadowRoot?.querySelector('audio');
+  await expect.poll(findAudio).toBeInstanceOf(HTMLAudioElement);
+  const media = required(findAudio());
+  const play = vi.fn();
+  const pause = vi.fn();
+  host.addEventListener('play', play);
+  host.addEventListener('pause', pause);
+  await expect.poll(() => media.duration).toBeCloseTo(5);
+  expect(media.paused).toBe(true);
+
+  await playButton().click();
+
+  await expect.element(pauseButton()).toBeVisible();
+  await expect.poll(() => media.currentTime).toBeGreaterThan(0);
+  expect(play).toHaveBeenCalledTimes(1);
+  expect(media.paused).toBe(false);
+
+  await pauseButton().click();
+
+  await expect.element(playButton()).toBeVisible();
+  expect(pause).toHaveBeenCalledTimes(1);
+  expect(media.paused).toBe(true);
+});
+
+it('S2 chooses a playback speed and keeps focus on the native control', async () => {
   const { host, media } = await mountRecording();
-  const speed = part(host, 'speed');
-  const menu = page.getByRole('menu');
-  speed.focus();
-  await userEvent.keyboard('{Enter}');
-  await expect.element(menu).toBeVisible();
-  await expect
-    .element(page.getByRole('menuitemradio', { name: '1×', exact: true }))
-    .toHaveAttribute('aria-checked', 'true');
-
-  await userEvent.keyboard('{End}{ArrowUp}{Enter}');
-
-  await expect.element(menu).not.toBeVisible();
-  await expect.poll(() => media.playbackRate).toBe(1.5);
-  await expect.element(page.getByRole('button', { name: 'Playback speed: 1.5×' })).toBeVisible();
+  const speed = required(
+    host.shadowRoot?.querySelector<HTMLSelectElement>('select[part~="speed"]'),
+  );
+  seekInput(host).focus();
+  await userEvent.tab();
   expect(host.shadowRoot?.activeElement).toBe(speed);
+  await expect.element(speedControl()).toHaveValue('1');
+  expect(speed.selectedOptions[0]?.text).toBe('1×');
+
+  await speedControl().selectOptions('1.5');
+
+  await expect.poll(() => media.playbackRate).toBe(1.5);
+  await expect.element(speedControl()).toHaveValue('1.5');
+  expect(speed.selectedOptions[0]?.text).toBe('1.5×');
+  expect(host.shadowRoot?.activeElement).toBe(speed);
+});
+
+it('restores normal speed and the default choices when custom rates are removed', async () => {
+  const { host, media } = await mountRecording({ attributes: { rates: '0.5,1' } });
+  const speed = required(
+    host.shadowRoot?.querySelector<HTMLSelectElement>('select[part~="speed"]'),
+  );
+  await speedControl().selectOptions('0.5');
+  await expect.poll(() => media.playbackRate).toBe(0.5);
+
+  host.removeAttribute('rates');
+
+  await expect.poll(() => media.playbackRate).toBe(1);
+  await expect.element(speedControl()).toHaveValue('1');
+  expect(Array.from(speed.options, (option) => option.text)).toEqual([
+    '0.75×',
+    '1×',
+    '1.25×',
+    '1.5×',
+    '2×',
+  ]);
 });
 
 it('S3 toggles the native muted state and names the next action', async () => {
@@ -184,8 +233,8 @@ it('S4 pauses on Space while Seek keeps focus and forwards one pause event', asy
   host.addEventListener('pause', event);
   await playButton().click();
   await expect.element(pauseButton()).toBeVisible();
-  const thumb = seekPart(host, 'thumb');
-  thumb.focus();
+  const input = seekInput(host);
+  input.focus();
 
   await userEvent.keyboard(' ');
 
@@ -193,21 +242,22 @@ it('S4 pauses on Space while Seek keeps focus and forwards one pause event', asy
   expect(media.paused).toBe(true);
   expect(pause).toHaveBeenCalledTimes(1);
   expect(event).toHaveBeenCalledTimes(1);
-  expect(thumb.getRootNode()).toBeInstanceOf(ShadowRoot);
-  expect((thumb.getRootNode() as ShadowRoot).activeElement).toBe(thumb);
+  expect(host.shadowRoot?.activeElement).toBe(input);
 });
 
 it('S5 seeks five seconds in each direction without leaving Seek', async () => {
   const { host, media } = await mountRecording({ currentTime: 84 });
-  seekPart(host, 'thumb').focus();
+  const input = seekInput(host);
+  input.focus();
 
   await userEvent.keyboard('{ArrowRight}');
-  await expect.element(seek()).toHaveAttribute('aria-valuenow', '89');
+  await expect.poll(() => input.valueAsNumber).toBe(89);
   expect(media.currentTime).toBe(89);
 
   await userEvent.keyboard('{ArrowLeft}');
-  await expect.element(seek()).toHaveAttribute('aria-valuenow', '84');
+  await expect.poll(() => input.valueAsNumber).toBe(84);
   expect(media.currentTime).toBe(84);
+  expect(host.shadowRoot?.activeElement).toBe(input);
 });
 
 it.each([
@@ -215,7 +265,7 @@ it.each([
   ['ArrowRight', 723, 725],
 ] as const)('S5 clamps %s at the edge of the available timeline', async (key, start, expected) => {
   const { host, media } = await mountRecording({ currentTime: start });
-  seekPart(host, 'thumb').focus();
+  seekInput(host).focus();
 
   await userEvent.keyboard(`{${key}}`);
 
@@ -227,8 +277,15 @@ it('S6 exposes the named group and seek time with no axe findings', async () => 
   const group = page.getByRole('group', { name: 'Interview' });
   const groupSeek = group.getByRole('slider', { name: 'Seek' });
 
-  seekPart(host, 'thumb').focus();
+  const play = playButton().element() as HTMLButtonElement;
+  play.focus();
+  await userEvent.tab();
 
+  const input = seekInput(host);
+  expect(host.shadowRoot?.activeElement).toBe(input);
+  const focus = getComputedStyle(input);
+  expect(focus.outlineStyle).toBe('solid');
+  expect(Number.parseFloat(focus.outlineWidth)).toBeGreaterThan(0);
   await expect.element(groupSeek).toHaveAttribute('aria-valuetext', '1:24 of 12:05');
   await expect.element(group.getByText('1:24', { exact: true })).toBeVisible();
   await expect.element(group.getByText('12:05', { exact: true })).toBeVisible();
@@ -241,7 +298,7 @@ it('S7 repaints the player when the page overrides its raised-surface token', as
   const background = () => getComputedStyle(player).backgroundColor;
   expect(background()).not.toBe('rgb(232, 238, 244)');
 
-  fixture.style.setProperty('--ki-surface-raised', 'rgb(232, 238, 244)');
+  document.documentElement.style.setProperty('--ki-surface-raised', 'rgb(232, 238, 244)');
 
   await expect.poll(background).toBe('rgb(232, 238, 244)');
 });
@@ -295,16 +352,16 @@ it('clears the old timeline when the source is removed', async () => {
   host.removeAttribute('src');
 
   await expect.element(playButton()).toBeDisabled();
-  await expect.element(seek()).toHaveAttribute('aria-disabled', 'true');
-  await expect.element(seek()).toHaveAttribute('aria-valuenow', '0');
+  await expect.element(seek()).toBeDisabled();
+  expect(seekInput(host).valueAsNumber).toBe(0);
   expect(media.getAttribute('src')).toBeNull();
   expect(part(host, 'time').textContent).not.toMatch(/12:05|1:24/u);
 });
 
 it('seeks to the point selected on the track', async () => {
-  const { host, media } = await mountRecording({ duration: 120 });
+  const { media } = await mountRecording({ duration: 120 });
 
-  await userEvent.click(seekPart(host, 'track'));
+  await seek().click();
 
   await expect.poll(() => Math.abs(media.currentTime - 60)).toBeLessThan(2);
 });
@@ -316,10 +373,12 @@ it('mirrors control placement and timeline navigation in RTL', async () => {
   expect(playButton().element().getBoundingClientRect().left).toBeGreaterThan(
     mute.element().getBoundingClientRect().right,
   );
-  const track = seekPart(host, 'track').getBoundingClientRect();
-  const thumb = seekPart(host, 'thumb');
-  expect(thumb.getBoundingClientRect().left).toBeGreaterThan(track.left + track.width / 2);
-  thumb.focus();
+  const track = part(host, 'track').getBoundingClientRect();
+  const progress = part(host, 'progress').getBoundingClientRect();
+  expect(progress.width).toBeGreaterThan(0);
+  expect(progress.left).toBeGreaterThan(track.left + track.width / 2);
+  expect(Math.abs(progress.right - track.right)).toBeLessThan(1);
+  seekInput(host).focus();
 
   await userEvent.keyboard('{ArrowLeft}');
 
@@ -342,8 +401,8 @@ it('keeps a visible edge and distinguishable seek progress with forced colors', 
     }
     const { host } = await mountRecording({ currentTime: 84 });
     const player = getComputedStyle(part(host, 'player'));
-    const track = getComputedStyle(seekPart(host, 'track'));
-    const fill = getComputedStyle(seekPart(host, 'fill'));
+    const track = getComputedStyle(part(host, 'track'));
+    const fill = getComputedStyle(part(host, 'progress'));
     expect(Number.parseFloat(player.borderBlockStartWidth)).toBeGreaterThan(0);
     expect(player.borderBlockStartColor).not.toBe(player.backgroundColor);
     expect(track.backgroundColor).not.toBe(fill.backgroundColor);
@@ -363,7 +422,6 @@ it('shows the updated seek time immediately under reduced motion', async () => {
 
     await expect.element(seek()).toHaveAttribute('aria-valuetext', '1:24 of 12:05');
     expect(part(host, 'player').getAnimations({ subtree: true })).toEqual([]);
-    expect(seekPart(host, 'track').getAnimations({ subtree: true })).toEqual([]);
   } finally {
     await browser.emulateReducedMotion(null);
   }

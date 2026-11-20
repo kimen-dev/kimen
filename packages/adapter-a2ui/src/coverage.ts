@@ -205,10 +205,7 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     kind: 'unmapped',
     reason: 'ki-video needs a native video child the spec cannot carry',
   },
-  AudioPlayer: {
-    kind: 'unmapped',
-    reason: 'no audio component in the catalog',
-  },
+  AudioPlayer: { catalog: ['ki-audio'], kind: 'mapped', properties: ['url', 'description'] },
   Modal: {
     catalog: ['ki-button', 'ki-dialog'],
     kind: 'mapped',
@@ -365,10 +362,7 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     kind: 'unmapped',
     reason: 'ki-video needs a native video child the spec cannot carry',
   },
-  AudioPlayer: {
-    kind: 'unmapped',
-    reason: 'no audio component in the catalog',
-  },
+  AudioPlayer: { catalog: ['ki-audio'], kind: 'mapped', properties: ['url', 'description'] },
   Modal: {
     catalog: ['ki-button', 'ki-dialog'],
     kind: 'mapped',

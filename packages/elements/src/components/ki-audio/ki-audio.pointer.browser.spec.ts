@@ -41,10 +41,16 @@ it('keeps each transport control and the transcript reachable with a coarse poin
   }
   fixture.setAttribute('data-ki-density', 'touch');
   fixture.innerHTML = '<ki-audio title="Interview" transcript-href="/ep4/transcript"></ki-audio>';
+  const host = fixture.querySelector('ki-audio');
+  if (!host) throw new Error('Expected the audio fixture to be rendered');
+  host.setAttribute('src', new URL('./fixtures/three-tones.wav', import.meta.url).href);
+  const seek = page.getByRole('slider', { name: 'Seek' });
+  await expect.element(seek).toHaveAttribute('max', '5');
+  await expect.element(seek).toBeEnabled();
   const controls = [
     page.getByRole('button', { name: 'Play', exact: true }),
-    page.getByRole('slider', { name: 'Seek' }),
-    page.getByRole('button', { name: 'Playback speed: 1×' }),
+    seek,
+    page.getByRole('combobox', { name: 'Playback speed' }),
     page.getByRole('button', { name: 'Mute', exact: true }),
     page.getByRole('link', { name: 'Read the transcript' }),
   ];
@@ -55,4 +61,6 @@ it('keeps each transport control and the transcript reachable with a coarse poin
     expect(width).toBeGreaterThanOrEqual(44);
     expect(height).toBeGreaterThanOrEqual(44);
   }
+  const track = host.shadowRoot?.querySelector('[part~="track"]');
+  expect(track?.getBoundingClientRect().height).toBeGreaterThan(0);
 });

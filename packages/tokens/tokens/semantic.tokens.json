@@ -1722,6 +1722,10 @@
       "action-seam": {
         "$value": "{ki.radius.0}",
         "$description": "Square corner at an edge shared by two actions."
+      },
+      "media-panel": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Corner shape of a self-contained media control panel."
       }
     },
     "motion": {
@@ -2254,6 +2258,13 @@
       "tile-compact": {
         "$value": "{ki.space.12xl}",
         "$description": "Size of the decorative tile in a compact empty view."
+      }
+    },
+    "media-layout": {
+      "$type": "dimension",
+      "inline-max": {
+        "$value": "{ki.size.surface.md}",
+        "$description": "Maximum inline size of a self-contained media control panel."
       }
     },
     "scale-control": {

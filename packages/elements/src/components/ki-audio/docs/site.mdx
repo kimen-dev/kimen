@@ -1,0 +1,46 @@
+---
+title: ki-audio
+description: Play an audio recording with a seek control, playback speed and a transcript link.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+import sample from '../fixtures/three-tones.wav?url&no-inline';
+
+Use `ki-audio` for voice notes, generated speech and other recordings a
+listener chooses to play. Give each recording a concise `title` and link to
+its transcript with `transcript-href`.
+
+<Demo layout="block" code={`<ki-audio src="${sample}" title="Three rising tones" transcript-href="#three-tones-transcript"></ki-audio>
+<p id="three-tones-transcript">[Three rising tones, separated by short pauses.]</p>`} />
+
+## Playback and keyboard controls
+
+Playback starts when the listener activates Play. Once the duration is available,
+focus Seek and press Left or Right to move five seconds along the timeline.
+In a right-to-left layout, Left moves towards the end of the recording.
+Press Space on Seek to toggle playback. Focus Playback speed and choose a
+rate using the platform's standard select controls.
+
+The title names the player group. The seek control announces the elapsed and
+total times, for example “1:24 of 12:05”. Set `time-label` with the
+`{elapsed}` and `{duration}` placeholders to translate that announcement.
+
+## Sources and playback events
+
+`src` and `transcript-href` accept relative references and HTTP(S) URLs.
+The guarded catalog also applies the host's origin allowlist when configured.
+Use the player's `play`, `pause`, `timeupdate` and `ended` events to observe
+the session. A catalog action can be bound to `ended`.
+
+Choose speeds with a comma-separated list such as `rates="0.75,1,1.5"`.
+Normal speed is always available. The default menu offers 0.75×, 1×, 1.25×,
+1.5× and 2×.
+
+## API reference
+
+<CemApi tag="ki-audio" />
+
+## Workshop
+
+[Open ki-audio in Storybook](/storybook/?path=/docs/docs-components-ki-audio--docs)

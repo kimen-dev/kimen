@@ -102,7 +102,22 @@ Feature: Play a voice note or recording
 Each interpretation below is the agent's choice, pending founder confirmation.
 
 - A missing or whitespace-only title displays and names the group “Audio player”. The published A2UI 0.9/0.9.1 and 1.0 schemas supply `url` and optional `description`, mapped to `src` and `title`. The component exposes local controls and media notifications with `ended` as the sole catalog action trigger.
-- A named single-thumb Slider receives an opt-in `value-text` override for assistive technology. Elapsed and total time use a digital clock format. The player handles horizontal arrows as five-second seeks, following the timeline direction in RTL. Space on the seek control toggles playback. Focused buttons and an open speed menu retain their own keyboard activation.
+- The seek control uses a native range input with digital clock values for assistive technology. The speed picker uses the platform select menu. The first composed build with `ki-slider`, `ki-menu`, and icon buttons measured 15.52 kB marginal and 34.35 kB worst case against the 9 kB and 25 kB limits. Horizontal arrows seek five seconds in the timeline direction. Space on Seek toggles playback. Buttons and the speed picker retain their standard activation.
 - Seek is available once a finite positive duration is known. At the beginning or end, seeks stay within the recording. Rates use unique numeric entries from 0.25× to 4×. The default rates apply if all entries are invalid, and 1× is always available for returning to normal speed.
 - The default URL scheme policy applies to both URLs. The catalog also honors configured origins. Playback failures have a localizable status and source changes reset the timeline.
-- The transcript link sits inside the themed panel. When the available width is small, the controls wrap so the seek target remains usable.
+- The transcript link sits inside the themed panel. The panel follows the 32 rem surface size and wraps the controls at narrow widths. The generated wrapper property for the title is `audioTitle`, and HTML uses the native `title` attribute.
+
+## Size measurements
+
+The AudioPlayer direct entry measures 4.78 kB marginal and 23.85 kB with the Stencil runtime. For shared bundles, the metadata records the measured increase from `f84525f`. Both builds used Node 26.5.0 and the same pinned dependencies.
+
+| Artifact and metric | Baseline bytes | AudioPlayer bytes | Increase |
+| --- | ---: | ---: | ---: |
+| MCP Apps HTML, raw | 889347 | 906653 | 17306 |
+| MCP Apps HTML, gzip | 210671 | 215642 | 4971 |
+| MCP Apps HTML, Brotli | 164976 | 168656 | 3680 |
+| MCP server bundle, raw | 2932114 | 2962584 | 30470 |
+| MCP server bundle, gzip | 562696 | 569796 | 7100 |
+| MCP server bundle, Brotli | 405374 | 409588 | 4214 |
+| Onmars stylesheet, minified Brotli | 15188 | 15263 | 75 |
+| Material 3 stylesheet, minified Brotli | 5345 | 5349 | 4 |

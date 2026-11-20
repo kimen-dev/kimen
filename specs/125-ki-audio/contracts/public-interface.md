@@ -16,4 +16,4 @@
 
 The two URLs accept relative references and HTTP(S), subject to the guarded catalog's configured origin policy. The player exposes `play`, `pause`, `ended`, and `timeupdate` on its host. Playback begins on user activation. The catalog exposes `ended` as the trigger for a consumer-declared action. There are no slots.
 
-The seek control uses `ki-slider` with the new optional `value-text` attribute, which sets the accessible value text of a single thumb while preserving the numeric value and the visual readout.
+The native range exposes an accessible time readout. The native select exposes the current playback rate and the available rates. Framework property bindings can set `audioTitle` for the HTML `title` attribute.
