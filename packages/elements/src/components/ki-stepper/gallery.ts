@@ -5,7 +5,6 @@ const horizontal = `
     <ki-step state="done" href="#cart">Cart</ki-step>
     <ki-step state="done">Address</ki-step>
     <ki-step state="current">Pay</ki-step>
-    <ki-step>Review</ki-step>
   </ki-stepper>
 `;
 

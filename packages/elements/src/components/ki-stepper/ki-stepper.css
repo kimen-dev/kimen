@@ -81,6 +81,7 @@
 [part="title"] {
   color: var(--ki-stepper-label-fg);
   background-color: var(--ki-stepper-label-bg);
+  inline-size: max-content;
   max-inline-size: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -185,10 +186,14 @@ a[part="title"]:focus-visible,
   }
 
   .horizontal [part="step"] {
-    flex: 1 1 min-content;
+    flex: 1 0 max-content;
     gap: var(--ki-layout-spacing-sm);
     min-inline-size: calc(var(--ki-stepper-dot-size) + var(--ki-layout-spacing-7xl));
     max-inline-size: 100%;
+  }
+
+  .horizontal .content {
+    flex-basis: max-content;
   }
 
   .horizontal [part="connector"] {
