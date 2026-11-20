@@ -1750,31 +1750,6 @@
         }
       }
     },
-    "size": {
-      "feature-tile": {
-        "$type": "dimension",
-        "xs": {
-          "$value": "{ki.space.7xl}",
-          "$description": "Extra-small feature tile edge, 24px at the default root size."
-        },
-        "sm": {
-          "$value": "{ki.space.10xl}",
-          "$description": "Small feature tile edge, 32px at the default root size."
-        },
-        "md": {
-          "$value": "{ki.space.12xl}",
-          "$description": "Medium feature tile edge, 40px at the default root size."
-        },
-        "lg": {
-          "$value": "{ki.space.14xl}",
-          "$description": "Large feature tile edge, 48px at the default root size."
-        },
-        "xl": {
-          "$value": "{ki.space.18xl}",
-          "$description": "Extra-large feature tile edge, 64px at the default root size."
-        }
-      }
-    },
     "motion": {
       "duration": {
         "$type": "duration",
@@ -2328,6 +2303,31 @@
       "coarse-target": {
         "$value": "{ki.size.target-touch}",
         "$description": "Minimum grip target when a value scale has a coarse primary pointer."
+      }
+    },
+    "size": {
+      "feature-tile": {
+        "$type": "dimension",
+        "xs": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Extra-small feature tile edge, 24px at the default root size."
+        },
+        "sm": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Small feature tile edge, 32px at the default root size."
+        },
+        "md": {
+          "$value": "{ki.space.12xl}",
+          "$description": "Medium feature tile edge, 40px at the default root size."
+        },
+        "lg": {
+          "$value": "{ki.space.14xl}",
+          "$description": "Large feature tile edge, 48px at the default root size."
+        },
+        "xl": {
+          "$value": "{ki.space.18xl}",
+          "$description": "Extra-large feature tile edge, 64px at the default root size."
+        }
       }
     }
   }
