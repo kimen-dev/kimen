@@ -41,6 +41,7 @@ import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./compo
 import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
+import { KiListChangeDetail, KiListSelection, KiListValue } from "./components/ki-list/ki-list";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
 import { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
@@ -114,6 +115,7 @@ export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./compo
 export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./components/ki-image/ki-image";
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
+export { KiListChangeDetail, KiListSelection, KiListValue } from "./components/ki-list/ki-list";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiMenuPlacement, KiMenuSelectDetail } from "./components/ki-menu/ki-menu";
 export { KiMenuItemTone, KiMenuItemType } from "./components/ki-menu-item/ki-menu-item";
@@ -1313,16 +1315,15 @@ export namespace Components {
         "summary"?: string;
     }
     /**
-     * A modal dialog for an interrupting decision or a focused task.
+     * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action. Use `fullscreen="compact"` for longer tasks
-     * that need the whole window on compact screens.
+     * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
-     * page, menus, or pickers.
+     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+     * (navigate or use a future full-screen variant), menus, or pickers.
      */
     interface KiDialog {
         /**
@@ -1330,24 +1331,10 @@ export namespace Components {
          */
         "close": () => Promise<void>;
         /**
-          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
-          * @default 'Close'
-         */
-        "closeLabel": string;
-        /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop": boolean;
-        /**
-          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
-         */
-        "confirmLabel"?: string;
-        /**
-          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
-          * @default 'never'
-         */
-        "fullscreen": 'never' | 'compact' | 'always';
         /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
@@ -1887,7 +1874,7 @@ export namespace Components {
          */
         "expanded"?: boolean;
         /**
-          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog. When slotted as a trailing list control, the row text supplies a fallback through the host aria-label. Use ki-button when the action has a visible label.
          */
         "label": string;
         /**
@@ -2147,30 +2134,76 @@ export namespace Components {
         "variant": KiLinkVariant;
     }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface KiList {
+        /**
+          * Accessible name for a list with links, options or trailing controls.
+         */
+        "label"?: string;
+        /**
+          * Form field name. Multiple selection submits repeated entries under this name.
+         */
+        "name"?: string;
+        /**
+          * Requires at least one enabled choice in a selection list.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Enables single or multiple selection. The default supports static, link and control rows.
+          * @default 'none'
+         */
+        "selection": KiListSelection;
+        /**
+          * Selected value or null in single selection, or selected values in source order in multiple selection. Assign a fresh array to change multiple selection. In HTML or catalog specs, set `selected` on the initial rows.
+          * @default null
+         */
+        "value": KiListValue;
     }
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+     * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface KiListItem {
+        /**
+          * Excludes this option from focus, selection by the user, and form data.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Native row link destination. Use outside selection lists, with no slotted interactive content.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Whether this row is selected in a single- or multiple-selection list.
+          * @default false
+         */
+        "selected": boolean;
         /**
           * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
          */
         "size": KiListItemSize;
+        /**
+          * Submitted option value. The primary row text supplies the default.
+         */
+        "value"?: string;
     }
     /**
      * Displays Markdown as Kimen components and native HTML semantics.
@@ -4648,6 +4681,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
+export interface KiListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiListElement;
+}
 export interface KiMenuCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiMenuElement;
@@ -5267,19 +5304,17 @@ declare global {
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
-        "ki-confirm": void;
     }
     /**
-     * A modal dialog for an interrupting decision or a focused task.
+     * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action. Use `fullscreen="compact"` for longer tasks
-     * that need the whole window on compact screens.
+     * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
-     * page, menus, or pickers.
+     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+     * (navigate or use a future full-screen variant), menus, or pickers.
      */
     interface HTMLKiDialogElement extends Components.KiDialog, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -5622,28 +5657,43 @@ declare global {
         prototype: HTMLKiLinkElement;
         new (): HTMLKiLinkElement;
     };
+    interface HTMLKiListElementEventMap {
+        "ki-change": KiListChangeDetail;
+    }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface HTMLKiListElement extends Components.KiList, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiListElementEventMap>(type: K, listener: (this: HTMLKiListElement, ev: KiListCustomEvent<HTMLKiListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiListElementEventMap>(type: K, listener: (this: HTMLKiListElement, ev: KiListCustomEvent<HTMLKiListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiListElement: {
         prototype: HTMLKiListElement;
         new (): HTMLKiListElement;
     };
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+     * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface HTMLKiListItemElement extends Components.KiListItem, HTMLStencilElement {
     }
@@ -8127,49 +8177,30 @@ declare namespace LocalJSX {
         "summary"?: string;
     }
     /**
-     * A modal dialog for an interrupting decision or a focused task.
+     * A modal dialog for one interrupting decision or short focused task.
      * @whenToUse destructive confirmations, blocking choices, and brief
      * critical input that must be resolved before returning to the page. Always
      * provide a `heading`, place actions in the `footer` slot, wire each
      * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-     * the least destructive action. Use `fullscreen="compact"` for longer tasks
-     * that need the whole window on compact screens.
+     * the least destructive action.
      * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-     * supplementary hints (`ki-tooltip`), multi-step flows that need their own
-     * page, menus, or pickers.
+     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+     * (navigate or use a future full-screen variant), menus, or pickers.
      */
     interface KiDialog {
-        /**
-          * Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
-          * @default 'Close'
-         */
-        "closeLabel"?: string;
         /**
           * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop"?: boolean;
         /**
-          * Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
-         */
-        "confirmLabel"?: string;
-        /**
-          * Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
-          * @default 'never'
-         */
-        "fullscreen"?: 'never' | 'compact' | 'always';
-        /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
         "heading": string;
         /**
-          * Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
+          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. Invoker dismissals report `command`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
          */
         "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
-        /**
-          * The user activated the confirmation button. Handle validation, submission and dismissal in the application.
-         */
-        "onKi-confirm"?: (event: KiDialogCustomEvent<void>) => void;
         /**
           * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
           * @default false
@@ -8729,7 +8760,7 @@ declare namespace LocalJSX {
          */
         "expanded"?: boolean;
         /**
-          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog. When slotted as a trailing list control, the row text supplies a fallback through the host aria-label. Use ki-button when the action has a visible label.
          */
         "label": string;
         /**
@@ -9001,30 +9032,88 @@ declare namespace LocalJSX {
         "variant"?: KiLinkVariant;
     }
     /**
-     * A non-interactive vertical list container for read-only collections of
-     * similar entries composed with `ki-list-item` children.
-     * @whenToUse settings, contacts, results or activity feeds where each item
-     * composes leading media, primary text, optional secondary text and trailing
-     * meta or a slotted control.
-     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-     * whole-item clickable rows or lone items outside a list.
+     * A vertical list of read-only entries, navigation links, settings controls,
+     * or options in a single- or multiple-selection listbox.
+     * @whenToUse settings, contacts, results, navigation or visible choices composed
+     * from primary text, supporting text and optional media. Name interactive lists.
+     * @whenNotToUse popup action menus, tabular data, or rows with several actions.
      */
     interface KiList {
+        /**
+          * If `true`, the user cannot interact with the element.
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Accessible name for a list with links, options or trailing controls.
+         */
+        "label"?: string;
+        /**
+          * Form field name. Multiple selection submits repeated entries under this name.
+         */
+        "name"?: string;
+        /**
+          * Fires once per user selection change, after updating the form value.
+         */
+        "onKi-change"?: (event: KiListCustomEvent<KiListChangeDetail>) => void;
+        /**
+          * Requires at least one enabled choice in a selection list.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Enables single or multiple selection. The default supports static, link and control rows.
+          * @default 'none'
+         */
+        "selection"?: KiListSelection;
+        /**
+          * Selected value or null in single selection, or selected values in source order in multiple selection. Assign a fresh array to change multiple selection. In HTML or catalog specs, set `selected` on the initial rows.
+          * @default null
+         */
+        "value"?: KiListValue;
     }
     /**
-     * A non-interactive item inside `ki-list`, composed from leading media,
-     * primary text, optional secondary text and trailing media or meta.
-     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-     * similar vertical collection.
-     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-     * tabular row, navigation link or whole-item clickable control.
+     * A row inside `ki-list`, composed from leading media, primary text,
+     * optional secondary text and trailing content.
+     * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+     * selection option, or a settings row with one control.
+     * @whenNotToUse as a menu item, tabular row, or row with several actions.
+     * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+     * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+     * @cssprop --ki-list-item-selected-bg - Selected option fill.
+     * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+     * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+     * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
+     * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
      */
     interface KiListItem {
+        /**
+          * Excludes this option from focus, selection by the user, and form data.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Native row link destination. Use outside selection lists, with no slotted interactive content.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Whether this row is selected in a single- or multiple-selection list.
+          * @default false
+         */
+        "selected"?: boolean;
         /**
           * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height (48, 56, 64 or 72px with a secondary line in onmars), padding, gap and text. Slotted start and end content keeps the size its author gave it. An unrecognized value matches no style rule and keeps the medium metrics. When to use: give every row of one list the same size. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
           * @default 'md'
          */
         "size"?: KiListItemSize;
+        /**
+          * Submitted option value. The primary row text supplies the default.
+         */
+        "value"?: string;
     }
     /**
      * Displays Markdown as Kimen components and native HTML semantics.
@@ -11816,9 +11905,6 @@ declare namespace LocalJSX {
         "open": boolean;
         "heading": string;
         "closeOnBackdrop": boolean;
-        "fullscreen": 'never' | 'compact' | 'always';
-        "confirmLabel": string;
-        "closeLabel": string;
     }
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
@@ -11982,8 +12068,18 @@ declare namespace LocalJSX {
         "target": string;
         "rel": string;
     }
+    interface KiListAttributes {
+        "selection": KiListSelection;
+        "label": string;
+        "name": string;
+        "required": boolean;
+    }
     interface KiListItemAttributes {
         "size": KiListItemSize;
+        "href": string;
+        "value": string;
+        "selected": boolean;
+        "disabled": boolean;
     }
     interface KiMarkdownAttributes {
         "srcText": string;
@@ -12503,7 +12599,7 @@ declare namespace LocalJSX {
         "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
         "ki-link": Omit<KiLink, keyof KiLinkAttributes> & { [K in keyof KiLink & keyof KiLinkAttributes]?: KiLink[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `attr:${K}`]?: KiLinkAttributes[K] } & { [K in keyof KiLink & keyof KiLinkAttributes as `prop:${K}`]?: KiLink[K] } & OneOf<"href", KiLink["href"], KiLinkAttributes["href"]>;
-        "ki-list": KiList;
+        "ki-list": Omit<KiList, keyof KiListAttributes> & { [K in keyof KiList & keyof KiListAttributes]?: KiList[K] } & { [K in keyof KiList & keyof KiListAttributes as `attr:${K}`]?: KiListAttributes[K] } & { [K in keyof KiList & keyof KiListAttributes as `prop:${K}`]?: KiList[K] };
         "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
         "ki-markdown": Omit<KiMarkdown, keyof KiMarkdownAttributes> & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes]?: KiMarkdown[K] } & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes as `attr:${K}`]?: KiMarkdownAttributes[K] } & { [K in keyof KiMarkdown & keyof KiMarkdownAttributes as `prop:${K}`]?: KiMarkdown[K] };
         "ki-menu": Omit<KiMenu, keyof KiMenuAttributes> & { [K in keyof KiMenu & keyof KiMenuAttributes]?: KiMenu[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `attr:${K}`]?: KiMenuAttributes[K] } & { [K in keyof KiMenu & keyof KiMenuAttributes as `prop:${K}`]?: KiMenu[K] };
@@ -12810,16 +12906,15 @@ declare module "@stencil/core" {
              */
             "ki-details": LocalJSX.IntrinsicElements["ki-details"] & JSXBase.HTMLAttributes<HTMLKiDetailsElement>;
             /**
-             * A modal dialog for an interrupting decision or a focused task.
+             * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief
              * critical input that must be resolved before returning to the page. Always
              * provide a `heading`, place actions in the `footer` slot, wire each
              * dismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on
-             * the least destructive action. Use `fullscreen="compact"` for longer tasks
-             * that need the whole window on compact screens.
+             * the least destructive action.
              * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
-             * supplementary hints (`ki-tooltip`), multi-step flows that need their own
-             * page, menus, or pickers.
+             * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+             * (navigate or use a future full-screen variant), menus, or pickers.
              */
             "ki-dialog": LocalJSX.IntrinsicElements["ki-dialog"] & JSXBase.HTMLAttributes<HTMLKiDialogElement>;
             /**
@@ -12995,22 +13090,26 @@ declare module "@stencil/core" {
              */
             "ki-link": LocalJSX.IntrinsicElements["ki-link"] & JSXBase.HTMLAttributes<HTMLKiLinkElement>;
             /**
-             * A non-interactive vertical list container for read-only collections of
-             * similar entries composed with `ki-list-item` children.
-             * @whenToUse settings, contacts, results or activity feeds where each item
-             * composes leading media, primary text, optional secondary text and trailing
-             * meta or a slotted control.
-             * @whenNotToUse menus, selectable option lists, tabular data, navigation,
-             * whole-item clickable rows or lone items outside a list.
+             * A vertical list of read-only entries, navigation links, settings controls,
+             * or options in a single- or multiple-selection listbox.
+             * @whenToUse settings, contacts, results, navigation or visible choices composed
+             * from primary text, supporting text and optional media. Name interactive lists.
+             * @whenNotToUse popup action menus, tabular data, or rows with several actions.
              */
             "ki-list": LocalJSX.IntrinsicElements["ki-list"] & JSXBase.HTMLAttributes<HTMLKiListElement>;
             /**
-             * A non-interactive item inside `ki-list`, composed from leading media,
-             * primary text, optional secondary text and trailing media or meta.
-             * @whenToUse only as a child of `ki-list`, for one read-only entry in a
-             * similar vertical collection.
-             * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
-             * tabular row, navigation link or whole-item clickable control.
+             * A row inside `ki-list`, composed from leading media, primary text,
+             * optional secondary text and trailing content.
+             * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+             * selection option, or a settings row with one control.
+             * @whenNotToUse as a menu item, tabular row, or row with several actions.
+             * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+             * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+             * @cssprop --ki-list-item-selected-bg - Selected option fill.
+             * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+             * @cssprop --ki-list-item-checkbox-selected-bg - Fill of the selected multiple-choice indicator.
+             * @cssprop --ki-list-item-checkbox-selected-fg - Check mark ink on the selected indicator.
+             * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
             /**

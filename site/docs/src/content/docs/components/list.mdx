@@ -1,14 +1,12 @@
 ---
 title: ki-list
-description: A non-interactive vertical list container for read-only collections of similar entries.
+description: A vertical list of static entries, links, settings controls, or selectable options.
 ---
 
 import CemApi from '../../../components/CemApi.astro';
 import Demo from '../../../components/Demo.astro';
 
-A non-interactive vertical list container for read-only collections of
-similar entries, composed with
-[ki-list-item](/docs/components/list-item/) children.
+A vertical list of static entries, links, settings controls, or selectable options. Use [ki-list-item](/docs/components/list-item/) for each row.
 
 <Demo
   layout="block"
@@ -28,17 +26,58 @@ similar entries, composed with
 </ki-list>`}
 />
 
+## Interactive rows
+
+```html
+<ki-list label="Settings">
+  <ki-list-item href="/settings/account">
+    Account
+    <span slot="secondary">Name, email, password</span>
+  </ki-list-item>
+</ki-list>
+```
+
+<Demo
+  layout="block"
+  code={`<ki-list label="Reviewers" selection="multiple" name="reviewers" required>
+  <ki-list-item value="ana" selected>Ana Garcia</ki-list-item>
+  <ki-list-item value="luis">Luis Perez</ki-list-item>
+</ki-list>`}
+/>
+
+<Demo
+  layout="block"
+  code={`<ki-list label="Notifications">
+  <ki-list-item>
+    Email digest
+    <span slot="secondary">Every Monday</span>
+    <ki-switch slot="end" checked></ki-switch>
+  </ki-list-item>
+</ki-list>`}
+/>
+
+Give each interactive list a `label`. Set `selection="single"` for one
+choice or `selection="multiple"` for independent choices. Set `selected` on
+initial rows. The list's `ki-change` event carries `event.detail.value`, a
+string or `null` in single mode and an array in multiple mode. Assign the
+JavaScript `value` property to update selection silently.
+
+Set `name` to submit the selection. Multiple selections submit one entry per
+selected enabled row, in row order. Set `required` to require a choice. Form
+reset restores the initial selection.
+
 ## API reference
 
 <CemApi tag="ki-list" />
 
 ## Accessibility
 
-The list is read-only: menus, selectable option lists, tabular data and
-navigation are different patterns with different semantics — use a menu,
-[ki-select](/docs/components/select/), a table or links respectively.
-A slotted control inside an item (in `end`, say) stays an ordinary,
-individually focusable control; whole-item clickable rows are unsupported.
+Navigation rows are native links. A named selection list exposes a listbox
+with one tab stop. Arrow keys, Home, End and type-ahead move focus. Space or
+Enter toggles the focused option. A row accepts one interaction: its link,
+its option, or a control in the `end` slot. Development builds warn about
+conflicting interactions. The row's primary text names an unlabeled trailing
+control.
 
 ## Workshop
 

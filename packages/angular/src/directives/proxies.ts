@@ -716,7 +716,7 @@ export declare interface KiDetails extends Components.KiDetails {
 
 @ProxyCmp({
   defineCustomElementFn: defineKiDialog,
-  inputs: ['closeLabel', 'closeOnBackdrop', 'confirmLabel', 'fullscreen', 'heading', 'open'],
+  inputs: ['closeOnBackdrop', 'heading', 'open'],
   methods: ['show', 'close']
 })
 @Component({
@@ -724,7 +724,7 @@ export declare interface KiDetails extends Components.KiDetails {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['closeLabel', 'closeOnBackdrop', 'confirmLabel', 'fullscreen', { name: 'heading', required: true }, 'open'],
+  inputs: ['closeOnBackdrop', { name: 'heading', required: true }, 'open'],
 })
 export class KiDialog {
   protected el: HTMLKiDialogElement;
@@ -1145,14 +1145,15 @@ export declare interface KiLink extends Components.KiLink {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiList
+  defineCustomElementFn: defineKiList,
+  inputs: ['label', 'name', 'required', 'selection', 'value']
 })
 @Component({
   selector: 'ki-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['label', 'name', 'required', 'selection', 'value'],
 })
 export class KiList {
   protected el: HTMLKiListElement;
@@ -1163,19 +1164,21 @@ export class KiList {
 }
 
 
-export declare interface KiList extends Components.KiList {}
+
+export declare interface KiList extends Components.KiList {
+}
 
 
 @ProxyCmp({
   defineCustomElementFn: defineKiListItem,
-  inputs: ['size']
+  inputs: ['disabled', 'href', 'selected', 'size', 'value']
 })
 @Component({
   selector: 'ki-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['size'],
+  inputs: ['disabled', 'href', 'selected', 'size', 'value'],
 })
 export class KiListItem {
   protected el: HTMLKiListItemElement;

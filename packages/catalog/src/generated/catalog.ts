@@ -1524,35 +1524,15 @@ export const catalogData = {
       "whenToUse": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
     },
     "ki-dialog": {
-      "description": "A modal dialog for an interrupting decision or a focused task.",
+      "description": "A modal dialog for one interrupting decision or short focused task.",
       "events": {
-        "ki-close": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
-        "ki-confirm": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application."
+        "ki-close": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`. Invoker dismissals report `command`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
       },
       "props": {
-        "close-label": {
-          "type": "string",
-          "description": "Accessible name for the fullscreen close button. Localize it or describe\nthe effect of dismissing, for example \"Discard and close\".",
-          "default": "Close"
-        },
         "close-on-backdrop": {
           "type": "boolean",
           "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
           "default": false
-        },
-        "confirm-label": {
-          "type": "string",
-          "description": "Label for the optional confirmation button. Use an action verb such as\n\"Save\". The button is in the fullscreen header or the centered footer."
-        },
-        "fullscreen": {
-          "type": "enum",
-          "values": [
-            "always",
-            "compact",
-            "never"
-          ],
-          "description": "Layout for the native modal. Use `compact` to fill windows narrower than\n600 CSS pixels, or `always` to fill any window. Use `never` for a centered\ndialog at every width.",
-          "default": "never"
         },
         "heading": {
           "type": "string",
@@ -1570,8 +1550,8 @@ export const catalogData = {
         "footer": "Dialog actions. Dismiss using an invoker command or `close()`."
       },
       "tag": "ki-dialog",
-      "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), multi-step flows that need their own\npage, menus, or pickers.",
-      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action. Use `fullscreen=\"compact\"` for longer tasks\nthat need the whole window on compact screens."
+      "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
+      "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each\ndismissal to `close()` or a close command, and in destructive confirmations put `autofocus` on\nthe least destructive action."
     },
     "ki-divider": {
       "description": "A static, decorative rule that visually separates adjacent content.",
@@ -2240,7 +2220,7 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+          "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog. When slotted as a trailing list control, the\nrow text supplies a fallback through the host aria-label.\nUse ki-button when the action has a visible label.",
           "required": true
         },
         "loading": {
@@ -2306,7 +2286,7 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone.",
+        "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.",
         "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
         "selected": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
       },
@@ -2569,20 +2549,61 @@ export const catalogData = {
       "whenToUse": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation."
     },
     "ki-list": {
-      "description": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
-      "events": {},
-      "props": {},
+      "description": "A vertical list of read-only entries, navigation links, settings controls,\nor options in a single- or multiple-selection listbox.",
+      "events": {
+        "ki-change": "Fires once per user selection change, after updating the form value."
+      },
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name for a list with links, options or trailing controls."
+        },
+        "name": {
+          "type": "string",
+          "description": "Form field name. Multiple selection submits repeated entries under this name."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Requires at least one enabled choice in a selection list.",
+          "default": false
+        },
+        "selection": {
+          "type": "enum",
+          "values": [
+            "multiple",
+            "none",
+            "single"
+          ],
+          "description": "Enables single or multiple selection. The default supports static, link and control rows.",
+          "default": "none"
+        }
+      },
       "slots": {
-        "": "`ki-list-item` children. Other children are unsupported."
+        "": "Direct `ki-list-item` children."
       },
       "tag": "ki-list",
-      "whenNotToUse": "menus, selectable option lists, tabular data, navigation,\nwhole-item clickable rows or lone items outside a list.",
-      "whenToUse": "settings, contacts, results or activity feeds where each item\ncomposes leading media, primary text, optional secondary text and trailing\nmeta or a slotted control."
+      "whenNotToUse": "popup action menus, tabular data, or rows with several actions.",
+      "whenToUse": "settings, contacts, results, navigation or visible choices composed\nfrom primary text, supporting text and optional media. Name interactive lists."
     },
     "ki-list-item": {
-      "description": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+      "description": "A row inside `ki-list`, composed from leading media, primary text,\noptional secondary text and trailing content.",
       "events": {},
       "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Excludes this option from focus, selection by the user, and form data.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Native row link destination. Use outside selection lists, with no\nslotted interactive content.",
+          "format": "url"
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "Whether this row is selected in a single- or multiple-selection list.",
+          "default": false
+        },
         "size": {
           "type": "enum",
           "values": [
@@ -2593,17 +2614,21 @@ export const catalogData = {
           ],
           "description": "Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height\n(48, 56, 64 or 72px with a secondary line in onmars), padding, gap and\ntext. Slotted start and end content keeps the size its author gave it.\nAn unrecognized value matches no style rule and keeps the medium metrics.\nWhen to use: give every row of one list the same size.\nWhen NOT to use: do not pick a smaller size to fit a dense region or a\nlarger one for touch; declare `data-ki-density` on the region instead,\nwhich composes with every size.",
           "default": "md"
+        },
+        "value": {
+          "type": "string",
+          "description": "Submitted option value. The primary row text supplies the default."
         }
       },
       "slots": {
         "": "Primary text line.",
-        "end": "Trailing media, meta text or a slotted control.",
+        "end": "Trailing media, meta text or the only control of a settings row.",
         "secondary": "Supporting text below the primary line. Its presence\nselects the multi-line min-height token.",
         "start": "Leading media such as an icon, avatar or image."
       },
       "tag": "ki-list-item",
-      "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
-      "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+      "whenNotToUse": "as a menu item, tabular row, or row with several actions.",
+      "whenToUse": "as a direct child of `ki-list`, for a static entry, link,\nselection option, or a settings row with one control."
     },
     "ki-markdown": {
       "description": "Displays Markdown as Kimen components and native HTML semantics.",

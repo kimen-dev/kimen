@@ -1,4 +1,14 @@
-import { AttachInternals, Component, Element, h, Listen, Prop, State, Watch } from '@stencil/core';
+import {
+  AttachInternals,
+  Component,
+  forceUpdate,
+  Element,
+  h,
+  Listen,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
 import {
   booleanFromAttributePresence,
   observeAttributePresence,
@@ -343,18 +353,24 @@ export class KiSwitch {
     this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   };
 
+  @Watch('aria-label')
+  private hostLabelChanged(): void {
+    // The native control owns the accessible name inside the shadow root.
+    forceUpdate(this.host);
+  }
+
   render() {
     const messages = {
       help: fieldText(this.helpText),
       error: this.userInvalid && !this.effectiveDisabled ? this.message : '',
     };
     return [
-      // eslint-disable-next-line jsx-a11y/label-has-associated-control -- Shadow label wraps the native input and slotted accessible-name content.
       <label class="base">
         <input
           ref={this.setInput}
           type="checkbox"
           role="switch"
+          aria-label={this.host.getAttribute('aria-label') ?? undefined}
           tabIndex={this.effectiveDisabled ? -1 : 0}
           checked={this.checked}
           disabled={this.effectiveDisabled}

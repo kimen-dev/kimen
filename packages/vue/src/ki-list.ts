@@ -9,5 +9,14 @@ import { defineCustomElement as defineKiList } from '@kimen/elements/components/
 
 
 
-export const KiList: StencilVueComponent<JSX.KiList> = /*@__PURE__*/ defineContainer<JSX.KiList>('ki-list', defineKiList);
+export const KiList: StencilVueComponent<JSX.KiList> = /*@__PURE__*/ defineContainer<JSX.KiList>('ki-list', defineKiList, [
+  'selection',
+  'label',
+  'name',
+  'required',
+  'value',
+  'ki-change'
+], [
+  'ki-change'
+]);
 
