@@ -480,10 +480,13 @@ export function writeProp(
   if (attributeValue === undefined) {
     element.removeAttribute(name);
   } else if (attributeValue === false) {
-    // Built-in Stencil props that default to true require an explicit false.
+    // Preserve explicit false for default-on props and for ToolCall’s automatic disclosure.
     // Registered components continue to use boolean attribute presence.
     const entry = ownEntry(builtInCatalog.components, component);
-    if (ownEntry(entry?.props, name)?.default === true) {
+    if (
+      ownEntry(entry?.props, name)?.default === true ||
+      (component === 'ki-tool-call' && name === 'open')
+    ) {
       element.setAttribute(name, 'false');
     } else {
       element.removeAttribute(name);

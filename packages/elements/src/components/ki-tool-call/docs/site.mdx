@@ -1,0 +1,39 @@
+---
+title: ki-tool-call
+description: Inspect the status, duration and payloads of an assistant tool call.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+<Demo code={`<ki-tool-call name="search_docs" title="Search docs" status="done" duration="1200" open>
+  <ki-code-block slot="input" language="json" filename="search-input.json" wrap>{"query": "Form validation"}</ki-code-block>
+  <ki-code-block slot="output" language="json" filename="search-output.json" wrap>["Field help and errors"]</ki-code-block>
+</ki-tool-call>`} />
+
+Use one disclosure per tool call. Supply a stable tool ID in `name` and an
+optional human-readable `title` (`toolTitle` in typed bindings). A completed
+call shows its elapsed duration when supplied in milliseconds.
+
+Put arguments in `input`, results in `output` and failure details in
+`error`. Use CodeBlock for structured text and supply distinct filenames when
+you show multiple blocks in the same view. A failed call opens by default.
+Set `open="false"` to start it collapsed. The native summary responds to
+pointer activation, Enter and Space.
+
+Set `retryable` to offer the Retry button on a failure. Handle the
+`ki-tool-retry` event in your app or bind a declared action to the ToolCall in
+a guarded surface. For approvals, show the `approval` status and provide a
+separate confirmation control.
+
+Listen for `ki-tool-status-change` and append one entry to your conversation's
+existing log. The event provides `detail.name`, `detail.status` and
+`detail.label`. Initial states remain available in the summary. Localize the
+badge and caption labels through their label props. Set `locale` to format
+the completed duration for your audience.
+
+## API reference
+
+<CemApi tag="ki-tool-call" />
+
+[Open ki-tool-call in Storybook](/storybook/?path=/docs/docs-components-ki-tool-call--docs)
