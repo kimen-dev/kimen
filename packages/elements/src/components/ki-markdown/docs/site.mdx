@@ -29,7 +29,9 @@ appears when its delimiter is complete and its last row can fill in over time.
 
 ## Formatting and destinations
 
-Markdown supports CommonMark and GFM tables, task lists and strikethrough.
+The supported Markdown subset includes headings, paragraphs, emphasis,
+strikethrough, inline and fenced code, links, opt-in images, ordered and
+unordered lists, task items, blockquotes, tables and hard breaks.
 Task checkboxes show their state and stay disabled. Fenced code uses
 [CodeBlock](/docs/components/code-block/) and its language label. Tables have
 native column headings. A blockquote that starts with `[!NOTE]` uses
@@ -44,6 +46,27 @@ HTTPS and relative references. A guarded surface can restrict both to its
 configured absolute origins. Rejected destinations leave the matching text
 visible. Set `allow-images` to let images load. Cross-origin links use
 [Link](/docs/components/link/) and include its new-tab announcement.
+
+## Register child elements
+
+The package loader registers Markdown, Link, CodeBlock and Note. With direct
+imports or a framework wrapper, register the child elements your content uses
+before rendering Markdown.
+
+```js
+import { defineCustomElement as defineCodeBlock } from '@kimen/elements/ki-code-block';
+import { defineCustomElement as defineLink } from '@kimen/elements/ki-link';
+import { defineCustomElement as defineNote } from '@kimen/elements/ki-note';
+import { defineCustomElement as defineMarkdown } from '@kimen/elements/ki-markdown';
+
+defineCodeBlock();
+defineLink();
+defineNote();
+defineMarkdown();
+```
+
+With a framework wrapper, use the first three registrations. The wrapper
+registers Markdown.
 
 ## API reference
 

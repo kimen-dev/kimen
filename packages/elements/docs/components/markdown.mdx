@@ -4,8 +4,10 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # ki-markdown
 
-Render an answer or note as Markdown, with CommonMark, GFM tables and task
-lists, and Kimen links, code blocks and notes.
+Render an answer or note with the supported Markdown subset. It includes
+headings, paragraphs, emphasis, strikethrough, inline and fenced code, links,
+opt-in images, ordered and unordered lists, task items, blockquotes, tables
+and hard breaks. A blockquote that starts with `[!NOTE]` uses Kimen Note.
 
 ```html
 <ki-markdown>## Validation checklist
@@ -35,6 +37,10 @@ Tab through links and code controls in document order. Link marks external
 destinations with its new-tab announcement and CodeBlock names each fenced
 sample using its language. Task list indicators display their state and are
 disabled. Tables expose native column headers.
+
+The package loader registers Markdown, Link, CodeBlock and Note. Apps using
+direct imports or framework wrappers register the child elements they use
+before rendering Markdown.
 
 ## Customization
 

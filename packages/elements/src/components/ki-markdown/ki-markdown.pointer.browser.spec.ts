@@ -4,7 +4,8 @@ import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 import { parkPointer } from '../../../browser-tests/axe';
-import { defineCustomElement } from '../../../dist/components/ki-markdown.js';
+import { defineCustomElement as defineCodeBlock } from '../../../dist/components/ki-code-block.js';
+import { defineCustomElement as defineMarkdown } from '../../../dist/components/ki-markdown.js';
 
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
@@ -13,7 +14,8 @@ const browser = commands as unknown as {
 };
 
 beforeAll(() => {
-  defineCustomElement();
+  defineCodeBlock();
+  defineMarkdown();
   styles.textContent = tokensCss;
   fixture.dataset.kiDensity = 'touch';
   document.head.append(styles);

@@ -5,7 +5,10 @@ import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { commands, page, server, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
-import { defineCustomElement } from '../../../dist/components/ki-markdown.js';
+import { defineCustomElement as defineCodeBlock } from '../../../dist/components/ki-code-block.js';
+import { defineCustomElement as defineLink } from '../../../dist/components/ki-link.js';
+import { defineCustomElement as defineMarkdown } from '../../../dist/components/ki-markdown.js';
+import { defineCustomElement as defineNote } from '../../../dist/components/ki-note.js';
 
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
@@ -17,7 +20,10 @@ const browser = commands as unknown as {
 const imageUrl = new URL('../ki-image/fixtures/hills.svg?no-inline', import.meta.url).href;
 
 beforeAll(() => {
-  defineCustomElement();
+  defineCodeBlock();
+  defineLink();
+  defineNote();
+  defineMarkdown();
   styles.textContent = `${tokensCss}\n${pageCss}`;
   document.head.append(styles);
   document.body.append(fixture);
@@ -244,6 +250,15 @@ it('S8 exposes headings, list state, table headers and accessible names and pass
   await expect
     .element(page.getByRole('link', { name: 'Source (opens in a new tab)', exact: true }))
     .toBeVisible();
+  const code = required(host.shadowRoot?.querySelector('ki-code-block'), 'CodeBlock');
+  await expect
+    .poll(() => code.shadowRoot?.querySelector('figure')?.getAttribute('aria-label'))
+    .toBe('ts');
+  const figure = required(code.shadowRoot?.querySelector('figure'), 'code figure');
+  const region = required(code.shadowRoot?.querySelector('pre'), 'native code region');
+  expect(region.getAttribute('aria-label')).toBe('ts');
+  expect(figure.hasAttribute('aria-labelledby')).toBe(false);
+  expect(region.hasAttribute('aria-labelledby')).toBe(false);
   await expect.element(page.getByRole('region', { name: 'ts' })).toBeVisible();
   const link = required(host.shadowRoot?.querySelector('ki-link'), 'external Link');
   const anchor = required(link.shadowRoot?.querySelector('a'), 'native external link');

@@ -3267,6 +3267,30 @@ Examples:
 
 # ki-markdown examples
 
+The supported Markdown subset includes headings, paragraphs, emphasis,
+strikethrough, inline and fenced code, links, opt-in images, ordered and
+unordered lists, task items, blockquotes, tables and hard breaks.
+Use `> [!NOTE]` to display a Kimen Note.
+
+The package loader registers Markdown, Link, CodeBlock and Note. Register the
+child elements your content uses when using direct imports or framework
+wrappers.
+
+```js
+import { defineCustomElement as defineCodeBlock } from '@kimen/elements/ki-code-block';
+import { defineCustomElement as defineLink } from '@kimen/elements/ki-link';
+import { defineCustomElement as defineNote } from '@kimen/elements/ki-note';
+import { defineCustomElement as defineMarkdown } from '@kimen/elements/ki-markdown';
+
+defineCodeBlock();
+defineLink();
+defineNote();
+defineMarkdown();
+```
+
+With a framework wrapper, use the first three registrations. The wrapper
+registers Markdown.
+
 Render a short note as static text.
 
 ```html

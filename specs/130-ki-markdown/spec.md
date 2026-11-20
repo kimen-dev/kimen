@@ -17,13 +17,23 @@
 ## Interpretations
 
 - **Source and headings** (agent's choice, pending founder confirmation). A supplied `src-text` wins even when empty. Otherwise the element reads its direct light-DOM text nodes, updating when they change. Heading levels saturate at six. An invalid offset falls back to two.
-- **Rendering** (agent's choice, pending founder confirmation). Use the installed Marked lexer and named character table to render CommonMark and the requested GFM extensions as text and known elements. Native tables use Kimen tokens while a Table component is unavailable. Their scroll area is reachable by keyboard and alignment follows the reading direction. A leading `[!NOTE]` marker becomes a Kimen Note. Task indicators are read-only.
+- **Rendering** (agent's choice, pending founder confirmation). Use a dependency-free tokenizer and Stencil VNodes for headings, paragraphs, emphasis, strong, strikethrough, code spans and fences, inline and reference links and images, lists and tasks, quotes and notes, tables and hard breaks. Decode numeric character references and a small set of named references in prose and destinations. Keep unfamiliar names and raw HTML literal. Native tables support keyboard scrolling and align with the reading direction. Hosts that use direct imports or individual framework wrappers register Link, CodeBlock and Note alongside Markdown. The full loader registers those elements together.
 - **Destinations** (agent's choice, pending founder confirmation). Cross-origin HTTP(S) links use Link's external mode. Rejected links and unrendered images retain their label or alternative text. Images send no referrer. A guarded renderer's origin allowlist also applies to URLs inside Markdown, including live and streamed catalog surfaces.
 - **Streaming** (agent's choice, pending founder confirmation). Render an open fence as CodeBlock while it grows. Confirm an end-of-source table delimiter before presenting a table. Preserve an existing table as its last row grows. The element does not apply a live region to the answer.
 - **A2UI routing** (agent's choice, pending founder confirmation). Route content Text in both dialects through Markdown. Text flattened into a control label stays literal. Keep the adapter's raw HTML prohibition.
 - **Contrast** (agent's choice, pending founder confirmation). Keep prose backgrounds transparent. Use supporting ink for quotes and table headers so both themes reach the contrast-more target.
 - **API declaration** (agent's choice, pending founder confirmation). Use a major declaration for the regenerated loader type namespaces, following the stacked CodeBlock change.
 - **Guardrail review**. The founder confirms S2, S3 and S6 in review. The component renders those cases through the existing URL rules and does not expose a surface action.
+
+## Component size
+
+`pnpm --filter @kimen/elements run size` measures the minified,
+Brotli-compressed component with Node 26 and pnpm 12.20.
+
+| Measurement | Marked implementation | Compact tokenizer | Target |
+| --- | ---: | ---: | ---: |
+| Marginal | 29.45 kB | 5.66 kB | Under 8 kB |
+| Standalone with Stencil runtime | 48.20 kB | 24.49 kB | Under 24.5 kB |
 
 ## Gherkin
 

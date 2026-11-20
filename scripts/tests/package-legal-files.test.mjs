@@ -92,15 +92,13 @@ test('a notice file with two sections of the same title is rejected', () => {
 
 // What a tarball must carry is decided by what is inside it. The packed
 // elements package ships the QR encoder, the embedded Stencil client runtime,
-// the Lucide icon modules, including assets derived from Feather, and the
-// Markdown lexer and named character reference table.
+// and the Lucide icon modules, including assets derived from Feather.
 test('the package notices include the third-party works shipped in each tarball', () => {
   for (const name of ['@kimen/elements', '@kimen/adapter-mcp-apps', '@kimen/mcp-server']) {
     assert.deepEqual(PACKAGE_NOTICE_SECTIONS[name], [
       'QR Code generator library (MIT)',
       'Stencil client runtime (MIT)',
       'Lucide 1.63.0 and Feather icons (ISC and MIT)',
-      'Marked 9.1.6 and character-entities 2.0.2 (MIT)',
     ]);
   }
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], ['onmars theme fonts (SIL OFL 1.1)']);
@@ -122,27 +120,6 @@ test('the Stencil notice reproduces the licence the installed runtime ships with
       assert.ok(flattened.includes(expected), `missing from the Stencil notice: ${expected}`);
     }
   }
-});
-
-test('the Markdown notice includes the installed dependencies’ redistribution terms', async () => {
-  const [notice, markedLicence, entitiesLicence] = await Promise.all([
-    read('NOTICE'),
-    read('packages/elements/node_modules/marked/LICENSE.md'),
-    read('packages/elements/node_modules/character-entities/license'),
-  ]);
-  const section = noticeSections(notice).sections.get(
-    'Marked 9.1.6 and character-entities 2.0.2 (MIT)',
-  );
-  assert.ok(section, 'the repository NOTICE has no Markdown parser section');
-  const markedHeading = '## Marked\n';
-  const markedTerms = markedLicence.slice(markedLicence.indexOf(markedHeading)).trimEnd();
-
-  assert.ok(markedTerms.startsWith(markedHeading), 'the Marked licensing terms are missing');
-  assert.ok(section.includes(markedTerms), 'the Marked and John Gruber terms must be reproduced');
-  assert.ok(
-    section.includes(entitiesLicence.trimEnd()),
-    'the character-entities terms must be reproduced',
-  );
 });
 
 for (const [name, directory] of [

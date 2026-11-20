@@ -3502,9 +3502,7 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-markdown"
-      ],
+      "dependents": [],
       "dependencies": [
         "ki-copy-button"
       ],
@@ -3514,9 +3512,6 @@
         ],
         "ki-copy-button": [
           "ki-icon"
-        ],
-        "ki-markdown": [
-          "ki-code-block"
         ]
       }
     },
@@ -7390,15 +7385,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-markdown"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-markdown": [
-          "ki-link"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-list/ki-list.tsx",
@@ -7617,7 +7606,7 @@
         }
       ],
       "usage": {
-        "examples": "# ki-markdown examples\n\nRender a short note as static text.\n\n```html\n<ki-markdown src-text=\"## Release notes\"></ki-markdown>\n\n<ki-markdown>Check the **release date** and the [upgrade guide](/guides/upgrade).</ki-markdown>\n```\n\nUpdate the source while chunks arrive. When all text has arrived, finish the\nstream so the component renders the complete Markdown document.\n\n```html\n<ki-markdown id=\"answer\" streaming></ki-markdown>\n```\n\n```js\nconst answer = document.querySelector('#answer');\nlet source = '';\nfor await (const chunk of answerChunks) {\n  source += chunk;\n  answer.srcText = source;\n}\nanswer.streaming = false;\n```\n\nAssign untrusted strings to `srcText`. In a static HTML example, escape angle\nbrackets before passing them as text.\n\n```html\n<ki-markdown>&lt;aside&gt;This markup is shown as text.&lt;/aside&gt;</ki-markdown>\n```\n\nA guarded surface can pass the source as a string in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-markdown\",\n    \"props\": { \"heading-offset\": 1 },\n    \"slots\": { \"\": [\"# Release notes\\n\\nRead the [upgrade guide](/guides/upgrade).\"] }\n  }\n}\n```\n"
+        "examples": "# ki-markdown examples\n\nThe supported Markdown subset includes headings, paragraphs, emphasis,\nstrikethrough, inline and fenced code, links, opt-in images, ordered and\nunordered lists, task items, blockquotes, tables and hard breaks.\nUse `> [!NOTE]` to display a Kimen Note.\n\nThe package loader registers Markdown, Link, CodeBlock and Note. Register the\nchild elements your content uses when using direct imports or framework\nwrappers.\n\n```js\nimport { defineCustomElement as defineCodeBlock } from '@kimen/elements/ki-code-block';\nimport { defineCustomElement as defineLink } from '@kimen/elements/ki-link';\nimport { defineCustomElement as defineNote } from '@kimen/elements/ki-note';\nimport { defineCustomElement as defineMarkdown } from '@kimen/elements/ki-markdown';\n\ndefineCodeBlock();\ndefineLink();\ndefineNote();\ndefineMarkdown();\n```\n\nWith a framework wrapper, use the first three registrations. The wrapper\nregisters Markdown.\n\nRender a short note as static text.\n\n```html\n<ki-markdown src-text=\"## Release notes\"></ki-markdown>\n\n<ki-markdown>Check the **release date** and the [upgrade guide](/guides/upgrade).</ki-markdown>\n```\n\nUpdate the source while chunks arrive. When all text has arrived, finish the\nstream so the component renders the complete Markdown document.\n\n```html\n<ki-markdown id=\"answer\" streaming></ki-markdown>\n```\n\n```js\nconst answer = document.querySelector('#answer');\nlet source = '';\nfor await (const chunk of answerChunks) {\n  source += chunk;\n  answer.srcText = source;\n}\nanswer.streaming = false;\n```\n\nAssign untrusted strings to `srcText`. In a static HTML example, escape angle\nbrackets before passing them as text.\n\n```html\n<ki-markdown>&lt;aside&gt;This markup is shown as text.&lt;/aside&gt;</ki-markdown>\n```\n\nA guarded surface can pass the source as a string in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-markdown\",\n    \"props\": { \"heading-offset\": 1 },\n    \"slots\": { \"\": [\"# Release notes\\n\\nRead the [upgrade guide](/guides/upgrade).\"] }\n  }\n}\n```\n"
       },
       "props": [
         {
@@ -7760,24 +7749,8 @@
       ],
       "states": [],
       "dependents": [],
-      "dependencies": [
-        "ki-link",
-        "ki-code-block",
-        "ki-note"
-      ],
-      "dependencyGraph": {
-        "ki-markdown": [
-          "ki-link",
-          "ki-code-block",
-          "ki-note"
-        ],
-        "ki-code-block": [
-          "ki-copy-button"
-        ],
-        "ki-copy-button": [
-          "ki-icon"
-        ]
-      }
+      "dependencies": [],
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-menu/ki-menu.tsx",
@@ -8609,15 +8582,9 @@
         }
       ],
       "states": [],
-      "dependents": [
-        "ki-markdown"
-      ],
+      "dependents": [],
       "dependencies": [],
-      "dependencyGraph": {
-        "ki-markdown": [
-          "ki-note"
-        ]
-      }
+      "dependencyGraph": {}
     },
     {
       "filePath": "src/components/ki-option/ki-option.tsx",

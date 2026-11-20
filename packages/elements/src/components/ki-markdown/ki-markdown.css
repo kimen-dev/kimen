@@ -103,13 +103,6 @@ blockquote {
   border-inline-start: var(--ki-focus-ring-width) solid var(--ki-markdown-quote-border);
 }
 
-hr {
-  inline-size: 100%;
-  box-sizing: border-box;
-  border: 0;
-  border-block-start: var(--ki-spacing-action-hairline) solid var(--ki-markdown-quote-border);
-}
-
 img {
   max-inline-size: 100%;
   block-size: auto;
@@ -165,7 +158,6 @@ blockquote {
     border-inline-start-color: CanvasText;
   }
 
-  hr,
   th,
   td {
     border-block-color: CanvasText;

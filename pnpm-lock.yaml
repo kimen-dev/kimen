@@ -417,12 +417,6 @@ importers:
       '@stencil/core':
         specifier: 4.45.3
         version: 4.45.3
-      character-entities:
-        specifier: 2.0.2
-        version: 2.0.2
-      marked:
-        specifier: 9.1.6
-        version: 9.1.6
     devDependencies:
       '@kimen/tokens':
         specifier: workspace:*

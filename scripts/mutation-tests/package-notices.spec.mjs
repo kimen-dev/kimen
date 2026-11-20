@@ -25,7 +25,6 @@ const bundleNotices = [
   'QR Code generator library (MIT)',
   'Stencil client runtime (MIT)',
   'Lucide 1.63.0 and Feather icons (ISC and MIT)',
-  'Marked 9.1.6 and character-entities 2.0.2 (MIT)',
 ];
 const fixtureNotice = [
   'Kimen',
@@ -220,12 +219,6 @@ const repositoryNotice = [
   'Icon body.',
   '',
   RULE,
-  'Third-party notices: Marked 9.1.6 and character-entities 2.0.2 (MIT)',
-  RULE,
-  '',
-  'Markdown parser body.',
-  '',
-  RULE,
   'Third-party notices: onmars theme fonts (SIL OFL 1.1)',
   RULE,
   '',
@@ -280,7 +273,7 @@ it('writes a byte copy of the licence and the derived notice into each published
   ]) {
     assert.equal(
       await readFile(join(root, directory, 'NOTICE'), 'utf8'),
-      `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: QR Code generator library (MIT)\n${RULE}\n\nQR body.\n\n${RULE}\nThird-party notices: Stencil client runtime (MIT)\n${RULE}\n\nStencil body.\n\n${RULE}\nThird-party notices: Lucide 1.63.0 and Feather icons (ISC and MIT)\n${RULE}\n\nIcon body.\n\n${RULE}\nThird-party notices: Marked 9.1.6 and character-entities 2.0.2 (MIT)\n${RULE}\n\nMarkdown parser body.\n`,
+      `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: QR Code generator library (MIT)\n${RULE}\n\nQR body.\n\n${RULE}\nThird-party notices: Stencil client runtime (MIT)\n${RULE}\n\nStencil body.\n\n${RULE}\nThird-party notices: Lucide 1.63.0 and Feather icons (ISC and MIT)\n${RULE}\n\nIcon body.\n`,
     );
   }
   assert.equal(

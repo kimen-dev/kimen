@@ -2,7 +2,12 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { headingLevel, markdownDestination, parseMarkdown } from './ki-markdown.behavior';
+import {
+  decodeMarkdownText,
+  headingLevel,
+  markdownDestination,
+  parseMarkdown,
+} from './ki-markdown.behavior';
 
 const base = new URL('https://app.example/inbox');
 
@@ -45,6 +50,13 @@ describe('Markdown source', () => {
     ]);
   });
 
+  it('stops table rows at a following blockquote that contains a pipe', () => {
+    expect(parseMarkdown('| A | B |\n| - | - |\n| 1 | 2 |\n> Next | Quote', false)).toMatchObject([
+      { type: 'table', rows: [[{ text: '1' }, { text: '2' }]] },
+      { type: 'blockquote', tokens: [{ type: 'paragraph', text: 'Next | Quote' }] },
+    ]);
+  });
+
   it('preserves reference links, escaped inline code and nested CommonMark lists', () => {
     const source = '3. Use [guide][docs] and `<field>`\n   - **Save**\n\n[docs]: /guide';
     expect(parseMarkdown(source, false)).toMatchObject([
@@ -59,7 +71,7 @@ describe('Markdown source', () => {
                   { type: 'text', text: 'Use ' },
                   { type: 'link', href: '/guide' },
                   { type: 'text', text: ' and ' },
-                  { type: 'codespan', text: '&lt;field&gt;' },
+                  { type: 'codespan', text: '<field>' },
                 ],
               },
               { type: 'list' },
@@ -68,6 +80,55 @@ describe('Markdown source', () => {
         ],
       },
     ]);
+  });
+
+  it('S13 keeps character references literal inside code spans', () => {
+    expect(parseMarkdown('Use \x60&lt;tag&gt;\x60 as written.', false)).toMatchObject([
+      {
+        type: 'paragraph',
+        tokens: [
+          { type: 'text', text: 'Use ' },
+          { type: 'codespan', text: '&lt;tag&gt;' },
+          { type: 'text', text: ' as written.' },
+        ],
+      },
+    ]);
+  });
+
+  it('recognizes hard breaks, nested emphasis and balanced link destinations', () => {
+    expect(parseMarkdown('Use ***both***.  \n[Guide](/manual(v2) "Upgrade")', false)).toMatchObject(
+      [
+        {
+          type: 'paragraph',
+          tokens: [
+            { type: 'text', text: 'Use ' },
+            { type: 'em', tokens: [{ type: 'strong', tokens: [{ text: 'both' }] }] },
+            { type: 'text', text: '.' },
+            { type: 'br' },
+            { type: 'link', href: '/manual(v2)', title: 'Upgrade', tokens: [{ text: 'Guide' }] },
+          ],
+        },
+      ],
+    );
+  });
+
+  it('keeps HTML block contents literal and does not register fenced definitions', () => {
+    expect(
+      parseMarkdown(
+        '<!-- description\n\n[Example](/hidden)\n-->\n\n~~~text\n[example]: /bad\n~~~\n\n[example]',
+        false,
+      ),
+    ).toMatchObject([
+      { type: 'literal', raw: '<!-- description\n\n[Example](/hidden)\n-->' },
+      { type: 'code', lang: 'text', text: '[example]: /bad' },
+      { type: 'paragraph', tokens: [{ type: 'text', text: '[example]' }] },
+    ]);
+  });
+
+  it('decodes the supported named and numeric references and preserves unfamiliar names', () => {
+    expect(decodeMarkdownText('&amp; &copy; &#65; &#x42; &CounterClockwiseContourIntegral;')).toBe(
+      '& © A B &CounterClockwiseContourIntegral;',
+    );
   });
 });
 

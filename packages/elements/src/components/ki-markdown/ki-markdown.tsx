@@ -1,23 +1,24 @@
 import { Component, Element, h, Prop, State, type VNode } from '@stencil/core';
-import type { Tokens } from 'marked';
-
 import { MARKDOWN_ORIGINS_ATTRIBUTE } from '../../utils/url-scheme';
 import {
   decodeMarkdownText,
   headingLevel,
-  imageAlternative,
   inlinePlainText,
   type MarkdownBlock,
-  type MarkdownInline,
   markdownDestination,
-  notePrefix,
   parseMarkdown,
   parseOriginScope,
 } from './ki-markdown.behavior';
+import type { MarkdownInline } from './ki-markdown.inline';
 
-type InlineContent = VNode | string;
-type Content = InlineContent | null;
+type Content = VNode | string;
 type Destination = ReturnType<typeof markdownDestination>;
+
+// Like Toaster, Markdown composes already registered elements. The full
+// loader registers them together. Direct-import hosts register the children.
+function childTag(name: 'link' | 'note' | 'code-block'): string {
+  return ['ki', name].join('-');
+}
 
 /**
  * Displays Markdown as Kimen components and native HTML semantics.
@@ -69,44 +70,33 @@ export class KiMarkdown {
   private inline(
     tokens: readonly MarkdownInline[],
     destination: (url: string) => Destination,
-  ): InlineContent[] {
+  ): Content[] {
     return tokens.map((token) => {
       switch (token.type) {
         case 'br':
           return <br />;
         case 'codespan':
-          return <code>{decodeMarkdownText(token.text)}</code>;
+          return <code>{token.text}</code>;
         case 'del':
         case 'em':
         case 'strong':
-          return h(token.type, null, ...this.inline(token.tokens as MarkdownInline[], destination));
-        case 'html':
-          return token.raw;
-        case 'image': {
-          const alt = imageAlternative(token.text);
-          const source = this.allowImages ? destination(token.href) : null;
-          return source && source.url !== '' ? (
-            <img
-              referrerPolicy="no-referrer"
-              alt={alt}
-              {...(token.title ? { title: decodeMarkdownText(token.title) } : {})}
-              src={source.url}
-            />
-          ) : (
-            alt
-          );
-        }
+          return h(token.type, null, ...this.inline(token.tokens, destination));
+        case 'literal':
+          return token.text;
+        case 'image':
         case 'link': {
-          const label = this.inline(token.tokens as MarkdownInline[], destination);
-          const link = destination(token.href);
+          const image = token.type === 'image';
+          const link = !image || this.allowImages ? destination(token.href) : null;
+          const title = token.title ? decodeMarkdownText(token.title) : undefined;
+          if (image) {
+            const alt = inlinePlainText(token.tokens);
+            return link?.url
+              ? h('img', { referrerPolicy: 'no-referrer', alt, title, src: link.url })
+              : alt;
+          }
+          const label = this.inline(token.tokens, destination);
           return link ? (
-            <ki-link
-              href={link.url}
-              external={link.external}
-              {...(token.title ? { title: decodeMarkdownText(token.title) } : {})}
-            >
-              {label}
-            </ki-link>
+            h(childTag('link'), { href: link.url, external: link.external, title }, ...label)
           ) : (
             <span>{label}</span>
           );
@@ -126,33 +116,25 @@ export class KiMarkdown {
 
   private block(token: MarkdownBlock, destination: (url: string) => Destination): Content {
     switch (token.type) {
-      case 'space':
-        return null;
-      case 'code': {
-        const language =
-          decodeMarkdownText(token.lang ?? '')
-            .trim()
-            .split(/\s+/u, 1)[0] ?? '';
-        return <ki-code-block language={language}>{token.text}</ki-code-block>;
-      }
+      case 'code':
+        return h(childTag('code-block'), { language: decodeMarkdownText(token.lang) }, token.text);
       case 'heading':
         return h(
           `h${String(headingLevel(token.depth, this.headingOffset))}`,
           null,
-          ...this.inline(token.tokens as MarkdownInline[], destination),
+          ...this.inline(token.tokens, destination),
         );
       case 'paragraph':
-        return <p>{this.inline(token.tokens as MarkdownInline[], destination)}</p>;
-      case 'text':
-        return token.tokens ? (
-          <p>{this.inline(token.tokens as MarkdownInline[], destination)}</p>
-        ) : (
-          decodeMarkdownText(token.text)
-        );
-      case 'hr':
-        return <hr />;
+        return <p>{this.inline(token.tokens, destination)}</p>;
       case 'blockquote':
-        return this.quote(token, destination);
+      case 'note': {
+        const note = token.type === 'note';
+        return h(
+          note ? childTag('note') : token.type,
+          note ? { tone: 'info' } : null,
+          ...this.blocks(token.tokens, destination),
+        );
+      }
       case 'list':
         return this.list(token, destination);
       case 'table':
@@ -162,88 +144,58 @@ export class KiMarkdown {
     }
   }
 
-  private quote(token: Tokens.Blockquote, destination: (url: string) => Destination): VNode {
-    const blocks = token.tokens as MarkdownBlock[];
-    let remaining = notePrefix(token);
-    if (remaining === 0) return <blockquote>{this.blocks(blocks, destination)}</blockquote>;
-
-    const [opening, ...following] = blocks;
-    const firstLine = opening?.type === 'paragraph' ? (opening.tokens as MarkdownInline[]) : [];
-    const noteChildren: Content[] = [];
-    for (const item of firstLine) {
-      if (remaining === 0) {
-        noteChildren.push(...this.inline([item], destination));
-      } else if (remaining < item.raw.length) {
-        noteChildren.push(decodeMarkdownText(item.raw.slice(remaining)));
-        remaining = 0;
-      } else {
-        remaining -= item.raw.length;
-      }
-    }
-    return (
-      <ki-note tone="info">
-        {noteChildren.length > 0 && <p>{noteChildren}</p>}
-        {this.blocks(opening?.type === 'paragraph' ? following : blocks, destination)}
-      </ki-note>
-    );
-  }
-
-  private list(token: Tokens.List, destination: (url: string) => Destination): VNode {
+  private list(
+    token: Extract<MarkdownBlock, { type: 'list' }>,
+    destination: (url: string) => Destination,
+  ): VNode {
     const items = token.items.map((item) => {
-      const blocks = item.tokens as MarkdownBlock[];
-      const first = blocks[0];
+      const first = item.tokens[0];
+      const task = item.checked !== undefined;
       const label =
-        first?.type === 'text' || first?.type === 'paragraph'
-          ? inlinePlainText((first.tokens ?? []) as MarkdownInline[])
-          : item.text;
+        first?.type === 'paragraph' || first?.type === 'heading'
+          ? inlinePlainText(first.tokens)
+          : '';
       return (
-        <li class={{ 'task-item': item.task }}>
-          {item.task && (
+        <li class={{ 'task-item': task }}>
+          {task && (
             <input type="checkbox" aria-label={label} checked={item.checked === true} disabled />
           )}
-          {blocks.map((block) =>
-            block.type === 'text' && block.tokens && !token.loose
-              ? this.inline(block.tokens as MarkdownInline[], destination)
+          {item.tokens.map((block) =>
+            block.type === 'paragraph' && !token.loose
+              ? this.inline(block.tokens, destination)
               : this.block(block, destination),
           )}
         </li>
       );
     });
-    return token.ordered ? (
-      <ol start={token.start === '' ? 1 : token.start}>{items}</ol>
-    ) : (
-      <ul>{items}</ul>
-    );
+    return token.start === undefined ? <ul>{items}</ul> : <ol start={token.start}>{items}</ol>;
   }
 
-  private table(token: Tokens.Table, destination: (url: string) => Destination): VNode {
+  private table(
+    token: Extract<MarkdownBlock, { type: 'table' }>,
+    destination: (url: string) => Destination,
+  ): VNode {
     // Keyboard readers can horizontally scroll wider tables in each engine.
     const focusability = { tabindex: '0' };
+    const row = (cells: typeof token.header, tag: 'th' | 'td') => (
+      <tr>
+        {cells.map((cell, column) =>
+          h(
+            tag,
+            {
+              scope: tag === 'th' ? 'col' : undefined,
+              'data-align': token.align[column],
+            },
+            ...this.inline(cell.tokens, destination),
+          ),
+        )}
+      </tr>
+    );
     return (
       <div class="table-scroll" {...focusability}>
         <table>
-          <thead>
-            <tr>
-              {token.header.map((cell, column) => (
-                <th scope="col" data-align={token.align[column] ?? undefined}>
-                  {this.inline(cell.tokens as MarkdownInline[], destination)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          {token.rows.length > 0 && (
-            <tbody>
-              {token.rows.map((row) => (
-                <tr>
-                  {row.map((cell, column) => (
-                    <td data-align={token.align[column] ?? undefined}>
-                      {this.inline(cell.tokens as MarkdownInline[], destination)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          )}
+          <thead>{row(token.header, 'th')}</thead>
+          {token.rows.length > 0 && <tbody>{token.rows.map((cells) => row(cells, 'td'))}</tbody>}
         </table>
       </div>
     );
