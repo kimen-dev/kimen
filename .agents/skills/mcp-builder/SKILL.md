@@ -7,7 +7,7 @@ license: Complete terms in LICENSE-NOTICE.md
 # MCP Server Development Guide
 
 > **Kimen note (local adaptation):** Kimen's MCP surface is the disposable MCP
-> Apps / A2UI / AG-UI adapters (constitution Art. VIII). Prefer the
+> Apps and A2UI adapters (constitution Art. VIII). Prefer the
 > **TypeScript** path below (Kimen is TS-strict; Art. IV). Use **pnpm**, not npm.
 > Any new runtime dependency the generated server pulls in is subject to the
 > supply-chain gate (audit + pin, Art. X). The evaluation harness step that
