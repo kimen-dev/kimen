@@ -43,6 +43,7 @@ export { KiSelect } from './ki-select.js';
 export { KiSkeleton } from './ki-skeleton.js';
 export { KiSpinner } from './ki-spinner.js';
 export { KiStack } from './ki-stack.js';
+export { KiStat } from './ki-stat.js';
 export { KiStatus } from './ki-status.js';
 export { KiSwitch } from './ki-switch.js';
 export { KiTab } from './ki-tab.js';

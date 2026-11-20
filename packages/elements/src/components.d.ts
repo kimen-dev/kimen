@@ -1451,6 +1451,59 @@ export namespace Components {
         "wrap": boolean;
     }
     /**
+     * A key metric with an optional comparison against a reference period.
+     * @whenToUse Summarize one numeric metric in a dashboard or report. Set
+     * direction to lower-is-better for metrics such as latency and neutral for
+     * changes that carry no favorable or unfavorable meaning.
+     * @whenNotToUse Present a sequence of readings or inspect multiple data
+     * points. Use a chart or table with a text equivalent for that data.
+     */
+    interface KiStat {
+        /**
+          * Optional finite change. Its sign determines the trend and its magnitude is displayed.
+         */
+        "delta"?: number;
+        /**
+          * Number-format options for the change. Defaults to format. Set this property to an Intl options object.
+         */
+        "deltaFormat"?: Intl.NumberFormatOptions;
+        /**
+          * Localized comparison period, such as "vs last week".
+         */
+        "deltaLabel"?: string;
+        /**
+          * Which direction is favorable for this metric. Use neutral to avoid a judgment.
+          * @default 'higher-is-better'
+         */
+        "direction": 'higher-is-better' | 'lower-is-better' | 'neutral';
+        /**
+          * Localized spoken direction for a negative delta.
+          * @default 'down'
+         */
+        "downLabel": string;
+        /**
+          * Number-format options for the reading. Set this JavaScript property to an Intl options object.
+         */
+        "format"?: Intl.NumberFormatOptions;
+        /**
+          * Localized name of the metric, such as "Median render time".
+         */
+        "label": string;
+        /**
+          * Literal suffix for decimal readings, such as "ms".
+         */
+        "unit"?: string;
+        /**
+          * Localized spoken direction for a positive delta.
+          * @default 'up'
+         */
+        "upLabel": string;
+        /**
+          * Current finite reading.
+         */
+        "value": number;
+    }
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -2596,6 +2649,20 @@ declare global {
         new (): HTMLKiStackElement;
     };
     /**
+     * A key metric with an optional comparison against a reference period.
+     * @whenToUse Summarize one numeric metric in a dashboard or report. Set
+     * direction to lower-is-better for metrics such as latency and neutral for
+     * changes that carry no favorable or unfavorable meaning.
+     * @whenNotToUse Present a sequence of readings or inspect multiple data
+     * points. Use a chart or table with a text equivalent for that data.
+     */
+    interface HTMLKiStatElement extends Components.KiStat, HTMLStencilElement {
+    }
+    var HTMLKiStatElement: {
+        prototype: HTMLKiStatElement;
+        new (): HTMLKiStatElement;
+    };
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -2856,6 +2923,7 @@ declare global {
         "ki-skeleton": HTMLKiSkeletonElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
+        "ki-stat": HTMLKiStatElement;
         "ki-status": HTMLKiStatusElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
@@ -4302,6 +4370,59 @@ declare namespace LocalJSX {
         "wrap"?: boolean;
     }
     /**
+     * A key metric with an optional comparison against a reference period.
+     * @whenToUse Summarize one numeric metric in a dashboard or report. Set
+     * direction to lower-is-better for metrics such as latency and neutral for
+     * changes that carry no favorable or unfavorable meaning.
+     * @whenNotToUse Present a sequence of readings or inspect multiple data
+     * points. Use a chart or table with a text equivalent for that data.
+     */
+    interface KiStat {
+        /**
+          * Optional finite change. Its sign determines the trend and its magnitude is displayed.
+         */
+        "delta"?: number;
+        /**
+          * Number-format options for the change. Defaults to format. Set this property to an Intl options object.
+         */
+        "deltaFormat"?: Intl.NumberFormatOptions;
+        /**
+          * Localized comparison period, such as "vs last week".
+         */
+        "deltaLabel"?: string;
+        /**
+          * Which direction is favorable for this metric. Use neutral to avoid a judgment.
+          * @default 'higher-is-better'
+         */
+        "direction"?: 'higher-is-better' | 'lower-is-better' | 'neutral';
+        /**
+          * Localized spoken direction for a negative delta.
+          * @default 'down'
+         */
+        "downLabel"?: string;
+        /**
+          * Number-format options for the reading. Set this JavaScript property to an Intl options object.
+         */
+        "format"?: Intl.NumberFormatOptions;
+        /**
+          * Localized name of the metric, such as "Median render time".
+         */
+        "label": string;
+        /**
+          * Literal suffix for decimal readings, such as "ms".
+         */
+        "unit"?: string;
+        /**
+          * Localized spoken direction for a positive delta.
+          * @default 'up'
+         */
+        "upLabel"?: string;
+        /**
+          * Current finite reading.
+         */
+        "value": number;
+    }
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -4939,6 +5060,16 @@ declare namespace LocalJSX {
         "justify": KiStackJustify;
         "wrap": boolean;
     }
+    interface KiStatAttributes {
+        "label": string;
+        "value": number;
+        "unit": string;
+        "delta": number;
+        "direction": 'higher-is-better' | 'lower-is-better' | 'neutral';
+        "deltaLabel": string;
+        "upLabel": string;
+        "downLabel": string;
+    }
     interface KiStatusAttributes {
         "tone": KiStatusTone;
         "ring": boolean;
@@ -5042,6 +5173,7 @@ declare namespace LocalJSX {
         "ki-skeleton": Omit<KiSkeleton, keyof KiSkeletonAttributes> & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes]?: KiSkeleton[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `attr:${K}`]?: KiSkeletonAttributes[K] } & { [K in keyof KiSkeleton & keyof KiSkeletonAttributes as `prop:${K}`]?: KiSkeleton[K] };
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
+        "ki-stat": Omit<KiStat, keyof KiStatAttributes> & { [K in keyof KiStat & keyof KiStatAttributes]?: KiStat[K] } & { [K in keyof KiStat & keyof KiStatAttributes as `attr:${K}`]?: KiStatAttributes[K] } & { [K in keyof KiStat & keyof KiStatAttributes as `prop:${K}`]?: KiStat[K] } & OneOf<"label", KiStat["label"], KiStatAttributes["label"]> & OneOf<"value", KiStat["value"], KiStatAttributes["value"]>;
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
@@ -5493,6 +5625,15 @@ declare module "@stencil/core" {
              * @cssprop --ki-stack-gap - The default gap on the host. An explicit non-default gap selects a semantic spacing step.
              */
             "ki-stack": LocalJSX.IntrinsicElements["ki-stack"] & JSXBase.HTMLAttributes<HTMLKiStackElement>;
+            /**
+             * A key metric with an optional comparison against a reference period.
+             * @whenToUse Summarize one numeric metric in a dashboard or report. Set
+             * direction to lower-is-better for metrics such as latency and neutral for
+             * changes that carry no favorable or unfavorable meaning.
+             * @whenNotToUse Present a sequence of readings or inspect multiple data
+             * points. Use a chart or table with a text equivalent for that data.
+             */
+            "ki-stat": LocalJSX.IntrinsicElements["ki-stat"] & JSXBase.HTMLAttributes<HTMLKiStatElement>;
             /**
              * A tiny, non-interactive status dot that marks the state of a nearby item.
              * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
