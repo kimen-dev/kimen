@@ -269,6 +269,56 @@ code {
   outline-offset: var(--ki-focus-ring-offset);
 }
 
+/* ---- 404 ------------------------------------------------------------------------------- */
+
+.not-found {
+  --ki-site-reading-width: 42rem;
+
+  display: grid;
+  gap: var(--ki-space-3xl);
+  inline-size: min(100% - 2 * var(--ki-site-gutter), var(--ki-site-reading-width));
+  margin-inline: auto;
+  padding-block: var(--ki-space-18xl) var(--ki-space-22xl);
+  color: var(--ki-text-med-em);
+  font-size: var(--ki-site-copy);
+  line-height: var(--ki-site-copy-line);
+}
+
+.not-found-code {
+  color: var(--ki-text-primary-high-em);
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-typography-size-body-1);
+  letter-spacing: var(--ki-typography-letter-spacing-none);
+}
+
+.not-found h1 {
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-display);
+  font-size: var(--ki-site-title);
+  font-weight: var(--ki-typography-weight-display-semibold);
+  line-height: var(--ki-site-title-line);
+  letter-spacing: var(--ki-typography-letter-spacing-lg);
+}
+
+.not-found-lede {
+  font-size: var(--ki-site-lede);
+  line-height: var(--ki-site-lede-line);
+}
+
+.not-found-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ki-space-xl) var(--ki-space-7xl);
+  margin-block-start: var(--ki-space-md);
+  font-size: var(--ki-typography-size-body-1);
+}
+
+.not-found-links a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--ki-site-target);
+}
+
 /* ---- footer ---------------------------------------------------------------------------- */
 
 .site-footer {
