@@ -31,11 +31,15 @@ export async function expectTertiaryAlias(
     const secondary = await mount('secondary', tone, false);
     const tertiary = await mount('tertiary', tone, false);
     await parkPointer();
-    expect(surfacePaint(tertiary), `${tone} rest`).toEqual(surfacePaint(secondary));
+    const rest = surfacePaint(secondary);
+    expect(surfacePaint(tertiary), `${tone} rest`).toEqual(rest);
 
     if (matchMedia('(hover: hover)').matches) {
       await userEvent.hover(secondary);
       const hoveredSecondary = surfacePaint(secondary);
+      // A read taken as a hover fade starts still shows rest, and two such
+      // reads match whatever the variants paint.
+      expect(hoveredSecondary, `${tone} hover has landed`).not.toEqual(rest);
       await userEvent.hover(tertiary);
       expect(surfacePaint(tertiary), `${tone} hover`).toEqual(hoveredSecondary);
     }
