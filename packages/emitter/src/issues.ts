@@ -51,7 +51,13 @@ export interface ResolvedEntries {
  * returned entries are sorted by tag so every artifact is deterministic
  * (S11).
  */
-const CONSTRAINT_TYPES: ReadonlySet<string> = new Set(['boolean', 'enum', 'number', 'string']);
+const CONSTRAINT_TYPES: ReadonlySet<string> = new Set([
+  'boolean',
+  'enum',
+  'number',
+  'number-or-string',
+  'string',
+]);
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);

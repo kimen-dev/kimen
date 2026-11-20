@@ -47,6 +47,7 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 
 ## Attributes
 
+- `ai-suggestion-text` (string, default 'Suggested by AI'): Localized provenance description read alongside help or an error when the end slot contains an AI label. Use this to translate the description.
 - `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
 - `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
 - `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
@@ -64,7 +65,7 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 ## Slots
 
 - `action`: One small submit action inside the field after the end adornment. Use for one-field forms such as search or subscribe. Place a named `ki-button size="sm" type="submit"` here, or wire a labeled `ki-icon-button size="sm"` to request form submission. The action has its own tab stop. Use the end slot for clear or reveal controls.
-- `end`: Trailing icon or text affix inside the field. Follows writing direction.
+- `end`: Trailing icon or text affix inside the field. Follows writing direction. A directly slotted AI label also describes the field as suggested by AI.
 - `start`: Leading icon or text affix inside the field. Follows writing direction.
 
 ## Parts

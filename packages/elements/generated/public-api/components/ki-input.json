@@ -1,6 +1,14 @@
 {
   "component": {
     "attributes": {
+      "ai-suggestion-text": {
+        "default": "'Suggested by AI'",
+        "deprecatedSince": null,
+        "description": "Localized provenance description read alongside help or an error when\nthe end slot contains an AI label. Use this to translate the description.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
       "autocomplete": {
         "default": null,
         "deprecatedSince": null,
@@ -1011,6 +1019,14 @@
       }
     },
     "properties": {
+      "aiSuggestionText": {
+        "default": "'Suggested by AI'",
+        "deprecatedSince": null,
+        "description": "Localized provenance description read alongside help or an error when\nthe end slot contains an AI label. Use this to translate the description.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
       "autocomplete": {
         "default": null,
         "deprecatedSince": null,
@@ -1128,7 +1144,7 @@
       "end": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Trailing icon or text affix inside the field. Follows writing direction.",
+        "description": "Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI.",
         "replacement": null,
         "required": false,
         "type": null

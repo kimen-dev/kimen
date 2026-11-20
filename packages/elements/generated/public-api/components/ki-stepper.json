@@ -1,0 +1,551 @@
+{
+  "component": {
+    "attributes": {
+      "count-label": {
+        "default": "'Steps ({total})'",
+        "deprecatedSince": null,
+        "description": "Compact disclosure text without a current step. Include {total}.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "current-label": {
+        "default": "'Current'",
+        "deprecatedSince": null,
+        "description": "Localized text for the current step.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "done-label": {
+        "default": "'Completed'",
+        "deprecatedSince": null,
+        "description": "Localized text for a completed step.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "error-label": {
+        "default": "'Error'",
+        "deprecatedSince": null,
+        "description": "Localized text for a step that has an error.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the list. Use a localized description of the task.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "orientation": {
+        "default": "'horizontal'",
+        "deprecatedSince": null,
+        "description": "Use vertical for a stacked list. Horizontal layout compacts below 22rem.",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      "summary-label": {
+        "default": "'Step {current} of {total}'",
+        "deprecatedSince": null,
+        "description": "Compact disclosure text. Place {current} and {total} in the local order.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "upcoming-label": {
+        "default": "'Not started'",
+        "deprecatedSince": null,
+        "description": "Localized text for an upcoming step.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-corner-activity-mark": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Round corners for rings and typing dots.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-7xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 7xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The md spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The sm spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xxs": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xxs spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-step-description-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Backing of a step description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-step-description-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a step description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-connector": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative connector from a step that is still incomplete.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-connector-done": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative connector from a completed step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-current-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the current step marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-current-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline of the current step marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-current-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Number ink on the current step marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-done-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a completed step marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-done-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink on the completed step marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-dot-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Diameter of the step marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-error-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the step error marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-error-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline of the step error marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-error-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink of the step error marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-glyph-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of the marker and disclosure glyphs.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-label-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default backing of a step label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default ink of a step label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-stroke": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the marker outline and connector.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-summary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Backing of the compact disclosure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-summary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the compact disclosure.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-upcoming-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of an upcoming step marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-upcoming-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline of an upcoming step marker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-stepper-upcoming-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Number and label ink of an upcoming step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "An ordered, responsive view of progress through named steps.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "connector": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The decorative line leading to the next step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "description": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional supporting text below the label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "list": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The ordered list.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "marker": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The decorative step number or state glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "step": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "A list item in the sequence.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "summary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The compact disclosure button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "title": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The label, rendered as a link when a completed step has a destination.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "countLabel": {
+        "default": "'Steps ({total})'",
+        "deprecatedSince": null,
+        "description": "Compact disclosure text without a current step. Include {total}.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "currentLabel": {
+        "default": "'Current'",
+        "deprecatedSince": null,
+        "description": "Localized text for the current step.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "doneLabel": {
+        "default": "'Completed'",
+        "deprecatedSince": null,
+        "description": "Localized text for a completed step.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "errorLabel": {
+        "default": "'Error'",
+        "deprecatedSince": null,
+        "description": "Localized text for a step that has an error.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the list. Use a localized description of the task.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "orientation": {
+        "default": "'horizontal'",
+        "deprecatedSince": null,
+        "description": "Use vertical for a stacked list. Horizontal layout compacts below 22rem.",
+        "replacement": null,
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      "summaryLabel": {
+        "default": "'Step {current} of {total}'",
+        "deprecatedSince": null,
+        "description": "Compact disclosure text. Place {current} and {total} in the local order.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "upcomingLabel": {
+        "default": "'Not started'",
+        "deprecatedSince": null,
+        "description": "Localized text for an upcoming step.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Direct ki-step children in task order. The stepper assigns each\nchild to its row automatically.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-stepper.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-stepper.d.ts",
+    "symbols": {
+      "KiStepper": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiStepper extends Components.KiStepper, HTMLElement {\n}\nexport const KiStepper: {\n    prototype: KiStepper;\n    new (): KiStepper;\n};"
+      },
+      "KiStepperOrientation": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiStepperOrientation = 'horizontal' | 'vertical';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-stepper.js"
+  }
+}

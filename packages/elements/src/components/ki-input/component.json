@@ -8,8 +8,18 @@
   "catalog": true,
   "formBinding": "text",
   "sizeBudget": {
+    "mcpApps": {
+      "raw": 820,
+      "gzip": 222,
+      "brotli": 50
+    },
     "mcpServer": {
-      "raw": 1505
+      "raw": 1505,
+      "gzip": 393,
+      "brotli": 261
+    },
+    "tokenStylesheets": {
+      "onmars": 32
     }
   }
 }

@@ -1,0 +1,41 @@
+---
+title: ki-feature-icon
+description: Place a decorative Lucide glyph on a tinted tile beside a heading.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Place one decorative glyph beside a feature, empty state or settings heading.
+The heading names the section. Use `ki-icon-button` for actions and `ki-badge`
+for short status labels.
+
+<Demo layout="block" code={`<div style="display:flex;align-items:center;gap:var(--ki-space-md)">
+  <ki-feature-icon tone="primary-light">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="m16 9-5.5 5.5L8 12"></path>
+    </svg>
+  </ki-feature-icon>
+  <h2>Security settings</h2>
+</div>`} />
+
+The tile defaults to neutral, medium and rounded square. The five sizes span
+24 to 64 CSS pixels at a 16px root. The glyph takes half the selected size.
+Use `shape="circle"` for a circular tile. An imported `ki-icon` with its
+default inherited size also fits the slot.
+
+The painted `tile` part and its glyph are hidden from assistive technology
+and skipped during keyboard navigation. The tile keeps its explicit size on
+touch screens, uses the system palette in forced colours and stays still
+when its appearance changes.
+
+## API reference
+
+<CemApi tag="ki-feature-icon" />
+
+## Workshop
+
+[Open ki-feature-icon in Storybook](/storybook/?path=/docs/docs-components-ki-feature-icon--docs)
