@@ -3092,6 +3092,379 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-copy-button/ki-copy-button.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-copy-button",
+      "docs": "Copies text to the clipboard and confirms the result in the same button.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions."
+        },
+        {
+          "name": "slot",
+          "text": "- Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
+        },
+        {
+          "name": "part",
+          "text": "button - Native copy control with keyboard and pointer activation."
+        },
+        {
+          "name": "part",
+          "text": "icon - Fixed-size decorative feedback glyph box inside the button."
+        },
+        {
+          "name": "part",
+          "text": "label - Wrapper around the visible slotted label."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-copy-button examples\n\n## Copy an invite link\n\n```html\n<ki-copy-button value=\"https://kimen.dev/i/4f9a\" label=\"Copy invite link\"></ki-copy-button>\n```\n\n## Copy what a field currently contains\n\n```html\n<ki-input id=\"token-field\" label=\"Token\" value=\"token-4f9a\"></ki-input>\n<ki-copy-button from=\"token-field\" variant=\"secondary\">Copy token</ki-copy-button>\n```\n\n## Copy a code sample with localized feedback\n\n```html\n<pre id=\"install-command\"><code>pnpm add @kimen/elements</code></pre>\n<ki-copy-button\n  from=\"install-command\"\n  copied-label=\"Copiado\"\n  copy-error-label=\"No se pudo copiar\"\n>Copiar comando</ki-copy-button>\n```\n"
+      },
+      "props": [
+        {
+          "name": "copiedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "copied-label",
+          "reflectToAttr": false,
+          "docs": "Polite announcement after a successful write. Override for localized interfaces.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Copied'"
+            }
+          ],
+          "default": "'Copied'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "copyErrorLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "copy-error-label",
+          "reflectToAttr": false,
+          "docs": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "\"Couldn't copy\""
+            }
+          ],
+          "default": "\"Couldn't copy\"",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "feedbackDuration",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "feedback-duration",
+          "reflectToAttr": false,
+          "docs": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "default",
+              "text": "1500"
+            }
+          ],
+          "default": "1500",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "from",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "from",
+          "reflectToAttr": false,
+          "docs": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Copy'"
+            }
+          ],
+          "default": "'Copy'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+          "complexType": {
+            "original": "KiButtonSize",
+            "resolved": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+            "references": {
+              "KiButtonSize": {
+                "location": "import",
+                "path": "../ki-button/ki-button",
+                "id": "src/components/ki-button/ki-button.tsx::KiButtonSize",
+                "referenceLocation": "KiButtonSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Token-backed button size. Match the size of adjacent controls.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            },
+            {
+              "value": "xs",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Exact clipboard text, including whitespace. Supply it when the text is known directly.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
+          "complexType": {
+            "original": "KiCopyButtonVariant",
+            "resolved": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\"",
+            "references": {
+              "KiCopyButtonVariant": {
+                "location": "local",
+                "path": "src/components/ki-copy-button/ki-copy-button.tsx",
+                "id": "src/components/ki-copy-button/ki-copy-button.tsx::KiCopyButtonVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'ghost'"
+            }
+          ],
+          "default": "'ghost'",
+          "values": [
+            {
+              "value": "ghost",
+              "type": "string"
+            },
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "quaternary",
+              "type": "string"
+            },
+            {
+              "value": "secondary",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-copy",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: string }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fired after a successful clipboard write. The detail carries the exact text copied.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-copy-error",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fired when the source cannot be read or clipboard writing is unavailable or fails.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
+        }
+      ],
+      "parts": [
+        {
+          "name": "button",
+          "docs": "Native copy control with keyboard and pointer activation."
+        },
+        {
+          "name": "icon",
+          "docs": "Fixed-size decorative feedback glyph box inside the button."
+        },
+        {
+          "name": "label",
+          "docs": "Wrapper around the visible slotted label."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-copy-button": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-counter/ki-counter.tsx",
       "encapsulation": "shadow",
       "tag": "ki-counter",
@@ -3915,6 +4288,347 @@
       ],
       "dependencyGraph": {
         "ki-empty-state": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-fab/ki-fab.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-fab",
+      "docs": "The primary action of a screen, as an icon or an extended control with a visible label.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button."
+        },
+        {
+          "name": "slot",
+          "text": "icon - Decorative, noninteractive icon replacing the named glyph."
+        },
+        {
+          "name": "part",
+          "text": "control - The native button or link, including its surface and focus ring."
+        },
+        {
+          "name": "part",
+          "text": "icon - Wrapper for the decorative named or slotted glyph."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible label of an extended FAB."
+        },
+        {
+          "name": "event",
+          "text": "click - Native activation click. The page or guarded renderer handles the declared action."
+        }
+      ],
+      "usage": {
+        "examples": "# Using ki-fab\n\nUse one FAB for the primary action of a screen. Give it a localized `label`\nin every layout. Import each Lucide glyph before mounting a FAB that names it.\nUse the native `click` event to call your application's action handler.\n\n```js\nimport '@kimen/elements/icons/pencil';\nimport { defineCustomElement } from '@kimen/elements/ki-fab';\n\ndefineCustomElement();\n\ndocument.querySelector('#compose')?.addEventListener('click', openComposer);\n```\n\n```html\n<ki-fab id=\"compose\" label=\"Compose\" icon-name=\"pencil\"></ki-fab>\n```\n\nUse `href` when activation takes the user to a destination. To supply a custom\nglyph, use the `icon` slot with decorative, noninteractive content.\n\n```html\n<ki-fab label=\"New project\" href=\"/projects/new\" variant=\"primary\" extended>\n  <svg slot=\"icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\" focusable=\"false\">\n    <path d=\"M5 12h14M12 5v14\"></path>\n  </svg>\n</ki-fab>\n```\n\nPlace a fixed FAB after the main content so its tab stop follows the page's\ncontrols. Reserve bottom space so the last item can scroll above it. Set\n`--ki-fab-mobile-nav-block-size` to the height of the fixed navigation when\npresent, excluding the safe area.\n\n```html\n<main class=\"compose-page\">\n  <!-- Page content -->\n</main>\n<ki-fab label=\"Compose\" icon-name=\"pencil\" position=\"fixed\" extended collapse-on-scroll></ki-fab>\n```\n\n```css\n:root {\n  --ki-fab-mobile-nav-block-size: var(--app-mobile-nav-height, 0px);\n  --compose-clearance: calc(\n    var(--ki-fab-size) + 2 * var(--ki-fab-offset) +\n      var(--ki-fab-mobile-nav-block-size) + env(safe-area-inset-bottom, 0px)\n  );\n  scroll-padding-block-end: var(--compose-clearance);\n}\n\n.compose-page {\n  padding-block-end: var(--compose-clearance);\n}\n```\n\nThe clearance above uses the default `md` size. Adjust it for a larger FAB\nand use the actual expanded height if the label wraps. The label hides as the\nuser scrolls down the document and reappears on upward scroll. The native\ncontrol retains its accessible name and focus.\n"
+      },
+      "props": [
+        {
+          "name": "collapseOnScroll",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "collapse-on-scroll",
+          "reflectToAttr": false,
+          "docs": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "extended",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "extended",
+          "reflectToAttr": false,
+          "docs": "Show the action label next to its icon.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the action. Also the visible text in the extended state.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "position",
+          "type": "\"fixed\" | \"static\"",
+          "complexType": {
+            "original": "KiFabPosition",
+            "resolved": "\"fixed\" | \"static\"",
+            "references": {
+              "KiFabPosition": {
+                "location": "local",
+                "path": "src/components/ki-fab/ki-fab.tsx",
+                "id": "src/components/ki-fab/ki-fab.tsx::KiFabPosition"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "position",
+          "reflectToAttr": true,
+          "docs": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'static'"
+            }
+          ],
+          "default": "'static'",
+          "values": [
+            {
+              "value": "fixed",
+              "type": "string"
+            },
+            {
+              "value": "static",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"xl\"",
+          "complexType": {
+            "original": "KiFabSize",
+            "resolved": "\"lg\" | \"md\" | \"xl\"",
+            "references": {
+              "KiFabSize": {
+                "location": "local",
+                "path": "src/components/ki-fab/ki-fab.tsx",
+                "id": "src/components/ki-fab/ki-fab.tsx::KiFabSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Square footprint when icon-only, and minimum size when extended.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "xl",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"primary\" | \"secondary\" | \"surface\"",
+          "complexType": {
+            "original": "KiFabVariant",
+            "resolved": "\"primary\" | \"secondary\" | \"surface\"",
+            "references": {
+              "KiFabVariant": {
+                "location": "local",
+                "path": "src/components/ki-fab/ki-fab.tsx",
+                "id": "src/components/ki-fab/ki-fab.tsx::KiFabVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Surface and ink: strong primary, tinted secondary or raised surface.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'secondary'"
+            }
+          ],
+          "default": "'secondary'",
+          "values": [
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "secondary",
+              "type": "string"
+            },
+            {
+              "value": "surface",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "icon",
+          "docs": "Decorative, noninteractive icon replacing the named glyph."
+        }
+      ],
+      "parts": [
+        {
+          "name": "control",
+          "docs": "The native button or link, including its surface and focus ring."
+        },
+        {
+          "name": "icon",
+          "docs": "Wrapper for the decorative named or slotted glyph."
+        },
+        {
+          "name": "label",
+          "docs": "Visible label of an extended FAB."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-fab": [
           "ki-icon"
         ]
       }
@@ -4750,16 +5464,20 @@
       "parts": [],
       "states": [],
       "dependents": [
+        "ki-copy-button",
         "ki-empty-state",
-        "ki-number-input",
+        "ki-fab",
         "ki-stat"
       ],
       "dependencies": [],
       "dependencyGraph": {
+        "ki-copy-button": [
+          "ki-icon"
+        ],
         "ki-empty-state": [
           "ki-icon"
         ],
-        "ki-number-input": [
+        "ki-fab": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -7615,628 +8333,6 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-number-input/ki-number-input.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-number-input",
-      "docs": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-      "docsTags": [
-        {
-          "name": "whenToUse",
-          "text": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning."
-        },
-        {
-          "name": "whenNotToUse",
-          "text": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue."
-        },
-        {
-          "name": "part",
-          "text": "label - Visible name of the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "field - Enclosure around the editor, unit and stepper buttons."
-        },
-        {
-          "name": "part",
-          "text": "input - Native text editor carrying the spinbutton role."
-        },
-        {
-          "name": "part",
-          "text": "unit - Visible unit referenced by the spinbutton's description."
-        },
-        {
-          "name": "part",
-          "text": "decrease - Button that subtracts one step."
-        },
-        {
-          "name": "part",
-          "text": "increase - Button that adds one step."
-        },
-        {
-          "name": "part",
-          "text": "help - Help message associated with the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "error - Polite validation feedback associated with the spinbutton."
-        },
-        {
-          "name": "part",
-          "text": "status - Polite feedback explaining a value adjustment."
-        },
-        {
-          "name": "event",
-          "text": "change - Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-        }
-      ],
-      "usage": {
-        "examples": "# ki-number-input examples\n\n## Quantity with bounds\n\n```html\n<ki-number-input label=\"Seats\" name=\"seats\" value=\"3\" min=\"1\" max=\"50\" steppers required></ki-number-input>\n```\n\n## Plain field with a unit\n\n```html\n<ki-number-input label=\"Timeout\" name=\"timeout\" value=\"30\" unit=\"seconds\" min=\"0\"></ki-number-input>\n```\n\nThe form submits `timeout=30`.\n\n## Percentage with localized editing\n\n```html\n<ki-number-input\n  lang=\"de-DE\"\n  label=\"Discount\"\n  name=\"discount\"\n  min=\"0\"\n  max=\"1\"\n  step=\"0.005\"\n  value=\"0.125\"\n  format='{\"style\":\"percent\",\"maximumFractionDigits\":1}'\n></ki-number-input>\n```\n\nThe editor displays `12,5` while focused and formats it as a percentage on\nblur. The form submits `discount=0.125`.\n\n## Custom-elements entry point\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-number-input';\n\ndefineCustomElement();\nconst discount = document.querySelector('ki-number-input[name=\"discount\"]');\nif (discount) {\n  discount.format = { style: 'percent', maximumFractionDigits: 1 };\n}\n```\n"
-      },
-      "props": [
-        {
-          "name": "decreaseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "decrease-label",
-          "reflectToAttr": false,
-          "docs": "Stepper's accessible name. The field label replaces {label}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Decrease {label}'"
-            }
-          ],
-          "default": "'Decrease {label}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "disabled",
-          "reflectToAttr": true,
-          "docs": "Prevents editing and excludes the control from form submission.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "errorText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "error-text",
-          "reflectToAttr": false,
-          "docs": "Validation hint to show when the entry fails a constraint.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "format",
-          "type": "NumberFormatOptions | undefined",
-          "complexType": {
-            "original": "Intl.NumberFormatOptions | undefined",
-            "resolved": "NumberFormatOptions | undefined",
-            "references": {
-              "Intl": {
-                "location": "global",
-                "id": "global::Intl"
-              }
-            }
-          },
-          "mutable": false,
-          "attr": "format",
-          "reflectToAttr": false,
-          "docs": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
-          "docsTags": [
-            {
-              "name": "attributeType",
-              "text": "string"
-            }
-          ],
-          "values": [
-            {
-              "type": "NumberFormatOptions"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": true,
-          "setter": true
-        },
-        {
-          "name": "helpText",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "help-text",
-          "reflectToAttr": false,
-          "docs": "Context or instructions displayed beneath the field when it has no visible error.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "increaseLabel",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "increase-label",
-          "reflectToAttr": false,
-          "docs": "Stepper's accessible name. The field label replaces {label}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Increase {label}'"
-            }
-          ],
-          "default": "'Increase {label}'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "invalidNumberMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "invalid-number-message",
-          "reflectToAttr": false,
-          "docs": "Default validation message for text that cannot be read as a number.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Enter a number.'"
-            }
-          ],
-          "default": "'Enter a number.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "Visible accessible name. Supply a meaningful label in the page language.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "max",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "max",
-          "reflectToAttr": false,
-          "docs": "Maximum permitted numeric value. Omit for an unbounded maximum.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "maximumMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "maximum-message",
-          "reflectToAttr": false,
-          "docs": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Value adjusted to the maximum of {value}.'"
-            }
-          ],
-          "default": "'Value adjusted to the maximum of {value}.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "min",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "min",
-          "reflectToAttr": false,
-          "docs": "Minimum permitted numeric value. Omit for an unbounded minimum.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "minimumMessage",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "minimum-message",
-          "reflectToAttr": false,
-          "docs": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Value adjusted to the minimum of {value}.'"
-            }
-          ],
-          "default": "'Value adjusted to the minimum of {value}.'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "name",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": true,
-          "docs": "Form-data key for the plain numeric value.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "required",
-          "reflectToAttr": true,
-          "docs": "Whether the user must enter a number before submitting the form.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "step",
-          "type": "number",
-          "complexType": {
-            "original": "number",
-            "resolved": "number",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "step",
-          "reflectToAttr": false,
-          "docs": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "1"
-            }
-          ],
-          "default": "1",
-          "values": [
-            {
-              "type": "number"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "steppers",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "steppers",
-          "reflectToAttr": false,
-          "docs": "Shows named decrease and increase buttons inside the field.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "false"
-            }
-          ],
-          "default": "false",
-          "values": [
-            {
-              "type": "boolean"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "unit",
-          "type": "string | undefined",
-          "complexType": {
-            "original": "string",
-            "resolved": "string | undefined",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "unit",
-          "reflectToAttr": false,
-          "docs": "Visible suffix such as seconds or seats, included in the accessible description.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": true,
-          "required": false,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "value",
-          "type": "number | undefined",
-          "complexType": {
-            "original": "number | undefined",
-            "resolved": "number | undefined",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "value",
-          "reflectToAttr": false,
-          "docs": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "undefined"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [
-        {
-          "event": "invalid",
-          "capture": false,
-          "passive": false
-        }
-      ],
-      "styles": [],
-      "slots": [],
-      "parts": [
-        {
-          "name": "decrease",
-          "docs": "Button that subtracts one step."
-        },
-        {
-          "name": "error",
-          "docs": "Polite validation feedback associated with the spinbutton."
-        },
-        {
-          "name": "field",
-          "docs": "Enclosure around the editor, unit and stepper buttons."
-        },
-        {
-          "name": "help",
-          "docs": "Help message associated with the spinbutton."
-        },
-        {
-          "name": "increase",
-          "docs": "Button that adds one step."
-        },
-        {
-          "name": "input",
-          "docs": "Native text editor carrying the spinbutton role."
-        },
-        {
-          "name": "label",
-          "docs": "Visible name of the spinbutton."
-        },
-        {
-          "name": "status",
-          "docs": "Polite feedback explaining a value adjustment."
-        },
-        {
-          "name": "unit",
-          "docs": "Visible unit referenced by the spinbutton's description."
-        }
-      ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [
-        "ki-icon"
-      ],
-      "dependencyGraph": {
-        "ki-number-input": [
-          "ki-icon"
-        ]
-      }
-    },
-    {
       "filePath": "src/components/ki-option/ki-option.tsx",
       "encapsulation": "shadow",
       "tag": "ki-option",
@@ -10301,6 +10397,615 @@
         {
           "name": "shape",
           "docs": "Each painted text line, circle or rectangle."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-slider/ki-slider.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-slider",
+      "docs": "Adjusts a value or an interval on a bounded scale.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "coarse adjustments such as volume, balance or a price filter,\nwith a descriptive label."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "when people need to enter exact numbers or choose among a\nfew named options. Use a number input or radio group for those tasks."
+        },
+        {
+          "name": "part",
+          "text": "field - Layout containing the visible label, value, controls and help."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible text used to name the control."
+        },
+        {
+          "name": "part",
+          "text": "value - Formatted value or interval shown beside the label."
+        },
+        {
+          "name": "part",
+          "text": "track - Inactive rail between the two ends of the scale."
+        },
+        {
+          "name": "part",
+          "text": "fill - Active portion of the rail."
+        },
+        {
+          "name": "part",
+          "text": "thumb - Focusable pointer target for one end of the selection."
+        },
+        {
+          "name": "part",
+          "text": "mark - Decorative scale mark at an interval boundary."
+        },
+        {
+          "name": "part",
+          "text": "center-tick - Midpoint mark on a centered scale."
+        },
+        {
+          "name": "part",
+          "text": "help - Supporting text associated with each thumb."
+        },
+        {
+          "name": "event",
+          "text": "change - Bubbles once when a pointer operation commits a different\nselection or a keyboard action changes it. Read the current host value.\nFor updates during a drag, listen for the standard bubbling `input` event.\nProgrammatic updates and form resets are silent."
+        }
+      ],
+      "usage": {
+        "examples": "# Slider examples\n\nImport the element and one theme stylesheet before mounting the examples.\n\n```js\nimport '@kimen/tokens/css';\nimport { defineCustomElement } from '@kimen/elements/ki-slider';\n\ndefineCustomElement();\n```\n\n```html\n<form>\n  <ki-slider label=\"Volume\" name=\"volume\" help-text=\"Playback level\"\n    min=\"0\" max=\"100\" step=\"1\" value=\"60\" marks=\"5\" format=\"percent\"></ki-slider>\n  <ki-slider label=\"Price per night\" name=\"price\" range\n    value=\"20,80\" format=\"currency\" currency=\"EUR\"></ki-slider>\n  <button type=\"reset\">Reset</button>\n</form>\n\n<ki-slider label=\"Exposure\" centered min=\"-50\" max=\"50\" value=\"-20\"></ki-slider>\n<ki-slider label=\"Bass\" orientation=\"vertical\" max=\"10\" value=\"4\"></ki-slider>\n```\n\nA named slider contributes one form entry. The form above starts with\n`volume=60` and `price=20,80`. Range values always run from lower to upper.\nThe closest `lang` controls the display format. Localize the thumb suffixes\nthrough `minimum-label` and `maximum-label`.\n\n```js\nconst volume = document.querySelector('ki-slider[name=\"volume\"]');\nvolume.addEventListener('input', () => previewVolume(volume.value));\nvolume.addEventListener('change', () => saveVolume(volume.value));\n```\n\nThe neutral catalog exposes the `change` action event. Bind it to a declared\naction to receive the current value on commit.\n"
+      },
+      "props": [
+        {
+          "name": "centered",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "centered",
+          "reflectToAttr": false,
+          "docs": "Shows a midpoint tick and fills from that point to a single thumb.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "currency",
+          "reflectToAttr": false,
+          "docs": "ISO 4217 code used with currency format.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'EUR'"
+            }
+          ],
+          "default": "'EUR'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Makes the slider unavailable for pointer, keyboard and form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "format",
+          "type": "\"currency\" | \"number\" | \"percent\"",
+          "complexType": {
+            "original": "KiSliderFormat",
+            "resolved": "\"currency\" | \"number\" | \"percent\"",
+            "references": {
+              "KiSliderFormat": {
+                "location": "local",
+                "path": "src/components/ki-slider/ki-slider.tsx",
+                "id": "src/components/ki-slider/ki-slider.tsx::KiSliderFormat"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "format",
+          "reflectToAttr": false,
+          "docs": "Display format for the readout and accessible values.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'number'"
+            }
+          ],
+          "default": "'number'",
+          "values": [
+            {
+              "value": "currency",
+              "type": "string"
+            },
+            {
+              "value": "number",
+              "type": "string"
+            },
+            {
+              "value": "percent",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": false,
+          "docs": "Optional supporting text, read as the description of each thumb.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible base name. Use a task-specific, localized label.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Slider'"
+            }
+          ],
+          "default": "'Slider'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "marks",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "marks",
+          "reflectToAttr": false,
+          "docs": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+          "docsTags": [
+            {
+              "name": "maximum",
+              "text": "100"
+            },
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "default",
+              "text": "0"
+            }
+          ],
+          "default": "0",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": false,
+          "docs": "Inclusive upper bound. A maximum below min collapses the scale.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "100"
+            }
+          ],
+          "default": "100",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maximumLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maximum-label",
+          "reflectToAttr": false,
+          "docs": "Localized suffix for the upper thumb's accessible name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'maximum'"
+            }
+          ],
+          "default": "'maximum'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min",
+          "reflectToAttr": false,
+          "docs": "Inclusive lower bound and step origin.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "0"
+            }
+          ],
+          "default": "0",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minimumLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minimum-label",
+          "reflectToAttr": false,
+          "docs": "Localized suffix for the lower thumb's accessible name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'minimum'"
+            }
+          ],
+          "default": "'minimum'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Native form key. Omit when the value should remain local to the control.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "complexType": {
+            "original": "KiSliderOrientation",
+            "resolved": "\"horizontal\" | \"vertical\"",
+            "references": {
+              "KiSliderOrientation": {
+                "location": "local",
+                "path": "src/components/ki-slider/ki-slider.tsx",
+                "id": "src/components/ki-slider/ki-slider.tsx::KiSliderOrientation"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "orientation",
+          "reflectToAttr": false,
+          "docs": "Axis of the scale. A vertical scale increases towards the top.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'horizontal'"
+            }
+          ],
+          "default": "'horizontal'",
+          "values": [
+            {
+              "value": "horizontal",
+              "type": "string"
+            },
+            {
+              "value": "vertical",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "range",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "range",
+          "reflectToAttr": false,
+          "docs": "Enables two non-crossing thumbs in minimum then maximum tab order.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "step",
+          "reflectToAttr": false,
+          "docs": "Positive increment. Values snap from min and max is always reachable.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number | string | undefined",
+          "complexType": {
+            "original": "number | string | undefined",
+            "resolved": "number | string | undefined",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "center-tick",
+          "docs": "Midpoint mark on a centered scale."
+        },
+        {
+          "name": "field",
+          "docs": "Layout containing the visible label, value, controls and help."
+        },
+        {
+          "name": "fill",
+          "docs": "Active portion of the rail."
+        },
+        {
+          "name": "help",
+          "docs": "Supporting text associated with each thumb."
+        },
+        {
+          "name": "label",
+          "docs": "Visible text used to name the control."
+        },
+        {
+          "name": "mark",
+          "docs": "Decorative scale mark at an interval boundary."
+        },
+        {
+          "name": "thumb",
+          "docs": "Focusable pointer target for one end of the selection."
+        },
+        {
+          "name": "track",
+          "docs": "Inactive rail between the two ends of the scale."
+        },
+        {
+          "name": "value",
+          "docs": "Formatted value or interval shown beside the label."
         }
       ],
       "states": [],
@@ -13416,6 +14121,11 @@
       "docstring": "",
       "path": "src/components/ki-chip-group/ki-chip-group.tsx"
     },
+    "src/components/ki-copy-button/ki-copy-button.tsx::KiCopyButtonVariant": {
+      "declaration": "export type KiCopyButtonVariant = Exclude<KiButtonVariant, 'tertiary'>;",
+      "docstring": "",
+      "path": "src/components/ki-copy-button/ki-copy-button.tsx"
+    },
     "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
       "docstring": "",
@@ -13430,6 +14140,21 @@
       "declaration": "export type KiDividerOrientation = 'horizontal' | 'vertical';",
       "docstring": "",
       "path": "src/components/ki-divider/ki-divider.tsx"
+    },
+    "src/components/ki-fab/ki-fab.tsx::KiFabSize": {
+      "declaration": "export type KiFabSize = 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-fab/ki-fab.tsx"
+    },
+    "src/components/ki-fab/ki-fab.tsx::KiFabVariant": {
+      "declaration": "export type KiFabVariant = 'primary' | 'secondary' | 'surface';",
+      "docstring": "",
+      "path": "src/components/ki-fab/ki-fab.tsx"
+    },
+    "src/components/ki-fab/ki-fab.tsx::KiFabPosition": {
+      "declaration": "export type KiFabPosition = 'static' | 'fixed';",
+      "docstring": "",
+      "path": "src/components/ki-fab/ki-fab.tsx"
     },
     "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
       "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",
@@ -13550,6 +14275,16 @@
       "declaration": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-select/ki-select.tsx"
+    },
+    "src/components/ki-slider/ki-slider.tsx::KiSliderFormat": {
+      "declaration": "export type KiSliderFormat = 'number' | 'percent' | 'currency';",
+      "docstring": "",
+      "path": "src/components/ki-slider/ki-slider.tsx"
+    },
+    "src/components/ki-slider/ki-slider.tsx::KiSliderOrientation": {
+      "declaration": "export type KiSliderOrientation = 'horizontal' | 'vertical';",
+      "docstring": "",
+      "path": "src/components/ki-slider/ki-slider.tsx"
     },
     "src/components/ki-stack/ki-stack.tsx::KiStackDirection": {
       "declaration": "export type KiStackDirection = 'column' | 'row';",

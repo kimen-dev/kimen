@@ -4314,6 +4314,1023 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-copy-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCopyButton",
+          "customElement": true,
+          "tagName": "ki-copy-button",
+          "description": "Copies text to the clipboard and confirms the result in the same button.",
+          "whenToUse": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root.",
+          "whenNotToUse": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions.",
+          "attributes": [
+            {
+              "name": "copied-label",
+              "fieldName": "copiedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Polite announcement after a successful write. Override for localized interfaces."
+            },
+            {
+              "name": "copy-error-label",
+              "fieldName": "copyErrorLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Polite announcement after a failed write or missing source. Override for localized interfaces."
+            },
+            {
+              "name": "feedback-duration",
+              "fieldName": "feedbackDuration",
+              "type": {
+                "text": "number"
+              },
+              "default": "1500",
+              "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+              "minimum": 0
+            },
+            {
+              "name": "from",
+              "fieldName": "from",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copy'",
+              "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Token-backed button size. Match the size of adjacent controls."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\""
+              },
+              "default": "'ghost'",
+              "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "copiedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Polite announcement after a successful write. Override for localized interfaces.",
+              "attribute": "copied-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "copyErrorLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
+              "attribute": "copy-error-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "feedbackDuration",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1500",
+              "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+              "attribute": "feedback-duration",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "from",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation.",
+              "attribute": "from",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copy'",
+              "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Token-backed button size. Match the size of adjacent controls.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly.",
+              "attribute": "value",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\""
+              },
+              "default": "'ghost'",
+              "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-copy",
+              "type": {
+                "text": "CustomEvent<{ value: string }>"
+              },
+              "description": "Fired after a successful clipboard write. The detail carries the exact text copied."
+            },
+            {
+              "name": "ki-copy-error",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Fired when the source cannot be read or clipboard writing is unavailable or fails."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "button",
+              "description": "Native copy control with keyboard and pointer activation."
+            },
+            {
+              "name": "icon",
+              "description": "Fixed-size decorative feedback glyph box inside the button."
+            },
+            {
+              "name": "label",
+              "description": "Wrapper around the visible slotted label."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-button-backdrop-filter",
+              "description": "Complete backdrop filter for glass button and icon-button variants."
+            },
+            {
+              "name": "--ki-button-border-width",
+              "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
+            },
+            {
+              "name": "--ki-button-focus-ring-color",
+              "description": "color used by the button component for focus ring color."
+            },
+            {
+              "name": "--ki-button-focus-ring-offset",
+              "description": "dimension used by the button component for focus ring offset."
+            },
+            {
+              "name": "--ki-button-focus-ring-shadow",
+              "description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring)."
+            },
+            {
+              "name": "--ki-button-focus-ring-width",
+              "description": "dimension used by the button component for focus ring width."
+            },
+            {
+              "name": "--ki-button-font-family",
+              "description": "font family used by the button component for font family."
+            },
+            {
+              "name": "--ki-button-font-weight",
+              "description": "font weight used by the button component for font weight."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-bg",
+              "description": "color used by the button component for ghost danger hover background."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-border",
+              "description": "color used by the button component for ghost danger hover border."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-fg",
+              "description": "color used by the button component for ghost danger hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-bg",
+              "description": "color used by the button component for ghost danger rest background."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-border",
+              "description": "color used by the button component for ghost danger rest border."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-fg",
+              "description": "color used by the button component for ghost danger rest foreground."
+            },
+            {
+              "name": "--ki-button-ghost-disabled-shadow",
+              "description": "value used by the button component for ghost disabled shadow."
+            },
+            {
+              "name": "--ki-button-ghost-hover-shadow",
+              "description": "value used by the button component for ghost hover shadow."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-bg",
+              "description": "color used by the button component for ghost neutral disabled background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-border",
+              "description": "color used by the button component for ghost neutral disabled border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-fg",
+              "description": "color used by the button component for ghost neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-bg",
+              "description": "color used by the button component for ghost neutral hover background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-border",
+              "description": "color used by the button component for ghost neutral hover border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-fg",
+              "description": "color used by the button component for ghost neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-bg",
+              "description": "color used by the button component for ghost neutral rest background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-border",
+              "description": "color used by the button component for ghost neutral rest border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-fg",
+              "description": "color used by the button component for ghost neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-ghost-rest-shadow",
+              "description": "value used by the button component for ghost rest shadow."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-bg",
+              "description": "color used by the button component for ghost success hover background."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-border",
+              "description": "color used by the button component for ghost success hover border."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-fg",
+              "description": "color used by the button component for ghost success hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-bg",
+              "description": "color used by the button component for ghost success rest background."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-border",
+              "description": "color used by the button component for ghost success rest border."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-fg",
+              "description": "color used by the button component for ghost success rest foreground."
+            },
+            {
+              "name": "--ki-button-label-padding-inline",
+              "description": "dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance)."
+            },
+            {
+              "name": "--ki-button-lg-font-size",
+              "description": "dimension used by the button component for lg font size."
+            },
+            {
+              "name": "--ki-button-lg-gap",
+              "description": "dimension used by the button component for lg gap."
+            },
+            {
+              "name": "--ki-button-lg-height",
+              "description": "dimension used by the button component for lg height."
+            },
+            {
+              "name": "--ki-button-lg-icon-size",
+              "description": "dimension used by the button component for lg icon size."
+            },
+            {
+              "name": "--ki-button-lg-line-height",
+              "description": "dimension used by the button component for lg line height."
+            },
+            {
+              "name": "--ki-button-lg-min-target",
+              "description": "dimension used by the button component for lg min target."
+            },
+            {
+              "name": "--ki-button-lg-padding-inline",
+              "description": "dimension used by the button component for lg padding inline."
+            },
+            {
+              "name": "--ki-button-lg-radius",
+              "description": "dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-lg-spinner-size",
+              "description": "dimension used by the button component for the lg loading spinner box (20px, the lg icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-md-font-size",
+              "description": "dimension used by the button component for md font size."
+            },
+            {
+              "name": "--ki-button-md-gap",
+              "description": "dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px)."
+            },
+            {
+              "name": "--ki-button-md-height",
+              "description": "dimension used by the button component for md height."
+            },
+            {
+              "name": "--ki-button-md-icon-size",
+              "description": "dimension used by the button component for md icon size."
+            },
+            {
+              "name": "--ki-button-md-line-height",
+              "description": "dimension used by the button component for md line height."
+            },
+            {
+              "name": "--ki-button-md-min-target",
+              "description": "dimension used by the button component for md min target."
+            },
+            {
+              "name": "--ki-button-md-padding-inline",
+              "description": "dimension used by the button component for md padding inline."
+            },
+            {
+              "name": "--ki-button-md-radius",
+              "description": "dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-md-spinner-size",
+              "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-padding-block",
+              "description": "dimension used by the button component for padding block (MarsUI: 4px in every size)."
+            },
+            {
+              "name": "--ki-button-primary-active-overlay",
+              "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-bg",
+              "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-border",
+              "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-fg",
+              "description": "color used by the button component for primary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-bg",
+              "description": "color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-border",
+              "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-fg",
+              "description": "color used by the button component for primary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-disabled-shadow",
+              "description": "value used by the button component for primary disabled shadow."
+            },
+            {
+              "name": "--ki-button-primary-hover-overlay",
+              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
+            },
+            {
+              "name": "--ki-button-primary-hover-shadow",
+              "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-bg",
+              "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-border",
+              "description": "color used by the button component for primary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-fg",
+              "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-bg",
+              "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-border",
+              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-fg",
+              "description": "color used by the button component for primary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-bg",
+              "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-border",
+              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-fg",
+              "description": "color used by the button component for primary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-rest-border-bottom",
+              "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
+            },
+            {
+              "name": "--ki-button-primary-rest-shadow",
+              "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-bg",
+              "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-border",
+              "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-fg",
+              "description": "color used by the button component for primary success hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-bg",
+              "description": "color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-border",
+              "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-fg",
+              "description": "color used by the button component for primary success rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-bg",
+              "description": "color used by the button component for quaternary danger hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-border",
+              "description": "color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-fg",
+              "description": "color used by the button component for quaternary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-bg",
+              "description": "color used by the button component for quaternary danger rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-border",
+              "description": "color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-fg",
+              "description": "color used by the button component for quaternary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-disabled-shadow",
+              "description": "value used by the button component for quaternary disabled shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-hover-shadow",
+              "description": "value used by the button component for quaternary hover shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-bg",
+              "description": "color used by the button component for quaternary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-border",
+              "description": "color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-fg",
+              "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-bg",
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-border",
+              "description": "color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-fg",
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-bg",
+              "description": "color used by the button component for quaternary neutral rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-border",
+              "description": "color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-fg",
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+            },
+            {
+              "name": "--ki-button-quaternary-rest-shadow",
+              "description": "value used by the button component for quaternary rest shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-bg",
+              "description": "color used by the button component for quaternary success hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-border",
+              "description": "color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-fg",
+              "description": "color used by the button component for quaternary success hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-bg",
+              "description": "color used by the button component for quaternary success rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-border",
+              "description": "color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-fg",
+              "description": "color used by the button component for quaternary success rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-active-overlay",
+              "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-bg",
+              "description": "color used by the button component for secondary danger hover background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-border",
+              "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-fg",
+              "description": "color used by the button component for secondary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-bg",
+              "description": "color used by the button component for secondary danger rest background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-border",
+              "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-fg",
+              "description": "color used by the button component for secondary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-disabled-shadow",
+              "description": "value used by the button component for secondary disabled shadow."
+            },
+            {
+              "name": "--ki-button-secondary-hover-overlay",
+              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
+            },
+            {
+              "name": "--ki-button-secondary-hover-shadow",
+              "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-bg",
+              "description": "color used by the button component for secondary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-border",
+              "description": "color used by the button component for secondary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-fg",
+              "description": "color used by the button component for secondary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-bg",
+              "description": "color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-border",
+              "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-fg",
+              "description": "color used by the button component for secondary neutral hover foreground (MarsUI text/high_em)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-bg",
+              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-border",
+              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-fg",
+              "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em)."
+            },
+            {
+              "name": "--ki-button-secondary-rest-border-bottom",
+              "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
+            },
+            {
+              "name": "--ki-button-secondary-rest-shadow",
+              "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-bg",
+              "description": "color used by the button component for secondary success hover background."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-border",
+              "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-fg",
+              "description": "color used by the button component for secondary success hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-bg",
+              "description": "color used by the button component for secondary success rest background."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-border",
+              "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-fg",
+              "description": "color used by the button component for secondary success rest foreground."
+            },
+            {
+              "name": "--ki-button-sm-font-size",
+              "description": "dimension used by the button component for sm font size."
+            },
+            {
+              "name": "--ki-button-sm-gap",
+              "description": "dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text)."
+            },
+            {
+              "name": "--ki-button-sm-height",
+              "description": "dimension used by the button component for sm height."
+            },
+            {
+              "name": "--ki-button-sm-icon-size",
+              "description": "dimension used by the button component for sm icon size."
+            },
+            {
+              "name": "--ki-button-sm-line-height",
+              "description": "dimension used by the button component for sm line height."
+            },
+            {
+              "name": "--ki-button-sm-min-target",
+              "description": "dimension used by the button component for sm min target."
+            },
+            {
+              "name": "--ki-button-sm-padding-inline",
+              "description": "dimension used by the button component for sm padding inline."
+            },
+            {
+              "name": "--ki-button-sm-radius",
+              "description": "dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-sm-spinner-size",
+              "description": "dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-spinner-duration",
+              "description": "duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference."
+            },
+            {
+              "name": "--ki-button-spinner-stroke-width",
+              "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-bg",
+              "description": "Tertiary alias of the secondary danger hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-border",
+              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-fg",
+              "description": "color used by the button component for tertiary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-bg",
+              "description": "Tertiary alias of the secondary danger rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-border",
+              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-fg",
+              "description": "color used by the button component for tertiary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-disabled-shadow",
+              "description": "value used by the button component for tertiary disabled shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-hover-overlay",
+              "description": "Hover overlay for neutral tertiary buttons, shared with secondary by default."
+            },
+            {
+              "name": "--ki-button-tertiary-hover-shadow",
+              "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-bg",
+              "description": "color used by the button component for tertiary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-border",
+              "description": "color used by the button component for tertiary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-fg",
+              "description": "color used by the button component for tertiary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-bg",
+              "description": "Tertiary alias of the secondary neutral hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-border",
+              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-fg",
+              "description": "Tertiary alias of the secondary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-bg",
+              "description": "Tertiary alias of the secondary neutral rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-border",
+              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-fg",
+              "description": "Tertiary alias of the secondary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-rest-border-bottom",
+              "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
+            },
+            {
+              "name": "--ki-button-tertiary-rest-shadow",
+              "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-bg",
+              "description": "Tertiary alias of the secondary success hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-border",
+              "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-fg",
+              "description": "color used by the button component for tertiary success hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-bg",
+              "description": "Tertiary alias of the secondary success rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-border",
+              "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-fg",
+              "description": "color used by the button component for tertiary success rest foreground."
+            },
+            {
+              "name": "--ki-button-xl-font-size",
+              "description": "dimension used by the button component for xl font size."
+            },
+            {
+              "name": "--ki-button-xl-gap",
+              "description": "dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px)."
+            },
+            {
+              "name": "--ki-button-xl-height",
+              "description": "dimension used by the button component for xl height."
+            },
+            {
+              "name": "--ki-button-xl-icon-size",
+              "description": "dimension used by the button component for xl icon size."
+            },
+            {
+              "name": "--ki-button-xl-line-height",
+              "description": "dimension used by the button component for xl line height."
+            },
+            {
+              "name": "--ki-button-xl-min-target",
+              "description": "dimension used by the button component for xl min target."
+            },
+            {
+              "name": "--ki-button-xl-padding-inline",
+              "description": "dimension used by the button component for xl padding inline (MarsUI 14px)."
+            },
+            {
+              "name": "--ki-button-xl-radius",
+              "description": "dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-xl-spinner-size",
+              "description": "dimension used by the button component for the xl loading spinner box (24px, the xl icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-button-xs-font-size",
+              "description": "dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px."
+            },
+            {
+              "name": "--ki-button-xs-gap",
+              "description": "dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px)."
+            },
+            {
+              "name": "--ki-button-xs-height",
+              "description": "dimension used by the button component for xs height."
+            },
+            {
+              "name": "--ki-button-xs-icon-size",
+              "description": "dimension used by the button component for xs icon size (MarsUI 14px)."
+            },
+            {
+              "name": "--ki-button-xs-line-height",
+              "description": "dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1)."
+            },
+            {
+              "name": "--ki-button-xs-min-target",
+              "description": "dimension used by the button component for xs min target."
+            },
+            {
+              "name": "--ki-button-xs-padding-inline",
+              "description": "dimension used by the button component for xs padding inline."
+            },
+            {
+              "name": "--ki-button-xs-radius",
+              "description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
+            },
+            {
+              "name": "--ki-button-xs-spinner-size",
+              "description": "dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
+            },
+            {
+              "name": "--ki-copy-button-error-bg",
+              "description": "Contrast ground for the error glyph on filled primary copy buttons."
+            },
+            {
+              "name": "--ki-copy-button-error-fg",
+              "description": "Copy failure glyph ink."
+            },
+            {
+              "name": "--ki-copy-button-success-bg",
+              "description": "Contrast ground for the success glyph on filled primary copy buttons."
+            },
+            {
+              "name": "--ki-copy-button-success-fg",
+              "description": "Confirmation check ink."
+            },
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCopyButton",
+          "declaration": {
+            "name": "KiCopyButton",
+            "module": "dist/components/ki-copy-button.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-copy-button",
+          "declaration": {
+            "name": "KiCopyButton",
+            "module": "dist/components/ki-copy-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-counter.js",
       "declarations": [
         {
@@ -5313,6 +6330,380 @@
           "declaration": {
             "name": "KiEmptyState",
             "module": "dist/components/ki-empty-state.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-fab.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFab",
+          "customElement": true,
+          "tagName": "ki-fab",
+          "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
+          "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation.",
+          "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
+          "attributes": [
+            {
+              "name": "collapse-on-scroll",
+              "fieldName": "collapseOnScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Compact an extended FAB on viewport scroll down and restore on scroll up."
+            },
+            {
+              "name": "extended",
+              "fieldName": "extended",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the action label next to its icon."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+              "format": "url"
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the action. Also the visible text in the extended state.",
+              "required": true
+            },
+            {
+              "name": "position",
+              "fieldName": "position",
+              "type": {
+                "text": "\"fixed\" | \"static\""
+              },
+              "default": "'static'",
+              "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"xl\""
+              },
+              "default": "'md'",
+              "description": "Square footprint when icon-only, and minimum size when extended."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"primary\" | \"secondary\" | \"surface\""
+              },
+              "default": "'secondary'",
+              "description": "Surface and ink: strong primary, tinted secondary or raised surface."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "collapseOnScroll",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+              "attribute": "collapse-on-scroll",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "extended",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show the action label next to its icon.",
+              "attribute": "extended",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+              "attribute": "href",
+              "reflects": false,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the action. Also the visible text in the extended state.",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "privacy": "public",
+              "type": {
+                "text": "\"fixed\" | \"static\""
+              },
+              "default": "'static'",
+              "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+              "attribute": "position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"xl\""
+              },
+              "default": "'md'",
+              "description": "Square footprint when icon-only, and minimum size when extended.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"primary\" | \"secondary\" | \"surface\""
+              },
+              "default": "'secondary'",
+              "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "click",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Native activation click. The page or guarded renderer handles the declared action."
+            }
+          ],
+          "slots": [
+            {
+              "name": "icon",
+              "description": "Decorative, noninteractive icon replacing the named glyph."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "control",
+              "description": "The native button or link, including its surface and focus ring."
+            },
+            {
+              "name": "icon",
+              "description": "Wrapper for the decorative named or slotted glyph."
+            },
+            {
+              "name": "label",
+              "description": "Visible label of an extended FAB."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-fab-backdrop-filter",
+              "description": "Complete optional filter behind the FAB."
+            },
+            {
+              "name": "--ki-fab-bg",
+              "description": "Tinted secondary FAB fill."
+            },
+            {
+              "name": "--ki-fab-bg-image",
+              "description": "Optional layer painted over the FAB fill."
+            },
+            {
+              "name": "--ki-fab-collapse-duration",
+              "description": "Duration of the extended FAB footprint change."
+            },
+            {
+              "name": "--ki-fab-collapse-easing",
+              "description": "Easing of the extended FAB footprint change."
+            },
+            {
+              "name": "--ki-fab-fg",
+              "description": "Ink on the tinted secondary FAB."
+            },
+            {
+              "name": "--ki-fab-font-family",
+              "description": "Typeface for FAB labels."
+            },
+            {
+              "name": "--ki-fab-font-size",
+              "description": "Text size for extended FAB labels."
+            },
+            {
+              "name": "--ki-fab-font-weight",
+              "description": "Text weight for extended FAB labels."
+            },
+            {
+              "name": "--ki-fab-forced-colors-border-width",
+              "description": "Boundary width for the FAB in forced colors."
+            },
+            {
+              "name": "--ki-fab-gap",
+              "description": "Space between icon and label in an extended FAB."
+            },
+            {
+              "name": "--ki-fab-hover-shadow",
+              "description": "FAB elevation for a pointer that can hover."
+            },
+            {
+              "name": "--ki-fab-icon-size",
+              "description": "Glyph size of the default FAB."
+            },
+            {
+              "name": "--ki-fab-lg-icon-size",
+              "description": "Glyph size of the medium FAB."
+            },
+            {
+              "name": "--ki-fab-lg-radius",
+              "description": "Corner radius of the medium FAB."
+            },
+            {
+              "name": "--ki-fab-lg-size",
+              "description": "Minimum footprint of the medium FAB."
+            },
+            {
+              "name": "--ki-fab-line-height",
+              "description": "Line height for extended FAB labels."
+            },
+            {
+              "name": "--ki-fab-mobile-nav-block-size",
+              "description": "Height to reserve for mobile navigation, excluding the safe-area inset."
+            },
+            {
+              "name": "--ki-fab-offset",
+              "description": "Fixed FAB gap to the viewport edge or mobile navigation."
+            },
+            {
+              "name": "--ki-fab-padding-inline-end",
+              "description": "Inline end padding of an extended FAB."
+            },
+            {
+              "name": "--ki-fab-padding-inline-start",
+              "description": "Inline start padding of an extended FAB."
+            },
+            {
+              "name": "--ki-fab-primary-bg",
+              "description": "Strong primary FAB fill."
+            },
+            {
+              "name": "--ki-fab-primary-fg",
+              "description": "Ink on the strong primary FAB."
+            },
+            {
+              "name": "--ki-fab-radius",
+              "description": "Corner radius of the default FAB size."
+            },
+            {
+              "name": "--ki-fab-shadow",
+              "description": "Resting FAB elevation."
+            },
+            {
+              "name": "--ki-fab-size",
+              "description": "Minimum FAB footprint in the default size."
+            },
+            {
+              "name": "--ki-fab-surface-bg",
+              "description": "Raised surface FAB fill."
+            },
+            {
+              "name": "--ki-fab-surface-fg",
+              "description": "Ink on the raised surface FAB."
+            },
+            {
+              "name": "--ki-fab-xl-icon-size",
+              "description": "Glyph size of the large FAB."
+            },
+            {
+              "name": "--ki-fab-xl-radius",
+              "description": "Corner radius of the large FAB."
+            },
+            {
+              "name": "--ki-fab-xl-size",
+              "description": "Minimum footprint of the large FAB."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFab",
+          "declaration": {
+            "name": "KiFab",
+            "module": "dist/components/ki-fab.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-fab",
+          "declaration": {
+            "name": "KiFab",
+            "module": "dist/components/ki-fab.js"
           }
         }
       ]
@@ -9687,631 +11078,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "dist/components/ki-number-input.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "KiNumberInput",
-          "customElement": true,
-          "tagName": "ki-number-input",
-          "description": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-          "whenToUse": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning.",
-          "whenNotToUse": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue.",
-          "attributes": [
-            {
-              "name": "decrease-label",
-              "fieldName": "decreaseLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Decrease {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}."
-            },
-            {
-              "name": "disabled",
-              "fieldName": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Prevents editing and excludes the control from form submission."
-            },
-            {
-              "name": "error-text",
-              "fieldName": "errorText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Validation hint to show when the entry fails a constraint."
-            },
-            {
-              "name": "format",
-              "fieldName": "format",
-              "type": {
-                "text": "string"
-              },
-              "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision."
-            },
-            {
-              "name": "help-text",
-              "fieldName": "helpText",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Context or instructions displayed beneath the field when it has no visible error."
-            },
-            {
-              "name": "increase-label",
-              "fieldName": "increaseLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Increase {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}."
-            },
-            {
-              "name": "invalid-number-message",
-              "fieldName": "invalidNumberMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Enter a number.'",
-              "description": "Default validation message for text that cannot be read as a number."
-            },
-            {
-              "name": "label",
-              "fieldName": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Visible accessible name. Supply a meaningful label in the page language.",
-              "required": true
-            },
-            {
-              "name": "max",
-              "fieldName": "max",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum permitted numeric value. Omit for an unbounded maximum."
-            },
-            {
-              "name": "maximum-message",
-              "fieldName": "maximumMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the maximum of {value}.'",
-              "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}."
-            },
-            {
-              "name": "min",
-              "fieldName": "min",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Minimum permitted numeric value. Omit for an unbounded minimum."
-            },
-            {
-              "name": "minimum-message",
-              "fieldName": "minimumMessage",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the minimum of {value}.'",
-              "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}."
-            },
-            {
-              "name": "name",
-              "fieldName": "name",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form-data key for the plain numeric value."
-            },
-            {
-              "name": "required",
-              "fieldName": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the user must enter a number before submitting the form."
-            },
-            {
-              "name": "step",
-              "fieldName": "step",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments."
-            },
-            {
-              "name": "steppers",
-              "fieldName": "steppers",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows named decrease and increase buttons inside the field."
-            },
-            {
-              "name": "unit",
-              "fieldName": "unit",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Visible suffix such as seconds or seats, included in the accessible description."
-            },
-            {
-              "name": "value",
-              "fieldName": "value",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent."
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "decreaseLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Decrease {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}.",
-              "attribute": "decrease-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Prevents editing and excludes the control from form submission.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "errorText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Validation hint to show when the entry fails a constraint.",
-              "attribute": "error-text",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "format",
-              "privacy": "public",
-              "type": {
-                "text": "NumberFormatOptions | undefined"
-              },
-              "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision.",
-              "attribute": "format",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Context or instructions displayed beneath the field when it has no visible error.",
-              "attribute": "help-text",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "increaseLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Increase {label}'",
-              "description": "Stepper's accessible name. The field label replaces {label}.",
-              "attribute": "increase-label",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "invalidNumberMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Enter a number.'",
-              "description": "Default validation message for text that cannot be read as a number.",
-              "attribute": "invalid-number-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "description": "Visible accessible name. Supply a meaningful label in the page language.",
-              "attribute": "label",
-              "reflects": false,
-              "required": true
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Maximum permitted numeric value. Omit for an unbounded maximum.",
-              "attribute": "max",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "maximumMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the maximum of {value}.'",
-              "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-              "attribute": "maximum-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "min",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Minimum permitted numeric value. Omit for an unbounded minimum.",
-              "attribute": "min",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "minimumMessage",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Value adjusted to the minimum of {value}.'",
-              "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-              "attribute": "minimum-message",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Form-data key for the plain numeric value.",
-              "attribute": "name",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether the user must enter a number before submitting the form.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "step",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-              "attribute": "step",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "steppers",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows named decrease and increase buttons inside the field.",
-              "attribute": "steppers",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "unit",
-              "privacy": "public",
-              "type": {
-                "text": "string | undefined"
-              },
-              "description": "Visible suffix such as seconds or seats, included in the accessible description.",
-              "attribute": "unit",
-              "reflects": false
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "privacy": "public",
-              "type": {
-                "text": "number | undefined"
-              },
-              "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent.",
-              "attribute": "value",
-              "reflects": false
-            }
-          ],
-          "events": [
-            {
-              "name": "change",
-              "type": {
-                "text": "Event"
-              },
-              "description": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-            }
-          ],
-          "slots": [],
-          "cssParts": [
-            {
-              "name": "decrease",
-              "description": "Button that subtracts one step."
-            },
-            {
-              "name": "error",
-              "description": "Polite validation feedback associated with the spinbutton."
-            },
-            {
-              "name": "field",
-              "description": "Enclosure around the editor, unit and stepper buttons."
-            },
-            {
-              "name": "help",
-              "description": "Help message associated with the spinbutton."
-            },
-            {
-              "name": "increase",
-              "description": "Button that adds one step."
-            },
-            {
-              "name": "input",
-              "description": "Native text editor carrying the spinbutton role."
-            },
-            {
-              "name": "label",
-              "description": "Visible name of the spinbutton."
-            },
-            {
-              "name": "status",
-              "description": "Polite feedback explaining a value adjustment."
-            },
-            {
-              "name": "unit",
-              "description": "Visible unit referenced by the spinbutton's description."
-            }
-          ],
-          "cssProperties": [
-            {
-              "name": "--ki-density-control-offset",
-              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
-            },
-            {
-              "name": "--ki-density-target-min",
-              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
-            },
-            {
-              "name": "--ki-focus-ring-color",
-              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
-            },
-            {
-              "name": "--ki-focus-ring-offset",
-              "description": "Gap between a focusable component and its keyboard focus ring."
-            },
-            {
-              "name": "--ki-focus-ring-width",
-              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
-            },
-            {
-              "name": "--ki-number-input-border-block-end-width",
-              "description": "Field border width at block end."
-            },
-            {
-              "name": "--ki-number-input-border-block-start-width",
-              "description": "Field border width at block start."
-            },
-            {
-              "name": "--ki-number-input-border-inline-width",
-              "description": "Field border width at either inline edge."
-            },
-            {
-              "name": "--ki-number-input-field-backdrop-filter",
-              "description": "Complete backdrop filter behind the field."
-            },
-            {
-              "name": "--ki-number-input-field-bg",
-              "description": "Resting NumberInput field fill."
-            },
-            {
-              "name": "--ki-number-input-field-bg-image",
-              "description": "Optional theme image layered over the field fill."
-            },
-            {
-              "name": "--ki-number-input-field-border",
-              "description": "Resting NumberInput field boundary."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-bg",
-              "description": "Field fill when disabled."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-border",
-              "description": "Boundary when the entire field is disabled."
-            },
-            {
-              "name": "--ki-number-input-field-disabled-fg",
-              "description": "Numeric entry ink when disabled."
-            },
-            {
-              "name": "--ki-number-input-field-fg",
-              "description": "Foreground of the numeric entry."
-            },
-            {
-              "name": "--ki-number-input-field-focus-bg",
-              "description": "Field fill while focused."
-            },
-            {
-              "name": "--ki-number-input-field-focus-fg",
-              "description": "Numeric entry ink while focused."
-            },
-            {
-              "name": "--ki-number-input-field-invalid-border",
-              "description": "Field boundary when a validation message is visible."
-            },
-            {
-              "name": "--ki-number-input-font-size",
-              "description": "Font size of the numeric entry and its suffix."
-            },
-            {
-              "name": "--ki-number-input-font-size-touch",
-              "description": "Minimum input font size under a coarse pointer."
-            },
-            {
-              "name": "--ki-number-input-height",
-              "description": "Medium field height before applying regional density."
-            },
-            {
-              "name": "--ki-number-input-label-font-size",
-              "description": "Field label font size."
-            },
-            {
-              "name": "--ki-number-input-label-font-weight",
-              "description": "Field label font weight."
-            },
-            {
-              "name": "--ki-number-input-label-gap",
-              "description": "Gap between the label, field and supporting messages."
-            },
-            {
-              "name": "--ki-number-input-label-line-height",
-              "description": "Line height of the field label."
-            },
-            {
-              "name": "--ki-number-input-line-height",
-              "description": "Line height of the numeric entry and its suffix."
-            },
-            {
-              "name": "--ki-number-input-padding-inline",
-              "description": "Inline padding for the plain field and unit suffix."
-            },
-            {
-              "name": "--ki-number-input-radius",
-              "description": "Field corners."
-            },
-            {
-              "name": "--ki-number-input-stepper-bg",
-              "description": "Resting stepper button fill."
-            },
-            {
-              "name": "--ki-number-input-stepper-disabled-fg",
-              "description": "Stepper icon ink when disabled."
-            },
-            {
-              "name": "--ki-number-input-stepper-fg",
-              "description": "Resting stepper icon ink."
-            },
-            {
-              "name": "--ki-number-input-stepper-hover-bg",
-              "description": "Stepper fill when hovered."
-            },
-            {
-              "name": "--ki-number-input-stepper-hover-fg",
-              "description": "Stepper icon ink when hovered."
-            },
-            {
-              "name": "--ki-number-input-stepper-padding-inline",
-              "description": "Editor inline padding between the steppers."
-            },
-            {
-              "name": "--ki-number-input-unit-bg",
-              "description": "Backing of the unit suffix within the field."
-            },
-            {
-              "name": "--ki-number-input-unit-fg",
-              "description": "Unit suffix ink. Medium emphasis in the standard contrast setting."
-            },
-            {
-              "name": "--ki-text-danger-high-em",
-              "description": "semantic color for text danger high em."
-            },
-            {
-              "name": "--ki-text-high-em",
-              "description": "semantic color for text high em."
-            },
-            {
-              "name": "--ki-text-supporting",
-              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
-            },
-            {
-              "name": "--ki-typography-family-body",
-              "description": "semantic font family for typography family body."
-            },
-            {
-              "name": "--ki-typography-line-height-caption-2",
-              "description": "semantic dimension for typography line height caption 2."
-            },
-            {
-              "name": "--ki-typography-size-caption-2",
-              "description": "semantic dimension for typography size caption 2."
-            },
-            {
-              "name": "--ki-typography-weight-body-normal",
-              "description": "semantic font weight for typography weight body normal."
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "KiNumberInput",
-          "declaration": {
-            "name": "KiNumberInput",
-            "module": "dist/components/ki-number-input.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ki-number-input",
-          "declaration": {
-            "name": "KiNumberInput",
-            "module": "dist/components/ki-number-input.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/components/ki-option.js",
       "declarations": [
         {
@@ -13060,6 +13826,559 @@
           "declaration": {
             "name": "KiSkeleton",
             "module": "dist/components/ki-skeleton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-slider.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSlider",
+          "customElement": true,
+          "tagName": "ki-slider",
+          "description": "Adjusts a value or an interval on a bounded scale.",
+          "whenToUse": "coarse adjustments such as volume, balance or a price filter,\nwith a descriptive label.",
+          "whenNotToUse": "when people need to enter exact numbers or choose among a\nfew named options. Use a number input or radio group for those tasks.",
+          "attributes": [
+            {
+              "name": "centered",
+              "fieldName": "centered",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a midpoint tick and fills from that point to a single thumb."
+            },
+            {
+              "name": "currency",
+              "fieldName": "currency",
+              "type": {
+                "text": "string"
+              },
+              "default": "'EUR'",
+              "description": "ISO 4217 code used with currency format."
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the slider unavailable for pointer, keyboard and form submission."
+            },
+            {
+              "name": "format",
+              "fieldName": "format",
+              "type": {
+                "text": "\"currency\" | \"number\" | \"percent\""
+              },
+              "default": "'number'",
+              "description": "Display format for the readout and accessible values."
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional supporting text, read as the description of each thumb."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Slider'",
+              "description": "Visible base name. Use a task-specific, localized label."
+            },
+            {
+              "name": "marks",
+              "fieldName": "marks",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "Inclusive upper bound. A maximum below min collapses the scale."
+            },
+            {
+              "name": "maximum-label",
+              "fieldName": "maximumLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'maximum'",
+              "description": "Localized suffix for the upper thumb's accessible name."
+            },
+            {
+              "name": "min",
+              "fieldName": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Inclusive lower bound and step origin."
+            },
+            {
+              "name": "minimum-label",
+              "fieldName": "minimumLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'minimum'",
+              "description": "Localized suffix for the lower thumb's accessible name."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native form key. Omit when the value should remain local to the control."
+            },
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'horizontal'",
+              "description": "Axis of the scale. A vertical scale increases towards the top."
+            },
+            {
+              "name": "range",
+              "fieldName": "range",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables two non-crossing thumbs in minimum then maximum tab order."
+            },
+            {
+              "name": "step",
+              "fieldName": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Positive increment. Values snap from min and max is always reachable."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "number | string | undefined"
+              },
+              "description": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "centered",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a midpoint tick and fills from that point to a single thumb.",
+              "attribute": "centered",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "currency",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'EUR'",
+              "description": "ISO 4217 code used with currency format.",
+              "attribute": "currency",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the slider unavailable for pointer, keyboard and form submission.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "privacy": "public",
+              "type": {
+                "text": "\"currency\" | \"number\" | \"percent\""
+              },
+              "default": "'number'",
+              "description": "Display format for the readout and accessible values.",
+              "attribute": "format",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional supporting text, read as the description of each thumb.",
+              "attribute": "help-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Slider'",
+              "description": "Visible base name. Use a task-specific, localized label.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "marks",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+              "attribute": "marks",
+              "reflects": false,
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "Inclusive upper bound. A maximum below min collapses the scale.",
+              "attribute": "max",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "maximumLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'maximum'",
+              "description": "Localized suffix for the upper thumb's accessible name.",
+              "attribute": "maximum-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Inclusive lower bound and step origin.",
+              "attribute": "min",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "minimumLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'minimum'",
+              "description": "Localized suffix for the lower thumb's accessible name.",
+              "attribute": "minimum-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native form key. Omit when the value should remain local to the control.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "privacy": "public",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'horizontal'",
+              "description": "Axis of the scale. A vertical scale increases towards the top.",
+              "attribute": "orientation",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "range",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Enables two non-crossing thumbs in minimum then maximum tab order.",
+              "attribute": "range",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Positive increment. Values snap from min and max is always reachable.",
+              "attribute": "step",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "number | string | undefined"
+              },
+              "description": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Bubbles once when a pointer operation commits a different\nselection or a keyboard action changes it. Read the current host value.\nFor updates during a drag, listen for the standard bubbling `input` event.\nProgrammatic updates and form resets are silent."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "center-tick",
+              "description": "Midpoint mark on a centered scale."
+            },
+            {
+              "name": "field",
+              "description": "Layout containing the visible label, value, controls and help."
+            },
+            {
+              "name": "fill",
+              "description": "Active portion of the rail."
+            },
+            {
+              "name": "help",
+              "description": "Supporting text associated with each thumb."
+            },
+            {
+              "name": "label",
+              "description": "Visible text used to name the control."
+            },
+            {
+              "name": "mark",
+              "description": "Decorative scale mark at an interval boundary."
+            },
+            {
+              "name": "thumb",
+              "description": "Focusable pointer target for one end of the selection."
+            },
+            {
+              "name": "track",
+              "description": "Inactive rail between the two ends of the scale."
+            },
+            {
+              "name": "value",
+              "description": "Formatted value or interval shown beside the label."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-slider-coarse-target",
+              "description": "Minimum target size on a coarse pointer."
+            },
+            {
+              "name": "--ki-slider-fill-backdrop-filter",
+              "description": "Optional effect behind the active rail."
+            },
+            {
+              "name": "--ki-slider-fill-bg",
+              "description": "Colour of the active section of the rail."
+            },
+            {
+              "name": "--ki-slider-fill-bg-image",
+              "description": "Optional image painted on the active rail."
+            },
+            {
+              "name": "--ki-slider-gap",
+              "description": "Gap between the slider control and its labels."
+            },
+            {
+              "name": "--ki-slider-label-bg",
+              "description": "Background beneath the field label."
+            },
+            {
+              "name": "--ki-slider-label-fg",
+              "description": "Ink of the field label."
+            },
+            {
+              "name": "--ki-slider-mark-width",
+              "description": "Thickness of each interval tick."
+            },
+            {
+              "name": "--ki-slider-radius",
+              "description": "Round rail, grip and midpoint tick corners."
+            },
+            {
+              "name": "--ki-slider-text-bg",
+              "description": "Background beneath the value readout and help."
+            },
+            {
+              "name": "--ki-slider-text-fg",
+              "description": "Ink of the value readout and help."
+            },
+            {
+              "name": "--ki-slider-thumb-backdrop-filter",
+              "description": "Optional effect behind the grip."
+            },
+            {
+              "name": "--ki-slider-thumb-bg",
+              "description": "Grip surface behind the outline."
+            },
+            {
+              "name": "--ki-slider-thumb-bg-image",
+              "description": "Optional image painted on the grip."
+            },
+            {
+              "name": "--ki-slider-thumb-border",
+              "description": "Outline colour of the visible grip."
+            },
+            {
+              "name": "--ki-slider-thumb-border-width",
+              "description": "Outline thickness of the visible grip."
+            },
+            {
+              "name": "--ki-slider-thumb-shadow",
+              "description": "Optional grip elevation."
+            },
+            {
+              "name": "--ki-slider-thumb-size",
+              "description": "Diameter of the visible grip within the pointer target."
+            },
+            {
+              "name": "--ki-slider-track-backdrop-filter",
+              "description": "Optional effect behind the inactive rail."
+            },
+            {
+              "name": "--ki-slider-track-bg",
+              "description": "Inactive rail colour against the surrounding surface."
+            },
+            {
+              "name": "--ki-slider-track-bg-image",
+              "description": "Optional image painted on the inactive rail."
+            },
+            {
+              "name": "--ki-slider-track-height",
+              "description": "Inactive rail thickness."
+            },
+            {
+              "name": "--ki-slider-vertical-length",
+              "description": "Length of the vertical rail."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSlider",
+          "declaration": {
+            "name": "KiSlider",
+            "module": "dist/components/ki-slider.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-slider",
+          "declaration": {
+            "name": "KiSlider",
+            "module": "dist/components/ki-slider.js"
           }
         }
       ]

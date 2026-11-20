@@ -1,5 +1,5 @@
-/* The button surface: the variant x tone x state paint that ki-button and
- * ki-icon-button share (specs/022-ki-icon-button/design-extraction.md: the
+/* The button surface: the variant x tone x state paint that ki-button,
+ * ki-icon-button and ki-copy-button share (specs/022-ki-icon-button/design-extraction.md: the
  * Icon_button set reuses the Button visual system 1:1). It is defined once,
  * here, fed by the --ki-button-* tokens, and both components load it through
  * `styleUrls` ahead of their own sheet. That sheet adds only what differs:
@@ -585,11 +585,4 @@ button[aria-disabled="true"] {
   overflow: hidden;
   position: absolute;
   white-space: nowrap;
-}
-
-/* Compatibility with the deprecated length while the full filter uses its default. */
-@container style(--_ki-button-backdrop-filter: var(--_ki-backdrop-filter-default)) {
-  button {
-    --_ki-button-backdrop-filter: blur(var(--ki-button-backdrop-blur));
-  }
 }

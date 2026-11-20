@@ -3,7 +3,7 @@
 // Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.4.0",
+  "catalogSchemaVersion": "1.5.0",
   "components": {
     "div": {
       "description": "A native layout container (`<div>`) that lays its children out as a flex column or row, separated by a spacing token. It has no visual identity of its own: no background, border or padding.",
@@ -686,6 +686,72 @@ export const catalogData = {
       "whenNotToUse": "choose exactly one option or submit a form value.",
       "whenToUse": "label related chips or let people change their reading order."
     },
+    "ki-copy-button": {
+      "description": "Copies text to the clipboard and confirms the result in the same button.",
+      "events": {
+        "ki-copy": "Fired after a successful clipboard write. The detail carries the exact text copied."
+      },
+      "props": {
+        "copied-label": {
+          "type": "string",
+          "description": "Polite announcement after a successful write. Override for localized interfaces.",
+          "default": "Copied"
+        },
+        "copy-error-label": {
+          "type": "string",
+          "description": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
+          "default": "Couldn't copy"
+        },
+        "feedback-duration": {
+          "type": "number",
+          "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+          "default": 1500,
+          "minimum": 0
+        },
+        "from": {
+          "type": "string",
+          "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
+          "default": "Copy"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Token-backed button size. Match the size of adjacent controls.",
+          "default": "md"
+        },
+        "value": {
+          "type": "string",
+          "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly."
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "ghost",
+            "primary",
+            "quaternary",
+            "secondary"
+          ],
+          "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
+          "default": "ghost"
+        }
+      },
+      "slots": {
+        "": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
+      },
+      "tag": "ki-copy-button",
+      "whenNotToUse": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions.",
+      "whenToUse": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},
@@ -831,6 +897,73 @@ export const catalogData = {
       "tag": "ki-empty-state",
       "whenNotToUse": "signal that results are loading or draw attention to an error\nthat needs acknowledgement. Use ki-spinner or ki-alert for those states.",
       "whenToUse": "explain an empty list, table, search result, or first-run view.\nSupply a localized heading that names what is empty and a short next step.\nUse announce for results that change after an interaction."
+    },
+    "ki-fab": {
+      "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
+      "events": {
+        "click": "Native activation click. The page or guarded renderer handles the declared action."
+      },
+      "props": {
+        "collapse-on-scroll": {
+          "type": "boolean",
+          "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+          "default": false
+        },
+        "extended": {
+          "type": "boolean",
+          "description": "Show the action label next to its icon.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the action. Also the visible text in the extended state.",
+          "required": true
+        },
+        "position": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "static"
+          ],
+          "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+          "default": "static"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "xl"
+          ],
+          "description": "Square footprint when icon-only, and minimum size when extended.",
+          "default": "md"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "primary",
+            "secondary",
+            "surface"
+          ],
+          "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+          "default": "secondary"
+        }
+      },
+      "slots": {
+        "icon": "Decorative, noninteractive icon replacing the named glyph."
+      },
+      "tag": "ki-fab",
+      "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
+      "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
     },
     "ki-format-date": {
       "description": "Displays an ISO date or timestamp in the reader's language.",
@@ -1543,100 +1676,6 @@ export const catalogData = {
       "whenNotToUse": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance.",
       "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
     },
-    "ki-number-input": {
-      "description": "A form field for a numeric quantity with optional stepper buttons, bounds,\nlocale-aware formatting, and a visible unit.",
-      "events": {
-        "change": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
-      },
-      "props": {
-        "decrease-label": {
-          "type": "string",
-          "description": "Stepper's accessible name. The field label replaces {label}.",
-          "default": "Decrease {label}"
-        },
-        "disabled": {
-          "type": "boolean",
-          "description": "Prevents editing and excludes the control from form submission.",
-          "default": false
-        },
-        "error-text": {
-          "type": "string",
-          "description": "Validation hint to show when the entry fails a constraint."
-        },
-        "format": {
-          "type": "string",
-          "description": "Intl.NumberFormat options for display. In HTML or a catalog spec, supply\nthese options as JSON text. The form value retains its original precision."
-        },
-        "help-text": {
-          "type": "string",
-          "description": "Context or instructions displayed beneath the field when it has no visible error."
-        },
-        "increase-label": {
-          "type": "string",
-          "description": "Stepper's accessible name. The field label replaces {label}.",
-          "default": "Increase {label}"
-        },
-        "invalid-number-message": {
-          "type": "string",
-          "description": "Default validation message for text that cannot be read as a number.",
-          "default": "Enter a number."
-        },
-        "label": {
-          "type": "string",
-          "description": "Visible accessible name. Supply a meaningful label in the page language.",
-          "required": true
-        },
-        "max": {
-          "type": "number",
-          "description": "Maximum permitted numeric value. Omit for an unbounded maximum."
-        },
-        "maximum-message": {
-          "type": "string",
-          "description": "Polite adjustment message after exceeding the maximum. The formatted bound replaces {value}.",
-          "default": "Value adjusted to the maximum of {value}."
-        },
-        "min": {
-          "type": "number",
-          "description": "Minimum permitted numeric value. Omit for an unbounded minimum."
-        },
-        "minimum-message": {
-          "type": "string",
-          "description": "Polite adjustment message after falling below the minimum. The formatted bound replaces {value}.",
-          "default": "Value adjusted to the minimum of {value}."
-        },
-        "name": {
-          "type": "string",
-          "description": "Form-data key for the plain numeric value."
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Whether the user must enter a number before submitting the form.",
-          "default": false
-        },
-        "step": {
-          "type": "number",
-          "description": "Positive increment for arrows and buttons. Page keys and Shift+arrows move ten increments.",
-          "default": 1
-        },
-        "steppers": {
-          "type": "boolean",
-          "description": "Shows named decrease and increase buttons inside the field.",
-          "default": false
-        },
-        "unit": {
-          "type": "string",
-          "description": "Visible suffix such as seconds or seats, included in the accessible description."
-        },
-        "value": {
-          "type": "number",
-          "description": "Current numeric value, or undefined when empty or unparseable. Use the\nattribute for the form reset value. Property assignments are silent."
-        }
-      },
-      "slots": {},
-      "tag": "ki-number-input",
-      "whenNotToUse": "Use ki-input for identifiers, codes, or other text that only\nlooks numeric. Use a range control when relative position is the main cue.",
-      "whenToUse": "Collect a number like a quantity, amount, or limit. Provide a\nvisible label and choose bounds and an increment when they have meaning."
-    },
     "ki-option": {
       "description": "A declarative data option rendered by its owning `ki-select`.",
       "events": {},
@@ -2031,6 +2070,106 @@ export const catalogData = {
       "tag": "ki-skeleton",
       "whenNotToUse": "For a standalone loading announcement, progress measurement,\nor interactive control. Put content and loading feedback in the caller's region.",
       "whenToUse": "Reserve the expected layout of a card, list, or assistant reply\nwhile it loads. Give the surrounding region an accessible name and set\nits aria-busy state. Show the skeleton after about 300 ms of waiting."
+    },
+    "ki-slider": {
+      "description": "Adjusts a value or an interval on a bounded scale.",
+      "events": {
+        "change": "Bubbles once when a pointer operation commits a different\nselection or a keyboard action changes it. Read the current host value.\nFor updates during a drag, listen for the standard bubbling `input` event.\nProgrammatic updates and form resets are silent."
+      },
+      "props": {
+        "centered": {
+          "type": "boolean",
+          "description": "Shows a midpoint tick and fills from that point to a single thumb.",
+          "default": false
+        },
+        "currency": {
+          "type": "string",
+          "description": "ISO 4217 code used with currency format.",
+          "default": "EUR"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Makes the slider unavailable for pointer, keyboard and form submission.",
+          "default": false
+        },
+        "format": {
+          "type": "enum",
+          "values": [
+            "currency",
+            "number",
+            "percent"
+          ],
+          "description": "Display format for the readout and accessible values.",
+          "default": "number"
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Optional supporting text, read as the description of each thumb."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible base name. Use a task-specific, localized label.",
+          "default": "Slider"
+        },
+        "marks": {
+          "type": "number",
+          "description": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 100
+        },
+        "max": {
+          "type": "number",
+          "description": "Inclusive upper bound. A maximum below min collapses the scale.",
+          "default": 100
+        },
+        "maximum-label": {
+          "type": "string",
+          "description": "Localized suffix for the upper thumb's accessible name.",
+          "default": "maximum"
+        },
+        "min": {
+          "type": "number",
+          "description": "Inclusive lower bound and step origin.",
+          "default": 0
+        },
+        "minimum-label": {
+          "type": "string",
+          "description": "Localized suffix for the lower thumb's accessible name.",
+          "default": "minimum"
+        },
+        "name": {
+          "type": "string",
+          "description": "Native form key. Omit when the value should remain local to the control."
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Axis of the scale. A vertical scale increases towards the top.",
+          "default": "horizontal"
+        },
+        "range": {
+          "type": "boolean",
+          "description": "Enables two non-crossing thumbs in minimum then maximum tab order.",
+          "default": false
+        },
+        "step": {
+          "type": "number",
+          "description": "Positive increment. Values snap from min and max is always reachable.",
+          "default": 1
+        },
+        "value": {
+          "type": "number-or-string",
+          "description": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized."
+        }
+      },
+      "slots": {},
+      "tag": "ki-slider",
+      "whenNotToUse": "when people need to enter exact numbers or choose among a\nfew named options. Use a number input or radio group for those tasks.",
+      "whenToUse": "coarse adjustments such as volume, balance or a price filter,\nwith a descriptive label."
     },
     "ki-spinner": {
       "description": "A compact status for an indeterminate wait.",
