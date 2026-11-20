@@ -180,22 +180,29 @@ it('S7 refined type-ahead focuses Sol without selecting it', async () => {
   expect(events).toEqual([]);
 });
 
-it('S8 exposes a named multiselect listbox, selected and disabled options, and passes axe', async () => {
-  const main = await mount(list('multiple'));
+it('S8 names options from visible row content and exposes listbox states', async () => {
+  const rows = options.replace(
+    '>Ana</ki-list-item>',
+    '>Ana<span slot="secondary">Design</span></ki-list-item>',
+  );
+  const main = await mount(list('multiple', rows));
   await expect
     .element(page.getByRole('listbox', { name: 'Reviewers' }))
     .toHaveAttribute('aria-multiselectable', 'true');
-  const ana = await namedOption('Ana');
+  const ana = await namedOption('Ana Design');
   await namedOption('Luis');
+  expect(ana.hasAttribute('aria-label')).toBe(false);
   const snapshot = await browserCommands.ariaSnapshot('ki-list');
   expect(snapshot).toMatch(/listbox "Reviewers"/u);
-  expect(snapshot).toMatch(/option "Ana" \[selected\]/u);
+  expect(snapshot).toMatch(/option "Ana Design" \[selected\]/u);
   expect(snapshot).toMatch(/option "Luis" \[disabled\]/u);
   await expectAccessible(main);
 
-  ana.textContent = 'Anita';
+  const primaryText = ana.firstChild;
+  if (!(primaryText instanceof Text)) throw new Error('Missing primary option text');
+  primaryText.data = 'Anita';
   await expect
-    .element(page.getByRole('option', { name: 'Anita' }))
+    .element(page.getByRole('option', { name: 'Anita Design', exact: true }))
     .toHaveAttribute('aria-selected', 'true');
 });
 

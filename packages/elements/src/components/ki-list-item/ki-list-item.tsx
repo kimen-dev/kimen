@@ -96,7 +96,6 @@ export class KiListItem implements ListRow {
   private primaryText = '';
   private secondaryText = '';
   private staticSemantics: (string | null)[] | undefined;
-  private optionName: string | undefined;
   private warnedConflict = false;
   private namedControl: Element | undefined;
   private suppliedName: string | undefined;
@@ -145,10 +144,6 @@ export class KiListItem implements ListRow {
     const attributes = ['role', 'aria-selected', 'aria-disabled', 'tabindex'];
     if (mode === 'none') {
       if (!this.staticSemantics) return;
-      if (this.optionName && this.host.getAttribute('aria-label') === this.optionName) {
-        this.host.removeAttribute('aria-label');
-      }
-      this.optionName = undefined;
       attributes.forEach((attribute, index) => {
         const original = this.staticSemantics?.[index];
         if (original == null) this.host.removeAttribute(attribute);
@@ -158,7 +153,6 @@ export class KiListItem implements ListRow {
     } else {
       this.staticSemantics ??= attributes.map((name) => this.host.getAttribute(name));
       this.host.setAttribute('role', 'option');
-      this.syncOptionName();
       this.host.setAttribute('aria-selected', String(this.selected));
       if (disabled) {
         this.host.setAttribute('aria-disabled', 'true');
@@ -169,21 +163,6 @@ export class KiListItem implements ListRow {
       }
     }
     if (oldMode !== mode) this.syncSlotState();
-  }
-
-  private syncOptionName(): void {
-    const current = this.host.getAttribute('aria-label');
-    if (current !== null && current !== this.optionName) {
-      this.optionName = undefined;
-      return;
-    }
-
-    // The option role lives on the host. Give it a name directly so the
-    // composed text in the shadow slots doesn't have to name it across trees.
-    const name = this.label;
-    if (name && current !== name) this.host.setAttribute('aria-label', name);
-    else if (!name && current !== null) this.host.removeAttribute('aria-label');
-    this.optionName = name || undefined;
   }
 
   componentWillLoad(): void {
@@ -209,14 +188,13 @@ export class KiListItem implements ListRow {
     this.observer?.disconnect();
     this.observer = new MutationObserver((records) => {
       // The owner reflects option state and tabindex onto the row itself.
-      // Ignore those writes, but re-check a label supplied by the author.
+      // Those writes do not change the slot contents.
       if (
         records.some(
           ({ target, type, attributeName }) =>
             target !== this.host ||
             type !== 'attributes' ||
             attributeName === 'hidden' ||
-            attributeName === 'aria-label' ||
             attributeName === 'slot',
         )
       )
