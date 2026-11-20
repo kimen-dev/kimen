@@ -1,6 +1,16 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
-  "formBinding": "text"
+  "formBinding": "text",
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 22390,
+      "gzip": 4993
+    }
+  }
 }

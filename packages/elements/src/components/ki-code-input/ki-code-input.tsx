@@ -360,18 +360,21 @@ export class KiCodeInput {
     const messages = { help: fieldText(this.helpText), error: this.shownError };
     const active = Math.min(this.selectionStart, length - 1);
 
+    // Stable local keys keep this field independent of Stencil's build-wide JSX key counter.
     return (
-      <div class="root">
-        <label part="label" htmlFor="input">
+      <div key="root" class="root">
+        <label key="label" part="label" htmlFor="input">
           {this.label}
         </label>
         <div
+          key="field"
           part="field"
           dir="ltr"
           style={{ '--_length': String(length) }}
           data-invalid={this.shownError ? 'true' : null}
         >
           <input
+            key="input"
             ref={(input) => {
               this.input = input;
             }}
@@ -400,7 +403,7 @@ export class KiCodeInput {
             onKeyUp={this.syncSelection}
             onKeyDown={this.handleKeyDown}
           />
-          <div class="cells" aria-hidden="true">
+          <div key="cells" class="cells" aria-hidden="true">
             {Array.from({ length }, (_, index) => (
               <span
                 key={index}
@@ -415,7 +418,7 @@ export class KiCodeInput {
             ))}
           </div>
         </div>
-        <FieldMessage {...messages} />
+        {h(FieldMessage, messages)}
       </div>
     );
   }
