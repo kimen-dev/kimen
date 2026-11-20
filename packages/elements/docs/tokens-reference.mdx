@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 478 semantic
-and 1621 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 483 semantic
+and 1697 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -83,6 +83,8 @@ every component at once.
 | `--ki-corner-action-frame` | `10px` | Outside corner of an action surface. |
 | `--ki-corner-action-seam` | `0px` | Square corner at an edge shared by two actions. |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
+| `--ki-corner-anchored-panel` | `12px` | Corner radius of an anchored explanation panel. |
+| `--ki-corner-compact-mark` | `6px` | Corner radius of a compact inline mark. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-feature-tile-circle` | `1000px` | Fully rounded corners of a circular feature tile. |
 | `--ki-corner-feature-tile-lg` | `12px` | Corner radius of a large square feature tile. |
@@ -211,6 +213,7 @@ every component at once.
 | `--ki-layout-floating-action-xl-icon` | `2.25rem` | Large floating action glyph (36px at the default root size). |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
+| `--ki-layout-rule-width` | `1px` | The width of a hairline rule separating adjacent content. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
@@ -322,6 +325,7 @@ every component at once.
 | `--ki-outline-danger-low-em` | `#ffcccf` | semantic color for outline danger low em. |
 | `--ki-outline-danger-low-em-alpha` | `rgba(239, 78, 105, 0.4)` | semantic color for outline danger low em alpha. |
 | `--ki-outline-danger-med-em` | `#f1989f` | semantic color for outline danger med em. |
+| `--ki-outline-hairline-width` | `1px` | Width of a hairline component surface edge. |
 | `--ki-outline-high-em` | `rgba(0, 0, 0, 0.12)` | semantic color for outline high em. |
 | `--ki-outline-info-base-em` | `#dff3ff` | semantic color for outline info base em. |
 | `--ki-outline-info-base-em-alpha` | `rgba(19, 185, 236, 0.2)` | semantic color for outline info base em alpha. |
@@ -524,6 +528,12 @@ every component at once.
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
 
+### `ki.surface-size`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-surface-size-compact` | `18rem` | Inline size of a compact anchored surface. |
+
 ### `ki.text`
 
 | Token | Value (onmars light) | Description |
@@ -651,6 +661,34 @@ every component at once.
 
 The public styling contract of each element. Reassign them on `:root` for a
 theme-wide change or on any subtree for a scoped one.
+
+### `ki-ai-label`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-ai-label-backdrop-filter` | `none` | Complete filter behind the AI provenance mark. Defaults to none. |
+| `--ki-ai-label-bg` | `#ffebe5` | Fill of the AI provenance mark. |
+| `--ki-ai-label-bg-image` | `none` | Optional image over the AI provenance fill. Defaults to none. |
+| `--ki-ai-label-border-width` | `1px` | Border width of the panel and the forced-colors mark. |
+| `--ki-ai-label-fg` | `#9a3715` | Text and icon ink of the AI provenance mark. |
+| `--ki-ai-label-gap` | `0.25rem` | Gap between the mark and its icon or between provenance metadata items. |
+| `--ki-ai-label-md-height` | `1.5rem` | Minimum painted block size of the medium AI mark. |
+| `--ki-ai-label-md-icon-size` | `1rem` | Sparkles icon size in the medium AI mark. |
+| `--ki-ai-label-md-padding-inline` | `0.5rem` | Inline inset of the medium AI mark. |
+| `--ki-ai-label-popover-backdrop-filter` | `none` | Complete filter behind the provenance explanation. Defaults to none. |
+| `--ki-ai-label-popover-bg` | `#f9f7f4` | Raised fill of the provenance explanation. |
+| `--ki-ai-label-popover-bg-image` | `none` | Optional image over the provenance explanation fill. Defaults to none. |
+| `--ki-ai-label-popover-border` | `rgba(24, 22, 19, 0.1)` | Hairline color of the explanation panel. |
+| `--ki-ai-label-popover-fg` | `#181613` | Ink of the provenance explanation and metadata. |
+| `--ki-ai-label-popover-gap` | `0.5rem` | Gap between the panel sections and between the panel and trigger. |
+| `--ki-ai-label-popover-padding` | `0.75rem` | Inset of the explanation panel. |
+| `--ki-ai-label-popover-radius` | `12px` | Corner radius of the explanation panel. |
+| `--ki-ai-label-popover-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of the explanation panel. |
+| `--ki-ai-label-popover-width` | `18rem` | Preferred inline size of the explanation panel. |
+| `--ki-ai-label-radius` | `6px` | Corner radius of the AI provenance mark. |
+| `--ki-ai-label-sm-height` | `1.25rem` | Minimum painted block size of the small AI mark. |
+| `--ki-ai-label-sm-icon-size` | `0.75rem` | Sparkles icon size in the small AI mark. |
+| `--ki-ai-label-sm-padding-inline` | `0.375rem` | Inline inset of the small AI mark. |
 
 ### `ki-alert`
 
@@ -2211,6 +2249,33 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-status-success-color` | `#409b3f` | color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500). |
 | `--ki-status-warning-color` | `#945b05` | color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008). |
 
+### `ki-stepper`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-step-description-bg` | `rgba(0, 0, 0, 0)` | Backing of a step description. |
+| `--ki-step-description-fg` | `#5e5953` | Ink of a step description. |
+| `--ki-stepper-connector` | `rgba(24, 22, 19, 0.1)` | Decorative connector from a step that is still incomplete. |
+| `--ki-stepper-connector-done` | `#1d1a16` | Decorative connector from a completed step. |
+| `--ki-stepper-current-bg` | `rgba(0, 0, 0, 0)` | Fill of the current step marker. |
+| `--ki-stepper-current-border` | `#1d1a16` | Outline of the current step marker. |
+| `--ki-stepper-current-fg` | `#ad411c` | Number ink on the current step marker. |
+| `--ki-stepper-done-bg` | `#1d1a16` | Fill of a completed step marker. |
+| `--ki-stepper-done-fg` | `#ffffff` | Glyph ink on the completed step marker. |
+| `--ki-stepper-dot-size` | `1.5rem` | Diameter of the step marker. |
+| `--ki-stepper-error-bg` | `rgba(0, 0, 0, 0)` | Fill of the step error marker. |
+| `--ki-stepper-error-border` | `#c21a45` | Outline of the step error marker. |
+| `--ki-stepper-error-fg` | `#c21a45` | Glyph ink of the step error marker. |
+| `--ki-stepper-glyph-size` | `0.875rem` | Size of the marker and disclosure glyphs. |
+| `--ki-stepper-label-bg` | `rgba(0, 0, 0, 0)` | Default backing of a step label. |
+| `--ki-stepper-label-fg` | `#181613` | Default ink of a step label. |
+| `--ki-stepper-stroke` | `2px` | Width of the marker outline and connector. |
+| `--ki-stepper-summary-bg` | `rgba(0, 0, 0, 0)` | Backing of the compact disclosure. |
+| `--ki-stepper-summary-fg` | `#181613` | Ink of the compact disclosure. |
+| `--ki-stepper-upcoming-bg` | `rgba(0, 0, 0, 0)` | Fill of an upcoming step marker. |
+| `--ki-stepper-upcoming-border` | `#86827b` | Outline of an upcoming step marker. |
+| `--ki-stepper-upcoming-fg` | `#5e5953` | Number and label ink of an upcoming step. |
+
 ### `ki-switch`
 
 | Token | Value (onmars light) | Description |
@@ -2360,6 +2425,42 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-panel-focus-ring-width` | `0.125rem` | dimension used by the tab panel component for focus ring width. |
 | `--ki-tab-panel-padding-block` | `0.625rem` | dimension used by the tab panel component for padding block. |
 | `--ki-tab-panel-padding-inline` | `0.625rem` | dimension used by the tab panel component for padding inline. |
+
+### `ki-table`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-table-backdrop-filter` | `none` | Complete filter applied behind the frame. |
+| `--ki-table-bg` | `#ffffff` | Table frame and caption surface. |
+| `--ki-table-bg-image` | `none` | Optional image layered over the table frame. |
+| `--ki-table-border` | `rgba(24, 22, 19, 0.1)` | Frame and row dividers. |
+| `--ki-table-border-width` | `1px` | Frame and row divider stroke. |
+| `--ki-table-caption-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the native table caption. |
+| `--ki-table-cell-padding-inline` | `0.75rem` | Horizontal space inside cells. |
+| `--ki-table-fg` | `#181613` | Primary record and caption ink. |
+| `--ki-table-focus-radius` | `2px` | Corner radius of the sort button focus ring. |
+| `--ki-table-focus-ring-color` | `#bb4e2a` | Keyboard focus outline ink. |
+| `--ki-table-focus-ring-offset` | `0.125rem` | Space between a focus outline and its control. |
+| `--ki-table-focus-ring-width` | `0.125rem` | Keyboard focus outline stroke. |
+| `--ki-table-header-bg` | `#f9f7f4` | Column header surface, including when sticky. |
+| `--ki-table-header-bg-image` | `none` | Optional image layered over the column header. |
+| `--ki-table-header-fg` | `#5e5953` | Column header ink. |
+| `--ki-table-header-height` | `2.5rem` | Column header row height. |
+| `--ki-table-meta-bg` | `#ffffff` | Surface behind secondary and numeric values at rest. |
+| `--ki-table-meta-fg` | `#5e5953` | Secondary and numeric value ink. |
+| `--ki-table-radius` | `12px` | Outer frame corner radius. |
+| `--ki-table-row-height` | `3rem` | Default data row height. |
+| `--ki-table-row-height-compact` | `2.5rem` | Compact data row height. |
+| `--ki-table-row-hover-bg` | `#f9f7f4` | Surface under a record on hover. |
+| `--ki-table-row-hover-fg` | `#181613` | Record ink on hover. |
+| `--ki-table-row-selected-bg` | `#ffebe5` | Surface under a selected record. |
+| `--ki-table-row-selected-fg` | `#181613` | Record ink when selected. |
+| `--ki-table-skeleton` | `#ebe7e1` | Decorative loading bar fill. |
+| `--ki-table-skeleton-height` | `0.625rem` | Loading bar height. |
+| `--ki-table-skeleton-radius` | `1000px` | Loading bar corner radius. |
+| `--ki-table-sort-gap` | `0.25rem` | Space between a column label and sort indicator. |
+| `--ki-table-sort-glyph-size` | `0.875rem` | Decorative sort indicator edge. |
+| `--ki-table-touch-target-min` | `2.75rem` | Minimum width and height of controls with a coarse pointer. |
 
 ### `ki-tabs`
 

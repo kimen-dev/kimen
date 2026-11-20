@@ -1,0 +1,74 @@
+{
+  "ki": {
+    "stepper": {
+      "dot-size": {
+        "$value": "{ki.layout.spacing.7xl}"
+      },
+      "glyph-size": {
+        "$value": "{ki.layout.spacing.2xl}"
+      },
+      "stroke": {
+        "$value": "{ki.activity-size.stroke}"
+      },
+      "done-bg": {
+        "$value": "{ki.surface.primary-med-em}"
+      },
+      "done-fg": {
+        "$value": "{ki.text.primary-on-primary}"
+      },
+      "current-bg": {
+        "$value": "{ki.surface.transparent}"
+      },
+      "current-border": {
+        "$value": "{ki.surface.primary-med-em}"
+      },
+      "current-fg": {
+        "$value": "{ki.text.primary-high-em}"
+      },
+      "upcoming-bg": {
+        "$value": "{ki.surface.transparent}"
+      },
+      "upcoming-border": {
+        "$value": "{ki.outline.control}"
+      },
+      "upcoming-fg": {
+        "$value": "{ki.text.supporting}"
+      },
+      "error-bg": {
+        "$value": "{ki.surface.transparent}"
+      },
+      "error-border": {
+        "$value": "{ki.text.danger-high-em}"
+      },
+      "error-fg": {
+        "$value": "{ki.text.danger-high-em}"
+      },
+      "label-bg": {
+        "$value": "{ki.surface.transparent}"
+      },
+      "label-fg": {
+        "$value": "{ki.text.high-em}"
+      },
+      "summary-bg": {
+        "$value": "{ki.surface.transparent}"
+      },
+      "summary-fg": {
+        "$value": "{ki.text.high-em}"
+      },
+      "connector": {
+        "$value": "{ki.outline.low-em}"
+      },
+      "connector-done": {
+        "$value": "{ki.surface.primary-med-em}"
+      }
+    },
+    "step": {
+      "description-bg": {
+        "$value": "{ki.surface.transparent}"
+      },
+      "description-fg": {
+        "$value": "{ki.text.supporting}"
+      }
+    }
+  }
+}

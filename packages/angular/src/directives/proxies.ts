@@ -6,6 +6,7 @@ import { ProxyCmp } from './angular-component-lib/utils';
 
 import type { Components } from '@kimen/elements/components';
 
+import { defineCustomElement as defineKiAiLabel } from '@kimen/elements/components/ki-ai-label.js';
 import { defineCustomElement as defineKiAlert } from '@kimen/elements/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '@kimen/elements/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '@kimen/elements/components/ki-avatar-group.js';
@@ -59,15 +60,47 @@ import { defineCustomElement as defineKiSpinner } from '@kimen/elements/componen
 import { defineCustomElement as defineKiStack } from '@kimen/elements/components/ki-stack.js';
 import { defineCustomElement as defineKiStat } from '@kimen/elements/components/ki-stat.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
+import { defineCustomElement as defineKiStep } from '@kimen/elements/components/ki-step.js';
+import { defineCustomElement as defineKiStepper } from '@kimen/elements/components/ki-stepper.js';
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
 import { defineCustomElement as defineKiTab } from '@kimen/elements/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
+import { defineCustomElement as defineKiTable } from '@kimen/elements/components/ki-table.js';
 import { defineCustomElement as defineKiTabs } from '@kimen/elements/components/ki-tabs.js';
 import { defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
 import { defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
+@ProxyCmp({
+  defineCustomElementFn: defineKiAiLabel,
+  inputs: ['explanation', 'generatedAt', 'generatedAtLabel', 'label', 'model', 'modelLabel', 'popoverLabel', 'revertLabel', 'revertible', 'size', 'triggerLabel']
+})
+@Component({
+  selector: 'ki-ai-label',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['explanation', 'generatedAt', 'generatedAtLabel', 'label', 'model', 'modelLabel', 'popoverLabel', 'revertLabel', 'revertible', 'size', 'triggerLabel'],
+})
+export class KiAiLabel {
+  protected el: HTMLKiAiLabelElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiAiLabel extends Components.KiAiLabel {
+  /**
+   * Bubbles when a person requests their original text. Use this request
+to restore the original from application state.
+   */
+}
+
+
 @ProxyCmp({
   defineCustomElementFn: defineKiAlert,
   inputs: ['dismissLabel', 'dismissed', 'dismissible', 'heading', 'tone']
@@ -786,14 +819,14 @@ export declare interface KiIndicator extends Components.KiIndicator {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiInput,
-  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'size', 'type', 'value']
+  inputs: ['aiSuggestionText', 'autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'size', 'type', 'value']
 })
 @Component({
   selector: 'ki-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'size', 'type', 'value'],
+  inputs: ['aiSuggestionText', 'autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'placeholder', 'readonly', 'required', 'size', 'type', 'value'],
 })
 export class KiInput {
   protected el: HTMLKiInputElement;
@@ -1377,6 +1410,52 @@ export declare interface KiStatus extends Components.KiStatus {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiStep,
+  inputs: ['description', 'href', 'state']
+})
+@Component({
+  selector: 'ki-step',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['description', 'href', 'state'],
+})
+export class KiStep {
+  protected el: HTMLKiStepElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiStep extends Components.KiStep {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiStepper,
+  inputs: ['countLabel', 'currentLabel', 'doneLabel', 'errorLabel', 'label', 'orientation', 'summaryLabel', 'upcomingLabel']
+})
+@Component({
+  selector: 'ki-stepper',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['countLabel', 'currentLabel', 'doneLabel', 'errorLabel', { name: 'label', required: true }, 'orientation', 'summaryLabel', 'upcomingLabel'],
+})
+export class KiStepper {
+  protected el: HTMLKiStepperElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiStepper extends Components.KiStepper {}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiSwitch,
   inputs: ['checked', 'disabled', 'helpText', 'name', 'size', 'value']
 })
@@ -1443,6 +1522,39 @@ export class KiTabPanel {
 
 
 export declare interface KiTabPanel extends Components.KiTabPanel {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiTable,
+  inputs: ['density', 'loading', 'rowSelectionLabel', 'selectAllLabel', 'selectable', 'stickyHeader']
+})
+@Component({
+  selector: 'ki-table',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'loading', 'rowSelectionLabel', 'selectAllLabel', 'selectable', 'stickyHeader'],
+})
+export class KiTable {
+  protected el: HTMLKiTableElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiTable extends Components.KiTable {
+  /**
+   * A person activates a sortable column. Use the key and direction to sort records
+and move aria-sort to the active header. The event is a request.
+   */
+  /**
+   * A person changes selection with a checkbox. The event supplies the selected
+data-key values in displayed order.
+   */
+}
 
 
 @ProxyCmp({

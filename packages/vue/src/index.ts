@@ -5,6 +5,7 @@
  * Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+export { KiAiLabel } from './ki-ai-label.js';
 export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';
@@ -58,9 +59,12 @@ export { KiSpinner } from './ki-spinner.js';
 export { KiStack } from './ki-stack.js';
 export { KiStat } from './ki-stat.js';
 export { KiStatus } from './ki-status.js';
+export { KiStep } from './ki-step.js';
+export { KiStepper } from './ki-stepper.js';
 export { KiSwitch } from './ki-switch.js';
 export { KiTab } from './ki-tab.js';
 export { KiTabPanel } from './ki-tab-panel.js';
+export { KiTable } from './ki-table.js';
 export { KiTabs } from './ki-tabs.js';
 export { KiTextarea } from './ki-textarea.js';
 export { KiToast } from './ki-toast.js';

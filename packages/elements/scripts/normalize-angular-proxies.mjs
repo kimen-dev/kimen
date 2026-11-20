@@ -23,7 +23,7 @@
 // shipping a half-normalized artifact.
 import { existsSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 export function normalizeAngularProxies(source) {
   if (!source.includes('outputs: [') && !source.includes('@Output()')) {
@@ -89,8 +89,12 @@ export function normalizeAngularProxies(source) {
   return { source, orphanCount, strippedTypeImports };
 }
 
-const entry = process.argv[1];
-if (entry && existsSync(entry) && import.meta.url === pathToFileURL(realpathSync(entry)).href) {
+const entryPath = process.argv[1];
+if (
+  entryPath &&
+  existsSync(entryPath) &&
+  realpathSync(entryPath) === realpathSync(fileURLToPath(import.meta.url))
+) {
   const proxiesPath = join(
     fileURLToPath(new URL('.', import.meta.url)),
     '../../angular/src/directives/proxies.ts',
