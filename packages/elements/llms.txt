@@ -46,8 +46,6 @@ methods, CSS custom properties and examples.
 - [ki-button](llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, or persistent actions such as Bold with `toggle`.
 - [ki-button-group](llms/ki-button-group.md): place two to five related actions together, present a primary action with a menu of alternatives, or give formatting tools one Tab stop.
 - [ki-card](llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
-- [ki-carousel](llms/ki-carousel.md): show a short set of related highlights, onboarding steps or media panels.
-- [ki-carousel-item](llms/ki-carousel-item.md): supply a single slide to a ki-carousel.
 - [ki-checkbox](llms/ki-checkbox.md): selecting one or more independent options that a form submits later, including a "select all" parent that presents partial selection with `indeterminate`.
 - [ki-checkbox-group](llms/ki-checkbox-group.md): people may select several visible options that share a question, form field, and optional selection limits.
 - [ki-chip](llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
