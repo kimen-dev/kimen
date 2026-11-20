@@ -1,21 +1,36 @@
-# One required PR result: the `quality` job, green only when every part of the
-# suite is. Source and CI implementation changes retain the complete suite,
-# split into jobs that run side by side: `core` runs gates-core.sh, and the
-# `browser` shards together run gates-browser.sh chromium. That is exactly
-# gates-suite.sh, the command that defines local readiness, cut along its own
-# two gates and the elements suite's files so the slowest part sets the time,
-# not the sum. Dependency metadata uses Nx affected. Heavy or low-frequency
-# controls live in dedicated workflows.
+# One required result: the `quality` job, green only when every part of the
+# suite that should run passed. The suite is split into jobs that run side by
+# side: `core` runs gates-core.sh, and the `browser` shards together run
+# gates-browser.sh chromium. That is exactly gates-suite.sh, the command that
+# defines local readiness, cut along its own two gates and the elements
+# suite's files so the slowest part sets the time, not the sum.
+#
+# Each pull request and merge group is classified first
+# (scripts/gates/classify-ci-scope.mjs):
+#   - shared infrastructure (root config, pnpm-lock.yaml, nx.json,
+#     tsconfig.base.json, scripts/gates, scripts/lib, the workflows...) or an
+#     unknown path runs the complete suite;
+#   - any other change runs the same jobs in the affected scope
+#     (scripts/gates/select-affected.mjs): every repository-wide gate still
+#     runs, while lint, budgets, unit tests and each browser suite cover only
+#     the projects Nx reports affected between the change's base and head;
+#   - dependency and workflow maintenance keep their focused paths on pull
+#     requests only, so the queue runs them in full; sandbox dependency
+#     maintenance belongs to containment.yml.
+# A push to main runs nothing here: the merge queue already tested the exact
+# tree that lands. The nightly run, and any manual dispatch, runs the
+# complete suite on main, the safety net for what the Nx graph does not model.
+# Heavy or low-frequency controls live in dedicated workflows.
 name: ci
 
 on:
-  push:
-    branches: [main]
   pull_request:
   # The merge queue tests each group against the latest main before it lands.
-  # Any event other than pull_request runs the complete suite (see the scope steps).
   merge_group:
     types: [checks_requested]
+  schedule:
+    - cron: '23 4 * * *' # nightly, 04:23 UTC: the complete suite on main
+  workflow_dispatch:
 
 permissions: {}
 
@@ -57,18 +72,16 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Classify pull request impact
-        if: github.event_name == 'pull_request'
+      # Writes scope, and for a pull request or merge group its base and head.
+      # Schedule and dispatch are always full. A scope this workflow does not
+      # know would skip every step below and pass, so it fails here instead.
+      - name: Classify the change
         id: scope
-        env:
-          KIMEN_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          KIMEN_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          comparison_base="$(git merge-base "$KIMEN_BASE_SHA" "$KIMEN_HEAD_SHA")"
-          scope="$(node scripts/gates/classify-ci-scope.mjs --base "$comparison_base" --head "$KIMEN_HEAD_SHA")"
-          printf 'scope=%s\n' "$scope" >>"$GITHUB_OUTPUT"
-          printf 'base=%s\n' "$comparison_base" >>"$GITHUB_OUTPUT"
-          printf 'head=%s\n' "$KIMEN_HEAD_SHA" >>"$GITHUB_OUTPUT"
+          node scripts/gates/classify-ci-scope.mjs --github-event >"$RUNNER_TEMP/scope.out"
+          cat "$RUNNER_TEMP/scope.out"
+          grep -Eqx 'scope=(full|affected|dependencies|workflows|sandbox)' "$RUNNER_TEMP/scope.out"
+          cat "$RUNNER_TEMP/scope.out" >>"$GITHUB_OUTPUT"
 
       # The scan itself is a gate inside gates-core.sh, not a step here, so the
       # command that defines local readiness runs exactly what this job does.
@@ -83,8 +96,8 @@ jobs:
       # explores.
       - name: Install Semgrep (hash-locked)
         if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected'
         run: bash scripts/gates/install-semgrep.sh "$RUNNER_TEMP/semgrep"
 
       # The cross-device regressions (cache-env-reentry, site-publication)
@@ -93,8 +106,8 @@ jobs:
       # tmpfs and designates it, exactly as a local tmpfs /tmp would.
       - name: Designate a temporary directory on its own filesystem
         if: >-
-          github.event_name != 'pull_request' ||
           steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected' ||
           steps.scope.outputs.scope == 'dependencies'
         run: |
           sudo mkdir -p /mnt/kimen-tmp
@@ -103,28 +116,40 @@ jobs:
 
       - name: Allocate isolated writable caches
         if: >-
-          github.event_name != 'pull_request' ||
           steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected' ||
           steps.scope.outputs.scope == 'dependencies'
         run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
 
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
         if: >-
-          github.event_name != 'pull_request' ||
           steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected' ||
           steps.scope.outputs.scope == 'dependencies'
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 26
-          cache: ${{ (github.event_name != 'pull_request' || steps.scope.outputs.scope == 'full' || steps.scope.outputs.scope == 'dependencies') && 'pnpm' || '' }}
+          cache: ${{ (steps.scope.outputs.scope == 'full' || steps.scope.outputs.scope == 'affected' || steps.scope.outputs.scope == 'dependencies') && 'pnpm' || '' }}
 
       - name: Install
         if: >-
-          github.event_name != 'pull_request' ||
           steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected' ||
           steps.scope.outputs.scope == 'dependencies'
         run: pnpm install --frozen-lockfile
+
+      # Exports KIMEN_GATE_SCOPE and the affected lists to the steps below; it
+      # widens to the complete suite itself if anything about the range is off.
+      - name: Select the affected projects
+        if: steps.scope.outputs.scope == 'affected'
+        env:
+          KIMEN_BASE_SHA: ${{ steps.scope.outputs.base }}
+          KIMEN_HEAD_SHA: ${{ steps.scope.outputs.head }}
+        run: |
+          node scripts/gates/select-affected.mjs --base "$KIMEN_BASE_SHA" --head "$KIMEN_HEAD_SHA" >"$RUNNER_TEMP/affected.env"
+          cat "$RUNNER_TEMP/affected.env"
+          cat "$RUNNER_TEMP/affected.env" >>"$GITHUB_ENV"
 
       - name: Detect browser-sensitive dependency changes
         if: steps.scope.outputs.scope == 'dependencies'
@@ -136,7 +161,7 @@ jobs:
           needed="$(node scripts/gates/dependency-browser-impact.mjs --base "$KIMEN_BASE_SHA" --head "$KIMEN_HEAD_SHA")"
           printf 'needed=%s\n' "$needed" >>"$GITHUB_OUTPUT"
 
-      # The complete suite's browser gate runs in the `browser` jobs; only the
+      # The suite's browser gate runs in the `browser` jobs; only the
       # dependency path, which runs its affected browser gate here, needs one.
       - name: Install Chromium
         if: steps.browser-impact.outputs.needed == 'true'
@@ -144,8 +169,8 @@ jobs:
 
       - name: Core quality
         if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected'
         run: bash scripts/gates/gates-core.sh
 
       - name: Affected dependency quality
@@ -165,9 +190,11 @@ jobs:
         if: steps.scope.outputs.scope == 'sandbox'
         run: node --test scripts/tests/sandbox-static-contract.test.mjs
 
-  # The browser gate of the complete suite, its elements files split in four:
-  # each shard runs a quarter of them, and the last one also the Chromium-only
-  # suites (scripts/gates/gates-browser.sh). Any other scope skips it.
+  # The browser gate of the suite, its elements files split in four: each
+  # shard runs a quarter of them, and the last one also the Chromium-only
+  # suites (scripts/gates/gates-browser.sh). In the affected scope a shard runs
+  # only the suites whose projects are affected, and a shard left with none
+  # finishes at once, green; the maintenance scopes skip it.
   browser:
     name: browser (chromium ${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
@@ -204,21 +231,18 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Classify pull request impact
-        if: github.event_name == 'pull_request'
+      - name: Classify the change
         id: scope
-        env:
-          KIMEN_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          KIMEN_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          comparison_base="$(git merge-base "$KIMEN_BASE_SHA" "$KIMEN_HEAD_SHA")"
-          scope="$(node scripts/gates/classify-ci-scope.mjs --base "$comparison_base" --head "$KIMEN_HEAD_SHA")"
-          printf 'scope=%s\n' "$scope" >>"$GITHUB_OUTPUT"
+          node scripts/gates/classify-ci-scope.mjs --github-event >"$RUNNER_TEMP/scope.out"
+          cat "$RUNNER_TEMP/scope.out"
+          grep -Eqx 'scope=(full|affected|dependencies|workflows|sandbox)' "$RUNNER_TEMP/scope.out"
+          cat "$RUNNER_TEMP/scope.out" >>"$GITHUB_OUTPUT"
 
       - name: Designate a temporary directory on its own filesystem
         if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected'
         run: |
           sudo mkdir -p /mnt/kimen-tmp
           sudo mount -t tmpfs -o size=4g,mode=1777 tmpfs /mnt/kimen-tmp
@@ -226,25 +250,48 @@ jobs:
 
       - name: Allocate isolated writable caches
         if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected'
         run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
 
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
         if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected'
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 26
-          cache: ${{ (github.event_name != 'pull_request' || steps.scope.outputs.scope == 'full') && 'pnpm' || '' }}
+          cache: ${{ (steps.scope.outputs.scope == 'full' || steps.scope.outputs.scope == 'affected') && 'pnpm' || '' }}
 
       - name: Install
         if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected'
         run: pnpm install --frozen-lockfile
+
+      - name: Select the affected projects
+        if: steps.scope.outputs.scope == 'affected'
+        env:
+          KIMEN_BASE_SHA: ${{ steps.scope.outputs.base }}
+          KIMEN_HEAD_SHA: ${{ steps.scope.outputs.head }}
+        run: |
+          node scripts/gates/select-affected.mjs --base "$KIMEN_BASE_SHA" --head "$KIMEN_HEAD_SHA" >"$RUNNER_TEMP/affected.env"
+          cat "$RUNNER_TEMP/affected.env"
+          cat "$RUNNER_TEMP/affected.env" >>"$GITHUB_ENV"
+
+      # The gate names this shard's suites; an empty list skips the rest.
+      - name: Plan this shard
+        if: >-
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'affected'
+        id: plan
+        env:
+          KIMEN_BROWSER_SHARD: ${{ matrix.shard }}/4
+        run: |
+          bash scripts/gates/gates-browser.sh chromium --plan >"$RUNNER_TEMP/plan.out"
+          cat "$RUNNER_TEMP/plan.out"
+          cat "$RUNNER_TEMP/plan.out" >>"$GITHUB_OUTPUT"
 
       # The Chromium build of the pinned Playwright, kept between runs under
       # the key of that exact version: a Playwright bump changes the key and
@@ -252,9 +299,7 @@ jobs:
       # system libraries are installed and a missing or partial browser is
       # fetched.
       - name: Resolve the pinned Playwright version
-        if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+        if: steps.plan.outputs.suites != ''
         id: playwright
         run: >-
           printf 'version=%s\n'
@@ -262,30 +307,25 @@ jobs:
           >>"$GITHUB_OUTPUT"
 
       - name: Restore the Chromium build of this Playwright
-        if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+        if: steps.plan.outputs.suites != ''
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
 
       - name: Install Chromium
-        if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+        if: steps.plan.outputs.suites != ''
         run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
 
       - name: Browser quality
-        if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full'
+        if: steps.plan.outputs.suites != ''
         env:
           KIMEN_BROWSER_SHARD: ${{ matrix.shard }}/4
         run: bash scripts/gates/gates-browser.sh chromium
 
   # The one required result. It waits for every part and is green only when
-  # each of them is; a part that was cancelled or skipped is not a pass.
+  # each of them is; a part that was cancelled or skipped is not a pass. A
+  # part with nothing to verify for a change still runs, and succeeds.
   quality:
     needs: [core, browser]
     if: always()
