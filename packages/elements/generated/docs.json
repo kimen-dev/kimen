@@ -2570,9 +2570,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-prompt-input"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-prompt-input": [
+          "ki-chip"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-chip-group/ki-chip-group.tsx",
@@ -3751,9 +3757,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-prompt-input"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-prompt-input": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -6129,6 +6141,746 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-prompt-input/ki-prompt-input.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-prompt-input",
+      "docs": "A multiline assistant composer with local file attachments and send and stop requests.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Compose a message to an assistant, optionally attach local files, and let people interrupt the assistant's response."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Ordinary multiline form input without a send or stop interaction (`ki-textarea`), file uploads, or rich text editing."
+        },
+        {
+          "name": "slot",
+          "text": "tools - Application-owned toolbar controls, such as a model-picker trigger. Use non-submitting controls."
+        },
+        {
+          "name": "slot",
+          "text": "attachments - Supplemental list items, visible when accept is set. Composer-managed files appear in the same list and alone contribute to ki-submit."
+        },
+        {
+          "name": "part",
+          "text": "field - The painted composer enclosure."
+        },
+        {
+          "name": "part",
+          "text": "textarea - The native growing text control."
+        },
+        {
+          "name": "part",
+          "text": "attachments - The labelled attachment list."
+        },
+        {
+          "name": "part",
+          "text": "tools - The container for the tools slot."
+        },
+        {
+          "name": "part",
+          "text": "actions - The toolbar with attachment, tool and message actions."
+        },
+        {
+          "name": "part",
+          "text": "attach - The native file-picker button."
+        },
+        {
+          "name": "part",
+          "text": "send - The native Send button."
+        },
+        {
+          "name": "part",
+          "text": "stop - The native Stop button, visible while streaming."
+        },
+        {
+          "name": "part",
+          "text": "status - The polite announcement for the streaming state."
+        },
+        {
+          "name": "part",
+          "text": "feedback - The polite announcement for rejected attachments."
+        }
+      ],
+      "usage": {
+        "examples": "# PromptInput examples\n\nUse a composer when a person can send a message to an assistant and stop its response. Provide a `label` even when there is a placeholder.\n\n## Text and attachments\n\n```html\n<ki-prompt-input\n  label=\"Message Kimen Assistant\"\n  placeholder=\"Ask anything, or drop a file\"\n  accept=\".csv,.pdf,image/*\"\n  max-files=\"5\"\n  max-size=\"5000000\"\n></ki-prompt-input>\n```\n\nThe file picker, drop area and clipboard share the same checks. `max-size` is the number of bytes allowed per file. An empty `accept` hides the attachment UI. The host receives a `ki-submit` event with `detail.text` and `detail.files`.\n\n## Model selection and keyboard shortcuts\n\n```html\n<ki-prompt-input label=\"Message assistant\" submit-on=\"mod-enter\">\n  <select slot=\"tools\" aria-label=\"Assistant model\">\n    <option value=\"standard\">Standard</option>\n    <option value=\"careful\">Careful</option>\n  </select>\n</ki-prompt-input>\n```\n\nIn modifier mode, Control+Enter and Command+Enter send. Shift+Enter always inserts a newline. A model picker built with a menu can use the same slot. Read model selection from that control when handling `ki-submit`.\n\nThe application sets `status` to `submitted` while awaiting a response and to `streaming` when output begins. It handles `ki-stop` and sets `status` to `idle` when the response ends or stops.\n"
+      },
+      "props": [
+        {
+          "name": "accept",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "accept",
+          "reflectToAttr": false,
+          "docs": "Comma-separated extensions or MIME types. Empty hides the attachment surface.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "attachLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "attach-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the file picker button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Attach files'"
+            }
+          ],
+          "default": "'Attach files'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "attachmentsLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "attachments-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the attachment list.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Attachments'"
+            }
+          ],
+          "default": "'Attachments'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Excludes the composer from interaction and native form data.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "fileCountMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "file-count-message",
+          "reflectToAttr": false,
+          "docs": "Localized count rejection. The {name} marker is replaced with the file name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{name} exceeds the maximum number of attachments.'"
+            }
+          ],
+          "default": "'{name} exceeds the maximum number of attachments.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "fileSizeMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "file-size-message",
+          "reflectToAttr": false,
+          "docs": "Localized size rejection. The {name} marker is replaced with the file name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{name} exceeds the file size limit.'"
+            }
+          ],
+          "default": "'{name} exceeds the file size limit.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "fileTypeMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "file-type-message",
+          "reflectToAttr": false,
+          "docs": "Localized type rejection. The {name} marker is replaced with the file name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{name} has an unsupported file type.'"
+            }
+          ],
+          "default": "'{name} has an unsupported file type.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Required accessible name of the text field. Supply it even with a placeholder.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxFiles",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max-files",
+          "reflectToAttr": false,
+          "docs": "Maximum count of attached files. Omit for no count limit.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxSize",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max-size",
+          "reflectToAttr": false,
+          "docs": "Maximum attachment size in bytes per file. Omit for no size limit.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Optional key for the text in native form data. Files are carried by ki-submit.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "placeholder",
+          "reflectToAttr": false,
+          "docs": "Hint displayed while the text field is empty.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remove-label",
+          "reflectToAttr": false,
+          "docs": "Prefix of an attachment's remove button name, followed by the file name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Remove'"
+            }
+          ],
+          "default": "'Remove'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sendLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "send-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the Send button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Send'"
+            }
+          ],
+          "default": "'Send'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "status",
+          "type": "\"idle\" | \"streaming\" | \"submitted\" | undefined",
+          "complexType": {
+            "original": "KiPromptInputStatus",
+            "resolved": "\"idle\" | \"streaming\" | \"submitted\" | undefined",
+            "references": {
+              "KiPromptInputStatus": {
+                "location": "local",
+                "path": "src/components/ki-prompt-input/ki-prompt-input.tsx",
+                "id": "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputStatus"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "status",
+          "reflectToAttr": false,
+          "docs": "Application-owned request state. Only idle can send; streaming exposes Stop.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'idle'"
+            }
+          ],
+          "default": "'idle'",
+          "values": [
+            {
+              "value": "idle",
+              "type": "string"
+            },
+            {
+              "value": "streaming",
+              "type": "string"
+            },
+            {
+              "value": "submitted",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "stopLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "stop-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the Stop button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Stop generating'"
+            }
+          ],
+          "default": "'Stop generating'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "submitOn",
+          "type": "\"enter\" | \"mod-enter\"",
+          "complexType": {
+            "original": "KiPromptInputSubmitOn",
+            "resolved": "\"enter\" | \"mod-enter\"",
+            "references": {
+              "KiPromptInputSubmitOn": {
+                "location": "local",
+                "path": "src/components/ki-prompt-input/ki-prompt-input.tsx",
+                "id": "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputSubmitOn"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "submit-on",
+          "reflectToAttr": false,
+          "docs": "Send with Enter or with Control/Command+Enter. Shift+Enter always adds a line.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'enter'"
+            }
+          ],
+          "default": "'enter'",
+          "values": [
+            {
+              "value": "enter",
+              "type": "string"
+            },
+            {
+              "value": "mod-enter",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current draft text; the value attribute provides the form reset default.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "writingMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "writing-message",
+          "reflectToAttr": false,
+          "docs": "Visible polite status while the assistant streams.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Writing…'"
+            }
+          ],
+          "default": "'Writing…'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-stop",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Requests that the application stop its streaming response.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-submit",
+          "detail": "KiPromptInputSubmitDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiPromptInputSubmitDetail",
+            "resolved": "KiPromptInputSubmitDetail",
+            "references": {
+              "KiPromptInputSubmitDetail": {
+                "location": "local",
+                "path": "src/components/ki-prompt-input/ki-prompt-input.tsx",
+                "id": "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputSubmitDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Requests a send with original text and a snapshot of accepted local files.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "attachments",
+          "docs": "Supplemental list items, visible when accept is set. Composer-managed files appear in the same list and alone contribute to ki-submit."
+        },
+        {
+          "name": "tools",
+          "docs": "Application-owned toolbar controls, such as a model-picker trigger. Use non-submitting controls."
+        }
+      ],
+      "parts": [
+        {
+          "name": "actions",
+          "docs": "The toolbar with attachment, tool and message actions."
+        },
+        {
+          "name": "attach",
+          "docs": "The native file-picker button."
+        },
+        {
+          "name": "attachments",
+          "docs": "The labelled attachment list."
+        },
+        {
+          "name": "feedback",
+          "docs": "The polite announcement for rejected attachments."
+        },
+        {
+          "name": "field",
+          "docs": "The painted composer enclosure."
+        },
+        {
+          "name": "send",
+          "docs": "The native Send button."
+        },
+        {
+          "name": "status",
+          "docs": "The polite announcement for the streaming state."
+        },
+        {
+          "name": "stop",
+          "docs": "The native Stop button, visible while streaming."
+        },
+        {
+          "name": "textarea",
+          "docs": "The native growing text control."
+        },
+        {
+          "name": "tools",
+          "docs": "The container for the tools slot."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-chip",
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-prompt-input": [
+          "ki-chip",
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-qr/ki-qr.tsx",
@@ -10346,6 +11098,21 @@
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",
       "docstring": "",
       "path": "src/components/ki-progress/ki-progress.tsx"
+    },
+    "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputStatus": {
+      "declaration": "export type KiPromptInputStatus = 'idle' | 'submitted' | 'streaming';",
+      "docstring": "",
+      "path": "src/components/ki-prompt-input/ki-prompt-input.tsx"
+    },
+    "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputSubmitOn": {
+      "declaration": "export type KiPromptInputSubmitOn = 'enter' | 'mod-enter';",
+      "docstring": "",
+      "path": "src/components/ki-prompt-input/ki-prompt-input.tsx"
+    },
+    "src/components/ki-prompt-input/ki-prompt-input.tsx::KiPromptInputSubmitDetail": {
+      "declaration": "export interface KiPromptInputSubmitDetail {\n  text: string;\n  files: File[];\n}",
+      "docstring": "",
+      "path": "src/components/ki-prompt-input/ki-prompt-input.tsx"
     },
     "src/components/ki-radio-group/ki-radio-group.tsx::KiRadioGroupSize": {
       "declaration": "export type KiRadioGroupSize = 'sm' | 'md';",

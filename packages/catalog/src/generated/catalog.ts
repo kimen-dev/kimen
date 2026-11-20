@@ -1268,6 +1268,122 @@ export const catalogData = {
       "whenNotToUse": "static measurements within a known range such as disk\nusage or scores (gauge/meter), step-by-step wizard navigation (stepper),\nskeleton placeholders while content loads, or operations that finish in\nunder about one second.",
       "whenToUse": "communicate advancement of an ongoing task such as upload,\ndownload, installation or multi-step processing. Use `value`/`max` when\nthe completed fraction is known; use `indeterminate` when work is ongoing\nbut its duration cannot be measured, including loading-indicator use cases.\nChoose `linear` in page flows and lists, and `circular` in compact or\ncentered placements. Always set `label` to what is progressing."
     },
+    "ki-prompt-input": {
+      "description": "A multiline assistant composer with local file attachments and send and stop requests.",
+      "events": {
+        "ki-stop": "Requests that the application stop its streaming response.",
+        "ki-submit": "Requests a send with original text and a snapshot of accepted local files."
+      },
+      "props": {
+        "accept": {
+          "type": "string",
+          "description": "Comma-separated extensions or MIME types. Empty hides the attachment surface.",
+          "default": ""
+        },
+        "attach-label": {
+          "type": "string",
+          "description": "Accessible name of the file picker button.",
+          "default": "Attach files"
+        },
+        "attachments-label": {
+          "type": "string",
+          "description": "Accessible name of the attachment list.",
+          "default": "Attachments"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Excludes the composer from interaction and native form data.",
+          "default": false
+        },
+        "file-count-message": {
+          "type": "string",
+          "description": "Localized count rejection. The {name} marker is replaced with the file name.",
+          "default": "{name} exceeds the maximum number of attachments."
+        },
+        "file-size-message": {
+          "type": "string",
+          "description": "Localized size rejection. The {name} marker is replaced with the file name.",
+          "default": "{name} exceeds the file size limit."
+        },
+        "file-type-message": {
+          "type": "string",
+          "description": "Localized type rejection. The {name} marker is replaced with the file name.",
+          "default": "{name} has an unsupported file type."
+        },
+        "label": {
+          "type": "string",
+          "description": "Required accessible name of the text field. Supply it even with a placeholder.",
+          "required": true
+        },
+        "max-files": {
+          "type": "number",
+          "description": "Maximum count of attached files. Omit for no count limit."
+        },
+        "max-size": {
+          "type": "number",
+          "description": "Maximum attachment size in bytes per file. Omit for no size limit."
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional key for the text in native form data. Files are carried by ki-submit."
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Hint displayed while the text field is empty."
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Prefix of an attachment's remove button name, followed by the file name.",
+          "default": "Remove"
+        },
+        "send-label": {
+          "type": "string",
+          "description": "Accessible name of the Send button.",
+          "default": "Send"
+        },
+        "status": {
+          "type": "enum",
+          "values": [
+            "idle",
+            "streaming",
+            "submitted"
+          ],
+          "description": "Application-owned request state. Only idle can send; streaming exposes Stop.",
+          "default": "idle"
+        },
+        "stop-label": {
+          "type": "string",
+          "description": "Accessible name of the Stop button.",
+          "default": "Stop generating"
+        },
+        "submit-on": {
+          "type": "enum",
+          "values": [
+            "enter",
+            "mod-enter"
+          ],
+          "description": "Send with Enter or with Control/Command+Enter. Shift+Enter always adds a line.",
+          "default": "enter"
+        },
+        "value": {
+          "type": "string",
+          "description": "Current draft text; the value attribute provides the form reset default.",
+          "default": ""
+        },
+        "writing-message": {
+          "type": "string",
+          "description": "Visible polite status while the assistant streams.",
+          "default": "Writing…"
+        }
+      },
+      "slots": {
+        "attachments": "Supplemental list items, visible when accept is set. Composer-managed files appear in the same list and alone contribute to ki-submit.",
+        "tools": "Application-owned toolbar controls, such as a model-picker trigger. Use non-submitting controls."
+      },
+      "tag": "ki-prompt-input",
+      "whenNotToUse": "Ordinary multiline form input without a send or stop interaction (`ki-textarea`), file uploads, or rich text editing.",
+      "whenToUse": "Compose a message to an assistant, optionally attach local files, and let people interrupt the assistant's response."
+    },
     "ki-qr": {
       "description": "A machine-scannable QR code that hands a declared value — a link, a\npairing payload — from the screen to a nearby camera, encoded locally\nand restyled entirely through tokens.",
       "events": {},

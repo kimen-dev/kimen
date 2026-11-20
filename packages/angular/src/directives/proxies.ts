@@ -31,6 +31,7 @@ import { defineCustomElement as defineKiListItem } from '@kimen/elements/compone
 import { defineCustomElement as defineKiNote } from '@kimen/elements/components/ki-note.js';
 import { defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
 import { defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
+import { defineCustomElement as defineKiPromptInput } from '@kimen/elements/components/ki-prompt-input.js';
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
@@ -677,6 +678,37 @@ export class KiProgress {
 
 
 export declare interface KiProgress extends Components.KiProgress {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiPromptInput,
+  inputs: ['accept', 'attachLabel', 'attachmentsLabel', 'disabled', 'fileCountMessage', 'fileSizeMessage', 'fileTypeMessage', 'label', 'maxFiles', 'maxSize', 'name', 'placeholder', 'removeLabel', 'sendLabel', 'status', 'stopLabel', 'submitOn', 'value', 'writingMessage']
+})
+@Component({
+  selector: 'ki-prompt-input',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['accept', 'attachLabel', 'attachmentsLabel', 'disabled', 'fileCountMessage', 'fileSizeMessage', 'fileTypeMessage', { name: 'label', required: true }, 'maxFiles', 'maxSize', 'name', 'placeholder', 'removeLabel', 'sendLabel', 'status', 'stopLabel', 'submitOn', 'value', 'writingMessage'],
+})
+export class KiPromptInput {
+  protected el: HTMLKiPromptInputElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiPromptInput extends Components.KiPromptInput {
+  /**
+   * Requests a send with original text and a snapshot of accepted local files.
+   */
+  /**
+   * Requests that the application stop its streaming response.
+   */
+}
 
 
 @ProxyCmp({

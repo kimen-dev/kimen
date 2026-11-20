@@ -30,6 +30,7 @@ export { KiListItem } from './ki-list-item.js';
 export { KiNote } from './ki-note.js';
 export { KiOption } from './ki-option.js';
 export { KiProgress } from './ki-progress.js';
+export { KiPromptInput } from './ki-prompt-input.js';
 export { KiQr } from './ki-qr.js';
 export { KiRadio } from './ki-radio.js';
 export { KiRadioGroup } from './ki-radio-group.js';

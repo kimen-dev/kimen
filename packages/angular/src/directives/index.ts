@@ -27,6 +27,7 @@ export const DIRECTIVES = [
   d.KiNote,
   d.KiOption,
   d.KiProgress,
+  d.KiPromptInput,
   d.KiQr,
   d.KiRadio,
   d.KiRadioGroup,

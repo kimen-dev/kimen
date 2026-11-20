@@ -28,6 +28,7 @@ import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
+import { KiPromptInputStatus, KiPromptInputSubmitDetail, KiPromptInputSubmitOn } from "./components/ki-prompt-input/ki-prompt-input";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 import { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
@@ -64,6 +65,7 @@ export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
+export { KiPromptInputStatus, KiPromptInputSubmitDetail, KiPromptInputSubmitOn } from "./components/ki-prompt-input/ki-prompt-input";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 export { KiSegmentedControlSize } from "./components/ki-segmented-control/ki-segmented-control";
@@ -979,6 +981,103 @@ export namespace Components {
         "value": number;
     }
     /**
+     * A multiline assistant composer with local file attachments and send and stop requests.
+     * @whenToUse Compose a message to an assistant, optionally attach local files, and let people interrupt the assistant's response.
+     * @whenNotToUse Ordinary multiline form input without a send or stop interaction (`ki-textarea`), file uploads, or rich text editing.
+     */
+    interface KiPromptInput {
+        /**
+          * Comma-separated extensions or MIME types. Empty hides the attachment surface.
+          * @default ''
+         */
+        "accept"?: string;
+        /**
+          * Accessible name of the file picker button.
+          * @default 'Attach files'
+         */
+        "attachLabel": string;
+        /**
+          * Accessible name of the attachment list.
+          * @default 'Attachments'
+         */
+        "attachmentsLabel": string;
+        /**
+          * Excludes the composer from interaction and native form data.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Localized count rejection. The {name} marker is replaced with the file name.
+          * @default '{name} exceeds the maximum number of attachments.'
+         */
+        "fileCountMessage": string;
+        /**
+          * Localized size rejection. The {name} marker is replaced with the file name.
+          * @default '{name} exceeds the file size limit.'
+         */
+        "fileSizeMessage": string;
+        /**
+          * Localized type rejection. The {name} marker is replaced with the file name.
+          * @default '{name} has an unsupported file type.'
+         */
+        "fileTypeMessage": string;
+        /**
+          * Required accessible name of the text field. Supply it even with a placeholder.
+         */
+        "label": string;
+        /**
+          * Maximum count of attached files. Omit for no count limit.
+         */
+        "maxFiles"?: number;
+        /**
+          * Maximum attachment size in bytes per file. Omit for no size limit.
+         */
+        "maxSize"?: number;
+        /**
+          * Optional key for the text in native form data. Files are carried by ki-submit.
+         */
+        "name"?: string;
+        /**
+          * Hint displayed while the text field is empty.
+         */
+        "placeholder"?: string;
+        /**
+          * Prefix of an attachment's remove button name, followed by the file name.
+          * @default 'Remove'
+         */
+        "removeLabel": string;
+        /**
+          * Accessible name of the Send button.
+          * @default 'Send'
+         */
+        "sendLabel": string;
+        /**
+          * Application-owned request state. Only idle can send; streaming exposes Stop.
+          * @default 'idle'
+         */
+        "status"?: KiPromptInputStatus;
+        /**
+          * Accessible name of the Stop button.
+          * @default 'Stop generating'
+         */
+        "stopLabel": string;
+        /**
+          * Send with Enter or with Control/Command+Enter. Shift+Enter always adds a line.
+          * @default 'enter'
+         */
+        "submitOn": KiPromptInputSubmitOn;
+        /**
+          * Current draft text; the value attribute provides the form reset default.
+          * @default ''
+         */
+        "value"?: string;
+        /**
+          * Visible polite status while the assistant streams.
+          * @default 'Writing…'
+         */
+        "writingMessage": string;
+    }
+    /**
      * A machine-scannable QR code that hands a declared value — a link, a
      * pairing payload — from the screen to a nearby camera, encoded locally
      * and restyled entirely through tokens.
@@ -1682,6 +1781,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
+export interface KiPromptInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiPromptInputElement;
+}
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiSegmentedControlElement;
@@ -2191,6 +2294,29 @@ declare global {
         prototype: HTMLKiProgressElement;
         new (): HTMLKiProgressElement;
     };
+    interface HTMLKiPromptInputElementEventMap {
+        "ki-submit": KiPromptInputSubmitDetail;
+        "ki-stop": void;
+    }
+    /**
+     * A multiline assistant composer with local file attachments and send and stop requests.
+     * @whenToUse Compose a message to an assistant, optionally attach local files, and let people interrupt the assistant's response.
+     * @whenNotToUse Ordinary multiline form input without a send or stop interaction (`ki-textarea`), file uploads, or rich text editing.
+     */
+    interface HTMLKiPromptInputElement extends Components.KiPromptInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiPromptInputElementEventMap>(type: K, listener: (this: HTMLKiPromptInputElement, ev: KiPromptInputCustomEvent<HTMLKiPromptInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiPromptInputElementEventMap>(type: K, listener: (this: HTMLKiPromptInputElement, ev: KiPromptInputCustomEvent<HTMLKiPromptInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiPromptInputElement: {
+        prototype: HTMLKiPromptInputElement;
+        new (): HTMLKiPromptInputElement;
+    };
     /**
      * A machine-scannable QR code that hands a declared value — a link, a
      * pairing payload — from the screen to a nearby camera, encoded locally
@@ -2606,6 +2732,7 @@ declare global {
         "ki-note": HTMLKiNoteElement;
         "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
+        "ki-prompt-input": HTMLKiPromptInputElement;
         "ki-qr": HTMLKiQrElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
@@ -3579,6 +3706,115 @@ declare namespace LocalJSX {
         "value"?: number;
     }
     /**
+     * A multiline assistant composer with local file attachments and send and stop requests.
+     * @whenToUse Compose a message to an assistant, optionally attach local files, and let people interrupt the assistant's response.
+     * @whenNotToUse Ordinary multiline form input without a send or stop interaction (`ki-textarea`), file uploads, or rich text editing.
+     */
+    interface KiPromptInput {
+        /**
+          * Comma-separated extensions or MIME types. Empty hides the attachment surface.
+          * @default ''
+         */
+        "accept"?: string;
+        /**
+          * Accessible name of the file picker button.
+          * @default 'Attach files'
+         */
+        "attachLabel"?: string;
+        /**
+          * Accessible name of the attachment list.
+          * @default 'Attachments'
+         */
+        "attachmentsLabel"?: string;
+        /**
+          * Excludes the composer from interaction and native form data.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Localized count rejection. The {name} marker is replaced with the file name.
+          * @default '{name} exceeds the maximum number of attachments.'
+         */
+        "fileCountMessage"?: string;
+        /**
+          * Localized size rejection. The {name} marker is replaced with the file name.
+          * @default '{name} exceeds the file size limit.'
+         */
+        "fileSizeMessage"?: string;
+        /**
+          * Localized type rejection. The {name} marker is replaced with the file name.
+          * @default '{name} has an unsupported file type.'
+         */
+        "fileTypeMessage"?: string;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Required accessible name of the text field. Supply it even with a placeholder.
+         */
+        "label": string;
+        /**
+          * Maximum count of attached files. Omit for no count limit.
+         */
+        "maxFiles"?: number;
+        /**
+          * Maximum attachment size in bytes per file. Omit for no size limit.
+         */
+        "maxSize"?: number;
+        /**
+          * Optional key for the text in native form data. Files are carried by ki-submit.
+         */
+        "name"?: string;
+        /**
+          * Requests that the application stop its streaming response.
+         */
+        "onKi-stop"?: (event: KiPromptInputCustomEvent<void>) => void;
+        /**
+          * Requests a send with original text and a snapshot of accepted local files.
+         */
+        "onKi-submit"?: (event: KiPromptInputCustomEvent<KiPromptInputSubmitDetail>) => void;
+        /**
+          * Hint displayed while the text field is empty.
+         */
+        "placeholder"?: string;
+        /**
+          * Prefix of an attachment's remove button name, followed by the file name.
+          * @default 'Remove'
+         */
+        "removeLabel"?: string;
+        /**
+          * Accessible name of the Send button.
+          * @default 'Send'
+         */
+        "sendLabel"?: string;
+        /**
+          * Application-owned request state. Only idle can send; streaming exposes Stop.
+          * @default 'idle'
+         */
+        "status"?: KiPromptInputStatus;
+        /**
+          * Accessible name of the Stop button.
+          * @default 'Stop generating'
+         */
+        "stopLabel"?: string;
+        /**
+          * Send with Enter or with Control/Command+Enter. Shift+Enter always adds a line.
+          * @default 'enter'
+         */
+        "submitOn"?: KiPromptInputSubmitOn;
+        /**
+          * Current draft text; the value attribute provides the form reset default.
+          * @default ''
+         */
+        "value"?: string;
+        /**
+          * Visible polite status while the assistant streams.
+          * @default 'Writing…'
+         */
+        "writingMessage"?: string;
+    }
+    /**
      * A machine-scannable QR code that hands a declared value — a link, a
      * pairing payload — from the screen to a nearby camera, encoded locally
      * and restyled entirely through tokens.
@@ -4446,6 +4682,27 @@ declare namespace LocalJSX {
         "shape": KiProgressShape;
         "label": string;
     }
+    interface KiPromptInputAttributes {
+        "label": string;
+        "placeholder": string;
+        "value": string;
+        "disabled": boolean;
+        "name": string;
+        "status": KiPromptInputStatus;
+        "accept": string;
+        "maxFiles": number;
+        "maxSize": number;
+        "submitOn": KiPromptInputSubmitOn;
+        "attachLabel": string;
+        "attachmentsLabel": string;
+        "removeLabel": string;
+        "sendLabel": string;
+        "stopLabel": string;
+        "writingMessage": string;
+        "fileTypeMessage": string;
+        "fileSizeMessage": string;
+        "fileCountMessage": string;
+    }
     interface KiQrAttributes {
         "value": string;
         "label": string;
@@ -4594,6 +4851,7 @@ declare namespace LocalJSX {
         "ki-note": Omit<KiNote, keyof KiNoteAttributes> & { [K in keyof KiNote & keyof KiNoteAttributes]?: KiNote[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `attr:${K}`]?: KiNoteAttributes[K] } & { [K in keyof KiNote & keyof KiNoteAttributes as `prop:${K}`]?: KiNote[K] };
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
+        "ki-prompt-input": Omit<KiPromptInput, keyof KiPromptInputAttributes> & { [K in keyof KiPromptInput & keyof KiPromptInputAttributes]?: KiPromptInput[K] } & { [K in keyof KiPromptInput & keyof KiPromptInputAttributes as `attr:${K}`]?: KiPromptInputAttributes[K] } & { [K in keyof KiPromptInput & keyof KiPromptInputAttributes as `prop:${K}`]?: KiPromptInput[K] } & OneOf<"label", KiPromptInput["label"], KiPromptInputAttributes["label"]>;
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
@@ -4907,6 +5165,12 @@ declare module "@stencil/core" {
              * under about one second.
              */
             "ki-progress": LocalJSX.IntrinsicElements["ki-progress"] & JSXBase.HTMLAttributes<HTMLKiProgressElement>;
+            /**
+             * A multiline assistant composer with local file attachments and send and stop requests.
+             * @whenToUse Compose a message to an assistant, optionally attach local files, and let people interrupt the assistant's response.
+             * @whenNotToUse Ordinary multiline form input without a send or stop interaction (`ki-textarea`), file uploads, or rich text editing.
+             */
+            "ki-prompt-input": LocalJSX.IntrinsicElements["ki-prompt-input"] & JSXBase.HTMLAttributes<HTMLKiPromptInputElement>;
             /**
              * A machine-scannable QR code that hands a declared value — a link, a
              * pairing payload — from the screen to a nearby camera, encoded locally
