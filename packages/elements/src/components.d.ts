@@ -22,6 +22,9 @@ import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiFabPosition, KiFabSize, KiFabVariant } from "./components/ki-fab/ki-fab";
+import { KiFabPosition as KiFabPosition1, KiFabVariant as KiFabVariant1 } from "./components/ki-fab/ki-fab";
+import { KiFabMenuSelectDetail } from "./components/ki-fab-menu/ki-fab-menu";
+import { KiFabMenuSelectDetail as KiFabMenuSelectDetail1 } from "./components/ki-fab-menu/ki-fab-menu";
 import { KiLayoutGap } from "./utils/layout-gap";
 import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -64,6 +67,9 @@ export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiFabPosition, KiFabSize, KiFabVariant } from "./components/ki-fab/ki-fab";
+export { KiFabPosition as KiFabPosition1, KiFabVariant as KiFabVariant1 } from "./components/ki-fab/ki-fab";
+export { KiFabMenuSelectDetail } from "./components/ki-fab-menu/ki-fab-menu";
+export { KiFabMenuSelectDetail as KiFabMenuSelectDetail1 } from "./components/ki-fab-menu/ki-fab-menu";
 export { KiLayoutGap } from "./utils/layout-gap";
 export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -751,6 +757,67 @@ export namespace Components {
           * @default 'secondary'
          */
         "variant": KiFabVariant;
+    }
+    /**
+     * An icon FAB that opens two to six related actions above its trigger.
+     * @whenToUse group related creation or screen actions behind one floating button.
+     * @whenNotToUse for a single primary action, long lists, or site navigation.
+     */
+    interface KiFabMenu {
+        /**
+          * Localized accessible name of the trigger when it becomes the close control.
+          * @default 'Close menu'
+         */
+        "closeLabel": string;
+        /**
+          * Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.
+          * @default 'plus'
+         */
+        "iconName": string;
+        /**
+          * Accessible name of the closed trigger and of the menu.
+         */
+        "label": string;
+        /**
+          * Whether the action stack is open. Reflected when the user opens or dismisses it.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.
+          * @default 'static'
+         */
+        "position": KiFabPosition1;
+        /**
+          * Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim="false" to opt out.
+          * @default true
+         */
+        "scrim": boolean;
+        /**
+          * Closed FAB surface. The open trigger always uses primary.
+          * @default 'secondary'
+         */
+        "variant": KiFabVariant1;
+    }
+    /**
+     * A labeled command or native link within a floating action menu.
+     * @whenToUse as a direct child of ki-fab-menu, with a short, visible action label.
+     * @whenNotToUse for a standalone action, a form control, or a container of interactive content.
+     */
+    interface KiFabMenuItem {
+        /**
+          * A nonempty destination renders a native link and preserves relative URL resolution.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Registered Lucide glyph. Import the desired icon before rendering.
+         */
+        "iconName"?: string;
+        /**
+          * Stable selection identifier. When omitted, the menu reports the trimmed visible label.
+         */
+        "value"?: string;
     }
     /**
      * Displays an ISO date or timestamp in the reader's language.
@@ -2155,6 +2222,14 @@ export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
 }
+export interface KiFabMenuCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiFabMenuElement;
+}
+export interface KiFabMenuItemCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiFabMenuItemElement;
+}
 export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
@@ -2530,6 +2605,52 @@ declare global {
     var HTMLKiFabElement: {
         prototype: HTMLKiFabElement;
         new (): HTMLKiFabElement;
+    };
+    interface HTMLKiFabMenuElementEventMap {
+        "ki-open": void;
+        "ki-close": void;
+        "ki-select": KiFabMenuSelectDetail;
+    }
+    /**
+     * An icon FAB that opens two to six related actions above its trigger.
+     * @whenToUse group related creation or screen actions behind one floating button.
+     * @whenNotToUse for a single primary action, long lists, or site navigation.
+     */
+    interface HTMLKiFabMenuElement extends Components.KiFabMenu, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiFabMenuElementEventMap>(type: K, listener: (this: HTMLKiFabMenuElement, ev: KiFabMenuCustomEvent<HTMLKiFabMenuElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiFabMenuElementEventMap>(type: K, listener: (this: HTMLKiFabMenuElement, ev: KiFabMenuCustomEvent<HTMLKiFabMenuElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiFabMenuElement: {
+        prototype: HTMLKiFabMenuElement;
+        new (): HTMLKiFabMenuElement;
+    };
+    interface HTMLKiFabMenuItemElementEventMap {
+        "ki-select": KiFabMenuSelectDetail1;
+    }
+    /**
+     * A labeled command or native link within a floating action menu.
+     * @whenToUse as a direct child of ki-fab-menu, with a short, visible action label.
+     * @whenNotToUse for a standalone action, a form control, or a container of interactive content.
+     */
+    interface HTMLKiFabMenuItemElement extends Components.KiFabMenuItem, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiFabMenuItemElementEventMap>(type: K, listener: (this: HTMLKiFabMenuItemElement, ev: KiFabMenuItemCustomEvent<HTMLKiFabMenuItemElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiFabMenuItemElementEventMap>(type: K, listener: (this: HTMLKiFabMenuItemElement, ev: KiFabMenuItemCustomEvent<HTMLKiFabMenuItemElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiFabMenuItemElement: {
+        prototype: HTMLKiFabMenuItemElement;
+        new (): HTMLKiFabMenuItemElement;
     };
     /**
      * Displays an ISO date or timestamp in the reader's language.
@@ -3251,6 +3372,8 @@ declare global {
         "ki-divider": HTMLKiDividerElement;
         "ki-empty-state": HTMLKiEmptyStateElement;
         "ki-fab": HTMLKiFabElement;
+        "ki-fab-menu": HTMLKiFabMenuElement;
+        "ki-fab-menu-item": HTMLKiFabMenuItemElement;
         "ki-format-date": HTMLKiFormatDateElement;
         "ki-format-number": HTMLKiFormatNumberElement;
         "ki-grid": HTMLKiGridElement;
@@ -4004,6 +4127,83 @@ declare namespace LocalJSX {
           * @default 'secondary'
          */
         "variant"?: KiFabVariant;
+    }
+    /**
+     * An icon FAB that opens two to six related actions above its trigger.
+     * @whenToUse group related creation or screen actions behind one floating button.
+     * @whenNotToUse for a single primary action, long lists, or site navigation.
+     */
+    interface KiFabMenu {
+        /**
+          * Localized accessible name of the trigger when it becomes the close control.
+          * @default 'Close menu'
+         */
+        "closeLabel"?: string;
+        /**
+          * Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.
+          * @default 'plus'
+         */
+        "iconName"?: string;
+        /**
+          * Accessible name of the closed trigger and of the menu.
+         */
+        "label": string;
+        /**
+          * Emitted when the action stack closes.
+         */
+        "onKi-close"?: (event: KiFabMenuCustomEvent<void>) => void;
+        /**
+          * Emitted when the action stack opens.
+         */
+        "onKi-open"?: (event: KiFabMenuCustomEvent<void>) => void;
+        /**
+          * Emits the selected item's value or its trimmed label. Native links retain their destination.
+         */
+        "onKi-select"?: (event: KiFabMenuCustomEvent<KiFabMenuSelectDetail>) => void;
+        /**
+          * Whether the action stack is open. Reflected when the user opens or dismisses it.
+          * @default false
+         */
+        "open"?: boolean;
+        /**
+          * Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.
+          * @default 'static'
+         */
+        "position"?: KiFabPosition1;
+        /**
+          * Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim="false" to opt out.
+          * @default true
+         */
+        "scrim"?: boolean;
+        /**
+          * Closed FAB surface. The open trigger always uses primary.
+          * @default 'secondary'
+         */
+        "variant"?: KiFabVariant1;
+    }
+    /**
+     * A labeled command or native link within a floating action menu.
+     * @whenToUse as a direct child of ki-fab-menu, with a short, visible action label.
+     * @whenNotToUse for a standalone action, a form control, or a container of interactive content.
+     */
+    interface KiFabMenuItem {
+        /**
+          * A nonempty destination renders a native link and preserves relative URL resolution.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Registered Lucide glyph. Import the desired icon before rendering.
+         */
+        "iconName"?: string;
+        /**
+          * Local command selection for a direct action binding. Links use native navigation.
+         */
+        "onKi-select"?: (event: KiFabMenuItemCustomEvent<KiFabMenuSelectDetail1>) => void;
+        /**
+          * Stable selection identifier. When omitted, the menu reports the trimmed visible label.
+         */
+        "value"?: string;
     }
     /**
      * Displays an ISO date or timestamp in the reader's language.
@@ -5548,6 +5748,20 @@ declare namespace LocalJSX {
         "position": KiFabPosition;
         "href": string;
     }
+    interface KiFabMenuAttributes {
+        "label": string;
+        "iconName": string;
+        "closeLabel": string;
+        "open": boolean;
+        "variant": KiFabVariant;
+        "position": KiFabPosition;
+        "scrim": boolean;
+    }
+    interface KiFabMenuItemAttributes {
+        "iconName": string;
+        "href": string;
+        "value": string;
+    }
     interface KiFormatDateAttributes {
         "date": string;
         "dateStyle": 'full' | 'long' | 'medium' | 'short';
@@ -5828,6 +6042,8 @@ declare namespace LocalJSX {
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-empty-state": Omit<KiEmptyState, keyof KiEmptyStateAttributes> & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes]?: KiEmptyState[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `attr:${K}`]?: KiEmptyStateAttributes[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `prop:${K}`]?: KiEmptyState[K] } & OneOf<"heading", KiEmptyState["heading"], KiEmptyStateAttributes["heading"]>;
         "ki-fab": Omit<KiFab, keyof KiFabAttributes> & { [K in keyof KiFab & keyof KiFabAttributes]?: KiFab[K] } & { [K in keyof KiFab & keyof KiFabAttributes as `attr:${K}`]?: KiFabAttributes[K] } & { [K in keyof KiFab & keyof KiFabAttributes as `prop:${K}`]?: KiFab[K] } & OneOf<"label", KiFab["label"], KiFabAttributes["label"]>;
+        "ki-fab-menu": Omit<KiFabMenu, keyof KiFabMenuAttributes> & { [K in keyof KiFabMenu & keyof KiFabMenuAttributes]?: KiFabMenu[K] } & { [K in keyof KiFabMenu & keyof KiFabMenuAttributes as `attr:${K}`]?: KiFabMenuAttributes[K] } & { [K in keyof KiFabMenu & keyof KiFabMenuAttributes as `prop:${K}`]?: KiFabMenu[K] } & OneOf<"label", KiFabMenu["label"], KiFabMenuAttributes["label"]>;
+        "ki-fab-menu-item": Omit<KiFabMenuItem, keyof KiFabMenuItemAttributes> & { [K in keyof KiFabMenuItem & keyof KiFabMenuItemAttributes]?: KiFabMenuItem[K] } & { [K in keyof KiFabMenuItem & keyof KiFabMenuItemAttributes as `attr:${K}`]?: KiFabMenuItemAttributes[K] } & { [K in keyof KiFabMenuItem & keyof KiFabMenuItemAttributes as `prop:${K}`]?: KiFabMenuItem[K] };
         "ki-format-date": Omit<KiFormatDate, keyof KiFormatDateAttributes> & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes]?: KiFormatDate[K] } & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes as `attr:${K}`]?: KiFormatDateAttributes[K] } & { [K in keyof KiFormatDate & keyof KiFormatDateAttributes as `prop:${K}`]?: KiFormatDate[K] };
         "ki-format-number": Omit<KiFormatNumber, keyof KiFormatNumberAttributes> & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes]?: KiFormatNumber[K] } & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes as `attr:${K}`]?: KiFormatNumberAttributes[K] } & { [K in keyof KiFormatNumber & keyof KiFormatNumberAttributes as `prop:${K}`]?: KiFormatNumber[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
@@ -6059,6 +6275,18 @@ declare module "@stencil/core" {
              * @event click - Native activation click. The page or guarded renderer handles the declared action.
              */
             "ki-fab": LocalJSX.IntrinsicElements["ki-fab"] & JSXBase.HTMLAttributes<HTMLKiFabElement>;
+            /**
+             * An icon FAB that opens two to six related actions above its trigger.
+             * @whenToUse group related creation or screen actions behind one floating button.
+             * @whenNotToUse for a single primary action, long lists, or site navigation.
+             */
+            "ki-fab-menu": LocalJSX.IntrinsicElements["ki-fab-menu"] & JSXBase.HTMLAttributes<HTMLKiFabMenuElement>;
+            /**
+             * A labeled command or native link within a floating action menu.
+             * @whenToUse as a direct child of ki-fab-menu, with a short, visible action label.
+             * @whenNotToUse for a standalone action, a form control, or a container of interactive content.
+             */
+            "ki-fab-menu-item": LocalJSX.IntrinsicElements["ki-fab-menu-item"] & JSXBase.HTMLAttributes<HTMLKiFabMenuItemElement>;
             /**
              * Displays an ISO date or timestamp in the reader's language.
              * @whenToUse For raw date and timestamp values in tables, records and prose.

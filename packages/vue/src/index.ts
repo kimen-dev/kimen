@@ -22,6 +22,8 @@ export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
 export { KiEmptyState } from './ki-empty-state.js';
 export { KiFab } from './ki-fab.js';
+export { KiFabMenu } from './ki-fab-menu.js';
+export { KiFabMenuItem } from './ki-fab-menu-item.js';
 export { KiFormatDate } from './ki-format-date.js';
 export { KiFormatNumber } from './ki-format-number.js';
 export { KiGrid } from './ki-grid.js';

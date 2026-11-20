@@ -51,6 +51,8 @@ methods, CSS custom properties and examples.
 - [ki-divider](llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
 - [ki-empty-state](llms/ki-empty-state.md): explain an empty list, table, search result, or first-run view.
 - [ki-fab](llms/ki-fab.md): give a mobile screen one primary action, such as composing a draft or creating a project.
+- [ki-fab-menu](llms/ki-fab-menu.md): group related creation or screen actions behind one floating button.
+- [ki-fab-menu-item](llms/ki-fab-menu-item.md): as a direct child of ki-fab-menu, with a short, visible action label.
 - [ki-format-date](llms/ki-format-date.md): For raw date and timestamp values in tables, records and prose.
 - [ki-format-number](llms/ki-format-number.md): For numeric data, currency amounts, ratios and measurements in content.
 - [ki-grid](llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.

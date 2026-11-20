@@ -6710,6 +6710,550 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-fab-menu.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFabMenu",
+          "customElement": true,
+          "tagName": "ki-fab-menu",
+          "description": "An icon FAB that opens two to six related actions above its trigger.",
+          "whenToUse": "group related creation or screen actions behind one floating button.",
+          "whenNotToUse": "for a single primary action, long lists, or site navigation.",
+          "attributes": [
+            {
+              "name": "close-label",
+              "fieldName": "closeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Close menu'",
+              "description": "Localized accessible name of the trigger when it becomes the close control."
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string"
+              },
+              "default": "'plus'",
+              "description": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the closed trigger and of the menu.",
+              "required": true
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the action stack is open. Reflected when the user opens or dismisses it."
+            },
+            {
+              "name": "position",
+              "fieldName": "position",
+              "type": {
+                "text": "\"fixed\" | \"static\""
+              },
+              "default": "'static'",
+              "description": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner."
+            },
+            {
+              "name": "scrim",
+              "fieldName": "scrim",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"primary\" | \"secondary\" | \"surface\""
+              },
+              "default": "'secondary'",
+              "description": "Closed FAB surface. The open trigger always uses primary."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "closeLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Close menu'",
+              "description": "Localized accessible name of the trigger when it becomes the close control.",
+              "attribute": "close-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'plus'",
+              "description": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the closed trigger and of the menu.",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the action stack is open. Reflected when the user opens or dismisses it.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "privacy": "public",
+              "type": {
+                "text": "\"fixed\" | \"static\""
+              },
+              "default": "'static'",
+              "description": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.",
+              "attribute": "position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "scrim",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out.",
+              "attribute": "scrim",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"primary\" | \"secondary\" | \"surface\""
+              },
+              "default": "'secondary'",
+              "description": "Closed FAB surface. The open trigger always uses primary.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-close",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Emitted when the action stack closes."
+            },
+            {
+              "name": "ki-open",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Emitted when the action stack opens."
+            },
+            {
+              "name": "ki-select",
+              "type": {
+                "text": "CustomEvent<KiFabMenuSelectDetail>"
+              },
+              "description": "Emits the selected item's value or its trimmed label. Native links retain their destination."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Two to six direct ki-fab-menu-item children, in top-to-bottom order."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "menu",
+              "description": "The named action list above the trigger."
+            },
+            {
+              "name": "scrim",
+              "description": "The optional pointer-dismissible overlay behind the menu."
+            },
+            {
+              "name": "trigger",
+              "description": "The native floating button that opens and closes the menu."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-fab-backdrop-filter",
+              "description": "Complete optional filter behind the FAB."
+            },
+            {
+              "name": "--ki-fab-bg",
+              "description": "Tinted secondary FAB fill."
+            },
+            {
+              "name": "--ki-fab-bg-image",
+              "description": "Optional layer painted over the FAB fill."
+            },
+            {
+              "name": "--ki-fab-fg",
+              "description": "Ink on the tinted secondary FAB."
+            },
+            {
+              "name": "--ki-fab-font-family",
+              "description": "Typeface for FAB labels."
+            },
+            {
+              "name": "--ki-fab-forced-colors-border-width",
+              "description": "Boundary width for the FAB in forced colors."
+            },
+            {
+              "name": "--ki-fab-hover-shadow",
+              "description": "FAB elevation for a pointer that can hover."
+            },
+            {
+              "name": "--ki-fab-icon-size",
+              "description": "Glyph size of the default FAB."
+            },
+            {
+              "name": "--ki-fab-menu-gap",
+              "description": "Gap between two stacked actions."
+            },
+            {
+              "name": "--ki-fab-menu-scrim-backdrop-filter",
+              "description": "Complete optional filter behind the scrim."
+            },
+            {
+              "name": "--ki-fab-menu-scrim-bg",
+              "description": "Dimming fill behind the open menu and its trigger."
+            },
+            {
+              "name": "--ki-fab-menu-scrim-bg-image",
+              "description": "Optional image painted above the scrim fill."
+            },
+            {
+              "name": "--ki-fab-menu-trigger-gap",
+              "description": "Gap between the last action and the FAB."
+            },
+            {
+              "name": "--ki-fab-mobile-nav-block-size",
+              "description": "Height to reserve for mobile navigation, excluding the safe-area inset."
+            },
+            {
+              "name": "--ki-fab-offset",
+              "description": "Fixed FAB gap to the viewport edge or mobile navigation."
+            },
+            {
+              "name": "--ki-fab-primary-bg",
+              "description": "Strong primary FAB fill."
+            },
+            {
+              "name": "--ki-fab-primary-fg",
+              "description": "Ink on the strong primary FAB."
+            },
+            {
+              "name": "--ki-fab-radius",
+              "description": "Corner radius of the default FAB size."
+            },
+            {
+              "name": "--ki-fab-shadow",
+              "description": "Resting FAB elevation."
+            },
+            {
+              "name": "--ki-fab-size",
+              "description": "Minimum FAB footprint in the default size."
+            },
+            {
+              "name": "--ki-fab-surface-bg",
+              "description": "Raised surface FAB fill."
+            },
+            {
+              "name": "--ki-fab-surface-fg",
+              "description": "Ink on the raised surface FAB."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFabMenu",
+          "declaration": {
+            "name": "KiFabMenu",
+            "module": "dist/components/ki-fab-menu.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-fab-menu",
+          "declaration": {
+            "name": "KiFabMenu",
+            "module": "dist/components/ki-fab-menu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-fab-menu-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFabMenuItem",
+          "customElement": true,
+          "tagName": "ki-fab-menu-item",
+          "description": "A labeled command or native link within a floating action menu.",
+          "whenToUse": "as a direct child of ki-fab-menu, with a short, visible action label.",
+          "whenNotToUse": "for a standalone action, a form control, or a container of interactive content.",
+          "attributes": [
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A nonempty destination renders a native link and preserves relative URL resolution.",
+              "format": "url"
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Registered Lucide glyph. Import the desired icon before rendering."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Stable selection identifier. When omitted, the menu reports the trimmed visible label."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A nonempty destination renders a native link and preserves relative URL resolution.",
+              "attribute": "href",
+              "reflects": false,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Registered Lucide glyph. Import the desired icon before rendering.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Stable selection identifier. When omitted, the menu reports the trimmed visible label.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-select",
+              "type": {
+                "text": "CustomEvent<KiFabMenuSelectDetail>"
+              },
+              "description": "Local command selection for a direct action binding. Links use native navigation."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The visible action label."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "control",
+              "description": "The native action button or link."
+            },
+            {
+              "name": "icon",
+              "description": "The decorative glyph next to the label."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-fab-forced-colors-border-width",
+              "description": "Boundary width for the FAB in forced colors."
+            },
+            {
+              "name": "--ki-fab-menu-item-backdrop-filter",
+              "description": "Complete optional filter behind the action."
+            },
+            {
+              "name": "--ki-fab-menu-item-bg",
+              "description": "Tinted surface of a floating action."
+            },
+            {
+              "name": "--ki-fab-menu-item-bg-image",
+              "description": "Optional image painted above the action fill."
+            },
+            {
+              "name": "--ki-fab-menu-item-content-gap",
+              "description": "Space between the action glyph and label."
+            },
+            {
+              "name": "--ki-fab-menu-item-fg",
+              "description": "Label and icon ink on the tinted action surface."
+            },
+            {
+              "name": "--ki-fab-menu-item-font-family",
+              "description": "Typeface for action labels."
+            },
+            {
+              "name": "--ki-fab-menu-item-font-size",
+              "description": "Text size for action labels."
+            },
+            {
+              "name": "--ki-fab-menu-item-font-weight",
+              "description": "Text weight of an action label."
+            },
+            {
+              "name": "--ki-fab-menu-item-height",
+              "description": "Minimum block size and inline target of an action."
+            },
+            {
+              "name": "--ki-fab-menu-item-hover-shadow",
+              "description": "Elevation of a hovered action."
+            },
+            {
+              "name": "--ki-fab-menu-item-icon-size",
+              "description": "Size of the glyph preceding an action label."
+            },
+            {
+              "name": "--ki-fab-menu-item-line-height",
+              "description": "Line height of an action label."
+            },
+            {
+              "name": "--ki-fab-menu-item-padding-block",
+              "description": "Block padding for a wrapping action label."
+            },
+            {
+              "name": "--ki-fab-menu-item-padding-end",
+              "description": "Inline-end padding of an action."
+            },
+            {
+              "name": "--ki-fab-menu-item-padding-start",
+              "description": "Inline-start padding of an action."
+            },
+            {
+              "name": "--ki-fab-menu-item-radius",
+              "description": "Pill radius of an action."
+            },
+            {
+              "name": "--ki-fab-menu-item-shadow",
+              "description": "Elevation of a resting action."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFabMenuItem",
+          "declaration": {
+            "name": "KiFabMenuItem",
+            "module": "dist/components/ki-fab-menu-item.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-fab-menu-item",
+          "declaration": {
+            "name": "KiFabMenuItem",
+            "module": "dist/components/ki-fab-menu-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-format-date.js",
       "declarations": [
         {

@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 456 semantic
-and 1526 component tokens. Values are the resolved **onmars light**
+and 1548 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1381,6 +1381,38 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-fab-xl-icon-size` | `2.25rem` | Glyph size of the large FAB. |
 | `--ki-fab-xl-radius` | `28px` | Corner radius of the large FAB. |
 | `--ki-fab-xl-size` | `6rem` | Minimum footprint of the large FAB. |
+
+### `ki-fab-menu`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-fab-menu-gap` | `0.25rem` | Gap between two stacked actions. |
+| `--ki-fab-menu-scrim-backdrop-filter` | `none` | Complete optional filter behind the scrim. |
+| `--ki-fab-menu-scrim-bg` | `rgba(24, 22, 19, 0.38)` | Dimming fill behind the open menu and its trigger. |
+| `--ki-fab-menu-scrim-bg-image` | `none` | Optional image painted above the scrim fill. |
+| `--ki-fab-menu-trigger-gap` | `0.5rem` | Gap between the last action and the FAB. |
+
+### `ki-fab-menu-item`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-fab-menu-item-backdrop-filter` | `none` | Complete optional filter behind the action. |
+| `--ki-fab-menu-item-bg` | `#ffebe5` | Tinted surface of a floating action. |
+| `--ki-fab-menu-item-bg-image` | `none` | Optional image painted above the action fill. |
+| `--ki-fab-menu-item-content-gap` | `0.5rem` | Space between the action glyph and label. |
+| `--ki-fab-menu-item-fg` | `#9a3715` | Label and icon ink on the tinted action surface. |
+| `--ki-fab-menu-item-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface for action labels. |
+| `--ki-fab-menu-item-font-size` | `0.9375rem` | Text size for action labels. |
+| `--ki-fab-menu-item-font-weight` | `600` | Text weight of an action label. |
+| `--ki-fab-menu-item-height` | `3.5rem` | Minimum block size and inline target of an action. |
+| `--ki-fab-menu-item-hover-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Elevation of a hovered action. |
+| `--ki-fab-menu-item-icon-size` | `1.25rem` | Size of the glyph preceding an action label. |
+| `--ki-fab-menu-item-line-height` | `1.5rem` | Line height of an action label. |
+| `--ki-fab-menu-item-padding-block` | `0.5rem` | Block padding for a wrapping action label. |
+| `--ki-fab-menu-item-padding-end` | `1rem` | Inline-end padding of an action. |
+| `--ki-fab-menu-item-padding-start` | `0.75rem` | Inline-start padding of an action. |
+| `--ki-fab-menu-item-radius` | `1000px` | Pill radius of an action. |
+| `--ki-fab-menu-item-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Elevation of a resting action. |
 
 ### `ki-format`
 

@@ -965,6 +965,91 @@ export const catalogData = {
       "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
       "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
     },
+    "ki-fab-menu": {
+      "description": "An icon FAB that opens two to six related actions above its trigger.",
+      "events": {
+        "ki-select": "Emits the selected item's value or its trimmed label. Native links retain their destination."
+      },
+      "props": {
+        "close-label": {
+          "type": "string",
+          "description": "Localized accessible name of the trigger when it becomes the close control.",
+          "default": "Close menu"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.",
+          "default": "plus"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the closed trigger and of the menu.",
+          "required": true
+        },
+        "open": {
+          "type": "boolean",
+          "description": "Whether the action stack is open. Reflected when the user opens or dismisses it.",
+          "default": false
+        },
+        "position": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "static"
+          ],
+          "description": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.",
+          "default": "static"
+        },
+        "scrim": {
+          "type": "boolean",
+          "description": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out.",
+          "default": true
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "primary",
+            "secondary",
+            "surface"
+          ],
+          "description": "Closed FAB surface. The open trigger always uses primary.",
+          "default": "secondary"
+        }
+      },
+      "slots": {
+        "": "Two to six direct ki-fab-menu-item children, in top-to-bottom order."
+      },
+      "tag": "ki-fab-menu",
+      "whenNotToUse": "for a single primary action, long lists, or site navigation.",
+      "whenToUse": "group related creation or screen actions behind one floating button."
+    },
+    "ki-fab-menu-item": {
+      "description": "A labeled command or native link within a floating action menu.",
+      "events": {
+        "ki-select": "Local command selection for a direct action binding. Links use native navigation."
+      },
+      "props": {
+        "href": {
+          "type": "string",
+          "description": "A nonempty destination renders a native link and preserves relative URL resolution.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide glyph. Import the desired icon before rendering."
+        },
+        "value": {
+          "type": "string",
+          "description": "Stable selection identifier. When omitted, the menu reports the trimmed visible label."
+        }
+      },
+      "slots": {
+        "": "The visible action label."
+      },
+      "tag": "ki-fab-menu-item",
+      "whenNotToUse": "for a standalone action, a form control, or a container of interactive content.",
+      "whenToUse": "as a direct child of ki-fab-menu, with a short, visible action label."
+    },
     "ki-format-date": {
       "description": "Displays an ISO date or timestamp in the reader's language.",
       "events": {},

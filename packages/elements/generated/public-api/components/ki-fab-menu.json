@@ -1,0 +1,424 @@
+{
+  "component": {
+    "attributes": {
+      "close-label": {
+        "default": "'Close menu'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the trigger when it becomes the close control.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "icon-name": {
+        "default": "'plus'",
+        "deprecatedSince": null,
+        "description": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the closed trigger and of the menu.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the action stack is open. Reflected when the user opens or dismisses it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "position": {
+        "default": "'static'",
+        "deprecatedSince": null,
+        "description": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.",
+        "replacement": null,
+        "required": false,
+        "type": "\"fixed\" | \"static\""
+      },
+      "scrim": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "variant": {
+        "default": "'secondary'",
+        "deprecatedSince": null,
+        "description": "Closed FAB surface. The open trigger always uses primary.",
+        "replacement": null,
+        "required": false,
+        "type": "\"primary\" | \"secondary\" | \"surface\""
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete optional filter behind the FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Tinted secondary FAB fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional layer painted over the FAB fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink on the tinted secondary FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface for FAB labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-forced-colors-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Boundary width for the FAB in forced colors.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-hover-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "FAB elevation for a pointer that can hover.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph size of the default FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between two stacked actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-scrim-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete optional filter behind the scrim.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-scrim-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Dimming fill behind the open menu and its trigger.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-scrim-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted above the scrim fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-trigger-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between the last action and the FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-mobile-nav-block-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Height to reserve for mobile navigation, excluding the safe-area inset.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fixed FAB gap to the viewport edge or mobile navigation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-primary-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Strong primary FAB fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-primary-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink on the strong primary FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the default FAB size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting FAB elevation.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum FAB footprint in the default size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-surface-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised surface FAB fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-surface-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink on the raised surface FAB.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "An icon FAB that opens two to six related actions above its trigger.",
+    "events": {
+      "ki-close": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted when the action stack closes.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      },
+      "ki-open": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted when the action stack opens.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      },
+      "ki-select": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emits the selected item's value or its trimmed label. Native links retain their destination.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiFabMenuSelectDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "menu": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named action list above the trigger.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "scrim": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The optional pointer-dismissible overlay behind the menu.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "trigger": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native floating button that opens and closes the menu.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "closeLabel": {
+        "default": "'Close menu'",
+        "deprecatedSince": null,
+        "description": "Localized accessible name of the trigger when it becomes the close control.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "iconName": {
+        "default": "'plus'",
+        "deprecatedSince": null,
+        "description": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name of the closed trigger and of the menu.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the action stack is open. Reflected when the user opens or dismisses it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "position": {
+        "default": "'static'",
+        "deprecatedSince": null,
+        "description": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.",
+        "replacement": null,
+        "required": false,
+        "type": "\"fixed\" | \"static\""
+      },
+      "scrim": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "variant": {
+        "default": "'secondary'",
+        "deprecatedSince": null,
+        "description": "Closed FAB surface. The open trigger always uses primary.",
+        "replacement": null,
+        "required": false,
+        "type": "\"primary\" | \"secondary\" | \"surface\""
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Two to six direct ki-fab-menu-item children, in top-to-bottom order.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-fab-menu.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-fab-menu.d.ts",
+    "symbols": {
+      "KiFabMenu": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiFabMenu extends Components.KiFabMenu, HTMLElement {\n}\nexport const KiFabMenu: {\n    prototype: KiFabMenu;\n    new (): KiFabMenu;\n};"
+      },
+      "KiFabMenuSelectDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiFabMenuSelectDetail {\n    value: string;\n}"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-fab-menu.js"
+  }
+}

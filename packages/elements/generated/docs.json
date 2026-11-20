@@ -4634,6 +4634,519 @@
       }
     },
     {
+      "filePath": "src/components/ki-fab-menu/ki-fab-menu.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-fab-menu",
+      "docs": "An icon FAB that opens two to six related actions above its trigger.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "group related creation or screen actions behind one floating button."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for a single primary action, long lists, or site navigation."
+        },
+        {
+          "name": "slot",
+          "text": "- Two to six direct ki-fab-menu-item children, in top-to-bottom order."
+        },
+        {
+          "name": "part",
+          "text": "trigger - The native floating button that opens and closes the menu."
+        },
+        {
+          "name": "part",
+          "text": "menu - The named action list above the trigger."
+        },
+        {
+          "name": "part",
+          "text": "scrim - The optional pointer-dismissible overlay behind the menu."
+        }
+      ],
+      "usage": {
+        "examples": "# Floating action menu examples\n\nRegister optional Lucide glyphs, then register the menu and its item together.\n\n```ts\nimport '@kimen/elements/icons/calendar';\nimport '@kimen/elements/icons/pencil';\nimport { defineCustomElement as defineItem } from '@kimen/elements/ki-fab-menu-item';\nimport { defineCustomElement as defineMenu } from '@kimen/elements/ki-fab-menu';\n\ndefineItem();\ndefineMenu();\n```\n\n```html\n<ki-fab-menu label=\"Create\" icon-name=\"plus\" position=\"fixed\">\n  <ki-fab-menu-item icon-name=\"pencil\" value=\"message\">New message</ki-fab-menu-item>\n  <ki-fab-menu-item icon-name=\"calendar\" href=\"/events/new\">New event</ki-fab-menu-item>\n</ki-fab-menu>\n```\n\nListen to `ki-select` on the menu to handle commands. Use the stable `value`\nin the event detail. Leave link navigation to the native anchor. In a catalog\nspec, bind separate action IDs to command items and supply a stable `value`\nfor each item. Keep link items unbound.\n\nUse two to six direct items. Fixed placement shares the FAB's safe-area\nand navigation clearance tokens. In static placement, leave space above\nthe trigger for the stack.\n"
+      },
+      "props": [
+        {
+          "name": "closeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "close-label",
+          "reflectToAttr": false,
+          "docs": "Localized accessible name of the trigger when it becomes the close control.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Close menu'"
+            }
+          ],
+          "default": "'Close menu'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Registered Lucide glyph for the closed trigger. The plus glyph ships with the component.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'plus'"
+            }
+          ],
+          "default": "'plus'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the closed trigger and of the menu.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Whether the action stack is open. Reflected when the user opens or dismisses it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "position",
+          "type": "\"fixed\" | \"static\"",
+          "complexType": {
+            "original": "KiFabPosition",
+            "resolved": "\"fixed\" | \"static\"",
+            "references": {
+              "KiFabPosition": {
+                "location": "import",
+                "path": "../ki-fab/ki-fab",
+                "id": "src/components/ki-fab/ki-fab.tsx::KiFabPosition",
+                "referenceLocation": "KiFabPosition"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "position",
+          "reflectToAttr": true,
+          "docs": "Static anchors to the host. Fixed anchors to the viewport's block-end inline-end corner.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'static'"
+            }
+          ],
+          "default": "'static'",
+          "values": [
+            {
+              "value": "fixed",
+              "type": "string"
+            },
+            {
+              "value": "static",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "scrim",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "scrim",
+          "reflectToAttr": false,
+          "docs": "Dim the viewport and dismiss on a scrim click. Use the boolean property or scrim=\"false\" to opt out.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "true"
+            }
+          ],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"primary\" | \"secondary\" | \"surface\"",
+          "complexType": {
+            "original": "KiFabVariant",
+            "resolved": "\"primary\" | \"secondary\" | \"surface\"",
+            "references": {
+              "KiFabVariant": {
+                "location": "import",
+                "path": "../ki-fab/ki-fab",
+                "id": "src/components/ki-fab/ki-fab.tsx::KiFabVariant",
+                "referenceLocation": "KiFabVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Closed FAB surface. The open trigger always uses primary.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'secondary'"
+            }
+          ],
+          "default": "'secondary'",
+          "values": [
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "secondary",
+              "type": "string"
+            },
+            {
+              "value": "surface",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-close",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Emitted when the action stack closes.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-open",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Emitted when the action stack opens.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-select",
+          "detail": "KiFabMenuSelectDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiFabMenuSelectDetail",
+            "resolved": "KiFabMenuSelectDetail",
+            "references": {
+              "KiFabMenuSelectDetail": {
+                "location": "local",
+                "path": "src/components/ki-fab-menu/ki-fab-menu.tsx",
+                "id": "src/components/ki-fab-menu/ki-fab-menu.tsx::KiFabMenuSelectDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Emits the selected item's value or its trimmed label. Native links retain their destination.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Two to six direct ki-fab-menu-item children, in top-to-bottom order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "menu",
+          "docs": "The named action list above the trigger."
+        },
+        {
+          "name": "scrim",
+          "docs": "The optional pointer-dismissible overlay behind the menu."
+        },
+        {
+          "name": "trigger",
+          "docs": "The native floating button that opens and closes the menu."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-fab-menu": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ki-fab-menu-item/ki-fab-menu-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-fab-menu-item",
+      "docs": "A labeled command or native link within a floating action menu.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "as a direct child of ki-fab-menu, with a short, visible action label."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "for a standalone action, a form control, or a container of interactive content."
+        },
+        {
+          "name": "slot",
+          "text": "- The visible action label."
+        },
+        {
+          "name": "part",
+          "text": "control - The native action button or link."
+        },
+        {
+          "name": "part",
+          "text": "icon - The decorative glyph next to the label."
+        }
+      ],
+      "usage": {
+        "examples": "# Floating action menu item examples\n\nPlace commands and links directly inside a menu and supply visible labels.\n\n```html\n<ki-fab-menu label=\"Create\">\n  <ki-fab-menu-item value=\"message\">New message</ki-fab-menu-item>\n  <ki-fab-menu-item href=\"/events/new\">New event</ki-fab-menu-item>\n</ki-fab-menu>\n```\n\nThe command reports `message` through the parent menu's `ki-select` event.\nThe link reports `New event` and follows its native destination.\n"
+      },
+      "props": [
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "A nonempty destination renders a native link and preserves relative URL resolution.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Registered Lucide glyph. Import the desired icon before rendering.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Stable selection identifier. When omitted, the menu reports the trimmed visible label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-select",
+          "detail": "KiFabMenuSelectDetail",
+          "bubbles": false,
+          "complexType": {
+            "original": "KiFabMenuSelectDetail",
+            "resolved": "KiFabMenuSelectDetail",
+            "references": {
+              "KiFabMenuSelectDetail": {
+                "location": "import",
+                "path": "../ki-fab-menu/ki-fab-menu",
+                "id": "src/components/ki-fab-menu/ki-fab-menu.tsx::KiFabMenuSelectDetail",
+                "referenceLocation": "KiFabMenuSelectDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": false,
+          "docs": "Local command selection for a direct action binding. Links use native navigation.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The visible action label."
+        }
+      ],
+      "parts": [
+        {
+          "name": "control",
+          "docs": "The native action button or link."
+        },
+        {
+          "name": "icon",
+          "docs": "The decorative glyph next to the label."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-fab-menu-item": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-format-date/ki-format-date.tsx",
       "encapsulation": "shadow",
       "tag": "ki-format-date",
@@ -5467,6 +5980,8 @@
         "ki-copy-button",
         "ki-empty-state",
         "ki-fab",
+        "ki-fab-menu",
+        "ki-fab-menu-item",
         "ki-stat"
       ],
       "dependencies": [],
@@ -5478,6 +5993,12 @@
           "ki-icon"
         ],
         "ki-fab": [
+          "ki-icon"
+        ],
+        "ki-fab-menu": [
+          "ki-icon"
+        ],
+        "ki-fab-menu-item": [
           "ki-icon"
         ],
         "ki-stat": [
@@ -13547,6 +14068,21 @@
       "docstring": "",
       "path": "src/components/ki-fab/ki-fab.tsx"
     },
+    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemType": {
+      "declaration": "export type KiMenuItemType = 'item' | 'checkbox' | 'radio';",
+      "docstring": "",
+      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
+    },
+    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemTone": {
+      "declaration": "export type KiMenuItemTone = 'neutral' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
+    },
+    "src/components/ki-fab-menu/ki-fab-menu.tsx::KiFabMenuSelectDetail": {
+      "declaration": "export interface KiFabMenuSelectDetail {\n  value: string;\n}",
+      "docstring": "",
+      "path": "src/components/ki-fab-menu/ki-fab-menu.tsx"
+    },
     "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
       "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",
       "docstring": "",
@@ -13611,16 +14147,6 @@
       "declaration": "export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-list-item/ki-list-item.tsx"
-    },
-    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemType": {
-      "declaration": "export type KiMenuItemType = 'item' | 'checkbox' | 'radio';",
-      "docstring": "",
-      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
-    },
-    "src/components/ki-menu-item/ki-menu-item.tsx::KiMenuItemTone": {
-      "declaration": "export type KiMenuItemTone = 'neutral' | 'danger';",
-      "docstring": "",
-      "path": "src/components/ki-menu-item/ki-menu-item.tsx"
     },
     "src/components/ki-menu/ki-menu.tsx::KiMenuPlacement": {
       "declaration": "export type KiMenuPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';",

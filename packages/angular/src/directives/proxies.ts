@@ -23,6 +23,8 @@ import { defineCustomElement as defineKiDialog } from '@kimen/elements/component
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
 import { defineCustomElement as defineKiFab } from '@kimen/elements/components/ki-fab.js';
+import { defineCustomElement as defineKiFabMenu } from '@kimen/elements/components/ki-fab-menu.js';
+import { defineCustomElement as defineKiFabMenuItem } from '@kimen/elements/components/ki-fab-menu-item.js';
 import { defineCustomElement as defineKiFormatDate } from '@kimen/elements/components/ki-format-date.js';
 import { defineCustomElement as defineKiFormatNumber } from '@kimen/elements/components/ki-format-number.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
@@ -508,6 +510,68 @@ export class KiFab {
 
 
 export declare interface KiFab extends Components.KiFab {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFabMenu,
+  inputs: ['closeLabel', 'iconName', 'label', 'open', 'position', 'scrim', 'variant']
+})
+@Component({
+  selector: 'ki-fab-menu',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['closeLabel', 'iconName', { name: 'label', required: true }, 'open', 'position', 'scrim', 'variant'],
+})
+export class KiFabMenu {
+  protected el: HTMLKiFabMenuElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiFabMenu extends Components.KiFabMenu {
+  /**
+   * Emitted when the action stack opens.
+   */
+  /**
+   * Emitted when the action stack closes.
+   */
+  /**
+   * Emits the selected item's value or its trimmed label. Native links retain their destination.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFabMenuItem,
+  inputs: ['href', 'iconName', 'value']
+})
+@Component({
+  selector: 'ki-fab-menu-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['href', 'iconName', 'value'],
+})
+export class KiFabMenuItem {
+  protected el: HTMLKiFabMenuItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiFabMenuItem extends Components.KiFabMenuItem {
+  /**
+   * Local command selection for a direct action binding. Links use native navigation.
+   */
+}
 
 
 @ProxyCmp({
