@@ -325,6 +325,16 @@ describe('the delivered document is a complete Kimen surface', () => {
     await expect
       .poll(() => view.document.querySelector('ki-icon')?.shadowRoot?.querySelector('svg path'))
       .toBeInstanceOf(view.SVGPathElement);
+    // The native disclosure must also receive its component stylesheet under
+    // the policy. Without it the browser renders the summary as a list item.
+    await expect
+      .poll(() => {
+        const summary = view.document
+          .querySelector('ki-details')
+          ?.shadowRoot?.querySelector('summary');
+        return summary && view.getComputedStyle(summary).display;
+      })
+      .toBe('flex');
     // The document's policy loads images from data: only, and the URL policy
     // never lets a spec name one, so the sample image source is refused: that
     // report is the policy working. Nothing else may be reported.

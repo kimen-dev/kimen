@@ -13,6 +13,7 @@ import {
   type Catalog,
   catalogData,
   createCatalog,
+  createLiveSurface,
   createStreamingRenderer,
   renderUiSpec,
 } from '../src/index.js';
@@ -119,6 +120,73 @@ describe('renderUiSpec — bound actions fire on the declared activation event',
       data: { label: 'T', value: 'b' },
       path: 'root',
     });
+  });
+
+  it('routes only a Combobox commit and reports the current multiple selection', () => {
+    const entry = builtIn.components['ki-combobox'];
+    expect(Object.keys(entry?.events ?? {})).toEqual(['change', 'ki-input']);
+    expect(entry?.activationEvent).toBe('change');
+    const extended = createCatalog(
+      {
+        components: {
+          'acme-tip': {
+            description: 'A tip.',
+            events: {},
+            props: {},
+            slots: {},
+            tag: 'acme-tip',
+            whenToUse: 'Offer brief guidance.',
+            whenNotToUse: 'Request a decision.',
+          },
+        },
+      },
+      { extend: builtIn },
+    );
+    expect(extended.ok && extended.catalog.components['ki-combobox']?.activationEvent).toBe(
+      'change',
+    );
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    const live = createLiveSurface({ actions: ['pick'], surface, onAction });
+    expect(
+      live.apply({
+        ops: [
+          {
+            op: 'insert',
+            node: {
+              id: 'choices',
+              component: 'ki-combobox',
+              action: 'pick',
+              props: { label: 'Labels', multiple: true, value: '[ "bug" ]' },
+            },
+          },
+        ],
+      }).ok,
+    ).toBe(true);
+    const combobox = rendered('ki-combobox');
+    change(combobox, 'ki-input');
+    expect(onAction).not.toHaveBeenCalled();
+
+    combobox['value'] = ['bug', 'a,b'];
+    change(combobox);
+    expect(onAction).toHaveBeenCalledOnce();
+    expect(onAction.mock.calls[0]?.[0]?.data['value']).toBe('["bug","a,b"]');
+
+    const set = live.apply({
+      ops: [
+        {
+          op: 'set',
+          id: 'choices',
+          props: { value: '["search"]' },
+        },
+      ],
+    });
+    expect(set.diagnostics[0]?.rule).toBe('user-state-conflict');
+    const remove = live.apply({ ops: [{ op: 'remove', id: 'choices' }] });
+    expect(remove.diagnostics[0]?.rule).toBe('user-state-conflict');
+
+    combobox['value'] = ['bug'];
+    change(combobox);
+    expect(live.apply({ ops: [{ op: 'remove', id: 'choices' }] }).ok).toBe(true);
   });
 
   it('S18 a click inside the selected panel dispatches nothing', () => {

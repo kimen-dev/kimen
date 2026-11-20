@@ -2,6 +2,7 @@
 import * as d from './proxies';
 
 export const DIRECTIVES = [
+  d.KiAccordion,
   d.KiAiLabel,
   d.KiAlert,
   d.KiAvatar,
@@ -17,10 +18,12 @@ export const DIRECTIVES = [
   d.KiChip,
   d.KiChipGroup,
   d.KiCodeBlock,
+  d.KiCombobox,
   d.KiConfirmation,
   d.KiConversation,
   d.KiCopyButton,
   d.KiCounter,
+  d.KiDetails,
   d.KiDialog,
   d.KiDivider,
   d.KiEmptyState,

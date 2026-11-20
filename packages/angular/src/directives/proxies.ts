@@ -6,6 +6,7 @@ import { ProxyCmp } from './angular-component-lib/utils';
 
 import type { Components } from '@kimen/elements/components';
 
+import { defineCustomElement as defineKiAccordion } from '@kimen/elements/components/ki-accordion.js';
 import { defineCustomElement as defineKiAiLabel } from '@kimen/elements/components/ki-ai-label.js';
 import { defineCustomElement as defineKiAlert } from '@kimen/elements/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '@kimen/elements/components/ki-avatar.js';
@@ -21,10 +22,12 @@ import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/co
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
 import { defineCustomElement as defineKiCodeBlock } from '@kimen/elements/components/ki-code-block.js';
+import { defineCustomElement as defineKiCombobox } from '@kimen/elements/components/ki-combobox.js';
 import { defineCustomElement as defineKiConfirmation } from '@kimen/elements/components/ki-confirmation.js';
 import { defineCustomElement as defineKiConversation } from '@kimen/elements/components/ki-conversation.js';
 import { defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
+import { defineCustomElement as defineKiDetails } from '@kimen/elements/components/ki-details.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
@@ -75,6 +78,29 @@ import { defineCustomElement as defineKiToast } from '@kimen/elements/components
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
+@ProxyCmp({
+  defineCustomElementFn: defineKiAccordion,
+  inputs: ['exclusive']
+})
+@Component({
+  selector: 'ki-accordion',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['exclusive'],
+})
+export class KiAccordion {
+  protected el: HTMLKiAccordionElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiAccordion extends Components.KiAccordion {}
+
+
 @ProxyCmp({
   defineCustomElementFn: defineKiAiLabel,
   inputs: ['explanation', 'generatedAt', 'generatedAtLabel', 'label', 'model', 'modelLabel', 'popoverLabel', 'revertLabel', 'revertible', 'size', 'triggerLabel']
@@ -477,6 +503,34 @@ export declare interface KiCodeBlock extends Components.KiCodeBlock {
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiCombobox,
+  inputs: ['addLabel', 'allowCustom', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', 'label', 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value']
+})
+@Component({
+  selector: 'ki-combobox',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['addLabel', 'allowCustom', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', { name: 'label', required: true }, 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value'],
+})
+export class KiCombobox {
+  protected el: HTMLKiComboboxElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCombobox extends Components.KiCombobox {
+  /**
+   * Reports a raw text edit in `detail.value`. Listen to it to request remote results.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiConfirmation,
   inputs: ['action', 'approveLabel', 'approvedLabel', 'consequence', 'deniedLabel', 'denyLabel', 'expiredLabel', 'heading', 'remember', 'rememberLabel', 'resolvedAt', 'resolvedBy', 'state', 'tone'],
   methods: ['focusPrompt']
@@ -583,6 +637,34 @@ export class KiCounter {
 
 
 export declare interface KiCounter extends Components.KiCounter {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiDetails,
+  inputs: ['disabled', 'name', 'open', 'summary']
+})
+@Component({
+  selector: 'ki-details',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'name', 'open', 'summary'],
+})
+export class KiDetails {
+  protected el: HTMLKiDetailsElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiDetails extends Components.KiDetails {
+  /**
+   * Emitted when the native disclosure toggles or an exclusive peer closes it.
+   */
+}
 
 
 @ProxyCmp({
@@ -1097,14 +1179,14 @@ export declare interface KiNote extends Components.KiNote {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiOption,
-  inputs: ['disabled', 'value']
+  inputs: ['description', 'disabled', 'value']
 })
 @Component({
   selector: 'ki-option',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'value'],
+  inputs: ['description', 'disabled', 'value'],
 })
 export class KiOption {
   protected el: HTMLKiOptionElement;

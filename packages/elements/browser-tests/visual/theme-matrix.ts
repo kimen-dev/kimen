@@ -1,5 +1,6 @@
 // Components whose contract also captures Material 3 in the dark scheme.
 const MATERIAL3_DARK: ReadonlySet<string> = new Set([
+  'ki-accordion',
   'ki-ai-label',
   'ki-breadcrumb',
   'ki-button',
@@ -8,10 +9,12 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-chip',
   'ki-chip-group',
   'ki-code-block',
+  'ki-combobox',
   'ki-confirmation',
   'ki-conversation',
   'ki-copy-button',
   'ki-counter',
+  'ki-details',
   'ki-empty-state',
   'ki-fab',
   'ki-feature-icon',
