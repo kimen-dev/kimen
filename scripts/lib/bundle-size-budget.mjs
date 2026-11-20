@@ -15,8 +15,11 @@ const BASE_BUDGETS = {
   // absorbs that approved growth so the release can ship; re-measuring each
   // component's marginal is a follow-up.
   // Plus about 1% for Linux CI's zlib/brotli output, which differs slightly from macOS.
-  mcpApps: { raw: 780_000, gzip: 177_000, brotli: 140_000 },
-  mcpServer: { raw: 2_570_000, gzip: 484_000, brotli: 380_000 },
+  // The glyphs components draw themselves had been dropped from both by an undeclared
+  // side effect; restoring them (2026-11-20) measured +859 B raw for the document and
+  // +879 B raw for kimen-mcp, which the raw bases absorb. The compressed growth fits.
+  mcpApps: { raw: 780_859, gzip: 177_000, brotli: 140_000 },
+  mcpServer: { raw: 2_570_879, gzip: 484_000, brotli: 380_000 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.

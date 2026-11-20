@@ -78,6 +78,13 @@ test('@spec:069-ki-icon#S10 the package exports side-effectful glyph modules ind
     import: './icons/*.js',
   });
   assert.ok(manifest.files.includes('icons'));
-  assert.deepEqual(manifest.sideEffects, ['./icons/*.js']);
+  // The public glyph modules, then the chunks each bundler-facing build gives
+  // the glyphs components draw themselves (scripts/glyph-chunks.ts).
+  assert.deepEqual(manifest.sideEffects, [
+    './icons/*.js',
+    './dist/components/glyph-*.js',
+    './dist/esm/glyph-*.js',
+    './dist/cjs/glyph-*.js',
+  ]);
   assert.ok(manifest.nx.targets.build.outputs.includes('{projectRoot}/icons'));
 });
