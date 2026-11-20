@@ -77,6 +77,17 @@
           "{workspaceRoot}/packages/angular/src/directives"
         ]
       },
+      "test-browser": {
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/site/*",
+          "{workspaceRoot}/site/assets/**/*",
+          "{workspaceRoot}/site/playground/**/*",
+          "{workspaceRoot}/site/privacy/**/*",
+          "{workspaceRoot}/packages/catalog/browser-tests/fixtures/**/*"
+        ]
+      },
       "storybook": {
         "dependsOn": [
           "build"

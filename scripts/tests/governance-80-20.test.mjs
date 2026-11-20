@@ -75,15 +75,16 @@ test('the required result is green only when the core job and every browser shar
 });
 
 test('dependency-only PRs keep one required result and run affected quality', async () => {
-  const [workflow, dependencyGate, nx] = await Promise.all([
+  const [workflow, dependencyGate, nx, classifier] = await Promise.all([
     readRepositoryFile('.github/workflows/ci.yml'),
     readRepositoryFile('scripts/gates/gates-dependencies.sh'),
     readRepositoryFile('nx.json').then(JSON.parse),
+    readRepositoryFile('scripts/gates/classify-ci-scope.mjs'),
   ]);
 
   assert.match(workflow, /fetch-depth:\s*0/u);
-  assert.match(workflow, /git merge-base/u);
-  assert.match(workflow, /classify-ci-scope\.mjs/u);
+  assert.match(classifier, /'merge-base'/u);
+  assert.match(workflow, /classify-ci-scope\.mjs --github-event/u);
   assert.match(workflow, /gates-dependencies\.sh/u);
   assert.match(workflow, /steps\.scope\.outputs\.scope == 'full'/u);
   assert.match(workflow, /steps\.scope\.outputs\.scope == 'dependencies'/u);
@@ -97,6 +98,126 @@ test('dependency-only PRs keep one required result and run affected quality', as
   assert.match(dependencyGate, /gates-browser\.sh chromium/u);
   assert.match(workflow, /steps\.browser-impact\.outputs\.needed == 'true'/u);
   assert.equal(nx.pluginsConfig?.['@nx/js']?.projectsAffectedByDependencyUpdates, 'auto');
+});
+
+// The expensive suite runs at most once per merge: on the pull request for
+// feedback and in the merge queue, which tests the exact tree that lands. A
+// push to main is not tested again; the nightly run on main (and a manual
+// dispatch) runs the complete suite as the safety net for anything the Nx
+// graph does not model, and a failure there fails that run.
+test('ci runs on pull requests, the merge queue, nightly and on demand, never on push', async () => {
+  const workflow = await readRepositoryFile('.github/workflows/ci.yml');
+  const triggers = /^on:\n((?: {2}.*\n|\n)+?)(?=\S)/mu.exec(workflow)?.[1] ?? '';
+  const events = [...triggers.matchAll(/^ {2}([a-z_]+):/gmu)].map((match) => match[1]);
+
+  assert.deepEqual(events, ['pull_request', 'merge_group', 'schedule', 'workflow_dispatch']);
+  assert.equal((triggers.match(/cron:/gu) ?? []).length, 1, 'one nightly schedule');
+  assert.match(triggers, /cron: '\d+ \d+ \* \* \*'/u, 'the schedule runs daily');
+  assert.doesNotMatch(triggers, /^ {2}push:/mu);
+});
+
+// Every event is classified by one script, and the scope it writes is checked
+// before any step depends on it: a scope the workflow does not know would
+// skip every step of a part, and an empty part passes.
+test('one classifier scopes every event and the nightly run is always complete', async () => {
+  const [workflow, classifier] = await Promise.all([
+    readRepositoryFile('.github/workflows/ci.yml'),
+    import('../gates/classify-ci-scope.mjs'),
+  ]);
+  const classify = 'run: |\n          node scripts/gates/classify-ci-scope.mjs --github-event';
+  assert.equal(workflow.split(classify).length - 1, 2, 'core and browser each classify');
+  assert.equal(
+    (
+      workflow.match(/grep -Eqx 'scope=\(full\|affected\|dependencies\|workflows\|sandbox\)'/gu) ??
+      []
+    ).length,
+    2,
+  );
+  assert.doesNotMatch(workflow, /github\.event_name/u);
+  for (const event of ['schedule', 'workflow_dispatch']) {
+    assert.deepEqual(
+      classifier.classifyGithubEvent({ environment: { GITHUB_EVENT_NAME: event } }),
+      { scope: 'full' },
+    );
+  }
+});
+
+// The founder's list (2026-11-20): changes to shared infrastructure run the
+// complete suite on every event, in the queue included.
+test('shared infrastructure always runs the complete suite', async () => {
+  const { classifyChangedFiles } = await import('../gates/classify-ci-scope.mjs');
+  for (const file of [
+    'package.json',
+    'pnpm-lock.yaml',
+    'nx.json',
+    'tsconfig.base.json',
+    'eslint.config.mjs',
+    'scripts/gates/gates-core.sh',
+    'scripts/lib/public-api.mjs',
+    '.github/workflows/ci.yml',
+  ]) {
+    const change = ['packages/elements/src/components/ki-card/ki-card.tsx', file];
+    assert.equal(classifyChangedFiles(change), 'full', file);
+    assert.equal(classifyChangedFiles(change, { event: 'merge_group' }), 'full', file);
+    assert.equal(classifyChangedFiles([file], { event: 'merge_group' }), 'full', file);
+  }
+});
+
+// The affected scope is opt-in: CI exports it from select-affected.mjs only
+// for a change the classifier scoped as `affected`, and only through the
+// environment. gates-suite.sh with no arguments, the release and the nightly
+// run never set it, so they stay the complete suite.
+test('the affected scope is opt-in and only CI opts in', async () => {
+  const [workflow, release, suite] = await Promise.all([
+    readRepositoryFile('.github/workflows/ci.yml'),
+    readRepositoryFile('.github/workflows/release.yml'),
+    readRepositoryFile('scripts/gates/gates-suite.sh'),
+  ]);
+  const select =
+    'node scripts/gates/select-affected.mjs --base "$KIMEN_BASE_SHA" --head "$KIMEN_HEAD_SHA" >"$RUNNER_TEMP/affected.env"';
+
+  assert.equal(workflow.split(select).length - 1, 2, 'core and browser each select');
+  for (const block of workflow.split('- name: Select the affected projects').slice(1)) {
+    assert.match(block, /^\s+if: steps\.scope\.outputs\.scope == 'affected'$/mu);
+    assert.match(block, /cat "\$RUNNER_TEMP\/affected\.env" >>"\$GITHUB_ENV"/u);
+  }
+  // Only the selection's own output sets them; no step assigns them itself.
+  assert.doesNotMatch(workflow, /KIMEN_(?:GATE_SCOPE|AFFECTED_[A-Z_]+)\s*[:=]/u);
+  assert.doesNotMatch(release, /KIMEN_GATE_SCOPE|KIMEN_AFFECTED_|select-affected/u);
+  assert.doesNotMatch(suite, /^\s*(?:export )?KIMEN_GATE_SCOPE=/mu);
+});
+
+// In the affected scope a browser shard runs the suites the gate plans for it
+// and nothing else; with none it finishes green without preparing a browser.
+test('browser shards prepare a browser only for planned suites', async () => {
+  const workflow = await readRepositoryFile('.github/workflows/ci.yml');
+  const start = workflow.indexOf('\n  browser:\n');
+  const browser = workflow.slice(start, workflow.indexOf('\n  quality:\n'));
+
+  assert.match(
+    browser,
+    /bash scripts\/gates\/gates-browser\.sh chromium --plan >"\$RUNNER_TEMP\/plan\.out"/u,
+  );
+  for (const step of [
+    'Resolve the pinned Playwright version',
+    'Restore the Chromium build of this Playwright',
+    'Install Chromium',
+    'Browser quality',
+  ]) {
+    const block = browser.slice(browser.indexOf(`- name: ${step}`));
+    assert.match(
+      block.slice(0, block.indexOf('\n      - ', 1)),
+      /^ {8}if: steps\.plan\.outputs\.suites != ''$/mu,
+      step,
+    );
+  }
+  // Neither part may be skipped as a whole: `quality` reads a skipped part as
+  // a failure, so a part with nothing to do has to run and succeed.
+  for (const name of ['core', 'browser']) {
+    const job = workflow.slice(workflow.indexOf(`\n  ${name}:\n`) + 1);
+    const header = job.slice(0, job.indexOf('    steps:'));
+    assert.doesNotMatch(header, /^ {4}if:/mu, name);
+  }
 });
 
 test('infra checks execute installed tools without re-entering pnpm', async () => {

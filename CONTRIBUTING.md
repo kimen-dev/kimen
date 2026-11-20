@@ -35,9 +35,19 @@ the same bar as agent-written code.
   advisory for changes whose risk justifies it.
 - `main` merges through a squash merge queue. Once `quality` is green on the
   PR, add it to the queue (`gh pr merge <n> --squash --auto` or "Merge when
-  ready"). The queue tests each group of PRs against the latest `main` with
-  the full suite and merges them together, so there is no need to update a
-  branch after another PR lands.
+  ready"). The queue tests each group of PRs against the latest `main` and
+  merges them together, so there is no need to update a branch after another
+  PR lands.
+- CI runs what a change can affect, on the PR and again in the queue. Every
+  repository-wide gate runs; lint, budgets, unit tests and the browser suites
+  cover only the projects Nx reports affected
+  (`scripts/gates/classify-ci-scope.mjs`, `scripts/gates/select-affected.mjs`).
+  Shared infrastructure (root configuration, `pnpm-lock.yaml`, `nx.json`,
+  `tsconfig.base.json`, `scripts/gates`, `scripts/lib`, the workflows) runs
+  the complete suite. A push to `main` is not tested again: a nightly run of
+  the complete suite on `main` is the safety net, and `workflow_dispatch`
+  starts one on demand. To reproduce a CI run locally:
+  `env $(node scripts/gates/select-affected.mjs --base <sha> --head <sha>) bash scripts/gates/gates-suite.sh`.
 
 ## Documentation map
 
