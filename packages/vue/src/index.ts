@@ -5,7 +5,6 @@
  * Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export { KiAccordion } from './ki-accordion.js';
 export { KiAlert } from './ki-alert.js';
 export { KiAvatar } from './ki-avatar.js';
 export { KiAvatarGroup } from './ki-avatar-group.js';
@@ -17,8 +16,8 @@ export { KiCheckbox } from './ki-checkbox.js';
 export { KiCheckboxGroup } from './ki-checkbox-group.js';
 export { KiChip } from './ki-chip.js';
 export { KiChipGroup } from './ki-chip-group.js';
+export { KiCopyButton } from './ki-copy-button.js';
 export { KiCounter } from './ki-counter.js';
-export { KiDetails } from './ki-details.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
 export { KiEmptyState } from './ki-empty-state.js';

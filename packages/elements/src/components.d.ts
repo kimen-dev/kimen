@@ -17,8 +17,8 @@ import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 import { KiChipSize } from "./components/ki-chip/ki-chip";
 import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+import { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
-import { KiDetailsToggleDetail } from "./components/ki-details/ki-details";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiLayoutGap } from "./utils/layout-gap";
@@ -58,8 +58,8 @@ export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 export { KiChipSize } from "./components/ki-chip/ki-chip";
 export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+export { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
-export { KiDetailsToggleDetail } from "./components/ki-details/ki-details";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiLayoutGap } from "./utils/layout-gap";
@@ -88,19 +88,6 @@ export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js"
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
-    /**
-     * A set of native disclosure panels with a shared frame.
-     * @whenToUse group related FAQ answers, settings or expandable sections.
-     * Enable exclusive when readers benefit from one open section at a time.
-     * @whenNotToUse switch between views or make the panels advance a workflow.
-     */
-    interface KiAccordion {
-        /**
-          * Whether the accordion allows at most one direct member to be open.
-          * @default false
-         */
-        "exclusive": boolean;
-    }
     /**
      * A persistent inline status message with token-backed tone semantics.
      * @whenToUse show a persistent inline message about the state of a page or
@@ -534,6 +521,54 @@ export namespace Components {
         "type": KiChipType;
     }
     /**
+     * Copies text to the clipboard and confirms the result in the same button.
+     * @whenToUse let a person copy a link, identifier, token or code sample. Supply
+     * a direct value or point to a source in the same document or shadow root.
+     * @whenNotToUse submit a form, navigate, or trigger an action with no clipboard
+     * write. Use a button or link for those actions.
+     */
+    interface KiCopyButton {
+        /**
+          * Polite announcement after a successful write. Override for localized interfaces.
+          * @default 'Copied'
+         */
+        "copiedLabel": string;
+        /**
+          * Polite announcement after a failed write or missing source. Override for localized interfaces.
+          * @default "Couldn't copy"
+         */
+        "copyErrorLabel": string;
+        /**
+          * Milliseconds to show feedback after a write settles. Zero keeps the outcome visible until the next result. Invalid values use 1500 ms.
+          * @minimum 0
+          * @default 1500
+         */
+        "feedbackDuration": number;
+        /**
+          * ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+         */
+        "from"?: string;
+        /**
+          * Accessible name for the icon-only control. Visible slot text supplies the name when present.
+          * @default 'Copy'
+         */
+        "label": string;
+        /**
+          * Token-backed button size. Match the size of adjacent controls.
+          * @default 'md'
+         */
+        "size": KiButtonSize1;
+        /**
+          * Exact clipboard text, including whitespace. Supply it when the text is known directly.
+         */
+        "value"?: string;
+        /**
+          * Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.
+          * @default 'ghost'
+         */
+        "variant": KiCopyButtonVariant;
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -567,29 +602,6 @@ export namespace Components {
           * @default undefined
          */
         "value"?: number;
-    }
-    /**
-     * A native disclosure for supporting information that can stay collapsed.
-     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
-     * output on demand. Use ki-accordion for related disclosures.
-     * @whenNotToUse hide the primary action or information needed to complete a task.
-     * For script-free HTML, author native details and summary directly.
-     */
-    interface KiDetails {
-        /**
-          * Disables summary activation. The page can still set open.
-          * @default false
-         */
-        "disabled": boolean;
-        /**
-          * Whether the panel is open. Native changes reflect back to this property.
-          * @default false
-         */
-        "open": boolean;
-        /**
-          * Plain label for the control. Supply the summary slot for a rich label.
-         */
-        "summary"?: string;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -2087,9 +2099,9 @@ export interface KiChipGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiChipGroupElement;
 }
-export interface KiDetailsCustomEvent<T> extends CustomEvent<T> {
+export interface KiCopyButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLKiDetailsElement;
+    target: HTMLKiCopyButtonElement;
 }
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2116,18 +2128,6 @@ export interface KiToastCustomEvent<T> extends CustomEvent<T> {
     target: HTMLKiToastElement;
 }
 declare global {
-    /**
-     * A set of native disclosure panels with a shared frame.
-     * @whenToUse group related FAQ answers, settings or expandable sections.
-     * Enable exclusive when readers benefit from one open section at a time.
-     * @whenNotToUse switch between views or make the panels advance a workflow.
-     */
-    interface HTMLKiAccordionElement extends Components.KiAccordion, HTMLStencilElement {
-    }
-    var HTMLKiAccordionElement: {
-        prototype: HTMLKiAccordionElement;
-        new (): HTMLKiAccordionElement;
-    };
     interface HTMLKiAlertElementEventMap {
         "ki-dismiss": null;
     }
@@ -2371,6 +2371,31 @@ declare global {
         prototype: HTMLKiChipGroupElement;
         new (): HTMLKiChipGroupElement;
     };
+    interface HTMLKiCopyButtonElementEventMap {
+        "ki-copy": { value: string };
+        "ki-copy-error": void;
+    }
+    /**
+     * Copies text to the clipboard and confirms the result in the same button.
+     * @whenToUse let a person copy a link, identifier, token or code sample. Supply
+     * a direct value or point to a source in the same document or shadow root.
+     * @whenNotToUse submit a form, navigate, or trigger an action with no clipboard
+     * write. Use a button or link for those actions.
+     */
+    interface HTMLKiCopyButtonElement extends Components.KiCopyButton, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCopyButtonElementEventMap>(type: K, listener: (this: HTMLKiCopyButtonElement, ev: KiCopyButtonCustomEvent<HTMLKiCopyButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCopyButtonElementEventMap>(type: K, listener: (this: HTMLKiCopyButtonElement, ev: KiCopyButtonCustomEvent<HTMLKiCopyButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCopyButtonElement: {
+        prototype: HTMLKiCopyButtonElement;
+        new (): HTMLKiCopyButtonElement;
+    };
     /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
@@ -2384,30 +2409,6 @@ declare global {
     var HTMLKiCounterElement: {
         prototype: HTMLKiCounterElement;
         new (): HTMLKiCounterElement;
-    };
-    interface HTMLKiDetailsElementEventMap {
-        "ki-toggle": KiDetailsToggleDetail;
-    }
-    /**
-     * A native disclosure for supporting information that can stay collapsed.
-     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
-     * output on demand. Use ki-accordion for related disclosures.
-     * @whenNotToUse hide the primary action or information needed to complete a task.
-     * For script-free HTML, author native details and summary directly.
-     */
-    interface HTMLKiDetailsElement extends Components.KiDetails, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLKiDetailsElementEventMap>(type: K, listener: (this: HTMLKiDetailsElement, ev: KiDetailsCustomEvent<HTMLKiDetailsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLKiDetailsElementEventMap>(type: K, listener: (this: HTMLKiDetailsElement, ev: KiDetailsCustomEvent<HTMLKiDetailsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLKiDetailsElement: {
-        prototype: HTMLKiDetailsElement;
-        new (): HTMLKiDetailsElement;
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
@@ -3173,7 +3174,6 @@ declare global {
         new (): HTMLKiVideoElement;
     };
     interface HTMLElementTagNameMap {
-        "ki-accordion": HTMLKiAccordionElement;
         "ki-alert": HTMLKiAlertElement;
         "ki-avatar": HTMLKiAvatarElement;
         "ki-avatar-group": HTMLKiAvatarGroupElement;
@@ -3185,8 +3185,8 @@ declare global {
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-copy-button": HTMLKiCopyButtonElement;
         "ki-counter": HTMLKiCounterElement;
-        "ki-details": HTMLKiDetailsElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-empty-state": HTMLKiEmptyStateElement;
@@ -3234,19 +3234,6 @@ declare global {
 declare namespace LocalJSX {
     type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K]?: never };
 
-    /**
-     * A set of native disclosure panels with a shared frame.
-     * @whenToUse group related FAQ answers, settings or expandable sections.
-     * Enable exclusive when readers benefit from one open section at a time.
-     * @whenNotToUse switch between views or make the panels advance a workflow.
-     */
-    interface KiAccordion {
-        /**
-          * Whether the accordion allows at most one direct member to be open.
-          * @default false
-         */
-        "exclusive"?: boolean;
-    }
     /**
      * A persistent inline status message with token-backed tone semantics.
      * @whenToUse show a persistent inline message about the state of a page or
@@ -3724,6 +3711,62 @@ declare namespace LocalJSX {
         "type"?: KiChipType;
     }
     /**
+     * Copies text to the clipboard and confirms the result in the same button.
+     * @whenToUse let a person copy a link, identifier, token or code sample. Supply
+     * a direct value or point to a source in the same document or shadow root.
+     * @whenNotToUse submit a form, navigate, or trigger an action with no clipboard
+     * write. Use a button or link for those actions.
+     */
+    interface KiCopyButton {
+        /**
+          * Polite announcement after a successful write. Override for localized interfaces.
+          * @default 'Copied'
+         */
+        "copiedLabel"?: string;
+        /**
+          * Polite announcement after a failed write or missing source. Override for localized interfaces.
+          * @default "Couldn't copy"
+         */
+        "copyErrorLabel"?: string;
+        /**
+          * Milliseconds to show feedback after a write settles. Zero keeps the outcome visible until the next result. Invalid values use 1500 ms.
+          * @minimum 0
+          * @default 1500
+         */
+        "feedbackDuration"?: number;
+        /**
+          * ID of a source in this button's document or shadow root. A nonempty ID takes precedence over `value`. The source's current string value or its text content is read on activation.
+         */
+        "from"?: string;
+        /**
+          * Accessible name for the icon-only control. Visible slot text supplies the name when present.
+          * @default 'Copy'
+         */
+        "label"?: string;
+        /**
+          * Fired after a successful clipboard write. The detail carries the exact text copied.
+         */
+        "onKi-copy"?: (event: KiCopyButtonCustomEvent<{ value: string }>) => void;
+        /**
+          * Fired when the source cannot be read or clipboard writing is unavailable or fails.
+         */
+        "onKi-copy-error"?: (event: KiCopyButtonCustomEvent<void>) => void;
+        /**
+          * Token-backed button size. Match the size of adjacent controls.
+          * @default 'md'
+         */
+        "size"?: KiButtonSize1;
+        /**
+          * Exact clipboard text, including whitespace. Supply it when the text is known directly.
+         */
+        "value"?: string;
+        /**
+          * Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.
+          * @default 'ghost'
+         */
+        "variant"?: KiCopyButtonVariant;
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -3757,33 +3800,6 @@ declare namespace LocalJSX {
           * @default undefined
          */
         "value"?: number;
-    }
-    /**
-     * A native disclosure for supporting information that can stay collapsed.
-     * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
-     * output on demand. Use ki-accordion for related disclosures.
-     * @whenNotToUse hide the primary action or information needed to complete a task.
-     * For script-free HTML, author native details and summary directly.
-     */
-    interface KiDetails {
-        /**
-          * Disables summary activation. The page can still set open.
-          * @default false
-         */
-        "disabled"?: boolean;
-        /**
-          * Emitted for a native state change, including an exclusive peer closing.
-         */
-        "onKi-toggle"?: (event: KiDetailsCustomEvent<KiDetailsToggleDetail>) => void;
-        /**
-          * Whether the panel is open. Native changes reflect back to this property.
-          * @default false
-         */
-        "open"?: boolean;
-        /**
-          * Plain label for the control. Supply the summary slot for a rich label.
-         */
-        "summary"?: string;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -5293,9 +5309,6 @@ declare namespace LocalJSX {
         "label": string;
     }
 
-    interface KiAccordionAttributes {
-        "exclusive": boolean;
-    }
     interface KiAlertAttributes {
         "tone": KiAlertTone | (string & {});
         "heading": string;
@@ -5379,17 +5392,22 @@ declare namespace LocalJSX {
         "focusTarget": string;
         "reorderAnnouncement": string;
     }
+    interface KiCopyButtonAttributes {
+        "value": string;
+        "from": string;
+        "label": string;
+        "variant": KiCopyButtonVariant;
+        "size": KiButtonSize;
+        "feedbackDuration": number;
+        "copiedLabel": string;
+        "copyErrorLabel": string;
+    }
     interface KiCounterAttributes {
         "value": number;
         "max": number;
         "dot": boolean;
         "tone": KiCounterTone;
         "for": string;
-    }
-    interface KiDetailsAttributes {
-        "summary": string;
-        "open": boolean;
-        "disabled": boolean;
     }
     interface KiDialogAttributes {
         "open": boolean;
@@ -5676,7 +5694,6 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
-        "ki-accordion": Omit<KiAccordion, keyof KiAccordionAttributes> & { [K in keyof KiAccordion & keyof KiAccordionAttributes]?: KiAccordion[K] } & { [K in keyof KiAccordion & keyof KiAccordionAttributes as `attr:${K}`]?: KiAccordionAttributes[K] } & { [K in keyof KiAccordion & keyof KiAccordionAttributes as `prop:${K}`]?: KiAccordion[K] };
         "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
         "ki-avatar": Omit<KiAvatar, keyof KiAvatarAttributes> & { [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K] };
         "ki-avatar-group": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K] };
@@ -5688,8 +5705,8 @@ declare namespace LocalJSX {
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-copy-button": Omit<KiCopyButton, keyof KiCopyButtonAttributes> & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes]?: KiCopyButton[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `attr:${K}`]?: KiCopyButtonAttributes[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `prop:${K}`]?: KiCopyButton[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
-        "ki-details": Omit<KiDetails, keyof KiDetailsAttributes> & { [K in keyof KiDetails & keyof KiDetailsAttributes]?: KiDetails[K] } & { [K in keyof KiDetails & keyof KiDetailsAttributes as `attr:${K}`]?: KiDetailsAttributes[K] } & { [K in keyof KiDetails & keyof KiDetailsAttributes as `prop:${K}`]?: KiDetails[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-empty-state": Omit<KiEmptyState, keyof KiEmptyStateAttributes> & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes]?: KiEmptyState[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `attr:${K}`]?: KiEmptyStateAttributes[K] } & { [K in keyof KiEmptyState & keyof KiEmptyStateAttributes as `prop:${K}`]?: KiEmptyState[K] } & OneOf<"heading", KiEmptyState["heading"], KiEmptyStateAttributes["heading"]>;
@@ -5738,13 +5755,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            /**
-             * A set of native disclosure panels with a shared frame.
-             * @whenToUse group related FAQ answers, settings or expandable sections.
-             * Enable exclusive when readers benefit from one open section at a time.
-             * @whenNotToUse switch between views or make the panels advance a workflow.
-             */
-            "ki-accordion": LocalJSX.IntrinsicElements["ki-accordion"] & JSXBase.HTMLAttributes<HTMLKiAccordionElement>;
             /**
              * A persistent inline status message with token-backed tone semantics.
              * @whenToUse show a persistent inline message about the state of a page or
@@ -5873,6 +5883,14 @@ declare module "@stencil/core" {
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
             /**
+             * Copies text to the clipboard and confirms the result in the same button.
+             * @whenToUse let a person copy a link, identifier, token or code sample. Supply
+             * a direct value or point to a source in the same document or shadow root.
+             * @whenNotToUse submit a form, navigate, or trigger an action with no clipboard
+             * write. Use a button or link for those actions.
+             */
+            "ki-copy-button": LocalJSX.IntrinsicElements["ki-copy-button"] & JSXBase.HTMLAttributes<HTMLKiCopyButtonElement>;
+            /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an
              * avatar. Supply the full meaning in the host's accessible name and use a
@@ -5881,14 +5899,6 @@ declare module "@stencil/core" {
              * row (use text or ki-badge), or an announcement that needs its own semantics.
              */
             "ki-counter": LocalJSX.IntrinsicElements["ki-counter"] & JSXBase.HTMLAttributes<HTMLKiCounterElement>;
-            /**
-             * A native disclosure for supporting information that can stay collapsed.
-             * @whenToUse reveal a short explanation, FAQ answer, settings section or tool
-             * output on demand. Use ki-accordion for related disclosures.
-             * @whenNotToUse hide the primary action or information needed to complete a task.
-             * For script-free HTML, author native details and summary directly.
-             */
-            "ki-details": LocalJSX.IntrinsicElements["ki-details"] & JSXBase.HTMLAttributes<HTMLKiDetailsElement>;
             /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief

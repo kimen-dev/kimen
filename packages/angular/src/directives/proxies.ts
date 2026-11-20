@@ -6,7 +6,6 @@ import { ProxyCmp } from './angular-component-lib/utils';
 
 import type { Components } from '@kimen/elements/components';
 
-import { defineCustomElement as defineKiAccordion } from '@kimen/elements/components/ki-accordion.js';
 import { defineCustomElement as defineKiAlert } from '@kimen/elements/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '@kimen/elements/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '@kimen/elements/components/ki-avatar-group.js';
@@ -18,8 +17,8 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
+import { defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
-import { defineCustomElement as defineKiDetails } from '@kimen/elements/components/ki-details.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
@@ -62,29 +61,6 @@ import { defineCustomElement as defineKiToast } from '@kimen/elements/components
 import { defineCustomElement as defineKiToaster } from '@kimen/elements/components/ki-toaster.js';
 import { defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
 import { defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
-@ProxyCmp({
-  defineCustomElementFn: defineKiAccordion,
-  inputs: ['exclusive']
-})
-@Component({
-  selector: 'ki-accordion',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['exclusive'],
-})
-export class KiAccordion {
-  protected el: HTMLKiAccordionElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface KiAccordion extends Components.KiAccordion {}
-
-
 @ProxyCmp({
   defineCustomElementFn: defineKiAlert,
   inputs: ['dismissLabel', 'dismissed', 'dismissible', 'heading', 'tone']
@@ -376,6 +352,37 @@ export declare interface KiChipGroup extends Components.KiChipGroup {
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiCopyButton,
+  inputs: ['copiedLabel', 'copyErrorLabel', 'feedbackDuration', 'from', 'label', 'size', 'value', 'variant']
+})
+@Component({
+  selector: 'ki-copy-button',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['copiedLabel', 'copyErrorLabel', 'feedbackDuration', 'from', 'label', 'size', 'value', 'variant'],
+})
+export class KiCopyButton {
+  protected el: HTMLKiCopyButtonElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCopyButton extends Components.KiCopyButton {
+  /**
+   * Fired after a successful clipboard write. The detail carries the exact text copied.
+   */
+  /**
+   * Fired when the source cannot be read or clipboard writing is unavailable or fails.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiCounter,
   inputs: ['dot', 'for', 'max', 'tone', 'value']
 })
@@ -396,34 +403,6 @@ export class KiCounter {
 
 
 export declare interface KiCounter extends Components.KiCounter {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineKiDetails,
-  inputs: ['disabled', 'open', 'summary']
-})
-@Component({
-  selector: 'ki-details',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'open', 'summary'],
-})
-export class KiDetails {
-  protected el: HTMLKiDetailsElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-
-export declare interface KiDetails extends Components.KiDetails {
-  /**
-   * Emitted for a native state change, including an exclusive peer closing.
-   */
-}
 
 
 @ProxyCmp({

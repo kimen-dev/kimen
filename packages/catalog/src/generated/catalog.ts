@@ -146,23 +146,6 @@ export const catalogData = {
       "whenNotToUse": "Do not use it for avatars (ki-avatar), for icons inside controls, for text set as an image, or as a button. Never bind an action.",
       "whenToUse": "Show a chart, a photo or an illustration that carries content (describe it in alt) or decoration (alt \"\")."
     },
-    "ki-accordion": {
-      "description": "A set of native disclosure panels with a shared frame.",
-      "events": {},
-      "props": {
-        "exclusive": {
-          "type": "boolean",
-          "description": "Whether the accordion allows at most one direct member to be open.",
-          "default": false
-        }
-      },
-      "slots": {
-        "": "Direct ki-details members in reading order."
-      },
-      "tag": "ki-accordion",
-      "whenNotToUse": "switch between views or make the panels advance a workflow.",
-      "whenToUse": "group related FAQ answers, settings or expandable sections.\nEnable exclusive when readers benefit from one open section at a time."
-    },
     "ki-alert": {
       "description": "A persistent inline status message with token-backed tone semantics.",
       "events": {
@@ -703,6 +686,72 @@ export const catalogData = {
       "whenNotToUse": "choose exactly one option or submit a form value.",
       "whenToUse": "label related chips or let people change their reading order."
     },
+    "ki-copy-button": {
+      "description": "Copies text to the clipboard and confirms the result in the same button.",
+      "events": {
+        "ki-copy": "Fired after a successful clipboard write. The detail carries the exact text copied."
+      },
+      "props": {
+        "copied-label": {
+          "type": "string",
+          "description": "Polite announcement after a successful write. Override for localized interfaces.",
+          "default": "Copied"
+        },
+        "copy-error-label": {
+          "type": "string",
+          "description": "Polite announcement after a failed write or missing source. Override for localized interfaces.",
+          "default": "Couldn't copy"
+        },
+        "feedback-duration": {
+          "type": "number",
+          "description": "Milliseconds to show feedback after a write settles. Zero keeps the\noutcome visible until the next result. Invalid values use 1500 ms.",
+          "default": 1500,
+          "minimum": 0
+        },
+        "from": {
+          "type": "string",
+          "description": "ID of a source in this button's document or shadow root. A nonempty ID\ntakes precedence over `value`. The source's current string value or\nits text content is read on activation."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name for the icon-only control. Visible slot text supplies the name when present.",
+          "default": "Copy"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "sm",
+            "xl",
+            "xs"
+          ],
+          "description": "Token-backed button size. Match the size of adjacent controls.",
+          "default": "md"
+        },
+        "value": {
+          "type": "string",
+          "description": "Exact clipboard text, including whitespace. Supply it when the text is known directly."
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "ghost",
+            "primary",
+            "quaternary",
+            "secondary"
+          ],
+          "description": "Button emphasis. Use ghost for compact actions and secondary for a visible supporting action.",
+          "default": "ghost"
+        }
+      },
+      "slots": {
+        "": "Optional visible text, which supplies the accessible name and\nplaces the icon at the inline start. Use plain text or non-interactive markup."
+      },
+      "tag": "ki-copy-button",
+      "whenNotToUse": "submit a form, navigate, or trigger an action with no clipboard\nwrite. Use a button or link for those actions.",
+      "whenToUse": "let a person copy a link, identifier, token or code sample. Supply\na direct value or point to a source in the same document or shadow root."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},
@@ -741,35 +790,6 @@ export const catalogData = {
       "tag": "ki-counter",
       "whenNotToUse": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics.",
       "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
-    },
-    "ki-details": {
-      "description": "A native disclosure for supporting information that can stay collapsed.",
-      "events": {
-        "ki-toggle": "Emitted for a native state change, including an exclusive peer closing."
-      },
-      "props": {
-        "disabled": {
-          "type": "boolean",
-          "description": "Disables summary activation. The page can still set open.",
-          "default": false
-        },
-        "open": {
-          "type": "boolean",
-          "description": "Whether the panel is open. Native changes reflect back to this property.",
-          "default": false
-        },
-        "summary": {
-          "type": "string",
-          "description": "Plain label for the control. Supply the summary slot for a rich label."
-        }
-      },
-      "slots": {
-        "": "Content shown when the disclosure is open.",
-        "summary": "Rich summary text or an authored heading, replacing the summary prop."
-      },
-      "tag": "ki-details",
-      "whenNotToUse": "hide the primary action or information needed to complete a task.\nFor script-free HTML, author native details and summary directly.",
-      "whenToUse": "reveal a short explanation, FAQ answer, settings section or tool\noutput on demand. Use ki-accordion for related disclosures."
     },
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
