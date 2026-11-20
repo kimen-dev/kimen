@@ -88,7 +88,7 @@ Feature: Rich tooltip and toggletip
     Then they appear to the right of their triggers
 
   # S14
-  Scenario: A coarse pointer gets the rich toggletip's larger inset
-    Given a page with automatic density and a coarse pointer
+  Scenario: The rich toggletip honors density with a coarse pointer
+    Given a page with compact density and a coarse pointer
     When the user taps the rich toggletip trigger
-    Then the panel opens with the coarse-density inset
+    Then the panel opens with the compact-density inset
