@@ -27,6 +27,7 @@ import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 import { KiSelectSize } from "./components/ki-select/ki-select";
+import { KiSliderFormat, KiSliderOrientation } from "./components/ki-slider/ki-slider";
 import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
@@ -58,6 +59,7 @@ export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiRadioGroupSize } from "./components/ki-radio-group/ki-radio-group";
 export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 export { KiSelectSize } from "./components/ki-select/ki-select";
+export { KiSliderFormat, KiSliderOrientation } from "./components/ki-slider/ki-slider";
 export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-stack/ki-stack";
 export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
@@ -1033,6 +1035,98 @@ export namespace Components {
         "value": string;
     }
     /**
+     * Adjusts a value or an interval on a bounded scale.
+     * @whenToUse coarse adjustments such as volume, balance or a price filter,
+     * with a descriptive label.
+     * @whenNotToUse when people need to enter exact numbers or choose among a
+     * few named options. Use a number input or radio group for those tasks.
+     * @event change - Bubbles once when a pointer operation commits a different
+     * selection or a keyboard action changes it. Read the current host value.
+     * For updates during a drag, listen for the standard bubbling `input` event.
+     * Programmatic updates and form resets are silent.
+     */
+    interface KiSlider {
+        /**
+          * Shows a midpoint tick and fills from that point to a single thumb.
+          * @default false
+         */
+        "centered": boolean;
+        /**
+          * ISO 4217 code used with currency format.
+          * @default 'EUR'
+         */
+        "currency": string;
+        /**
+          * Makes the slider unavailable for pointer, keyboard and form submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Display format for the readout and accessible values.
+          * @default 'number'
+         */
+        "format": KiSliderFormat;
+        /**
+          * Optional supporting text, read as the description of each thumb.
+         */
+        "helpText"?: string;
+        /**
+          * Visible base name. Use a task-specific, localized label.
+          * @default 'Slider'
+         */
+        "label"?: string;
+        /**
+          * Number of evenly spaced tick intervals, up to 100. Zero hides ticks.
+          * @maximum 100
+          * @minimum 0
+          * @default 0
+         */
+        "marks": number;
+        /**
+          * Inclusive upper bound. A maximum below min collapses the scale.
+          * @default 100
+         */
+        "max": number;
+        /**
+          * Localized suffix for the upper thumb's accessible name.
+          * @default 'maximum'
+         */
+        "maximumLabel"?: string;
+        /**
+          * Inclusive lower bound and step origin.
+          * @default 0
+         */
+        "min": number;
+        /**
+          * Localized suffix for the lower thumb's accessible name.
+          * @default 'minimum'
+         */
+        "minimumLabel"?: string;
+        /**
+          * Native form key. Omit when the value should remain local to the control.
+         */
+        "name"?: string;
+        /**
+          * Axis of the scale. A vertical scale increases towards the top.
+          * @default 'horizontal'
+         */
+        "orientation": KiSliderOrientation;
+        /**
+          * Enables two non-crossing thumbs in minimum then maximum tab order.
+          * @default false
+         */
+        "range": boolean;
+        /**
+          * Positive increment. Values snap from min and max is always reachable.
+          * @default 1
+         */
+        "step": number;
+        /**
+          * Current selection as a number or, in range mode, a comma-separated pair. HTML attributes also accept the scalar as numeric text. Defaults to min for one thumb and to both bounds for a range. User updates are normalized.
+         */
+        "value": number | string | undefined;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -1998,6 +2092,23 @@ declare global {
         new (): HTMLKiSelectElement;
     };
     /**
+     * Adjusts a value or an interval on a bounded scale.
+     * @whenToUse coarse adjustments such as volume, balance or a price filter,
+     * with a descriptive label.
+     * @whenNotToUse when people need to enter exact numbers or choose among a
+     * few named options. Use a number input or radio group for those tasks.
+     * @event change - Bubbles once when a pointer operation commits a different
+     * selection or a keyboard action changes it. Read the current host value.
+     * For updates during a drag, listen for the standard bubbling `input` event.
+     * Programmatic updates and form resets are silent.
+     */
+    interface HTMLKiSliderElement extends Components.KiSlider, HTMLStencilElement {
+    }
+    var HTMLKiSliderElement: {
+        prototype: HTMLKiSliderElement;
+        new (): HTMLKiSliderElement;
+    };
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -2273,6 +2384,7 @@ declare global {
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-select": HTMLKiSelectElement;
+        "ki-slider": HTMLKiSliderElement;
         "ki-spinner": HTMLKiSpinnerElement;
         "ki-stack": HTMLKiStackElement;
         "ki-status": HTMLKiStatusElement;
@@ -3279,6 +3391,102 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * Adjusts a value or an interval on a bounded scale.
+     * @whenToUse coarse adjustments such as volume, balance or a price filter,
+     * with a descriptive label.
+     * @whenNotToUse when people need to enter exact numbers or choose among a
+     * few named options. Use a number input or radio group for those tasks.
+     * @event change - Bubbles once when a pointer operation commits a different
+     * selection or a keyboard action changes it. Read the current host value.
+     * For updates during a drag, listen for the standard bubbling `input` event.
+     * Programmatic updates and form resets are silent.
+     */
+    interface KiSlider {
+        /**
+          * Shows a midpoint tick and fills from that point to a single thumb.
+          * @default false
+         */
+        "centered"?: boolean;
+        /**
+          * ISO 4217 code used with currency format.
+          * @default 'EUR'
+         */
+        "currency"?: string;
+        /**
+          * Makes the slider unavailable for pointer, keyboard and form submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Display format for the readout and accessible values.
+          * @default 'number'
+         */
+        "format"?: KiSliderFormat;
+        /**
+          * Optional supporting text, read as the description of each thumb.
+         */
+        "helpText"?: string;
+        /**
+          * Visible base name. Use a task-specific, localized label.
+          * @default 'Slider'
+         */
+        "label"?: string;
+        /**
+          * Number of evenly spaced tick intervals, up to 100. Zero hides ticks.
+          * @maximum 100
+          * @minimum 0
+          * @default 0
+         */
+        "marks"?: number;
+        /**
+          * Inclusive upper bound. A maximum below min collapses the scale.
+          * @default 100
+         */
+        "max"?: number;
+        /**
+          * Localized suffix for the upper thumb's accessible name.
+          * @default 'maximum'
+         */
+        "maximumLabel"?: string;
+        /**
+          * Inclusive lower bound and step origin.
+          * @default 0
+         */
+        "min"?: number;
+        /**
+          * Localized suffix for the lower thumb's accessible name.
+          * @default 'minimum'
+         */
+        "minimumLabel"?: string;
+        /**
+          * Native form key. Omit when the value should remain local to the control.
+         */
+        "name"?: string;
+        /**
+          * Axis of the scale. A vertical scale increases towards the top.
+          * @default 'horizontal'
+         */
+        "orientation"?: KiSliderOrientation;
+        /**
+          * Enables two non-crossing thumbs in minimum then maximum tab order.
+          * @default false
+         */
+        "range"?: boolean;
+        /**
+          * Positive increment. Values snap from min and max is always reachable.
+          * @default 1
+         */
+        "step"?: number;
+        /**
+          * Current selection as a number or, in range mode, a comma-separated pair. HTML attributes also accept the scalar as numeric text. Defaults to min for one thumb and to both bounds for a range. User updates are normalized.
+         */
+        "value"?: number | string | undefined;
+    }
+    /**
      * A compact status for an indeterminate wait.
      * @whenToUse show brief inline activity such as saving a change or running a
      * tool. Choose typing dots for an assistant that is thinking. Set a localized
@@ -3890,6 +4098,24 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiSliderAttributes {
+        "label": string;
+        "helpText": string;
+        "name": string;
+        "disabled": boolean;
+        "min": number;
+        "max": number;
+        "step": number;
+        "value": string;
+        "range": boolean;
+        "marks": number;
+        "format": KiSliderFormat;
+        "currency": string;
+        "minimumLabel": string;
+        "maximumLabel": string;
+        "centered": boolean;
+        "orientation": KiSliderOrientation;
+    }
     interface KiSpinnerAttributes {
         "label": string;
         "variant": 'ring' | 'dots';
@@ -3994,6 +4220,7 @@ declare namespace LocalJSX {
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
+        "ki-slider": Omit<KiSlider, keyof KiSliderAttributes> & { [K in keyof KiSlider & keyof KiSliderAttributes]?: KiSlider[K] } & { [K in keyof KiSlider & keyof KiSliderAttributes as `attr:${K}`]?: KiSliderAttributes[K] } & { [K in keyof KiSlider & keyof KiSliderAttributes as `prop:${K}`]?: KiSlider[K] };
         "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-stack": Omit<KiStack, keyof KiStackAttributes> & { [K in keyof KiStack & keyof KiStackAttributes]?: KiStack[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `attr:${K}`]?: KiStackAttributes[K] } & { [K in keyof KiStack & keyof KiStackAttributes as `prop:${K}`]?: KiStack[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
@@ -4360,6 +4587,18 @@ declare module "@stencil/core" {
              * are silent.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
+            /**
+             * Adjusts a value or an interval on a bounded scale.
+             * @whenToUse coarse adjustments such as volume, balance or a price filter,
+             * with a descriptive label.
+             * @whenNotToUse when people need to enter exact numbers or choose among a
+             * few named options. Use a number input or radio group for those tasks.
+             * @event change - Bubbles once when a pointer operation commits a different
+             * selection or a keyboard action changes it. Read the current host value.
+             * For updates during a drag, listen for the standard bubbling `input` event.
+             * Programmatic updates and form resets are silent.
+             */
+            "ki-slider": LocalJSX.IntrinsicElements["ki-slider"] & JSXBase.HTMLAttributes<HTMLKiSliderElement>;
             /**
              * A compact status for an indeterminate wait.
              * @whenToUse show brief inline activity such as saving a change or running a

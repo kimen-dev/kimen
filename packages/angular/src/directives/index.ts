@@ -29,6 +29,7 @@ export const DIRECTIVES = [
   d.KiRadioGroup,
   d.KiScroller,
   d.KiSelect,
+  d.KiSlider,
   d.KiSpinner,
   d.KiStack,
   d.KiStatus,
