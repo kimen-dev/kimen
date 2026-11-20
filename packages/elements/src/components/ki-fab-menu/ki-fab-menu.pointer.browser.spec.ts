@@ -3,7 +3,8 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { commands, page } from 'vitest/browser';
 import { parkPointer } from '../../../browser-tests/axe';
-import { defineCustomElement } from '../../../dist/components/ki-fab-menu.js';
+import { defineCustomElement as defineItem } from '../../../dist/components/ki-fab-menu-item.js';
+import { defineCustomElement as defineMenu } from '../../../dist/components/ki-fab-menu.js';
 
 const browser = commands as unknown as {
   emulateHoverCapability: (capability: 'none' | null) => Promise<boolean>;
@@ -13,7 +14,8 @@ const fixture = document.createElement('main');
 fixture.dataset.kiDensity = 'compact';
 
 beforeAll(() => {
-  defineCustomElement();
+  defineItem();
+  defineMenu();
   styles.textContent = tokensCss;
   document.head.append(styles);
   document.body.append(fixture);

@@ -3,7 +3,8 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
-import { defineCustomElement } from '../../../dist/components/ki-fab-menu.js';
+import { defineCustomElement as defineItem } from '../../../dist/components/ki-fab-menu-item.js';
+import { defineCustomElement as defineMenu } from '../../../dist/components/ki-fab-menu.js';
 
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
@@ -23,7 +24,8 @@ const actions =
   '<ki-fab-menu-item href="#new-event">New event</ki-fab-menu-item>';
 
 beforeAll(() => {
-  defineCustomElement();
+  defineItem();
+  defineMenu();
   styles.textContent = tokensCss;
   document.head.append(styles);
   document.body.append(fixture);
@@ -105,6 +107,26 @@ it('S2: selecting a command emits its value, closes and restores focus', async (
   expect(selected.mock.calls[0]?.[0]).toHaveProperty('detail', { value: 'message' });
   expect(closed).toHaveBeenCalledTimes(1);
   expect(part(host, 'trigger').matches(':focus')).toBe(true);
+});
+
+it('S2: a command can bind its own action while the parent reports one selection', async () => {
+  const host = mount();
+  const itemAction = vi.fn((event: Event) => {
+    event.stopPropagation();
+  });
+  const menuAction = vi.fn();
+  const item = host.querySelector('ki-fab-menu-item');
+  item?.addEventListener('ki-select', itemAction);
+  host.addEventListener('ki-select', menuAction);
+  await create.click();
+
+  await message.click();
+
+  await expect.element(create).toBeVisible();
+  expect(itemAction).toHaveBeenCalledTimes(1);
+  expect(itemAction.mock.calls[0]?.[0]).toHaveProperty('detail', { value: 'message' });
+  expect(menuAction).toHaveBeenCalledTimes(1);
+  expect(menuAction.mock.calls[0]?.[0]).toHaveProperty('target', host);
 });
 
 it('S3: clicking the scrim dismisses the menu and restores focus', async () => {

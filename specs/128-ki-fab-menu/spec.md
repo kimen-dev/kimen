@@ -138,7 +138,7 @@ Feature: Floating action menu
 | --- | --- | --- |
 | Core behavior | S1–S5 | |
 | Keyboard path | S6–S10 | |
-| Assistive technology | S11 | |
+| Assistive-tech outcome | S11 | |
 | Form participation | N/A | The actions are commands and native links. Buttons use `type="button"` and the component contributes no form value. |
 | Theming | S12–S16 | |
 
@@ -159,4 +159,5 @@ Each item is an agent's choice, pending founder confirmation.
 3. Count visible direct item children in document order. The first six can be used. Fewer than two disable the trigger and close an already open menu. An initially open menu focuses its first item without emitting a mount notification. Programmatic state changes emit the same lifecycle events as user changes.
 4. Follow Menu's trigger ArrowUp and ArrowDown, wrapping vertical navigation, Home, End and Tab conventions. Open and close immediately, matching the reference preview.
 5. Use the existing high-emphasis overlay as the scrim, including its theme opacity. Static placement requires block-start clearance for the action stack. Fixed placement reuses the FAB inset and mobile navigation reservation.
-6. The catalog binds the parent action to `ki-select`. Each child supplies its props and label, and links use the existing URL policy.
+6. The catalog binds the parent action to `ki-select`. Command items expose a local, non-bubbling `ki-select` for distinct catalog action IDs. Link items use native navigation and the existing URL policy.
+7. Measure the two tags together for the component budget. Record only the measured MCP server growth of 26,162 raw bytes and 4,396 gzip bytes against the same-dependency build of `8879dbb`. The existing Brotli allowance has headroom.

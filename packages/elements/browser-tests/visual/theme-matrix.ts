@@ -8,6 +8,8 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-counter',
   'ki-empty-state',
   'ki-fab',
+  'ki-fab-menu',
+  'ki-fab-menu-item',
   'ki-format-date',
   'ki-format-number',
   'ki-grid',
