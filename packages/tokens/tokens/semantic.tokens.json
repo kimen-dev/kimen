@@ -557,6 +557,11 @@
     },
     "outline": {
       "$type": "color",
+      "hairline-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Thin stroke for a surface or control boundary."
+      },
       "high-em": {
         "$value": "{ki.color.black.12}",
         "$description": "semantic color for outline high em."

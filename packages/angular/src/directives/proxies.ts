@@ -13,10 +13,11 @@ import { defineCustomElement as defineKiBadge } from '@kimen/elements/components
 import { defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
+import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
-import { defineCustomElement as defineKiDrawer } from '@kimen/elements/components/ki-drawer.js';
+import { defineCustomElement as defineKiFileUpload } from '@kimen/elements/components/ki-file-upload.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
 import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
@@ -218,6 +219,34 @@ export declare interface KiCheckbox extends Components.KiCheckbox {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineKiCheckboxGroup,
+  inputs: ['disabled', 'errorText', 'helpText', 'label', 'max', 'min', 'name', 'orientation', 'value']
+})
+@Component({
+  selector: 'ki-checkbox-group',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'max', 'min', 'name', 'orientation', 'value'],
+})
+export class KiCheckboxGroup {
+  protected el: HTMLKiCheckboxGroupElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCheckboxGroup extends Components.KiCheckboxGroup {
+  /**
+   * Fires once for a committed user toggle with a copy of the current selection.
+   */
+}
+
+
+@ProxyCmp({
   defineCustomElementFn: defineKiCounter,
   inputs: ['dot', 'for', 'max', 'tone', 'value']
 })
@@ -299,19 +328,18 @@ export declare interface KiDivider extends Components.KiDivider {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineKiDrawer,
-  inputs: ['closeLabel', 'heading', 'modal', 'open', 'placement', 'size'],
-  methods: ['show', 'close']
+  defineCustomElementFn: defineKiFileUpload,
+  inputs: ['accept', 'browseLabel', 'cancelLabel', 'countError', 'disabled', 'doneLabel', 'dropLabel', 'errorText', 'failedLabel', 'files', 'helpText', 'label', 'listLabel', 'maxFiles', 'maxSize', 'multiple', 'name', 'queuedLabel', 'removeLabel', 'required', 'requiredLabel', 'requiredMessage', 'sizeError', 'typeError', 'uploadingLabel']
 })
 @Component({
-  selector: 'ki-drawer',
+  selector: 'ki-file-upload',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['closeLabel', { name: 'heading', required: true }, 'modal', 'open', 'placement', 'size'],
+  inputs: ['accept', 'browseLabel', 'cancelLabel', 'countError', 'disabled', 'doneLabel', 'dropLabel', 'errorText', 'failedLabel', 'files', 'helpText', 'label', 'listLabel', 'maxFiles', 'maxSize', 'multiple', 'name', 'queuedLabel', 'removeLabel', 'required', 'requiredLabel', 'requiredMessage', 'sizeError', 'typeError', 'uploadingLabel'],
 })
-export class KiDrawer {
-  protected el: HTMLKiDrawerElement;
+export class KiFileUpload {
+  protected el: HTMLKiFileUploadElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -320,10 +348,15 @@ export class KiDrawer {
 
 
 
-export declare interface KiDrawer extends Components.KiDrawer {
+export declare interface KiFileUpload extends Components.KiFileUpload {
   /**
-   * Requests dismissal before the drawer closes. Call preventDefault() to keep it open,
-for example when edits are unsaved. The event carries the reason in detail.reason.
+   * Reports the accepted rows in one picker or drop batch, each with its original File.
+   */
+  /**
+   * Reports a row removed by the user, after updating the file list.
+   */
+  /**
+   * Requests that the application cancel the identified upload.
    */
 }
 

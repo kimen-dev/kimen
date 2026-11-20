@@ -1,0 +1,107 @@
+{
+  "ki": {
+    "file-upload": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s1}",
+        "$description": "Drop zone background at rest."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Main drop zone text at rest."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image over the drop zone background."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.no-backdrop-filter}",
+        "$description": "Complete backdrop filter applied behind the drop zone."
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.control}",
+        "$description": "Dashed boundary of the drop zone."
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.outline.hairline-width}",
+        "$description": "Outline stroke width for the drop zone and file rows."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Drop zone corner radius."
+      },
+      "active": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-tint}",
+          "$description": "Drop zone background while files are dragged over it."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Main drop zone text while files are dragged over it."
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{ki.focus.ring-color}",
+          "$description": "Drop zone boundary while files are dragged over it."
+        }
+      },
+      "row": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s0}",
+          "$description": "Background of a file row and the field label."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "File names, row action icons and the field label."
+        },
+        "bg-image": {
+          "$type": "other",
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image over the file row background."
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.no-backdrop-filter}",
+          "$description": "Complete backdrop filter applied behind a file row."
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.low-em}",
+          "$description": "Boundary of a file row without an error."
+        },
+        "radius": {
+          "$type": "dimension",
+          "$value": "{ki.radius.component.md}",
+          "$description": "File row corner radius."
+        }
+      },
+      "error": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s0}",
+          "$description": "Background of a file row with an error."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "Text of a file error or field error."
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.danger-med-em}",
+          "$description": "Boundary of a file row with an error."
+        }
+      }
+    }
+  }
+}

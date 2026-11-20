@@ -11,10 +11,11 @@ import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
-import { KiDrawerCloseDetail, KiDrawerPlacement } from "./components/ki-drawer/ki-drawer";
+import { KiFile, KiFileActionDetail, KiFilesAddDetail } from "./components/ki-file-upload/ki-file-upload";
 import { KiLayoutGap } from "./utils/layout-gap";
 import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -43,10 +44,11 @@ export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar"
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
+export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./components/ki-checkbox-group/ki-checkbox-group";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
-export { KiDrawerCloseDetail, KiDrawerPlacement } from "./components/ki-drawer/ki-drawer";
+export { KiFile, KiFileActionDetail, KiFilesAddDetail } from "./components/ki-file-upload/ki-file-upload";
 export { KiLayoutGap } from "./utils/layout-gap";
 export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -329,6 +331,55 @@ export namespace Components {
         "value"?: string;
     }
     /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface KiCheckboxGroup {
+        /**
+          * Makes the group unavailable and excludes it from form submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Localized message displayed for a failing selection limit.
+         */
+        "errorText"?: string;
+        /**
+          * One line of guidance displayed under the choices.
+         */
+        "helpText"?: string;
+        /**
+          * Visible legend and accessible name for these choices.
+         */
+        "label": string;
+        /**
+          * Maximum number of checked options, as a nonnegative integer.
+         */
+        "max"?: number;
+        /**
+          * Minimum number of checked options, as a nonnegative integer.
+         */
+        "min"?: number;
+        /**
+          * Form-data key repeated for each selected option.
+         */
+        "name"?: string;
+        /**
+          * Lays choices out vertically or in a wrapping horizontal row.
+          * @default 'vertical'
+         */
+        "orientation": KiCheckboxGroupOrientation;
+        /**
+          * Selected values in option order. Assign a fresh array to update selection silently. Initial checked options seed the group when this property is omitted. In HTML and catalog specs use `checked` on each selected option.
+          * @default []
+         */
+        "value": string[];
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -419,50 +470,133 @@ export namespace Components {
         "orientation": KiDividerOrientation;
     }
     /**
-     * An edge-aligned sheet for a focused task that keeps the current page in context.
-     * @whenToUse Edit an item beside its list or offer a short set of actions in a
-     * bottom sheet. Supply a heading and wire slotted actions in the application.
-     * Use non-modal mode if people need to interact with the page while editing.
-     * @whenNotToUse Menus, hover hints, permanent navigation, or work that needs a
-     * full page. For a short interrupting decision in the center, use ki-dialog.
+     * A form-associated picker and drop zone with local selection validation and a
+     * list of file upload outcomes.
+     * @whenToUse collect local attachments, media or imports, and optionally show
+     * application-managed upload progress and results.
+     * @whenNotToUse transfer files without an application handler, collect a URL,
+     * or use client-side type and size checks as upload authorization.
      */
-    interface KiDrawer {
+    interface KiFileUpload {
         /**
-          * Requests dismissal. An application can veto it by canceling ki-close.
+          * Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.
          */
-        "close": () => Promise<void>;
+        "accept"?: string;
         /**
-          * Accessible name for the built-in Close button. Translate this for localized interfaces.
-          * @default 'Close'
+          * Visible text of the native file picker button.
+          * @default 'Browse files'
          */
-        "closeLabel"?: string;
+        "browseLabel": string;
         /**
-          * Title and accessible name. Provide a heading whenever the drawer opens.
+          * Accessible name template for cancellation. Use {file} for the displayed filename.
+          * @default 'Cancel upload of {file}'
          */
-        "heading": string;
+        "cancelLabel": string;
         /**
-          * Makes the page behind the sheet inert. Set modal="false" for continued page interaction.
-          * @default true
+          * Rejection text for a file beyond selection capacity.
+          * @default 'Too many files.'
          */
-        "modal": boolean;
+        "countError": string;
         /**
-          * Reflected live state. Setting it to false requests dismissal and may be vetoed.
+          * Disables the picker and file actions and excludes the field from submission.
           * @default false
          */
-        "open": boolean;
+        "disabled": boolean;
         /**
-          * Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.
-          * @default 'end'
+          * Status text for a completed upload.
+          * @default 'Uploaded'
          */
-        "placement": KiDrawerPlacement;
+        "doneLabel": string;
         /**
-          * Opens the sheet. A focused invoker receives focus again after modal dismissal.
+          * Drop instruction shown just before the Browse button.
+          * @default 'Drop files here or'
          */
-        "show": () => Promise<void>;
+        "dropLabel": string;
         /**
-          * Optional CSS length. Overrides the 18rem themed width or bottom height cap.
+          * Application validation error. Clear it to allow form submission again.
          */
-        "size"?: string;
+        "errorText"?: string;
+        /**
+          * Fallback status text for a failed upload without a supplied error.
+          * @default 'Upload failed.'
+         */
+        "failedLabel": string;
+        /**
+          * Displayed file records, including rejections. Assign a new array to update progress or outcomes. Keep each original File on its record for form submission. Set this as a JavaScript property when supplying file records.
+          * @default []
+         */
+        "files": KiFile[];
+        /**
+          * Guidance for file formats, limits or the purpose of this field.
+         */
+        "helpText"?: string;
+        /**
+          * Visible label and accessible name of the upload group.
+          * @default 'Upload files'
+         */
+        "label": string;
+        /**
+          * Accessible name of the list of files.
+          * @default 'Files'
+         */
+        "listLabel": string;
+        /**
+          * Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.
+         */
+        "maxFiles"?: number;
+        /**
+          * Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as "10MB".
+         */
+        "maxSize"?: string;
+        /**
+          * Allows a selection of more than one file.
+          * @default false
+         */
+        "multiple": boolean;
+        /**
+          * Form-data key repeated for each accepted original file.
+         */
+        "name"?: string;
+        /**
+          * Status text for an accepted file waiting to upload.
+          * @default 'Queued'
+         */
+        "queuedLabel": string;
+        /**
+          * Accessible name template for removal. Use {file} for the displayed filename.
+          * @default 'Remove {file}'
+         */
+        "removeLabel": string;
+        /**
+          * Requires at least one original accepted file to submit the form.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Visible annotation for a required file field.
+          * @default 'Required'
+         */
+        "requiredLabel": string;
+        /**
+          * Validation message when the form requires a file and none is selected.
+          * @default 'Select a file.'
+         */
+        "requiredMessage": string;
+        /**
+          * Rejection text for a file larger than max-size.
+          * @default 'This file is too large.'
+         */
+        "sizeError": string;
+        /**
+          * Rejection text for a file that does not match accept.
+          * @default 'This file type is not allowed.'
+         */
+        "typeError": string;
+        /**
+          * Progress indicator name template. Use {file} for the displayed filename.
+          * @default 'Uploading {file}'
+         */
+        "uploadingLabel": string;
     }
     /**
      * A passive responsive grid for content items.
@@ -1512,13 +1646,17 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiCheckboxGroupCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiCheckboxGroupElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
 }
-export interface KiDrawerCustomEvent<T> extends CustomEvent<T> {
+export interface KiFileUploadCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLKiDrawerElement;
+    target: HTMLKiFileUploadElement;
 }
 export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1676,6 +1814,31 @@ declare global {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
     };
+    interface HTMLKiCheckboxGroupElementEventMap {
+        "ki-change": KiCheckboxGroupChangeDetail;
+    }
+    /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface HTMLKiCheckboxGroupElement extends Components.KiCheckboxGroup, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiCheckboxGroupElementEventMap>(type: K, listener: (this: HTMLKiCheckboxGroupElement, ev: KiCheckboxGroupCustomEvent<HTMLKiCheckboxGroupElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiCheckboxGroupElementEventMap>(type: K, listener: (this: HTMLKiCheckboxGroupElement, ev: KiCheckboxGroupCustomEvent<HTMLKiCheckboxGroupElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiCheckboxGroupElement: {
+        prototype: HTMLKiCheckboxGroupElement;
+        new (): HTMLKiCheckboxGroupElement;
+    };
     /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
@@ -1737,30 +1900,32 @@ declare global {
         prototype: HTMLKiDividerElement;
         new (): HTMLKiDividerElement;
     };
-    interface HTMLKiDrawerElementEventMap {
-        "ki-close": KiDrawerCloseDetail;
+    interface HTMLKiFileUploadElementEventMap {
+        "ki-files-add": KiFilesAddDetail;
+        "ki-file-remove": KiFileActionDetail;
+        "ki-file-cancel": KiFileActionDetail;
     }
     /**
-     * An edge-aligned sheet for a focused task that keeps the current page in context.
-     * @whenToUse Edit an item beside its list or offer a short set of actions in a
-     * bottom sheet. Supply a heading and wire slotted actions in the application.
-     * Use non-modal mode if people need to interact with the page while editing.
-     * @whenNotToUse Menus, hover hints, permanent navigation, or work that needs a
-     * full page. For a short interrupting decision in the center, use ki-dialog.
+     * A form-associated picker and drop zone with local selection validation and a
+     * list of file upload outcomes.
+     * @whenToUse collect local attachments, media or imports, and optionally show
+     * application-managed upload progress and results.
+     * @whenNotToUse transfer files without an application handler, collect a URL,
+     * or use client-side type and size checks as upload authorization.
      */
-    interface HTMLKiDrawerElement extends Components.KiDrawer, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLKiDrawerElementEventMap>(type: K, listener: (this: HTMLKiDrawerElement, ev: KiDrawerCustomEvent<HTMLKiDrawerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLKiFileUploadElement extends Components.KiFileUpload, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiFileUploadElementEventMap>(type: K, listener: (this: HTMLKiFileUploadElement, ev: KiFileUploadCustomEvent<HTMLKiFileUploadElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLKiDrawerElementEventMap>(type: K, listener: (this: HTMLKiDrawerElement, ev: KiDrawerCustomEvent<HTMLKiDrawerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiFileUploadElementEventMap>(type: K, listener: (this: HTMLKiFileUploadElement, ev: KiFileUploadCustomEvent<HTMLKiFileUploadElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLKiDrawerElement: {
-        prototype: HTMLKiDrawerElement;
-        new (): HTMLKiDrawerElement;
+    var HTMLKiFileUploadElement: {
+        prototype: HTMLKiFileUploadElement;
+        new (): HTMLKiFileUploadElement;
     };
     /**
      * A passive responsive grid for content items.
@@ -2330,10 +2495,11 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
-        "ki-drawer": HTMLKiDrawerElement;
+        "ki-file-upload": HTMLKiFileUploadElement;
         "ki-grid": HTMLKiGridElement;
         "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
@@ -2639,6 +2805,63 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A form-associated group of independently selectable checkboxes.
+     * @whenToUse people may select several visible options that share a question,
+     * form field, and optional selection limits.
+     * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+     * immediate on/off setting (use `ki-switch`). Provide a group label.
+     * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+     */
+    interface KiCheckboxGroup {
+        /**
+          * Makes the group unavailable and excludes it from form submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Localized message displayed for a failing selection limit.
+         */
+        "errorText"?: string;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * One line of guidance displayed under the choices.
+         */
+        "helpText"?: string;
+        /**
+          * Visible legend and accessible name for these choices.
+         */
+        "label": string;
+        /**
+          * Maximum number of checked options, as a nonnegative integer.
+         */
+        "max"?: number;
+        /**
+          * Minimum number of checked options, as a nonnegative integer.
+         */
+        "min"?: number;
+        /**
+          * Form-data key repeated for each selected option.
+         */
+        "name"?: string;
+        /**
+          * Fires once for a committed user toggle with a copy of the current selection.
+         */
+        "onKi-change"?: (event: KiCheckboxGroupCustomEvent<KiCheckboxGroupChangeDetail>) => void;
+        /**
+          * Lays choices out vertically or in a wrapping horizontal row.
+          * @default 'vertical'
+         */
+        "orientation"?: KiCheckboxGroupOrientation;
+        /**
+          * Selected values in option order. Assign a fresh array to update selection silently. Initial checked options seed the group when this property is omitted. In HTML and catalog specs use `checked` on each selected option.
+          * @default []
+         */
+        "value"?: string[];
+    }
+    /**
      * A decorative count or dot over a trigger or avatar.
      * @whenToUse mark unread or pending items on a trigger, or presence on an
      * avatar. Supply the full meaning in the host's accessible name and use a
@@ -2725,46 +2948,149 @@ declare namespace LocalJSX {
         "orientation"?: KiDividerOrientation;
     }
     /**
-     * An edge-aligned sheet for a focused task that keeps the current page in context.
-     * @whenToUse Edit an item beside its list or offer a short set of actions in a
-     * bottom sheet. Supply a heading and wire slotted actions in the application.
-     * Use non-modal mode if people need to interact with the page while editing.
-     * @whenNotToUse Menus, hover hints, permanent navigation, or work that needs a
-     * full page. For a short interrupting decision in the center, use ki-dialog.
+     * A form-associated picker and drop zone with local selection validation and a
+     * list of file upload outcomes.
+     * @whenToUse collect local attachments, media or imports, and optionally show
+     * application-managed upload progress and results.
+     * @whenNotToUse transfer files without an application handler, collect a URL,
+     * or use client-side type and size checks as upload authorization.
      */
-    interface KiDrawer {
+    interface KiFileUpload {
         /**
-          * Accessible name for the built-in Close button. Translate this for localized interfaces.
-          * @default 'Close'
+          * Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.
          */
-        "closeLabel"?: string;
+        "accept"?: string;
         /**
-          * Title and accessible name. Provide a heading whenever the drawer opens.
+          * Visible text of the native file picker button.
+          * @default 'Browse files'
          */
-        "heading": string;
+        "browseLabel"?: string;
         /**
-          * Makes the page behind the sheet inert. Set modal="false" for continued page interaction.
-          * @default true
+          * Accessible name template for cancellation. Use {file} for the displayed filename.
+          * @default 'Cancel upload of {file}'
          */
-        "modal"?: boolean;
+        "cancelLabel"?: string;
         /**
-          * Requests dismissal before the drawer closes. Call preventDefault() to keep it open, for example when edits are unsaved. The event carries the reason in detail.reason.
+          * Rejection text for a file beyond selection capacity.
+          * @default 'Too many files.'
          */
-        "onKi-close"?: (event: KiDrawerCustomEvent<KiDrawerCloseDetail>) => void;
+        "countError"?: string;
         /**
-          * Reflected live state. Setting it to false requests dismissal and may be vetoed.
+          * Disables the picker and file actions and excludes the field from submission.
           * @default false
          */
-        "open"?: boolean;
+        "disabled"?: boolean;
         /**
-          * Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.
-          * @default 'end'
+          * Status text for a completed upload.
+          * @default 'Uploaded'
          */
-        "placement"?: KiDrawerPlacement;
+        "doneLabel"?: string;
         /**
-          * Optional CSS length. Overrides the 18rem themed width or bottom height cap.
+          * Drop instruction shown just before the Browse button.
+          * @default 'Drop files here or'
          */
-        "size"?: string;
+        "dropLabel"?: string;
+        /**
+          * Application validation error. Clear it to allow form submission again.
+         */
+        "errorText"?: string;
+        /**
+          * Fallback status text for a failed upload without a supplied error.
+          * @default 'Upload failed.'
+         */
+        "failedLabel"?: string;
+        /**
+          * Displayed file records, including rejections. Assign a new array to update progress or outcomes. Keep each original File on its record for form submission. Set this as a JavaScript property when supplying file records.
+          * @default []
+         */
+        "files"?: KiFile[];
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Guidance for file formats, limits or the purpose of this field.
+         */
+        "helpText"?: string;
+        /**
+          * Visible label and accessible name of the upload group.
+          * @default 'Upload files'
+         */
+        "label"?: string;
+        /**
+          * Accessible name of the list of files.
+          * @default 'Files'
+         */
+        "listLabel"?: string;
+        /**
+          * Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.
+         */
+        "maxFiles"?: number;
+        /**
+          * Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as "10MB".
+         */
+        "maxSize"?: string;
+        /**
+          * Allows a selection of more than one file.
+          * @default false
+         */
+        "multiple"?: boolean;
+        /**
+          * Form-data key repeated for each accepted original file.
+         */
+        "name"?: string;
+        /**
+          * Requests that the application cancel the identified upload.
+         */
+        "onKi-file-cancel"?: (event: KiFileUploadCustomEvent<KiFileActionDetail>) => void;
+        /**
+          * Reports a row removed by the user, after updating the file list.
+         */
+        "onKi-file-remove"?: (event: KiFileUploadCustomEvent<KiFileActionDetail>) => void;
+        /**
+          * Reports the accepted rows in one picker or drop batch, each with its original File.
+         */
+        "onKi-files-add"?: (event: KiFileUploadCustomEvent<KiFilesAddDetail>) => void;
+        /**
+          * Status text for an accepted file waiting to upload.
+          * @default 'Queued'
+         */
+        "queuedLabel"?: string;
+        /**
+          * Accessible name template for removal. Use {file} for the displayed filename.
+          * @default 'Remove {file}'
+         */
+        "removeLabel"?: string;
+        /**
+          * Requires at least one original accepted file to submit the form.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Visible annotation for a required file field.
+          * @default 'Required'
+         */
+        "requiredLabel"?: string;
+        /**
+          * Validation message when the form requires a file and none is selected.
+          * @default 'Select a file.'
+         */
+        "requiredMessage"?: string;
+        /**
+          * Rejection text for a file larger than max-size.
+          * @default 'This file is too large.'
+         */
+        "sizeError"?: string;
+        /**
+          * Rejection text for a file that does not match accept.
+          * @default 'This file type is not allowed.'
+         */
+        "typeError"?: string;
+        /**
+          * Progress indicator name template. Use {file} for the displayed filename.
+          * @default 'Uploading {file}'
+         */
+        "uploadingLabel"?: string;
     }
     /**
      * A passive responsive grid for content items.
@@ -3882,6 +4208,16 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiCheckboxGroupAttributes {
+        "label": string;
+        "name": string;
+        "helpText": string;
+        "errorText": string;
+        "disabled": boolean;
+        "min": number;
+        "max": number;
+        "orientation": KiCheckboxGroupOrientation;
+    }
     interface KiCounterAttributes {
         "value": number;
         "max": number;
@@ -3897,13 +4233,31 @@ declare namespace LocalJSX {
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
     }
-    interface KiDrawerAttributes {
-        "heading": string;
-        "placement": KiDrawerPlacement;
-        "open": boolean;
-        "size": string;
-        "modal": boolean;
-        "closeLabel": string;
+    interface KiFileUploadAttributes {
+        "label": string;
+        "helpText": string;
+        "errorText": string;
+        "name": string;
+        "required": boolean;
+        "disabled": boolean;
+        "multiple": boolean;
+        "accept": string;
+        "maxSize": string;
+        "maxFiles": number;
+        "browseLabel": string;
+        "dropLabel": string;
+        "listLabel": string;
+        "removeLabel": string;
+        "cancelLabel": string;
+        "uploadingLabel": string;
+        "queuedLabel": string;
+        "doneLabel": string;
+        "failedLabel": string;
+        "typeError": string;
+        "sizeError": string;
+        "countError": string;
+        "requiredLabel": string;
+        "requiredMessage": string;
     }
     interface KiGridAttributes {
         "columns": number;
@@ -4102,10 +4456,11 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
-        "ki-drawer": Omit<KiDrawer, keyof KiDrawerAttributes> & { [K in keyof KiDrawer & keyof KiDrawerAttributes]?: KiDrawer[K] } & { [K in keyof KiDrawer & keyof KiDrawerAttributes as `attr:${K}`]?: KiDrawerAttributes[K] } & { [K in keyof KiDrawer & keyof KiDrawerAttributes as `prop:${K}`]?: KiDrawer[K] } & OneOf<"heading", KiDrawer["heading"], KiDrawerAttributes["heading"]>;
+        "ki-file-upload": Omit<KiFileUpload, keyof KiFileUploadAttributes> & { [K in keyof KiFileUpload & keyof KiFileUploadAttributes]?: KiFileUpload[K] } & { [K in keyof KiFileUpload & keyof KiFileUploadAttributes as `attr:${K}`]?: KiFileUploadAttributes[K] } & { [K in keyof KiFileUpload & keyof KiFileUploadAttributes as `prop:${K}`]?: KiFileUpload[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
         "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
@@ -4239,6 +4594,15 @@ declare module "@stencil/core" {
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
             /**
+             * A form-associated group of independently selectable checkboxes.
+             * @whenToUse people may select several visible options that share a question,
+             * form field, and optional selection limits.
+             * @whenNotToUse mutually exclusive choices (use `ki-radio-group`) or an
+             * immediate on/off setting (use `ki-switch`). Provide a group label.
+             * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
+             */
+            "ki-checkbox-group": LocalJSX.IntrinsicElements["ki-checkbox-group"] & JSXBase.HTMLAttributes<HTMLKiCheckboxGroupElement>;
+            /**
              * A decorative count or dot over a trigger or avatar.
              * @whenToUse mark unread or pending items on a trigger, or presence on an
              * avatar. Supply the full meaning in the host's accessible name and use a
@@ -4274,14 +4638,14 @@ declare module "@stencil/core" {
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
             /**
-             * An edge-aligned sheet for a focused task that keeps the current page in context.
-             * @whenToUse Edit an item beside its list or offer a short set of actions in a
-             * bottom sheet. Supply a heading and wire slotted actions in the application.
-             * Use non-modal mode if people need to interact with the page while editing.
-             * @whenNotToUse Menus, hover hints, permanent navigation, or work that needs a
-             * full page. For a short interrupting decision in the center, use ki-dialog.
+             * A form-associated picker and drop zone with local selection validation and a
+             * list of file upload outcomes.
+             * @whenToUse collect local attachments, media or imports, and optionally show
+             * application-managed upload progress and results.
+             * @whenNotToUse transfer files without an application handler, collect a URL,
+             * or use client-side type and size checks as upload authorization.
              */
-            "ki-drawer": LocalJSX.IntrinsicElements["ki-drawer"] & JSXBase.HTMLAttributes<HTMLKiDrawerElement>;
+            "ki-file-upload": LocalJSX.IntrinsicElements["ki-file-upload"] & JSXBase.HTMLAttributes<HTMLKiFileUploadElement>;
             /**
              * A passive responsive grid for content items.
              * @whenToUse lay out items on responsive tracks with consistent token spacing.

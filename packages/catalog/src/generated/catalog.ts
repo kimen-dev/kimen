@@ -455,6 +455,59 @@ export const catalogData = {
       "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked.",
       "whenToUse": "selecting one or more independent options that a form submits\nlater, including a \"select all\" parent that presents partial selection with\n`indeterminate`. Always provide a visible label in the default slot."
     },
+    "ki-checkbox-group": {
+      "description": "A form-associated group of independently selectable checkboxes.",
+      "events": {
+        "ki-change": "Fires once for a committed user toggle with a copy of the current selection."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Makes the group unavailable and excludes it from form submission.",
+          "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Localized message displayed for a failing selection limit."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of guidance displayed under the choices."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible legend and accessible name for these choices.",
+          "required": true
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum number of checked options, as a nonnegative integer."
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum number of checked options, as a nonnegative integer."
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key repeated for each selected option."
+        },
+        "orientation": {
+          "type": "enum",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Lays choices out vertically or in a wrapping horizontal row.",
+          "default": "vertical"
+        }
+      },
+      "slots": {
+        "": "Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group."
+      },
+      "tag": "ki-checkbox-group",
+      "whenNotToUse": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label.",
+      "whenToUse": "people may select several visible options that share a question,\nform field, and optional selection limits."
+    },
     "ki-counter": {
       "description": "A decorative count or dot over a trigger or avatar.",
       "events": {},
@@ -543,55 +596,135 @@ export const catalogData = {
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
     },
-    "ki-drawer": {
-      "description": "An edge-aligned sheet for a focused task that keeps the current page in context.",
+    "ki-file-upload": {
+      "description": "A form-associated picker and drop zone with local selection validation and a\nlist of file upload outcomes.",
       "events": {
-        "ki-close": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason."
+        "ki-file-cancel": "Requests that the application cancel the identified upload.",
+        "ki-file-remove": "Reports a row removed by the user, after updating the file list.",
+        "ki-files-add": "Reports the accepted rows in one picker or drop batch, each with its original File."
       },
       "props": {
-        "close-label": {
+        "accept": {
           "type": "string",
-          "description": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
-          "default": "Close"
+          "description": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections."
         },
-        "heading": {
+        "browse-label": {
           "type": "string",
-          "description": "Title and accessible name. Provide a heading whenever the drawer opens.",
-          "required": true
+          "description": "Visible text of the native file picker button.",
+          "default": "Browse files"
         },
-        "modal": {
-          "type": "boolean",
-          "description": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
-          "default": true
+        "cancel-label": {
+          "type": "string",
+          "description": "Accessible name template for cancellation. Use {file} for the displayed filename.",
+          "default": "Cancel upload of {file}"
         },
-        "open": {
+        "count-error": {
+          "type": "string",
+          "description": "Rejection text for a file beyond selection capacity.",
+          "default": "Too many files."
+        },
+        "disabled": {
           "type": "boolean",
-          "description": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
+          "description": "Disables the picker and file actions and excludes the field from submission.",
           "default": false
         },
-        "placement": {
-          "type": "enum",
-          "values": [
-            "bottom",
-            "end",
-            "start"
-          ],
-          "description": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
-          "default": "end"
-        },
-        "size": {
+        "done-label": {
           "type": "string",
-          "description": "Optional CSS length. Overrides the 18rem themed width or bottom height cap."
+          "description": "Status text for a completed upload.",
+          "default": "Uploaded"
+        },
+        "drop-label": {
+          "type": "string",
+          "description": "Drop instruction shown just before the Browse button.",
+          "default": "Drop files here or"
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Application validation error. Clear it to allow form submission again."
+        },
+        "failed-label": {
+          "type": "string",
+          "description": "Fallback status text for a failed upload without a supplied error.",
+          "default": "Upload failed."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Guidance for file formats, limits or the purpose of this field."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible label and accessible name of the upload group.",
+          "default": "Upload files"
+        },
+        "list-label": {
+          "type": "string",
+          "description": "Accessible name of the list of files.",
+          "default": "Files"
+        },
+        "max-files": {
+          "type": "number",
+          "description": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one."
+        },
+        "max-size": {
+          "type": "string",
+          "description": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\"."
+        },
+        "multiple": {
+          "type": "boolean",
+          "description": "Allows a selection of more than one file.",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key repeated for each accepted original file."
+        },
+        "queued-label": {
+          "type": "string",
+          "description": "Status text for an accepted file waiting to upload.",
+          "default": "Queued"
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Accessible name template for removal. Use {file} for the displayed filename.",
+          "default": "Remove {file}"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Requires at least one original accepted file to submit the form.",
+          "default": false
+        },
+        "required-label": {
+          "type": "string",
+          "description": "Visible annotation for a required file field.",
+          "default": "Required"
+        },
+        "required-message": {
+          "type": "string",
+          "description": "Validation message when the form requires a file and none is selected.",
+          "default": "Select a file."
+        },
+        "size-error": {
+          "type": "string",
+          "description": "Rejection text for a file larger than max-size.",
+          "default": "This file is too large."
+        },
+        "type-error": {
+          "type": "string",
+          "description": "Rejection text for a file that does not match accept.",
+          "default": "This file type is not allowed."
+        },
+        "uploading-label": {
+          "type": "string",
+          "description": "Progress indicator name template. Use {file} for the displayed filename.",
+          "default": "Uploading {file}"
         }
       },
       "slots": {
-        "": "The drawer's content, such as fields or a short list of actions.",
-        "footer": "Optional actions such as Save. Wire these in the application.",
-        "header-actions": "Optional actions between the heading and Close button."
+        "help": "Plain-language guidance for the picker, in place of help-text."
       },
-      "tag": "ki-drawer",
-      "whenNotToUse": "Menus, hover hints, permanent navigation, or work that needs a\nfull page. For a short interrupting decision in the center, use ki-dialog.",
-      "whenToUse": "Edit an item beside its list or offer a short set of actions in a\nbottom sheet. Supply a heading and wire slotted actions in the application.\nUse non-modal mode if people need to interact with the page while editing."
+      "tag": "ki-file-upload",
+      "whenNotToUse": "transfer files without an application handler, collect a URL,\nor use client-side type and size checks as upload authorization.",
+      "whenToUse": "collect local attachments, media or imports, and optionally show\napplication-managed upload progress and results."
     },
     "ki-grid": {
       "description": "A passive responsive grid for content items.",

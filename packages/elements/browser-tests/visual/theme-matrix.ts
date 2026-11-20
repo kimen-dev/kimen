@@ -22,6 +22,7 @@ const MATERIAL3_DARK: ReadonlySet<string> = new Set([
   'ki-empty-state',
   'ki-fab',
   'ki-feature-icon',
+  'ki-file-upload',
   'ki-format-date',
   'ki-format-number',
   'ki-grid',

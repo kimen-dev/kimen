@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 402 semantic
-and 1285 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 401 semantic
+and 1293 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -47,7 +47,6 @@ every component at once.
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
-| `--ki-corner-sheet` | `16px` | Inner corner radius of an edge-aligned sheet. |
 
 ### `ki.density`
 
@@ -154,7 +153,6 @@ every component at once.
 | --- | --- | --- |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
-| `--ki-layout-sheet-size` | `18rem` | Default inline size or block-size cap of a compact sheet. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
@@ -250,6 +248,7 @@ every component at once.
 | `--ki-outline-danger-low-em` | `#ffcccf` | semantic color for outline danger low em. |
 | `--ki-outline-danger-low-em-alpha` | `rgba(239, 78, 105, 0.4)` | semantic color for outline danger low em alpha. |
 | `--ki-outline-danger-med-em` | `#f1989f` | semantic color for outline danger med em. |
+| `--ki-outline-hairline-width` | `1px` | Thin stroke for a surface or control boundary. |
 | `--ki-outline-high-em` | `rgba(0, 0, 0, 0.12)` | semantic color for outline high em. |
 | `--ki-outline-info-base-em` | `#dff3ff` | semantic color for outline info base em. |
 | `--ki-outline-info-base-em-alpha` | `rgba(19, 185, 236, 0.2)` | semantic color for outline info base em alpha. |
@@ -1061,6 +1060,12 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-checkbox-unchecked-rest-border` | `#86827b` | color used by the checkbox component for unchecked rest border. |
 | `--ki-checkbox-unchecked-rest-fg` | `#181613` | color used by the checkbox component for unchecked rest foreground. |
 
+### `ki-checkbox-group`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-checkbox-group-gap` | `0.5rem` | Space between checkbox options and the group label and messages. |
+
 ### `ki-counter`
 
 | Token | Value (onmars light) | Description |
@@ -1135,22 +1140,29 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
 | `--ki-divider-thickness` | `1px` | dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). |
 
-### `ki-drawer`
+### `ki-file-upload`
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-drawer-backdrop-filter` | `none` | Complete backdrop filter applied behind the drawer surface. |
-| `--ki-drawer-bg` | `#f9f7f4` | Raised surface color of the drawer. |
-| `--ki-drawer-bg-image` | `none` | Optional image layered over the drawer surface. |
-| `--ki-drawer-close-size` | `2rem` | Preferred size of the Close button before the density minimum. |
-| `--ki-drawer-fg` | `#181613` | Foreground color on the drawer surface. |
-| `--ki-drawer-handle-color` | `#86827b` | Color of the bottom-sheet handle. |
-| `--ki-drawer-handle-size` | `2rem` | Inline extent of the bottom-sheet handle. |
-| `--ki-drawer-handle-thickness` | `0.25rem` | Thickness of the bottom-sheet handle. |
-| `--ki-drawer-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the drawer title. |
-| `--ki-drawer-radius` | `16px` | Radius of the corners on the inner edge of the drawer. |
-| `--ki-drawer-shadow` | `0 4px 12px 0 rgba(24, 22, 19, 0.07), 0 20px 44px 0 rgba(24, 22, 19, 0.12), 0 18px 40px 0 transparent` | Resting elevation of the drawer. |
-| `--ki-drawer-size` | `18rem` | Default inline size of a side sheet and block-size cap of a bottom sheet. |
+| `--ki-file-upload-active-bg` | `#ffebe5` | Drop zone background while files are dragged over it. |
+| `--ki-file-upload-active-border` | `#bb4e2a` | Drop zone boundary while files are dragged over it. |
+| `--ki-file-upload-active-fg` | `#181613` | Main drop zone text while files are dragged over it. |
+| `--ki-file-upload-backdrop-filter` | `none` | Complete backdrop filter applied behind the drop zone. |
+| `--ki-file-upload-bg` | `#f9f7f4` | Drop zone background at rest. |
+| `--ki-file-upload-bg-image` | `none` | Optional image over the drop zone background. |
+| `--ki-file-upload-border` | `#86827b` | Dashed boundary of the drop zone. |
+| `--ki-file-upload-border-width` | `1px` | Outline stroke width for the drop zone and file rows. |
+| `--ki-file-upload-error-bg` | `#ffffff` | Background of a file row with an error. |
+| `--ki-file-upload-error-border` | `#f1989f` | Boundary of a file row with an error. |
+| `--ki-file-upload-error-fg` | `#c21a45` | Text of a file error or field error. |
+| `--ki-file-upload-fg` | `#181613` | Main drop zone text at rest. |
+| `--ki-file-upload-radius` | `12px` | Drop zone corner radius. |
+| `--ki-file-upload-row-backdrop-filter` | `none` | Complete backdrop filter applied behind a file row. |
+| `--ki-file-upload-row-bg` | `#ffffff` | Background of a file row and the field label. |
+| `--ki-file-upload-row-bg-image` | `none` | Optional image over the file row background. |
+| `--ki-file-upload-row-border` | `rgba(24, 22, 19, 0.1)` | Boundary of a file row without an error. |
+| `--ki-file-upload-row-fg` | `#181613` | File names, row action icons and the field label. |
+| `--ki-file-upload-row-radius` | `10px` | File row corner radius. |
 
 ### `ki-icon`
 

@@ -1720,6 +1720,362 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-checkbox-group/ki-checkbox-group.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-checkbox-group",
+      "docs": "A form-associated group of independently selectable checkboxes.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "people may select several visible options that share a question,\nform field, and optional selection limits."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "mutually exclusive choices (use `ki-radio-group`) or an\nimmediate on/off setting (use `ki-switch`). Provide a group label."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group."
+        },
+        {
+          "name": "part",
+          "text": "label - Legend that names the group."
+        },
+        {
+          "name": "part",
+          "text": "help - Guidance below the options and the group's accessible description."
+        },
+        {
+          "name": "part",
+          "text": "error - Polite error message shown in place of the help."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-checkbox-group-gap - Space between options and group sections."
+        }
+      ],
+      "usage": {
+        "examples": "# Checkbox group examples\n\n## Submit several selections\n\n```html\n<form id=\"settings\">\n  <ki-checkbox-group\n    id=\"regions\"\n    label=\"Regions\"\n    name=\"regions\"\n    min=\"1\"\n    help-text=\"Choose the regions you serve.\"\n    error-text=\"Choose at least one region.\"\n  >\n    <ki-checkbox value=\"eu\" checked>Europe</ki-checkbox>\n    <ki-checkbox value=\"am\">Americas</ki-checkbox>\n    <ki-checkbox value=\"apac\">Asia-Pacific</ki-checkbox>\n  </ki-checkbox-group>\n  <button type=\"submit\">Save regions</button>\n</form>\n```\n\nReading `new FormData(form).getAll('regions')` returns each checked value\nin option order. Keep individual option labels visible and give each option\na distinct value when you need to select it independently from JavaScript.\n\n## Read and update selection\n\n```js\nimport { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';\nimport { defineCustomElement as defineCheckboxGroup } from '@kimen/elements/ki-checkbox-group';\n\ndefineCheckbox();\ndefineCheckboxGroup();\n\nconst group = document.querySelector('#regions');\ngroup.value = ['eu', 'apac'];\n\ngroup.addEventListener('ki-change', (event) => {\n  const selectedRegions = event.detail.value;\n  console.log(selectedRegions);\n});\n```\n\n## Horizontal choices\n\n```html\n<ki-checkbox-group label=\"Notifications\" orientation=\"horizontal\">\n  <ki-checkbox value=\"mentions\">Mentions</ki-checkbox>\n  <ki-checkbox value=\"reviews\">Review requests</ki-checkbox>\n</ki-checkbox-group>\n```\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Makes the group unavailable and excludes it from form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Localized message displayed for a failing selection limit.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "One line of guidance displayed under the choices.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Visible legend and accessible name for these choices.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": true,
+          "docs": "Maximum number of checked options, as a nonnegative integer.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "min",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min",
+          "reflectToAttr": true,
+          "docs": "Minimum number of checked options, as a nonnegative integer.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key repeated for each selected option.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "complexType": {
+            "original": "KiCheckboxGroupOrientation",
+            "resolved": "\"horizontal\" | \"vertical\"",
+            "references": {
+              "KiCheckboxGroupOrientation": {
+                "location": "local",
+                "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx",
+                "id": "src/components/ki-checkbox-group/ki-checkbox-group.tsx::KiCheckboxGroupOrientation"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "orientation",
+          "reflectToAttr": true,
+          "docs": "Lays choices out vertically or in a wrapping horizontal row.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'vertical'"
+            }
+          ],
+          "default": "'vertical'",
+          "values": [
+            {
+              "value": "horizontal",
+              "type": "string"
+            },
+            {
+              "value": "vertical",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "complexType": {
+            "original": "string[]",
+            "resolved": "string[]",
+            "references": {}
+          },
+          "mutable": true,
+          "reflectToAttr": false,
+          "docs": "Selected values in option order. Assign a fresh array to update selection\nsilently. Initial checked options seed the group when this property is\nomitted. In HTML and catalog specs use `checked` on each selected option.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "[]"
+            }
+          ],
+          "default": "this.defaultValue",
+          "values": [
+            {
+              "type": "string[]"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "KiCheckboxGroupChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiCheckboxGroupChangeDetail",
+            "resolved": "KiCheckboxGroupChangeDetail",
+            "references": {
+              "KiCheckboxGroupChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx",
+                "id": "src/components/ki-checkbox-group/ki-checkbox-group.tsx::KiCheckboxGroupChangeDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fires once for a committed user toggle with a copy of the current selection.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "focusout",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "change",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct `ki-checkbox` options, each with its own visible label and value.\nPut form naming and constraints on the group."
+        }
+      ],
+      "parts": [
+        {
+          "name": "error",
+          "docs": "Polite error message shown in place of the help."
+        },
+        {
+          "name": "help",
+          "docs": "Guidance below the options and the group's accessible description."
+        },
+        {
+          "name": "label",
+          "docs": "Legend that names the group."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-counter/ki-counter.tsx",
       "encapsulation": "shadow",
       "tag": "ki-counter",
@@ -2236,66 +2592,78 @@
       "dependencyGraph": {}
     },
     {
-      "filePath": "src/components/ki-drawer/ki-drawer.tsx",
+      "filePath": "src/components/ki-file-upload/ki-file-upload.tsx",
       "encapsulation": "shadow",
-      "tag": "ki-drawer",
-      "docs": "An edge-aligned sheet for a focused task that keeps the current page in context.",
+      "tag": "ki-file-upload",
+      "docs": "A form-associated picker and drop zone with local selection validation and a\nlist of file upload outcomes.",
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "Edit an item beside its list or offer a short set of actions in a\nbottom sheet. Supply a heading and wire slotted actions in the application.\nUse non-modal mode if people need to interact with the page while editing."
+          "text": "collect local attachments, media or imports, and optionally show\napplication-managed upload progress and results."
         },
         {
           "name": "whenNotToUse",
-          "text": "Menus, hover hints, permanent navigation, or work that needs a\nfull page. For a short interrupting decision in the center, use ki-dialog."
+          "text": "transfer files without an application handler, collect a URL,\nor use client-side type and size checks as upload authorization."
         },
         {
           "name": "slot",
-          "text": "- The drawer's content, such as fields or a short list of actions."
-        },
-        {
-          "name": "slot",
-          "text": "header-actions - Optional actions between the heading and Close button."
-        },
-        {
-          "name": "slot",
-          "text": "footer - Optional actions such as Save. Wire these in the application."
+          "text": "help - Plain-language guidance for the picker, in place of help-text."
         },
         {
           "name": "part",
-          "text": "dialog - The native sheet surface."
+          "text": "label - Field label and optional required annotation."
         },
         {
           "name": "part",
-          "text": "handle - The decorative bottom-sheet swipe handle."
+          "text": "drop-zone - Surface that receives files dragged from the operating system."
         },
         {
           "name": "part",
-          "text": "header - The heading and action layout."
+          "text": "browse - Native button that opens the file picker."
         },
         {
           "name": "part",
-          "text": "heading - The visible title that names the sheet."
+          "text": "input - Hidden native file picker."
         },
         {
           "name": "part",
-          "text": "close - The built-in Close button."
+          "text": "help - Guidance associated with the field."
         },
         {
           "name": "part",
-          "text": "body - The scrollable content region."
+          "text": "error - Field-level form validation error."
         },
         {
           "name": "part",
-          "text": "footer - The action row, collapsed when empty."
+          "text": "list - List of selected files and rejections."
+        },
+        {
+          "name": "part",
+          "text": "row - A file row, with data-status matching its lifecycle state."
+        },
+        {
+          "name": "part",
+          "text": "file-name - Name displayed for the file."
+        },
+        {
+          "name": "part",
+          "text": "file-meta - Size, outcome or error text for the file."
+        },
+        {
+          "name": "part",
+          "text": "action - Native button for removal or cancellation."
+        },
+        {
+          "name": "part",
+          "text": "progress - Progress indicator for an uploading file."
         }
       ],
       "usage": {
-        "examples": "## Edit details beside a list\n\nUse `heading` to name the sheet. Open it from a focused trigger so focus can\nreturn there. The app wires its own footer actions.\n\n```html\n<ki-button id=\"edit-incident\" type=\"button\">Edit incident</ki-button>\n<ki-drawer id=\"incident-editor\" heading=\"Edit incident\" placement=\"end\">\n  <ki-input label=\"Title\" value=\"Search index rebuild\"></ki-input>\n  <ki-button slot=\"footer\" id=\"save-incident\" type=\"button\" variant=\"primary\">\n    Save\n  </ki-button>\n</ki-drawer>\n\n<script type=\"module\">\n  const editor = document.querySelector('#incident-editor');\n  document.querySelector('#edit-incident').addEventListener('click', () => editor.show());\n  document.querySelector('#save-incident').addEventListener('click', () => {\n    // Save the app's changes first.\n    editor.close();\n  });\n  editor.addEventListener('ki-close', (event) => {\n    if (editor.hasAttribute('data-unsaved')) event.preventDefault();\n  });\n</script>\n```\n\n## Offer a short list of actions\n\nA bottom sheet has a swipe handle and a keyboard-accessible Close button.\nUse `close-label` to translate the button for your audience.\n\n```html\n<ki-drawer heading=\"Share incident\" placement=\"bottom\" size=\"20rem\" open>\n  <p>Choose how to share the incident.</p>\n  <ki-button slot=\"footer\" variant=\"secondary\">Email</ki-button>\n  <ki-button slot=\"footer\" variant=\"primary\">Copy link</ki-button>\n</ki-drawer>\n```\n\nUse `modal=\"false\"` when the page behind the drawer should stay interactive.\n`placement=\"start\"` and `placement=\"end\"` follow the inherited direction.\n"
+        "examples": "# File upload examples\n\n## Submit attachments with a form\n\n```html\n<form action=\"/attachments\" method=\"post\" enctype=\"multipart/form-data\">\n  <ki-file-upload\n    label=\"Incident attachments\"\n    name=\"attachments\"\n    accept=\".csv,.pdf\"\n    max-size=\"10MB\"\n    max-files=\"3\"\n    multiple\n    required\n  >\n    <span slot=\"help\">Choose up to three CSV or PDF files, up to 10 MB each.</span>\n  </ki-file-upload>\n  <button type=\"submit\">Send attachments</button>\n  <button type=\"reset\">Clear attachments</button>\n</form>\n```\n\nRegister the element once with the direct package entry point.\n\n```js\nimport { defineCustomElement } from '@kimen/elements/ki-file-upload';\n\ndefineCustomElement();\n```\n\nThe form submits each accepted original `File` under `attachments`. A reset\nclears the list. Use `error-text` for a form error, such as one returned by\nyour application, and clear it when the error is resolved.\n\n## Report progress from an application-managed transfer\n\nUse a standalone picker when your application sends files as soon as people\nchoose them.\n\n```html\n<ki-file-upload id=\"transfer-picker\" label=\"Import CSV files\" accept=\".csv\" multiple>\n</ki-file-upload>\n```\n\nHere `sendFile` is your application's transfer function. It accepts a\n`File`, an abort signal and a progress callback receiving a percentage.\n\n```js\nconst upload = document.querySelector('#transfer-picker');\nconst transfers = new Map();\n\nfunction update(file, changes) {\n  upload.files = upload.files.map((entry) =>\n    entry.file === file ? { ...entry, ...changes } : entry,\n  );\n}\n\nasync function startUpload(file) {\n  const controller = new AbortController();\n  transfers.set(file, controller);\n  update(file, { status: 'uploading', progress: 0 });\n\n  try {\n    await sendFile(file, {\n      signal: controller.signal,\n      onProgress: (progress) => update(file, { progress }),\n    });\n    update(file, { status: 'done' });\n  } catch {\n    const error = controller.signal.aborted ? 'Upload canceled.' : 'Upload failed.';\n    update(file, { status: 'error', error });\n  } finally {\n    transfers.delete(file);\n  }\n}\n\nupload.addEventListener('ki-files-add', ({ detail }) => {\n  for (const { file } of detail.files) {\n    void startUpload(file);\n  }\n});\n\nupload.addEventListener('ki-file-cancel', ({ detail }) => {\n  transfers.get(detail.file.file)?.abort();\n});\n```\n\nUse `ki-file-remove` to update application state when a row is removed.\nFor previously uploaded attachments, set `files` to rows with metadata and\n`status: 'done'`. Only rows carrying an original `File` contribute form\nentries.\n"
       },
       "props": [
         {
-          "name": "closeLabel",
+          "name": "accept",
           "type": "string | undefined",
           "complexType": {
             "original": "string",
@@ -2303,16 +2671,10 @@
             "references": {}
           },
           "mutable": false,
-          "attr": "close-label",
+          "attr": "accept",
           "reflectToAttr": false,
-          "docs": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Close'"
-            }
-          ],
-          "default": "'Close'",
+          "docs": "Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.",
+          "docsTags": [],
           "values": [
             {
               "type": "string"
@@ -2327,7 +2689,7 @@
           "setter": false
         },
         {
-          "name": "heading",
+          "name": "browseLabel",
           "type": "string",
           "complexType": {
             "original": "string",
@@ -2335,42 +2697,19 @@
             "references": {}
           },
           "mutable": false,
-          "attr": "heading",
+          "attr": "browse-label",
           "reflectToAttr": false,
-          "docs": "Title and accessible name. Provide a heading whenever the drawer opens.",
-          "docsTags": [],
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": true,
-          "getter": false,
-          "setter": false
-        },
-        {
-          "name": "modal",
-          "type": "boolean",
-          "complexType": {
-            "original": "boolean",
-            "resolved": "boolean",
-            "references": {}
-          },
-          "mutable": true,
-          "attr": "modal",
-          "reflectToAttr": false,
-          "docs": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
+          "docs": "Visible text of the native file picker button.",
           "docsTags": [
             {
               "name": "default",
-              "text": "true"
+              "text": "'Browse files'"
             }
           ],
-          "default": "true",
+          "default": "'Browse files'",
           "values": [
             {
-              "type": "boolean"
+              "type": "string"
             }
           ],
           "optional": false,
@@ -2379,7 +2718,65 @@
           "setter": false
         },
         {
-          "name": "open",
+          "name": "cancelLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "cancel-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name template for cancellation. Use {file} for the displayed filename.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Cancel upload of {file}'"
+            }
+          ],
+          "default": "'Cancel upload of {file}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "countError",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count-error",
+          "reflectToAttr": false,
+          "docs": "Rejection text for a file beyond selection capacity.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Too many files.'"
+            }
+          ],
+          "default": "'Too many files.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
           "type": "boolean",
           "complexType": {
             "original": "boolean",
@@ -2387,9 +2784,9 @@
             "references": {}
           },
           "mutable": true,
-          "attr": "open",
+          "attr": "disabled",
           "reflectToAttr": true,
-          "docs": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
+          "docs": "Disables the picker and file actions and excludes the field from submission.",
           "docsTags": [
             {
               "name": "default",
@@ -2408,41 +2805,26 @@
           "setter": false
         },
         {
-          "name": "placement",
-          "type": "\"bottom\" | \"end\" | \"start\"",
+          "name": "doneLabel",
+          "type": "string",
           "complexType": {
-            "original": "KiDrawerPlacement",
-            "resolved": "\"bottom\" | \"end\" | \"start\"",
-            "references": {
-              "KiDrawerPlacement": {
-                "location": "local",
-                "path": "src/components/ki-drawer/ki-drawer.tsx",
-                "id": "src/components/ki-drawer/ki-drawer.tsx::KiDrawerPlacement"
-              }
-            }
+            "original": "string",
+            "resolved": "string",
+            "references": {}
           },
           "mutable": false,
-          "attr": "placement",
-          "reflectToAttr": true,
-          "docs": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
+          "attr": "done-label",
+          "reflectToAttr": false,
+          "docs": "Status text for a completed upload.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'end'"
+              "text": "'Uploaded'"
             }
           ],
-          "default": "'end'",
+          "default": "'Uploaded'",
           "values": [
             {
-              "value": "bottom",
-              "type": "string"
-            },
-            {
-              "value": "end",
-              "type": "string"
-            },
-            {
-              "value": "start",
               "type": "string"
             }
           ],
@@ -2452,7 +2834,36 @@
           "setter": false
         },
         {
-          "name": "size",
+          "name": "dropLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "drop-label",
+          "reflectToAttr": false,
+          "docs": "Drop instruction shown just before the Browse button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Drop files here or'"
+            }
+          ],
+          "default": "'Drop files here or'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
           "type": "string | undefined",
           "complexType": {
             "original": "string",
@@ -2460,9 +2871,9 @@
             "references": {}
           },
           "mutable": false,
-          "attr": "size",
+          "attr": "error-text",
           "reflectToAttr": false,
-          "docs": "Optional CSS length. Overrides the 18rem themed width or bottom height cap.",
+          "docs": "Application validation error. Clear it to allow form submission again.",
           "docsTags": [],
           "values": [
             {
@@ -2476,130 +2887,631 @@
           "required": false,
           "getter": false,
           "setter": false
-        }
-      ],
-      "methods": [
-        {
-          "name": "close",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
-          "complexType": {
-            "signature": "() => Promise<void>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
-          },
-          "signature": "close() => Promise<void>",
-          "parameters": [],
-          "docs": "Requests dismissal. An application can veto it by canceling ki-close.",
-          "docsTags": []
         },
         {
-          "name": "show",
-          "returns": {
-            "type": "Promise<void>",
-            "docs": ""
-          },
+          "name": "failedLabel",
+          "type": "string",
           "complexType": {
-            "signature": "() => Promise<void>",
-            "parameters": [],
-            "references": {
-              "Promise": {
-                "location": "global",
-                "id": "global::Promise"
-              }
-            },
-            "return": "Promise<void>"
+            "original": "string",
+            "resolved": "string",
+            "references": {}
           },
-          "signature": "show() => Promise<void>",
-          "parameters": [],
-          "docs": "Opens the sheet. A focused invoker receives focus again after modal dismissal.",
-          "docsTags": []
-        }
-      ],
-      "events": [
+          "mutable": false,
+          "attr": "failed-label",
+          "reflectToAttr": false,
+          "docs": "Fallback status text for a failed upload without a supplied error.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Upload failed.'"
+            }
+          ],
+          "default": "'Upload failed.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
-          "event": "ki-close",
-          "detail": "KiDrawerCloseDetail",
-          "bubbles": true,
+          "name": "files",
+          "type": "KiFile[]",
           "complexType": {
-            "original": "KiDrawerCloseDetail",
-            "resolved": "KiDrawerCloseDetail",
+            "original": "KiFile[]",
+            "resolved": "KiFile[]",
             "references": {
-              "KiDrawerCloseDetail": {
+              "KiFile": {
                 "location": "local",
-                "path": "src/components/ki-drawer/ki-drawer.tsx",
-                "id": "src/components/ki-drawer/ki-drawer.tsx::KiDrawerCloseDetail"
+                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
+                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFile"
               }
             }
           },
-          "cancelable": true,
+          "mutable": true,
+          "reflectToAttr": false,
+          "docs": "Displayed file records, including rejections. Assign a new array to update\nprogress or outcomes. Keep each original File on its record for form\nsubmission. Set this as a JavaScript property when supplying file records.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "[]"
+            }
+          ],
+          "default": "[]",
+          "values": [
+            {
+              "type": "KiFile[]"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": false,
+          "docs": "Guidance for file formats, limits or the purpose of this field.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible label and accessible name of the upload group.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Upload files'"
+            }
+          ],
+          "default": "'Upload files'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "listLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "list-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the list of files.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Files'"
+            }
+          ],
+          "default": "'Files'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxFiles",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max-files",
+          "reflectToAttr": false,
+          "docs": "Maximum accepted local files as a nonnegative integer. Single-file mode also caps this at one.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maxSize",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max-size",
+          "reflectToAttr": false,
+          "docs": "Maximum size per selected file in bytes or decimal B, KB, MB or GB, such as \"10MB\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "multiple",
+          "reflectToAttr": true,
+          "docs": "Allows a selection of more than one file.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key repeated for each accepted original file.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "queuedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "queued-label",
+          "reflectToAttr": false,
+          "docs": "Status text for an accepted file waiting to upload.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Queued'"
+            }
+          ],
+          "default": "'Queued'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remove-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name template for removal. Use {file} for the displayed filename.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Remove {file}'"
+            }
+          ],
+          "default": "'Remove {file}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires at least one original accepted file to submit the form.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "requiredLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required-label",
+          "reflectToAttr": false,
+          "docs": "Visible annotation for a required file field.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Required'"
+            }
+          ],
+          "default": "'Required'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "requiredMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required-message",
+          "reflectToAttr": false,
+          "docs": "Validation message when the form requires a file and none is selected.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Select a file.'"
+            }
+          ],
+          "default": "'Select a file.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sizeError",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size-error",
+          "reflectToAttr": false,
+          "docs": "Rejection text for a file larger than max-size.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'This file is too large.'"
+            }
+          ],
+          "default": "'This file is too large.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "typeError",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "type-error",
+          "reflectToAttr": false,
+          "docs": "Rejection text for a file that does not match accept.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'This file type is not allowed.'"
+            }
+          ],
+          "default": "'This file type is not allowed.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "uploadingLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "uploading-label",
+          "reflectToAttr": false,
+          "docs": "Progress indicator name template. Use {file} for the displayed filename.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Uploading {file}'"
+            }
+          ],
+          "default": "'Uploading {file}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-file-cancel",
+          "detail": "KiFileActionDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiFileActionDetail",
+            "resolved": "KiFileActionDetail",
+            "references": {
+              "KiFileActionDetail": {
+                "location": "local",
+                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
+                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail"
+              }
+            }
+          },
+          "cancelable": false,
           "composed": true,
-          "docs": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason.",
+          "docs": "Requests that the application cancel the identified upload.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-file-remove",
+          "detail": "KiFileActionDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiFileActionDetail",
+            "resolved": "KiFileActionDetail",
+            "references": {
+              "KiFileActionDetail": {
+                "location": "local",
+                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
+                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports a row removed by the user, after updating the file list.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-files-add",
+          "detail": "KiFilesAddDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiFilesAddDetail",
+            "resolved": "KiFilesAddDetail",
+            "references": {
+              "KiFilesAddDetail": {
+                "location": "local",
+                "path": "src/components/ki-file-upload/ki-file-upload.tsx",
+                "id": "src/components/ki-file-upload/ki-file-upload.tsx::KiFilesAddDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports the accepted rows in one picker or drop batch, each with its original File.",
           "docsTags": []
         }
       ],
-      "listeners": [],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        }
+      ],
       "styles": [],
       "slots": [
         {
-          "name": "",
-          "docs": "The drawer's content, such as fields or a short list of actions."
-        },
-        {
-          "name": "footer",
-          "docs": "Optional actions such as Save. Wire these in the application."
-        },
-        {
-          "name": "header-actions",
-          "docs": "Optional actions between the heading and Close button."
+          "name": "help",
+          "docs": "Plain-language guidance for the picker, in place of help-text."
         }
       ],
       "parts": [
         {
-          "name": "body",
-          "docs": "The scrollable content region."
+          "name": "action",
+          "docs": "Native button for removal or cancellation."
         },
         {
-          "name": "close",
-          "docs": "The built-in Close button."
+          "name": "browse",
+          "docs": "Native button that opens the file picker."
         },
         {
-          "name": "dialog",
-          "docs": "The native sheet surface."
+          "name": "drop-zone",
+          "docs": "Surface that receives files dragged from the operating system."
         },
         {
-          "name": "footer",
-          "docs": "The action row, collapsed when empty."
+          "name": "error",
+          "docs": "Field-level form validation error."
         },
         {
-          "name": "handle",
-          "docs": "The decorative bottom-sheet swipe handle."
+          "name": "file-meta",
+          "docs": "Size, outcome or error text for the file."
         },
         {
-          "name": "header",
-          "docs": "The heading and action layout."
+          "name": "file-name",
+          "docs": "Name displayed for the file."
         },
         {
-          "name": "heading",
-          "docs": "The visible title that names the sheet."
+          "name": "help",
+          "docs": "Guidance associated with the field."
+        },
+        {
+          "name": "input",
+          "docs": "Hidden native file picker."
+        },
+        {
+          "name": "label",
+          "docs": "Field label and optional required annotation."
+        },
+        {
+          "name": "list",
+          "docs": "List of selected files and rejections."
+        },
+        {
+          "name": "progress",
+          "docs": "Progress indicator for an uploading file."
+        },
+        {
+          "name": "row",
+          "docs": "A file row, with data-status matching its lifecycle state."
         }
       ],
       "states": [],
       "dependents": [],
       "dependencies": [
-        "ki-icon"
+        "ki-icon",
+        "ki-progress"
       ],
       "dependencyGraph": {
-        "ki-drawer": [
-          "ki-icon"
+        "ki-file-upload": [
+          "ki-icon",
+          "ki-progress"
         ]
       }
     },
@@ -3006,11 +3918,11 @@
       "parts": [],
       "states": [],
       "dependents": [
-        "ki-drawer"
+        "ki-file-upload"
       ],
       "dependencies": [],
       "dependencyGraph": {
-        "ki-drawer": [
+        "ki-file-upload": [
           "ki-icon"
         ]
       }
@@ -5386,9 +6298,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-file-upload"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-file-upload": [
+          "ki-progress"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-qr/ki-qr.tsx",
@@ -9163,6 +10081,16 @@
       "docstring": "",
       "path": "src/components/ki-checkbox/ki-checkbox.tsx"
     },
+    "src/components/ki-checkbox-group/ki-checkbox-group.tsx::KiCheckboxGroupOrientation": {
+      "declaration": "export type KiCheckboxGroupOrientation = 'vertical' | 'horizontal';",
+      "docstring": "",
+      "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx"
+    },
+    "src/components/ki-checkbox-group/ki-checkbox-group.tsx::KiCheckboxGroupChangeDetail": {
+      "declaration": "export interface KiCheckboxGroupChangeDetail {\n  value: string[];\n}",
+      "docstring": "",
+      "path": "src/components/ki-checkbox-group/ki-checkbox-group.tsx"
+    },
     "src/components/ki-counter/ki-counter.tsx::KiCounterTone": {
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
       "docstring": "",
@@ -9178,15 +10106,20 @@
       "docstring": "",
       "path": "src/components/ki-divider/ki-divider.tsx"
     },
-    "src/components/ki-drawer/ki-drawer.tsx::KiDrawerPlacement": {
-      "declaration": "export type KiDrawerPlacement = 'start' | 'end' | 'bottom';",
+    "src/components/ki-file-upload/ki-file-upload.tsx::KiFile": {
+      "declaration": "export interface KiFile {\n  name: string;\n  /** Size in bytes. */\n  size: number;\n  status: 'queued' | 'uploading' | 'done' | 'error';\n  /** Percentage for an upload with known progress. */\n  progress?: number;\n  /** Visible error reason for a row in the error state. */\n  error?: string;\n  /** Original accepted local file, retained for submission. */\n  file?: File;\n}",
       "docstring": "",
-      "path": "src/components/ki-drawer/ki-drawer.tsx"
+      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
     },
-    "src/components/ki-drawer/ki-drawer.tsx::KiDrawerCloseDetail": {
-      "declaration": "export interface KiDrawerCloseDetail {\n  /** The source of the dismissal request. Open-state changes report `method`. */\n  reason: KiDrawerCloseReason;\n}",
+    "src/components/ki-file-upload/ki-file-upload.tsx::KiFilesAddDetail": {
+      "declaration": "export interface KiFilesAddDetail {\n  files: KiFile[];\n}",
       "docstring": "",
-      "path": "src/components/ki-drawer/ki-drawer.tsx"
+      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
+    },
+    "src/components/ki-file-upload/ki-file-upload.tsx::KiFileActionDetail": {
+      "declaration": "export interface KiFileActionDetail {\n  file: KiFile;\n}",
+      "docstring": "",
+      "path": "src/components/ki-file-upload/ki-file-upload.tsx"
     },
     "src/components/ki-icon/ki-icon.tsx::KiIconSize": {
       "declaration": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';",
