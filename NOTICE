@@ -77,9 +77,8 @@ Apache-2.0 as recorded per directory.
 Third-party notices: Inter font (SIL OFL 1.1)
 ================================================================================
 
-The visual-regression harness and public site vendor the Inter variable font
-so screenshot baselines and published typography never depend on fonts
-installed on the runner or visitor device:
+The visual-regression harness and site compatibility fixtures vendor the Inter
+variable font so screenshot baselines never depend on installed fonts:
 
   - packages/elements/browser-tests/visual/fonts/InterVariable.woff2
   - site/assets/fonts/InterVariable.woff2
@@ -104,11 +103,10 @@ labels keep the approved design metrics on every platform:
     JetBrains Mono — https://github.com/JetBrains/JetBrainsMono
     Fetched from: fonts/webfonts/JetBrainsMono[wght].woff2 on the upstream
     default branch
-    Font revision: 2.19988 (WOFF2 metadata)
+    Version 2.305 (WOFF2 name table)
     SHA-256: 31ec365b93e4bad6f202ce23352a56d01ca4462b2afc782ed2cf6fa42ca9ac0e
     Copyright 2020 The JetBrains Mono Project Authors
-    License: SIL Open Font License 1.1 —
-    https://github.com/JetBrains/JetBrainsMono/blob/master/OFL.txt
+    License: site/assets/fonts/JetBrainsMono-OFL.txt (SIL OFL 1.1)
 
   The font file is not part of any published npm package.
 
@@ -117,8 +115,9 @@ Third-party notices: onmars theme fonts (SIL OFL 1.1)
 ================================================================================
 
 The optional onmars v2 font stylesheet uses the following Latin variable faces
-from the Kimen design-system reference. The complete SIL Open Font License 1.1
-texts and copyright notices are packaged alongside the fonts.
+from the Kimen design-system reference. The public site also serves the same
+bytes. The complete SIL Open Font License 1.1 texts and copyright notices are
+distributed alongside the fonts.
 
   - packages/tokens/fonts/InstrumentSansVariable.woff2
     Instrument Sans — https://github.com/Instrument/instrument-sans
@@ -138,9 +137,8 @@ texts and copyright notices are packaged alongside the fonts.
 Third-party notices: Roboto font (SIL OFL 1.1)
 ================================================================================
 
-The visual-regression harness also vendors the Roboto variable font so the
-material3 theme galleries render their real typeface instead of a platform
-fallback face:
+The visual-regression harness and public site use the same Roboto variable
+font so the material3 theme can render its own typeface:
 
   - packages/elements/browser-tests/visual/fonts/RobotoVariable.woff2
     Roboto — https://fonts.google.com/specimen/Roboto
@@ -150,11 +148,10 @@ fallback face:
     Font revision: Version 3.015; 2026 (WOFF2 metadata)
     SHA-256: 0a44e0bb6ba5c8537e8814c148ef7755f1bce12112361231f595ecc584a18d7a
     Copyright 2011 The Roboto Project Authors
-    License: SIL Open Font License 1.1 —
-    https://github.com/googlefonts/roboto-3-classic/blob/v3.015/OFL.txt
+    License: site/assets/fonts/Roboto-OFL.txt (SIL OFL 1.1)
 
-  The font file is used only as a test fixture; it is not part of any
-  published package.
+  The assembler copies this file to /assets/fonts/RobotoVariable.woff2.
+  The font file is not part of any published npm package.
 
 ================================================================================
 Third-party notices: QR Code generator library (MIT)
