@@ -617,7 +617,8 @@ const APPROVED_LANDING = {
   llms: [752, 129.6, 630.4, 362.1],
   artifacts: [57.6, 413.3, 630.4, 326],
   // From the top of #quality.
-  gateTable: [57.6, 322.9, 1324.8, 404.1],
+  // Its last column shows only the check mark now (#520, item 18): 3px shorter.
+  gateTable: [57.6, 322.9, 1324.8, 401.0],
   // The closing call and the footer.
   closeHeight: 498.8,
   closeTitle: { centre: 720, y: 130.6, height: 82.6 },
@@ -806,7 +807,9 @@ describe('Kimen public site experience in a real browser', () => {
     expect(document.querySelector('nav')).toBeInstanceOf(HTMLElement);
     expect(document.querySelector('main')).toBeInstanceOf(HTMLElement);
     expect(document.querySelector('footer')).toBeInstanceOf(HTMLElement);
-    expect(canonicalDestination(linkNamed('Components'))).toBe('/docs/components/alert/');
+    // The header's Components link opens the component index (#520, item 25);
+    // S1 fixes only "Explore the components".
+    expect(canonicalDestination(linkNamed('Components'))).toBe('/docs/#docs-components-title');
     expect(canonicalDestination(linkNamed('Playground'))).toBe('/playground/');
     expect(canonicalDestination(linkNamed('GitHub'))).toBe('https://github.com/kimen-dev/kimen');
     await expectAccessible(document.body);
@@ -1062,7 +1065,6 @@ describe('Kimen public site experience in a real browser', () => {
         'ways-title',
         'guard-title',
         'components-title',
-        'catalog-title',
         'agents-title',
         'gates-title',
         'status-title',
@@ -1073,8 +1075,7 @@ describe('Kimen public site experience in a real browser', () => {
       'This page runs on @kimen/tokens. Flip it.',
       'Write it yourself, or let your agent compose it.',
       'The guardrail says no, and says why.',
-      'Every component, live. Not screenshots.',
-      'The ki-* catalog.',
+      'The ki-* catalog: every component, live.',
       'Legible to agents, by contract.',
       'Done means gates exit 0.',
       'Honest, gated, in the open.',
@@ -1245,6 +1246,80 @@ describe('Kimen public site experience in a real browser', () => {
     }
     expect(horizontalOverflow(), overflowDiagnostics()).toBeLessThanOrEqual(0);
   });
+
+  // #520, item 22: at 375 the header took three rows. Below 40rem the brand,
+  // the scheme control and a menu share one row; the links live in the menu.
+  it.each([320, 375] as const)(
+    'keeps the landing header on one row at %i CSS pixels',
+    async (width) => {
+      await page.viewport(width, DEFAULT_VIEWPORT.height);
+      await mountPage('landing');
+      const brand = requireElement<HTMLElement>('.hero > .brand', HTMLElement);
+      const scheme = requireElement<HTMLElement>('[data-header-scheme]', HTMLElement);
+      const menu = requireElement<HTMLDetailsElement>('[data-topnav-menu]', HTMLDetailsElement);
+      const summary = requireElement<HTMLElement>('[data-topnav-menu] > summary', HTMLElement);
+
+      const row = [brand, scheme, summary].map((element) => element.getBoundingClientRect());
+      for (const box of row) {
+        expect(Math.abs(box.top + box.height / 2 - (row[1].top + row[1].height / 2))).toBeLessThan(
+          2,
+        );
+      }
+      expect(row[0].right).toBeLessThanOrEqual(row[1].left);
+      expect(row[1].right).toBeLessThanOrEqual(row[2].left);
+      expect([...document.querySelectorAll<HTMLElement>('.topnav > a')].filter(isRendered)).toEqual(
+        [],
+      );
+
+      await userEvent.click(summary);
+      expect(menu.open).toBe(true);
+      expect(
+        [...menu.querySelectorAll<HTMLAnchorElement>('nav a')]
+          .filter(isRendered)
+          .map((link) => link.textContent.trim()),
+      ).toEqual(['Components', 'Use it', 'Docs', 'Playground', 'GitHub']);
+      await userEvent.keyboard('{Escape}');
+      expect(menu.open).toBe(false);
+      expect(document.activeElement).toBe(summary);
+      expect(horizontalOverflow(), overflowDiagnostics()).toBeLessThanOrEqual(0);
+    },
+  );
+
+  // #520, item 20: holes in the wall, a lone last cell, two cell patterns, and
+  // ki-mobile-nav's fixed bar covering the bottom of the page.
+  it.each([1440, 1024, 375] as const)(
+    'keeps the live wall tidy at %i CSS pixels',
+    async (width) => {
+      await page.viewport(width, DEFAULT_VIEWPORT.height);
+      await mountPage('landing');
+      const manifest = JSON.parse(customElementsManifestJson) as {
+        modules: { declarations?: { tagName?: string }[] }[];
+      };
+      expect(renderCatalog(manifest, document)).toBe(true);
+      await settleInitialLayout();
+      const grid = requireElement<HTMLElement>('#catalog-grid', HTMLElement);
+
+      const last = grid.lastElementChild;
+      if (!(last instanceof HTMLElement)) throw new Error('the wall has no cells');
+      expect(
+        Math.abs(last.getBoundingClientRect().right - grid.getBoundingClientRect().right),
+      ).toBeLessThan(2);
+      expect(grid.querySelectorAll('.cell-description')).toHaveLength(0);
+      for (const cell of grid.querySelectorAll<HTMLElement>('.cell')) {
+        expect(
+          cell.lastElementChild?.classList.contains('tag'),
+          'the tag line closes each cell',
+        ).toBe(true);
+      }
+      const mobileNav = grid.querySelector('ki-mobile-nav');
+      const bar = mobileNav?.shadowRoot?.querySelector('nav');
+      const cell = mobileNav?.closest('.cell');
+      if (!bar || !cell) throw new Error('ki-mobile-nav is not on the wall');
+      const [barBox, cellBox] = [bar.getBoundingClientRect(), cell.getBoundingClientRect()];
+      expect(barBox.top).toBeGreaterThanOrEqual(cellBox.top - 1);
+      expect(barBox.bottom).toBeLessThanOrEqual(cellBox.bottom + 1);
+    },
+  );
 
   it.each([
     ['landing', 320],

@@ -372,20 +372,23 @@ function wireBands(root, view, signal) {
     });
   }
 
+  // The copies are made at once and stay hidden until the bands are ready (#520, item 19): their
+  // components render while the visitor reads the hero, so the bands never show up empty.
+  for (const [index, config] of BANDS.entries()) {
+    const copy = first.cloneNode(true);
+    copy.dataset.band = String(index + 2);
+    copy.dataset.kiTheme = config.theme;
+    copy.dataset.kiColorScheme = config.scheme;
+    copy.querySelector('.band-label').textContent = config.label;
+    copy.querySelector('.band-attr').textContent =
+      config.theme === 'onmars'
+        ? `data-ki-color-scheme="${config.scheme}"`
+        : `data-ki-theme="material3"\ndata-ki-color-scheme="${config.scheme}"`;
+    bandElements.at(-1).after(copy);
+    bandElements.push(copy);
+  }
+
   function activateBands() {
-    for (const [index, config] of BANDS.entries()) {
-      const copy = first.cloneNode(true);
-      copy.dataset.band = String(index + 2);
-      copy.dataset.kiTheme = config.theme;
-      copy.dataset.kiColorScheme = config.scheme;
-      copy.querySelector('.band-label').textContent = config.label;
-      copy.querySelector('.band-attr').textContent =
-        config.theme === 'onmars'
-          ? `data-ki-color-scheme="${config.scheme}"`
-          : `data-ki-theme="material3"\ndata-ki-color-scheme="${config.scheme}"`;
-      bandElements.at(-1).after(copy);
-      bandElements.push(copy);
-    }
     bands.dataset.ready = '';
     for (const seam of seams) seam.hidden = false;
     picker.hidden = false;
@@ -645,14 +648,34 @@ function defaultSample(root, tag, declaration) {
     }
   }
   if (declaration.slots?.some((slot) => slot.name === '')) sample.textContent = title;
-  cell.append(sample);
-  if (declaration.description?.trim()) {
-    const description = root.createElement('p');
-    description.className = 'cell-description';
-    description.textContent = declaration.description.trim().split('\n')[0];
-    cell.append(description);
-  }
+  // One pattern for every cell (#520, item 20): the live sample, then its tag line. The frame
+  // contains the sample's own layout, so page chrome such as ki-mobile-nav's fixed bar stays
+  // inside its cell instead of covering the page.
+  const frame = root.createElement('div');
+  frame.className = 'cell-sample';
+  frame.append(sample);
+  cell.append(frame);
   return cell;
+}
+
+/**
+ * End the wall flush (#520, item 20): stretch its last cell across whatever its row leaves
+ * empty. Dense packing fills the holes before it.
+ */
+function fillLastRow(grid, view) {
+  const last = grid.lastElementChild;
+  if (!(last instanceof view.HTMLElement)) return;
+  last.style.removeProperty('grid-column-end');
+  const columns = view.getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean);
+  if (columns.length < 2 || grid.hidden) return;
+  const area = grid.getBoundingClientRect();
+  const box = last.getBoundingClientRect();
+  const track = area.width / columns.length;
+  const rtl = view.getComputedStyle(grid).direction === 'rtl';
+  const start = Math.round((rtl ? area.right - box.right : box.left - area.left) / track);
+  const span = Math.max(1, Math.round(box.width / track));
+  const rest = columns.length - start - span;
+  if (rest > 0) last.style.setProperty('grid-column-end', `span ${span + rest}`);
 }
 
 export function renderCatalog(manifest, root = document) {
@@ -691,6 +714,7 @@ export function renderCatalog(manifest, root = document) {
 
   grid.replaceChildren(cells);
   grid.hidden = false;
+  fillLastRow(grid, root.defaultView);
   const count = root.querySelector('[data-component-count]');
   if (count) count.textContent = String(declarations.size);
   return true;
@@ -742,7 +766,45 @@ function wireCatalog(root, view, signal) {
     { rootMargin: '90% 0px' },
   );
   observer.observe(grid.parentElement);
-  signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+  // The column count changes with the viewport; the last row is filled again each time.
+  const resize = new view.ResizeObserver(() => fillLastRow(grid, view));
+  resize.observe(grid);
+  signal.addEventListener(
+    'abort',
+    () => {
+      observer.disconnect();
+      resize.disconnect();
+    },
+    { once: true },
+  );
+}
+
+/**
+ * The phone header menu (#520, item 22) is a native disclosure. Close it the way a menu closes:
+ * on Escape (focus back on its button), on a click outside it, and when a link inside it is
+ * followed (a same-page link would otherwise leave it open over the section it jumped to).
+ */
+function wireTopnavMenu(root, signal) {
+  const menu = root.querySelector('[data-topnav-menu]');
+  if (!menu) return;
+  const summary = menu.querySelector('summary');
+  menu.addEventListener(
+    'keydown',
+    (event) => {
+      if (event.key !== 'Escape' || !menu.open) return;
+      menu.open = false;
+      summary?.focus();
+    },
+    { signal },
+  );
+  root.addEventListener(
+    'click',
+    (event) => {
+      if (!menu.open) return;
+      if (!menu.contains(event.target) || event.target.closest?.('a')) menu.open = false;
+    },
+    { signal },
+  );
 }
 
 function wireDock(root, view, signal) {
@@ -769,6 +831,7 @@ export function initializeLanding(root = document) {
   wireGuard(root, signal);
   wireCatalog(root, view, signal);
   wireDock(root, view, signal);
+  wireTopnavMenu(root, signal);
   return () => controller.abort();
 }
 

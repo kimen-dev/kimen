@@ -127,12 +127,11 @@ test('the public pages retain the approved desktop design structure and density'
 
   for (const heading of [
     'The component foundation built for generative UI.',
-    'Every component, live. Not screenshots.',
+    'The <code>ki-*</code> catalog: every component, live.',
     'This page runs on <code>@kimen/tokens</code>. Flip it.',
     'Legible to agents, by contract.',
     'What only a GenUI-first library does.',
     'Done means gates exit 0.',
-    'The ki-* catalog.',
     'Honest, gated, in the open.',
   ]) {
     assert.ok(landing.includes(heading), `landing must retain heading: ${heading}`);
@@ -155,6 +154,39 @@ test('the public pages retain the approved desktop design structure and density'
     (playground.match(/class=["'][^"']*\btoken-row\b/gu) ?? []).length,
     10,
     'the no-JavaScript playground inspector keeps its ten sample rows (playground.js lists the full semantic set)',
+  );
+});
+
+// The live review of kimen.dev (#520), items 17, 18 and 21.
+test('the landing separates inline pairs, states required gates, and marks its disclosure', async () => {
+  const landing = await readSiteFile('index.html');
+
+  const artifacts = between(
+    landing,
+    '<div class="contract-artifact">',
+    '@kimen/emitter',
+    'artifacts',
+  );
+  assert.doesNotMatch(artifacts, /<\/(?:a|code)>\s*·/u, 'a bare dot reads as part of the words');
+  assert.equal(
+    (artifacts.match(/<span class="sep"><\/span>/gu) ?? []).length,
+    2,
+    'each pair is split by the separator, whose dot site/landing.css draws',
+  );
+
+  const gates = between(landing, '<table class="gate-table">', '</table>', 'gate table');
+  assert.match(gates, /<th scope="col">Required<\/th>/u);
+  assert.doesNotMatch(
+    gates,
+    />\s*required\s*</u,
+    'the column says it once; each row shows the mark',
+  );
+
+  const summary = between(landing, '<details class="comparison">', '</summary>', 'comparison');
+  assert.match(
+    summary,
+    /<use href="#i-chevron" \/>/u,
+    'the comparison opens with the site chevron',
   );
 });
 

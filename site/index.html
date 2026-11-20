@@ -83,6 +83,12 @@
           <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
         </symbol>
         <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+        <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24">
+          <path d="M4 6h16" />
+          <path d="M4 12h16" />
+          <path d="M4 18h16" />
+        </symbol>
         <symbol id="i-x" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="10" />
           <path d="m15 9-6 6" />
@@ -140,7 +146,7 @@
           <span class="sr">home</span>
         </a>
         <nav class="topnav" aria-label="Primary">
-          <a href="./docs/components/alert/">Components</a>
+          <a href="./docs/#docs-components-title">Components</a>
           <a href="#start">Use it</a>
           <a href="./docs/">Docs</a>
           <a href="./playground/">Playground</a>
@@ -167,6 +173,22 @@
             >
           </fieldset>
         </nav>
+        <!-- Below 40rem the links above leave the header row (#520, item 22): the brand, the
+             scheme control and this menu share one row. A native disclosure, so the links
+             stay reachable without JavaScript. -->
+        <details class="topnav-menu" data-topnav-menu>
+          <summary>
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-menu" /></svg>
+            <span class="sr">Menu</span>
+          </summary>
+          <nav aria-label="Primary menu">
+            <a href="./docs/#docs-components-title">Components</a>
+            <a href="#start">Use it</a>
+            <a href="./docs/">Docs</a>
+            <a href="./playground/">Playground</a>
+            <a href="https://github.com/kimen-dev/kimen">GitHub</a>
+          </nav>
+        </details>
         <div class="pitch">
           <h1 id="hero-title">Agents write data. <em>Kimen renders real UI.</em></h1>
           <p class="lede">
@@ -452,10 +474,10 @@
             <button type="button" data-pick="4" aria-pressed="false">Material 3 dark</button>
           </div>
           <div class="themes-foot">
-            <h2 class="section-title" id="theme-title">
+            <h2 class="themes-lede-title" id="theme-title">
               This page runs on <code>@kimen/tokens</code>. Flip it.
             </h2>
-            <p>
+            <p class="themes-lede">
               <span class="hint-wide" data-band-hint hidden
                 >Drag a seam, click within a band, or use the arrow keys on a seam.</span
               ><span class="hint-narrow" data-band-hint hidden
@@ -690,14 +712,13 @@ claude mcp add kimen -- node --permission \
 
         <section class="catalog" id="components" aria-labelledby="components-title">
           <h2 id="components-title" class="section-title">
-            Every component, live. Not screenshots.
+            The <code>ki-*</code> catalog: every component, live.
           </h2>
           <p class="section-lede">
             Rendered from the same tokens the package ships. Hover, focus and click them: every
-            state is the real one.
+            state is the real one. Not screenshots.
           </p>
-          <h3 id="catalog-title" class="catalog-title">The ki-* catalog.</h3>
-          <div class="wall" id="catalog-grid" aria-labelledby="catalog-title" hidden></div>
+          <div class="wall" id="catalog-grid" aria-labelledby="components-title" hidden></div>
           <p class="catalog-all">
             <a href="./docs/components/alert/">Explore the components</a>
             <span data-catalog-status role="status"></span>
@@ -1033,7 +1054,7 @@ claude mcp add kimen -- node --permission \
                   playsinline
                 ></video>
               </ki-video>
-              <p class="cell-description">A terracotta square crosses the frame.</p>
+              <p class="sample-caption">A terracotta square crosses the frame.</p>
             </div>
           </template>
         </section>
@@ -1058,12 +1079,16 @@ claude mcp add kimen -- node --permission \
               <div class="contract-artifact">
                 <dt>
                   <a href="./llms.txt"><code>llms.txt</code></a>
-                  · <a href="./llms-full.txt"><code>llms-full.txt</code></a>
+                  <span class="sep"></span>
+                  <a href="./llms-full.txt"><code>llms-full.txt</code></a>
                 </dt>
                 <dd>The library as an index for language models, and all of it in one file.</dd>
               </div>
               <div class="contract-artifact">
-                <dt><code>@whenToUse</code> · <code>@whenNotToUse</code></dt>
+                <dt>
+                  <code>@whenToUse</code> <span class="sep"></span>
+                  <code>@whenNotToUse</code>
+                </dt>
                 <dd>Usage guidance on every component, inside the contract itself.</dd>
               </div>
               <div class="contract-artifact">
@@ -1095,7 +1120,10 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
   hierarchy, or confirming/destructive actions through tone.</code></pre>
           </figure>
           <details class="comparison">
-            <summary>What only a GenUI-first library does.</summary>
+            <summary>
+              What only a GenUI-first library does.
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-chevron" /></svg>
+            </summary>
             <div class="comparison-wrap" tabindex="0" role="region" aria-label="Library approach comparison">
               <table>
                 <thead>
@@ -1174,7 +1202,7 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
               <tr>
                 <th scope="col">Gate</th>
                 <th scope="col">Bar</th>
-                <th scope="col">State</th>
+                <th scope="col">Required</th>
               </tr>
             </thead>
             <tbody>
@@ -1186,7 +1214,7 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
                     ><svg aria-hidden="true" focusable="false" class="icon">
                       <use href="#i-ok" />
                     </svg
-                    >required</span
+                    ><span class="sr">Yes</span></span
                   >
                 </td>
               </tr>
@@ -1198,7 +1226,7 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
                     ><svg aria-hidden="true" focusable="false" class="icon">
                       <use href="#i-ok" />
                     </svg
-                    >required</span
+                    ><span class="sr">Yes</span></span
                   >
                 </td>
               </tr>
@@ -1210,7 +1238,7 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
                     ><svg aria-hidden="true" focusable="false" class="icon">
                       <use href="#i-ok" />
                     </svg
-                    >required</span
+                    ><span class="sr">Yes</span></span
                   >
                 </td>
               </tr>
@@ -1224,7 +1252,7 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
                     ><svg aria-hidden="true" focusable="false" class="icon">
                       <use href="#i-ok" />
                     </svg
-                    >required</span
+                    ><span class="sr">Yes</span></span
                   >
                 </td>
               </tr>
@@ -1236,14 +1264,14 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
                     ><svg aria-hidden="true" focusable="false" class="icon">
                       <use href="#i-ok" />
                     </svg
-                    >required</span
+                    ><span class="sr">Yes</span></span
                   >
                 </td>
               </tr>
               <tr>
                 <th scope="row">Mutation testing</th>
                 <td>Changed-core mutation gate: tests that test the tests</td>
-                <td><span class="state wip">hardening</span></td>
+                <td><span class="state wip">Not yet</span></td>
               </tr>
             </tbody>
           </table>
