@@ -77,8 +77,11 @@ function part(search: SearchElement, name: string): HTMLElement {
 }
 
 function record(host: HTMLElement, name: string) {
-  const listener = vi.fn<(event: CustomEvent<{ value: string }>) => void>();
-  host.addEventListener(name, listener as EventListener);
+  const listener = vi.fn<(detail: unknown) => void>();
+  host.addEventListener(name, (event) => {
+    const detail: unknown = event instanceof CustomEvent ? event.detail : undefined;
+    listener(detail);
+  });
   return listener;
 }
 
@@ -110,7 +113,7 @@ it('S1 debounces edits and reports the latest query', async () => {
     expect(listener).not.toHaveBeenCalled();
     await browser.fastForwardClock(100);
     expect(listener).toHaveBeenCalledTimes(1);
-    expect(listener.mock.calls[0]?.[0].detail).toEqual({ value: 'dialog' });
+    expect(listener.mock.calls[0]?.[0]).toEqual({ value: 'dialog' });
     expect(search.open).toBe(true);
   } finally {
     await browser.resumeClock();
@@ -123,7 +126,7 @@ it('S2 runs a clicked suggestion and retains host results', async () => {
   await searchbox().click();
   await page.getByRole('option', { name: /^Dialog/ }).click();
   expect(listener).toHaveBeenCalledTimes(1);
-  expect(listener.mock.calls[0]?.[0].detail).toEqual({ value: 'ki-dialog' });
+  expect(listener.mock.calls[0]?.[0]).toEqual({ value: 'ki-dialog' });
   await expect.element(combobox()).toHaveValue('ki-dialog');
   await expect.element(page.getByText('Dialog guide')).toBeVisible();
 });
@@ -186,7 +189,7 @@ it('S7 uses the active suggestion for Enter', async () => {
   await searchbox().click();
   await userEvent.keyboard('{ArrowDown}{Enter}');
   expect(listener).toHaveBeenCalledTimes(1);
-  expect(listener.mock.calls[0]?.[0].detail).toEqual({ value: 'ki-dialog' });
+  expect(listener.mock.calls[0]?.[0]).toEqual({ value: 'ki-dialog' });
 });
 
 it('S8 submits the typed query with Enter when no suggestion is active', async () => {
@@ -195,7 +198,7 @@ it('S8 submits the typed query with Enter when no suggestion is active', async (
   await searchbox().click();
   await userEvent.keyboard('{Enter}');
   expect(listener).toHaveBeenCalledTimes(1);
-  expect(listener.mock.calls[0]?.[0].detail).toEqual({ value: 'overlay' });
+  expect(listener.mock.calls[0]?.[0]).toEqual({ value: 'overlay' });
 });
 
 it('S9 clears before closing on Escape', async () => {
@@ -255,7 +258,7 @@ it('S2 keeps a docked view open during an internal pointer event across a closed
   option.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
   expect(search.open).toBe(true);
   option.click();
-  expect(listener.mock.calls[0]?.[0].detail).toEqual({ value: 'ki-dialog' });
+  expect(listener.mock.calls[0]?.[0]).toEqual({ value: 'ki-dialog' });
 });
 
 it('S12 names the collapsed search landmark and searchbox', async () => {
