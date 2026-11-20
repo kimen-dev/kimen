@@ -16395,6 +16395,723 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-search.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSearch",
+          "customElement": true,
+          "tagName": "ki-search",
+          "description": "A query field with a responsive view for suggestions, recent searches and results.",
+          "whenToUse": "accept free-text searches and let the user run a typed or suggested\nquery. Listen for ki-input to update suggestions, and ki-search to render results.",
+          "whenNotToUse": "selecting one value from a fixed set belongs in ki-select.\nUse ki-input when a plain search field is enough.",
+          "attributes": [
+            {
+              "name": "back-label",
+              "fieldName": "backLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Back'",
+              "description": "Accessible name of the full-screen Back button."
+            },
+            {
+              "name": "clear-label",
+              "fieldName": "clearLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Clear search'",
+              "description": "Accessible name of the query clear button."
+            },
+            {
+              "name": "highlight",
+              "fieldName": "highlight",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Emphasize literal, case-insensitive matches in suggestion titles."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Accessible name of the search landmark, input and full-screen dialog."
+            },
+            {
+              "name": "loading",
+              "fieldName": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a loading indicator while the host fetches suggestions."
+            },
+            {
+              "name": "loading-label",
+              "fieldName": "loadingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading suggestions'",
+              "description": "Accessible name of the loading indicator."
+            },
+            {
+              "name": "mode",
+              "fieldName": "mode",
+              "type": {
+                "text": "\"auto\" | \"docked\" | \"fullscreen\""
+              },
+              "default": "'auto'",
+              "description": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Name under which the current query is included in form data."
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the search view is open. The field opens it on focus, click or input."
+            },
+            {
+              "name": "placeholder",
+              "fieldName": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional hint displayed inside the empty search field."
+            },
+            {
+              "name": "recent-label",
+              "fieldName": "recentLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Recent searches'",
+              "description": "Visible and accessible name of the recent-search group."
+            },
+            {
+              "name": "remove-recent-label",
+              "fieldName": "removeRecentLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Remove {value}'",
+              "description": "Accessible name template for recent-query removal. Use {value} for the query title."
+            },
+            {
+              "name": "suggestion-count-plural",
+              "fieldName": "suggestionCountPlural",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{count} suggestions'",
+              "description": "Polite announcement for zero or multiple suggestions. Use {count} for the number."
+            },
+            {
+              "name": "suggestion-count-singular",
+              "fieldName": "suggestionCountSingular",
+              "type": {
+                "text": "string"
+              },
+              "default": "'1 suggestion'",
+              "description": "Polite announcement when the list contains one suggestion."
+            },
+            {
+              "name": "suggestions-label",
+              "fieldName": "suggestionsLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Suggestions'",
+              "description": "Accessible name of the suggestion listbox."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Current query. Edits and selected suggestions update this property."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "backLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Back'",
+              "description": "Accessible name of the full-screen Back button.",
+              "attribute": "back-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "clearLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Clear search'",
+              "description": "Accessible name of the query clear button.",
+              "attribute": "clear-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "highlight",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Emphasize literal, case-insensitive matches in suggestion titles.",
+              "attribute": "highlight",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Accessible name of the search landmark, input and full-screen dialog.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a loading indicator while the host fetches suggestions.",
+              "attribute": "loading",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "loadingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading suggestions'",
+              "description": "Accessible name of the loading indicator.",
+              "attribute": "loading-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "privacy": "public",
+              "type": {
+                "text": "\"auto\" | \"docked\" | \"fullscreen\""
+              },
+              "default": "'auto'",
+              "description": "View presentation. Auto uses a full-screen dialog below 600 CSS pixels.",
+              "attribute": "mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Name under which the current query is included in form data.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the search view is open. The field opens it on focus, click or input.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional hint displayed inside the empty search field.",
+              "attribute": "placeholder",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "recentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Recent searches'",
+              "description": "Visible and accessible name of the recent-search group.",
+              "attribute": "recent-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "removeRecentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Remove {value}'",
+              "description": "Accessible name template for recent-query removal. Use {value} for the query title.",
+              "attribute": "remove-recent-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "suggestionCountPlural",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{count} suggestions'",
+              "description": "Polite announcement for zero or multiple suggestions. Use {count} for the number.",
+              "attribute": "suggestion-count-plural",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "suggestionCountSingular",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'1 suggestion'",
+              "description": "Polite announcement when the list contains one suggestion.",
+              "attribute": "suggestion-count-singular",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "suggestionsLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Suggestions'",
+              "description": "Accessible name of the suggestion listbox.",
+              "attribute": "suggestions-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Current query. Edits and selected suggestions update this property.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-clear",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "The user cleared the query with the clear control or with Escape."
+            },
+            {
+              "name": "ki-input",
+              "type": {
+                "text": "CustomEvent<KiSearchValueDetail>"
+              },
+              "description": "The current query after 200 ms of inactivity following an edit."
+            },
+            {
+              "name": "ki-remove-recent",
+              "type": {
+                "text": "CustomEvent<KiSearchValueDetail>"
+              },
+              "description": "The removed recent query. Hosts can use this to persist the updated history."
+            },
+            {
+              "name": "ki-search",
+              "type": {
+                "text": "CustomEvent<KiSearchValueDetail>"
+              },
+              "description": "The query to run, emitted on Enter or activation of a suggestion or recent search."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Direct ki-search-suggestion children supply suggestion and recent-query data."
+            },
+            {
+              "name": "leading",
+              "description": "A control or decorative icon at the start of the collapsed or docked bar."
+            },
+            {
+              "name": "results",
+              "description": "Host-rendered results beneath suggestions and recent searches."
+            },
+            {
+              "name": "trailing",
+              "description": "A control or avatar at the end of the collapsed or docked bar. Supply\na labelled button here to surface voice search."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "bar",
+              "description": "Collapsed and docked search bar."
+            },
+            {
+              "name": "dialog-bar",
+              "description": "Search bar inside the full-screen view."
+            },
+            {
+              "name": "input",
+              "description": "Native query input in each presentation."
+            },
+            {
+              "name": "option",
+              "description": "A selectable suggestion in the listbox."
+            },
+            {
+              "name": "recent",
+              "description": "Labelled group of recent searches."
+            },
+            {
+              "name": "results",
+              "description": "Container around host-rendered results."
+            },
+            {
+              "name": "view",
+              "description": "Docked popover or full-screen dialog surface."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-control-offset",
+              "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-glyph-size-md",
+              "description": "Medium glyph for body content (20px at the default root size)."
+            },
+            {
+              "name": "--ki-layout-spacing-3xl",
+              "description": "The 3xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-sm",
+              "description": "The sm spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-search-bar-backdrop-filter",
+              "description": "Complete backdrop filter for the bar."
+            },
+            {
+              "name": "--ki-search-bar-bg",
+              "description": "Fill of the collapsed and docked bar."
+            },
+            {
+              "name": "--ki-search-bar-bg-image",
+              "description": "Optional image painted over the bar fill."
+            },
+            {
+              "name": "--ki-search-bar-fg",
+              "description": "Query ink over the search bar."
+            },
+            {
+              "name": "--ki-search-bar-height",
+              "description": "Minimum height of the search bar, 56px at the default root size."
+            },
+            {
+              "name": "--ki-search-bar-placeholder",
+              "description": "Placeholder ink exposed by the Search API."
+            },
+            {
+              "name": "--ki-search-bar-placeholder-fg",
+              "description": "Default contrast pair for placeholder text over the search bar."
+            },
+            {
+              "name": "--ki-search-bar-radius",
+              "description": "Pill corner of the collapsed and docked bar."
+            },
+            {
+              "name": "--ki-search-control-size",
+              "description": "Base size of actions and minimum height of search rows."
+            },
+            {
+              "name": "--ki-search-group-heading-family",
+              "description": "Font family for the recent-query group heading."
+            },
+            {
+              "name": "--ki-search-input-touch-size",
+              "description": "Minimum input font size on coarse pointers to avoid focus zoom."
+            },
+            {
+              "name": "--ki-search-option-active-bg",
+              "description": "Fill of the focused or hovered suggestion."
+            },
+            {
+              "name": "--ki-search-option-active-fg",
+              "description": "Ink of the focused or hovered suggestion."
+            },
+            {
+              "name": "--ki-search-option-active-supporting-fg",
+              "description": "Description ink on the focused or hovered suggestion."
+            },
+            {
+              "name": "--ki-search-view-backdrop-filter",
+              "description": "Complete backdrop filter for the search view."
+            },
+            {
+              "name": "--ki-search-view-bg",
+              "description": "Raised fill of the docked and full-screen view."
+            },
+            {
+              "name": "--ki-search-view-bg-image",
+              "description": "Optional image painted over the view fill."
+            },
+            {
+              "name": "--ki-search-view-divider",
+              "description": "Divider separating the active field and full-screen results."
+            },
+            {
+              "name": "--ki-search-view-fg",
+              "description": "Ink over the search view."
+            },
+            {
+              "name": "--ki-search-view-radius",
+              "description": "Corner for the docked view."
+            },
+            {
+              "name": "--ki-search-view-shadow",
+              "description": "Resting elevation of the docked view."
+            },
+            {
+              "name": "--ki-search-view-supporting-fg",
+              "description": "Ink for descriptions and the recent-search group label."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-body-2",
+              "description": "semantic dimension for typography size body 2."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            },
+            {
+              "name": "--ki-typography-weight-body-bold",
+              "description": "semantic font weight for typography weight body bold."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSearch",
+          "declaration": {
+            "name": "KiSearch",
+            "module": "dist/components/ki-search.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-search",
+          "declaration": {
+            "name": "KiSearch",
+            "module": "dist/components/ki-search.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-search-suggestion.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSearchSuggestion",
+          "customElement": true,
+          "tagName": "ki-search-suggestion",
+          "description": "Declarative search suggestion or recent query rendered by its owning ki-search.",
+          "whenToUse": "supply one suggested or recent query as a direct ki-search child.",
+          "whenNotToUse": "standalone display, form options or arbitrary results content.\nUse the results slot of ki-search for independently rendered results.",
+          "attributes": [
+            {
+              "name": "description",
+              "fieldName": "description",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional supporting text displayed below the title."
+            },
+            {
+              "name": "recent",
+              "fieldName": "recent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Display in the removable recent-search group."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Query to run. When omitted, the trimmed title is used."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "description",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional supporting text displayed below the title.",
+              "attribute": "description",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "recent",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Display in the removable recent-search group.",
+              "attribute": "recent",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Query to run. When omitted, the trimmed title is used.",
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Plain text title displayed in the owning search view."
+            }
+          ],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-search-suggestion-font-family",
+              "description": "Inherited body typeface on the declarative suggestion host."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSearchSuggestion",
+          "declaration": {
+            "name": "KiSearchSuggestion",
+            "module": "dist/components/ki-search-suggestion.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-search-suggestion",
+          "declaration": {
+            "name": "KiSearchSuggestion",
+            "module": "dist/components/ki-search-suggestion.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-segment.js",
       "declarations": [
         {

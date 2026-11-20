@@ -57,6 +57,8 @@ import { defineCustomElement as defineKiRadio } from '@kimen/elements/components
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
 import { defineCustomElement as defineKiRelativeTime } from '@kimen/elements/components/ki-relative-time.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
+import { defineCustomElement as defineKiSearch } from '@kimen/elements/components/ki-search.js';
+import { defineCustomElement as defineKiSearchSuggestion } from '@kimen/elements/components/ki-search-suggestion.js';
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
@@ -1367,6 +1369,66 @@ export class KiScroller {
 
 
 export declare interface KiScroller extends Components.KiScroller {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSearch,
+  inputs: ['backLabel', 'clearLabel', 'highlight', 'label', 'loading', 'loadingLabel', 'mode', 'name', 'open', 'placeholder', 'recentLabel', 'removeRecentLabel', 'suggestionCountPlural', 'suggestionCountSingular', 'suggestionsLabel', 'value']
+})
+@Component({
+  selector: 'ki-search',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['backLabel', 'clearLabel', 'highlight', 'label', 'loading', 'loadingLabel', 'mode', 'name', 'open', 'placeholder', 'recentLabel', 'removeRecentLabel', 'suggestionCountPlural', 'suggestionCountSingular', 'suggestionsLabel', 'value'],
+})
+export class KiSearch {
+  protected el: HTMLKiSearchElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiSearch extends Components.KiSearch {
+  /**
+   * The current query after 200 ms of inactivity following an edit.
+   */
+  /**
+   * The query to run, emitted on Enter or activation of a suggestion or recent search.
+   */
+  /**
+   * The user cleared the query with the clear control or with Escape.
+   */
+  /**
+   * The removed recent query. Hosts can use this to persist the updated history.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSearchSuggestion,
+  inputs: ['description', 'recent', 'value']
+})
+@Component({
+  selector: 'ki-search-suggestion',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['description', 'recent', 'value'],
+})
+export class KiSearchSuggestion {
+  protected el: HTMLKiSearchSuggestionElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSearchSuggestion extends Components.KiSearchSuggestion {}
 
 
 @ProxyCmp({

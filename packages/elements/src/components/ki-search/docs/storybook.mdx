@@ -1,0 +1,12 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SearchStories from '../ki-search.stories';
+
+<Meta of={SearchStories} />
+
+# Search playground
+
+<Canvas of={SearchStories.Playground} />
+<Controls of={SearchStories.Playground} />
+
+<Canvas of={SearchStories.FullScreen} />
+<Canvas of={SearchStories.Loading} />

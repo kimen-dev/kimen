@@ -1,0 +1,94 @@
+{
+  "ki": {
+    "search": {
+      "bar-height": {
+        "$value": "{ki.layout.spacing.16xl}",
+        "$description": "Minimum height of the search bar, 56px at the default root size."
+      },
+      "bar-radius": {
+        "$value": "{ki.corner.search-bar}",
+        "$description": "Pill corner of the collapsed and docked bar."
+      },
+      "bar-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Fill of the collapsed and docked bar."
+      },
+      "bar-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image painted over the bar fill."
+      },
+      "bar-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for the bar."
+      },
+      "bar-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Query ink over the search bar."
+      },
+      "bar-placeholder": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Placeholder ink exposed by the Search API."
+      },
+      "bar-placeholder-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Default contrast pair for placeholder text over the search bar."
+      },
+      "view-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Raised fill of the docked and full-screen view."
+      },
+      "view-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image painted over the view fill."
+      },
+      "view-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter for the search view."
+      },
+      "view-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink over the search view."
+      },
+      "view-supporting-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Ink for descriptions and the recent-search group label."
+      },
+      "view-radius": {
+        "$value": "{ki.corner.search-view}",
+        "$description": "Corner for the docked view."
+      },
+      "view-shadow": {
+        "$value": "{ki.elevation.e3}",
+        "$description": "Resting elevation of the docked view."
+      },
+      "view-divider": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Divider separating the active field and full-screen results."
+      },
+      "option-active-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Fill of the focused or hovered suggestion."
+      },
+      "option-active-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Ink of the focused or hovered suggestion."
+      },
+      "option-active-supporting-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Description ink on the focused or hovered suggestion."
+      },
+      "group-heading-family": {
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Font family for the recent-query group heading."
+      },
+      "control-size": {
+        "$value": "{ki.layout.spacing.13xl}",
+        "$description": "Base size of actions and minimum height of search rows."
+      },
+      "input-touch-size": {
+        "$value": "{ki.layout.spacing.3xl}",
+        "$description": "Minimum input font size on coarse pointers to avoid focus zoom."
+      }
+    }
+  }
+}

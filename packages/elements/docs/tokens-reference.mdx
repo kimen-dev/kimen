@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 497 semantic
-and 1807 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 499 semantic
+and 1830 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -96,6 +96,8 @@ every component at once.
 | `--ki-corner-field-surface` | `10px` | Corner radius for an editable field and its floating choice surface. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
 | `--ki-corner-panel` | `12px` | Corner radius for an outlined content panel. |
+| `--ki-corner-search-bar` | `1000px` | Pill corner for a search bar. |
+| `--ki-corner-search-view` | `20px` | Corner for a docked search view. |
 
 ### `ki.density`
 
@@ -2152,6 +2154,39 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-scroller-thumb-thickness` | `0.25rem` | dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17). |
 | `--ki-scroller-track-color` | `rgba(255, 255, 255, 0)` | color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute. |
 | `--ki-scroller-track-inset` | `0.25rem` | dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5). |
+
+### `ki-search`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-search-bar-backdrop-filter` | `none` | Complete backdrop filter for the bar. |
+| `--ki-search-bar-bg` | `#f3f0eb` | Fill of the collapsed and docked bar. |
+| `--ki-search-bar-bg-image` | `none` | Optional image painted over the bar fill. |
+| `--ki-search-bar-fg` | `#181613` | Query ink over the search bar. |
+| `--ki-search-bar-height` | `3.5rem` | Minimum height of the search bar, 56px at the default root size. |
+| `--ki-search-bar-placeholder` | `#5e5953` | Placeholder ink exposed by the Search API. |
+| `--ki-search-bar-placeholder-fg` | `#5e5953` | Default contrast pair for placeholder text over the search bar. |
+| `--ki-search-bar-radius` | `1000px` | Pill corner of the collapsed and docked bar. |
+| `--ki-search-control-size` | `2.75rem` | Base size of actions and minimum height of search rows. |
+| `--ki-search-group-heading-family` | `'Instrument Sans', system-ui, sans-serif` | Font family for the recent-query group heading. |
+| `--ki-search-input-touch-size` | `1rem` | Minimum input font size on coarse pointers to avoid focus zoom. |
+| `--ki-search-option-active-bg` | `#f3f0eb` | Fill of the focused or hovered suggestion. |
+| `--ki-search-option-active-fg` | `#181613` | Ink of the focused or hovered suggestion. |
+| `--ki-search-option-active-supporting-fg` | `#5e5953` | Description ink on the focused or hovered suggestion. |
+| `--ki-search-view-backdrop-filter` | `none` | Complete backdrop filter for the search view. |
+| `--ki-search-view-bg` | `#f9f7f4` | Raised fill of the docked and full-screen view. |
+| `--ki-search-view-bg-image` | `none` | Optional image painted over the view fill. |
+| `--ki-search-view-divider` | `rgba(24, 22, 19, 0.1)` | Divider separating the active field and full-screen results. |
+| `--ki-search-view-fg` | `#181613` | Ink over the search view. |
+| `--ki-search-view-radius` | `20px` | Corner for the docked view. |
+| `--ki-search-view-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Resting elevation of the docked view. |
+| `--ki-search-view-supporting-fg` | `#5e5953` | Ink for descriptions and the recent-search group label. |
+
+### `ki-search-suggestion`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-search-suggestion-font-family` | `'Instrument Sans', system-ui, sans-serif` | Inherited body typeface on the declarative suggestion host. |
 
 ### `ki-segmented-control`
 

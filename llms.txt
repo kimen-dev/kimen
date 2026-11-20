@@ -93,6 +93,8 @@ methods, CSS custom properties and examples.
 - [ki-radio-group](https://kimen.dev/llms/ki-radio-group.md): a person must choose exactly one of a small set of mutually exclusive options that should all be visible at once.
 - [ki-relative-time](https://kimen.dev/llms/ki-relative-time.md): For timestamps whose distance from the present matters, such as timeline entries or recent changes.
 - [ki-scroller](https://kimen.dev/llms/ki-scroller.md): a bounded region inside a view whose content can outgrow it: chat or message panes, code and log blocks, tag rows, sidebar navigation, tall menus inside cards.
+- [ki-search](https://kimen.dev/llms/ki-search.md): accept free-text searches and let the user run a typed or suggested query.
+- [ki-search-suggestion](https://kimen.dev/llms/ki-search-suggestion.md): supply one suggested or recent query as a direct ki-search child.
 - [ki-segment](https://kimen.dev/llms/ki-segment.md): offer one mutually exclusive choice with text or a named icon.
 - [ki-segmented-control](https://kimen.dev/llms/ki-segmented-control.md): apply a chart range, view mode, or another immediate setting.
 - [ki-select](https://kimen.dev/llms/ki-select.md): choose exactly one value from a known closed list, especially when there are roughly five or more choices or space is limited.

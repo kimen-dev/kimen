@@ -56,6 +56,8 @@ export { KiRadio } from './ki-radio.js';
 export { KiRadioGroup } from './ki-radio-group.js';
 export { KiRelativeTime } from './ki-relative-time.js';
 export { KiScroller } from './ki-scroller.js';
+export { KiSearch } from './ki-search.js';
+export { KiSearchSuggestion } from './ki-search-suggestion.js';
 export { KiSegment } from './ki-segment.js';
 export { KiSegmentedControl } from './ki-segmented-control.js';
 export { KiSelect } from './ki-select.js';

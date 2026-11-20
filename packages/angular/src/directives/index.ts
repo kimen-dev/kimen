@@ -53,6 +53,8 @@ export const DIRECTIVES = [
   d.KiRadioGroup,
   d.KiRelativeTime,
   d.KiScroller,
+  d.KiSearch,
+  d.KiSearchSuggestion,
   d.KiSegment,
   d.KiSegmentedControl,
   d.KiSelect,
