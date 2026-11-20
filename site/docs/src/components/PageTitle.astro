@@ -3,7 +3,9 @@ const { entry } = Astro.locals.starlightRoute;
 const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
 const siteBase = docsBase.replace(/docs\/?$/u, '');
 const isDocsHome = Astro.url.pathname.replace(/\/$/u, '') === docsBase.slice(0, -1);
-const component = entry.id.startsWith('components/') ? `ki-${entry.id.slice('components/'.length)}` : null;
+const component = entry.id.startsWith('components/')
+  ? `ki-${entry.id.slice('components/'.length)}`
+  : null;
 ---
 
 {!isDocsHome && <h1 id="_top">{entry.data.title}</h1>}

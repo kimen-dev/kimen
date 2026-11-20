@@ -9,12 +9,28 @@ const guidePaths = ['guides/ui-spec', 'guides/emitting-specs', 'guides/a2ui', 'g
 const isDocsHome = Astro.url.pathname.replace(/\/$/u, '') === docsBase.slice(0, -1);
 const componentIndex = { href: docsBase, label: 'Components' };
 const sections = [
-  { label: 'Start', path: 'getting-started', current: isDocsHome || entry.id === 'getting-started' },
-  { label: 'Guides', path: 'guides/theming', current: entry.id.startsWith('guides/') && !guidePaths.includes(entry.id) },
+  {
+    label: 'Start',
+    path: 'getting-started',
+    current: isDocsHome || entry.id === 'getting-started',
+  },
+  {
+    label: 'Guides',
+    path: 'guides/theming',
+    current: entry.id.startsWith('guides/') && !guidePaths.includes(entry.id),
+  },
   { label: 'Generative UI', path: 'guides/ui-spec', current: guidePaths.includes(entry.id) },
-  { ...componentIndex, path: '#docs-components-title', current: entry.id.startsWith('components/') },
+  {
+    ...componentIndex,
+    path: '#docs-components-title',
+    current: entry.id.startsWith('components/'),
+  },
   { label: 'Tokens', path: 'tokens/reference', current: entry.id.startsWith('tokens/') },
-  { label: 'Resources', path: 'resources/working-with-ai', current: entry.id.startsWith('resources/') },
+  {
+    label: 'Resources',
+    path: 'resources/working-with-ai',
+    current: entry.id.startsWith('resources/'),
+  },
 ];
 const siteLinks = [
   { href: siteBase, label: 'Home' },
