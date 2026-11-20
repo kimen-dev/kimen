@@ -1,17 +1,21 @@
 import { h } from '@stencil/core';
 import type { Meta, StoryObj } from '@stencil/storybook-plugin';
-import type { JSX } from '../../components';
+import type { KiSearch } from './ki-search';
+
+type SearchArgs = Partial<
+  Pick<KiSearch, 'label' | 'placeholder' | 'value' | 'mode' | 'open' | 'highlight' | 'loading'>
+>;
 
 const meta = {
   title: 'Elements/ki-search',
   component: 'ki-search',
   args: { label: 'Search Kimen', placeholder: 'Search Kimen', mode: 'docked' },
-} satisfies Meta<JSX.KiSearch>;
+} satisfies Meta<SearchArgs>;
 
 export default meta;
-type Story = StoryObj<JSX.KiSearch>;
+type Story = StoryObj<SearchArgs>;
 
-function renderSearch(args: JSX.KiSearch) {
+function renderSearch(args: SearchArgs) {
   return (
     <ki-search {...args}>
       <ki-search-suggestion value="ki-dialog" description="Component">

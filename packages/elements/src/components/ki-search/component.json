@@ -4,5 +4,9 @@
   "catalog": true,
   "formBinding": "text",
   "visual": { "material3Dark": true },
-  "budgetGroup": { "members": ["ki-search", "ki-search-suggestion"] }
+  "budgetGroup": { "members": ["ki-search", "ki-search-suggestion"] },
+  "sizeBudget": {
+    "mcpApps": { "raw": 22291, "gzip": 5977, "brotli": 4303 },
+    "mcpServer": { "raw": 34640, "gzip": 8638, "brotli": 5500 }
+  }
 }
