@@ -1413,6 +1413,91 @@ export const catalogData = {
       "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
       "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once."
     },
+    "ki-rating": {
+      "description": "Displays a score or collects one choice on a small rating scale.",
+      "events": {
+        "ki-change": "Fires once when a person changes the selection. The detail contains the numeric value."
+      },
+      "props": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Makes an editable rating unavailable and excludes it from form submission.",
+          "default": false
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Lucide icon name. Import custom names before mounting. Unavailable names use star.",
+          "default": "star"
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
+          "required": true
+        },
+        "max": {
+          "type": "number",
+          "description": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 10
+        },
+        "name": {
+          "type": "string",
+          "description": "Form field name for a selected editable score."
+        },
+        "option-label": {
+          "type": "string",
+          "description": "Accessible name pattern for the other choices. Use {value} for the choice.",
+          "default": "{value} stars"
+        },
+        "option-singular-label": {
+          "type": "string",
+          "description": "Accessible name pattern for the one-star choice. Use {value} for the choice.",
+          "default": "{value} star"
+        },
+        "precision": {
+          "type": "number",
+          "description": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.",
+          "default": 1
+        },
+        "rated-label": {
+          "type": "string",
+          "description": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores.",
+          "default": "Rated {value} out of {max}"
+        },
+        "readonly": {
+          "type": "boolean",
+          "description": "Displays a score without editing or submitting it.",
+          "default": false
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Requires an editable score before the form can be submitted.",
+          "default": false
+        },
+        "required-message": {
+          "type": "string",
+          "description": "Validation message for an unanswered required rating.",
+          "default": "Select a rating."
+        },
+        "score-label": {
+          "type": "string",
+          "description": "Visible score pattern in input mode. Use {value} and {max} for the scores.",
+          "default": "{value} of {max}"
+        },
+        "value": {
+          "type": "number",
+          "description": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 10
+        }
+      },
+      "slots": {},
+      "tag": "ki-rating",
+      "whenNotToUse": "Use message actions for yes/no feedback and a slider for a\ncontinuous or large numeric range.",
+      "whenToUse": "Show an average review score in readonly mode or ask people to rate\nan answer, experience, or product on a small scale."
+    },
     "ki-scroller": {
       "description": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",
       "events": {},

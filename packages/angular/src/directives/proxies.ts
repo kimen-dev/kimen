@@ -35,6 +35,7 @@ import { defineCustomElement as defineKiProgress } from '@kimen/elements/compone
 import { defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
 import { defineCustomElement as defineKiRadio } from '@kimen/elements/components/ki-radio.js';
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
+import { defineCustomElement as defineKiRating } from '@kimen/elements/components/ki-rating.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSegment } from '@kimen/elements/components/ki-segment.js';
 import { defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
@@ -771,6 +772,34 @@ export class KiRadioGroup {
 
 
 export declare interface KiRadioGroup extends Components.KiRadioGroup {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiRating,
+  inputs: ['disabled', 'iconName', 'label', 'max', 'name', 'optionLabel', 'optionSingularLabel', 'precision', 'ratedLabel', 'readonly', 'required', 'requiredMessage', 'scoreLabel', 'value']
+})
+@Component({
+  selector: 'ki-rating',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['disabled', 'iconName', { name: 'label', required: true }, 'max', 'name', 'optionLabel', 'optionSingularLabel', 'precision', 'ratedLabel', 'readonly', 'required', 'requiredMessage', 'scoreLabel', 'value'],
+})
+export class KiRating {
+  protected el: HTMLKiRatingElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiRating extends Components.KiRating {
+  /**
+   * Fires once when a person changes the selection. The detail contains the numeric value.
+   */
+}
 
 
 @ProxyCmp({

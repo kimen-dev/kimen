@@ -1125,6 +1125,87 @@ export namespace Components {
         "value": string;
     }
     /**
+     * Displays a score or collects one choice on a small rating scale.
+     * @whenToUse Show an average review score in readonly mode or ask people to rate
+     * an answer, experience, or product on a small scale.
+     * @whenNotToUse Use message actions for yes/no feedback and a slider for a
+     * continuous or large numeric range.
+     */
+    interface KiRating {
+        /**
+          * Makes an editable rating unavailable and excludes it from form submission.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Lucide icon name. Import custom names before mounting. Unavailable names use star.
+          * @default 'star'
+         */
+        "iconName": string;
+        /**
+          * Visible question in input mode and accessible context in read-only mode. Always supply it.
+         */
+        "label": string;
+        /**
+          * Highest score and number of glyphs. Use a whole number from 1 to 10.
+          * @minimum 1
+          * @maximum 10
+          * @default 5
+         */
+        "max": number;
+        /**
+          * Form field name for a selected editable score.
+         */
+        "name"?: string;
+        /**
+          * Accessible name pattern for the other choices. Use {value} for the choice.
+          * @default '{value} stars'
+         */
+        "optionLabel": string;
+        /**
+          * Accessible name pattern for the one-star choice. Use {value} for the choice.
+          * @default '{value} star'
+         */
+        "optionSingularLabel": string;
+        /**
+          * Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.
+          * @default 1
+         */
+        "precision": number;
+        /**
+          * Accessible name pattern for the read-only image. Use {value} and {max} for the scores.
+          * @default 'Rated {value} out of {max}'
+         */
+        "ratedLabel": string;
+        /**
+          * Displays a score without editing or submitting it.
+          * @default false
+         */
+        "readonly": boolean;
+        /**
+          * Requires an editable score before the form can be submitted.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Validation message for an unanswered required rating.
+          * @default 'Select a rating.'
+         */
+        "requiredMessage": string;
+        /**
+          * Visible score pattern in input mode. Use {value} and {max} for the scores.
+          * @default '{value} of {max}'
+         */
+        "scoreLabel": string;
+        /**
+          * Current score. Zero means unanswered in input mode. Editable scores use the nearest allowed step. Read-only scores retain their decimal precision.
+          * @minimum 0
+          * @maximum 10
+          * @default 0
+         */
+        "value": number;
+    }
+    /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
      * @whenToUse a bounded region inside a view whose content can outgrow it:
@@ -1758,6 +1839,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
+export interface KiRatingCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiRatingElement;
+}
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiSegmentedControlElement;
@@ -2341,6 +2426,30 @@ declare global {
         prototype: HTMLKiRadioGroupElement;
         new (): HTMLKiRadioGroupElement;
     };
+    interface HTMLKiRatingElementEventMap {
+        "ki-change": { value: number };
+    }
+    /**
+     * Displays a score or collects one choice on a small rating scale.
+     * @whenToUse Show an average review score in readonly mode or ask people to rate
+     * an answer, experience, or product on a small scale.
+     * @whenNotToUse Use message actions for yes/no feedback and a slider for a
+     * continuous or large numeric range.
+     */
+    interface HTMLKiRatingElement extends Components.KiRating, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiRatingElementEventMap>(type: K, listener: (this: HTMLKiRatingElement, ev: KiRatingCustomEvent<HTMLKiRatingElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiRatingElementEventMap>(type: K, listener: (this: HTMLKiRatingElement, ev: KiRatingCustomEvent<HTMLKiRatingElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiRatingElement: {
+        prototype: HTMLKiRatingElement;
+        new (): HTMLKiRatingElement;
+    };
     /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
@@ -2713,6 +2822,7 @@ declare global {
         "ki-qr": HTMLKiQrElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
+        "ki-rating": HTMLKiRatingElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-segment": HTMLKiSegmentElement;
         "ki-segmented-control": HTMLKiSegmentedControlElement;
@@ -3832,6 +3942,95 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * Displays a score or collects one choice on a small rating scale.
+     * @whenToUse Show an average review score in readonly mode or ask people to rate
+     * an answer, experience, or product on a small scale.
+     * @whenNotToUse Use message actions for yes/no feedback and a slider for a
+     * continuous or large numeric range.
+     */
+    interface KiRating {
+        /**
+          * Makes an editable rating unavailable and excludes it from form submission.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Lucide icon name. Import custom names before mounting. Unavailable names use star.
+          * @default 'star'
+         */
+        "iconName"?: string;
+        /**
+          * Visible question in input mode and accessible context in read-only mode. Always supply it.
+         */
+        "label": string;
+        /**
+          * Highest score and number of glyphs. Use a whole number from 1 to 10.
+          * @minimum 1
+          * @maximum 10
+          * @default 5
+         */
+        "max"?: number;
+        /**
+          * Form field name for a selected editable score.
+         */
+        "name"?: string;
+        /**
+          * Fires once when a person changes the selection. The detail contains the numeric value.
+         */
+        "onKi-change"?: (event: KiRatingCustomEvent<{ value: number }>) => void;
+        /**
+          * Accessible name pattern for the other choices. Use {value} for the choice.
+          * @default '{value} stars'
+         */
+        "optionLabel"?: string;
+        /**
+          * Accessible name pattern for the one-star choice. Use {value} for the choice.
+          * @default '{value} star'
+         */
+        "optionSingularLabel"?: string;
+        /**
+          * Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.
+          * @default 1
+         */
+        "precision"?: number;
+        /**
+          * Accessible name pattern for the read-only image. Use {value} and {max} for the scores.
+          * @default 'Rated {value} out of {max}'
+         */
+        "ratedLabel"?: string;
+        /**
+          * Displays a score without editing or submitting it.
+          * @default false
+         */
+        "readonly"?: boolean;
+        /**
+          * Requires an editable score before the form can be submitted.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Validation message for an unanswered required rating.
+          * @default 'Select a rating.'
+         */
+        "requiredMessage"?: string;
+        /**
+          * Visible score pattern in input mode. Use {value} and {max} for the scores.
+          * @default '{value} of {max}'
+         */
+        "scoreLabel"?: string;
+        /**
+          * Current score. Zero means unanswered in input mode. Editable scores use the nearest allowed step. Read-only scores retain their decimal precision.
+          * @minimum 0
+          * @maximum 10
+          * @default 0
+         */
+        "value"?: number;
+    }
+    /**
      * A bounded scroll container that clips its content along one declared axis
      * and replaces platform scrollbar chrome with a token-resolved indicator.
      * @whenToUse a bounded region inside a view whose content can outgrow it:
@@ -4652,6 +4851,22 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiRatingAttributes {
+        "label": string;
+        "value": number;
+        "max": number;
+        "readonly": boolean;
+        "precision": number;
+        "iconName": string;
+        "name": string;
+        "required": boolean;
+        "disabled": boolean;
+        "ratedLabel": string;
+        "optionSingularLabel": string;
+        "optionLabel": string;
+        "scoreLabel": string;
+        "requiredMessage": string;
+    }
     interface KiScrollerAttributes {
         "orientation": KiScrollerOrientation;
         "label": string;
@@ -4793,6 +5008,7 @@ declare namespace LocalJSX {
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
+        "ki-rating": Omit<KiRating, keyof KiRatingAttributes> & { [K in keyof KiRating & keyof KiRatingAttributes]?: KiRating[K] } & { [K in keyof KiRating & keyof KiRatingAttributes as `attr:${K}`]?: KiRatingAttributes[K] } & { [K in keyof KiRating & keyof KiRatingAttributes as `prop:${K}`]?: KiRating[K] } & OneOf<"label", KiRating["label"], KiRatingAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-segment": Omit<KiSegment, keyof KiSegmentAttributes> & { [K in keyof KiSegment & keyof KiSegmentAttributes]?: KiSegment[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `attr:${K}`]?: KiSegmentAttributes[K] } & { [K in keyof KiSegment & keyof KiSegmentAttributes as `prop:${K}`]?: KiSegment[K] } & OneOf<"value", KiSegment["value"], KiSegmentAttributes["value"]>;
         "ki-segmented-control": Omit<KiSegmentedControl, keyof KiSegmentedControlAttributes> & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes]?: KiSegmentedControl[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `attr:${K}`]?: KiSegmentedControlAttributes[K] } & { [K in keyof KiSegmentedControl & keyof KiSegmentedControlAttributes as `prop:${K}`]?: KiSegmentedControl[K] } & OneOf<"label", KiSegmentedControl["label"], KiSegmentedControlAttributes["label"]>;
@@ -5158,6 +5374,14 @@ declare module "@stencil/core" {
              * it for programmatic `value` writes, which are silent.
              */
             "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
+            /**
+             * Displays a score or collects one choice on a small rating scale.
+             * @whenToUse Show an average review score in readonly mode or ask people to rate
+             * an answer, experience, or product on a small scale.
+             * @whenNotToUse Use message actions for yes/no feedback and a slider for a
+             * continuous or large numeric range.
+             */
+            "ki-rating": LocalJSX.IntrinsicElements["ki-rating"] & JSXBase.HTMLAttributes<HTMLKiRatingElement>;
             /**
              * A bounded scroll container that clips its content along one declared axis
              * and replaces platform scrollbar chrome with a token-resolved indicator.

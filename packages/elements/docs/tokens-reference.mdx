@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 435 semantic
-and 1386 component tokens. Values are the resolved **onmars light**
+and 1404 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1647,6 +1647,29 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-radio-group-label-hint-fg` | `#5e5953` | color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
 | `--ki-radio-group-label-hint-gap` | `0.25rem` | dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-radio-group-label-line-height` | `1.25rem` | dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement). |
+
+### `ki-rating`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-rating-disabled-fg` | `#6b665f` | Glyph ink while the rating is unavailable. |
+| `--ki-rating-gap` | `0.125rem` | Space between rating glyphs or targets. |
+| `--ki-rating-hover-backdrop-filter` | `none` | Complete backdrop filter for the hovered choice. |
+| `--ki-rating-hover-bg` | `#f3f0eb` | Surface of the choice under the pointer. |
+| `--ki-rating-hover-bg-image` | `none` | Optional image over the hovered choice surface. |
+| `--ki-rating-label-bg` | `rgba(0, 0, 0, 0)` | Backdrop of the visible question. |
+| `--ki-rating-label-fg` | `#181613` | Ink of the visible question. |
+| `--ki-rating-label-gap` | `0.25rem` | Space between the question and scale. |
+| `--ki-rating-off-bg` | `rgba(0, 0, 0, 0)` | Backdrop of an outlined glyph. |
+| `--ki-rating-off-fg` | `#86827b` | Ink of an outlined glyph. |
+| `--ki-rating-on-bg` | `rgba(0, 0, 0, 0)` | Backdrop of a filled glyph. |
+| `--ki-rating-on-fg` | `#945b05` | Ink of a filled glyph. |
+| `--ki-rating-score-bg` | `rgba(0, 0, 0, 0)` | Backdrop of the visible score. |
+| `--ki-rating-score-fg` | `#5e5953` | Ink of the visible score. |
+| `--ki-rating-score-gap` | `0.5rem` | Space between the glyphs and visible score. |
+| `--ki-rating-size` | `1.25rem` | Size of a rating glyph. |
+| `--ki-rating-target-radius` | `8px` | Corners of the interactive target. |
+| `--ki-rating-target-size` | `2rem` | Default whole-step target size. |
 
 ### `ki-scroller`
 

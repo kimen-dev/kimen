@@ -9329,6 +9329,477 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-rating.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiRating",
+          "customElement": true,
+          "tagName": "ki-rating",
+          "description": "Displays a score or collects one choice on a small rating scale.",
+          "whenToUse": "Show an average review score in readonly mode or ask people to rate\nan answer, experience, or product on a small scale.",
+          "whenNotToUse": "Use message actions for yes/no feedback and a slider for a\ncontinuous or large numeric range.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes an editable rating unavailable and excludes it from form submission."
+            },
+            {
+              "name": "icon-name",
+              "fieldName": "iconName",
+              "type": {
+                "text": "string"
+              },
+              "default": "'star'",
+              "description": "Lucide icon name. Import custom names before mounting. Unavailable names use star."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
+              "required": true
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
+              "minimum": 1,
+              "maximum": 10
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form field name for a selected editable score."
+            },
+            {
+              "name": "option-label",
+              "fieldName": "optionLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{value} stars'",
+              "description": "Accessible name pattern for the other choices. Use {value} for the choice."
+            },
+            {
+              "name": "option-singular-label",
+              "fieldName": "optionSingularLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{value} star'",
+              "description": "Accessible name pattern for the one-star choice. Use {value} for the choice."
+            },
+            {
+              "name": "precision",
+              "fieldName": "precision",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps."
+            },
+            {
+              "name": "rated-label",
+              "fieldName": "ratedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Rated {value} out of {max}'",
+              "description": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores."
+            },
+            {
+              "name": "readonly",
+              "fieldName": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Displays a score without editing or submitting it."
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires an editable score before the form can be submitted."
+            },
+            {
+              "name": "required-message",
+              "fieldName": "requiredMessage",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Select a rating.'",
+              "description": "Validation message for an unanswered required rating."
+            },
+            {
+              "name": "score-label",
+              "fieldName": "scoreLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{value} of {max}'",
+              "description": "Visible score pattern in input mode. Use {value} and {max} for the scores."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
+              "minimum": 0,
+              "maximum": 10
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes an editable rating unavailable and excludes it from form submission.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "iconName",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'star'",
+              "description": "Lucide icon name. Import custom names before mounting. Unavailable names use star.",
+              "attribute": "icon-name",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
+              "attribute": "max",
+              "reflects": false,
+              "minimum": 1,
+              "maximum": 10
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form field name for a selected editable score.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "optionLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{value} stars'",
+              "description": "Accessible name pattern for the other choices. Use {value} for the choice.",
+              "attribute": "option-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "optionSingularLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{value} star'",
+              "description": "Accessible name pattern for the one-star choice. Use {value} for the choice.",
+              "attribute": "option-singular-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "precision",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.",
+              "attribute": "precision",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "ratedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Rated {value} out of {max}'",
+              "description": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores.",
+              "attribute": "rated-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Displays a score without editing or submitting it.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires an editable score before the form can be submitted.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "requiredMessage",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Select a rating.'",
+              "description": "Validation message for an unanswered required rating.",
+              "attribute": "required-message",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "scoreLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{value} of {max}'",
+              "description": "Visible score pattern in input mode. Use {value} and {max} for the scores.",
+              "attribute": "score-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
+              "attribute": "value",
+              "reflects": false,
+              "minimum": 0,
+              "maximum": 10
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<{ value: number }>"
+              },
+              "description": "Fires once when a person changes the selection. The detail contains the numeric value."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "choice",
+              "description": "Native radio target for one selectable score."
+            },
+            {
+              "name": "glyph",
+              "description": "Decorative artwork for one rating step."
+            },
+            {
+              "name": "label",
+              "description": "Visible question above the editable scale."
+            },
+            {
+              "name": "scale",
+              "description": "Read-only score image or editable radio group."
+            },
+            {
+              "name": "score",
+              "description": "Visible numeric score."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-rating-disabled-fg",
+              "description": "Glyph ink while the rating is unavailable."
+            },
+            {
+              "name": "--ki-rating-gap",
+              "description": "Space between rating glyphs or targets."
+            },
+            {
+              "name": "--ki-rating-hover-backdrop-filter",
+              "description": "Complete backdrop filter for the hovered choice."
+            },
+            {
+              "name": "--ki-rating-hover-bg",
+              "description": "Surface of the choice under the pointer."
+            },
+            {
+              "name": "--ki-rating-hover-bg-image",
+              "description": "Optional image over the hovered choice surface."
+            },
+            {
+              "name": "--ki-rating-label-bg",
+              "description": "Backdrop of the visible question."
+            },
+            {
+              "name": "--ki-rating-label-fg",
+              "description": "Ink of the visible question."
+            },
+            {
+              "name": "--ki-rating-label-gap",
+              "description": "Space between the question and scale."
+            },
+            {
+              "name": "--ki-rating-off-bg",
+              "description": "Backdrop of an outlined glyph."
+            },
+            {
+              "name": "--ki-rating-off-fg",
+              "description": "Ink of an outlined glyph."
+            },
+            {
+              "name": "--ki-rating-on-bg",
+              "description": "Backdrop of a filled glyph."
+            },
+            {
+              "name": "--ki-rating-on-fg",
+              "description": "Ink of a filled glyph."
+            },
+            {
+              "name": "--ki-rating-score-bg",
+              "description": "Backdrop of the visible score."
+            },
+            {
+              "name": "--ki-rating-score-fg",
+              "description": "Ink of the visible score."
+            },
+            {
+              "name": "--ki-rating-score-gap",
+              "description": "Space between the glyphs and visible score."
+            },
+            {
+              "name": "--ki-rating-size",
+              "description": "Size of a rating glyph."
+            },
+            {
+              "name": "--ki-rating-target-radius",
+              "description": "Corners of the interactive target."
+            },
+            {
+              "name": "--ki-rating-target-size",
+              "description": "Default whole-step target size."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiRating",
+          "declaration": {
+            "name": "KiRating",
+            "module": "dist/components/ki-rating.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-rating",
+          "declaration": {
+            "name": "KiRating",
+            "module": "dist/components/ki-rating.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-scroller.js",
       "declarations": [
         {

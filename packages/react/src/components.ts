@@ -33,6 +33,7 @@ export { KiProgress } from './ki-progress.js';
 export { KiQr } from './ki-qr.js';
 export { KiRadio } from './ki-radio.js';
 export { KiRadioGroup } from './ki-radio-group.js';
+export { KiRating } from './ki-rating.js';
 export { KiScroller } from './ki-scroller.js';
 export { KiSegment } from './ki-segment.js';
 export { KiSegmentedControl } from './ki-segmented-control.js';

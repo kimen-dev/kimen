@@ -3931,9 +3931,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-rating"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-rating": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -6909,6 +6915,512 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-rating/ki-rating.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-rating",
+      "docs": "Displays a score or collects one choice on a small rating scale.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Show an average review score in readonly mode or ask people to rate\nan answer, experience, or product on a small scale."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Use message actions for yes/no feedback and a slider for a\ncontinuous or large numeric range."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible question above the editable scale."
+        },
+        {
+          "name": "part",
+          "text": "scale - Read-only score image or editable radio group."
+        },
+        {
+          "name": "part",
+          "text": "glyph - Decorative artwork for one rating step."
+        },
+        {
+          "name": "part",
+          "text": "choice - Native radio target for one selectable score."
+        },
+        {
+          "name": "part",
+          "text": "score - Visible numeric score."
+        }
+      ],
+      "usage": {
+        "examples": "# Rating usage\n\n## Display a review average\n\n```html\n<ki-rating readonly label=\"Average review score\" value=\"4.3\"></ki-rating>\n```\n\nThe text reads 4.3. The glyphs fill to 4.5 and assistive technology receives one image named “Rated 4.3 out of 5”.\n\n## Collect answer feedback\n\n```html\n<form>\n  <ki-rating\n    label=\"How useful was this answer?\"\n    name=\"usefulness\"\n    precision=\"0.5\"\n    required\n  ></ki-rating>\n  <button>Submit feedback</button>\n</form>\n```\n\nA choice of 2.5 submits as `usefulness=2.5`. A form reset restores the starting value. Subscribe to `ki-change` for a user's changed choice and read its numeric `detail.value`.\n\n## Use a different glyph\n\n```js\nimport '@kimen/elements/icons/heart';\n```\n\n```html\n<ki-rating\n  label=\"How much did you enjoy the experience?\"\n  icon-name=\"heart\"\n  option-singular-label=\"{value} heart\"\n  option-label=\"{value} hearts\"\n></ki-rating>\n```\n"
+      },
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Makes an editable rating unavailable and excludes it from form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "iconName",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "icon-name",
+          "reflectToAttr": false,
+          "docs": "Lucide icon name. Import custom names before mounting. Unavailable names use star.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'star'"
+            }
+          ],
+          "default": "'star'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": false,
+          "docs": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "maximum",
+              "text": "10"
+            },
+            {
+              "name": "default",
+              "text": "5"
+            }
+          ],
+          "default": "5",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form field name for a selected editable score.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "optionLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "option-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name pattern for the other choices. Use {value} for the choice.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{value} stars'"
+            }
+          ],
+          "default": "'{value} stars'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "optionSingularLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "option-singular-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name pattern for the one-star choice. Use {value} for the choice.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{value} star'"
+            }
+          ],
+          "default": "'{value} star'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "precision",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "precision",
+          "reflectToAttr": false,
+          "docs": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "ratedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "rated-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Rated {value} out of {max}'"
+            }
+          ],
+          "default": "'Rated {value} out of {max}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "readonly",
+          "reflectToAttr": true,
+          "docs": "Displays a score without editing or submitting it.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires an editable score before the form can be submitted.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "requiredMessage",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required-message",
+          "reflectToAttr": false,
+          "docs": "Validation message for an unanswered required rating.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Select a rating.'"
+            }
+          ],
+          "default": "'Select a rating.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "scoreLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "score-label",
+          "reflectToAttr": false,
+          "docs": "Visible score pattern in input mode. Use {value} and {max} for the scores.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'{value} of {max}'"
+            }
+          ],
+          "default": "'{value} of {max}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "10"
+            },
+            {
+              "name": "default",
+              "text": "0"
+            }
+          ],
+          "default": "0",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "{ value: number; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: number }",
+            "resolved": "{ value: number; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Fires once when a person changes the selection. The detail contains the numeric value.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "choice",
+          "docs": "Native radio target for one selectable score."
+        },
+        {
+          "name": "glyph",
+          "docs": "Decorative artwork for one rating step."
+        },
+        {
+          "name": "label",
+          "docs": "Visible question above the editable scale."
+        },
+        {
+          "name": "scale",
+          "docs": "Read-only score image or editable radio group."
+        },
+        {
+          "name": "score",
+          "docs": "Visible numeric score."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-rating": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-scroller/ki-scroller.tsx",
