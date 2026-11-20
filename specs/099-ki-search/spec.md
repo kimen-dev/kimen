@@ -13,8 +13,8 @@ the visual anatomy. The issue defines the responsive and accessibility contract.
   the view open for results. Form submission remains a separate form action.
   Clear cancels pending input and reports `ki-clear`.
 - **Agent's choice, pending founder confirmation.** The host supplies search
-  history as declarative children. Removing a recent query hides that child for
-  its lifetime in the component and emits `ki-remove-recent` for host persistence.
+  history as declarative children. Removing a recent query hides it while that
+  query is assigned to its child and emits `ki-remove-recent` for host persistence.
   The recent group uses native search and remove buttons in the Tab sequence.
   Arrow keys act on the suggestion listbox.
 - **Agent's choice, pending founder confirmation.** Voice search is a labelled

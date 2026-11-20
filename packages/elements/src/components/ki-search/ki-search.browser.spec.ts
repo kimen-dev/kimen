@@ -51,7 +51,7 @@ afterAll(() => {
 async function mount(
   attributes = 'mode="docked"',
   content = suggestions,
-  container: HTMLElement = fixture,
+  container: HTMLElement | ShadowRoot = fixture,
 ): Promise<SearchElement> {
   const search = document.createElement('ki-search') as SearchElement;
   search.setAttribute('label', 'Search Kimen');
@@ -233,6 +233,29 @@ it('S11 includes a keyboard-operable removal control in the Recent group', async
   await userEvent.keyboard('{Enter}');
   await expect.element(recent).not.toBeInTheDocument();
   await expect.element(combobox()).toHaveFocus();
+});
+
+it('S11 displays a new recent query when the page reuses a removed child', async () => {
+  const search = await mount('mode="docked" open');
+  const child = search.querySelector('ki-search-suggestion[recent]');
+  if (!child) throw new Error('Recent query fixture is missing');
+  await page.getByRole('button', { name: 'Remove button tokens' }).click();
+  child.textContent = 'color tokens';
+  await expect.element(page.getByRole('button', { name: 'Remove color tokens' })).toBeVisible();
+});
+
+it('S2 keeps a docked view open during an internal pointer event across a closed shadow root', async () => {
+  const parent = document.createElement('div');
+  fixture.append(parent);
+  const root = parent.attachShadow({ mode: 'closed' });
+  const search = await mount('mode="docked" open', suggestions, root);
+  const listener = record(search, 'ki-search');
+  await expect.poll(() => part(search, 'view').matches(':popover-open')).toBe(true);
+  const option = part(search, 'option');
+  option.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+  expect(search.open).toBe(true);
+  option.click();
+  expect(listener.mock.calls[0]?.[0].detail).toEqual({ value: 'ki-dialog' });
 });
 
 it('S12 names the collapsed search landmark and searchbox', async () => {

@@ -16,7 +16,7 @@ import {
   Watch,
   h,
 } from '@stencil/core';
-import { isOutsideOverlay, setOverlayOpen } from '../../utils/anchored-overlay';
+import { setOverlayOpen } from '../../utils/anchored-overlay';
 import { highlightSegments } from './ki-search.text';
 
 export type KiSearchMode = 'auto' | 'docked' | 'fullscreen';
@@ -135,7 +135,8 @@ export class KiSearch {
   @State() private activeIndex = -1;
   @State() private announce = false;
 
-  private readonly removed = new WeakSet<Element>();
+  private readonly removed = new WeakMap<Element, string>();
+  private insidePointer: PointerEvent | undefined;
   private observer?: MutationObserver;
   private media: MediaQueryList | undefined;
   private barInput: HTMLInputElement | undefined;
@@ -240,18 +241,21 @@ export class KiSearch {
   private readonly readRows = (): void => {
     const rows: SearchRow[] = [];
     for (const child of this.host.children) {
-      if (child.localName !== OPTION_TAG || child.slot || this.removed.has(child)) continue;
+      if (child.localName !== OPTION_TAG || child.slot) continue;
       const source: Node = child;
       const title = source.textContent?.trim() ?? '';
       const value = child.getAttribute('value') ?? title;
-      const recent = child.getAttribute('recent');
+      const recentAttribute = child.getAttribute('recent');
+      const recent = recentAttribute !== null && recentAttribute !== 'false';
+      if (recent && this.removed.get(child) === value) continue;
+      this.removed.delete(child);
       if (title || value) {
         rows.push({
           source: child,
           title: title || value,
           value,
           description: child.getAttribute('description') ?? '',
-          recent: recent !== null && recent !== 'false',
+          recent,
         });
       }
     }
@@ -321,11 +325,19 @@ export class KiSearch {
       doc.addEventListener('pointerdown', this.closeOnOutsidePointer);
     } else {
       doc.removeEventListener('pointerdown', this.closeOnOutsidePointer);
+      this.insidePointer = undefined;
     }
   }
 
+  @Listen('pointerdown')
+  protected rememberInsidePointer(event: PointerEvent): void {
+    // A closed ancestor shadow root can hide this host from the document path.
+    if (this.open && !this.fullscreen) this.insidePointer = event;
+  }
+
   private readonly closeOnOutsidePointer = (event: PointerEvent): void => {
-    if (isOutsideOverlay(event, this.host)) this.open = false;
+    if (this.insidePointer !== event) this.open = false;
+    this.insidePointer = undefined;
   };
 
   private cancelAnnouncement(): void {
@@ -373,15 +385,9 @@ export class KiSearch {
     if (!event.isComposing) this.queueInput();
   };
 
-  private setActionValue(value: string): void {
-    if (this.value === value) return;
-    this.value = value;
-    this.host.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
-  }
-
   private runSearch(value: string): void {
     this.cancelInput();
-    this.setActionValue(value);
+    this.value = value;
     this.activeIndex = -1;
     this.activeInput?.focus();
     this.kiSearch.emit({ value });
@@ -389,7 +395,7 @@ export class KiSearch {
 
   private readonly clear = (): void => {
     this.cancelInput();
-    this.setActionValue('');
+    this.value = '';
     this.activeInput?.focus();
     this.kiClear.emit();
   };
@@ -441,7 +447,7 @@ export class KiSearch {
   }
 
   private removeRecent(row: SearchRow): void {
-    this.removed.add(row.source);
+    this.removed.set(row.source, row.value);
     this.activeInput?.focus();
     this.readRows();
     this.kiRemoveRecent.emit({ value: row.value });
