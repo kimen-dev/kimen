@@ -23,7 +23,10 @@ export function siteAssetsPlugin({ workspaceRoot = repositoryRoot } = {}) {
 
   return {
     name: 'kimen-site-assets',
-    /** @param {import('vite').ViteDevServer} server */
+    /**
+     * Structural type: the elements package depends on Vitest, not on Vite directly.
+     * @param {{ middlewares: { use(handler: (request: import('node:http').IncomingMessage, response: import('node:http').ServerResponse, next: () => void) => void): void } }} server
+     */
     configureServer(server) {
       server.middlewares.use(async (request, response, next) => {
         const path = decodeURIComponent(new URL(request.url ?? '/', 'http://localhost').pathname);
