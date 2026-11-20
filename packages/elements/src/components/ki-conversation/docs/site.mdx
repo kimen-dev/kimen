@@ -1,0 +1,61 @@
+---
+title: ki-conversation
+description: Display and optionally follow a transcript of user messages, replies and system events.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use the conversation for a chronological exchange between a person and an
+assistant. Add a [ki-message](../message/) for each turn or system event. Keep
+the composer outside the transcript so it stays outside the live region.
+
+<Demo
+  layout="block"
+  code={`<ki-conversation label="Component help">
+  <ki-message message-role="user">Which inputs handle form errors?</ki-message>
+  <ki-message message-role="event" icon-name="search">Searched the component docs</ki-message>
+  <ki-message message-role="assistant" author="Ava said">
+    Input, textarea and select show field errors.
+  </ki-message>
+</ki-conversation>`}
+/>
+
+## Following the conversation
+
+Give the host a block size and set `stick-to-bottom` to follow new messages
+and growing replies. When the person scrolls back, the log stays at their
+reading position and a **Jump to latest** button appears. Scrolling to the
+end or activating the button resumes following. Omit `stick-to-bottom` for
+manual scrolling.
+
+<Demo
+  layout="block"
+  code={`<ki-conversation label="Release history" stick-to-bottom style="block-size: 9rem">
+  <ki-message>The first release added forms.</ki-message>
+  <ki-message>The next release added navigation.</ki-message>
+  <ki-message>The third release introduced the icon set.</ki-message>
+  <ki-message>The fourth release added page layouts.</ki-message>
+  <ki-message>The latest release adds conversation views.</ki-message>
+</ki-conversation>`}
+/>
+
+## Accessibility
+
+The `label` prop names the polite log. Give each transcript a distinct name
+if a page contains more than one. Localize **Jump to latest** with
+`jump-label`. After the person activates that button with the keyboard,
+focus returns to the log.
+
+A streaming reply exposes a busy article while the text arrives. Clear
+`streaming` once the final reply is in the DOM so assistive technology can
+present it as a single update. Use `author` to localize the accessible name
+of each article. See the [message guide](../message/) for role defaults.
+
+## API reference
+
+<CemApi tag="ki-conversation" />
+
+## Workshop
+
+[Open ki-conversation in Storybook](/storybook/?path=/docs/docs-components-ki-conversation--docs)

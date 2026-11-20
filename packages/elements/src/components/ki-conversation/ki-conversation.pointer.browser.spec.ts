@@ -33,7 +33,7 @@ it('S15 gives the jump control a touch-sized hit target', async (test) => {
   if (!(await browserCommands.emulateHoverCapability('none'))) {
     test.skip('this engine cannot emulate a coarse pointer');
   }
-  expect(matchMedia('(pointer: coarse)').matches).toBe(true);
+  await expect.poll(() => matchMedia('(pointer: coarse)').matches).toBe(true);
   fixture.innerHTML = `
     <ki-conversation stick-to-bottom style="block-size:180px">
       <div style="min-block-size:400px">Earlier messages</div>

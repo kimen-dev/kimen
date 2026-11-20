@@ -19,7 +19,8 @@ Each interpretation below is the **agent's choice, pending founder confirmation*
 
 - Following is off by default. Set `stick-to-bottom` on a block-size-constrained
   conversation to enable it. The jump control sits below the scrollport, and
-  keyboard activation returns focus to the log.
+  keyboard activation returns focus to the log. It uses the large secondary
+  button so a coarse pointer has a touch-sized target at default density.
 - `label` defaults to “Conversation” and `jump-label` defaults to “Jump to
   latest”. For messages, `author` sets the complete accessible article name.
   Override it to localize the fallback “You said”, “Assistant said” or “System
@@ -33,6 +34,8 @@ Each interpretation below is the **agent's choice, pending founder confirmation*
 - The message uses a decorative default assistant avatar and supports any
   supplied avatar as slot content. The issue's event presentation uses
   article semantics like the other two message roles.
+- Event text uses the mode-aware supporting ink. The caret uses the shared
+  1,200 ms activity pulse and stays still under reduced motion.
 - Conversation and Message use sibling tag folders and share the Conversation
   token sources and a composite bundle budget, following Kimen discovery.
   The jump control is internal. Catalog entries declare no emitted actions,

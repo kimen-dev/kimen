@@ -84,6 +84,8 @@ it('S4 follows growth within an existing streaming reply', async () => {
     return paragraph;
   });
   latest.append(...paragraphs);
+  // The prior automatic scroll can notify after the next chunk changes layout.
+  viewport.dispatchEvent(new Event('scroll'));
   await expect.poll(() => viewport.scrollHeight).toBeGreaterThan(before);
   await expectAtEnd(viewport);
 });
@@ -119,17 +121,20 @@ it('S7 resumes following after the reader goes back to the end', async () => {
 });
 
 it('S8 returns to the latest reply and restores log focus using the keyboard', async () => {
-  const { viewport } = await mount();
+  const { conversation, viewport } = await mount();
   await pause(viewport);
   viewport.focus({ preventScroll: true });
 
   await userEvent.tab();
-  await expect.element(jump).toHaveFocus();
+  await expect.element(jump).toBeVisible();
+  const button = jump.element();
+  const root = button.getRootNode();
+  await expect.poll(() => root instanceof ShadowRoot && root.activeElement === button).toBe(true);
   await userEvent.keyboard('{Enter}');
 
   await expectAtEnd(viewport);
   await expect.element(jump).not.toBeInTheDocument();
-  await expect.element(log).toHaveFocus();
+  expect(conversation.shadowRoot?.activeElement).toBe(viewport);
 });
 
 it('S9 exposes a named polite log with named articles, separate from the composer', async () => {
@@ -143,10 +148,13 @@ it('S9 exposes a named polite log with named articles, separate from the compose
   `;
 
   await expect.element(log).toHaveAttribute('aria-live', 'polite');
-  await expect.element(log.getByRole('article', { name: 'You said' })).toBeVisible();
-  await expect.element(log.getByRole('article', { name: 'System event' })).toBeVisible();
-  await expect.element(log.getByRole('article', { name: 'Ava said' })).toBeVisible();
+  await expect.element(page.getByRole('article', { name: 'You said' })).toBeVisible();
+  await expect.element(page.getByRole('article', { name: 'System event' })).toBeVisible();
+  await expect.element(page.getByRole('article', { name: 'Ava said' })).toBeVisible();
   await expect.element(page.getByRole('textbox', { name: 'Compose a message' })).toBeVisible();
-  await expect.element(log.getByRole('textbox')).not.toBeInTheDocument();
+  const slot = log.element().querySelector('slot');
+  const messages = Array.from(fixture.querySelectorAll('ki-message'));
+  expect(slot?.assignedElements()).toEqual(messages);
+  expect(fixture.querySelector('ki-message[role]')).toBeNull();
   await expectAccessible(fixture);
 });

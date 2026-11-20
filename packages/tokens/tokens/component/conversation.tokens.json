@@ -1,0 +1,118 @@
+{
+  "ki": {
+    "conversation": {
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{ki.layout.conversation.max-width}",
+        "$description": "Maximum inline size of the transcript."
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.layout.spacing.3xl}",
+        "$description": "Space between messages in the transcript."
+      }
+    },
+    "message": {
+      "user": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.s2}",
+          "$description": "Solid background of a user bubble."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text ink in a user bubble."
+        },
+        "bg-image": {
+          "$type": "other",
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image over the user bubble background."
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$description": "Complete filter behind the user bubble."
+        },
+        "max-width": {
+          "$type": "other",
+          "$value": "{ki.layout.conversation.user-max-width}",
+          "$description": "Maximum share of the transcript width a user bubble occupies."
+        },
+        "end-radius": {
+          "$type": "dimension",
+          "$value": "{ki.layout.conversation.bubble-end-radius}",
+          "$description": "Radius of the user bubble at the block-end inline-end corner."
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.layout.conversation.bubble-radius}",
+        "$description": "Radius of the user bubble corners."
+      },
+      "padding": {
+        "$type": "other",
+        "$value": "{ki.layout.conversation.bubble-padding}",
+        "$description": "Block and inline padding inside a user bubble, in that order."
+      },
+      "assistant": {
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.high-em}",
+          "$description": "Text ink of an assistant reply on the page surface."
+        }
+      },
+      "event": {
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.supporting}",
+          "$description": "Text and icon ink of a system event on the page surface."
+        }
+      },
+      "avatar": {
+        "bg": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-low-em}",
+          "$description": "Solid primary container of the default assistant avatar."
+        },
+        "fg": {
+          "$type": "color",
+          "$value": "{ki.text.primary-on-primary-light}",
+          "$description": "Glyph ink inside the default assistant avatar."
+        },
+        "bg-image": {
+          "$type": "other",
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image over the default assistant avatar background."
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.component.no-backdrop-filter}",
+          "$description": "Complete filter behind the default assistant avatar."
+        },
+        "radius": {
+          "$type": "dimension",
+          "$value": "{ki.layout.conversation.avatar-radius}",
+          "$description": "Corner radius of the default assistant avatar."
+        }
+      },
+      "caret": {
+        "inline-size": {
+          "$type": "dimension",
+          "$value": "{ki.layout.conversation.caret-inline-size}",
+          "$description": "Streaming caret width relative to its message text."
+        },
+        "block-size": {
+          "$type": "dimension",
+          "$value": "{ki.layout.conversation.caret-block-size}",
+          "$description": "Streaming caret height relative to its message text."
+        },
+        "duration": {
+          "$type": "duration",
+          "$value": "{ki.motion.duration.activity-pulse}",
+          "$description": "Period of the streaming caret blink when motion is allowed."
+        }
+      }
+    }
+  }
+}

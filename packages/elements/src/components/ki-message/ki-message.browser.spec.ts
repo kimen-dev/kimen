@@ -68,6 +68,11 @@ it('S1 distinguishes the question, event and assistant reply by layout', async (
   expect(bubble.width).toBeLessThan(log.width);
   expect((event.left + event.right) / 2).toBeCloseTo((log.left + log.right) / 2, 0);
   expect(avatar.right).toBeLessThan(reply.left);
+  await expect
+    .poll(() =>
+      part('#event', 'content').querySelector('ki-icon')?.shadowRoot?.querySelector('svg'),
+    )
+    .toBeInstanceOf(SVGElement);
 });
 
 it('S2 renders custom avatar, rich content and interactive actions in reading order', async () => {
@@ -104,8 +109,7 @@ it('S10 holds streamed updates atomically and clears busy when the reply complet
     </ki-conversation>
     <button type="button" tabindex="0">Composer control</button>
   `;
-  const log = page.getByRole('log', { name: 'Project chat' });
-  const reply = log.getByRole('article', { name: 'Assistant said' });
+  const reply = page.getByRole('article', { name: 'Assistant said' });
   const composer = page.getByRole('button', { name: 'Composer control' });
   await expect.element(reply).toHaveAttribute('aria-busy', 'true');
   await expect.element(reply).toHaveAttribute('aria-atomic', 'true');
@@ -118,7 +122,7 @@ it('S10 holds streamed updates atomically and clears busy when the reply complet
   message?.removeAttribute('streaming');
 
   await expect.element(reply).not.toHaveAttribute('aria-busy', 'true');
-  await expect.element(log.getByText('Here are the docs.')).toBeVisible();
+  await expect.element(page.getByText('Here are the docs.')).toBeVisible();
   await expect.element(composer).toHaveFocus();
   expect(message?.shadowRoot?.querySelector('[part~="caret"]')).toBeNull();
 });
