@@ -103,10 +103,13 @@ it('S1: filters a formatted paste and publishes the complete code once', async (
   const input = inputOf(element);
   input.focus();
 
-  input.dispatchEvent(
-    new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }),
-  );
+  const paste = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+  // Firefox drops clipboardData from ClipboardEventInit. A native paste
+  // supplies it, so give the synthetic event the same payload.
+  Object.defineProperty(paste, 'clipboardData', { value: data });
+  input.dispatchEvent(paste);
 
+  expect(paste.defaultPrevented).toBe(true);
   await expect.element(textbox()).toHaveValue('042911');
   await expect
     .poll(() => cellsOf(element).map((cell) => cell.textContent))
@@ -122,7 +125,7 @@ it('S2: accepts one whole alphanumeric replacement through the autofill input', 
   const element = await mount('length="4" type="alphanumeric"');
   const events = codeEvents(element);
   const input = inputOf(element);
-  expect(input.autocomplete).toBe('one-time-code');
+  expect(input.getAttribute('autocomplete')).toBe('one-time-code');
   expect(input.inputMode).toBe('text');
   expect(input.maxLength).toBe(4);
 
@@ -134,6 +137,36 @@ it('S2: accepts one whole alphanumeric replacement through the autofill input', 
   expect(events).toEqual([
     ['ki-input', 'a7B9'],
     ['ki-complete', 'a7B9'],
+  ]);
+});
+
+it('publishes a committed replacement carrying an IME marker without an active composition', async () => {
+  const form = formFixture();
+  const element = await mount('name="otp" required', form);
+  const input = inputOf(element);
+  const events = codeEvents(element);
+  input.value = '042911';
+
+  input.dispatchEvent(
+    new InputEvent('input', {
+      bubbles: true,
+      composed: true,
+      inputType: 'insertCompositionText',
+      isComposing: true,
+    }),
+  );
+
+  await expect
+    .poll(() =>
+      cellsOf(element)
+        .map((cell) => cell.textContent)
+        .join(''),
+    )
+    .toBe('042911');
+  expect(new FormData(form).getAll('otp')).toEqual(['042911']);
+  expect(events).toEqual([
+    ['ki-input', '042911'],
+    ['ki-complete', '042911'],
   ]);
 });
 

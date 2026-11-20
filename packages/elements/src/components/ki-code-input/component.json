@@ -9,8 +9,8 @@
   "formBinding": "text",
   "sizeBudget": {
     "mcpServer": {
-      "raw": 22390,
-      "gzip": 4993
+      "raw": 22705,
+      "gzip": 5086
     }
   }
 }

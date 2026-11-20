@@ -55,6 +55,7 @@ export class KiCodeInput {
   @State() private selectionEnd = 0;
 
   private input: HTMLInputElement | undefined;
+  private composing = false;
   private userInvalid = false;
   private customValidity = '';
 
@@ -232,6 +233,7 @@ export class KiCodeInput {
     const character = event.data;
     if (
       event.inputType === 'insertText' &&
+      !this.composing &&
       !event.isComposing &&
       character?.length === 1 &&
       normalizeCode(character, this.type, this.codeLength) === ''
@@ -257,6 +259,12 @@ export class KiCodeInput {
     this.userInvalid = false;
     this.shownError = '';
   }
+
+  private readonly bindInput = (input: HTMLInputElement | undefined): void => {
+    this.input = input;
+    // Preserve the content attribute even when the IDL getter normalizes it.
+    input?.setAttribute('autocomplete', 'one-time-code');
+  };
 
   private readonly syncSelection = (): void => {
     this.selectionStart = this.input?.selectionStart ?? 0;
@@ -294,7 +302,18 @@ export class KiCodeInput {
   };
 
   private readonly handleInput = (event: InputEvent): void => {
-    if (!event.isComposing) this.acceptInput();
+    // A whole-value insertion can carry an IME marker in Gecko. Defer
+    // only pre-edit input received during an active composition session.
+    if (!this.composing || !event.isComposing) this.acceptInput();
+  };
+
+  private readonly handleCompositionStart = (): void => {
+    this.composing = true;
+  };
+
+  private readonly handleCompositionEnd = (): void => {
+    this.composing = false;
+    this.acceptInput();
   };
 
   private readonly handleChange = (): void => {
@@ -320,6 +339,8 @@ export class KiCodeInput {
     // The native clipboard transaction handles plain codes and their undo.
     // A formatted paste inserts the cleaned text into the current selection.
     input.setRangeText(replacement, start, end, 'end');
+    this.acceptInput();
+    // Notify native input listeners, including framework form bindings.
     input.dispatchEvent(
       new InputEvent('input', {
         bubbles: true,
@@ -336,6 +357,7 @@ export class KiCodeInput {
       !form ||
       event.key !== 'Enter' ||
       event.defaultPrevented ||
+      this.composing ||
       event.isComposing ||
       event.altKey ||
       event.ctrlKey ||
@@ -347,6 +369,7 @@ export class KiCodeInput {
     // The native input is in shadow DOM. Forward an explicit Enter to the
     // outer form using its submitter, so its value and overrides are preserved.
     event.preventDefault();
+    this.acceptInput();
     const submitter = Array.from(form.elements).find(
       (element): element is HTMLButtonElement | HTMLInputElement =>
         (element instanceof HTMLButtonElement || element instanceof HTMLInputElement) &&
@@ -375,14 +398,11 @@ export class KiCodeInput {
         >
           <input
             key="input"
-            ref={(input) => {
-              this.input = input;
-            }}
+            ref={this.bindInput}
             id="input"
             part="input"
             type="text"
             {...(this.name !== undefined ? { name: this.name } : {})}
-            autocomplete="one-time-code"
             autoCapitalize="none"
             spellcheck="false"
             inputMode={this.type === 'alphanumeric' ? 'text' : 'numeric'}
@@ -394,7 +414,8 @@ export class KiCodeInput {
             aria-describedby={fieldDescribedBy(messages)}
             aria-invalid={fieldInvalid(messages)}
             onInput={this.handleInput}
-            onCompositionend={this.acceptInput}
+            onCompositionstart={this.handleCompositionStart}
+            onCompositionend={this.handleCompositionEnd}
             onChange={this.handleChange}
             onPaste={this.handlePaste}
             onFocus={this.syncSelection}
