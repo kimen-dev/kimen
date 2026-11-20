@@ -43,16 +43,16 @@ them: they are the library's design decisions, not suggestions. If the
 
 ## Install and load
 
-Kimen is pre-1.0. Check whether `@kimen/elements` has a release on npm
-before installing (`npm view @kimen/elements version`). If it prints 0.1.0
-or later:
+Install both packages from npm with the project's package manager:
 
 ```sh
-npm install @kimen/elements @kimen/tokens
+pnpm add @kimen/elements @kimen/tokens   # or: npm install @kimen/elements @kimen/tokens
 ```
 
-If it prints `0.0.0` (a name reservation with no components) or nothing,
-build the repository and link the packages from it; see
+Kimen is pre-1.0, so expect breaking changes between minor versions. To use
+an unreleased change, or a Kimen package that has no release on npm yet
+(`npm view <package> version` prints nothing, or only `0.0.0`, which reserves
+the name), link it from a repository build; see
 `references/install-from-source.md`.
 
 Then, once per page or app entry point:

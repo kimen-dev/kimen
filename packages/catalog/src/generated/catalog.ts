@@ -5739,5 +5739,5 @@ export const catalogData = {
       "whenToUse": "Mark the figure or phrase of a sentence that matters most, such as a total."
     }
   },
-  "elementsVersion": "0.1.0"
+  "elementsVersion": "0.1.1"
 } as const;

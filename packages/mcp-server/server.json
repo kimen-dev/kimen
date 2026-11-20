@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.kimen-dev/kimen",
+  "title": "Kimen",
+  "description": "List and describe Kimen components, validate UI specs and render them as MCP Apps surfaces.",
+  "websiteUrl": "https://kimen.dev/docs/guides/connect-agents/",
+  "repository": {
+    "url": "https://github.com/kimen-dev/kimen",
+    "source": "github",
+    "subfolder": "packages/mcp-server"
+  },
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@kimen/mcp-server",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

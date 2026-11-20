@@ -1,8 +1,13 @@
-# Installing Kimen before the packages are on npm
+# Using Kimen from a repository build
 
-Kimen is pre-1.0. Until `npm view @kimen/elements version` prints 0.1.0 or
-later, use the packages from a local build of the repository. Version `0.0.0`
-on npm only reserves the name: it contains no components.
+Install Kimen from npm whenever you can (`pnpm add @kimen/elements
+@kimen/tokens`; the MCP server runs with `npx -y -p @kimen/mcp-server@0.1.1
+kimen-mcp`). Use a local build of the repository only for what npm does not
+have: an unreleased change, or a Kimen package with no release yet. Check
+with `npm view <package> version`: nothing, or only `0.0.0` (a name
+reservation with no code), means unpublished. The first release, 0.1.0,
+publishes `@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server`; the
+generative UI packages and framework wrappers may still need this page.
 
 ## 1. Build the repository once
 
@@ -40,5 +45,6 @@ entries with version ranges and reinstall.
 - Bundlers that refuse to follow symlinks outside the project root need
   their option for it (for example Vite's `server.fs.allow` with the
   repository path, or `preserveSymlinks`).
-- The `kimen-mcp` binary needs no linking: point your MCP client at
-  `packages/mcp-server/dist/kimen-mcp.mjs` (see the `kimen-genui` skill).
+- A repository build of `kimen-mcp` needs no linking: point your MCP client
+  at `node /absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs`
+  instead of the `npx` command (see the `kimen-genui` skill).

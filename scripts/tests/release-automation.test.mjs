@@ -1,17 +1,26 @@
 // @spec:151-release-automation
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
   buildChangelog,
+  mcpServerMetadataPath,
+  mcpServerPinPaths,
+  pinMcpServer,
+  pinServerMetadata,
   prepareManifest,
+  prepareMcpServerVersion,
   releaseNotes,
+  releasePackages,
   releaseProposal,
   selectReleaseVersion,
+  verifyMcpServerVersion,
 } from '../release/release-plan.mjs';
 import {
   ensureGitHubRelease,
+  releaseCommitFiles,
   syncReleasePullRequest,
   mergedReleaseVersion,
 } from '../release/release-github.mjs';
@@ -216,4 +225,156 @@ test('S6 only the three release manifests can be prepared and their runtime rang
     /workspace:/u,
   );
   assert.throws(() => prepareManifest({ ...elements, version: '0.1.0' }, '0.2.0'), /version/u);
+});
+
+const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
+const readRepositoryFile = (path) => readFile(new URL(`../../${path}`, import.meta.url), 'utf8');
+const mcpName = 'io.github.kimen-dev/kimen';
+const installArgs = (version) => ['-y', '-p', `@kimen/mcp-server@${version}`, 'kimen-mcp'];
+const cursorLink = (version) => {
+  const config = JSON.stringify({ command: 'npx', args: installArgs(version) });
+  const base64 = Buffer.from(config).toString('base64');
+  return `https://cursor.com/install-mcp?name=kimen&config=${encodeURIComponent(base64)}`;
+};
+const vscodeLink = (version, scheme = 'vscode') => {
+  const config = JSON.stringify({
+    name: 'kimen',
+    type: 'stdio',
+    command: 'npx',
+    args: installArgs(version),
+  });
+  const target = `${scheme}:mcp/install?${encodeURIComponent(config)}`;
+  return `https://vscode.dev/redirect?url=${encodeURIComponent(target)}`;
+};
+const guide = (version) => `Run \`npx -y -p @kimen/mcp-server@${version} kimen-mcp\`.
+
+\`\`\`json
+{ "args": ["-y", "-p", "@kimen/mcp-server@${version}", "kimen-mcp"] }
+\`\`\`
+
+- [Add to Cursor](${cursorLink(version)})
+- [Install in VS Code](${vscodeLink(version)}) ([Insiders](${vscodeLink(version, 'vscode-insiders')}))
+
+The package is \`@kimen/mcp-server\`; a build is at \`/@kimen/mcp-server/dist/kimen-mcp.mjs\`.
+`;
+const serverJson = (version) =>
+  `${JSON.stringify(
+    {
+      name: mcpName,
+      version,
+      packages: [
+        {
+          registryType: 'npm',
+          identifier: '@kimen/mcp-server',
+          version,
+          transport: { type: 'stdio' },
+        },
+      ],
+    },
+    null,
+    2,
+  )}\n`;
+
+test('S9 every plain and link-encoded kimen-mcp pin moves to the release version', () => {
+  const { text, pins } = pinMcpServer(guide('0.1.0'), '0.2.0', 'guide.mdx');
+  assert.equal(text, guide('0.2.0'));
+  assert.deepEqual(pins, ['0.1.0', '0.1.0', '0.1.0', '0.1.0', '0.1.0']);
+  assert.equal(pinMcpServer(text, '0.2.0', 'guide.mdx').text, text);
+  assert.doesNotMatch(text, /0\.1\.0/u);
+  assert.throws(() => pinMcpServer(guide('0.1.0'), '0.2', 'guide.mdx'), /Invalid release version/u);
+});
+
+test('S9 server.json takes the release version in both fields and stays canonical', () => {
+  assert.equal(pinServerMetadata(serverJson('0.1.0'), '0.2.0', mcpName), serverJson('0.2.0'));
+  assert.throws(
+    () => pinServerMetadata(serverJson('0.1.0').replace(/\n {2}/gu, '\n    '), '0.2.0', mcpName),
+    /canonical/u,
+  );
+  assert.throws(
+    () => pinServerMetadata(serverJson('0.1.0'), '0.2.0', 'io.github.other/kimen'),
+    /must name io\.github\.other\/kimen/u,
+  );
+  const twoPackages = JSON.parse(serverJson('0.1.0'));
+  twoPackages.packages.push({ ...twoPackages.packages[0], registryType: 'oci' });
+  assert.throws(
+    () => pinServerMetadata(`${JSON.stringify(twoPackages, null, 2)}\n`, '0.2.0', mcpName),
+    /only the npm package/u,
+  );
+});
+
+test('S9 a listed file that lost its pin or runs kimen-mcp unpinned fails closed', () => {
+  assert.throws(
+    () => pinMcpServer('The package is `@kimen/mcp-server`.\n', '0.2.0', 'README.md'),
+    /README\.md must pin @kimen\/mcp-server/u,
+  );
+  for (const unpinned of [
+    `${guide('0.1.0')}\nnpx -y -p @kimen/mcp-server kimen-mcp\n`,
+    `${guide('0.1.0')}\n"args": ["-y", "-p", "@kimen/mcp-server", "kimen-mcp"]\n`,
+  ]) {
+    assert.throws(() => pinMcpServer(unpinned, '0.2.0', 'guide.mdx'), /without a pinned version/u);
+  }
+  const unpinnedConfig = '{"command":"npx","args":["@kimen/mcp-server","kimen-mcp"]}';
+  const unpinnedLink = guide('0.1.0').replace(
+    cursorLink('0.1.0'),
+    `https://cursor.com/install-mcp?name=kimen&config=${encodeURIComponent(
+      Buffer.from(unpinnedConfig).toString('base64'),
+    )}`,
+  );
+  assert.throws(() => pinMcpServer(unpinnedLink, '0.2.0', 'guide.mdx'), /install link/u);
+});
+
+test('S9 the release pull request pins exactly the listed files and server.json to its own version', async () => {
+  const before = new Map([
+    ...mcpServerPinPaths.map((path) => [
+      path,
+      path.endsWith('.json') ? '"@kimen/mcp-server@0.1.0"\n' : guide('0.1.0'),
+    ]),
+    [mcpServerMetadataPath, serverJson('0.1.0')],
+  ]);
+  const read = async (path) => {
+    if (!before.has(path)) assert.fail(`release preparation read an unlisted file: ${path}`);
+    return before.get(path);
+  };
+  const prepared = await prepareMcpServerVersion(read, '0.2.0', mcpName);
+  assert.deepEqual([...prepared.keys()].toSorted(), [...before.keys()].toSorted());
+  await verifyMcpServerVersion(async (path) => prepared.get(path), '0.2.0', mcpName);
+  await assert.rejects(
+    verifyMcpServerVersion(async (path) => prepared.get(path), '0.3.0', mcpName),
+    /must pin @kimen\/mcp-server to the release version 0\.3\.0/u,
+  );
+  const lagging = new Map(prepared).set(mcpServerPinPaths[0], guide('0.1.0'));
+  await assert.rejects(
+    verifyMcpServerVersion(async (path) => lagging.get(path), '0.2.0', mcpName),
+    /packages\/mcp-server\/README\.md must pin/u,
+  );
+  for (const path of [mcpServerMetadataPath, ...mcpServerPinPaths]) {
+    assert.ok(releaseCommitFiles.includes(path), `${path} is committed with the release`);
+  }
+});
+
+test('S9 the pin list covers every kimen-mcp pin in the repository, all at one version', async () => {
+  const search = spawnSync('git', ['grep', '-l', '-E', '@kimen/mcp-server@[0-9]'], {
+    cwd: repositoryRoot,
+    encoding: 'utf8',
+  });
+  assert.equal(search.status, 0, search.stderr);
+  const pinned = search.stdout
+    .split('\n')
+    .filter((path) => path && path !== 'scripts/tests/release-automation.test.mjs');
+  assert.deepEqual(
+    pinned.filter((path) => !mcpServerPinPaths.includes(path)),
+    [],
+    'every file that pins @kimen/mcp-server is listed in mcpServerPinPaths',
+  );
+  const manifest = JSON.parse(await readRepositoryFile(releasePackages.get('@kimen/mcp-server')));
+  assert.equal(manifest.mcpName, mcpName);
+  const { version } = JSON.parse(await readRepositoryFile(mcpServerMetadataPath));
+  const versions = new Set();
+  for (const path of mcpServerPinPaths) {
+    for (const pin of pinMcpServer(await readRepositoryFile(path), version, path).pins) {
+      versions.add(pin);
+    }
+  }
+  assert.deepEqual([...versions], [version], 'every pin agrees with server.json');
+  await verifyMcpServerVersion(readRepositoryFile, version, manifest.mcpName);
 });

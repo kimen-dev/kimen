@@ -21,10 +21,10 @@
     ]
   },
   "dependencies": {
-    "@astrojs/starlight": "0.42.11",
+    "@astrojs/starlight": "0.43.0",
     "@kimen/elements": "workspace:*",
     "@kimen/tokens": "workspace:*",
-    "astro": "7.4.11",
+    "astro": "7.4.12",
     "sharp": "0.35.5"
   }
 }

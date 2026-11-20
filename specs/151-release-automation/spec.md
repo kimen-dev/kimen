@@ -61,6 +61,13 @@ Feature: Kimen prepares and tags releases through a pull request
     Given the kimen-mcp bundle includes code from third-party npm packages
     When packaging verifies the bundle against the package NOTICE
     Then each bundled third-party package has its own notice section in the tarball
+
+  # S9
+  Scenario: The release pull request moves the kimen-mcp pins to its version
+    Given the agent plugin, its guides and server.json pin @kimen/mcp-server to 0.1.0
+    When release preparation proposes v0.2.0
+    Then every listed @kimen/mcp-server pin and both server.json versions read 0.2.0 in that pull request
+    And no file outside the pin list changes
 ```
 
 ## Acceptance notes
@@ -69,3 +76,4 @@ Feature: Kimen prepares and tags releases through a pull request
 - Features raise the minor version and fixes raise the patch version. Before 1.0.0, breaking changes raise the minor version. From 1.0.0 onward, breaking changes raise the major version.
 - The release pull request goes through the normal required checks. The existing tag-triggered workflow validates and publishes the immutable candidate.
 - The dedicated GitHub App owns branch, pull request, tag and GitHub Release writes. The automation never pushes to `main`.
+- The agent plugin, its docs and the one-click install links run `kimen-mcp` by exact version (`@kimen/mcp-server@X.Y.Z`). Release preparation rewrites those pins, including the ones encoded in the Cursor and VS Code links, and both `version` fields of `packages/mcp-server/server.json`, in the files listed by `mcpServerPinPaths` only. A listed file without a pin, or with an unpinned `@kimen/mcp-server` command, fails preparation before any release file is written, and the release pull request and its tag are refused while any pin differs from the release version.

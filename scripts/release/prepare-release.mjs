@@ -4,6 +4,7 @@ import { releaseChangelog, releaseVersion } from 'nx/release';
 import {
   buildChangelog,
   prepareManifest,
+  prepareMcpServerVersion,
   releaseNotes,
   releasePackages,
   releaseVersionPattern,
@@ -11,6 +12,7 @@ import {
 } from './release-plan.mjs';
 
 const noGitWrites = { stageChanges: false, gitCommit: false, gitTag: false, gitPush: false };
+const readText = (path) => readFile(path, 'utf8');
 
 async function prepareRelease() {
   const manifests = new Map();
@@ -73,6 +75,10 @@ async function prepareRelease() {
     console.log('No release-worthy changes in the publication scope');
     return;
   }
+  // Rewrite the kimen-mcp pins in memory first: a missing pin fails the run
+  // before Nx writes any manifest.
+  const { mcpName } = manifests.get('@kimen/mcp-server');
+  const pinnedFiles = await prepareMcpServerVersion(readText, version, mcpName);
 
   const result = await releaseVersion({
     ...options,
@@ -100,6 +106,7 @@ async function prepareRelease() {
       );
     }
   }
+  for (const [path, text] of pinnedFiles) await writeFile(path, text);
   await writeFile('CHANGELOG.md', nextChangelog);
   console.log(`Prepared v${version}`);
   if (process.env.GITHUB_OUTPUT)
