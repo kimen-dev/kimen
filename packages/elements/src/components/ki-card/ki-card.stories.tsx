@@ -84,3 +84,47 @@ export const MediaAndBody: Story = {
     },
   },
 };
+
+export const Variants: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--ki-space-xl)' }}>
+      <ki-card variant="elevated">
+        <h2 slot="header">Elevated</h2>
+        <p>Raised surface with a resting shadow.</p>
+      </ki-card>
+      <ki-card variant="filled">
+        <h2 slot="header">Filled</h2>
+        <p>Tinted surface for grouped content.</p>
+      </ki-card>
+      <ki-card variant="outlined">
+        <h2 slot="header">Outlined</h2>
+        <p>Bordered surface for a dense list.</p>
+      </ki-card>
+    </div>
+  ),
+};
+
+export const LinkedCard: Story = {
+  args: { variant: 'outlined', href: '#incident-42' },
+  parameters: {
+    slots: {
+      header: <h2>Search index rebuild</h2>,
+      default: <p id="incident-42">Scheduled for midnight.</p>,
+      footer: (
+        <ki-button variant="secondary" type="button">
+          Bookmark
+        </ki-button>
+      ),
+    },
+  },
+};
+
+export const ActionCard: Story = {
+  args: { variant: 'filled', interactive: true },
+  parameters: {
+    slots: {
+      header: <h2>Preview monthly report</h2>,
+      default: <p>Review the report before publishing it.</p>,
+    },
+  },
+};

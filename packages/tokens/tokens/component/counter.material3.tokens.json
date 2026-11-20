@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "counter": {
+      "ring": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Material 3 base surface for the separating ring."
+      }
+    }
+  }
+}

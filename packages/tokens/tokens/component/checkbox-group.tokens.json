@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "checkbox-group": {
+      "gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Space between checkbox options and the group label and messages."
+      }
+    }
+  }
+}

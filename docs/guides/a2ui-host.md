@@ -270,10 +270,10 @@ the two ever drift. Five classes, five behaviors:
 
 | Class | Behavior |
 | --- | --- |
-| `mapped` (Card, Button, TextField, List, Tabs, …) | Renders as its neutral `ki-*` counterpart(s) |
+| `mapped` (Card, Button, TextField, Image, List, Tabs, …) | Renders as its neutral `ki-*` counterpart(s) |
 | `inline` (Text) | No element of its own; its resolved string becomes inert text in the parent slot |
 | `layout` (Row, Column) | No element of its own; its children join the parent slot in order |
-| `unmapped` (Image, Icon, Modal, Slider, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
+| `unmapped` (Icon, Modal, Slider, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
 | `forbidden` (`html`, `RawHtml`, `script`, `iframe`) | The **whole message** is rejected (`forbidden-type`) — across every updated component, reachable from the root or not |
 
 The asymmetry between the last two is deliberate: an attacker gains nothing by
@@ -293,6 +293,12 @@ example `formatDate`) degrades its component the same way, with
 `formatCurrency` and `pluralize` are evaluated. Report degradations back to
 the agent over your channel so it can re-emit with supported content; the
 rest of the surface renders normally.
+
+`Image` maps to `ki-image`. Supply alternative text in `@accessibility.label`
+on 1.0 or `accessibility.label` on 0.9.1. Set `hidden: true` in the same
+accessibility object for decorative images. An informative image without a
+label degrades per node with `reason: 'missing-image-alt'`. URLs for mapped
+images pass through the catalog's URL policy.
 
 ## Diagnostics reference
 

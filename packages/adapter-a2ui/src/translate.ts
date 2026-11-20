@@ -46,7 +46,11 @@ export interface A2uiDegradationReport {
   readonly surfaceId: string;
   readonly componentId: string;
   readonly componentType: string;
-  readonly reason: 'unmapped-type' | 'unsupported-function' | 'unsupported-variant';
+  readonly reason:
+    | 'missing-image-alt'
+    | 'unmapped-type'
+    | 'unsupported-function'
+    | 'unsupported-variant';
   readonly detail?: string | undefined;
 }
 
@@ -115,7 +119,7 @@ interface WalkContext {
 class Degrade extends Error {
   constructor(
     readonly reason: A2uiDegradationReport['reason'],
-    readonly detail: string,
+    readonly detail?: string,
   ) {
     super(reason);
   }
@@ -491,16 +495,23 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     ];
   },
   ChoicePicker: (it) => {
-    if ((it.literal('variant') ?? 'mutuallyExclusive') !== 'mutuallyExclusive') {
-      throw new Degrade('unsupported-variant', 'multipleSelection');
+    const variant = it.literal('variant') ?? 'mutuallyExclusive';
+    if (variant !== 'mutuallyExclusive' && variant !== 'multipleSelection') {
+      throw new Degrade('unsupported-variant', variant);
     }
+    const multiple = variant === 'multipleSelection';
     const options = it.body['options'];
     if (!Array.isArray(options)) {
       throw it.malformed('options', 'ChoicePicker options must be a list');
     }
     const selected = it.value('value');
     const first = Array.isArray(selected) ? toText(selected[0]) : toText(selected);
-    const radios = options.map((option, index) => {
+    const selectedValues = new Set(
+      multiple && Array.isArray(selected)
+        ? selected.filter((value): value is string => typeof value === 'string')
+        : [],
+    );
+    const choices = options.map((option, index) => {
       if (!isPlainObject(option) || typeof option['value'] !== 'string') {
         throw it.malformed(
           `options/${String(index)}`,
@@ -509,17 +520,25 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       }
       const label =
         option['label'] === undefined ? '' : toText(resolveOption(it, option['label'], index));
-      return node('ki-radio', { value: option['value'] }, label === '' ? [] : [label]);
+      const value = option['value'];
+      return node(
+        multiple ? 'ki-checkbox' : 'ki-radio',
+        { value, ...(selectedValues.has(value) ? { checked: true } : {}) },
+        label === '' ? [] : [label],
+      );
     });
     const label = it.text('label');
+    if (multiple && label.trim() === '') {
+      throw new Degrade('unsupported-variant', 'multipleSelection requires a group label');
+    }
     return [
       node(
-        'ki-radio-group',
+        multiple ? 'ki-checkbox-group' : 'ki-radio-group',
         {
           ...(label === '' ? {} : { label }),
-          ...(first === '' ? {} : { value: first }),
+          ...(!multiple && first !== '' ? { value: first } : {}),
         },
-        radios,
+        choices,
       ),
     ];
   },
@@ -530,6 +549,35 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       node(
         'ki-divider',
         axis === 'vertical' || axis === 'horizontal' ? { orientation: axis } : {},
+        [],
+      ),
+    ];
+  },
+  Image: (it) => {
+    const src = it.value('url');
+    if (src === undefined && it.body['url'] !== undefined) {
+      // A missing binding can resolve when the data model arrives.
+      return [];
+    }
+    if (typeof src !== 'string') {
+      throw it.malformed('url', 'Image url must resolve to a string');
+    }
+    const fit = it.literal('fit');
+    const accessibility =
+      it.body[it.context.dialect.reservedNamespace ? '@accessibility' : 'accessibility'];
+    const { hidden, label } = isPlainObject(accessibility) ? accessibility : {};
+    const alt = typeof label === 'string' ? label : '';
+    if (hidden !== true && alt.trim() === '') {
+      throw new Degrade('missing-image-alt');
+    }
+    return [
+      node(
+        'ki-image',
+        {
+          src,
+          ...(hidden === true ? { decorative: true } : { alt }),
+          ...(fit === 'cover' || fit === 'contain' ? { fit } : {}),
+        },
         [],
       ),
     ];

@@ -1,0 +1,212 @@
+:host {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  min-block-size: var(--ki-density-target-min);
+  vertical-align: middle;
+  font-family: var(--ki-chip-font-family);
+
+  --_ki-chip-height: var(--ki-chip-height);
+  --_ki-chip-inset: var(--ki-chip-inset);
+  --_ki-chip-font-size: var(--ki-chip-font-size);
+  --_ki-chip-line-height: var(--ki-chip-line-height);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([size="sm"]) {
+  --_ki-chip-height: var(--ki-chip-height-sm);
+  --_ki-chip-inset: var(--ki-chip-inset-sm);
+  --_ki-chip-font-size: var(--ki-chip-font-size-sm);
+  --_ki-chip-line-height: var(--ki-chip-line-height-sm);
+}
+
+[part="chip"] {
+  display: inline-flex;
+  position: relative;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ki-chip-gap);
+  min-inline-size: 0;
+  min-block-size: var(--_ki-chip-height);
+  padding-block: 0;
+  padding-inline: var(--_ki-chip-inset);
+  border: var(--ki-chip-border-width) solid var(--ki-chip-border);
+  border-radius: var(--ki-chip-radius);
+  background-color: var(--ki-chip-bg);
+  background-image: var(--ki-chip-bg-image);
+  backdrop-filter: var(--ki-chip-backdrop-filter);
+  color: var(--ki-chip-fg);
+  font-family: inherit;
+  font-size: var(--_ki-chip-font-size);
+  font-weight: var(--ki-chip-font-weight);
+  line-height: var(--_ki-chip-line-height);
+  text-align: start;
+}
+
+button[part="chip"] {
+  min-inline-size: var(--ki-chip-height-sm);
+}
+
+button {
+  appearance: none;
+  margin: 0;
+  cursor: pointer;
+}
+
+[part="label"] {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+[part="start"],
+[part="selection-icon"] {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  line-height: 0;
+}
+
+[part="start"][hidden] {
+  display: none;
+}
+
+svg,
+::slotted(svg) {
+  display: block;
+  inline-size: var(--ki-chip-icon-size);
+  block-size: var(--ki-chip-icon-size);
+}
+
+[part="chip"][data-kind="assist"] [part="start"] {
+  color: var(--ki-chip-assist-icon-fg);
+}
+
+[part="chip"][aria-pressed="true"] {
+  background-color: var(--ki-chip-selected-bg);
+  color: var(--ki-chip-selected-fg);
+  border-color: var(--ki-chip-selected-border);
+}
+
+[part="chip"][data-kind="input"] {
+  border-width: 0;
+  background-color: var(--ki-chip-input-bg);
+  color: var(--ki-chip-input-fg);
+}
+
+[part="chip"][data-kind="input"]:has([part="remove"]) {
+  padding-inline-end: var(--ki-chip-inset-action);
+}
+
+[part="remove"],
+[part="drag-handle"] {
+  display: inline-grid;
+  position: relative;
+  flex: none;
+  place-items: center;
+  inline-size: var(--ki-chip-height-sm);
+  block-size: var(--ki-chip-height-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ki-chip-radius);
+  font: inherit;
+}
+
+[part="remove"] {
+  background-color: var(--ki-chip-remove-bg);
+  color: var(--ki-chip-remove-fg);
+}
+
+[part="drag-handle"] {
+  inline-size: var(--ki-density-target-min);
+  color: var(--ki-chip-fg);
+  cursor: grab;
+}
+
+/* A group reserves touch room around the paint. The pseudo-element extends
+   the button's actual hit area while the pill keeps its visual size. */
+button:not(:disabled)::after,
+[part="drag-handle"]::after {
+  position: absolute;
+  inset-block: min(0px, calc((100% - var(--ki-density-target-min)) / 2));
+  inset-inline: min(0px, calc((100% - var(--ki-density-target-min)) / 2));
+  border-radius: inherit;
+  content: "";
+}
+
+[part="drag-handle"] + button[part="chip"] {
+  min-inline-size: var(--ki-density-target-min);
+}
+
+:host([data-ki-chip-picked]) [part="drag-handle"] {
+  background-color: var(--ki-chip-selected-bg);
+  color: var(--ki-chip-selected-fg);
+}
+
+@media (hover: hover) {
+  button[part="chip"]:not(:disabled, [aria-pressed="true"]):hover {
+    background-color: var(--ki-chip-hover-bg);
+    color: var(--ki-chip-hover-fg);
+  }
+
+  [part="remove"]:not(:disabled):hover {
+    background-color: var(--ki-chip-remove-hover-bg);
+    color: var(--ki-chip-remove-hover-fg);
+  }
+}
+
+[part="chip"]:is(:disabled, [data-disabled]),
+[part="remove"]:disabled,
+[part="chip"]:disabled [part="start"] {
+  color: var(--ki-chip-disabled-ink);
+  border-color: var(--ki-chip-disabled-border);
+  cursor: default;
+}
+
+[part="chip"]:disabled {
+  background-color: var(--ki-chip-bg);
+}
+
+button[part="chip"]:not(:disabled):is(:active, [data-ki-pressed]),
+[part="remove"]:not(:disabled):is(:active, [data-ki-pressed]) {
+  background-color: var(--ki-chip-pressed-bg);
+  color: var(--ki-chip-pressed-fg);
+}
+
+:where([part="chip"], [part="remove"]):focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :where([part="chip"], [part="remove"]) {
+    transition:
+      background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      color var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      border-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+}
+
+@media (forced-colors: active) {
+  [part="chip"][data-kind="input"] {
+    border: thin solid CanvasText;
+  }
+
+  [part="chip"][aria-pressed="true"]:not(:disabled),
+  :host([data-ki-chip-picked]) [part="drag-handle"] {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+    border-color: Highlight;
+  }
+
+  :where([part="chip"], [part="remove"]):focus-visible {
+    outline: var(--ki-focus-ring-width) solid Highlight;
+    outline-offset: var(--ki-focus-ring-offset);
+  }
+}

@@ -35,13 +35,84 @@
   gap: var(--_ki-card-gap);
   padding-block: var(--_ki-card-padding-block);
   color: var(--_ki-card-fg);
-  background: var(--_ki-card-bg);
+  background-color: var(--_ki-card-bg);
+  background-image: var(--ki-card-bg-image, none);
+  backdrop-filter: var(--ki-card-backdrop-filter, none);
   border-color: var(--_ki-card-border-color);
   border-style: solid;
   border-width: var(--_ki-card-border-width);
   border-radius: var(--_ki-card-radius);
   box-shadow: var(--_ki-card-elevation);
   overflow: hidden;
+}
+
+[part="card"][data-variant="elevated"] {
+  --_ki-card-bg: var(--ki-card-elevated-bg);
+  --_ki-card-fg: var(--ki-card-elevated-fg);
+  --_ki-card-border-width: 0;
+  --_ki-card-elevation: var(--ki-card-elevated-shadow);
+}
+
+[part="card"][data-variant="filled"] {
+  --_ki-card-bg: var(--ki-card-filled-bg);
+  --_ki-card-fg: var(--ki-card-filled-fg);
+  --_ki-card-border-width: 0;
+  --_ki-card-elevation: var(--ki-elevation-none);
+}
+
+[part="card"][data-variant="outlined"] {
+  --_ki-card-bg: var(--ki-card-outlined-bg);
+  --_ki-card-fg: var(--ki-card-outlined-fg);
+  --_ki-card-border-width: var(--ki-card-outlined-border-width);
+  --_ki-card-border-color: var(--ki-card-outlined-border);
+  --_ki-card-elevation: var(--ki-elevation-none);
+}
+
+[part="card"][data-clickable] {
+  position: relative;
+  isolation: isolate;
+  min-block-size: var(--ki-density-target-min);
+  min-inline-size: var(--ki-density-target-min);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+[data-clickable] > [part="header"] > slot {
+  display: none;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--ki-card-title-family);
+  font-size: var(--ki-typography-size-title-1);
+  line-height: var(--ki-typography-line-height-title-1);
+}
+
+[part="trigger"] {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+[part="trigger"]::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+}
+
+[part="trigger"]:focus-visible {
+  outline: none;
+}
+
+[part="card"]:has([part="trigger"]:focus-visible) {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
 }
 
 [part="media"][data-empty],
@@ -111,8 +182,27 @@ slot[name="media"]::slotted(video) {
  * state lives outside the motion gate so reduced-motion users still get it,
  * but inside the hover-capability gate (pointer-capability contract). */
 @media (hover: hover) {
-  :host(:hover) [part="card"] {
+  :host(:hover)
+    [part="card"]:not(
+      [data-variant="elevated"],
+      [data-variant="filled"],
+      [data-variant="outlined"],
+      [data-clickable]
+    ) {
     box-shadow: var(--ki-elevation-e2);
+  }
+
+  :host(:hover) [part="card"][data-clickable] {
+    box-shadow: var(--ki-card-hover-shadow);
+  }
+
+  :host(:hover) [part="card"][data-clickable]::before {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    background-color: var(--ki-card-hover-overlay);
+    content: "";
+    pointer-events: none;
   }
 }
 
@@ -139,5 +229,9 @@ slot[name="media"]::slotted(video) {
 @media (forced-colors: active) {
   [part="card"] {
     border: thin solid CanvasText;
+  }
+
+  [part="card"]:has([part="trigger"]:focus-visible) {
+    outline-color: Highlight;
   }
 }
