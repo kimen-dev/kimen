@@ -83,8 +83,11 @@ until a Kimen catalog with its own id and schema document exists.
 transport attaches, preferred version first: under the metadata key
 `a2uiRendererCapabilities`, `{ "1.0": { "supportedCatalogIds": [1.0 basic] } }`;
 under `a2uiClientCapabilities`, `{ "v0.9": { "supportedCatalogIds": [0.9.1
-basic ids] } }`. The A2UI MIME type is a transport concern: 1.0 names it
-`application/a2ui+json`, 0.9.1 `application/json+a2ui`.
+basic ids] } }`. The A2UI MIME type is a transport concern: 1.0 and 0.9.1
+both name it `application/a2ui+json` (0.9.1 replaced the legacy
+`application/json+a2ui`, which v0.8 and early v0.9 agents may still send).
+Over A2A the extension URIs are `https://a2ui.org/a2a-extension/a2ui/v1.0`
+and `https://a2ui.org/a2a-extension/a2ui/v0.9.1`.
 
 ## Component-type coverage
 
