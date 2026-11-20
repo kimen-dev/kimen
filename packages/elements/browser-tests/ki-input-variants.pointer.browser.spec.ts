@@ -19,7 +19,9 @@ afterEach(async () => {
   resetRoot();
 });
 
-it('S7 preserves touch density and native text size for both appearances', async ({ skip }) => {
+it('S7 preserves touch density and native text size on an outlined input and filled textarea', async ({
+  skip,
+}) => {
   const emulated = await browserCommands.emulateHoverCapability('none');
   if (!emulated && !navigator.userAgent.includes('Chrome/')) {
     skip('CDP touch emulation is available in Chromium');

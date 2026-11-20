@@ -1,6 +1,8 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
+  --_ki-field-appearance-ring-color: var(--ki-input-focus-ring-color);
+  --_ki-field-count-inset: var(--ki-input-label-padding-inline);
   --_ki-input-bg: var(--ki-input-rest-bg);
   --_ki-input-fg: var(--ki-input-rest-fg);
   --_ki-input-border: var(--ki-input-rest-border);
@@ -172,10 +174,16 @@
   );
   padding-inline: var(--_ki-input-padding-inline);
   background-color: var(--_ki-input-bg);
-  border-block-start-width: var(--ki-input-border-block-start-width);
-  border-block-end-width: var(--ki-input-border-block-end-width);
-  border-inline-start-width: var(--ki-input-border-inline-start-width);
-  border-inline-end-width: var(--ki-input-border-inline-end-width);
+  border-block-start-width: var(
+    --_ki-field-border-block-start,
+    var(--ki-input-border-block-start-width)
+  );
+  border-block-end-width: var(--_ki-field-border-block-end, var(--ki-input-border-block-end-width));
+  border-inline-start-width: var(
+    --_ki-field-border-inline,
+    var(--ki-input-border-inline-start-width)
+  );
+  border-inline-end-width: var(--_ki-field-border-inline, var(--ki-input-border-inline-end-width));
   border-color: var(--_ki-input-border);
   border-style: solid;
   border-radius: var(--_ki-input-radius);
@@ -207,7 +215,7 @@
   flex: 1 1 auto;
   padding-block: 0;
   padding-inline: var(--_ki-input-text-padding-inline);
-  color: var(--_ki-input-fg);
+  color: var(--_ki-field-appearance-fg, var(--_ki-input-fg));
   background-color: transparent;
   border: 0;
   outline: 0;
@@ -223,12 +231,15 @@
    (WCAG 2.5.8); the control paints nothing, so nothing visible moves. */
 :host([size="xs"]) [part="input"],
 :host([size="sm"]) [part="input"] {
-  margin-block: calc(-1 * var(--ki-input-border-block-start-width))
-    calc(-1 * var(--ki-input-border-block-end-width));
+  margin-block: calc(
+      -1 *
+      var(--_ki-field-border-block-start, var(--ki-input-border-block-start-width))
+    )
+    calc(-1 * var(--_ki-field-border-block-end, var(--ki-input-border-block-end-width)));
 }
 
 [part="input"]::placeholder {
-  color: var(--_ki-input-placeholder-fg);
+  color: var(--_ki-field-appearance-placeholder-fg, var(--_ki-input-placeholder-fg));
 }
 
 /* Spec 048: under a coarse primary pointer the text a person types is at

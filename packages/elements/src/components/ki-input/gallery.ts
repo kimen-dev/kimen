@@ -12,5 +12,11 @@ export default {
     row(
       '<ki-input label="Amount"><span slot="start">EUR</span><span slot="end">.00</span></ki-input>',
     ),
+    row(
+      '<ki-input label="Workspace name" appearance="outlined" value="Kimen design" maxlength="30" show-count help-text="Shown to members"></ki-input>',
+    ),
+    row(
+      '<ki-input label="Price" appearance="filled" value="49.00"><span slot="start">EUR</span><span slot="end">/ month</span></ki-input>',
+    ),
   ].join(''),
 } satisfies VisualGallery;

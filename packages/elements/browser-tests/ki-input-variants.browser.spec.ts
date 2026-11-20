@@ -35,7 +35,9 @@ const themesAndSchemes = THEMES.flatMap((theme) =>
 beforeAll(installKimen);
 afterAll(uninstallKimen);
 
-beforeEach(() => { themeDocument('onmars', 'light'); });
+beforeEach(() => {
+  themeDocument('onmars', 'light');
+});
 
 afterEach(async () => {
   await parkPointer();
@@ -102,6 +104,19 @@ it.for(tags)('S2 exposes an opt-in count at the logical end on %s, including RTL
   await expect.element(page.getByText('12 / 30')).toBeVisible();
   host.showCount = false;
   await expect.element(page.getByText('12 / 30')).not.toBeInTheDocument();
+});
+
+it.for(tags)('S2 shows an empty count after removing the value attribute on %s', async (tag) => {
+  const fixture = await mount(`
+    <${tag} label="Summary" value="Kimen" maxlength="10" show-count></${tag}>
+  `);
+  const host = fixture.querySelector(tag);
+  if (!host) throw new Error('Missing field');
+  const textbox = page.getByRole('textbox', { name: 'Summary' });
+  await expect.element(textbox).toHaveAccessibleDescription('5 / 10');
+  host.removeAttribute('value');
+  await expect.element(textbox).toHaveValue('');
+  await expect.element(textbox).toHaveAccessibleDescription('0 / 10');
 });
 
 it('S3 tabs to the native input and keeps its focus ring at the typing cap', async () => {
@@ -174,7 +189,7 @@ it('S5 keeps the complete textarea edit, blocks submission and clears the error 
   await userEvent.keyboard('ABCD');
   await expect.element(textbox).toHaveValue('ABCD');
   expect(host.validity.tooLong).toBe(true);
-  expect(getComputedStyle(count).color).not.toBe(normalInk);
+  await expect.poll(() => getComputedStyle(count).color).not.toBe(normalInk);
   form.requestSubmit();
   expect(submitted).toHaveLength(0);
 

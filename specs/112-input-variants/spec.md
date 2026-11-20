@@ -37,6 +37,7 @@ Issue #348 is in the branch base at `3f8c864`.
   shared input tokens across the two elements. The count uses the semantic
   supporting-text ink so it responds to contrast-more. Filled fields add a
   thicker focus-coloured indicator and retain the same outline as outlined fields.
+  The Material 3 filled radius follows that theme's extra-small field shape.
 
 ## Gherkin
 

@@ -16,6 +16,8 @@ const meta = {
     placeholder: '',
     name: 'email',
     value: '',
+    appearance: 'default',
+    showCount: false,
     required: false,
     readonly: false,
     disabled: false,
@@ -88,4 +90,25 @@ export const Focused: Story = {
     await new Promise((resolve) => requestAnimationFrame(resolve));
     canvasElement.querySelector('ki-input')?.focus();
   },
+};
+
+/** Outlined and filled fields share count, label and focus behavior. */
+export const Appearances: Story = {
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '0.75rem', inlineSize: '18rem' }}>
+      {(['outlined', 'filled'] as const).map((appearance) => (
+        <ki-input
+          {...args}
+          appearance={appearance}
+          type="text"
+          label="Workspace name"
+          value="Kimen design"
+          minlength={3}
+          maxlength={30}
+          showCount
+          helpText="Shown to members"
+        />
+      ))}
+    </div>
+  ),
 };
