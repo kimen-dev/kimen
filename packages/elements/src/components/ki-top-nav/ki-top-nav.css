@@ -49,7 +49,7 @@
 }
 
 :host([sticky]) .bar {
-  border-block-end: var(--ki-layout-surface-border-width) solid var(--ki-top-nav-border);
+  border-block-end: var(--ki-layout-border-width) solid var(--ki-top-nav-border);
 }
 
 .header {
@@ -119,8 +119,8 @@ nav {
 }
 
 .links ::slotted(a[href][aria-current="page"]) {
-  padding-block-start: var(--ki-layout-selection-indicator-width);
-  border-block-end: var(--ki-layout-selection-indicator-width) solid var(--ki-top-nav-indicator);
+  padding-block-start: var(--ki-layout-indicator-width);
+  border-block-end: var(--ki-layout-indicator-width) solid var(--ki-top-nav-indicator);
   color: var(--ki-top-nav-item-current-fg);
 }
 
@@ -319,7 +319,7 @@ nav {
   overflow: auto;
   margin: 0;
   padding: var(--ki-layout-spacing-xs);
-  border: var(--ki-layout-surface-border-width) solid var(--ki-top-nav-border);
+  border: var(--ki-layout-border-width) solid var(--ki-top-nav-border);
   border-radius: var(--ki-top-nav-menu-radius);
   background-color: var(--ki-top-nav-bg);
   background-image: var(--ki-top-nav-bg-image);

@@ -4274,12 +4274,12 @@ CSS custom properties:
 - `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
 - `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
 - `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-selection-indicator-width`: Thickness of the line identifying a selected navigation destination.
+- `--ki-layout-border-width`: Hairline edge on a structural surface.
+- `--ki-layout-indicator-width`: Thickness of the line identifying a selected navigation destination.
 - `--ki-layout-spacing-12xl`: The 12xl spacing step for a stack or grid gap.
 - `--ki-layout-spacing-7xl`: The 7xl spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-layout-surface-border-width`: Hairline edge on a structural surface.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.

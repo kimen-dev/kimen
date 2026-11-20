@@ -2,7 +2,7 @@
   "ki": {
     "top-nav": {
       "menu-radius": {
-        "$value": "{ki.radius.component.md}",
+        "$value": "{ki.layout.menu-radius-sm}",
         "$description": "Material 3 corner radius for the menu and trigger."
       }
     }

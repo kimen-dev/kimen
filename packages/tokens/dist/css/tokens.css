@@ -983,8 +983,10 @@
   --ki-activity-size-dot:var(--ki-space-sm);
   --ki-layout-app-bar-lg-height:var(--ki-size-app-bar-lg);
   --ki-layout-app-bar-xl-height:var(--ki-size-app-bar-xl);
-  --ki-layout-surface-border-width:var(--ki-size-border-hairline);
-  --ki-layout-selection-indicator-width:var(--ki-size-border-thin);
+  --ki-layout-menu-radius:var(--ki-radius-component-lg);
+  --ki-layout-menu-radius-sm:var(--ki-radius-component-md);
+  --ki-layout-border-width:var(--ki-size-border-hairline);
+  --ki-layout-indicator-width:var(--ki-size-border-thin);
   --ki-layout-spacing-zero:var(--ki-space-zero);
   --ki-layout-spacing-xxs:var(--ki-space-xxs);
   --ki-layout-spacing-xs:var(--ki-space-xs);
@@ -2290,7 +2292,7 @@
   --ki-top-nav-item-hover-bg:var(--ki-surface-s2);
   --ki-top-nav-item-hover-fg:var(--ki-text-high-em);
   --ki-top-nav-indicator:var(--ki-surface-primary-med-em);
-  --ki-top-nav-menu-radius:var(--ki-radius-component-lg);
+  --ki-top-nav-menu-radius:var(--ki-layout-menu-radius);
   --ki-app-bar-height:var(--ki-layout-spacing-18xl);
   --ki-app-bar-lg-height:var(--ki-layout-app-bar-lg-height);
   --ki-app-bar-xl-height:var(--ki-layout-app-bar-xl-height);

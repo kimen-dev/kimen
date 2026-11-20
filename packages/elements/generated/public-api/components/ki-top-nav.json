@@ -251,7 +251,15 @@
         "required": false,
         "type": null
       },
-      "--ki-layout-selection-indicator-width": {
+      "--ki-layout-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hairline edge on a structural surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-indicator-width": {
         "default": null,
         "deprecatedSince": null,
         "description": "Thickness of the line identifying a selected navigation destination.",
@@ -287,14 +295,6 @@
         "default": null,
         "deprecatedSince": null,
         "description": "The xs spacing step for a stack or grid gap.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-layout-surface-border-width": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "Hairline edge on a structural surface.",
         "replacement": null,
         "required": false,
         "type": null

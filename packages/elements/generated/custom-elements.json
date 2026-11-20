@@ -12859,7 +12859,11 @@
               "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
             },
             {
-              "name": "--ki-layout-selection-indicator-width",
+              "name": "--ki-layout-border-width",
+              "description": "Hairline edge on a structural surface."
+            },
+            {
+              "name": "--ki-layout-indicator-width",
               "description": "Thickness of the line identifying a selected navigation destination."
             },
             {
@@ -12877,10 +12881,6 @@
             {
               "name": "--ki-layout-spacing-xs",
               "description": "The xs spacing step for a stack or grid gap."
-            },
-            {
-              "name": "--ki-layout-surface-border-width",
-              "description": "Hairline edge on a structural surface."
             },
             {
               "name": "--ki-motion-duration-fast",

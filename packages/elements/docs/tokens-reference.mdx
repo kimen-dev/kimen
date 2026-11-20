@@ -16,7 +16,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 404 semantic
+Every custom property in the public styling contract: 406 semantic
 and 1306 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
@@ -153,9 +153,12 @@ every component at once.
 | --- | --- | --- |
 | `--ki-layout-app-bar-lg-height` | `7rem` | Height of a large two-row screen bar. |
 | `--ki-layout-app-bar-xl-height` | `9.5rem` | Height of an extra-large two-row screen bar. |
+| `--ki-layout-border-width` | `1px` | Hairline edge on a structural surface. |
 | `--ki-layout-grid-fixed-breakpoint` | `30rem` | Minimum available inline size for a fixed grid to use multiple tracks. |
 | `--ki-layout-grid-min` | `15rem` | Default minimum inline size of an automatic grid track. |
-| `--ki-layout-selection-indicator-width` | `2px` | Thickness of the line identifying a selected navigation destination. |
+| `--ki-layout-indicator-width` | `2px` | Thickness of the line identifying a selected navigation destination. |
+| `--ki-layout-menu-radius` | `12px` | Corner radius of a floating navigation menu. |
+| `--ki-layout-menu-radius-sm` | `10px` | Smaller corner radius of a floating navigation menu. |
 | `--ki-layout-spacing-10xl` | `2rem` | The 10xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-11xl` | `2.25rem` | The 11xl spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-12xl` | `2.5rem` | The 12xl spacing step for a stack or grid gap. |
@@ -188,7 +191,6 @@ every component at once.
 | `--ki-layout-spacing-xs` | `0.25rem` | The xs spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-xxs` | `0.125rem` | The xxs spacing step for a stack or grid gap. |
 | `--ki-layout-spacing-zero` | `0rem` | The zero spacing step for a stack or grid gap. |
-| `--ki-layout-surface-border-width` | `1px` | Hairline edge on a structural surface. |
 
 ### `ki.motion`
 

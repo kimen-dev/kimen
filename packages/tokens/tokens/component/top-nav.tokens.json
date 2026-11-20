@@ -72,7 +72,7 @@
         "$description": "Bar marking the current primary destination."
       },
       "menu-radius": {
-        "$value": "{ki.radius.component.lg}",
+        "$value": "{ki.layout.menu-radius}",
         "$description": "Menu and trigger corner radius."
       }
     },
