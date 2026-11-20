@@ -7931,12 +7931,55 @@
           "whenNotToUse": "Collect a prompt, announce a page alert, or execute a tool.",
           "attributes": [
             {
+              "name": "actions-label",
+              "fieldName": "actionsLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name that opts this assistant reply into the message actions toolbar."
+            },
+            {
               "name": "author",
               "fieldName": "author",
               "type": {
                 "text": "string | undefined"
               },
               "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
+            },
+            {
+              "name": "branch-count",
+              "fieldName": "branchCount",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "1",
+              "description": "Number of reply alternatives. The controls appear when there are at least two."
+            },
+            {
+              "name": "branch-index",
+              "fieldName": "branchIndex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "1",
+              "description": "One-based index of the displayed reply. Update it after accepting a branch request."
+            },
+            {
+              "name": "branch-status-label",
+              "fieldName": "branchStatusLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Response {index} of {count}'",
+              "description": "Localized branch status template. Use {index} and {count} for the reply position."
+            },
+            {
+              "name": "feedback",
+              "fieldName": "feedback",
+              "type": {
+                "text": "\"bad\" | \"good\" | undefined"
+              },
+              "description": "Current rating for this reply. Assign the saved rating when displaying a\ndifferent branch. Select good or bad with the corresponding action control."
             },
             {
               "name": "icon-name",
@@ -7955,6 +7998,24 @@
               "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
             },
             {
+              "name": "next-branch-label",
+              "fieldName": "nextBranchLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Next response'",
+              "description": "Accessible name for the next branch control."
+            },
+            {
+              "name": "previous-branch-label",
+              "fieldName": "previousBranchLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Previous response'",
+              "description": "Accessible name for the previous branch control."
+            },
+            {
               "name": "streaming",
               "fieldName": "streaming",
               "type": {
@@ -7967,6 +8028,17 @@
           "members": [
             {
               "kind": "field",
+              "name": "actionsLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name that opts this assistant reply into the message actions toolbar.",
+              "attribute": "actions-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
               "name": "author",
               "privacy": "public",
               "type": {
@@ -7975,6 +8047,53 @@
               "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name.",
               "attribute": "author",
               "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "branchCount",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "1",
+              "description": "Number of reply alternatives. The controls appear when there are at least two.",
+              "attribute": "branch-count",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "branchIndex",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "1",
+              "description": "One-based index of the displayed reply. Update it after accepting a branch request.",
+              "attribute": "branch-index",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "branchStatusLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Response {index} of {count}'",
+              "description": "Localized branch status template. Use {index} and {count} for the reply position.",
+              "attribute": "branch-status-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "feedback",
+              "privacy": "public",
+              "type": {
+                "text": "\"bad\" | \"good\" | undefined"
+              },
+              "description": "Current rating for this reply. Assign the saved rating when displaying a\ndifferent branch. Select good or bad with the corresponding action control.",
+              "attribute": "feedback",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -8000,6 +8119,30 @@
             },
             {
               "kind": "field",
+              "name": "nextBranchLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Next response'",
+              "description": "Accessible name for the next branch control.",
+              "attribute": "next-branch-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "previousBranchLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Previous response'",
+              "description": "Accessible name for the previous branch control.",
+              "attribute": "previous-branch-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
               "name": "streaming",
               "privacy": "public",
               "type": {
@@ -8011,7 +8154,29 @@
               "reflects": true
             }
           ],
-          "events": [],
+          "events": [
+            {
+              "name": "ki-branch-change",
+              "type": {
+                "text": "CustomEvent<{ index: number }>"
+              },
+              "description": "Requests the alternative reply at the one-based index in the event detail."
+            },
+            {
+              "name": "ki-feedback",
+              "type": {
+                "text": "CustomEvent<{ value: KiMessageFeedback }>"
+              },
+              "description": "Reports the selected rating. Persist it or offer optional feedback in the app."
+            },
+            {
+              "name": "ki-regenerate",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Requests a new reply when the authored Regenerate action is activated."
+            }
+          ],
           "slots": [
             {
               "name": "",
@@ -8019,7 +8184,7 @@
             },
             {
               "name": "actions",
-              "description": "Follow-up controls supplied by the consumer after the content."
+              "description": "Follow-up controls supplied by the consumer after the content.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls."
             },
             {
               "name": "avatar",
@@ -8036,6 +8201,10 @@
               "description": "The leading assistant avatar container."
             },
             {
+              "name": "branches",
+              "description": "The previous and next controls and the visible branch position."
+            },
+            {
               "name": "caret",
               "description": "The decorative marker displayed while a message is streaming."
             },
@@ -8050,8 +8219,72 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-button-ghost-neutral-disabled-bg",
+              "description": "color used by the button component for ghost neutral disabled background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-border",
+              "description": "color used by the button component for ghost neutral disabled border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-fg",
+              "description": "color used by the button component for ghost neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-bg",
+              "description": "color used by the button component for ghost neutral hover background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-border",
+              "description": "color used by the button component for ghost neutral hover border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-fg",
+              "description": "color used by the button component for ghost neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-bg",
+              "description": "color used by the button component for ghost neutral rest background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-border",
+              "description": "color used by the button component for ghost neutral rest border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-fg",
+              "description": "color used by the button component for ghost neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-xs-radius",
+              "description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
+            },
+            {
               "name": "--ki-control-border-width",
               "description": "Stroke width of the boundary of a compact control."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-icon-button-xs-icon-size",
+              "description": "dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon)."
+            },
+            {
+              "name": "--ki-icon-button-xs-size",
+              "description": "dimension used by the icon button component for xs box (24px square, Figma Space/7xl)."
             },
             {
               "name": "--ki-layout-conversation-avatar-radius",

@@ -5832,7 +5832,7 @@
         },
         {
           "name": "slot",
-          "text": "actions - Follow-up controls supplied by the consumer after the content."
+          "text": "actions - Follow-up controls supplied by the consumer after the content.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls."
         },
         {
           "name": "part",
@@ -5852,13 +5852,43 @@
         },
         {
           "name": "part",
+          "text": "branches - The previous and next controls and the visible branch position."
+        },
+        {
+          "name": "part",
           "text": "caret - The decorative marker displayed while a message is streaming."
         }
       ],
       "usage": {
-        "examples": "# ki-message examples\n\n## User and event messages\n\n```html\n<ki-message message-role=\"user\">Can I export my settings?</ki-message>\n<ki-message message-role=\"event\" icon-name=\"search\">Found the export guide</ki-message>\n```\n\n## Assistant reply with an avatar and action\n\nThe `author` prop names the article. Put formatted content in the default\nslot and application controls in `actions`.\n\n```html\n<ki-message message-role=\"assistant\" author=\"Ava said\">\n  <ki-avatar slot=\"avatar\" size=\"xs\" initials=\"AV\"></ki-avatar>\n  <strong>Yes.</strong> Choose <code>JSON</code> from the export menu.\n  <details slot=\"actions\">\n    <summary>View source</summary>\n    Settings export guide\n  </details>\n</ki-message>\n```\n\n## Streaming reply\n\nAdd `streaming` while the content is arriving, then remove it when the\ncomplete reply is available. Use a registered Markdown component in the\ndefault slot when your application displays formatted Markdown.\n\n```html\n<ki-message message-role=\"assistant\" streaming>Choose the export format</ki-message>\n```\n"
+        "examples": "# ki-message examples\n\n## User and event messages\n\n```html\n<ki-message message-role=\"user\">Can I export my settings?</ki-message>\n<ki-message message-role=\"event\" icon-name=\"search\">Found the export guide</ki-message>\n```\n\n## Assistant reply with an avatar and action\n\nThe `author` prop names the article. Put formatted content in the default\nslot and application controls in `actions`.\n\n```html\n<ki-message message-role=\"assistant\" author=\"Ava said\">\n  <ki-avatar slot=\"avatar\" size=\"xs\" initials=\"AV\"></ki-avatar>\n  <strong>Yes.</strong> Choose <code>JSON</code> from the export menu.\n  <details slot=\"actions\">\n    <summary>View source</summary>\n    Settings export guide\n  </details>\n</ki-message>\n```\n\n## Streaming reply\n\nAdd `streaming` while the content is arriving, then remove it when the\ncomplete reply is available. Use a registered Markdown component in the\ndefault slot when your application displays formatted Markdown.\n\n```html\n<ki-message message-role=\"assistant\" streaming>Choose the export format</ki-message>\n```\n\n## Alternative replies\n\n```html\n<ki-message branch-index=\"2\" branch-count=\"3\">Choose JSON for a readable copy.</ki-message>\n```\n\nHandle `ki-branch-change` to show the requested alternative. Set\n`branchIndex` to `event.detail.index` when replacing the reply content.\nSet `actions-label` when the reply supplies a toolbar. The Conversation\nguide includes the complete Message actions recipe.\n"
       },
       "props": [
+        {
+          "name": "actionsLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "actions-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name that opts this assistant reply into the message actions toolbar.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "author",
           "type": "string | undefined",
@@ -5874,6 +5904,139 @@
           "docsTags": [],
           "values": [
             {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "branchCount",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "branch-count",
+          "reflectToAttr": false,
+          "docs": "Number of reply alternatives. The controls appear when there are at least two.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "branchIndex",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "branch-index",
+          "reflectToAttr": false,
+          "docs": "One-based index of the displayed reply. Update it after accepting a branch request.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "branchStatusLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "branch-status-label",
+          "reflectToAttr": false,
+          "docs": "Localized branch status template. Use {index} and {count} for the reply position.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Response {index} of {count}'"
+            }
+          ],
+          "default": "'Response {index} of {count}'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "feedback",
+          "type": "\"bad\" | \"good\" | undefined",
+          "complexType": {
+            "original": "KiMessageFeedback",
+            "resolved": "\"bad\" | \"good\" | undefined",
+            "references": {
+              "KiMessageFeedback": {
+                "location": "local",
+                "path": "src/components/ki-message/ki-message.tsx",
+                "id": "src/components/ki-message/ki-message.tsx::KiMessageFeedback"
+              }
+            }
+          },
+          "mutable": true,
+          "attr": "feedback",
+          "reflectToAttr": true,
+          "docs": "Current rating for this reply. Assign the saved rating when displaying a\ndifferent branch. Select good or bad with the corresponding action control.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "bad",
+              "type": "string"
+            },
+            {
+              "value": "good",
               "type": "string"
             },
             {
@@ -5958,6 +6121,70 @@
           "setter": false
         },
         {
+          "name": "nextBranchLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "next-branch-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the next branch control.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Next response'"
+            }
+          ],
+          "default": "'Next response'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "previousBranchLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "previous-branch-label",
+          "reflectToAttr": false,
+          "docs": "Accessible name for the previous branch control.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Previous response'"
+            }
+          ],
+          "default": "'Previous response'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "streaming",
           "type": "boolean",
           "complexType": {
@@ -5988,7 +6215,56 @@
         }
       ],
       "methods": [],
-      "events": [],
+      "events": [
+        {
+          "event": "ki-branch-change",
+          "detail": "{ index: number; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ index: number }",
+            "resolved": "{ index: number; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Requests the alternative reply at the one-based index in the event detail.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-feedback",
+          "detail": "{ value: KiMessageFeedback; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: KiMessageFeedback }",
+            "resolved": "{ value: KiMessageFeedback; }",
+            "references": {
+              "KiMessageFeedback": {
+                "location": "local",
+                "path": "src/components/ki-message/ki-message.tsx",
+                "id": "src/components/ki-message/ki-message.tsx::KiMessageFeedback"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Reports the selected rating. Persist it or offer optional feedback in the app.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-regenerate",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Requests a new reply when the authored Regenerate action is activated.",
+          "docsTags": []
+        }
+      ],
       "listeners": [],
       "styles": [],
       "slots": [
@@ -5998,7 +6274,7 @@
         },
         {
           "name": "actions",
-          "docs": "Follow-up controls supplied by the consumer after the content."
+          "docs": "Follow-up controls supplied by the consumer after the content.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls."
         },
         {
           "name": "avatar",
@@ -6013,6 +6289,10 @@
         {
           "name": "avatar",
           "docs": "The leading assistant avatar container."
+        },
+        {
+          "name": "branches",
+          "docs": "The previous and next controls and the visible branch position."
         },
         {
           "name": "caret",
@@ -10734,6 +11014,11 @@
     },
     "src/components/ki-message/ki-message.tsx::KiMessageRole": {
       "declaration": "export type KiMessageRole = 'user' | 'assistant' | 'event';",
+      "docstring": "",
+      "path": "src/components/ki-message/ki-message.tsx"
+    },
+    "src/components/ki-message/ki-message.tsx::KiMessageFeedback": {
+      "declaration": "export type KiMessageFeedback = 'good' | 'bad';",
       "docstring": "",
       "path": "src/components/ki-message/ki-message.tsx"
     },

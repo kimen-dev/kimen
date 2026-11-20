@@ -25,7 +25,7 @@ import { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 import { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 import { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 import { KiListItemSize } from "./components/ki-list-item/ki-list-item";
-import { KiMessageRole } from "./components/ki-message/ki-message";
+import { KiMessageFeedback, KiMessageRole } from "./components/ki-message/ki-message";
 import { KiNoteTone } from "./components/ki-note/ki-note.icons";
 import { KiNoteSize } from "./components/ki-note/ki-note";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -62,7 +62,7 @@ export { KiImageFit, KiImageLoading, KiImageRadius, KiImageRatio } from "./compo
 export { KiInputSize, KiInputType } from "./components/ki-input/ki-input";
 export { KiLinkUnderline, KiLinkVariant } from "./components/ki-link/ki-link";
 export { KiListItemSize } from "./components/ki-list-item/ki-list-item";
-export { KiMessageRole } from "./components/ki-message/ki-message";
+export { KiMessageFeedback, KiMessageRole } from "./components/ki-message/ki-message";
 export { KiNoteTone } from "./components/ki-note/ki-note.icons";
 export { KiNoteSize } from "./components/ki-note/ki-note";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
@@ -930,9 +930,32 @@ export namespace Components {
      */
     interface KiMessage {
         /**
+          * Accessible name that opts this assistant reply into the message actions toolbar.
+         */
+        "actionsLabel"?: string;
+        /**
           * Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
          */
         "author"?: string;
+        /**
+          * Number of reply alternatives. The controls appear when there are at least two.
+          * @default 1
+         */
+        "branchCount"?: number;
+        /**
+          * One-based index of the displayed reply. Update it after accepting a branch request.
+          * @default 1
+         */
+        "branchIndex"?: number;
+        /**
+          * Localized branch status template. Use {index} and {count} for the reply position.
+          * @default 'Response {index} of {count}'
+         */
+        "branchStatusLabel"?: string;
+        /**
+          * Current rating for this reply. Assign the saved rating when displaying a different branch. Select good or bad with the corresponding action control.
+         */
+        "feedback"?: KiMessageFeedback;
         /**
           * Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
          */
@@ -942,6 +965,16 @@ export namespace Components {
           * @default 'assistant'
          */
         "messageRole"?: KiMessageRole;
+        /**
+          * Accessible name for the next branch control.
+          * @default 'Next response'
+         */
+        "nextBranchLabel"?: string;
+        /**
+          * Accessible name for the previous branch control.
+          * @default 'Previous response'
+         */
+        "previousBranchLabel"?: string;
         /**
           * Show the caret and mark the article busy until this message is complete.
           * @default false
@@ -1734,6 +1767,10 @@ export interface KiImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiImageElement;
 }
+export interface KiMessageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiMessageElement;
+}
 export interface KiSegmentedControlCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiSegmentedControlElement;
@@ -2210,6 +2247,11 @@ declare global {
         prototype: HTMLKiListItemElement;
         new (): HTMLKiListItemElement;
     };
+    interface HTMLKiMessageElementEventMap {
+        "ki-branch-change": { index: number };
+        "ki-feedback": { value: KiMessageFeedback };
+        "ki-regenerate": void;
+    }
     /**
      * A named chat article styled as a person’s message, assistant reply or event.
      * @whenToUse Display a transcript entry inside ki-conversation. Pass
@@ -2217,6 +2259,14 @@ declare global {
      * @whenNotToUse Collect a prompt, announce a page alert, or execute a tool.
      */
     interface HTMLKiMessageElement extends Components.KiMessage, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiMessageElementEventMap>(type: K, listener: (this: HTMLKiMessageElement, ev: KiMessageCustomEvent<HTMLKiMessageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiMessageElementEventMap>(type: K, listener: (this: HTMLKiMessageElement, ev: KiMessageCustomEvent<HTMLKiMessageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiMessageElement: {
         prototype: HTMLKiMessageElement;
@@ -3607,9 +3657,32 @@ declare namespace LocalJSX {
      */
     interface KiMessage {
         /**
+          * Accessible name that opts this assistant reply into the message actions toolbar.
+         */
+        "actionsLabel"?: string;
+        /**
           * Full accessible name for this article, such as "Ava said". Override it to identify the speaker or localize the default role-specific name.
          */
         "author"?: string;
+        /**
+          * Number of reply alternatives. The controls appear when there are at least two.
+          * @default 1
+         */
+        "branchCount"?: number;
+        /**
+          * One-based index of the displayed reply. Update it after accepting a branch request.
+          * @default 1
+         */
+        "branchIndex"?: number;
+        /**
+          * Localized branch status template. Use {index} and {count} for the reply position.
+          * @default 'Response {index} of {count}'
+         */
+        "branchStatusLabel"?: string;
+        /**
+          * Current rating for this reply. Assign the saved rating when displaying a different branch. Select good or bad with the corresponding action control.
+         */
+        "feedback"?: KiMessageFeedback;
         /**
           * Decorative event glyph from the ki-icon registry. Search is available directly. Import other per-icon modules before setting their names.
          */
@@ -3619,6 +3692,28 @@ declare namespace LocalJSX {
           * @default 'assistant'
          */
         "messageRole"?: KiMessageRole;
+        /**
+          * Accessible name for the next branch control.
+          * @default 'Next response'
+         */
+        "nextBranchLabel"?: string;
+        /**
+          * Requests the alternative reply at the one-based index in the event detail.
+         */
+        "onKi-branch-change"?: (event: KiMessageCustomEvent<{ index: number }>) => void;
+        /**
+          * Reports the selected rating. Persist it or offer optional feedback in the app.
+         */
+        "onKi-feedback"?: (event: KiMessageCustomEvent<{ value: KiMessageFeedback }>) => void;
+        /**
+          * Requests a new reply when the authored Regenerate action is activated.
+         */
+        "onKi-regenerate"?: (event: KiMessageCustomEvent<void>) => void;
+        /**
+          * Accessible name for the previous branch control.
+          * @default 'Previous response'
+         */
+        "previousBranchLabel"?: string;
         /**
           * Show the caret and mark the article busy until this message is complete.
           * @default false
@@ -4569,6 +4664,13 @@ declare namespace LocalJSX {
         "streaming": boolean;
         "author": string;
         "iconName": string;
+        "actionsLabel": string;
+        "feedback": KiMessageFeedback;
+        "branchIndex": number;
+        "branchCount": number;
+        "previousBranchLabel": string;
+        "nextBranchLabel": string;
+        "branchStatusLabel": string;
     }
     interface KiNoteAttributes {
         "tone": KiNoteTone;

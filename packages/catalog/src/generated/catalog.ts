@@ -1197,11 +1197,42 @@ export const catalogData = {
     },
     "ki-message": {
       "description": "A named chat article styled as a person’s message, assistant reply or event.",
-      "events": {},
+      "events": {
+        "ki-branch-change": "Requests the alternative reply at the one-based index in the event detail.",
+        "ki-feedback": "Reports the selected rating. Persist it or offer optional feedback in the app.",
+        "ki-regenerate": "Requests a new reply when the authored Regenerate action is activated."
+      },
       "props": {
+        "actions-label": {
+          "type": "string",
+          "description": "Accessible name that opts this assistant reply into the message actions toolbar."
+        },
         "author": {
           "type": "string",
           "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
+        },
+        "branch-count": {
+          "type": "number",
+          "description": "Number of reply alternatives. The controls appear when there are at least two.",
+          "default": 1
+        },
+        "branch-index": {
+          "type": "number",
+          "description": "One-based index of the displayed reply. Update it after accepting a branch request.",
+          "default": 1
+        },
+        "branch-status-label": {
+          "type": "string",
+          "description": "Localized branch status template. Use {index} and {count} for the reply position.",
+          "default": "Response {index} of {count}"
+        },
+        "feedback": {
+          "type": "enum",
+          "values": [
+            "bad",
+            "good"
+          ],
+          "description": "Current rating for this reply. Assign the saved rating when displaying a\ndifferent branch. Select good or bad with the corresponding action control."
         },
         "icon-name": {
           "type": "string",
@@ -1216,6 +1247,16 @@ export const catalogData = {
           ],
           "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
         },
+        "next-branch-label": {
+          "type": "string",
+          "description": "Accessible name for the next branch control.",
+          "default": "Next response"
+        },
+        "previous-branch-label": {
+          "type": "string",
+          "description": "Accessible name for the previous branch control.",
+          "default": "Previous response"
+        },
         "streaming": {
           "type": "boolean",
           "description": "Show the caret and mark the article busy until this message is complete.",
@@ -1224,7 +1265,7 @@ export const catalogData = {
       },
       "slots": {
         "": "Message content, including text or formatted elements.",
-        "actions": "Follow-up controls supplied by the consumer after the content.",
+        "actions": "Follow-up controls supplied by the consumer after the content.\nWith actions-label, use direct buttons or buttons inside a layout-only\nki-button-group. Mark Regenerate and rating buttons with data-message-action.\nThe toolbar manages their tab order and includes any reply branch controls.",
         "avatar": "Optional avatar replacing the assistant’s decorative default."
       },
       "tag": "ki-message",

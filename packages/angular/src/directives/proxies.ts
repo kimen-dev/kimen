@@ -637,14 +637,14 @@ export declare interface KiListItem extends Components.KiListItem {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiMessage,
-  inputs: ['author', 'iconName', 'messageRole', 'streaming']
+  inputs: ['actionsLabel', 'author', 'branchCount', 'branchIndex', 'branchStatusLabel', 'feedback', 'iconName', 'messageRole', 'nextBranchLabel', 'previousBranchLabel', 'streaming']
 })
 @Component({
   selector: 'ki-message',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['author', 'iconName', 'messageRole', 'streaming'],
+  inputs: ['actionsLabel', 'author', 'branchCount', 'branchIndex', 'branchStatusLabel', 'feedback', 'iconName', 'messageRole', 'nextBranchLabel', 'previousBranchLabel', 'streaming'],
 })
 export class KiMessage {
   protected el: HTMLKiMessageElement;
@@ -655,7 +655,18 @@ export class KiMessage {
 }
 
 
-export declare interface KiMessage extends Components.KiMessage {}
+
+export declare interface KiMessage extends Components.KiMessage {
+  /**
+   * Requests the alternative reply at the one-based index in the event detail.
+   */
+  /**
+   * Reports the selected rating. Persist it or offer optional feedback in the app.
+   */
+  /**
+   * Requests a new reply when the authored Regenerate action is activated.
+   */
+}
 
 
 @ProxyCmp({
