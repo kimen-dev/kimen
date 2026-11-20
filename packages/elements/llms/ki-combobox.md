@@ -127,7 +127,7 @@ None.
 - `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap.
 - `--ki-outline-danger-high-em`: semantic color for outline danger high em.
-- `--ki-outline-hairline-width`: Resting hairline for control and floating surface boundaries.
+- `--ki-outline-hairline-width`: Width of a hairline component surface edge.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).

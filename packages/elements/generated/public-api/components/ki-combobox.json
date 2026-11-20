@@ -398,7 +398,7 @@
       "--ki-outline-hairline-width": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Resting hairline for control and floating surface boundaries.",
+        "description": "Width of a hairline component surface edge.",
         "replacement": null,
         "required": false,
         "type": null

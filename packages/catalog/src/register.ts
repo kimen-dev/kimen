@@ -84,7 +84,7 @@ const propConstraintSchema = z.strictObject({
   maximum: z.number().optional(),
   minimum: z.number().optional(),
   required: z.boolean().optional(),
-  type: z.enum(['boolean', 'enum', 'number', 'string']),
+  type: z.enum(['boolean', 'enum', 'number', 'number-or-string', 'string']),
   values: z.array(z.string()).optional(),
 });
 
@@ -255,7 +255,9 @@ function checkConstraint(
       constraint.type === 'enum'
         ? typeof constraint.default === 'string' &&
           (constraint.values ?? []).includes(constraint.default)
-        : typeof constraint.default === constraint.type && inBounds;
+        : constraint.type === 'number-or-string'
+          ? typeof constraint.default === 'number' || typeof constraint.default === 'string'
+          : typeof constraint.default === constraint.type && inBounds;
     if (!satisfies) {
       issues.push({
         code: 'malformed-constraint',

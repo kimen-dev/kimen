@@ -114,6 +114,17 @@ test('S12 the icon gallery requires both themes in both schemes', () => {
   ]);
 });
 
+test('the code block gallery requires both themes in both schemes', () => {
+  assert.deepEqual(expectedLinuxBaselines('ki-code-block.visual.browser.spec.ts'), [
+    'ki-code-block-onmars-light-gallery-chromium-linux.png',
+    'ki-code-block-material3-light-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-code-block.visual.dark.browser.spec.ts'), [
+    'ki-code-block-onmars-dark-gallery-chromium-linux.png',
+    'ki-code-block-material3-dark-gallery-chromium-linux.png',
+  ]);
+});
+
 test('a deleted linux baseline is detected by the armed audit', () => {
   const specs = ['ki-button.visual.browser.spec.ts', 'ki-button.visual.dark.browser.spec.ts'];
   const complete = new Map([
