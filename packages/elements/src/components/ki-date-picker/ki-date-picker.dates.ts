@@ -37,12 +37,12 @@ export function rangeValue(start: string, end: string): string {
 }
 
 export function normalizeValue(
-  value: string,
+  value: string | null,
   mode: DatePickerMode,
   min?: string,
   max?: string,
 ): string | undefined {
-  if (value === '') return '';
+  if (!value) return '';
   const dates = value.split('/');
   if (dates.length !== (mode === 'range' ? 2 : 1)) return undefined;
   const start = isoDate(dates[0]);
@@ -117,10 +117,6 @@ export function formatValue(
     .join(rangeSeparator);
 }
 
-function escapePattern(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
-}
-
 export function parseEntry(
   entry: string,
   mode: DatePickerMode,
@@ -132,24 +128,28 @@ export function parseEntry(
   const iso = normalizeValue(text, mode, min, max);
   if (iso !== undefined) return iso;
 
-  const separators = entryFormat(locale)
-    .formatToParts(sample)
-    .map(({ type, value }) =>
-      type === 'literal'
-        ? escapePattern(value.replace(bidiMarks, '')).replace(/\s+/gu, '\\s*')
-        : `(?<${type}>\\d${type === 'year' ? '{4}' : '{1,2}'})`,
-    );
-  const matchDate = new RegExp(`^${separators.join('')}$`, 'u');
+  const parts = entryFormat(locale).formatToParts(sample);
   const digits = new Intl.NumberFormat(locale, { useGrouping: false });
   let latin = text;
   for (let digit = 0; digit < 10; digit++) {
     latin = latin.replaceAll(digits.format(digit), String(digit));
   }
   const entries = mode === 'range' ? latin.split(/\s*–\s*|\s+-\s+/u) : [latin];
-  const dates = entries.map((part) => {
-    const { year, month, day } = matchDate.exec(part.trim())?.groups ?? {};
-    return [year, month?.padStart(2, '0'), day?.padStart(2, '0')].join('-');
-  });
+  const dates: string[] = [];
+  for (const part of entries) {
+    const tokens = part.trim().match(/\d+|\D+/gu);
+    if (tokens?.length !== parts.length) return undefined;
+    const date: Record<string, string> = {};
+    for (const { type, value } of parts) {
+      const token = tokens.shift() ?? '';
+      if (type === 'literal') {
+        if (token.trim() !== value.replace(bidiMarks, '').trim()) return undefined;
+      } else {
+        date[type] = token.padStart(2, '0');
+      }
+    }
+    dates.push([date.year, date.month, date.day].join('-'));
+  }
   return normalizeValue(dates.join('/'), mode, min, max);
 }
 

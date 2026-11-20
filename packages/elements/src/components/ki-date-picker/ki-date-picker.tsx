@@ -183,7 +183,10 @@ export class KiDatePicker {
   @Watch('invalidDateLabel')
   protected syncForm(_newValue?: unknown, _oldValue?: unknown, prop?: string): void {
     const disabled = this.#effectiveDisabled;
-    if (prop === 'value') this.entry = undefined;
+    if (prop === 'value') {
+      this.entry = undefined;
+      this.value ||= '';
+    }
     if (disabled || prop === 'value') this.#closeCalendar();
     if (prop === 'mode' || prop === 'locale' || prop === 'min' || prop === 'max') {
       this.#closeCalendar(this.#trigger);

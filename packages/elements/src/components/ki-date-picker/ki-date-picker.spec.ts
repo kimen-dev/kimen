@@ -12,8 +12,7 @@ import {
 
 describe('date value', () => {
   it('treats a removed value attribute as empty', () => {
-    const result: unknown = Reflect.apply(normalizeValue, undefined, [null, 'single']);
-    expect(result).toBe('');
+    expect(normalizeValue(null, 'single')).toBe('');
   });
 
   it.each(['2026-02-29', '2026-11-31', '0000-01-01', '2026-1-05'])(
