@@ -1649,13 +1649,14 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Tab label; this is the accessible name source.",
+        "": "Required visible text label and accessible name source.",
         "end": "Trailing icon or media. Follows writing direction.",
+        "icon": "Decorative SVG. Supply visible text in the default slot.",
         "start": "Leading icon or media. Follows writing direction."
       },
       "tag": "ki-tab",
       "whenNotToUse": "standalone, for form value\nselection, or for page navigation; use the parent group's `value` instead\nof authoring `selected`.",
-      "whenToUse": "label one peer content view inside `ki-tabs`, with optional\n`start` and `end` slot media."
+      "whenToUse": "label one peer content view inside `ki-tabs`, with optional\ndecorative `icon` and `start` or `end` slot media."
     },
     "ki-tab-panel": {
       "description": "One content view paired with a `ki-tab` inside `ki-tabs`.",
@@ -1680,6 +1681,14 @@ export const catalogData = {
         "ki-change": "Fired once after a user-driven selection change from pointer or keyboard\nnavigation. `detail.value` is the resolved selected value and `value` is\nalready current when listeners run. Programmatic `value` writes and\nfirst-render fallback are silent."
       },
       "props": {
+        "icon-layout": {
+          "type": "enum",
+          "values": [
+            "inline",
+            "stacked"
+          ],
+          "description": "Positions the decorative icon relative to its tab label. When omitted,\nprimary stacks the icon above the label and secondary puts it inline."
+        },
         "label": {
           "type": "string",
           "description": "Accessible name for the tablist. Always provide one when multiple tab\ngroups may appear in a view. When NOT to use: do not use `label` as a\nvisible heading; render visible context in surrounding content."
@@ -1700,6 +1709,15 @@ export const catalogData = {
           "type": "string",
           "description": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent.",
           "default": ""
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "primary",
+            "secondary"
+          ],
+          "description": "Visual treatment for the group. Use one primary group per screen and\nsecondary groups within content.",
+          "default": "primary"
         }
       },
       "slots": {
@@ -1707,7 +1725,7 @@ export const catalogData = {
       },
       "tag": "ki-tabs",
       "whenNotToUse": "selecting form values\n(use `ki-radio-group`), page navigation (use links), step flows, or\nstandalone `ki-tab` / `ki-tab-panel` children outside this group.",
-      "whenToUse": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time."
+      "whenToUse": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time. Use primary for the screen-level group\nand secondary inside content."
     },
     "ki-textarea": {
       "description": "A token-styled multiline text field with native form semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",

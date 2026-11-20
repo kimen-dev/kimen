@@ -7914,7 +7914,7 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "label one peer content view inside `ki-tabs`, with optional\n`start` and `end` slot media."
+          "text": "label one peer content view inside `ki-tabs`, with optional\ndecorative `icon` and `start` or `end` slot media."
         },
         {
           "name": "whenNotToUse",
@@ -7922,7 +7922,11 @@
         },
         {
           "name": "slot",
-          "text": "- Tab label; this is the accessible name source."
+          "text": "- Required visible text label and accessible name source."
+        },
+        {
+          "name": "slot",
+          "text": "icon - Decorative SVG. Supply visible text in the default slot."
         },
         {
           "name": "slot",
@@ -7942,7 +7946,7 @@
         }
       ],
       "usage": {
-        "examples": "A tab's default slot is its label and accessible name source; `value` pairs it with the `ki-tab-panel` sharing the same value inside a `ki-tabs` group:\n\n```html\n<ki-tabs label=\"Settings\" value=\"profile\">\n  <ki-tab value=\"profile\">Profile</ki-tab>\n  <ki-tab value=\"privacy\">Privacy</ki-tab>\n  <ki-tab-panel value=\"profile\">Profile settings</ki-tab-panel>\n  <ki-tab-panel value=\"privacy\">Privacy settings</ki-tab-panel>\n</ki-tabs>\n```\n\nThe `start` and `end` slots hold leading and trailing icons or media (they follow writing direction); keep decorative media `aria-hidden`:\n\n```html\n<ki-tabs label=\"Inbox views\" value=\"all\">\n  <ki-tab value=\"all\">\n    <span slot=\"start\" aria-hidden=\"true\">✉</span>\n    All mail\n  </ki-tab>\n  <ki-tab value=\"unread\">Unread</ki-tab>\n  <ki-tab-panel value=\"all\">Every conversation.</ki-tab-panel>\n  <ki-tab-panel value=\"unread\">Unread conversations only.</ki-tab-panel>\n</ki-tabs>\n```\n\n`disabled` excludes the tab from selection by every modality, and `selected` is output-only state written by the group — set the group's `value` instead of authoring it:\n\n```html\n<ki-tabs label=\"Repository\" value=\"commits\">\n  <ki-tab value=\"commits\">Commits</ki-tab>\n  <ki-tab value=\"releases\" disabled>Releases</ki-tab>\n  <ki-tab-panel value=\"commits\">Commit history</ki-tab-panel>\n  <ki-tab-panel value=\"releases\">Published releases</ki-tab-panel>\n</ki-tabs>\n```\n"
+        "examples": "A tab's default slot is its label and accessible name source; `value` pairs it with the `ki-tab-panel` sharing the same value inside a `ki-tabs` group:\n\n```html\n<ki-tabs label=\"Settings\" value=\"profile\">\n  <ki-tab value=\"profile\">Profile</ki-tab>\n  <ki-tab value=\"privacy\">Privacy</ki-tab>\n  <ki-tab-panel value=\"profile\">Profile settings</ki-tab-panel>\n  <ki-tab-panel value=\"privacy\">Privacy settings</ki-tab-panel>\n</ki-tabs>\n```\n\nThe `start` and `end` slots hold leading and trailing icons or media (they follow writing direction); keep decorative media `aria-hidden`:\n\n```html\n<ki-tabs label=\"Inbox views\" value=\"all\">\n  <ki-tab value=\"all\">\n    <span slot=\"start\" aria-hidden=\"true\">✉</span>\n    All mail\n  </ki-tab>\n  <ki-tab value=\"unread\">Unread</ki-tab>\n  <ki-tab-panel value=\"all\">Every conversation.</ki-tab-panel>\n  <ki-tab-panel value=\"unread\">Unread conversations only.</ki-tab-panel>\n</ki-tabs>\n```\n\n`disabled` excludes the tab from selection by every modality, and `selected` is output-only state written by the group — set the group's `value` instead of authoring it:\n\n```html\n<ki-tabs label=\"Repository\" value=\"commits\">\n  <ki-tab value=\"commits\">Commits</ki-tab>\n  <ki-tab value=\"releases\" disabled>Releases</ki-tab>\n  <ki-tab-panel value=\"commits\">Commit history</ki-tab-panel>\n  <ki-tab-panel value=\"releases\">Published releases</ki-tab-panel>\n</ki-tabs>\n```\n\nFor a decorative SVG, use the `icon` slot and give the tab a visible text\nlabel in the default slot. The label names the tab and its linked panel.\nThe group's `icon-layout` controls whether the icon is above the label or\ninline with it.\n"
       },
       "props": [
         {
@@ -8040,11 +8044,15 @@
       "slots": [
         {
           "name": "",
-          "docs": "Tab label; this is the accessible name source."
+          "docs": "Required visible text label and accessible name source."
         },
         {
           "name": "end",
           "docs": "Trailing icon or media. Follows writing direction."
+        },
+        {
+          "name": "icon",
+          "docs": "Decorative SVG. Supply visible text in the default slot."
         },
         {
           "name": "start",
@@ -8152,7 +8160,7 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time."
+          "text": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time. Use primary for the screen-level group\nand secondary inside content."
         },
         {
           "name": "whenNotToUse",
@@ -8172,9 +8180,47 @@
         }
       ],
       "usage": {
-        "examples": "Tabs pair with panels through a shared `value`; the group's `value` selects the active pair and `label` names the tablist:\n\n```html\n<ki-tabs label=\"Settings\" value=\"email\">\n  <ki-tab value=\"email\">Email</ki-tab>\n  <ki-tab value=\"security\">Security</ki-tab>\n  <ki-tab-panel value=\"email\">Email delivery preferences</ki-tab-panel>\n  <ki-tab-panel value=\"security\">Security and sign-in preferences</ki-tab-panel>\n</ki-tabs>\n```\n\nA disabled tab stays visible but cannot be selected by any modality; user selection dispatches a composed `ki-change` event carrying the new value in `detail.value` (programmatic `value` writes stay silent):\n\n```html\n<ki-tabs label=\"Billing\" value=\"plans\">\n  <ki-tab value=\"plans\">Plans</ki-tab>\n  <ki-tab value=\"invoices\" disabled>Invoices</ki-tab>\n  <ki-tab-panel value=\"plans\">Plan management</ki-tab-panel>\n  <ki-tab-panel value=\"invoices\">Invoice history</ki-tab-panel>\n</ki-tabs>\n```\n"
+        "examples": "Tabs pair with panels through a shared `value`; the group's `value` selects the active pair and `label` names the tablist:\n\n```html\n<ki-tabs label=\"Settings\" value=\"email\">\n  <ki-tab value=\"email\">Email</ki-tab>\n  <ki-tab value=\"security\">Security</ki-tab>\n  <ki-tab-panel value=\"email\">Email delivery preferences</ki-tab-panel>\n  <ki-tab-panel value=\"security\">Security and sign-in preferences</ki-tab-panel>\n</ki-tabs>\n```\n\nA disabled tab stays visible but cannot be selected by any modality; user selection dispatches a composed `ki-change` event carrying the new value in `detail.value` (programmatic `value` writes stay silent):\n\n```html\n<ki-tabs label=\"Billing\" value=\"plans\">\n  <ki-tab value=\"plans\">Plans</ki-tab>\n  <ki-tab value=\"invoices\" disabled>Invoices</ki-tab>\n  <ki-tab-panel value=\"plans\">Plan management</ki-tab-panel>\n  <ki-tab-panel value=\"invoices\">Invoice history</ki-tab-panel>\n</ki-tabs>\n```\n\nUse a primary group for tabs at screen level. In content, use\n`variant=\"secondary\"` for a full-width selection indicator. A decorative\nSVG in a tab's `icon` slot stacks above the label in primary tabs and\nappears before the label in secondary tabs. Set `icon-layout=\"inline\"` or\n`icon-layout=\"stacked\"` to override the layout for the group.\n\n```html\n<ki-tabs label=\"Mail sections\" variant=\"secondary\">\n  <ki-tab value=\"inbox\">\n    <svg slot=\"icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n      <path d=\"M3 5h18v14H3zM3 5l9 7 9-7\" />\n    </svg>\n    Inbox\n  </ki-tab>\n  <ki-tab-panel value=\"inbox\">Incoming messages</ki-tab-panel>\n</ki-tabs>\n```\n"
       },
       "props": [
+        {
+          "name": "iconLayout",
+          "type": "\"inline\" | \"stacked\" | undefined",
+          "complexType": {
+            "original": "KiTabsIconLayout",
+            "resolved": "\"inline\" | \"stacked\" | undefined",
+            "references": {
+              "KiTabsIconLayout": {
+                "location": "import",
+                "path": "./ki-tabs.presentation",
+                "id": "src/components/ki-tabs/ki-tabs.presentation.ts::KiTabsIconLayout",
+                "referenceLocation": "KiTabsIconLayout"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "icon-layout",
+          "reflectToAttr": true,
+          "docs": "Positions the decorative icon relative to its tab label. When omitted,\nprimary stacks the icon above the label and secondary puts it inline.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "inline",
+              "type": "string"
+            },
+            {
+              "value": "stacked",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "label",
           "type": "string | undefined",
@@ -8283,6 +8329,50 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"primary\" | \"secondary\" | undefined",
+          "complexType": {
+            "original": "KiTabsVariant",
+            "resolved": "\"primary\" | \"secondary\" | undefined",
+            "references": {
+              "KiTabsVariant": {
+                "location": "import",
+                "path": "./ki-tabs.presentation",
+                "id": "src/components/ki-tabs/ki-tabs.presentation.ts::KiTabsVariant",
+                "referenceLocation": "KiTabsVariant"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Visual treatment for the group. Use one primary group per screen and\nsecondary groups within content.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'primary'"
+            }
+          ],
+          "default": "'primary'",
+          "values": [
+            {
+              "value": "primary",
+              "type": "string"
+            },
+            {
+              "value": "secondary",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -9760,6 +9850,16 @@
       "declaration": "export type KiTabsSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-tabs/ki-tabs.tsx"
+    },
+    "src/components/ki-tabs/ki-tabs.presentation.ts::KiTabsVariant": {
+      "declaration": "export type KiTabsVariant = 'primary' | 'secondary';",
+      "docstring": "",
+      "path": "src/components/ki-tabs/ki-tabs.presentation.ts"
+    },
+    "src/components/ki-tabs/ki-tabs.presentation.ts::KiTabsIconLayout": {
+      "declaration": "export type KiTabsIconLayout = 'stacked' | 'inline';",
+      "docstring": "",
+      "path": "src/components/ki-tabs/ki-tabs.presentation.ts"
     },
     "src/components/ki-textarea/ki-textarea.tsx::KiTextareaSize": {
       "declaration": "export type KiTextareaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",

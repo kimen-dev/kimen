@@ -68,7 +68,7 @@ methods, CSS custom properties and examples.
 - [ki-stack](llms/ki-stack.md): arrange content in a vertical sequence or a horizontal row with consistent token spacing.
 - [ki-status](llms/ki-status.md): mark a state with minimal footprint adjacent to (or overlaid on) the item it describes: presence on an avatar, health of a service list entry, connection state in a toolbar.
 - [ki-switch](llms/ki-switch.md): binary settings whose change takes effect immediately, always with a slotted label.
-- [ki-tab](llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional `start` and `end` slot media.
+- [ki-tab](llms/ki-tab.md): label one peer content view inside `ki-tabs`, with optional decorative `icon` and `start` or `end` slot media.
 - [ki-tab-panel](llms/ki-tab-panel.md): hold the content for one peer tab view, sharing `value` with its `ki-tab`.
 - [ki-tabs](llms/ki-tabs.md): switch between small sets of peer views inside the same page, with one visible panel at a time.
 - [ki-textarea](llms/ki-textarea.md): free-form text longer than one line, such as comments, descriptions, messages, delivery notes, or addresses when paired with a matching `autocomplete` purpose.

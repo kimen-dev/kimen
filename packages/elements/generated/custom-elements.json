@@ -11016,7 +11016,7 @@
           "customElement": true,
           "tagName": "ki-tab",
           "description": "One selectable tab inside a `ki-tabs` view switcher.",
-          "whenToUse": "label one peer content view inside `ki-tabs`, with optional\n`start` and `end` slot media.",
+          "whenToUse": "label one peer content view inside `ki-tabs`, with optional\ndecorative `icon` and `start` or `end` slot media.",
           "whenNotToUse": "standalone, for form value\nselection, or for page navigation; use the parent group's `value` instead\nof authoring `selected`.",
           "attributes": [
             {
@@ -11089,11 +11089,15 @@
           "slots": [
             {
               "name": "",
-              "description": "Tab label; this is the accessible name source."
+              "description": "Required visible text label and accessible name source."
             },
             {
               "name": "end",
               "description": "Trailing icon or media. Follows writing direction."
+            },
+            {
+              "name": "icon",
+              "description": "Decorative SVG. Supply visible text in the default slot."
             },
             {
               "name": "start",
@@ -11136,6 +11140,14 @@
               "description": "Standard interaction transition easing curve."
             },
             {
+              "name": "--ki-tab-backdrop-filter",
+              "description": "Complete backdrop filter for a tab surface."
+            },
+            {
+              "name": "--ki-tab-bg-image",
+              "description": "Optional surface image for a tab."
+            },
+            {
               "name": "--ki-tab-focus-ring-color",
               "description": "color used by the tab component for focus ring color."
             },
@@ -11162,6 +11174,14 @@
             {
               "name": "--ki-tab-gap",
               "description": "dimension used by the tab component for gap."
+            },
+            {
+              "name": "--ki-tab-icon-inline-gap",
+              "description": "Gap from an inline tab icon to its label."
+            },
+            {
+              "name": "--ki-tab-icon-size",
+              "description": "Inline and block size of a decorative tab icon."
             },
             {
               "name": "--ki-tab-indicator-color",
@@ -11416,9 +11436,17 @@
           "customElement": true,
           "tagName": "ki-tabs",
           "description": "A tab group for switching between peer content views.",
-          "whenToUse": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time.",
+          "whenToUse": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time. Use primary for the screen-level group\nand secondary inside content.",
           "whenNotToUse": "selecting form values\n(use `ki-radio-group`), page navigation (use links), step flows, or\nstandalone `ki-tab` / `ki-tab-panel` children outside this group.",
           "attributes": [
+            {
+              "name": "icon-layout",
+              "fieldName": "iconLayout",
+              "type": {
+                "text": "\"inline\" | \"stacked\" | undefined"
+              },
+              "description": "Positions the decorative icon relative to its tab label. When omitted,\nprimary stacks the icon above the label and secondary puts it inline."
+            },
             {
               "name": "label",
               "fieldName": "label",
@@ -11444,9 +11472,29 @@
               },
               "default": "''",
               "description": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"primary\" | \"secondary\" | undefined"
+              },
+              "default": "'primary'",
+              "description": "Visual treatment for the group. Use one primary group per screen and\nsecondary groups within content."
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "iconLayout",
+              "privacy": "public",
+              "type": {
+                "text": "\"inline\" | \"stacked\" | undefined"
+              },
+              "description": "Positions the decorative icon relative to its tab label. When omitted,\nprimary stacks the icon above the label and secondary puts it inline.",
+              "attribute": "icon-layout",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "label",
@@ -11481,6 +11529,18 @@
               "description": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent.",
               "attribute": "value",
               "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"primary\" | \"secondary\" | undefined"
+              },
+              "default": "'primary'",
+              "description": "Visual treatment for the group. Use one primary group per screen and\nsecondary groups within content.",
+              "attribute": "variant",
+              "reflects": true
             }
           ],
           "events": [
@@ -11506,6 +11566,14 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-tab-icon-stacked-gap",
+              "description": "Gap from a stacked tab icon to its label."
+            },
+            {
+              "name": "--ki-tab-icon-stacked-min-block-size",
+              "description": "Minimum block size for a tab with a stacked icon."
+            },
+            {
               "name": "--ki-tab-lg-font-size",
               "description": "dimension used by the tab component for lg font size (Tab-nav-item 10048:1068 lg: UI/body-2)."
             },
@@ -11516,6 +11584,18 @@
             {
               "name": "--ki-tab-lg-min-block-size",
               "description": "dimension used by the tab component for lg min block size (Tab-nav-item 10048:1068 lg: 48px)."
+            },
+            {
+              "name": "--ki-tab-padding-block-end",
+              "description": "dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes)."
+            },
+            {
+              "name": "--ki-tab-primary-indicator-height",
+              "description": "Height of the content-width indicator on a primary icon tab."
+            },
+            {
+              "name": "--ki-tab-secondary-indicator-height",
+              "description": "Height of the full-width indicator on a secondary tab."
             },
             {
               "name": "--ki-tab-sm-font-size",
@@ -11568,6 +11648,22 @@
             {
               "name": "--ki-tabs-lg-gap",
               "description": "dimension used by the tabs component for the lg gap between tabs (Tab-nav 10048:1249 lg binds Space/9xl, 28px)."
+            },
+            {
+              "name": "--ki-tabs-secondary-selected-rest-bg",
+              "description": "Selected secondary tab background at rest."
+            },
+            {
+              "name": "--ki-tabs-secondary-selected-rest-fg",
+              "description": "Selected secondary tab label foreground at rest."
+            },
+            {
+              "name": "--ki-tabs-secondary-unselected-rest-bg",
+              "description": "Secondary tab background at rest."
+            },
+            {
+              "name": "--ki-tabs-secondary-unselected-rest-fg",
+              "description": "Secondary tab label foreground at rest."
             },
             {
               "name": "--ki-tabs-sm-gap",

@@ -75,6 +75,22 @@
         "required": false,
         "type": null
       },
+      "--ki-tab-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for a tab surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional surface image for a tab.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-tab-focus-ring-color": {
         "default": null,
         "deprecatedSince": null,
@@ -127,6 +143,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the tab component for gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-icon-inline-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap from an inline tab icon to its label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tab-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline and block size of a decorative tab icon.",
         "replacement": null,
         "required": false,
         "type": null
@@ -383,7 +415,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Tab label; this is the accessible name source.",
+        "description": "Required visible text label and accessible name source.",
         "replacement": null,
         "required": false,
         "type": null
@@ -392,6 +424,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Trailing icon or media. Follows writing direction.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "icon": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative SVG. Supply visible text in the default slot.",
         "replacement": null,
         "required": false,
         "type": null

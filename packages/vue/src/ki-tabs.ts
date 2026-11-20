@@ -13,6 +13,8 @@ export const KiTabs: StencilVueComponent<JSX.KiTabs> = /*@__PURE__*/ defineConta
   'value',
   'label',
   'size',
+  'variant',
+  'iconLayout',
   'ki-change'
 ], [
   'ki-change'

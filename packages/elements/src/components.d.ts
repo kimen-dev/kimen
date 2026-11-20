@@ -33,6 +33,7 @@ import { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-
 import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiSwitchSize } from "./components/ki-switch/ki-switch";
 import { KiTabsSize } from "./components/ki-tabs/ki-tabs";
+import { KiTabsIconLayout, KiTabsVariant } from "./components/ki-tabs/ki-tabs.presentation";
 import { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 import { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
@@ -66,6 +67,7 @@ export { KiStackAlign, KiStackDirection, KiStackJustify } from "./components/ki-
 export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiSwitchSize } from "./components/ki-switch/ki-switch";
 export { KiTabsSize } from "./components/ki-tabs/ki-tabs";
+export { KiTabsIconLayout, KiTabsVariant } from "./components/ki-tabs/ki-tabs.presentation";
 export { KiTextareaSize } from "./components/ki-textarea/ki-textarea";
 export { KiToastDismissDetail, KiToastTone } from "./components/ki-toast/ki-toast.timing.js";
 export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js";
@@ -1290,7 +1292,7 @@ export namespace Components {
     /**
      * One selectable tab inside a `ki-tabs` view switcher.
      * @whenToUse label one peer content view inside `ki-tabs`, with optional
-     * `start` and `end` slot media.
+     * decorative `icon` and `start` or `end` slot media.
      * @whenNotToUse standalone, for form value
      * selection, or for page navigation; use the parent group's `value` instead
      * of authoring `selected`.
@@ -1329,7 +1331,8 @@ export namespace Components {
     /**
      * A tab group for switching between peer content views.
      * @whenToUse switch between small sets of peer views inside the same page,
-     * with one visible panel at a time.
+     * with one visible panel at a time. Use primary for the screen-level group
+     * and secondary inside content.
      * @whenNotToUse selecting form values
      * (use `ki-radio-group`), page navigation (use links), step flows, or
      * standalone `ki-tab` / `ki-tab-panel` children outside this group.
@@ -1337,6 +1340,10 @@ export namespace Components {
      * the tablist owns them; coordination, not authoring surface (spec 014).
      */
     interface KiTabs {
+        /**
+          * Positions the decorative icon relative to its tab label. When omitted, primary stacks the icon above the label and secondary puts it inline.
+         */
+        "iconLayout"?: KiTabsIconLayout;
         /**
           * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
           * @default undefined
@@ -1352,6 +1359,11 @@ export namespace Components {
           * @default ''
          */
         "value": string;
+        /**
+          * Visual treatment for the group. Use one primary group per screen and secondary groups within content.
+          * @default 'primary'
+         */
+        "variant"?: KiTabsVariant;
     }
     /**
      * A token-styled multiline text field with native form semantics.
@@ -2264,7 +2276,7 @@ declare global {
     /**
      * One selectable tab inside a `ki-tabs` view switcher.
      * @whenToUse label one peer content view inside `ki-tabs`, with optional
-     * `start` and `end` slot media.
+     * decorative `icon` and `start` or `end` slot media.
      * @whenNotToUse standalone, for form value
      * selection, or for page navigation; use the parent group's `value` instead
      * of authoring `selected`.
@@ -2294,7 +2306,8 @@ declare global {
     /**
      * A tab group for switching between peer content views.
      * @whenToUse switch between small sets of peer views inside the same page,
-     * with one visible panel at a time.
+     * with one visible panel at a time. Use primary for the screen-level group
+     * and secondary inside content.
      * @whenNotToUse selecting form values
      * (use `ki-radio-group`), page navigation (use links), step flows, or
      * standalone `ki-tab` / `ki-tab-panel` children outside this group.
@@ -3750,7 +3763,7 @@ declare namespace LocalJSX {
     /**
      * One selectable tab inside a `ki-tabs` view switcher.
      * @whenToUse label one peer content view inside `ki-tabs`, with optional
-     * `start` and `end` slot media.
+     * decorative `icon` and `start` or `end` slot media.
      * @whenNotToUse standalone, for form value
      * selection, or for page navigation; use the parent group's `value` instead
      * of authoring `selected`.
@@ -3789,7 +3802,8 @@ declare namespace LocalJSX {
     /**
      * A tab group for switching between peer content views.
      * @whenToUse switch between small sets of peer views inside the same page,
-     * with one visible panel at a time.
+     * with one visible panel at a time. Use primary for the screen-level group
+     * and secondary inside content.
      * @whenNotToUse selecting form values
      * (use `ki-radio-group`), page navigation (use links), step flows, or
      * standalone `ki-tab` / `ki-tab-panel` children outside this group.
@@ -3797,6 +3811,10 @@ declare namespace LocalJSX {
      * the tablist owns them; coordination, not authoring surface (spec 014).
      */
     interface KiTabs {
+        /**
+          * Positions the decorative icon relative to its tab label. When omitted, primary stacks the icon above the label and secondary puts it inline.
+         */
+        "iconLayout"?: KiTabsIconLayout;
         /**
           * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
           * @default undefined
@@ -3816,6 +3834,11 @@ declare namespace LocalJSX {
           * @default ''
          */
         "value"?: string;
+        /**
+          * Visual treatment for the group. Use one primary group per screen and secondary groups within content.
+          * @default 'primary'
+         */
+        "variant"?: KiTabsVariant;
     }
     /**
      * A token-styled multiline text field with native form semantics.
@@ -4278,6 +4301,8 @@ declare namespace LocalJSX {
         "value": string;
         "label": string;
         "size": KiTabsSize;
+        "variant": KiTabsVariant;
+        "iconLayout": KiTabsIconLayout;
     }
     interface KiTextareaAttributes {
         "label": string;
@@ -4786,7 +4811,7 @@ declare module "@stencil/core" {
             /**
              * One selectable tab inside a `ki-tabs` view switcher.
              * @whenToUse label one peer content view inside `ki-tabs`, with optional
-             * `start` and `end` slot media.
+             * decorative `icon` and `start` or `end` slot media.
              * @whenNotToUse standalone, for form value
              * selection, or for page navigation; use the parent group's `value` instead
              * of authoring `selected`.
@@ -4803,7 +4828,8 @@ declare module "@stencil/core" {
             /**
              * A tab group for switching between peer content views.
              * @whenToUse switch between small sets of peer views inside the same page,
-             * with one visible panel at a time.
+             * with one visible panel at a time. Use primary for the screen-level group
+             * and secondary inside content.
              * @whenNotToUse selecting form values
              * (use `ki-radio-group`), page navigation (use links), step flows, or
              * standalone `ki-tab` / `ki-tab-panel` children outside this group.

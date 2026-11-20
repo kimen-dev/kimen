@@ -921,14 +921,14 @@ export declare interface KiTabPanel extends Components.KiTabPanel {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiTabs,
-  inputs: ['label', 'size', 'value']
+  inputs: ['iconLayout', 'label', 'size', 'value', 'variant']
 })
 @Component({
   selector: 'ki-tabs',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['label', 'size', 'value'],
+  inputs: ['iconLayout', 'label', 'size', 'value', 'variant'],
 })
 export class KiTabs {
   protected el: HTMLKiTabsElement;

@@ -675,6 +675,8 @@
   --ki-tabs-sm-gap:var(--ki-space-zero);
   --ki-tabs-lg-gap:var(--ki-space-zero);
   --ki-tabs-xl-gap:var(--ki-space-zero);
+  --ki-tabs-secondary-unselected-rest-bg:var(--ki-surface-s0);
+  --ki-tabs-secondary-selected-rest-bg:var(--ki-surface-s0);
   --ki-textarea-padding-block:var(--ki-space-xl);
   --ki-textarea-radius:var(--ki-radius-component-xs);
   --ki-textarea-font-size-touch:var(--ki-typography-size-body-2);

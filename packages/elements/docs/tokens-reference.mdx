@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 408 semantic
-and 1319 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 410 semantic
+and 1331 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -46,6 +46,8 @@ every component at once.
 | --- | --- | --- |
 | `--ki-control-border-width` | `1px` | Stroke width of the boundary of a compact control. |
 | `--ki-control-icon-gap` | `0.375rem` | Separation between a control label and its leading icon. |
+| `--ki-control-indicator-width-medium` | `3px` | Medium selection marker for primary navigation. |
+| `--ki-control-indicator-width-thin` | `2px` | Thin selection marker for navigation within content. |
 | `--ki-control-radius-item` | `8px` | Corner radius of an individual control inside a track. |
 | `--ki-control-radius-track` | `10px` | Corner radius of a track containing adjacent controls. |
 | `--ki-control-size-md` | `2.5rem` | Medium control track height, 40 CSS px at the default root size. |
@@ -1828,6 +1830,8 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-tab-backdrop-filter` | `none` | Complete backdrop filter for a tab surface. |
+| `--ki-tab-bg-image` | `none` | Optional surface image for a tab. |
 | `--ki-tab-focus-ring-color` | `#bb4e2a` | color used by the tab component for focus ring color. |
 | `--ki-tab-focus-ring-offset` | `0.125rem` | dimension used by the tab component for focus ring offset. |
 | `--ki-tab-focus-ring-shadow` | `0 0 0 3px rgba(188, 76, 38, 0.2)` | shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
@@ -1835,6 +1839,10 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-font-size` | `0.8125rem` | dimension used by the tab component for font size. |
 | `--ki-tab-font-weight` | `600` | font weight used by the tab component for font weight. |
 | `--ki-tab-gap` | `0.25rem` | dimension used by the tab component for gap. |
+| `--ki-tab-icon-inline-gap` | `0.5rem` | Gap from an inline tab icon to its label. |
+| `--ki-tab-icon-size` | `1.25rem` | Inline and block size of a decorative tab icon. |
+| `--ki-tab-icon-stacked-gap` | `0.125rem` | Gap from a stacked tab icon to its label. |
+| `--ki-tab-icon-stacked-min-block-size` | `4rem` | Minimum block size for a tab with a stacked icon. |
 | `--ki-tab-indicator-color` | `#1d1a16` | color used by the tab component for indicator color (MarsUI active underline is Outline/inverse_white: black in light, white in dark — the inverse neutral, not primary). |
 | `--ki-tab-indicator-radius` | `0px` | dimension used by the tab component for indicator radius (the master underline is a square-ended 2px bottom border). |
 | `--ki-tab-indicator-size` | `0.125rem` | dimension used by the tab component for indicator size. |
@@ -1845,7 +1853,9 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-min-block-size` | `2.5rem` | dimension used by the tab component for min block size (MarsUI Tab_nav md bar height 40px: 24px body_1 label + 8px block-end clearance + underline; retargeted from ki.space.7xl per the fidelity audit — material3 pins its own value). |
 | `--ki-tab-padding-block-end` | `0.5rem` | dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes). |
 | `--ki-tab-padding-inline` | `0rem` | dimension used by the tab component for padding inline (MarsUI items carry no inline padding: spacing comes from the bar gap and the underline spans the full item width). |
+| `--ki-tab-primary-indicator-height` | `3px` | Height of the content-width indicator on a primary icon tab. |
 | `--ki-tab-radius` | `6px` | dimension used by the tab component for radius. |
+| `--ki-tab-secondary-indicator-height` | `2px` | Height of the full-width indicator on a secondary tab. |
 | `--ki-tab-selected-active-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for selected active background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language). |
 | `--ki-tab-selected-active-fg` | `#181613` | color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240). |
 | `--ki-tab-selected-disabled-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for selected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill). |
@@ -1892,6 +1902,10 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tabs-divider-width` | `0rem` | dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override). |
 | `--ki-tabs-gap` | `1.625rem` | dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding). |
 | `--ki-tabs-lg-gap` | `1.75rem` | dimension used by the tabs component for the lg gap between tabs (Tab-nav 10048:1249 lg binds Space/9xl, 28px). |
+| `--ki-tabs-secondary-selected-rest-bg` | `rgba(255, 255, 255, 0)` | Selected secondary tab background at rest. |
+| `--ki-tabs-secondary-selected-rest-fg` | `#181613` | Selected secondary tab label foreground at rest. |
+| `--ki-tabs-secondary-unselected-rest-bg` | `rgba(255, 255, 255, 0)` | Secondary tab background at rest. |
+| `--ki-tabs-secondary-unselected-rest-fg` | `#5e5953` | Secondary tab label foreground at rest. |
 | `--ki-tabs-sm-gap` | `1.5rem` | dimension used by the tabs component for the sm gap between tabs (Tab-nav 10048:1249 sm binds Space/7xl, 24px). |
 | `--ki-tabs-xl-gap` | `2rem` | dimension used by the tabs component for the xl gap between tabs (Tab-nav 10048:1249 xl binds Space/10xl, 32px). |
 | `--ki-tabs-xs-gap` | `1.25rem` | dimension used by the tabs component for the xs gap between tabs (Tab-nav 10048:1249 xs binds Space/5xl, 20px). |
