@@ -19,6 +19,12 @@
       "raw": 36465,
       "gzip": 8167,
       "brotli": 5630
+    },
+    "worstCase": {
+      "brotli": 25500
+    },
+    "tokenStylesheets": {
+      "onmars": 178
     }
   }
 }

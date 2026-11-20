@@ -1,10 +1,27 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
-  "budgetGroup": { "members": ["ki-tree", "ki-tree-item"] },
+  "budgetGroup": {
+    "members": ["ki-tree", "ki-tree-item"]
+  },
   "sizeBudget": {
-    "mcpApps": { "raw": 18343, "gzip": 4745, "brotli": 3755 },
-    "mcpServer": { "raw": 27297, "gzip": 6561, "brotli": 4196 }
+    "mcpApps": {
+      "raw": 18343,
+      "gzip": 4745,
+      "brotli": 3755
+    },
+    "mcpServer": {
+      "raw": 27297,
+      "gzip": 6561,
+      "brotli": 4196
+    },
+    "tokenStylesheets": {
+      "onmars": 121
+    }
   }
 }

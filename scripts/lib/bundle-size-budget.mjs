@@ -12,7 +12,9 @@ const BASE_BUDGETS = {
   mcpApps: { raw: 674_000, gzip: 152_500, brotli: 124_000 },
   mcpServer: { raw: 2_543_000, gzip: 482_000, brotli: 364_000 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
-  tokenStylesheets: { onmars: 12_400, material3: 5_600, base: 250 },
+  // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
+  // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
+  tokenStylesheets: { onmars: 12_850, material3: 5_600, base: 250 },
 };
 
 export function deriveBundleSizeBudgets(components) {
@@ -23,6 +25,8 @@ export function deriveBundleSizeBudgets(components) {
   };
   for (const { tag, metadata } of components) {
     for (const [target, allowances] of Object.entries(metadata.sizeBudget ?? {})) {
+      // worstCase is a per-component ceiling (run-size-limit.mjs), not an aggregate allowance.
+      if (target === 'worstCase') continue;
       for (const [metric, bytes] of Object.entries(allowances)) {
         const limit = limits[target][metric] + bytes;
         if (!Number.isSafeInteger(limit)) {
