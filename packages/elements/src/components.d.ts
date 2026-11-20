@@ -17,6 +17,7 @@ import { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 import { KiChipSize } from "./components/ki-chip/ki-chip";
 import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+import { KiConfirmationState, KiConfirmationTone } from "./components/ki-confirmation/ki-confirmation";
 import { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
@@ -62,6 +63,7 @@ export { KiCheckboxGroupChangeDetail, KiCheckboxGroupOrientation } from "./compo
 export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 export { KiChipSize } from "./components/ki-chip/ki-chip";
 export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
+export { KiConfirmationState, KiConfirmationTone } from "./components/ki-confirmation/ki-confirmation";
 export { KiCopyButtonVariant } from "./components/ki-copy-button/ki-copy-button";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
@@ -565,6 +567,84 @@ export namespace Components {
           * @default 'filter'
          */
         "type": KiChipType;
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface KiConfirmation {
+        /**
+          * Tool identifier shown to the person and available for reporting by the host.
+         */
+        "action": string;
+        /**
+          * Verb or short phrase that describes what approval does, such as "Send email".
+         */
+        "approveLabel": string;
+        /**
+          * Localized outcome text when the host marks the request approved.
+          * @default 'Approved'
+         */
+        "approvedLabel": string;
+        /**
+          * Cost or irreversible effect to read before deciding, displayed as a warning note.
+         */
+        "consequence"?: string;
+        /**
+          * Localized outcome text when the host marks the request denied.
+          * @default 'Denied'
+         */
+        "deniedLabel": string;
+        /**
+          * Verb or short phrase for refusal, such as "Keep draft".
+         */
+        "denyLabel": string;
+        /**
+          * Localized outcome text when the host marks the request expired.
+          * @default 'Expired'
+         */
+        "expiredLabel": string;
+        /**
+          * Moves focus to the pending group and reports success. Call only when the host knows the person was waiting for this request. A focused editor keeps its focus, including editors inside open shadow roots.
+         */
+        "focusPrompt": () => Promise<boolean>;
+        /**
+          * Question naming the proposed action. Provide it before asking for a decision.
+         */
+        "heading": string;
+        /**
+          * Offers an unchecked preference limited to this action in the current conversation.
+          * @default false
+         */
+        "remember": boolean;
+        /**
+          * Localized conversation permission label. Name the specific permission when possible.
+          * @default 'Allow this action for the rest of this conversation'
+         */
+        "rememberLabel": string;
+        /**
+          * Display-ready, localized resolution time from the host, if known.
+         */
+        "resolvedAt"?: string;
+        /**
+          * Display-ready name of the person or service that resolved the request, if known.
+         */
+        "resolvedBy"?: string;
+        /**
+          * Host-controlled outcome. Resolve after recording a decision or expiring the request.
+          * @default 'pending'
+         */
+        "state": KiConfirmationState;
+        /**
+          * Use danger when approval is destructive. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone": KiConfirmationTone;
     }
     /**
      * Copies text to the clipboard and confirms the result in the same button.
@@ -2349,6 +2429,10 @@ export interface KiChipGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiChipGroupElement;
 }
+export interface KiConfirmationCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiConfirmationElement;
+}
 export interface KiCopyButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiCopyButtonElement;
@@ -2646,6 +2730,33 @@ declare global {
     var HTMLKiChipGroupElement: {
         prototype: HTMLKiChipGroupElement;
         new (): HTMLKiChipGroupElement;
+    };
+    interface HTMLKiConfirmationElementEventMap {
+        "ki-approve": { remember: boolean };
+        "ki-deny": void;
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface HTMLKiConfirmationElement extends Components.KiConfirmation, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiConfirmationElementEventMap>(type: K, listener: (this: HTMLKiConfirmationElement, ev: KiConfirmationCustomEvent<HTMLKiConfirmationElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiConfirmationElementEventMap>(type: K, listener: (this: HTMLKiConfirmationElement, ev: KiConfirmationCustomEvent<HTMLKiConfirmationElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiConfirmationElement: {
+        prototype: HTMLKiConfirmationElement;
+        new (): HTMLKiConfirmationElement;
     };
     interface HTMLKiCopyButtonElementEventMap {
         "ki-copy": { value: string };
@@ -3534,6 +3645,7 @@ declare global {
         "ki-checkbox-group": HTMLKiCheckboxGroupElement;
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
+        "ki-confirmation": HTMLKiConfirmationElement;
         "ki-copy-button": HTMLKiCopyButtonElement;
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
@@ -4100,6 +4212,88 @@ declare namespace LocalJSX {
           * @default 'filter'
          */
         "type"?: KiChipType;
+    }
+    /**
+     * An inline prompt for a decision about a proposed assistant action.
+     * @whenToUse Show the exact action and the details a person needs before
+     * granting permission. A trusted host maps the two decision events to its
+     * declared actions and records the outcome in state.
+     * @whenNotToUse Report a completed action without a preceding request, or
+     * block the rest of the interface with a modal decision (use ki-dialog).
+     * The displayed action identifier is text and carries no execution authority.
+     */
+    interface KiConfirmation {
+        /**
+          * Tool identifier shown to the person and available for reporting by the host.
+         */
+        "action": string;
+        /**
+          * Verb or short phrase that describes what approval does, such as "Send email".
+         */
+        "approveLabel": string;
+        /**
+          * Localized outcome text when the host marks the request approved.
+          * @default 'Approved'
+         */
+        "approvedLabel"?: string;
+        /**
+          * Cost or irreversible effect to read before deciding, displayed as a warning note.
+         */
+        "consequence"?: string;
+        /**
+          * Localized outcome text when the host marks the request denied.
+          * @default 'Denied'
+         */
+        "deniedLabel"?: string;
+        /**
+          * Verb or short phrase for refusal, such as "Keep draft".
+         */
+        "denyLabel": string;
+        /**
+          * Localized outcome text when the host marks the request expired.
+          * @default 'Expired'
+         */
+        "expiredLabel"?: string;
+        /**
+          * Question naming the proposed action. Provide it before asking for a decision.
+         */
+        "heading": string;
+        /**
+          * Explicit approval, with the conversation preference at the time of the decision.
+         */
+        "onKi-approve"?: (event: KiConfirmationCustomEvent<{ remember: boolean }>) => void;
+        /**
+          * Explicit refusal of the pending request.
+         */
+        "onKi-deny"?: (event: KiConfirmationCustomEvent<void>) => void;
+        /**
+          * Offers an unchecked preference limited to this action in the current conversation.
+          * @default false
+         */
+        "remember"?: boolean;
+        /**
+          * Localized conversation permission label. Name the specific permission when possible.
+          * @default 'Allow this action for the rest of this conversation'
+         */
+        "rememberLabel"?: string;
+        /**
+          * Display-ready, localized resolution time from the host, if known.
+         */
+        "resolvedAt"?: string;
+        /**
+          * Display-ready name of the person or service that resolved the request, if known.
+         */
+        "resolvedBy"?: string;
+        /**
+          * Host-controlled outcome. Resolve after recording a decision or expiring the request.
+          * @default 'pending'
+         */
+        "state"?: KiConfirmationState;
+        /**
+          * Use danger when approval is destructive. Unknown values use neutral.
+          * @default 'neutral'
+         */
+        "tone"?: KiConfirmationTone;
     }
     /**
      * Copies text to the clipboard and confirms the result in the same button.
@@ -6008,6 +6202,22 @@ declare namespace LocalJSX {
         "focusTarget": string;
         "reorderAnnouncement": string;
     }
+    interface KiConfirmationAttributes {
+        "heading": string;
+        "action": string;
+        "approveLabel": string;
+        "denyLabel": string;
+        "tone": KiConfirmationTone;
+        "consequence": string;
+        "remember": boolean;
+        "rememberLabel": string;
+        "state": KiConfirmationState;
+        "approvedLabel": string;
+        "deniedLabel": string;
+        "expiredLabel": string;
+        "resolvedBy": string;
+        "resolvedAt": string;
+    }
     interface KiCopyButtonAttributes {
         "value": string;
         "from": string;
@@ -6364,6 +6574,7 @@ declare namespace LocalJSX {
         "ki-checkbox-group": Omit<KiCheckboxGroup, keyof KiCheckboxGroupAttributes> & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes]?: KiCheckboxGroup[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `attr:${K}`]?: KiCheckboxGroupAttributes[K] } & { [K in keyof KiCheckboxGroup & keyof KiCheckboxGroupAttributes as `prop:${K}`]?: KiCheckboxGroup[K] } & OneOf<"label", KiCheckboxGroup["label"], KiCheckboxGroupAttributes["label"]>;
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
+        "ki-confirmation": Omit<KiConfirmation, keyof KiConfirmationAttributes> & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes]?: KiConfirmation[K] } & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes as `attr:${K}`]?: KiConfirmationAttributes[K] } & { [K in keyof KiConfirmation & keyof KiConfirmationAttributes as `prop:${K}`]?: KiConfirmation[K] } & OneOf<"heading", KiConfirmation["heading"], KiConfirmationAttributes["heading"]> & OneOf<"action", KiConfirmation["action"], KiConfirmationAttributes["action"]> & OneOf<"approveLabel", KiConfirmation["approveLabel"], KiConfirmationAttributes["approveLabel"]> & OneOf<"denyLabel", KiConfirmation["denyLabel"], KiConfirmationAttributes["denyLabel"]>;
         "ki-copy-button": Omit<KiCopyButton, keyof KiCopyButtonAttributes> & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes]?: KiCopyButton[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `attr:${K}`]?: KiCopyButtonAttributes[K] } & { [K in keyof KiCopyButton & keyof KiCopyButtonAttributes as `prop:${K}`]?: KiCopyButton[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
@@ -6557,6 +6768,16 @@ declare module "@stencil/core" {
              * @whenNotToUse choose exactly one option or submit a form value.
              */
             "ki-chip-group": LocalJSX.IntrinsicElements["ki-chip-group"] & JSXBase.HTMLAttributes<HTMLKiChipGroupElement>;
+            /**
+             * An inline prompt for a decision about a proposed assistant action.
+             * @whenToUse Show the exact action and the details a person needs before
+             * granting permission. A trusted host maps the two decision events to its
+             * declared actions and records the outcome in state.
+             * @whenNotToUse Report a completed action without a preceding request, or
+             * block the rest of the interface with a modal decision (use ki-dialog).
+             * The displayed action identifier is text and carries no execution authority.
+             */
+            "ki-confirmation": LocalJSX.IntrinsicElements["ki-confirmation"] & JSXBase.HTMLAttributes<HTMLKiConfirmationElement>;
             /**
              * Copies text to the clipboard and confirms the result in the same button.
              * @whenToUse let a person copy a link, identifier, token or code sample. Supply

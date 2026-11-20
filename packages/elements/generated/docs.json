@@ -1611,9 +1611,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-confirmation"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-confirmation": [
+          "ki-button"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-button-group/ki-button-group.tsx",
@@ -3393,6 +3399,550 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-confirmation/ki-confirmation.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-confirmation",
+      "docs": "An inline prompt for a decision about a proposed assistant action.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Show the exact action and the details a person needs before\ngranting permission. A trusted host maps the two decision events to its\ndeclared actions and records the outcome in state."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Report a completed action without a preceding request, or\nblock the rest of the interface with a modal decision (use ki-dialog).\nThe displayed action identifier is text and carries no execution authority."
+        },
+        {
+          "name": "slot",
+          "text": "- Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
+        },
+        {
+          "name": "part",
+          "text": "group - The painted, labelled prompt or outcome surface."
+        },
+        {
+          "name": "part",
+          "text": "heading - The pending question."
+        },
+        {
+          "name": "part",
+          "text": "remember - The label of the conversation preference checkbox."
+        },
+        {
+          "name": "part",
+          "text": "decisions - The row of decision controls."
+        },
+        {
+          "name": "part",
+          "text": "summary - The resolved row."
+        }
+      ],
+      "usage": {
+        "examples": "# Confirm an assistant action\n\n```html\n<ki-confirmation\n  id=\"send-email-prompt\"\n  heading=\"Send this email?\"\n  action=\"send_email\"\n  approve-label=\"Send email\"\n  deny-label=\"Keep draft\"\n  consequence=\"Recipients will get the message immediately.\"\n  remember\n  remember-label=\"Allow sending email for the rest of this conversation\"\n>\n  <dl>\n    <dt>To</dt><dd>Ana Rivera</dd>\n    <dt>Subject</dt><dd>Weekly report</dd>\n  </dl>\n</ki-confirmation>\n```\n\nMap the two decisions in trusted host code. This MCP Apps example uses a\nready `SurfaceBridge` whose rendered spec declares `approve-send-email` and\n`deny-send-email` in its top-level `actions`. Keep a guarded node's scalar\n`action` binding unset because the component declares two events. Its\n`props.action` carries the visible tool identifier. A trusted host that\napplies an origin allowlist can supply that identifier after rendering, since\nguarded spec data under that prop name passes through the URL policy.\n\n```js\nconst prompt = document.querySelector('#send-email-prompt');\n\nprompt.addEventListener('ki-approve', (event) => {\n  if (event.composedPath()[0] !== prompt) return;\n  bridge.dispatch('approve-send-email', {\n    tool: 'send_email',\n    remember: event.detail?.remember === true,\n  });\n});\n\nprompt.addEventListener('ki-deny', (event) => {\n  if (event.composedPath()[0] !== prompt) return;\n  bridge.dispatch('deny-send-email', { tool: 'send_email' });\n});\n```\n\nThe host owns execution, deadlines and any conversation permission. Supply\noutcome metadata and set the resolved state after recording the decision.\n\n```js\nprompt.resolvedBy = 'You';\nprompt.resolvedAt = '10:32';\nprompt.state = 'approved';\n```\n\nCall `await prompt.focusPrompt()` when the person is waiting for the request.\nKeep the proposed inputs stable while the person is deciding. Mount a new\nelement if another request for the same tool replaces a pending one.\n"
+      },
+      "props": [
+        {
+          "name": "action",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "action",
+          "reflectToAttr": false,
+          "docs": "Tool identifier shown to the person and available for reporting by the host.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "approveLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "approve-label",
+          "reflectToAttr": false,
+          "docs": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "approvedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "approved-label",
+          "reflectToAttr": false,
+          "docs": "Localized outcome text when the host marks the request approved.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Approved'"
+            }
+          ],
+          "default": "'Approved'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "consequence",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "consequence",
+          "reflectToAttr": false,
+          "docs": "Cost or irreversible effect to read before deciding, displayed as a warning note.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "deniedLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "denied-label",
+          "reflectToAttr": false,
+          "docs": "Localized outcome text when the host marks the request denied.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Denied'"
+            }
+          ],
+          "default": "'Denied'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "denyLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "deny-label",
+          "reflectToAttr": false,
+          "docs": "Verb or short phrase for refusal, such as \"Keep draft\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "expiredLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "expired-label",
+          "reflectToAttr": false,
+          "docs": "Localized outcome text when the host marks the request expired.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Expired'"
+            }
+          ],
+          "default": "'Expired'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "heading",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading",
+          "reflectToAttr": false,
+          "docs": "Question naming the proposed action. Provide it before asking for a decision.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "remember",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remember",
+          "reflectToAttr": false,
+          "docs": "Offers an unchecked preference limited to this action in the current conversation.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "rememberLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "remember-label",
+          "reflectToAttr": false,
+          "docs": "Localized conversation permission label. Name the specific permission when possible.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Allow this action for the rest of this conversation'"
+            }
+          ],
+          "default": "'Allow this action for the rest of this conversation'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "resolvedAt",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "resolved-at",
+          "reflectToAttr": false,
+          "docs": "Display-ready, localized resolution time from the host, if known.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "resolvedBy",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "resolved-by",
+          "reflectToAttr": false,
+          "docs": "Display-ready name of the person or service that resolved the request, if known.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "state",
+          "type": "\"approved\" | \"denied\" | \"expired\" | \"pending\"",
+          "complexType": {
+            "original": "KiConfirmationState",
+            "resolved": "\"approved\" | \"denied\" | \"expired\" | \"pending\"",
+            "references": {
+              "KiConfirmationState": {
+                "location": "local",
+                "path": "src/components/ki-confirmation/ki-confirmation.tsx",
+                "id": "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationState"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "state",
+          "reflectToAttr": false,
+          "docs": "Host-controlled outcome. Resolve after recording a decision or expiring the request.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'pending'"
+            }
+          ],
+          "default": "'pending'",
+          "values": [
+            {
+              "value": "approved",
+              "type": "string"
+            },
+            {
+              "value": "denied",
+              "type": "string"
+            },
+            {
+              "value": "expired",
+              "type": "string"
+            },
+            {
+              "value": "pending",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"neutral\"",
+          "complexType": {
+            "original": "KiConfirmationTone",
+            "resolved": "\"danger\" | \"neutral\"",
+            "references": {
+              "KiConfirmationTone": {
+                "location": "local",
+                "path": "src/components/ki-confirmation/ki-confirmation.tsx",
+                "id": "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": false,
+          "docs": "Use danger when approval is destructive. Unknown values use neutral.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "focusPrompt",
+          "returns": {
+            "type": "Promise<boolean>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<boolean>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<boolean>"
+          },
+          "signature": "focusPrompt() => Promise<boolean>",
+          "parameters": [],
+          "docs": "Moves focus to the pending group and reports success. Call only when the\nhost knows the person was waiting for this request. A focused editor keeps\nits focus, including editors inside open shadow roots.",
+          "docsTags": []
+        }
+      ],
+      "events": [
+        {
+          "event": "ki-approve",
+          "detail": "{ remember: boolean; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ remember: boolean }",
+            "resolved": "{ remember: boolean; }",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Explicit approval, with the conversation preference at the time of the decision.",
+          "docsTags": []
+        },
+        {
+          "event": "ki-deny",
+          "detail": "void",
+          "bubbles": true,
+          "complexType": {
+            "original": "void",
+            "resolved": "void",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Explicit refusal of the pending request.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
+        }
+      ],
+      "parts": [
+        {
+          "name": "decisions",
+          "docs": "The row of decision controls."
+        },
+        {
+          "name": "group",
+          "docs": "The painted, labelled prompt or outcome surface."
+        },
+        {
+          "name": "heading",
+          "docs": "The pending question."
+        },
+        {
+          "name": "remember",
+          "docs": "The label of the conversation preference checkbox."
+        },
+        {
+          "name": "summary",
+          "docs": "The resolved row."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-button",
+        "ki-note"
+      ],
+      "dependencyGraph": {
+        "ki-confirmation": [
+          "ki-button",
+          "ki-note"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-copy-button/ki-copy-button.tsx",
@@ -8868,9 +9418,15 @@
         }
       ],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-confirmation"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-confirmation": [
+          "ki-note"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-option/ki-option.tsx",
@@ -14982,6 +15538,16 @@
       "declaration": "export interface KiChipReorderDetail {\n  value: string;\n  fromIndex: number;\n  toIndex: number;\n}",
       "docstring": "",
       "path": "src/components/ki-chip-group/ki-chip-group.tsx"
+    },
+    "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationTone": {
+      "declaration": "export type KiConfirmationTone = 'neutral' | 'danger';",
+      "docstring": "",
+      "path": "src/components/ki-confirmation/ki-confirmation.tsx"
+    },
+    "src/components/ki-confirmation/ki-confirmation.tsx::KiConfirmationState": {
+      "declaration": "export type KiConfirmationState = 'pending' | 'approved' | 'denied' | 'expired';",
+      "docstring": "",
+      "path": "src/components/ki-confirmation/ki-confirmation.tsx"
     },
     "src/components/ki-copy-button/ki-copy-button.tsx::KiCopyButtonVariant": {
       "declaration": "export type KiCopyButtonVariant = Exclude<KiButtonVariant, 'tertiary'>;",
