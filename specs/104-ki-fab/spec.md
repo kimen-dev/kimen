@@ -157,3 +157,4 @@ Each item is an agent's choice, pending founder confirmation.
 4. Reduced motion makes the change immediate. Regular motion transitions the label and spacing without replacing the focused native element.
 5. Use the current `surface.s1` alias for the raised variant. The sizes remain constant under coarse pointer and compact density.
 6. Hover follows the issue's elevation step. Optional background imagery stays theme-controlled.
+7. A blank `href` uses the button behavior. A nonempty destination uses native link resolution.

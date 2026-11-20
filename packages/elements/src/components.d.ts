@@ -14,6 +14,7 @@ import { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+import { KiFabPosition, KiFabSize, KiFabVariant } from "./components/ki-fab/ki-fab";
 import { KiLayoutGap } from "./utils/layout-gap";
 import { KiIconSize } from "./components/ki-icon/ki-icon";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -45,6 +46,7 @@ export { KiCheckboxSize } from "./components/ki-checkbox/ki-checkbox";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+export { KiFabPosition, KiFabSize, KiFabVariant } from "./components/ki-fab/ki-fab";
 export { KiLayoutGap } from "./utils/layout-gap";
 export { KiIconSize } from "./components/ki-icon/ki-icon";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
@@ -415,6 +417,52 @@ export namespace Components {
           * @default 'horizontal'
          */
         "orientation": KiDividerOrientation;
+    }
+    /**
+     * The primary action of a screen, as an icon or an extended control with a visible label.
+     * @whenToUse give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation.
+     * @whenNotToUse for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.
+     * @event click - Native activation click. The page or guarded renderer handles the declared action.
+     */
+    interface KiFab {
+        /**
+          * Compact an extended FAB on viewport scroll down and restore on scroll up.
+          * @default false
+         */
+        "collapseOnScroll": boolean;
+        /**
+          * Show the action label next to its icon.
+          * @default false
+         */
+        "extended": boolean;
+        /**
+          * A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.
+         */
+        "iconName"?: string;
+        /**
+          * Accessible name of the action. Also the visible text in the extended state.
+         */
+        "label": string;
+        /**
+          * Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.
+          * @default 'static'
+         */
+        "position": KiFabPosition;
+        /**
+          * Square footprint when icon-only, and minimum size when extended.
+          * @default 'md'
+         */
+        "size": KiFabSize;
+        /**
+          * Surface and ink: strong primary, tinted secondary or raised surface.
+          * @default 'secondary'
+         */
+        "variant": KiFabVariant;
     }
     /**
      * A passive responsive grid for content items.
@@ -1686,6 +1734,18 @@ declare global {
         new (): HTMLKiDividerElement;
     };
     /**
+     * The primary action of a screen, as an icon or an extended control with a visible label.
+     * @whenToUse give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation.
+     * @whenNotToUse for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.
+     * @event click - Native activation click. The page or guarded renderer handles the declared action.
+     */
+    interface HTMLKiFabElement extends Components.KiFab, HTMLStencilElement {
+    }
+    var HTMLKiFabElement: {
+        prototype: HTMLKiFabElement;
+        new (): HTMLKiFabElement;
+    };
+    /**
      * A passive responsive grid for content items.
      * @whenToUse lay out items on responsive tracks with consistent token spacing.
      * @whenNotToUse for page shells, painted grouping (use ki-card), or a data grid.
@@ -2256,6 +2316,7 @@ declare global {
         "ki-counter": HTMLKiCounterElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
+        "ki-fab": HTMLKiFabElement;
         "ki-grid": HTMLKiGridElement;
         "ki-icon": HTMLKiIconElement;
         "ki-icon-button": HTMLKiIconButtonElement;
@@ -2645,6 +2706,52 @@ declare namespace LocalJSX {
           * @default 'horizontal'
          */
         "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * The primary action of a screen, as an icon or an extended control with a visible label.
+     * @whenToUse give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation.
+     * @whenNotToUse for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.
+     * @event click - Native activation click. The page or guarded renderer handles the declared action.
+     */
+    interface KiFab {
+        /**
+          * Compact an extended FAB on viewport scroll down and restore on scroll up.
+          * @default false
+         */
+        "collapseOnScroll"?: boolean;
+        /**
+          * Show the action label next to its icon.
+          * @default false
+         */
+        "extended"?: boolean;
+        /**
+          * A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.
+          * @format url
+         */
+        "href"?: string;
+        /**
+          * Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence.
+         */
+        "iconName"?: string;
+        /**
+          * Accessible name of the action. Also the visible text in the extended state.
+         */
+        "label": string;
+        /**
+          * Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.
+          * @default 'static'
+         */
+        "position"?: KiFabPosition;
+        /**
+          * Square footprint when icon-only, and minimum size when extended.
+          * @default 'md'
+         */
+        "size"?: KiFabSize;
+        /**
+          * Surface and ink: strong primary, tinted secondary or raised surface.
+          * @default 'secondary'
+         */
+        "variant"?: KiFabVariant;
     }
     /**
      * A passive responsive grid for content items.
@@ -3777,6 +3884,16 @@ declare namespace LocalJSX {
     interface KiDividerAttributes {
         "orientation": KiDividerOrientation;
     }
+    interface KiFabAttributes {
+        "label": string;
+        "iconName": string;
+        "size": KiFabSize;
+        "variant": KiFabVariant;
+        "extended": boolean;
+        "collapseOnScroll": boolean;
+        "position": KiFabPosition;
+        "href": string;
+    }
     interface KiGridAttributes {
         "columns": number;
         "minColumn": string;
@@ -3977,6 +4094,7 @@ declare namespace LocalJSX {
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-fab": Omit<KiFab, keyof KiFabAttributes> & { [K in keyof KiFab & keyof KiFabAttributes]?: KiFab[K] } & { [K in keyof KiFab & keyof KiFabAttributes as `attr:${K}`]?: KiFabAttributes[K] } & { [K in keyof KiFab & keyof KiFabAttributes as `prop:${K}`]?: KiFab[K] } & OneOf<"label", KiFab["label"], KiFabAttributes["label"]>;
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
         "ki-icon": Omit<KiIcon, keyof KiIconAttributes> & { [K in keyof KiIcon & keyof KiIconAttributes]?: KiIcon[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `attr:${K}`]?: KiIconAttributes[K] } & { [K in keyof KiIcon & keyof KiIconAttributes as `prop:${K}`]?: KiIcon[K] } & OneOf<"name", KiIcon["name"], KiIconAttributes["name"]>;
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
@@ -4144,6 +4262,13 @@ declare module "@stencil/core" {
              * (prefer white space).
              */
             "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
+            /**
+             * The primary action of a screen, as an icon or an extended control with a visible label.
+             * @whenToUse give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation.
+             * @whenNotToUse for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.
+             * @event click - Native activation click. The page or guarded renderer handles the declared action.
+             */
+            "ki-fab": LocalJSX.IntrinsicElements["ki-fab"] & JSXBase.HTMLAttributes<HTMLKiFabElement>;
             /**
              * A passive responsive grid for content items.
              * @whenToUse lay out items on responsive tracks with consistent token spacing.

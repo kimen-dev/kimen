@@ -16,6 +16,7 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
+import { defineCustomElement as defineKiFab } from '@kimen/elements/components/ki-fab.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
 import { defineCustomElement as defineKiIcon } from '@kimen/elements/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
@@ -295,6 +296,29 @@ export class KiDivider {
 
 
 export declare interface KiDivider extends Components.KiDivider {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiFab,
+  inputs: ['collapseOnScroll', 'extended', 'href', 'iconName', 'label', 'position', 'size', 'variant']
+})
+@Component({
+  selector: 'ki-fab',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseOnScroll', 'extended', 'href', 'iconName', { name: 'label', required: true }, 'position', 'size', 'variant'],
+})
+export class KiFab {
+  protected el: HTMLKiFabElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiFab extends Components.KiFab {}
 
 
 @ProxyCmp({

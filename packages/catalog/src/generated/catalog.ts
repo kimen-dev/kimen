@@ -543,6 +543,73 @@ export const catalogData = {
       "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
       "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content."
     },
+    "ki-fab": {
+      "description": "The primary action of a screen, as an icon or an extended control with a visible label.",
+      "events": {
+        "click": "Native activation click. The page or guarded renderer handles the declared action."
+      },
+      "props": {
+        "collapse-on-scroll": {
+          "type": "boolean",
+          "description": "Compact an extended FAB on viewport scroll down and restore on scroll up.",
+          "default": false
+        },
+        "extended": {
+          "type": "boolean",
+          "description": "Show the action label next to its icon.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "A nonempty destination renders an anchor. Relative URLs and fragments retain native resolution.",
+          "format": "url"
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Registered Lucide name. Import the icon module before rendering. The icon slot takes precedence."
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the action. Also the visible text in the extended state.",
+          "required": true
+        },
+        "position": {
+          "type": "enum",
+          "values": [
+            "fixed",
+            "static"
+          ],
+          "description": "Fixed sits at the viewport's block-end inline-end corner. Reserve page clearance there.",
+          "default": "static"
+        },
+        "size": {
+          "type": "enum",
+          "values": [
+            "lg",
+            "md",
+            "xl"
+          ],
+          "description": "Square footprint when icon-only, and minimum size when extended.",
+          "default": "md"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "primary",
+            "secondary",
+            "surface"
+          ],
+          "description": "Surface and ink: strong primary, tinted secondary or raised surface.",
+          "default": "secondary"
+        }
+      },
+      "slots": {
+        "icon": "Decorative, noninteractive icon replacing the named glyph."
+      },
+      "tag": "ki-fab",
+      "whenNotToUse": "for secondary or destructive actions, for multiple actions on the same screen, or on a desktop screen that already has a visible primary ki-button.",
+      "whenToUse": "give a mobile screen one primary action, such as composing a draft or creating a project. Supply a descriptive label and a registered icon or decorative icon slot. Reserve page clearance for fixed placement, and leave the action binding unset for native link navigation."
+    },
     "ki-grid": {
       "description": "A passive responsive grid for content items.",
       "events": {},

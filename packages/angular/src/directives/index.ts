@@ -12,6 +12,7 @@ export const DIRECTIVES = [
   d.KiCounter,
   d.KiDialog,
   d.KiDivider,
+  d.KiFab,
   d.KiGrid,
   d.KiIcon,
   d.KiIconButton,
