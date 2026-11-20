@@ -7,6 +7,13 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [0.1.1] - 2026-11-20
+
+### Fixed
+
+- **deps:** update dependency @astrojs/starlight to v0.43.0 ([#542](https://github.com/kimen-dev/kimen/pull/542))
+- **elements:** clear Firefox's labelled-by cache after aria snapshots ([#543](https://github.com/kimen-dev/kimen/pull/543))
+
 ## [0.1.0] - 2026-11-20
 
 ### Added
