@@ -18,7 +18,10 @@ concurrency:
 jobs:
   validate-core:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # The full suite, packaging and the candidate build took 16 min before the
+    # document 2 components and over 30 after them (run 44740752207 was cut off
+    # at 30 while building the candidate). Keep about twice the measured time.
+    timeout-minutes: 60
     permissions:
       contents: read
     outputs:
@@ -155,7 +158,9 @@ jobs:
   browser:
     needs: validate-core
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # One engine runs the whole browser suite unsharded: 6-7 min before the
+    # document 2 components, about twice that after them.
+    timeout-minutes: 40
     permissions:
       contents: read
     strategy:
