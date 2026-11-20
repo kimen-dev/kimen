@@ -62,6 +62,7 @@ test('S5 the surfaces sync gate covers both indexes, the site summary and every 
     'llms.txt',
     'llms-full.txt',
     'packages/elements/llms.txt',
+    'packages/elements/llms/agent-setup.md',
     'packages/elements/llms/theming.md',
     ...(await publishedTags()).map((tag) => `packages/elements/llms/${tag}.md`),
     ...(await genUiDirectories()).map((directory) => `llms/${directory.split('/').at(-1)}.md`),

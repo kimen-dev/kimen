@@ -8,9 +8,9 @@
 
 Kimen is an open-source, AI-First generative UI library: StencilJS web
 components (`ki-` prefix), a neutral schema-constrained catalog, and disposable
-protocol adapters (A2UI, MCP Apps, AG-UI, json-render). One-person, AI-First
-operation: agents implement, deterministic gates verify, and a single founder
-merges.
+protocol adapters (A2UI and MCP Apps today; AG-UI and json-render planned).
+One-person, AI-First operation: agents implement, deterministic gates verify,
+and a single founder merges.
 
 ## Law of the repo
 
@@ -45,6 +45,10 @@ merges.
 - `/.agents/skills/`: canonical Spec Kit and constitutional skills
   (`gherkin-use-cases`, `frontend-best-practices`, `frontend-qa`);
   `/.claude/skills` is Claude's compatibility symlink
+- `/plugins/kimen/`: the distributable agent plugin for apps built on Kimen
+  (skills `kimen-components` and `kimen-genui`, canonical there and linked
+  from `.agents/skills/`; Claude Code, Codex and Antigravity manifests). The
+  marketplace is `/.claude-plugin/marketplace.json`
 - `/specs/`: feature specs (created by `/speckit-specify`)
 - `/tools/kimen-plugin/`: Nx generators (`component`, `feature-spec`,
   `adapter`): `pnpm exec nx g @kimen/nx-plugin:component ki-x --spec NNN-ki-x`
