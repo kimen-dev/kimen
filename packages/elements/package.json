@@ -119,7 +119,10 @@
   "collection:main": "dist/collection/index.js",
   "unpkg": "dist/kimen/kimen.esm.js",
   "sideEffects": [
-    "./icons/*.js"
+    "./icons/*.js",
+    "./dist/components/glyph-*.js",
+    "./dist/esm/glyph-*.js",
+    "./dist/cjs/glyph-*.js"
   ],
   "exports": {
     ".": {

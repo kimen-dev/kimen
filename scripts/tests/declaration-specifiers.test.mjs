@@ -7,6 +7,7 @@ import test from 'node:test';
 import {
   extensionlessRelativeSpecifiers,
   normalizeDeclarationDirectories,
+  rebaseDeclarationSpecifiers,
   rewriteDeclarationSpecifiers,
 } from '../lib/declaration-specifiers.mjs';
 
@@ -261,5 +262,132 @@ test('a directory with no declaration files is a broken build, not an empty succ
   await assert.rejects(
     normalizeDeclarationDirectories([join(root, 'dist/types')]),
     /no declaration files/iu,
+  );
+});
+
+// Stencil copies src/ into dist/types/ one directory deeper, so a specifier
+// that leaves src/ points one directory short of its file.
+const label = '/package/dist/types/components/ki-ai-label/ki-ai-label.d.ts';
+const mirror = { outputRoot: '/package/dist/types', sourceRoot: '/package/src' };
+
+test('re-bases a specifier that names a file only the source location answers', () => {
+  const result = rebaseDeclarationSpecifiers(
+    "import '../../../icons/sparkles.js';\nimport { A } from '../../utils/a.js';\n",
+    label,
+    mirror,
+    present('/package/icons/sparkles.d.ts', '/package/dist/types/utils/a.d.ts'),
+  );
+
+  assert.equal(
+    result.text,
+    "import '../../../../icons/sparkles.js';\nimport { A } from '../../utils/a.js';\n",
+  );
+  assert.equal(result.rewritten, 1);
+});
+
+test('reads the declaration of each runtime extension and a named JSON file as is', () => {
+  const result = rebaseDeclarationSpecifiers(
+    [
+      "import '../../../icons/a.mjs';",
+      "import '../../../icons/b.cjs';",
+      "import data from '../../../icons/c.json';",
+      "import '../../../icons/d.js';",
+      '',
+    ].join('\n'),
+    label,
+    mirror,
+    present(
+      '/package/icons/a.d.mts',
+      '/package/icons/b.d.cts',
+      '/package/icons/c.json',
+      '/package/icons/d.d.ts',
+    ),
+  );
+
+  assert.equal(result.rewritten, 4);
+  assert.match(result.text, /'\.\.\/\.\.\/\.\.\/\.\.\/icons\/c\.json'/u);
+});
+
+test('a re-based specifier stays put on a second pass, and a sibling keeps its dot', () => {
+  const exists = present('/package/icons/x.d.ts', '/package/dist/types/components/ki-x/y.d.ts');
+  const first = rebaseDeclarationSpecifiers(
+    "import '../../../icons/x.js';\nimport './y.js';\n",
+    '/package/dist/types/components/ki-x/ki-x.d.ts',
+    mirror,
+    exists,
+  );
+  const second = rebaseDeclarationSpecifiers(
+    first.text,
+    '/package/dist/types/components/ki-x/ki-x.d.ts',
+    mirror,
+    exists,
+  );
+
+  assert.equal(first.text, "import '../../../../icons/x.js';\nimport './y.js';\n");
+  assert.equal(second.text, first.text);
+  assert.equal(second.rewritten, 0);
+});
+
+test('re-bases onto a sibling-relative path with a leading dot', () => {
+  // dist/types/a.d.ts mirrors src/a.ts; src/sibling.js resolves only in the
+  // source, and its re-based path from dist/types/ stays a relative path.
+  const result = rebaseDeclarationSpecifiers(
+    "import './sibling.js';\n",
+    '/package/dist/types/a.d.ts',
+    { outputRoot: '/package/dist/types', sourceRoot: '/package/dist/types/nested' },
+    present('/package/dist/types/nested/sibling.d.ts'),
+  );
+
+  assert.equal(result.text, "import './nested/sibling.js';\n");
+});
+
+test('refuses a named specifier that neither location answers, or one with no source root', () => {
+  const missing = "import '../../../icons/gone.js';\n";
+  for (const roots of [mirror, {}, { outputRoot: '/package/dist/types' }]) {
+    assert.throws(
+      () => rebaseDeclarationSpecifiers(missing, label, roots, present()),
+      (error) =>
+        error instanceof Error &&
+        error.message ===
+          `${label}: relative specifier '../../../icons/gone.js' has no declaration file behind it; refusing to guess`,
+    );
+  }
+});
+
+test('leaves extensionless and package specifiers to the naming pass', () => {
+  const source = "import { h } from '@stencil/core';\nexport * from './elsewhere';\n";
+  const result = rebaseDeclarationSpecifiers(source, label, mirror, present());
+
+  assert.deepEqual(result, { text: source, rewritten: 0 });
+});
+
+test('re-bases only in the directories given a source root, then names files', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'kimen-declaration-specifiers-'));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await writeTree(root, {
+    'icons/x.d.ts': 'export {};\n',
+    'src/components/ki-x/ki-x.tsx': "import '../../../icons/x.js';\n",
+    'dist/types/components/ki-x/ki-x.d.ts':
+      "import '../../../icons/x.js';\nimport type { Y } from '../../y';\n",
+    'dist/types/y.d.ts': 'export type Y = string;\n',
+    'loader/index.d.ts': "export * from '../dist/types/y.js';\n",
+  });
+  const sourceRoots = { [join(root, 'dist/types')]: join(root, 'src') };
+
+  const report = await normalizeDeclarationDirectories(
+    [join(root, 'dist/types'), join(root, 'loader')],
+    { sourceRoots },
+  );
+
+  assert.deepEqual(report, { declarations: 3, rewrittenFiles: 1, rewrittenSpecifiers: 2 });
+  assert.equal(
+    await readFile(join(root, 'dist/types/components/ki-x/ki-x.d.ts'), 'utf8'),
+    "import '../../../../icons/x.js';\nimport type { Y } from '../../y.js';\n",
+  );
+
+  await writeFile(join(root, 'loader/index.d.ts'), "import '../icons/gone.js';\n", 'utf8');
+  await assert.rejects(
+    normalizeDeclarationDirectories([join(root, 'loader')], { sourceRoots }),
+    /'\.\.\/icons\/gone\.js' has no declaration file behind it/u,
   );
 });

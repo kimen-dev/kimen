@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kimen.dev/sitemap-index.xml
