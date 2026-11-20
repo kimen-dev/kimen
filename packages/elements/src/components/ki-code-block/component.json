@@ -1,7 +1,18 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "tokenNamespace": "code",
   "catalog": true,
-  "catalogAction": "ki-copy"
+  "catalogAction": "ki-copy",
+  "sizeBudget": {
+    "mcpServer": {
+      "raw": 15866,
+      "gzip": 4690,
+      "brotli": 2437
+    }
+  }
 }

@@ -20,6 +20,7 @@
 - **Line highlighting** (agent's choice, pending founder confirmation). Lines are one-based. Omit malformed and reversed ranges, intersect valid ranges with the displayed lines, and combine overlaps. A visible rule and a localized accessible description identify selected lines. The code and its gutter read left to right inside either interface direction.
 - **Labels and clipboard** (agent's choice, pending founder confirmation). Use a localized fallback figure name when metadata is missing and forward localizable button labels to CopyButton. Publish successful and failed copy events on the code block. Guarded surfaces can bind a declared action to successful copies.
 - **Contrast** (agent's choice, pending founder confirmation). Use supporting text for comments and line numbers so the same inks remain legible in both themes, including on highlighted lines. Declare the `code` token namespace in the component inventory to keep the proposed `--ki-code-*` names.
+- **API declaration** (agent's choice, pending founder confirmation). Declare the change as major to match the API gate's classification of the regenerated loader `Components` and `JSX` namespaces.
 
 ## Gherkin
 

@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 451 semantic
-and 1495 component tokens. Values are the resolved **onmars light**
+and 1519 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1217,6 +1217,35 @@ theme-wide change or on any subtree for a scoped one.
 | --- | --- | --- |
 | `--ki-chip-group-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family inherited by chip group content. |
 | `--ki-chip-group-gap` | `0.5rem` | Gap between adjacent chips and rows. |
+
+### `ki-code-block`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-code-backdrop-filter` | `none` | Whole backdrop filter for the figure. |
+| `--ki-code-bg` | `#f9f7f4` | Solid backing for the header and source. |
+| `--ki-code-bg-image` | `none` | Optional image layer above the solid backing. |
+| `--ki-code-border` | `rgba(24, 22, 19, 0.1)` | Frame and header divider. |
+| `--ki-code-border-width` | `1px` | Width of the frame and header divider. |
+| `--ki-code-comment` | `#5e5953` | Supporting syntax ink for comments. |
+| `--ki-code-fg` | `#181613` | Default source ink. |
+| `--ki-code-focus-color` | `#bb4e2a` | Keyboard focus ring of the scroll area. |
+| `--ki-code-focus-width` | `0.125rem` | Width of the scroll area's focus ring. |
+| `--ki-code-font-family` | `'JetBrains Mono', ui-monospace, monospace` | Typeface for source and line numbers. |
+| `--ki-code-font-size` | `0.75rem` | Compact text size for caption and source. |
+| `--ki-code-function` | `#085268` | Syntax ink for function names. |
+| `--ki-code-header-fg` | `#5e5953` | Supporting language and filename ink. |
+| `--ki-code-header-padding` | `0.25rem` | Compact header inset and gap. |
+| `--ki-code-highlight-bg` | `#ebe7e1` | Fill of a highlighted line. |
+| `--ki-code-highlight-marker` | `#bc4c26` | Inline rule identifying a highlighted line. |
+| `--ki-code-highlight-marker-width` | `0.125rem` | Width of the highlighted line rule. |
+| `--ki-code-keyword` | `#ad411c` | Syntax ink for keywords. |
+| `--ki-code-line-height` | `1rem` | Line box height for caption and source. |
+| `--ki-code-line-number` | `#5e5953` | Ink for the decorative line numbers. |
+| `--ki-code-number` | `#945b05` | Syntax ink for numbers. |
+| `--ki-code-padding` | `0.75rem` | Inset of the source and leading caption edge. |
+| `--ki-code-radius` | `12px` | Corner radius of the figure. |
+| `--ki-code-string` | `#2c6a2b` | Syntax ink for strings. |
 
 ### `ki-copy-button`
 

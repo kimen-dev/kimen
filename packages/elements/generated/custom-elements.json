@@ -4314,6 +4314,414 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-code-block.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCodeBlock",
+          "customElement": true,
+          "tagName": "ki-code-block",
+          "description": "Presents source code with a named header, syntax colors, line controls and\nclipboard feedback.",
+          "whenToUse": "display a multiline example, generated code or a tool result that\nreaders should be able to inspect and copy.",
+          "whenNotToUse": "when the reader should edit the source or when the code belongs\ninline in a sentence. Use an editor or a native inline code element.",
+          "attributes": [
+            {
+              "name": "copied-label",
+              "fieldName": "copiedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Polite announcement after a successful clipboard write."
+            },
+            {
+              "name": "copy-error-label",
+              "fieldName": "copyErrorLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Polite announcement after a failed clipboard write."
+            },
+            {
+              "name": "copy-label",
+              "fieldName": "copyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copy code'",
+              "description": "Accessible name of the copy button."
+            },
+            {
+              "name": "copyable",
+              "fieldName": "copyable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it."
+            },
+            {
+              "name": "filename",
+              "fieldName": "filename",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "File name shown in the header beside the language."
+            },
+            {
+              "name": "highlight",
+              "fieldName": "highlight",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`."
+            },
+            {
+              "name": "highlight-label",
+              "fieldName": "highlightLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Highlighted lines'",
+              "description": "Localizable prefix for the accessible description of highlighted lines."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Code'",
+              "description": "Figure and scroll area label when there is no language or filename."
+            },
+            {
+              "name": "language",
+              "fieldName": "language",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON."
+            },
+            {
+              "name": "line-numbers",
+              "fieldName": "lineNumbers",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show decorative one-based line numbers."
+            },
+            {
+              "name": "wrap",
+              "fieldName": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Soft-wrap long lines within the available width."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "copiedLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copied'",
+              "description": "Polite announcement after a successful clipboard write.",
+              "attribute": "copied-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "copyErrorLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\"",
+              "description": "Polite announcement after a failed clipboard write.",
+              "attribute": "copy-error-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "copyLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Copy code'",
+              "description": "Accessible name of the copy button.",
+              "attribute": "copy-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "copyable",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it.",
+              "attribute": "copyable",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "filename",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "File name shown in the header beside the language.",
+              "attribute": "filename",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "highlight",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`.",
+              "attribute": "highlight",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "highlightLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Highlighted lines'",
+              "description": "Localizable prefix for the accessible description of highlighted lines.",
+              "attribute": "highlight-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "'Code'",
+              "description": "Figure and scroll area label when there is no language or filename.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "language",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
+              "attribute": "language",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "lineNumbers",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show decorative one-based line numbers.",
+              "attribute": "line-numbers",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Soft-wrap long lines within the available width.",
+              "attribute": "wrap",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-copy",
+              "type": {
+                "text": "CustomEvent<{ value: string }>"
+              },
+              "description": "CopyButton reports a successful write with the original source text."
+            },
+            {
+              "name": "ki-copy-error",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "CopyButton reports an unsuccessful clipboard write."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Literal source text. Escape markup in HTML or supply a text node."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "code",
+              "description": "The monospaced source and its optional gutter."
+            },
+            {
+              "name": "figure",
+              "description": "Framed surface around the snippet."
+            },
+            {
+              "name": "header",
+              "description": "Caption containing the language, filename and copy control."
+            },
+            {
+              "name": "scroll",
+              "description": "Focusable native code scroll area."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-code-backdrop-filter",
+              "description": "Whole backdrop filter for the figure."
+            },
+            {
+              "name": "--ki-code-bg",
+              "description": "Solid backing for the header and source."
+            },
+            {
+              "name": "--ki-code-bg-image",
+              "description": "Optional image layer above the solid backing."
+            },
+            {
+              "name": "--ki-code-border",
+              "description": "Frame and header divider."
+            },
+            {
+              "name": "--ki-code-border-width",
+              "description": "Width of the frame and header divider."
+            },
+            {
+              "name": "--ki-code-comment",
+              "description": "Supporting syntax ink for comments."
+            },
+            {
+              "name": "--ki-code-fg",
+              "description": "Default source ink."
+            },
+            {
+              "name": "--ki-code-focus-color",
+              "description": "Keyboard focus ring of the scroll area."
+            },
+            {
+              "name": "--ki-code-focus-width",
+              "description": "Width of the scroll area's focus ring."
+            },
+            {
+              "name": "--ki-code-font-family",
+              "description": "Typeface for source and line numbers."
+            },
+            {
+              "name": "--ki-code-font-size",
+              "description": "Compact text size for caption and source."
+            },
+            {
+              "name": "--ki-code-function",
+              "description": "Syntax ink for function names."
+            },
+            {
+              "name": "--ki-code-header-fg",
+              "description": "Supporting language and filename ink."
+            },
+            {
+              "name": "--ki-code-header-padding",
+              "description": "Compact header inset and gap."
+            },
+            {
+              "name": "--ki-code-highlight-bg",
+              "description": "Fill of a highlighted line."
+            },
+            {
+              "name": "--ki-code-highlight-marker",
+              "description": "Inline rule identifying a highlighted line."
+            },
+            {
+              "name": "--ki-code-highlight-marker-width",
+              "description": "Width of the highlighted line rule."
+            },
+            {
+              "name": "--ki-code-keyword",
+              "description": "Syntax ink for keywords."
+            },
+            {
+              "name": "--ki-code-line-height",
+              "description": "Line box height for caption and source."
+            },
+            {
+              "name": "--ki-code-line-number",
+              "description": "Ink for the decorative line numbers."
+            },
+            {
+              "name": "--ki-code-number",
+              "description": "Syntax ink for numbers."
+            },
+            {
+              "name": "--ki-code-padding",
+              "description": "Inset of the source and leading caption edge."
+            },
+            {
+              "name": "--ki-code-radius",
+              "description": "Corner radius of the figure."
+            },
+            {
+              "name": "--ki-code-string",
+              "description": "Syntax ink for strings."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCodeBlock",
+          "declaration": {
+            "name": "KiCodeBlock",
+            "module": "dist/components/ki-code-block.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-code-block",
+          "declaration": {
+            "name": "KiCodeBlock",
+            "module": "dist/components/ki-code-block.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-copy-button.js",
       "declarations": [
         {

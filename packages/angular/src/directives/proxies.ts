@@ -17,6 +17,7 @@ import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/compone
 import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
+import { defineCustomElement as defineKiCodeBlock } from '@kimen/elements/components/ki-code-block.js';
 import { defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
@@ -347,6 +348,37 @@ export class KiChipGroup {
 export declare interface KiChipGroup extends Components.KiChipGroup {
   /**
    * Emitted after moving a chip. Indices are zero-based positions in the visible chip collection.
+   */
+}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiCodeBlock,
+  inputs: ['copiedLabel', 'copyErrorLabel', 'copyLabel', 'copyable', 'filename', 'highlight', 'highlightLabel', 'label', 'language', 'lineNumbers', 'wrap']
+})
+@Component({
+  selector: 'ki-code-block',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['copiedLabel', 'copyErrorLabel', 'copyLabel', 'copyable', 'filename', 'highlight', 'highlightLabel', 'label', 'language', 'lineNumbers', 'wrap'],
+})
+export class KiCodeBlock {
+  protected el: HTMLKiCodeBlockElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiCodeBlock extends Components.KiCodeBlock {
+  /**
+   * CopyButton reports a successful write with the original source text.
+   */
+  /**
+   * CopyButton reports an unsuccessful clipboard write.
    */
 }
 
