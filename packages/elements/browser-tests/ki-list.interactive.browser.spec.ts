@@ -118,7 +118,8 @@ it('S4 ignores a disabled option click', async () => {
   const main = await mount(list('single'));
   const events = details(main);
   const disabled = page.getByRole('option', { name: 'Luis' }).element() as HTMLElement;
-  disabled.click();
+  await userEvent.click(disabled, { force: true });
+  expect(document.activeElement).not.toBe(disabled);
   expect(disabled.getAttribute('aria-selected')).toBe('false');
   expect(events).toEqual([]);
 });
@@ -162,7 +163,7 @@ it('S7 refined type-ahead focuses Sol without selecting it', async () => {
   const main = await mount(list('multiple'));
   const events = details(main);
   (page.getByRole('option', { name: 'Ana' }).element() as HTMLElement).focus();
-  await userEvent.keyboard('so');
+  await userEvent.keyboard('xso');
   await expect.element(page.getByRole('option', { name: 'Sol' })).toHaveFocus();
   await expect
     .element(page.getByRole('option', { name: 'Sol' }))
@@ -189,12 +190,16 @@ it('S9 tabs into the native switch named by the primary row text', async () => {
   main.querySelector('button')?.focus();
   await userEvent.tab();
   const control = page.getByRole('switch', { name: 'Email digest' });
-  await expect.element(control).toHaveFocus();
+  await expect.element(control).toBeInTheDocument();
+  const switchHost = main.querySelector('ki-switch');
+  expect(switchHost?.shadowRoot?.activeElement).toBe(control.element());
   await userEvent.keyboard(' ');
   await expect.element(control).toBeChecked();
   const primary = main.querySelector('ki-list-item > span');
   if (primary) primary.textContent = 'Weekly digest';
-  await expect.element(page.getByRole('switch', { name: 'Weekly digest' })).toHaveFocus();
+  const renamed = page.getByRole('switch', { name: 'Weekly digest' });
+  await expect.element(renamed).toBeInTheDocument();
+  expect(switchHost?.shadowRoot?.activeElement).toBe(renamed.element());
   await expectAccessible(main);
 });
 
@@ -203,6 +208,9 @@ it('S10 submits the ordered values under one name', async () => {
     `<form>${list('multiple', options.replace('value="sara"', 'value="sara" selected'))}</form>`,
   );
   const form = mountedForm(main);
+  await expect
+    .element(page.getByRole('option', { name: 'Sara' }))
+    .toHaveAttribute('aria-selected', 'true');
   const submissions: string[][] = [];
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -217,8 +225,13 @@ it('S11 blocks submission when a required list has no selection', async () => {
     `<form>${list('single', options.replace(' selected', ''), 'required')}</form>`,
   );
   const form = mountedForm(main);
+  await expect
+    .element(page.getByRole('listbox', { name: 'Reviewers' }))
+    .toHaveAttribute('aria-required', 'true');
   const invalid = vi.fn();
-  const submit = vi.fn((event: Event) => { event.preventDefault(); });
+  const submit = vi.fn((event: Event) => {
+    event.preventDefault();
+  });
   form.addEventListener('invalid', invalid, { capture: true });
   form.addEventListener('submit', submit);
   form.requestSubmit();
@@ -257,6 +270,7 @@ it('S14 retains the selection mark and focus ring in forced colors', async (test
     await mount(`<button tabindex="0">Before</button>${list('multiple')}`);
     (page.getByRole('button', { name: 'Before' }).element() as HTMLElement).focus();
     await userEvent.tab();
+    await expect.poll(() => matchMedia('(forced-colors: active)').matches).toBe(true);
     const row = page.getByRole('option', { name: 'Ana' }).element();
     expect(getComputedStyle(part(row, 'item')).outlineStyle).toBe('solid');
     expect(getComputedStyle(part(row, 'indicator')).borderBlockStartStyle).toBe('solid');

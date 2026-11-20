@@ -1,4 +1,4 @@
-import { Component, Element, h, Prop, Watch } from '@stencil/core';
+import { Component, forceUpdate, Element, h, Prop, Watch } from '@stencil/core';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -25,7 +25,7 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  *
  * @slot - Exactly one decorative icon. The slot is presentational: its
  * content is hidden from assistive technology and never contributes to the
- * accessible name — that comes from `label` alone.
+ * accessible name — supply `label` or a named list row.
  * @slot counter - Decorative ki-counter in the block-start inline-end corner.
  * Include its meaning in the button label.
  * @part button - Internal native button.
@@ -75,11 +75,9 @@ export class KiIconButton {
 
   /**
    * Accessible name of the internal focusable button ("Close", "Play").
-   * Required in the catalog contract: the icon is presentational, so without
-   * a label the control exposes no name and fails the accessibility audit.
-   * The component never invents a fallback name.
-   * When NOT to use: never omit it; never duplicate it as visible text (a
-   * visible label means ki-button).
+   * Required in the catalog contract. An end slot in a named list can supply
+   * the optional fallback from the row text. Use ki-button when the button
+   * has a visible label.
    */
   @Prop({ reflect: true }) label!: string;
 
@@ -201,6 +199,12 @@ export class KiIconButton {
     }
   };
 
+  @Watch('aria-label')
+  private hostLabelChanged(): void {
+    // The native control owns the accessible name inside the shadow root.
+    forceUpdate(this.host);
+  }
+
   render() {
     // Not form-associated (FR-008): no ElementInternals, and the internal
     // native button is type="button" inside the shadow root, so activation
@@ -222,7 +226,7 @@ export class KiIconButton {
           tabIndex={this.disabled ? -1 : 0}
           disabled={this.disabled}
           aria-disabled={loading ? 'true' : undefined}
-          aria-label={this.label}
+          aria-label={this.label || (this.host.getAttribute('aria-label') ?? undefined)}
           onClick={this.handleClick}
           onKeyDown={startKeyboardPress}
           onKeyUp={releaseKeyboardPress}

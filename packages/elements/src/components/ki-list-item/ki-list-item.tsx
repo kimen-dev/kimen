@@ -1,4 +1,12 @@
-import { Component, Element, Host, Prop, State, h } from '@stencil/core';
+import '../../../icons/check.js';
+import '../../../icons/chevron-right.js';
+import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
+import type { KiListSelection } from '../ki-list/ki-list';
+import { type ListRow, listContexts, listRows } from '../ki-list/list-context';
+import { hasControlName, rowControls, slotText } from './list-item-content';
+
+const slotNames = ['start', 'primary', 'secondary', 'end'] as const;
+type Region = (typeof slotNames)[number];
 
 export type KiListItemSize = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -18,31 +26,36 @@ function hasAssignedContent(slot: HTMLSlotElement | null, textSlot = false): boo
 }
 
 /**
- * A non-interactive item inside `ki-list`, composed from leading media,
- * primary text, optional secondary text and trailing media or meta.
+ * A row inside `ki-list`, composed from leading media, primary text,
+ * optional secondary text and trailing content.
  *
- * @whenToUse only as a child of `ki-list`, for one read-only entry in a
- * similar vertical collection.
- * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
- * tabular row, navigation link or whole-item clickable control.
+ * @whenToUse as a direct child of `ki-list`, for a static entry, link,
+ * selection option, or a settings row with one control.
+ * @whenNotToUse as a menu item, tabular row, or row with several actions.
  *
  * @slot start - Leading media such as an icon, avatar or image.
  * @slot - Primary text line.
  * @slot secondary - Supporting text below the primary line. Its presence
  * selects the multi-line min-height token.
- * @slot end - Trailing media, meta text or a slotted control.
+ * @slot end - Trailing media, meta text or the only control of a settings row.
  * @part item - Item row surface and layout container.
  * @part start - Leading region wrapper.
  * @part content - Text column containing primary and secondary lines.
  * @part end - Trailing region wrapper.
+ * @part indicator - Decorative navigation or selection indicator.
+ * @cssprop --ki-list-item-hover-bg - Interactive row hover fill.
+ * @cssprop --ki-list-item-hover-fg - Text and indicator on an unselected hovered row.
+ * @cssprop --ki-list-item-selected-bg - Selected option fill.
+ * @cssprop --ki-list-item-selected-fg - Text and indicator on a selected option.
+ * @cssprop --ki-list-item-interactive-radius - Corner radius of links and options.
  */
 @Component({
   tag: 'ki-list-item',
   styleUrl: 'ki-list-item.css',
   shadow: true,
 })
-export class KiListItem {
-  @Element() private readonly host!: HTMLElement;
+export class KiListItem implements ListRow {
+  @Element() readonly host!: HTMLElement;
 
   /**
    * Token-backed row size (`--ki-list-item-{size}-*` tokens): minimum height
@@ -58,12 +71,103 @@ export class KiListItem {
    */
   @Prop({ reflect: true }) size: KiListItemSize = 'md';
 
+  /**
+   * Native row link destination. Use outside selection lists, with no
+   * slotted interactive content.
+   * @format url
+   */
+  @Prop({ reflect: true }) href?: string;
+
+  /** Submitted option value. The primary row text supplies the default. */
+  @Prop({ reflect: true }) value?: string;
+
+  /** Whether this row is selected in a single- or multiple-selection list. */
+  @Prop({ reflect: true, mutable: true }) selected = false;
+
+  /** Excludes this option from focus, selection by the user, and form data. */
+  @Prop({ reflect: true }) disabled = false;
+
   @State() private hasStart = false;
   @State() private hasPrimary = false;
   @State() private hasSecondary = false;
   @State() private hasEnd = false;
 
+  @State() private mode: KiListSelection = 'none';
+  @State() private hasControls = false;
+  @State() private blocked = new Set<Region>();
+
   private observer?: MutationObserver;
+  private primaryText = '';
+  private secondaryText = '';
+  private staticSemantics: (string | null)[] | undefined;
+  private warnedConflict = false;
+  private namedControl: Element | undefined;
+  private suppliedName: string | undefined;
+  private ready = false;
+
+  @Watch('href')
+  protected hrefChanged(): void {
+    this.syncSlotState();
+  }
+
+  @Watch('value')
+  @Watch('disabled')
+  protected optionChanged(): void {
+    this.notifyList();
+  }
+
+  @Watch('selected')
+  protected selectedChanged(): void {
+    this.notifyList(this.selected ? this : undefined);
+  }
+
+  private notifyList(preferred?: ListRow): void {
+    if (this.host.parentElement) listContexts.get(this.host.parentElement)?.(preferred);
+  }
+
+  get label(): string {
+    return this.primaryText || this.secondaryText;
+  }
+
+  get optionValue(): string {
+    return this.value ?? this.primaryText;
+  }
+
+  get interactive(): boolean {
+    return Boolean(this.href?.trim()) || this.hasControls;
+  }
+
+  private register(): void {
+    listRows.set(this.host, this);
+    this.notifyList();
+  }
+
+  setOption(mode: KiListSelection, tabIndex: 0 | -1, disabled: boolean): void {
+    const oldMode = this.mode;
+    this.mode = mode;
+    const attributes = ['role', 'aria-selected', 'aria-disabled', 'tabindex'];
+    if (mode === 'none') {
+      if (!this.staticSemantics) return;
+      attributes.forEach((attribute, index) => {
+        const original = this.staticSemantics?.[index];
+        if (original == null) this.host.removeAttribute(attribute);
+        else this.host.setAttribute(attribute, original);
+      });
+      this.staticSemantics = undefined;
+    } else {
+      this.staticSemantics ??= attributes.map((name) => this.host.getAttribute(name));
+      this.host.setAttribute('role', 'option');
+      this.host.setAttribute('aria-selected', String(this.selected));
+      if (disabled) {
+        this.host.setAttribute('aria-disabled', 'true');
+        this.host.removeAttribute('tabindex');
+      } else {
+        this.host.removeAttribute('aria-disabled');
+        this.host.tabIndex = tabIndex;
+      }
+    }
+    if (oldMode !== mode) this.syncSlotState();
+  }
 
   componentWillLoad(): void {
     // Default structural role, set only when the author has not supplied one so
@@ -71,6 +175,14 @@ export class KiListItem {
     if (!this.host.hasAttribute('role')) {
       this.host.setAttribute('role', 'listitem');
     }
+    // Property writes may match this row before its shadow slots exist.
+    this.primaryText = slotText(
+      Array.from(this.host.childNodes).filter(
+        (node) => !(node instanceof globalThis.Element && node.getAttribute('slot')),
+      ),
+    );
+    this.ready = true;
+    this.register();
   }
 
   connectedCallback(): void {
@@ -81,10 +193,40 @@ export class KiListItem {
     // observer, and an item that is moved in the document (a reordered row)
     // connects again without loading again.
     this.observer?.disconnect();
-    this.observer = new MutationObserver(() => {
-      this.syncSlotState();
+    this.observer = new MutationObserver((records) => {
+      // The owner reflects option ARIA and tabindex onto the row itself.
+      // Those projection writes must not trigger another owner update.
+      if (
+        records.some(
+          ({ target, type, attributeName }) =>
+            target !== this.host ||
+            type !== 'attributes' ||
+            attributeName === 'hidden' ||
+            attributeName === 'slot',
+        )
+      )
+        this.syncSlotState();
     });
-    this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
+    this.observer.observe(this.host, {
+      characterData: true,
+      childList: true,
+      subtree: true,
+      attributeFilter: [
+        'slot',
+        'hidden',
+        'role',
+        'tabindex',
+        'href',
+        'type',
+        'controls',
+        'contenteditable',
+        'aria-label',
+        'aria-labelledby',
+        'label',
+        'title',
+      ],
+    });
+    if (this.ready) this.register();
     // Content written while the item was out of the document. On the first
     // connection the slots are not rendered yet: componentDidLoad syncs.
     this.syncSlotState();
@@ -96,48 +238,134 @@ export class KiListItem {
 
   disconnectedCallback(): void {
     this.observer?.disconnect();
+    listRows.delete(this.host);
+    this.setOption('none', -1, false);
+    this.clearControlName();
   }
 
   private syncSlotState = (): void => {
-    const start =
-      this.host.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="start"]') ?? null;
-    const primary =
-      this.host.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])') ?? null;
-    const secondary =
-      this.host.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="secondary"]') ?? null;
-    const end = this.host.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="end"]') ?? null;
+    const root = this.host.shadowRoot;
+    const start = root?.querySelector<HTMLSlotElement>('slot[name="start"]') ?? null;
+    const primary = root?.querySelector<HTMLSlotElement>('slot:not([name])') ?? null;
+    const secondary = root?.querySelector<HTMLSlotElement>('slot[name="secondary"]') ?? null;
+    const end = root?.querySelector<HTMLSlotElement>('slot[name="end"]') ?? null;
+    const slots = { start, primary, secondary, end };
+    // Removing or moving a row should release its accessible-name fallback.
+    if (!primary || !this.host.isConnected) return;
 
     this.hasStart = hasAssignedContent(start);
     this.hasPrimary = hasAssignedContent(primary, true);
     this.hasSecondary = hasAssignedContent(secondary, true);
     this.hasEnd = hasAssignedContent(end);
+    this.primaryText = slotText(primary.assignedNodes({ flatten: true }));
+    this.secondaryText = slotText(secondary?.assignedNodes({ flatten: true }) ?? []);
+
+    const blocked = new Set<Region>();
+    const endControls: Element[] = [];
+    let count = 0;
+    for (const name of slotNames) {
+      const elements = slots[name]?.assignedElements({ flatten: true }) ?? [];
+      const controls = elements.flatMap(rowControls);
+      if (controls.length === 0) continue;
+      count += controls.length;
+      blocked.add(name);
+      if (name === 'end') endControls.push(...controls);
+    }
+    this.hasControls = count > 0;
+    if (
+      this.blocked.size !== blocked.size ||
+      [...blocked].some((name) => !this.blocked.has(name))
+    ) {
+      this.blocked = blocked;
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+      const conflict =
+        count > 1 ||
+        (count === 1 &&
+          (Boolean(this.href?.trim()) || this.mode !== 'none' || !blocked.has('end'))) ||
+        (this.mode !== 'none' && Boolean(this.href?.trim()));
+      if (conflict && !this.warnedConflict) {
+        console.warn(
+          '[Kimen] ki-list-item supports one interactive element: a link, an option, or one control in the end slot.',
+        );
+      }
+      this.warnedConflict = conflict;
+    }
+
+    const control = this.mode === 'none' && endControls.length === 1 ? endControls[0] : undefined;
+    this.syncControlName(control);
+    this.notifyList();
   };
 
+  private clearControlName(): void {
+    if (this.namedControl?.getAttribute('aria-label') === this.suppliedName) {
+      this.namedControl?.removeAttribute('aria-label');
+    }
+    this.namedControl = undefined;
+    this.suppliedName = undefined;
+  }
+
+  private syncControlName(control: Element | undefined): void {
+    const name = this.primaryText || this.secondaryText;
+    if (this.namedControl !== control || !name) this.clearControlName();
+    if (!control || !name) return;
+    if (control === this.namedControl && control.getAttribute('aria-label') === this.suppliedName) {
+      if (hasControlName(control, this.suppliedName)) this.clearControlName();
+      else if (name === this.suppliedName) return;
+      else this.clearControlName();
+    }
+    if (!hasControlName(control)) {
+      control.setAttribute('aria-label', name);
+      this.namedControl = control;
+      this.suppliedName = name;
+    }
+  }
+
   render() {
-    // Only `.has-secondary` drives styling (the multi-line min-height token,
-    // :host(.has-secondary)); start/primary/end drive the per-region `hidden`
-    // collapse, not host classes.
+    const mode = this.mode;
+    const option = mode !== 'none';
+    const href = !option && !this.hasControls ? this.href?.trim() : undefined;
+    const inert = (region: Region): boolean => option && this.blocked.has(region);
+    const regions = [
+      <div key="start" part="start" hidden={!this.hasStart} inert={inert('start')}>
+        <slot name="start" onSlotchange={this.syncSlotState} />
+      </div>,
+      <div key="content" part="content" hidden={!this.hasPrimary && !this.hasSecondary}>
+        <span class="primary" hidden={!this.hasPrimary} inert={inert('primary')}>
+          <slot onSlotchange={this.syncSlotState} />
+        </span>
+        <span class="secondary" hidden={!this.hasSecondary} inert={inert('secondary')}>
+          <slot name="secondary" onSlotchange={this.syncSlotState} />
+        </span>
+      </div>,
+      <div key="end" part="end" hidden={!this.hasEnd} inert={inert('end')}>
+        <slot name="end" onSlotchange={this.syncSlotState} />
+      </div>,
+    ];
     return (
       <Host class={{ 'has-secondary': this.hasSecondary }}>
-        <div part="item">
-          <div part="start" hidden={!this.hasStart}>
-            <slot name="start" onSlotchange={this.syncSlotState} />
-          </div>
-          {/* Collapse the flexible text column when neither text region has
-              content, so an item with only start/end regions does not reserve
-              column width or flex gaps (FR-002/FR-003, codex review). */}
-          <div part="content" hidden={!this.hasPrimary && !this.hasSecondary}>
-            <span class="primary" hidden={!this.hasPrimary}>
-              <slot onSlotchange={this.syncSlotState} />
+        {href ? (
+          <a part="item" class="interactive link" href={href} tabIndex={0}>
+            {regions}
+            <span part="indicator" class="chevron" aria-hidden="true">
+              <ki-icon name="chevron-right" />
             </span>
-            <span class="secondary" hidden={!this.hasSecondary}>
-              <slot name="secondary" onSlotchange={this.syncSlotState} />
-            </span>
+          </a>
+        ) : (
+          <div part="item" class={{ interactive: option, option }}>
+            {regions}
+            {option && (
+              <span
+                part="indicator"
+                class={mode === 'single' ? 'radio' : 'checkbox'}
+                aria-hidden="true"
+              >
+                {mode === 'multiple' && this.selected && <ki-icon name="check" />}
+              </span>
+            )}
           </div>
-          <div part="end" hidden={!this.hasEnd}>
-            <slot name="end" onSlotchange={this.syncSlotState} />
-          </div>
-        </div>
+        )}
       </Host>
     );
   }

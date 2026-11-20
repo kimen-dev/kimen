@@ -10,7 +10,7 @@
 
 **Status**: Draft
 
-**Input**: User description: "Fase 2 batch component: a `<ki-list>` web
+**Original input**: User description: "Fase 2 batch component: a `<ki-list>` web
 component with `<ki-list-item>` children — a simple, non-virtualized,
 non-interactive data list. Each item composes leading media, a primary text
 line, an optional secondary text line and trailing media or meta through
@@ -195,7 +195,7 @@ observe default rendering.
   list introduces no truncation or internal scrolling in v1 — consumers
   manage overflow. A third text line (M3 three-line items) is wrapped
   secondary text, not a dedicated region.
-- Interactive content slotted in `start`/`end` (e.g. a trailing switch)
+- A control slotted in `end` (e.g. a trailing switch)
   keeps its own focus and events; the list never intercepts, duplicates or
   re-targets them.
 - RTL documents: `start`/`end` regions and all internal spacing follow the
@@ -310,7 +310,7 @@ Feature: List
 
 ### Functional Requirements
 
-- **FR-001**: The list MUST be a non-interactive, non-virtualized container
+- **FR-001**: A static list MUST be a non-virtualized container
   that renders its `ki-list-item` children as one vertical list in source
   order. Neither the list nor its items are focusable, appear in the tab
   order, or emit component events of their own.
@@ -330,7 +330,7 @@ Feature: List
   changing which min-height token applies.
 - **FR-004**: Regions MUST render in the documented reading order: leading
   media, primary text above secondary text, trailing media/meta.
-- **FR-005**: The list MUST expose list semantics to assistive technology:
+- **FR-005**: A static list MUST expose list semantics to assistive technology:
   a list with an accurate item count, each item exposing its text content;
   neither list nor item adds an interactive role, name or state of its own.
   Because the items are slotted custom elements in the light DOM, a native
@@ -341,7 +341,7 @@ Feature: List
   roles are document-structure semantics, not an APG interactive widget
   pattern, so they do not conflict with "no ARIA is better than wrong ARIA"
   (Art. V).
-- **FR-006**: Interactive elements slotted inside an item MUST remain fully
+- **FR-006**: A control in the `end` slot of a settings row MUST remain fully
   operable; the list MUST NOT intercept, duplicate or re-target their focus
   or events.
 - **FR-007**: Every visual property (surface, item min-heights, padding,
@@ -447,11 +447,7 @@ Feature: List
   reveal a scale. The decision stands as shipped; whether the scale is a
   `size` attribute, a per-theme token step or nothing at all is a founder
   re-derivation against the master, not an agent call.)
-- Non-interactive v1 is a charter scope decision: item selection, whole-item
-  click/navigation, drag, menus and the M3 interactive item states are
-  future features; until then the catalog documents them as when-NOT-to-use.
-  Controls composed inside `start`/`end` slots (e.g. a settings list with
-  trailing switches) are the supported v1 pattern for interactivity.
+- Selection and whole-row navigation are opt-in through [InteractiveList](../107-interactive-list/spec.md). Each row supports at most one interaction. A settings control belongs in the trailing slot.
 - Non-virtualized v1 is a charter scope decision: the list renders all its
   children; very long collections are the consumer's concern beyond the
   bundle budget gate.

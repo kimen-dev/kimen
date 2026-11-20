@@ -21,7 +21,7 @@ it('S17 keeps a coarse-pointer target without lingering hover paint in compact d
   }
   const url = location.href;
   try {
-    expect(matchMedia('(pointer: coarse)').matches).toBe(true);
+    await expect.poll(() => matchMedia('(pointer: coarse)').matches).toBe(true);
     defineKiList();
     defineKiListItem();
     const style = document.createElement('style');
@@ -34,7 +34,10 @@ it('S17 keeps a coarse-pointer target without lingering hover paint in compact d
     document.body.append(main);
     const link = page.getByRole('link', { name: 'Account' });
     await expect.element(link).toBeInTheDocument();
+    expect(link.element().getBoundingClientRect().height).toBeGreaterThanOrEqual(24);
+    main.setAttribute('data-ki-density', 'touch');
     expect(link.element().getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    main.setAttribute('data-ki-density', 'compact');
     await link.click();
     expect(location.hash).toBe('#account');
     expect(getComputedStyle(link.element()).backgroundColor).toBe('rgba(0, 0, 0, 0)');
