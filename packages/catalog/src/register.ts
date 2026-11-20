@@ -89,6 +89,7 @@ const propConstraintSchema = z.strictObject({
 });
 
 const entrySchema = z.strictObject({
+  activationEvent: z.string().optional(),
   description: z.string(),
   events: z.record(z.string(), z.string()),
   props: z.record(z.string(), propConstraintSchema),
@@ -342,6 +343,15 @@ function checkEntry(
       value: entry.tag,
     });
   }
+  const action = entry.activationEvent;
+  if (action !== undefined && !Object.hasOwn(entry.events, action)) {
+    issues.push({
+      code: 'malformed-definition',
+      message: `"${entry.tag}" activationEvent must name a declared event`,
+      path: `${path}.activationEvent`,
+      value: action,
+    });
+  }
   for (const field of GUIDANCE_FIELDS) {
     if (entry[field].trim() === '') {
       issues.push({
@@ -415,6 +425,7 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
 
 function normalizeEntry(input: ParsedEntry): CatalogEntry {
   return {
+    ...(input.activationEvent === undefined ? {} : { activationEvent: input.activationEvent }),
     description: input.description,
     events: sortedRecord(Object.entries(input.events)),
     props: sortedRecord(

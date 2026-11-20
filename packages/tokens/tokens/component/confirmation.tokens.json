@@ -1,0 +1,63 @@
+{
+  "ki": {
+    "confirmation": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s1}",
+        "$description": "Solid raised background of the confirmation prompt and summary."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on the confirmation surface."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image painted over the solid confirmation background."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop effect behind the confirmation."
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.med-em}",
+        "$description": "Boundary of the confirmation surface."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "Corner radius of the confirmation surface."
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{ki.space.3xl}",
+        "$description": "Space between the prompt's edge and its content."
+      },
+      "heading": {
+        "font-family": {
+          "$type": "fontFamily",
+          "$value": "{ki.typography.family.heading}",
+          "$description": "Typeface of the pending question."
+        }
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Stroke width of the confirmation boundary."
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.space.xl}",
+        "$description": "Block separation between confirmation rows."
+      },
+      "inline-gap": {
+        "$type": "dimension",
+        "$value": "{ki.space.md}",
+        "$description": "Space between text and controls in a row."
+      }
+    }
+  }
+}

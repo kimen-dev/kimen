@@ -1,0 +1,51 @@
+---
+title: ki-combobox
+description: Search a list, select one or more options, or add a custom value.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use Combobox when people need to find a choice in a long list, select several
+values, or add a new value to the list.
+
+<Demo code={`<ki-combobox label="Assignee" placeholder="Search people">
+  <ki-option value="ana" description="ana@example.com">Ana Ruiz</ki-option>
+  <ki-option value="anabel" description="anabel@example.com">Anabel Soto</ki-option>
+  <ki-option value="juan" description="juan@example.com">Juan Antón</ki-option>
+</ki-combobox>`} />
+
+## Multiple choices
+
+Set `multiple` to show selected values as removable tags. Add `allow-custom`
+to let someone choose text they typed. Use a JavaScript array to assign
+`value` or encode the array as a JSON string in HTML. Forms submit multiple
+values as repeated entries under the same name.
+
+<Demo code={`<ki-combobox label="Labels" placeholder="Add a label" multiple allow-custom value='["bug","search"]'>
+  <ki-option>bug</ki-option>
+  <ki-option>search</ki-option>
+  <ki-option>documentation</ki-option>
+</ki-combobox>`} />
+
+## Remote results
+
+Set `filter="none"`. Listen for `ki-input` and use `event.detail.value` to fetch
+results. Set `loading` until the latest results have replaced the option
+children. Listen for `change` to read the committed `value`.
+
+## Accessibility
+
+Give the field a visible label. An option can add secondary text with
+`description` and decorative content with the `start` slot. Use Up and Down
+to navigate, Enter to choose, Escape to close and then clear, and Backspace
+to remove the last tag when the query is empty. The text field announces
+the result count and each tag has a named removal button.
+
+## API reference
+
+<CemApi tag="ki-combobox" />
+
+## Workshop
+
+[Open ki-combobox in Storybook](/storybook/?path=/docs/docs-components-ki-combobox--docs)

@@ -1648,6 +1648,10 @@
         "$value": "{ki.size.border.hairline}",
         "$description": "Width of the frame and divider in an action surface.",
         "$type": "dimension"
+      },
+      "floating-surface-max-block": {
+        "$value": "{ki.size.surface.xs}",
+        "$description": "Maximum block size of a compact floating surface before it scrolls."
       }
     },
     "notification-marker": {
@@ -1761,6 +1765,14 @@
       "anchored-panel": {
         "$value": "{ki.radius.component.lg}",
         "$description": "Corner radius of an anchored explanation panel."
+      },
+      "field-surface": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Corner radius for an editable field and its floating choice surface."
+      },
+      "field-item": {
+        "$value": "{ki.radius.component.sm}",
+        "$description": "Corner radius for choices and tokens inside an editable field."
       }
     },
     "motion": {
@@ -2109,6 +2121,42 @@
       "rule-width": {
         "$value": "{ki.size.border.hairline}",
         "$description": "The width of a hairline rule separating adjacent content."
+      },
+      "conversation": {
+        "max-width": {
+          "$value": "{ki.size.conversation.max-width}",
+          "$description": "Maximum inline size for a conversation transcript."
+        },
+        "user-max-width": {
+          "$type": "other",
+          "$value": "{ki.size.conversation.user-max-width}",
+          "$description": "Maximum width of a user bubble relative to the transcript."
+        },
+        "bubble-radius": {
+          "$value": "{ki.radius.big-component.xs}",
+          "$description": "Standard corner radius of a user bubble."
+        },
+        "bubble-end-radius": {
+          "$value": "{ki.radius.component.xs}",
+          "$description": "Smaller radius of the end corner of a user bubble."
+        },
+        "bubble-padding": {
+          "$type": "other",
+          "$value": "{ki.size.conversation.bubble-padding}",
+          "$description": "Block and inline insets for a user bubble."
+        },
+        "avatar-radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Round corner radius of the fallback assistant avatar."
+        },
+        "caret-inline-size": {
+          "$value": "{ki.size.conversation.caret-inline-size}",
+          "$description": "Inline size of a streaming caret."
+        },
+        "caret-block-size": {
+          "$value": "{ki.size.conversation.caret-block-size}",
+          "$description": "Block size of a streaming caret."
+        }
       }
     },
     "control": {

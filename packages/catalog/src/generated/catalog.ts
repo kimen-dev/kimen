@@ -868,6 +868,233 @@ export const catalogData = {
       "whenNotToUse": "when the reader should edit the source or when the code belongs\ninline in a sentence. Use an editor or a native inline code element.",
       "whenToUse": "display a multiline example, generated code or a tool result that\nreaders should be able to inspect and copy."
     },
+    "ki-combobox": {
+      "description": "An editable, form-associated combobox with local or remote filtering,\nsingle or multiple selection, and optional free entry.",
+      "activationEvent": "change",
+      "events": {
+        "change": "Composed event after a user changes the committed selection.\nRead the committed value from the host.",
+        "ki-input": "Reports a raw text edit in `detail.value`. Listen to it to request remote results."
+      },
+      "props": {
+        "add-label": {
+          "type": "string",
+          "description": "Localizable free-entry offer. {text} is replaced by the trimmed query.",
+          "default": "Add “{text}”"
+        },
+        "allow-custom": {
+          "type": "boolean",
+          "description": "Offers to add trimmed query text when no known or selected choice already matches it.",
+          "default": false
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disables editing, navigation and form submission.",
+          "default": false
+        },
+        "empty-label": {
+          "type": "string",
+          "description": "Localizable status when there are no choices to display.",
+          "default": "No results"
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Message used when a required selection is missing, in place of the browser's message."
+        },
+        "filter": {
+          "type": "enum",
+          "values": [
+            "contains",
+            "none",
+            "starts-with"
+          ],
+          "description": "Filters by label. Set to none when the application provides results from a remote search.",
+          "default": "contains"
+        },
+        "help-text": {
+          "type": "string",
+          "description": "Guidance shown below the field and read as its description."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible label and accessible name. Supply it even when placeholder text is also set.",
+          "required": true
+        },
+        "loading": {
+          "type": "boolean",
+          "description": "Replaces visible options with a loading indicator while a search is pending.",
+          "default": false
+        },
+        "loading-label": {
+          "type": "string",
+          "description": "Localizable status while waiting for a result set.",
+          "default": "Loading results"
+        },
+        "multiple": {
+          "type": "boolean",
+          "description": "Enables ordered multiple selection and renders selected values as tags.",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key. Multiple choices contribute one entry each under this name."
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Hint shown in the text input when it is empty.",
+          "default": ""
+        },
+        "remove-label": {
+          "type": "string",
+          "description": "Localizable removal button label. {label} is replaced by the selected label.",
+          "default": "Remove {label}"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Requires a committed choice to submit the form.",
+          "default": false
+        },
+        "result-count-label": {
+          "type": "string",
+          "description": "Localizable status for several choices. {count} is replaced by the result count.",
+          "default": "{count} results"
+        },
+        "result-one-label": {
+          "type": "string",
+          "description": "Localizable status for one available choice.",
+          "default": "1 result"
+        },
+        "value": {
+          "type": "string",
+          "description": "Committed value. Use a string for single selection and an array of strings\nfor multiple selection. In HTML and catalog specs, encode multiple values\nas a JSON array string in the value attribute, or supply one literal value.\nAssign a new array to change multiple selections programmatically.",
+          "default": ""
+        }
+      },
+      "slots": {
+        "": "Declarative ki-option children. Supply unique values and a human-readable label."
+      },
+      "tag": "ki-combobox",
+      "whenNotToUse": "use a select-only control for a short closed set or a plain\ntext field for unrestricted input with no choices.",
+      "whenToUse": "choose from a long list of options, let people search an option\nsource, or allow multiple selections that remain visible as tags."
+    },
+    "ki-confirmation": {
+      "description": "An inline prompt for a decision about a proposed assistant action.",
+      "events": {
+        "ki-approve": "Explicit approval, with the conversation preference at the time of the decision.",
+        "ki-deny": "Explicit refusal of the pending request."
+      },
+      "props": {
+        "action": {
+          "type": "string",
+          "description": "Tool identifier shown to the person and available for reporting by the host.",
+          "required": true
+        },
+        "approve-label": {
+          "type": "string",
+          "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+          "required": true
+        },
+        "approved-label": {
+          "type": "string",
+          "description": "Localized outcome text when the host marks the request approved.",
+          "default": "Approved"
+        },
+        "consequence": {
+          "type": "string",
+          "description": "Cost or irreversible effect to read before deciding, displayed as a warning note."
+        },
+        "denied-label": {
+          "type": "string",
+          "description": "Localized outcome text when the host marks the request denied.",
+          "default": "Denied"
+        },
+        "deny-label": {
+          "type": "string",
+          "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
+          "required": true
+        },
+        "expired-label": {
+          "type": "string",
+          "description": "Localized outcome text when the host marks the request expired.",
+          "default": "Expired"
+        },
+        "heading": {
+          "type": "string",
+          "description": "Question naming the proposed action. Provide it before asking for a decision.",
+          "required": true
+        },
+        "remember": {
+          "type": "boolean",
+          "description": "Offers an unchecked preference limited to this action in the current conversation.",
+          "default": false
+        },
+        "remember-label": {
+          "type": "string",
+          "description": "Localized conversation permission label. Name the specific permission when possible.",
+          "default": "Allow this action for the rest of this conversation"
+        },
+        "resolved-at": {
+          "type": "string",
+          "description": "Display-ready, localized resolution time from the host, if known."
+        },
+        "resolved-by": {
+          "type": "string",
+          "description": "Display-ready name of the person or service that resolved the request, if known."
+        },
+        "state": {
+          "type": "enum",
+          "values": [
+            "approved",
+            "denied",
+            "expired",
+            "pending"
+          ],
+          "description": "Host-controlled outcome. Resolve after recording a decision or expiring the request.",
+          "default": "pending"
+        },
+        "tone": {
+          "type": "enum",
+          "values": [
+            "danger",
+            "neutral"
+          ],
+          "description": "Use danger when approval is destructive. Unknown values use neutral.",
+          "default": "neutral"
+        }
+      },
+      "slots": {
+        "": "Details the person needs to make the decision. Use readable text or\nsemantic markup such as a description list."
+      },
+      "tag": "ki-confirmation",
+      "whenNotToUse": "Report a completed action without a preceding request, or\nblock the rest of the interface with a modal decision (use ki-dialog).\nThe displayed action identifier is text and carries no execution authority.",
+      "whenToUse": "Show the exact action and the details a person needs before\ngranting permission. A trusted host maps the two decision events to its\ndeclared actions and records the outcome in state."
+    },
+    "ki-conversation": {
+      "description": "An accessible chat transcript with optional following as messages arrive.",
+      "events": {},
+      "props": {
+        "jump-label": {
+          "type": "string",
+          "description": "Visible and accessible label for the control that resumes following.",
+          "default": "Jump to latest"
+        },
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the transcript. Supply a distinct label when several logs share a page.",
+          "default": "Conversation"
+        },
+        "stick-to-bottom": {
+          "type": "boolean",
+          "description": "Follow new or growing messages until the reader scrolls away from the end.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "The chronological transcript, normally ki-message elements."
+      },
+      "tag": "ki-conversation",
+      "whenNotToUse": "Collect input, send messages or present a static sequence of\ncards. Place the composer outside the transcript.",
+      "whenToUse": "Display chronological user, assistant and event messages. Give\nthe host a block-size constraint to keep scrolling within the transcript."
+    },
     "ki-copy-button": {
       "description": "Copies text to the clipboard and confirms the result in the same button.",
       "events": {
@@ -1653,6 +1880,7 @@ export const catalogData = {
         }
       },
       "slots": {
+        "action": "One small submit action inside the field after the end adornment.\nUse for one-field forms such as search or subscribe. Place a named\n`ki-button size=\"sm\" type=\"submit\"` here, or wire a labeled\n`ki-icon-button size=\"sm\"` to request form submission. The action has its own tab\nstop. Use the end slot for clear or reveal controls.",
         "end": "Trailing icon or text affix inside the field. Follows writing direction.\nA directly slotted AI label also describes the field as suggested by AI.",
         "start": "Leading icon or text affix inside the field. Follows writing direction."
       },
@@ -1870,6 +2098,42 @@ export const catalogData = {
       "whenNotToUse": "standalone controls, navigational links, or form options.",
       "whenToUse": "a command, independent checkbox action, or exclusive radio action in a menu."
     },
+    "ki-message": {
+      "description": "A named chat article styled as a person’s message, assistant reply or event.",
+      "events": {},
+      "props": {
+        "author": {
+          "type": "string",
+          "description": "Full accessible name for this article, such as \"Ava said\". Override it to\nidentify the speaker or localize the default role-specific name."
+        },
+        "icon-name": {
+          "type": "string",
+          "description": "Decorative event glyph from the ki-icon registry. Search is available\ndirectly. Import other per-icon modules before setting their names."
+        },
+        "message-role": {
+          "type": "enum",
+          "values": [
+            "assistant",
+            "event",
+            "user"
+          ],
+          "description": "The speaker or event kind. The user has a trailing bubble, the assistant has\na leading avatar, and an event is a centered note."
+        },
+        "streaming": {
+          "type": "boolean",
+          "description": "Show the caret and mark the article busy until this message is complete.",
+          "default": false
+        }
+      },
+      "slots": {
+        "": "Message content, including text or formatted elements.",
+        "actions": "Follow-up controls supplied by the consumer after the content.",
+        "avatar": "Optional avatar replacing the assistant’s decorative default."
+      },
+      "tag": "ki-message",
+      "whenNotToUse": "Collect a prompt, announce a page alert, or execute a tool.",
+      "whenToUse": "Display a transcript entry inside ki-conversation. Pass\nformatted content through the default slot and set streaming during a reply."
+    },
     "ki-note": {
       "description": "A compact, static explanation beside a control or inside a card.",
       "events": {},
@@ -1911,9 +2175,13 @@ export const catalogData = {
       "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader."
     },
     "ki-option": {
-      "description": "A declarative data option rendered by its owning `ki-select`.",
+      "description": "A declarative data option rendered by its owning `ki-select` or `ki-combobox`.",
       "events": {},
       "props": {
+        "description": {
+          "type": "string",
+          "description": "Secondary text shown below the label in a combobox choice row."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Makes this option unavailable. Disabled options cannot be selected, are\nskipped by keyboard highlight, and are exposed unavailable by the select.",
@@ -1925,11 +2193,12 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Text label mirrored by the owning select."
+        "": "Text label mirrored by the owning choice field.",
+        "start": "Decorative content shown before the label in a combobox row."
       },
       "tag": "ki-option",
       "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
-      "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value."
+      "whenToUse": "declare one choice inside a `ki-select` or `ki-combobox`; its text is the\nhuman-facing label and its `value` is the submitted value."
     },
     "ki-popover": {
       "description": "A non-modal popover anchored to a button.",

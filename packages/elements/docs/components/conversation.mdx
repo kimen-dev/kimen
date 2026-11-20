@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-conversation" />
+
+# Conversation
+
+Use `ki-conversation` for a chat transcript and `ki-message` for each user
+turn, assistant reply or system event. Place the composer after the log.
+
+```html
+<ki-conversation label="Component help" stick-to-bottom style="block-size: 20rem">
+  <ki-message message-role="user">Which inputs handle form errors?</ki-message>
+  <ki-message message-role="event" icon-name="search">Searched the component docs</ki-message>
+  <ki-message message-role="assistant" author="Ava said">
+    Input, textarea and select show field errors.
+  </ki-message>
+</ki-conversation>
+```
+
+## Follow the latest reply
+
+Set a block size on the conversation and enable `stick-to-bottom` to follow
+new messages and growing replies. Scrolling back pauses following. The person
+can scroll to the end or use **Jump to latest** to resume it. Keyboard activation
+returns focus to the log. Without `stick-to-bottom`, scrolling follows the
+person's reading position.
+
+## Stream a reply
+
+Set `streaming` before adding a reply to the log. Append each chunk to the
+message's content and clear `streaming` once the reply is complete. The article
+stays busy during streaming so the live region can present the complete reply
+on completion. With reduced motion the caret stays visible and still.
+
+Put text or formatted content in the default slot. Assistant replies accept a
+custom `avatar` and messages accept application controls in the `actions`
+slot. The app handles those controls and the stream. Use the spinner's dots
+variant to show a separate thinking status before the first chunk arrives.
+
+## Accessibility and styling
+
+`label` names the polite log. `jump-label` localizes **Jump to latest**, and
+`author` sets each article's complete accessible name, for example
+“Ava said.” Without an explicit author, the defaults are “You said,”
+“Assistant said” and “System event.”
+
+Use `--ki-conversation-max-width` and `--ki-conversation-gap` for transcript
+layout. Customize the user bubble with the `--ki-message-user-bg`,
+`--ki-message-user-fg`, `--ki-message-user-bg-image` and
+`--ki-message-user-backdrop-filter` tokens. Style the scrollport with
+`ki-conversation::part(log)` or the article with `ki-message::part(message)`.
+
+[Open the conversation examples](?path=/docs/elements-ki-conversation--examples)
