@@ -16,9 +16,9 @@ import { type KiAlertTone, liveExposureForTone } from './ki-alert.tone.js';
  * remains until the condition is resolved or the person dismisses it. Express
  * severity with `tone`, never custom styling.
  * @whenNotToUse transient confirmations that expire on their own belong to
- * the future `ki-toast`; tiny status descriptors attached to another element
- * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
- * field-level validation belongs to the form control.
+ * `ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to
+ * another element belong to `ki-badge`; blocking decisions belong to
+ * `ki-dialog`; inline field-level validation belongs to the form control.
  *
  * Assistive technology note: alerts that must be announced should be inserted
  * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
@@ -87,8 +87,8 @@ export class KiAlert {
    * the alert message. When false, the alert adds no tab stop.
    *
    * When to use: allow a person to acknowledge and clear a persistent message.
-   * When NOT to use: do not use dismissible for auto-expiring messages; that is
-   * future `ki-toast` behavior.
+   * When NOT to use: do not use dismissible for auto-expiring messages; those
+   * belong to `ki-toast`.
    *
    * @default false
    */

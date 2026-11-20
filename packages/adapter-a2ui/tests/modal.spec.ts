@@ -1,5 +1,5 @@
 // @spec:078-dialog-trigger
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   A2UI_BASIC_CATALOG_IDS,
@@ -20,6 +20,8 @@ beforeEach(() => {
   surface = document.createElement('div');
   document.body.replaceChildren(surface);
 });
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe('A2UI Modal', () => {
   it.each([V09, V1])(
@@ -80,6 +82,46 @@ describe('A2UI Modal', () => {
       });
     },
   );
+
+  it.each([
+    {
+      label: { id: 'label', component: 'Row', children: ['text'] },
+      heading: 'Details',
+      selector: 'ki-stack',
+      text: 'Details',
+    },
+    {
+      label: { id: 'label', component: 'Icon', name: 'add' },
+      heading: 'Dialog',
+      selector: 'ki-icon[name="plus"]',
+      text: 'Open dialog',
+    },
+  ])('S11 names a Modal when the trigger label is $label.component', (example) => {
+    const { version, catalogId } = V1;
+    // Stand in for the glyph the host imported before rendering the surface.
+    vi.stubGlobal(Symbol.for('kimen.icon-registry.v1'), new Map([['plus', '<path />']]));
+    const adapter = createA2uiAdapter({ surface });
+    const result = adapter.apply({
+      version,
+      createSurface: {
+        surfaceId: SURFACE_ID,
+        catalogId,
+        components: [
+          MODAL,
+          { id: 'details', component: 'Button', child: 'label' },
+          example.label,
+          { id: 'text', component: 'Text', text: 'Details' },
+          INFORMATION,
+        ],
+      },
+    });
+
+    expect(result).toMatchObject({ ok: true, degradations: [] });
+    const trigger = surface.querySelector('ki-button[command="show-modal"]');
+    expect(trigger?.querySelector(example.selector)).not.toBeNull();
+    expect(trigger?.textContent).toBe(example.text);
+    expect(surface.querySelector('ki-dialog')?.getAttribute('heading')).toBe(example.heading);
+  });
 
   it('S11 pairs each repeated Modal with its own dialog and scoped text', () => {
     const { version, catalogId, pathKey } = V1;

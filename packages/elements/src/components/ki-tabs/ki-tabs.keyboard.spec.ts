@@ -35,6 +35,17 @@ describe('ki-tabs keyboard', () => {
     expect(lastSelectableIndex([{ value: 'one', disabled: true, duplicate: false }])).toBeNull();
   });
 
+  it('S13 keeps previous navigation within the reconciled range before a new tab joins', () => {
+    const lastOnly: TabRecord[] = [
+      { value: 'disabled', disabled: true, duplicate: false },
+      { value: 'available', disabled: false, duplicate: false },
+    ];
+
+    expect(nextSelectableIndex(lastOnly, -1, 'previous')).toBeNull();
+    expect(nextSelectableIndex(lastOnly, -1, 'next')).toBe(1);
+    expect(nextSelectableIndex(lastOnly.slice(1), -1, 'previous')).toBe(0);
+  });
+
   it('S4 S16 maps horizontal arrows through writing direction plus Home and End', () => {
     expect(navigationIntentForKey('ArrowRight', 'ltr')).toBe('next');
     expect(navigationIntentForKey('ArrowLeft', 'ltr')).toBe('previous');

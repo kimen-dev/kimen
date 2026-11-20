@@ -1,4 +1,5 @@
 // @spec:030-adapter-mcp-apps
+// @spec:069-ki-icon
 // The packaged surface document, exactly as the adapter delivers it, inside a
 // sandboxed frame of a real engine. The test IS the host: it hands the frame
 // the resource text and then speaks MCP Apps 2026-01-26 over `postMessage` —
@@ -158,8 +159,8 @@ const rendering = (host: Host): { background: string; scheme: string } => {
 
 /**
  * The smallest spec node the catalog accepts for `tag`: every prop the
- * component contract requires, given a value of its declared type. Read from
- * the catalog, so a newly required prop never needs this test edited.
+ * component contract requires, given a value of its declared type. Icons use
+ * the named glyph the stock document includes.
  */
 // Read through the published Catalog shape, where every constraint field is
 // optional, instead of the literal type of the generated data.
@@ -181,6 +182,13 @@ function minimalNode(tag: string): {
     } else {
       props[name] = constraint.values?.[0] ?? 'Sample';
     }
+  }
+  if (tag === 'ki-icon') {
+    props['name'] = 'circle-check';
+  }
+  if (tag === 'ki-image') {
+    // An informative image needs alt text; the decorative form needs none.
+    props['decorative'] = true;
   }
   return { component: tag, props };
 }
@@ -269,6 +277,38 @@ describe('the delivered document is a complete Kimen surface', () => {
     await expect
       .poll(() => tags.filter((tag) => view.document.querySelector(tag)?.shadowRoot == null))
       .toEqual([]);
+    await expect
+      .poll(() => view.document.querySelector('ki-icon')?.shadowRoot?.querySelector('svg path'))
+      .toBeInstanceOf(view.SVGPathElement);
+    // The document's policy loads images from data: only, and the URL policy
+    // never lets a spec name one, so the sample image source is refused: that
+    // report is the policy working. Nothing else may be reported.
+    const sample = new URL('Sample', view.document.baseURI).href;
+    expect(
+      host.violations.filter((violation) => violation !== `img-src blocked ${sample}`),
+    ).toEqual([]);
+  });
+
+  it('S13 renders the stock glyph and rejects unselected names', async () => {
+    const host = await embed({ hostContext: { theme: 'light' } });
+    const iconSpec = (name: string, label: string) => ({
+      root: { component: 'ki-icon', props: { label, name } },
+      version: 1,
+    });
+
+    host.send(toolResult(iconSpec('circle-check', 'Confirmed')));
+    await expect.element(surfaceFrame().getByRole('img', { name: 'Confirmed' })).toBeVisible();
+
+    host.send(toolResult(iconSpec('triangle-alert', 'Unselected')));
+    // The same host sends this marker after the tool result, so observing
+    // the scheme change proves the frame processed both messages.
+    host.send(hostContextChanged({ theme: 'dark' }));
+    await expect.poll(() => rendering(host).scheme).toBe('dark');
+
+    await expect.element(surfaceFrame().getByRole('img', { name: 'Confirmed' })).toBeVisible();
+    await expect
+      .element(surfaceFrame().getByRole('img', { name: 'Unselected' }))
+      .not.toBeInTheDocument();
     expect(host.violations).toEqual([]);
   });
 

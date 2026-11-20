@@ -46,7 +46,11 @@ export interface A2uiDegradationReport {
   readonly surfaceId: string;
   readonly componentId: string;
   readonly componentType: string;
-  readonly reason: 'unmapped-type' | 'unsupported-function' | 'unsupported-variant';
+  readonly reason:
+    | 'missing-image-alt'
+    | 'unmapped-type'
+    | 'unsupported-function'
+    | 'unsupported-variant';
   readonly detail?: string | undefined;
 }
 
@@ -115,7 +119,7 @@ interface WalkContext {
 class Degrade extends Error {
   constructor(
     readonly reason: A2uiDegradationReport['reason'],
-    readonly detail: string,
+    readonly detail?: string,
   ) {
     super(reason);
   }
@@ -394,6 +398,89 @@ const BUTTON_VARIANTS: Readonly<Record<string, string>> = {
   primary: 'primary',
 };
 
+const LAYOUT_ALIGN = new Set(['start', 'center', 'end', 'stretch', 'baseline']);
+const LAYOUT_JUSTIFY: ReadonlyMap<string, string> = new Map([
+  ['start', 'start'],
+  ['center', 'center'],
+  ['end', 'end'],
+  ['spaceBetween', 'between'],
+]);
+
+function layout(it: Instance, direction?: 'row'): UiSpecNode {
+  const align = it.literal('align');
+  const justify = LAYOUT_JUSTIFY.get(it.literal('justify') ?? '');
+  const items = it
+    .children('children')
+    .map((child) => (typeof child === 'string' ? node('ki-stack', {}, [child]) : child));
+
+  return node(
+    'ki-stack',
+    {
+      ...(direction === undefined ? {} : { direction }),
+      ...(align === undefined || !LAYOUT_ALIGN.has(align) ? {} : { align }),
+      ...(justify === undefined ? {} : { justify }),
+    },
+    items,
+  );
+}
+
+/** Reads the label leaves while keeping the rendered Row and Column stacks intact. */
+function modalLabelContent(label: readonly Piece[]): Piece[] {
+  return label.flatMap((piece) =>
+    typeof piece !== 'string' && piece.component === 'ki-stack'
+      ? modalLabelContent(piece.slots?.[''] ?? [])
+      : [piece],
+  );
+}
+
+/** Basic-catalog Icon names whose Lucide names differ, in both A2UI versions. */
+const ICON_NAMES: Readonly<Record<string, string>> = {
+  accountCircle: 'circle-user-round',
+  add: 'plus',
+  arrowBack: 'arrow-left',
+  arrowForward: 'arrow-right',
+  attachFile: 'paperclip',
+  calendarToday: 'calendar-days',
+  call: 'phone',
+  close: 'x',
+  delete: 'trash-2',
+  edit: 'pencil',
+  error: 'circle-alert',
+  event: 'calendar',
+  fastForward: 'fast-forward',
+  favorite: 'heart',
+  favoriteOff: 'heart-off',
+  help: 'circle-question-mark',
+  locationOn: 'map-pin',
+  lockOpen: 'lock-open',
+  moreHoriz: 'ellipsis',
+  moreVert: 'ellipsis-vertical',
+  notifications: 'bell',
+  notificationsOff: 'bell-off',
+  payment: 'credit-card',
+  person: 'user-round',
+  photo: 'image',
+  print: 'printer',
+  refresh: 'refresh-cw',
+  shoppingCart: 'shopping-cart',
+  skipNext: 'skip-forward',
+  skipPrevious: 'skip-back',
+  starHalf: 'star-half',
+  starOff: 'star-off',
+  stop: 'square',
+  visibility: 'eye',
+  visibilityOff: 'eye-off',
+  volumeDown: 'volume-1',
+  volumeMute: 'volume',
+  volumeOff: 'volume-x',
+  volumeUp: 'volume-2',
+  warning: 'triangle-alert',
+};
+
+function isSvgPathIcon(value: unknown): boolean {
+  return isPlainObject(value) && Object.keys(value).length === 1 && Object.hasOwn(value, 'svgPath');
+}
+
 /** Per-type builders for every `mapped`, `inline` and `layout` basic-catalog type. */
 export const BUILDERS: Readonly<Record<string, Builder>> = {
   Button: (it) => {
@@ -417,16 +504,23 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     ];
   },
   ChoicePicker: (it) => {
-    if ((it.literal('variant') ?? 'mutuallyExclusive') !== 'mutuallyExclusive') {
-      throw new Degrade('unsupported-variant', 'multipleSelection');
+    const variant = it.literal('variant') ?? 'mutuallyExclusive';
+    if (variant !== 'mutuallyExclusive' && variant !== 'multipleSelection') {
+      throw new Degrade('unsupported-variant', variant);
     }
+    const multiple = variant === 'multipleSelection';
     const options = it.body['options'];
     if (!Array.isArray(options)) {
       throw it.malformed('options', 'ChoicePicker options must be a list');
     }
     const selected = it.value('value');
     const first = Array.isArray(selected) ? toText(selected[0]) : toText(selected);
-    const radios = options.map((option, index) => {
+    const selectedValues = new Set(
+      multiple && Array.isArray(selected)
+        ? selected.filter((value): value is string => typeof value === 'string')
+        : [],
+    );
+    const choices = options.map((option, index) => {
       if (!isPlainObject(option) || typeof option['value'] !== 'string') {
         throw it.malformed(
           `options/${String(index)}`,
@@ -435,21 +529,29 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       }
       const label =
         option['label'] === undefined ? '' : toText(resolveOption(it, option['label'], index));
-      return node('ki-radio', { value: option['value'] }, label === '' ? [] : [label]);
+      const value = option['value'];
+      return node(
+        multiple ? 'ki-checkbox' : 'ki-radio',
+        { value, ...(selectedValues.has(value) ? { checked: true } : {}) },
+        label === '' ? [] : [label],
+      );
     });
     const label = it.text('label');
+    if (multiple && label.trim() === '') {
+      throw new Degrade('unsupported-variant', 'multipleSelection requires a group label');
+    }
     return [
       node(
-        'ki-radio-group',
+        multiple ? 'ki-checkbox-group' : 'ki-radio-group',
         {
           ...(label === '' ? {} : { label }),
-          ...(first === '' ? {} : { value: first }),
+          ...(!multiple && first !== '' ? { value: first } : {}),
         },
-        radios,
+        choices,
       ),
     ];
   },
-  Column: (it) => it.children('children'),
+  Column: (it) => [layout(it)],
   Divider: (it) => {
     const axis = it.literal('axis');
     return [
@@ -459,6 +561,54 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         [],
       ),
     ];
+  },
+  Image: (it) => {
+    const src = it.value('url');
+    if (src === undefined && it.body['url'] !== undefined) {
+      // A missing binding can resolve when the data model arrives.
+      return [];
+    }
+    if (typeof src !== 'string') {
+      throw it.malformed('url', 'Image url must resolve to a string');
+    }
+    const fit = it.literal('fit');
+    const accessibility =
+      it.body[it.context.dialect.reservedNamespace ? '@accessibility' : 'accessibility'];
+    const { hidden, label } = isPlainObject(accessibility) ? accessibility : {};
+    const alt = typeof label === 'string' ? label : '';
+    if (hidden !== true && alt.trim() === '') {
+      throw new Degrade('missing-image-alt');
+    }
+    return [
+      node(
+        'ki-image',
+        {
+          src,
+          ...(hidden === true ? { decorative: true } : { alt }),
+          ...(fit === 'cover' || fit === 'contain' ? { fit } : {}),
+        },
+        [],
+      ),
+    ];
+  },
+  Icon: (it) => {
+    const raw = it.body['name'];
+    if (raw === undefined) {
+      throw it.malformed('name', 'Icon needs a name');
+    }
+    const name = isSvgPathIcon(raw) ? raw : it.value('name');
+    if (isSvgPathIcon(name)) {
+      throw new Degrade('unsupported-variant', 'svgPath');
+    }
+    // Data may arrive after the component list. Keep the binding for that update.
+    if (name === undefined) {
+      return [];
+    }
+    if (typeof name !== 'string') {
+      throw it.malformed('name', 'Icon name must resolve to a string');
+    }
+    const mapped = Object.hasOwn(ICON_NAMES, name) ? ICON_NAMES[name] : undefined;
+    return [node('ki-icon', { name: mapped ?? name }, [])];
   },
   List: (it) => [
     node(
@@ -495,10 +645,18 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     }
     const button = typeof trigger === 'object' ? trigger : undefined;
     const label = typeof trigger === 'string' ? [trigger] : (button?.slots?.[''] ?? []);
-    const text = label
+    const content = modalLabelContent(label);
+    const text = content
       .filter((piece): piece is string => typeof piece === 'string')
       .join('')
       .trim();
+    // The adapter's icons are decorative. Keep their glyphs and name the opener.
+    const needsFallback =
+      text === '' &&
+      content.every((piece) => typeof piece === 'string' || piece.component === 'ki-icon');
+    const openerLabel = needsFallback
+      ? [...label.filter((piece) => typeof piece !== 'string'), 'Open dialog']
+      : label;
     // The visit number is unique even when a ChildList repeats the A2UI id.
     const id = `a2ui-modal-${String(nodes)}`;
     const opener = {
@@ -506,7 +664,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       ...node(
         'ki-button',
         { ...button?.props, command: 'show-modal', commandfor: id, type: 'button' },
-        text === '' && label.every((piece) => typeof piece === 'string') ? ['Open dialog'] : label,
+        openerLabel,
       ),
     };
     const binding = button === undefined ? undefined : actionNodes.get(button);
@@ -528,7 +686,7 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
       },
     ];
   },
-  Row: (it) => it.children('children'),
+  Row: (it) => [layout(it, 'row')],
   Tabs: (it) => {
     const tabs = it.body['tabs'];
     if (!Array.isArray(tabs) || tabs.length === 0) {

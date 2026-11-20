@@ -9,7 +9,8 @@
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "NOTICE"
   ],
   "exports": {
     ".": {
@@ -67,6 +68,7 @@
         "inputs": [
           "{projectRoot}/**/*",
           "!{projectRoot}/src/generated/**",
+          "{workspaceRoot}/scripts/lib/stock-surface-icons.mjs",
           "^default"
         ],
         "outputs": [

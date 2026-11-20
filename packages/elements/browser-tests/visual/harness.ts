@@ -27,6 +27,7 @@ import { defineAllComponents } from '../all-components';
 import robotoWoff2Url from './fonts/RobotoVariable.woff2?url';
 import type { VisualComponent, VisualGallery } from './galleries';
 import { fixtureFor } from './galleries';
+import { visualGalleryThemes } from './theme-matrix';
 
 type Scheme = 'dark' | 'light';
 type Theme = 'material3' | 'onmars';
@@ -204,9 +205,7 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
   const { define, scheme } = options;
   const name = 'name' in options ? options.name : options.component;
   const gallery = 'gallery' in options ? options.gallery : fixtureFor(options.component).gallery;
-  // The approved matrix: onmars light + dark for every component, material3
-  // light only (alternate-theme contract at marginal cost).
-  const themes: readonly Theme[] = scheme === 'light' ? ['onmars', 'material3'] : ['onmars'];
+  const themes = visualGalleryThemes(name, scheme);
 
   describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {

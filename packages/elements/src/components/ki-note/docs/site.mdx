@@ -1,0 +1,33 @@
+---
+title: ki-note
+description: Short, static context beside a control or inside a card.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a note for a short constraint, tip or consequence. Place it beside the
+control or passage it explains. Put the consequence first in warnings.
+
+<Demo code={`<ki-note>Only workspace owners can change billing details.</ki-note>
+<ki-note tone="warning" size="sm">Changing the slug breaks existing links.</ki-note>
+<ki-note icon="false">Billing statements remain available for one year.</ki-note>`} />
+
+## Icons and accessibility
+
+The note is static text. It adds no landmark, announcement or tab stop. The
+icon is decorative. Use words that convey the message by themselves.
+
+Supply a decorative glyph through the `icon` slot. Set `icon="false"` in HTML
+or `element.icon = false` in JavaScript to hide the icon and reclaim its space.
+
+Use `ki-alert` for updates that must be announced, Toast for transient
+confirmations and the field's `help-text` for field guidance.
+
+## API reference
+
+<CemApi tag="ki-note" />
+
+## Workshop
+
+[Open ki-note in Storybook](/storybook/?path=/docs/docs-components-ki-note--docs)

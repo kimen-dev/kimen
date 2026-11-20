@@ -138,8 +138,8 @@ until it arrives, components are buffered and nothing renders.
 ```
 
 The adapter translates the tree into one neutral spec — `Card` becomes
-`ki-card`, `Column` contributes its children in order (the catalog has no
-layout element yet), `TextField` with `longText` becomes `ki-textarea`,
+`ki-card`, `Column` becomes `ki-stack` and `Row` becomes `ki-stack direction="row"`.
+Both stacks keep their children in order. `TextField` with `longText` becomes `ki-textarea`,
 `Button` becomes `ki-button` with its child text as label, `Text` becomes inert
 text in the parent's slot — and hands it to the guarded renderer. A property
 the basic catalog does not declare for the type rejects the message
@@ -270,10 +270,10 @@ the two ever drift. Five classes, five behaviors:
 
 | Class | Behavior |
 | --- | --- |
-| `mapped` (Card, Button, TextField, List, Tabs, Modal, …) | Renders as its neutral `ki-*` counterpart(s) |
+| `mapped` (Card, Button, TextField, Image, Icon, List, Tabs, Row, Column, Modal, …) | Renders as its neutral `ki-*` counterpart(s) |
 | `inline` (Text) | No element of its own; its resolved string becomes inert text in the parent slot |
-| `layout` (Row, Column) | No element of its own; its children join the parent slot in order |
-| `unmapped` (Image, Icon, Slider, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
+| `layout` | No element of its own; its children join the parent slot in order |
+| `unmapped` (Slider, DateTimeInput, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
 | `forbidden` (`html`, `RawHtml`, `script`, `iframe`) | The **whole message** is rejected (`forbidden-type`) — across every updated component, reachable from the root or not |
 
 A `Modal` with a supported `trigger` and `content` renders a `ki-button` and
@@ -297,6 +297,12 @@ example `formatDate`) degrades its component the same way, with
 `formatCurrency` and `pluralize` are evaluated. Report degradations back to
 the agent over your channel so it can re-emit with supported content; the
 rest of the surface renders normally.
+
+`Image` maps to `ki-image`. Supply alternative text in `@accessibility.label`
+on 1.0 or `accessibility.label` on 0.9.1. Set `hidden: true` in the same
+accessibility object for decorative images. An informative image without a
+label degrades per node with `reason: 'missing-image-alt'`. URLs for mapped
+images pass through the catalog's URL policy.
 
 ## Diagnostics reference
 

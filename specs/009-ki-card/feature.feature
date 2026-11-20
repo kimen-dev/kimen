@@ -1,7 +1,7 @@
 Feature: Card
   A card groups related content — media, header, body and footer — on one
-  distinct surface that any brand restyles through tokens alone, without the
-  card ever competing with the interactive content placed inside it.
+  distinct surface that any brand restyles through tokens alone. A card may
+  also offer a primary action while its inner controls remain independent.
 
   # Family: core behavior
   # S1
@@ -24,14 +24,14 @@ Feature: Card
 
   # S8
   Scenario: The card leaves its content's events untouched
-    Given a card whose footer holds a button labeled "Download" on a page that counts activations
+    Given a passive card whose footer holds a button labeled "Download" on a page that counts activations
     When the user clicks the button
     Then the page observes exactly one activation
 
   # Family: keyboard path
   # S4
-  Scenario: The card never takes focus away from its content
-    Given a card whose footer holds a button labeled "Renew subscription"
+  Scenario: A passive card leaves focus to its contents
+    Given a passive card whose footer holds a button labeled "Renew subscription"
     When the user presses Tab
     Then focus lands on the "Renew subscription" button and never on the card itself
 
@@ -42,9 +42,8 @@ Feature: Card
     When the accessibility tree is queried
     Then the heading and body text are exposed and the card contributes no role, name or state of its own
 
-  # Family: form participation — N/A for ki-card: a non-interactive grouping
-  # container is not a form control and contributes no entry to submitted
-  # form data (justified in spec.md's Scenario Family Coverage table).
+  # Family: form participation — a passive card has no form value.
+  # The action card test is part of the CardVariants contract.
 
   # Family: theming
   # S6
