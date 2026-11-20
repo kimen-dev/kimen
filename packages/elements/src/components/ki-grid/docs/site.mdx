@@ -1,0 +1,29 @@
+---
+title: ki-grid
+description: Arrange content on responsive tracks using Kimen spacing steps.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a grid for independent items that reflow when their available inline size
+changes. Use `min-column` for automatic tracks or `columns` for a fixed count.
+Below 30rem of available inline size, a fixed grid switches to one column.
+A direct child with `data-span="2"` spans two tracks when they fit.
+
+<Demo layout="block" code={`<ki-grid min-column="8rem">
+  <ki-card data-span="2">Overview</ki-card>
+  <ki-card>Orders</ki-card>
+  <ki-card>Customers</ki-card>
+</ki-grid>`} />
+
+The grid preserves the reading and focus order of its children. Use a table
+when row and column relationships convey meaning.
+
+## API reference
+
+<CemApi tag="ki-grid" />
+
+## Workshop
+
+[Open ki-grid in Storybook](/storybook/?path=/docs/docs-components-ki-grid--docs)

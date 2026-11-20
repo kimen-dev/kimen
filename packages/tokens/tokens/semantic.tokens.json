@@ -1,6 +1,11 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$type": "other",
+        "$value": "none",
+        "$description": "An unadorned surface has no background image."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -20,10 +25,6 @@
       "tooltip": {
         "$value": "{ki.foundation.onmars-v1.tooltip-bg-image}",
         "$description": "Theme image layered over a tooltip surface."
-      },
-      "none": {
-        "$value": "none",
-        "$description": "Default for surfaces with no decorative image."
       }
     },
     "surface": {
@@ -1103,6 +1104,11 @@
       }
     },
     "effect": {
+      "no-backdrop-filter": {
+        "$type": "other",
+        "$value": "none",
+        "$description": "A surface that paints without filtering its backdrop."
+      },
       "component": {
         "backdrop-blur": {
           "$type": "dimension",
@@ -1121,6 +1127,11 @@
           "$type": "other",
           "$value": "blur({ki.effect.component.backdrop-blur})",
           "$description": "Complete backdrop filter for glass components. Use none to turn the effect off."
+        },
+        "no-backdrop-filter": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "An unadorned surface applies no backdrop filter."
         },
         "listbox-backdrop-filter": {
           "$type": "other",
@@ -1222,11 +1233,6 @@
               "$description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with --ki-effect-component-backdrop-filter."
             }
           }
-        },
-        "no-backdrop-filter": {
-          "$type": "other",
-          "$value": "none",
-          "$description": "Default for component surfaces without a backdrop effect."
         }
       },
       "video-hover-opacity": {
@@ -1300,6 +1306,34 @@
       "$description": "semantic color for transparent inverse."
     },
     "typography": {
+      "underline": {
+        "thickness": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "Stroke width of a resting text underline."
+        },
+        "thickness-hover": {
+          "$value": "{ki.size.text-decoration.thickness-hover}",
+          "$description": "Stroke width of an emphasized underline on hover."
+        },
+        "offset": {
+          "$value": "{ki.size.text-decoration.offset}",
+          "$description": "Gap between text and its underline."
+        }
+      },
+      "inline-icon": {
+        "size": {
+          "$value": "{ki.size.inline-icon.size}",
+          "$description": "Edge of a glyph placed inline with text."
+        },
+        "gap": {
+          "$value": "{ki.size.inline-icon.gap}",
+          "$description": "Gap between text and a trailing inline glyph."
+        }
+      },
+      "visually-hidden-size": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Nonzero edge for clipped text available to assistive technology."
+      },
       "family": {
         "$type": "fontFamily",
         "display": {
@@ -1536,8 +1570,34 @@
         }
       }
     },
+    "glyph": {
+      "size": {
+        "$type": "dimension",
+        "sm": {
+          "$value": "{ki.space.3xl}",
+          "$description": "Small glyph for dense layouts (16px at the default root size)."
+        },
+        "md": {
+          "$value": "{ki.space.5xl}",
+          "$description": "Medium glyph for body content (20px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Large standalone glyph (24px at the default root size)."
+        }
+      },
+      "stroke-width": {
+        "$type": "number",
+        "$value": "{ki.scale.icon-stroke}",
+        "$description": "Weight of a line icon's outline in viewBox units."
+      }
+    },
     "spacing": {
       "$type": "dimension",
+      "media-caption": {
+        "$value": "{ki.space.xs}",
+        "$description": "Block spacing between a media frame and its caption."
+      },
       "inline": {
         "$value": "{ki.space.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md."
@@ -1545,6 +1605,14 @@
       "block": {
         "$value": "{ki.space.xl}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
+      },
+      "activity-label-gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Gap between an inline activity mark and its label."
+      },
+      "activity-dot-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "Gap between typing dots."
       },
       "action-gap": {
         "$value": "{ki.space.md}",
@@ -1568,26 +1636,27 @@
         "$type": "dimension"
       }
     },
-    "glyph": {
-      "size": {
-        "$type": "dimension",
-        "sm": {
-          "$value": "{ki.space.3xl}",
-          "$description": "Small glyph for dense layouts (16px at the default root size)."
-        },
-        "md": {
-          "$value": "{ki.space.5xl}",
-          "$description": "Medium glyph for body content (20px at the default root size)."
-        },
-        "lg": {
-          "$value": "{ki.space.7xl}",
-          "$description": "Large standalone glyph (24px at the default root size)."
-        }
+    "notification-marker": {
+      "$type": "dimension",
+      "count-size": {
+        "$value": "{ki.space.4xl}",
+        "$description": "Minimum diameter of a notification marker that displays a count."
       },
-      "stroke-width": {
-        "$type": "number",
-        "$value": "{ki.scale.icon-stroke}",
-        "$description": "Weight of a line icon's outline in viewBox units."
+      "dot-size": {
+        "$value": "{ki.space.lg}",
+        "$description": "Diameter of a notification or presence dot."
+      },
+      "ring-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Width of the separator between a notification marker and its trigger."
+      },
+      "padding-inline": {
+        "$value": "{ki.space.xs}",
+        "$description": "Inline padding of a notification marker with a count."
+      },
+      "radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "Pill radius of a notification marker."
       }
     },
     "density": {
@@ -1625,9 +1694,17 @@
     },
     "corner": {
       "$type": "dimension",
+      "inline": {
+        "$value": "{ki.radius.xxs}",
+        "$description": "Small radius for an outline around inline content."
+      },
       "control": {
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
+      },
+      "activity-mark": {
+        "$value": "{ki.radius.round}",
+        "$description": "Round corners for rings and typing dots."
       },
       "action-frame": {
         "$value": "{ki.radius.component.md}",
@@ -1696,6 +1773,22 @@
         "instant": {
           "$value": "{ki.duration.instant}",
           "$description": "Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs)."
+        },
+        "activity-rotation": {
+          "$value": "{ki.duration.activity-rotation}",
+          "$description": "Period of an indeterminate activity rotation."
+        },
+        "activity-rotation-reduced": {
+          "$value": "{ki.duration.activity-rotation-reduced}",
+          "$description": "Period of an indeterminate activity rotation with reduced motion."
+        },
+        "activity-pulse": {
+          "$value": "{ki.duration.activity-pulse}",
+          "$description": "Period of an indeterminate typing pulse."
+        },
+        "activity-stagger": {
+          "$value": "{ki.duration.activity-stagger}",
+          "$description": "Stagger between neighboring marks of an activity pulse."
         }
       },
       "easing": {
@@ -1743,6 +1836,14 @@
         "emphasized-out": {
           "$value": "{ki.easing.spring}",
           "$description": "Expressive exit curve for selected controls. Onmars eases out without overshoot."
+        },
+        "activity-rotation": {
+          "$value": "{ki.easing.linear}",
+          "$description": "Constant speed for an activity rotation."
+        },
+        "activity-pulse": {
+          "$value": "{ki.easing.in-out}",
+          "$description": "Symmetric easing for fluctuations in a typing pulse."
         }
       },
       "distance": {
@@ -1758,6 +1859,274 @@
         "md": {
           "$value": "{ki.space.md}",
           "$description": "Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise)."
+        }
+      },
+      "scale": {
+        "$type": "number",
+        "activity-pulse-min": {
+          "$value": "{ki.scale.activity-pulse-min}",
+          "$description": "Smallest visual scale of an activity pulse."
+        }
+      }
+    },
+    "activity-size": {
+      "$type": "dimension",
+      "ring-sm": {
+        "$value": "{ki.space.3xl}",
+        "$description": "Small inline activity ring diameter."
+      },
+      "ring-md": {
+        "$value": "{ki.space.5xl}",
+        "$description": "Medium inline activity ring diameter."
+      },
+      "ring-lg": {
+        "$value": "{ki.space.10xl}",
+        "$description": "Large inline activity ring diameter."
+      },
+      "stroke": {
+        "$value": "{ki.size.border.thin}",
+        "$description": "Stroke of a small or medium activity ring."
+      },
+      "stroke-lg": {
+        "$value": "{ki.size.border.medium}",
+        "$description": "Stroke of a large activity ring."
+      },
+      "dot": {
+        "$value": "{ki.space.sm}",
+        "$description": "Diameter of a typing dot at its full size."
+      }
+    },
+    "layout": {
+      "$type": "dimension",
+      "spacing": {
+        "zero": {
+          "$value": "{ki.space.zero}",
+          "$description": "The zero spacing step for a stack or grid gap."
+        },
+        "xxs": {
+          "$value": "{ki.space.xxs}",
+          "$description": "The xxs spacing step for a stack or grid gap."
+        },
+        "xs": {
+          "$value": "{ki.space.xs}",
+          "$description": "The xs spacing step for a stack or grid gap."
+        },
+        "sm": {
+          "$value": "{ki.space.sm}",
+          "$description": "The sm spacing step for a stack or grid gap."
+        },
+        "md": {
+          "$value": "{ki.space.md}",
+          "$description": "The md spacing step for a stack or grid gap."
+        },
+        "lg": {
+          "$value": "{ki.space.lg}",
+          "$description": "The lg spacing step for a stack or grid gap."
+        },
+        "xl": {
+          "$value": "{ki.space.xl}",
+          "$description": "The xl spacing step for a stack or grid gap."
+        },
+        "2xl": {
+          "$value": "{ki.space.2xl}",
+          "$description": "The 2xl spacing step for a stack or grid gap."
+        },
+        "3xl": {
+          "$value": "{ki.space.3xl}",
+          "$description": "The 3xl spacing step for a stack or grid gap."
+        },
+        "4xl": {
+          "$value": "{ki.space.4xl}",
+          "$description": "The 4xl spacing step for a stack or grid gap."
+        },
+        "5xl": {
+          "$value": "{ki.space.5xl}",
+          "$description": "The 5xl spacing step for a stack or grid gap."
+        },
+        "6xl": {
+          "$value": "{ki.space.6xl}",
+          "$description": "The 6xl spacing step for a stack or grid gap."
+        },
+        "7xl": {
+          "$value": "{ki.space.7xl}",
+          "$description": "The 7xl spacing step for a stack or grid gap."
+        },
+        "8xl": {
+          "$value": "{ki.space.8xl}",
+          "$description": "The 8xl spacing step for a stack or grid gap."
+        },
+        "9xl": {
+          "$value": "{ki.space.9xl}",
+          "$description": "The 9xl spacing step for a stack or grid gap."
+        },
+        "10xl": {
+          "$value": "{ki.space.10xl}",
+          "$description": "The 10xl spacing step for a stack or grid gap."
+        },
+        "11xl": {
+          "$value": "{ki.space.11xl}",
+          "$description": "The 11xl spacing step for a stack or grid gap."
+        },
+        "12xl": {
+          "$value": "{ki.space.12xl}",
+          "$description": "The 12xl spacing step for a stack or grid gap."
+        },
+        "13xl": {
+          "$value": "{ki.space.13xl}",
+          "$description": "The 13xl spacing step for a stack or grid gap."
+        },
+        "14xl": {
+          "$value": "{ki.space.14xl}",
+          "$description": "The 14xl spacing step for a stack or grid gap."
+        },
+        "15xl": {
+          "$value": "{ki.space.15xl}",
+          "$description": "The 15xl spacing step for a stack or grid gap."
+        },
+        "16xl": {
+          "$value": "{ki.space.16xl}",
+          "$description": "The 16xl spacing step for a stack or grid gap."
+        },
+        "17xl": {
+          "$value": "{ki.space.17xl}",
+          "$description": "The 17xl spacing step for a stack or grid gap."
+        },
+        "18xl": {
+          "$value": "{ki.space.18xl}",
+          "$description": "The 18xl spacing step for a stack or grid gap."
+        },
+        "19xl": {
+          "$value": "{ki.space.19xl}",
+          "$description": "The 19xl spacing step for a stack or grid gap."
+        },
+        "20xl": {
+          "$value": "{ki.space.20xl}",
+          "$description": "The 20xl spacing step for a stack or grid gap."
+        },
+        "21xl": {
+          "$value": "{ki.space.21xl}",
+          "$description": "The 21xl spacing step for a stack or grid gap."
+        },
+        "22xl": {
+          "$value": "{ki.space.22xl}",
+          "$description": "The 22xl spacing step for a stack or grid gap."
+        },
+        "23xl": {
+          "$value": "{ki.space.23xl}",
+          "$description": "The 23xl spacing step for a stack or grid gap."
+        },
+        "24xl": {
+          "$value": "{ki.space.24xl}",
+          "$description": "The 24xl spacing step for a stack or grid gap."
+        },
+        "25xl": {
+          "$value": "{ki.space.25xl}",
+          "$description": "The 25xl spacing step for a stack or grid gap."
+        },
+        "26xl": {
+          "$value": "{ki.space.26xl}",
+          "$description": "The 26xl spacing step for a stack or grid gap."
+        }
+      },
+      "grid-min": {
+        "$value": "{ki.size.layout.grid-min}",
+        "$description": "Default minimum inline size of an automatic grid track."
+      },
+      "grid-fixed-breakpoint": {
+        "$value": "{ki.size.layout.grid-fixed-breakpoint}",
+        "$description": "Minimum available inline size for a fixed grid to use multiple tracks."
+      }
+    },
+    "control": {
+      "size": {
+        "$type": "dimension",
+        "xs": {
+          "$value": "{ki.space.9xl}",
+          "$description": "Extra-small control track height, 28 CSS px at the default root size."
+        },
+        "sm": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Small control track height, 32 CSS px at the default root size."
+        },
+        "md": {
+          "$value": "{ki.space.12xl}",
+          "$description": "Medium control track height, 40 CSS px at the default root size."
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "track": {
+          "$value": "{ki.radius.component.md}",
+          "$description": "Corner radius of a track containing adjacent controls."
+        },
+        "item": {
+          "$value": "{ki.radius.component.sm}",
+          "$description": "Corner radius of an individual control inside a track."
+        }
+      },
+      "track-inset": {
+        "$type": "dimension",
+        "$value": "{ki.space.xxs}",
+        "$description": "Inset and spacing between adjacent controls inside a track."
+      },
+      "icon-gap": {
+        "$type": "dimension",
+        "$value": "{ki.space.sm}",
+        "$description": "Separation between a control label and its leading icon."
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Stroke width of the boundary of a compact control."
+      },
+      "compact-pill": {
+        "height": {
+          "$value": "{ki.space.10xl}",
+          "$description": "Default height of a compact pill."
+        },
+        "height-sm": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Small height of a compact pill."
+        },
+        "icon-size": {
+          "$value": "{ki.space.3xl}",
+          "$description": "Icon size inside a compact pill."
+        },
+        "inset": {
+          "$value": "{ki.space.xl}",
+          "$description": "Default inline padding of a compact pill."
+        },
+        "inset-sm": {
+          "$value": "{ki.space.md}",
+          "$description": "Small inline padding of a compact pill."
+        },
+        "inset-action": {
+          "$value": "{ki.space.xs}",
+          "$description": "Trailing inset beside a pill action."
+        },
+        "gap": {
+          "$value": "{ki.space.sm}",
+          "$description": "Gap between content in a compact pill."
+        },
+        "collection-gap": {
+          "$value": "{ki.space.md}",
+          "$description": "Gap between adjacent compact pills."
+        },
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Fully rounded compact pill shape."
+        },
+        "border-width": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "Default thickness of a compact pill border."
+        },
+        "bg-image": {
+          "$value": "none",
+          "$description": "Default compact pill surface uses a solid color."
+        },
+        "backdrop-filter": {
+          "$value": "none",
+          "$description": "Default compact pill surface leaves the backdrop unfiltered."
         }
       }
     }

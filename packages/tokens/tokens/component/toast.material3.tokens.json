@@ -1,0 +1,25 @@
+{
+  "ki": {
+    "toast": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s2}",
+        "$description": "Material 3 snackbar-like container for the toast: a surface step above the page."
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.none}",
+        "$description": "Material 3 containers are not stroked."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.xxs}",
+        "$description": "Material 3 snackbar shape: md.sys.shape.corner.extra-small through the material3 radius scale."
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{ki.elevation.e3}",
+        "$description": "Material 3 snackbar elevation (level 3)."
+      }
+    }
+  }
+}

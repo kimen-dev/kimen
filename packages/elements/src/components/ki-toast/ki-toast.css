@@ -1,0 +1,150 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
+ * Logical properties only (Art. IV): direction-agnostic by construction. */
+:host {
+  --_ki-toast-icon: var(--ki-toast-neutral-icon);
+  --_ki-toast-padding: calc(var(--ki-toast-padding) * var(--ki-density-space-scale));
+  --_ki-toast-gap: calc(var(--ki-toast-gap) * var(--ki-density-space-scale));
+
+  display: block;
+  max-inline-size: var(--ki-toast-width);
+  font-family: var(--ki-typography-family-body);
+}
+
+/* Left, or waiting in a toaster's queue: nothing to see. */
+:host([dismissed]),
+:host([queued]) {
+  display: none;
+}
+
+/* The tone lives in the icon alone (issue 353). */
+:host([tone="info"]) {
+  --_ki-toast-icon: var(--ki-toast-info-icon);
+}
+
+:host([tone="success"]) {
+  --_ki-toast-icon: var(--ki-toast-success-icon);
+}
+
+:host([tone="warning"]) {
+  --_ki-toast-icon: var(--ki-toast-warning-icon);
+}
+
+:host([tone="danger"]) {
+  --_ki-toast-icon: var(--ki-toast-danger-icon);
+}
+
+/* One flat, opaque, raised surface with a hairline edge (onmars v2). The fill
+ * is a colour; an image, a backdrop filter and the elevation are tokens a
+ * theme may set, and the elevation is the only theme-controlled shadow in
+ * the list (document 2, rule 6). Stencil does not autoprefix: the -webkit-
+ * alias ships explicitly for Safari. */
+[part="toast"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--_ki-toast-gap);
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding: var(--_ki-toast-padding);
+  border: var(--ki-toast-border-width) solid var(--ki-toast-border);
+  border-radius: var(--ki-toast-radius);
+  background-color: var(--ki-toast-bg);
+  background-image: var(--ki-toast-bg-image);
+  box-shadow: var(--ki-toast-shadow);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: var(--ki-toast-backdrop-filter);
+  backdrop-filter: var(--ki-toast-backdrop-filter);
+  color: var(--ki-toast-fg);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-para);
+}
+
+/* Decorative: aria-hidden in the template. As tall as the first line, so the
+ * glyph sits beside the heading (or the message without one). */
+[part="icon"] {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  block-size: var(--ki-typography-line-height-body-2);
+  color: var(--_ki-toast-icon);
+}
+
+[part="icon"] svg {
+  inline-size: var(--ki-toast-icon-size);
+  block-size: var(--ki-toast-icon-size);
+}
+
+.live {
+  display: grid;
+  flex: 1 1 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+[part="heading"] {
+  display: block;
+  font-family: var(--ki-toast-heading-font-family);
+  font-size: var(--ki-typography-size-body-2);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  line-height: var(--ki-typography-line-height-body-2);
+}
+
+[part="message"] {
+  display: block;
+  color: var(--ki-toast-message-fg);
+}
+
+/* With nothing slotted the wrapper takes no space, gap included. */
+[part="action"] {
+  display: none;
+  flex: none;
+  align-items: center;
+  align-self: center;
+}
+
+.has-action > [part="action"] {
+  display: flex;
+}
+
+[part="dismiss"] {
+  flex: none;
+}
+
+/* Micro-motion (Art. V): a short rise on arrival, transform and opacity
+ * only, gated so reduced-motion environments (and the visual harness) stay
+ * static. Toasts leave without an exit animation (I-7). */
+@media (prefers-reduced-motion: no-preference) {
+  [part="toast"] {
+    animation: ki-toast-in var(--ki-motion-duration-medium-1) var(--ki-motion-easing-out);
+  }
+}
+
+@keyframes ki-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ki-motion-distance-sm));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
+/* Forced colors (Windows Contrast themes): the forced palette repaints the
+ * fill and drops the shadow that tell the toast from the page, so its edge is
+ * drawn in the forced text colour, and the icon keeps its glyph. */
+@media (forced-colors: active) {
+  [part="toast"] {
+    border-color: CanvasText;
+  }
+
+  [part="icon"] {
+    color: CanvasText;
+  }
+}

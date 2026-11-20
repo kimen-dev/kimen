@@ -34,7 +34,9 @@ const frozenValue = (name, tag) => ({
 });
 /**
  * Wrapper-contract event types (spec 034): the three `Ki*CustomEvent`
- * generics the generated framework wrappers import from the package root.
+ * generics the generated framework wrappers imported from the package root
+ * (since spec 049 they read event types from `@kimen/elements/components`;
+ * these stay for consumers that import them from the root).
  * Type-only re-exports of Stencil-generated interfaces — NOT part of the
  * deprecated legacy facade and never a component-registry path. Exactly
  * this set is permitted from exactly this module; everything else on the

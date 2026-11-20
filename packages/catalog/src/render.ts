@@ -141,11 +141,38 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
 /**
  * The declared events of a catalog entry, in the entry's (sorted) order. A
  * bound node activates on the only one (FR-003, S17) or, when there is none,
- * on the platform click; more than one is ambiguous and the guard rejects
- * the binding before any listener exists (S19).
+ * on the platform click. Multiple events require a source-owned discriminator
+ * on a validated prop. Otherwise the guard rejects the binding (S19).
  */
 export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
+}
+
+const CHIP_ACTIVATIONS = ['ki-change', 'ki-remove', 'ki-activate'] as const;
+
+function chipActivations(tag: string, events: readonly string[]): boolean {
+  return (
+    tag === 'ki-chip' &&
+    events.length === CHIP_ACTIVATIONS.length &&
+    CHIP_ACTIVATIONS.every((event) => events.includes(event))
+  );
+}
+
+function chipActivation(
+  element: Element,
+  props: Readonly<Record<string, Scalar>>,
+): (typeof CHIP_ACTIVATIONS)[number] | undefined {
+  const group = element.parentElement;
+  const type =
+    props['type'] ?? (group?.localName === 'ki-chip-group' ? group.getAttribute('type') : null);
+  switch (type) {
+    case 'assist':
+      return 'ki-activate';
+    case 'input':
+      return props['removable'] === true ? 'ki-remove' : undefined;
+    default:
+      return 'ki-change';
+  }
 }
 
 /**
@@ -154,7 +181,13 @@ export function declaredEvents(entry: CatalogEntry | undefined): readonly string
  * event, icon availability and the prop-name guards. Catalog membership,
  * prop types and limits, URL policy, actions and slots were enforced upstream.
  */
-export function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardState): void {
+export function guardNode(
+  node: UiSpecNode,
+  path: string,
+  depth: number,
+  state: GuardState,
+  parent?: UiSpecNode,
+): void {
   state.nodes += 1;
   if (depth > state.budgets.maxDepth) {
     state.diagnostics.push({
@@ -204,11 +237,23 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
     }
   }
   // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
-  // activation event. An entry declaring several gives the spec no way to
-  // say which, so the binding is rejected fail-closed instead of guessing.
+  // activation event. Chip type supplies an explicit discriminator. Other
+  // ambiguous entries are rejected before the binding is built.
   if (node.action !== undefined) {
     const events = declaredEvents(ownEntry(state.components, node.component));
-    if (events.length > 1) {
+    if (chipActivations(node.component, events)) {
+      const kind =
+        node.props?.['type'] ??
+        (parent?.component === 'ki-chip-group' ? parent.props?.['type'] : undefined);
+      if (kind === 'input' && node.props?.['removable'] !== true) {
+        state.diagnostics.push({
+          message: 'an input chip needs removable: true to bind a removal action',
+          path: `${path}.action`,
+          rule: 'ambiguous-activation-event',
+          value: node.action,
+        });
+      }
+    } else if (events.length > 1) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
         path: `${path}.action`,
@@ -238,7 +283,7 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
       if (typeof child !== 'string') {
-        guardNode(child, `${path}.slots.${slotName}[${String(index)}]`, depth + 1, state);
+        guardNode(child, `${path}.slots.${slotName}[${String(index)}]`, depth + 1, state, node);
       }
     });
   }
@@ -260,7 +305,7 @@ export function payloadBytes(data: unknown): number {
  * the prop and only when the live value has the declared type, so nothing
  * undeclared or mistyped ever crosses the action channel.
  */
-const LIVE_STATE_PROPS = ['checked', 'value'] as const;
+const LIVE_STATE_PROPS = ['checked', 'selected', 'value'] as const;
 
 export function matchesConstraint(
   value: unknown,
@@ -338,14 +383,26 @@ export function attachText(
   return parent.insertBefore(holder, before);
 }
 
-/** Writes one validated prop as an attribute: booleans by presence. */
-export function writeProp(element: Element, name: string, value: Scalar | undefined): void {
-  if (value === undefined || value === false) {
+/** Writes one validated prop as an attribute. */
+export function writeProp(
+  element: Element,
+  component: string,
+  name: string,
+  value: Scalar | undefined,
+): void {
+  if (value === undefined) {
     element.removeAttribute(name);
-  } else if (value === true) {
-    element.setAttribute(name, '');
+  } else if (value === false) {
+    // Built-in Stencil props that default to true require an explicit false.
+    // Registered components continue to use boolean attribute presence.
+    const entry = ownEntry(builtInCatalog.components, component);
+    if (ownEntry(entry?.props, name)?.default === true) {
+      element.setAttribute(name, 'false');
+    } else {
+      element.removeAttribute(name);
+    }
   } else {
-    element.setAttribute(name, String(value));
+    element.setAttribute(name, value === true ? '' : String(value));
   }
 }
 
@@ -374,7 +431,7 @@ export function writeProps(
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, name, value);
+    writeProp(element, component, name, value);
   }
 }
 
@@ -399,8 +456,8 @@ export function pinButtonType(
 }
 
 /**
- * Wires the ONE activation listener of a bound node (FR-003) onto a
- * dispatch callback. `currentProps` is read at activation time, so a caller
+ * Routes the bound node's activation event (FR-003) to a dispatch callback.
+ * `currentProps` is read at activation time, so a caller
  * whose props change after build (the live surface) reports the current
  * ones; `renderUiSpec` passes the props it built with.
  */
@@ -410,46 +467,52 @@ export function wireActivation(
   currentProps: () => Readonly<Record<string, Scalar>>,
   dispatch: (data: Readonly<Record<string, Scalar>>) => void,
 ): void {
-  // The guard admitted at most one declared event (S19).
-  const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
-  if (activation === DEFAULT_ACTIVATION_EVENT) {
-    // A click-activated node (S4) dispatches the spec's data payload and
-    // suppresses the native default (a submit button's form submission)
-    // and the bubbling, so no other callback or code path runs.
-    element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-      if (!claim(event)) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      dispatch({ ...currentProps() });
-    });
+  const events = declaredEvents(entry);
+  const variantActivation = chipActivations(element.localName, events);
+  const activation = events[0] ?? DEFAULT_ACTIVATION_EVENT;
+  const clickActivated = !variantActivation && activation === DEFAULT_ACTIVATION_EVENT;
+  const hasOptInCardAction = entry?.tag === 'ki-card' && activation === 'ki-activate';
+  const cardHasLink = (props: Readonly<Record<string, Scalar>>): boolean => {
+    const href = props['href'];
+    return typeof href === 'string' && href.trim() !== '';
+  };
+
+  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+    // Declared-event controls claim their click so it cannot activate an
+    // enclosing bound node. Their native interaction still runs.
+    if (!claim(event) || (!clickActivated && !hasOptInCardAction)) return;
+    const props = currentProps();
+    // Passive cards retain legacy click bindings. Linked cards keep native
+    // navigation, and interactive cards dispatch through ki-activate.
+    if (!clickActivated && (props['interactive'] === true || cardHasLink(props))) return;
+    event.preventDefault();
+    event.stopPropagation();
+    dispatch({ ...props });
+  });
+
+  if (clickActivated) {
     pinButtonType(element, entry, currentProps());
     return;
   }
-  // A declared-event node (S17) dispatches on the event its catalog entry
-  // declares, emitted by the component itself — a same-named event bubbling
-  // up from a descendant is not this control's activation (S18). Nothing is
-  // cancelled: the control must be able to change, and the payload carries
-  // its live state. The click that operates the control is claimed, never
-  // cancelled, so an enclosing click-bound node does not dispatch for it (S4).
-  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-    claim(event);
-  });
-  element.addEventListener(activation, (event: Event) => {
-    if (event.target !== element || !claim(event)) {
-      return;
-    }
-    dispatch(liveData(element, currentProps(), entry));
-  });
+
+  // Accept only the component's own event for its current mode (S17–S19).
+  // The control's default behavior remains intact, and actions carry its live state.
+  for (const name of variantActivation ? CHIP_ACTIVATIONS : [activation]) {
+    element.addEventListener(name, (event: Event) => {
+      if (event.target !== element || !claim(event)) return;
+      const props = currentProps();
+      if (hasOptInCardAction && (props['interactive'] !== true || cardHasLink(props))) return;
+      if (variantActivation && chipActivation(element, props) !== name) return;
+      dispatch(liveData(element, props, entry));
+    });
+  }
 }
 
 /**
- * Builds one validated node into a detached element (FR-004): props become
- * attributes (booleans as presence), text children become inert text nodes
- * (never `innerHTML`), and a bound action wires exactly one activation
- * listener — derived from the catalog entry (FR-003) — onto the renderer's
- * single channel. No spec string is ever evaluated.
+ * Builds one validated node into a detached element (FR-004). Props become
+ * attributes, text children become inert text nodes, and a bound action
+ * routes the node's selected activation (FR-003) to the renderer's single
+ * channel. No spec string is ever evaluated.
  */
 function buildNode(
   node: UiSpecNode,

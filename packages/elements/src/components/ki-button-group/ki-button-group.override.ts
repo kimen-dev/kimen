@@ -4,7 +4,7 @@ interface ButtonOverride {
   applied: string;
 }
 
-export function authoredButtonValue(
+function authoredButtonValue(
   current: string | null,
   override: ButtonOverride | undefined,
 ): string | null {

@@ -1,0 +1,23 @@
+# Stack examples
+
+A vertical sequence uses the default direction and the medium spacing step.
+
+```html
+<ki-stack>
+  <h2>Account</h2>
+  <p>Review the settings for your workspace.</p>
+  <ki-button variant="secondary">Edit settings</ki-button>
+</ki-stack>
+```
+
+A toolbar keeps its source order with a horizontal axis, wrapping and a
+growing label. Place `data-grow` on a direct child to give it a share of the
+available free space.
+
+```html
+<ki-stack direction="row" gap="sm" justify="between" align="center" wrap>
+  <strong data-grow>Order summary</strong>
+  <ki-button variant="secondary">Cancel</ki-button>
+  <ki-button variant="primary">Save</ki-button>
+</ki-stack>
+```
