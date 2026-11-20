@@ -1,7 +1,9 @@
 {
   "barePage": { "keyboardPressed": false },
   "pointer": { "hoverWitness": false },
-  "visual": { "material3Dark": true },
   "catalog": true,
+  "sizeBudget": {
+    "mcpServer": { "raw": 22593, "gzip": 5076, "brotli": 3728 }
+  },
   "budgetGroup": { "members": ["ki-breadcrumb", "ki-breadcrumb-item"] }
 }
