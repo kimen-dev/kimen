@@ -22,6 +22,22 @@ export function focusOriginOf(toaster: Element): HTMLElement | null {
   return origin;
 }
 
+/**
+ * Whether the pointer rests on `scope` or focus is inside it: a toaster, or a
+ * toast standing alone. Asking `scope.matches(state)` is not enough: the
+ * toaster's stack is a popover in the top layer, and Blink and WebKit stop
+ * `:hover` and `:focus-within` at a top-layer element, so the toaster host
+ * never matches while the pointer or focus is on one of its toasts (Gecko
+ * carries both up to the host). The stack itself matches in every engine, so
+ * the top elements of the shadow tree are asked too.
+ */
+export function interactionWithin(scope: Element, state: ':focus-within' | ':hover'): boolean {
+  return (
+    scope.matches(state) ||
+    [...(scope.shadowRoot?.children ?? [])].some((child) => child.matches(state))
+  );
+}
+
 /** The first control of a toast: its first focusable action, else its dismiss button. */
 export function firstControlOf(toast: HTMLElement): HTMLElement | null {
   for (const action of toast.querySelectorAll<HTMLElement>(':scope > [slot="action"]')) {
