@@ -1,0 +1,92 @@
+Feature: ki-code-input collects a fixed-length verification code
+  A single field accepts the code and presents one box per character.
+
+  # S1
+  Scenario: Pasting a formatted code completes the field once
+    Given an empty six-digit verification field
+    When the user pastes "04 29-11"
+    Then the boxes show "042911"
+    And one input event followed by one completion event reports "042911"
+
+  # S2
+  Scenario: Accept a whole alphanumeric code through the autofill field
+    Given a four-character alphanumeric verification field
+    When the browser enters "a7B9" in one edit
+    Then the boxes show "a7B9" in order
+    And the completion event reports "a7B9"
+
+  # S3
+  Scenario: Edit a code with the keyboard as one field
+    Given the six-digit verification field contains "042911" and has focus
+    When the user selects and replaces the third digit with "8" using the keyboard
+    Then the field contains "048911"
+    And the completion event reports "048911"
+
+  # S4
+  Scenario: Undo an accepted native edit
+    Given the user has changed "042911" to "048911" using the keyboard
+    When the user undoes the edit
+    Then the field contains "042911"
+
+  # S5
+  Scenario: Expose one named field and its delivery instructions
+    Given a required field labeled "Verification code" with delivery instructions
+    When the field receives focus
+    Then assistive technology exposes one required text field named "Verification code"
+    And the field is described by the delivery instructions
+
+  # S6
+  Scenario: Replace delivery instructions with a polite validation error
+    Given a required six-digit field with "042" entered and the error "Enter all six digits."
+    When the user submits the form
+    Then the field is marked invalid and described by "Enter all six digits."
+    And the help line is replaced by the polite error announcement
+
+  # S7
+  Scenario: Submit the code as one named form entry
+    Given a form with "042911" in the verification field named "otp"
+    When the user submits the form
+    Then the form data includes one "otp" entry with the value "042911"
+
+  # S8
+  Scenario: Reset the code to its declared value
+    Given the form declared "042911" and the user has replaced it
+    When the user resets the form
+    Then the field returns to "042911" silently
+
+  # S9
+  Scenario: Exclude the code when its fieldset is disabled
+    Given a fieldset containing a verification field filled with "042911"
+    When the fieldset is disabled
+    Then the verification field is unavailable for editing
+    And its code is excluded from submitted form data
+
+  # S10
+  Scenario: Restyle boxes through semantic tokens
+    Given a page supplies a custom surface for a four-character code
+    When the page shows the verification field
+    Then the four boxes use the supplied surface
+
+  # S11
+  Scenario: Keep a stationary caret under reduced motion
+    Given the empty verification field has focus
+    When the user requests reduced motion
+    Then the caret stays visible without blinking
+
+  # S12
+  Scenario: Distinguish focus from the resting border in forced colours
+    Given a verification field in a forced-colour palette
+    When the user focuses the field
+    Then its boxes remain visible and the active box shows a distinct focus outline
+
+  # S13
+  Scenario: Keep the code order in a right-to-left form
+    Given a right-to-left form shows the label "Verification code"
+    When the user enters "042911"
+    Then the code reads left to right and the field stays aligned to the reading start
+
+  # S14
+  Scenario: Respect density and keep a usable touch target
+    Given a small verification field in a touch-density region
+    When the user interacts using a coarse pointer
+    Then the field uses the touch density and its entry text is at least 16 pixels
