@@ -33,6 +33,11 @@ the same bar as agent-written code.
   never hand-edited.
 - The founder is the only merge gate. Independent review is optional and
   advisory for changes whose risk justifies it.
+- `main` merges through a squash merge queue. Once `quality` is green on the
+  PR, add it to the queue (`gh pr merge <n> --squash --auto` or "Merge when
+  ready"). The queue tests each group of PRs against the latest `main` with
+  the full suite and merges them together, so there is no need to update a
+  branch after another PR lands.
 
 ## Documentation map
 

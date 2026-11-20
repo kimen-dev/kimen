@@ -29,7 +29,19 @@
       "parameters": {
         "do_not_enforce_on_create": false,
         "required_status_checks": [{ "context": "quality", "integration_id": 15368 }],
-        "strict_required_status_checks_policy": true
+        "strict_required_status_checks_policy": false
+      }
+    },
+    {
+      "type": "merge_queue",
+      "parameters": {
+        "check_response_timeout_minutes": 60,
+        "grouping_strategy": "HEADGREEN",
+        "max_entries_to_build": 5,
+        "max_entries_to_merge": 5,
+        "merge_method": "SQUASH",
+        "min_entries_to_merge": 1,
+        "min_entries_to_merge_wait_minutes": 5
       }
     }
   ]
