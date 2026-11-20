@@ -17,6 +17,8 @@ import { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 import { KiChipSize } from "./components/ki-chip/ki-chip";
 import { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
 import { KiCounterTone } from "./components/ki-counter/ki-counter";
+import { DatePickerMode } from "./components/ki-date-picker/ki-date-picker.dates";
+import { DatePickerChangeDetail } from "./components/ki-date-picker/ki-date-picker";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiLayoutGap } from "./utils/layout-gap";
@@ -56,6 +58,8 @@ export { KiChipType } from "./components/ki-chip/ki-chip.dom.js";
 export { KiChipSize } from "./components/ki-chip/ki-chip";
 export { KiChipReorderDetail } from "./components/ki-chip-group/ki-chip-group";
 export { KiCounterTone } from "./components/ki-counter/ki-counter";
+export { DatePickerMode } from "./components/ki-date-picker/ki-date-picker.dates";
+export { DatePickerChangeDetail } from "./components/ki-date-picker/ki-date-picker";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiLayoutGap } from "./utils/layout-gap";
@@ -540,6 +544,108 @@ export namespace Components {
           * @default undefined
          */
         "value"?: number;
+    }
+    /**
+     * A locale-aware date field with an anchored keyboard-operable calendar.
+     * @whenToUse Choose a nearby date or date range when the weekday matters, such as
+     * a booking, a deadline or a schedule.
+     * @whenNotToUse Enter a known distant date, such as a birth date, or choose a time.
+     */
+    interface KiDatePicker {
+        /**
+          * Localized label of the confirmation button that saves a complete draft.
+          * @default 'Apply'
+         */
+        "applyLabel": string;
+        /**
+          * Localized label of the confirmation button that discards a draft.
+          * @default 'Cancel'
+         */
+        "cancelLabel": string;
+        /**
+          * Localized name of the trigger when a date is saved. Use {date} for the current selection.
+          * @default 'Change date, {date}'
+         */
+        "changeLabel": string;
+        /**
+          * Localized name of the calendar dialog and of the trigger when no date is saved.
+          * @default 'Choose date'
+         */
+        "chooseLabel": string;
+        /**
+          * Require Apply before saving picks made in the calendar.
+          * @default false
+         */
+        "confirm": boolean;
+        /**
+          * Disables the text entry and calendar button and excludes the field from form data.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Overrides the message shown when a date is missing, invalid or outside the bounds.
+         */
+        "errorText"?: string;
+        /**
+          * First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.
+          * @minimum 0
+          * @maximum 6
+         */
+        "firstDayOfWeek"?: number;
+        /**
+          * A format hint or explanation read with the field. It is replaced by a visible error.
+         */
+        "helpText"?: string;
+        /**
+          * Localized fallback message for an impossible, incomplete or out-of-bounds date.
+          * @default 'Enter a valid date within the allowed range.'
+         */
+        "invalidDateLabel": string;
+        /**
+          * Visible text and accessible name of the date field. Provide a label for every field.
+         */
+        "label": string;
+        /**
+          * BCP 47 language tag for localized dates and weekday order. Defaults to the page language.
+         */
+        "locale"?: string;
+        /**
+          * Latest selectable date, inclusive. Use YYYY-MM-DD.
+         */
+        "max"?: string;
+        /**
+          * Earliest selectable date, inclusive. Use YYYY-MM-DD.
+         */
+        "min"?: string;
+        /**
+          * Select one date or a range with a start and an end date.
+          * @default 'single'
+         */
+        "mode": DatePickerMode;
+        /**
+          * Form-data key. A range is submitted as a single value.
+         */
+        "name"?: string;
+        /**
+          * Localized accessible name of the next-month button.
+          * @default 'Next month'
+         */
+        "nextMonthLabel": string;
+        /**
+          * Localized accessible name of the previous-month button.
+          * @default 'Previous month'
+         */
+        "previousMonthLabel": string;
+        /**
+          * Requires a complete date or pair of dates for native form submission.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.
+          * @default ''
+         */
+        "value": string;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -1888,6 +1994,10 @@ export interface KiChipGroupCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiChipGroupElement;
 }
+export interface KiDatePickerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiDatePickerElement;
+}
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
@@ -2169,6 +2279,29 @@ declare global {
     var HTMLKiCounterElement: {
         prototype: HTMLKiCounterElement;
         new (): HTMLKiCounterElement;
+    };
+    interface HTMLKiDatePickerElementEventMap {
+        "ki-change": DatePickerChangeDetail;
+    }
+    /**
+     * A locale-aware date field with an anchored keyboard-operable calendar.
+     * @whenToUse Choose a nearby date or date range when the weekday matters, such as
+     * a booking, a deadline or a schedule.
+     * @whenNotToUse Enter a known distant date, such as a birth date, or choose a time.
+     */
+    interface HTMLKiDatePickerElement extends Components.KiDatePicker, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiDatePickerElementEventMap>(type: K, listener: (this: HTMLKiDatePickerElement, ev: KiDatePickerCustomEvent<HTMLKiDatePickerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiDatePickerElementEventMap>(type: K, listener: (this: HTMLKiDatePickerElement, ev: KiDatePickerCustomEvent<HTMLKiDatePickerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiDatePickerElement: {
+        prototype: HTMLKiDatePickerElement;
+        new (): HTMLKiDatePickerElement;
     };
     interface HTMLKiDialogElementEventMap {
         "ki-close": KiDialogCloseDetail;
@@ -2896,6 +3029,7 @@ declare global {
         "ki-chip": HTMLKiChipElement;
         "ki-chip-group": HTMLKiChipGroupElement;
         "ki-counter": HTMLKiCounterElement;
+        "ki-date-picker": HTMLKiDatePickerElement;
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-grid": HTMLKiGridElement;
@@ -3439,6 +3573,116 @@ declare namespace LocalJSX {
           * @default undefined
          */
         "value"?: number;
+    }
+    /**
+     * A locale-aware date field with an anchored keyboard-operable calendar.
+     * @whenToUse Choose a nearby date or date range when the weekday matters, such as
+     * a booking, a deadline or a schedule.
+     * @whenNotToUse Enter a known distant date, such as a birth date, or choose a time.
+     */
+    interface KiDatePicker {
+        /**
+          * Localized label of the confirmation button that saves a complete draft.
+          * @default 'Apply'
+         */
+        "applyLabel"?: string;
+        /**
+          * Localized label of the confirmation button that discards a draft.
+          * @default 'Cancel'
+         */
+        "cancelLabel"?: string;
+        /**
+          * Localized name of the trigger when a date is saved. Use {date} for the current selection.
+          * @default 'Change date, {date}'
+         */
+        "changeLabel"?: string;
+        /**
+          * Localized name of the calendar dialog and of the trigger when no date is saved.
+          * @default 'Choose date'
+         */
+        "chooseLabel"?: string;
+        /**
+          * Require Apply before saving picks made in the calendar.
+          * @default false
+         */
+        "confirm"?: boolean;
+        /**
+          * Disables the text entry and calendar button and excludes the field from form data.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Overrides the message shown when a date is missing, invalid or outside the bounds.
+         */
+        "errorText"?: string;
+        /**
+          * First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.
+          * @minimum 0
+          * @maximum 6
+         */
+        "firstDayOfWeek"?: number;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * A format hint or explanation read with the field. It is replaced by a visible error.
+         */
+        "helpText"?: string;
+        /**
+          * Localized fallback message for an impossible, incomplete or out-of-bounds date.
+          * @default 'Enter a valid date within the allowed range.'
+         */
+        "invalidDateLabel"?: string;
+        /**
+          * Visible text and accessible name of the date field. Provide a label for every field.
+         */
+        "label": string;
+        /**
+          * BCP 47 language tag for localized dates and weekday order. Defaults to the page language.
+         */
+        "locale"?: string;
+        /**
+          * Latest selectable date, inclusive. Use YYYY-MM-DD.
+         */
+        "max"?: string;
+        /**
+          * Earliest selectable date, inclusive. Use YYYY-MM-DD.
+         */
+        "min"?: string;
+        /**
+          * Select one date or a range with a start and an end date.
+          * @default 'single'
+         */
+        "mode"?: DatePickerMode;
+        /**
+          * Form-data key. A range is submitted as a single value.
+         */
+        "name"?: string;
+        /**
+          * Localized accessible name of the next-month button.
+          * @default 'Next month'
+         */
+        "nextMonthLabel"?: string;
+        /**
+          * Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes.
+         */
+        "onKi-change"?: (event: KiDatePickerCustomEvent<DatePickerChangeDetail>) => void;
+        /**
+          * Localized accessible name of the previous-month button.
+          * @default 'Previous month'
+         */
+        "previousMonthLabel"?: string;
+        /**
+          * Requires a complete date or pair of dates for native form submission.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.
+          * @default ''
+         */
+        "value"?: string;
     }
     /**
      * A modal dialog for one interrupting decision or short focused task.
@@ -4887,6 +5131,28 @@ declare namespace LocalJSX {
         "tone": KiCounterTone;
         "for": string;
     }
+    interface KiDatePickerAttributes {
+        "label": string;
+        "helpText": string;
+        "errorText": string;
+        "required": boolean;
+        "disabled": boolean;
+        "name": string;
+        "mode": DatePickerMode;
+        "value": string;
+        "min": string;
+        "max": string;
+        "locale": string;
+        "firstDayOfWeek": number;
+        "confirm": boolean;
+        "chooseLabel": string;
+        "changeLabel": string;
+        "previousMonthLabel": string;
+        "nextMonthLabel": string;
+        "cancelLabel": string;
+        "applyLabel": string;
+        "invalidDateLabel": string;
+    }
     interface KiDialogAttributes {
         "open": boolean;
         "heading": string;
@@ -5146,6 +5412,7 @@ declare namespace LocalJSX {
         "ki-chip": Omit<KiChip, keyof KiChipAttributes> & { [K in keyof KiChip & keyof KiChipAttributes]?: KiChip[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `attr:${K}`]?: KiChipAttributes[K] } & { [K in keyof KiChip & keyof KiChipAttributes as `prop:${K}`]?: KiChip[K] };
         "ki-chip-group": Omit<KiChipGroup, keyof KiChipGroupAttributes> & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes]?: KiChipGroup[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `attr:${K}`]?: KiChipGroupAttributes[K] } & { [K in keyof KiChipGroup & keyof KiChipGroupAttributes as `prop:${K}`]?: KiChipGroup[K] };
         "ki-counter": Omit<KiCounter, keyof KiCounterAttributes> & { [K in keyof KiCounter & keyof KiCounterAttributes]?: KiCounter[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `attr:${K}`]?: KiCounterAttributes[K] } & { [K in keyof KiCounter & keyof KiCounterAttributes as `prop:${K}`]?: KiCounter[K] };
+        "ki-date-picker": Omit<KiDatePicker, keyof KiDatePickerAttributes> & { [K in keyof KiDatePicker & keyof KiDatePickerAttributes]?: KiDatePicker[K] } & { [K in keyof KiDatePicker & keyof KiDatePickerAttributes as `attr:${K}`]?: KiDatePickerAttributes[K] } & { [K in keyof KiDatePicker & keyof KiDatePickerAttributes as `prop:${K}`]?: KiDatePicker[K] } & OneOf<"label", KiDatePicker["label"], KiDatePickerAttributes["label"]>;
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-grid": Omit<KiGrid, keyof KiGridAttributes> & { [K in keyof KiGrid & keyof KiGridAttributes]?: KiGrid[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `attr:${K}`]?: KiGridAttributes[K] } & { [K in keyof KiGrid & keyof KiGridAttributes as `prop:${K}`]?: KiGrid[K] };
@@ -5326,6 +5593,13 @@ declare module "@stencil/core" {
              * row (use text or ki-badge), or an announcement that needs its own semantics.
              */
             "ki-counter": LocalJSX.IntrinsicElements["ki-counter"] & JSXBase.HTMLAttributes<HTMLKiCounterElement>;
+            /**
+             * A locale-aware date field with an anchored keyboard-operable calendar.
+             * @whenToUse Choose a nearby date or date range when the weekday matters, such as
+             * a booking, a deadline or a schedule.
+             * @whenNotToUse Enter a known distant date, such as a birth date, or choose a time.
+             */
+            "ki-date-picker": LocalJSX.IntrinsicElements["ki-date-picker"] & JSXBase.HTMLAttributes<HTMLKiDatePickerElement>;
             /**
              * A modal dialog for one interrupting decision or short focused task.
              * @whenToUse destructive confirmations, blocking choices, and brief

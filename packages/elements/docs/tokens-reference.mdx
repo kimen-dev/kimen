@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 448 semantic
-and 1453 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 450 semantic
+and 1476 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -62,6 +62,7 @@ every component at once.
 | `--ki-control-radius-track` | `10px` | Corner radius of a track containing adjacent controls. |
 | `--ki-control-size-md` | `2.5rem` | Medium control track height, 40 CSS px at the default root size. |
 | `--ki-control-size-sm` | `2rem` | Small control track height, 32 CSS px at the default root size. |
+| `--ki-control-size-touch` | `44px` | Touch target size for controls on a coarse pointer. |
 | `--ki-control-size-xs` | `1.75rem` | Extra-small control track height, 28 CSS px at the default root size. |
 | `--ki-control-track-inset` | `0.125rem` | Inset and spacing between adjacent controls inside a track. |
 
@@ -72,6 +73,7 @@ every component at once.
 | `--ki-corner-action-frame` | `10px` | Outside corner of an action surface. |
 | `--ki-corner-action-seam` | `0px` | Square corner at an edge shared by two actions. |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
+| `--ki-corner-calendar-surface` | `16px` | Outer corner radius of a raised calendar surface. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 | `--ki-corner-inline` | `2px` | Small radius for an outline around inline content. |
 
@@ -1233,6 +1235,34 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-counter-size` | `1.125rem` | Minimum width and height of a count pill. |
 | `--ki-counter-success-bg` | `#2c6a2b` | Success notification indicator fill. |
 | `--ki-counter-success-fg` | `#ffffff` | Success notification count text. |
+
+### `ki-date-picker`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-date-picker-backdrop-filter` | `none` | Complete filter behind the calendar. |
+| `--ki-date-picker-bg` | `#f9f7f4` | Fill of the calendar dialog. |
+| `--ki-date-picker-bg-image` | `none` | Optional image layered over the calendar fill. |
+| `--ki-date-picker-border` | `rgba(24, 22, 19, 0.1)` | Calendar surface edge. |
+| `--ki-date-picker-day-hover-bg` | `#ebe7e1` | Hover fill of an available unselected day. |
+| `--ki-date-picker-day-hover-fg` | `#181613` | Ink on the hover fill. |
+| `--ki-date-picker-day-radius` | `8px` | Radius of a day and the ends of a range. |
+| `--ki-date-picker-day-size` | `2.5rem` | Default size of a day target. |
+| `--ki-date-picker-fg` | `#181613` | Default calendar text. |
+| `--ki-date-picker-field-bg` | `#f3f0eb` | Fill of the text field. |
+| `--ki-date-picker-field-fg` | `#181613` | Text, icon and caret of the field. |
+| `--ki-date-picker-heading-family` | `'Instrument Sans', system-ui, sans-serif` | Family of the calendar month heading. |
+| `--ki-date-picker-outside-bg` | `#f9f7f4` | Fill behind dates in neighboring months. |
+| `--ki-date-picker-outside-fg` | `#5e5953` | Ink of dates in neighboring months. |
+| `--ki-date-picker-radius` | `16px` | Calendar popup corner radius. |
+| `--ki-date-picker-range-bg` | `#ffebe5` | Fill of the span between selected endpoints. |
+| `--ki-date-picker-range-fg` | `#9a3715` | Text of dates within the span. |
+| `--ki-date-picker-selected-bg` | `#1d1a16` | Fill of a chosen day or range endpoint. |
+| `--ki-date-picker-selected-fg` | `#ffffff` | Text of a chosen day or range endpoint. |
+| `--ki-date-picker-shadow` | `0 2px 6px 0 rgba(24, 22, 19, 0.05), 0 12px 28px 0 rgba(24, 22, 19, 0.09), 0 10px 24px 0 transparent` | Calendar popup elevation. |
+| `--ki-date-picker-today-border` | `#bc4c26` | Outline of the current date. |
+| `--ki-date-picker-weekday-bg` | `#f9f7f4` | Fill behind weekday names. |
+| `--ki-date-picker-weekday-fg` | `#5e5953` | Ink of weekday names. |
 
 ### `ki-dialog`
 

@@ -18,6 +18,7 @@ import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/co
 import { defineCustomElement as defineKiChip } from '@kimen/elements/components/ki-chip.js';
 import { defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
 import { defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
+import { defineCustomElement as defineKiDatePicker } from '@kimen/elements/components/ki-date-picker.js';
 import { defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import { defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
 import { defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
@@ -367,6 +368,34 @@ export class KiCounter {
 
 
 export declare interface KiCounter extends Components.KiCounter {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiDatePicker,
+  inputs: ['applyLabel', 'cancelLabel', 'changeLabel', 'chooseLabel', 'confirm', 'disabled', 'errorText', 'firstDayOfWeek', 'helpText', 'invalidDateLabel', 'label', 'locale', 'max', 'min', 'mode', 'name', 'nextMonthLabel', 'previousMonthLabel', 'required', 'value']
+})
+@Component({
+  selector: 'ki-date-picker',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['applyLabel', 'cancelLabel', 'changeLabel', 'chooseLabel', 'confirm', 'disabled', 'errorText', 'firstDayOfWeek', 'helpText', 'invalidDateLabel', { name: 'label', required: true }, 'locale', 'max', 'min', 'mode', 'name', 'nextMonthLabel', 'previousMonthLabel', 'required', 'value'],
+})
+export class KiDatePicker {
+  protected el: HTMLKiDatePickerElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+
+export declare interface KiDatePicker extends Components.KiDatePicker {
+  /**
+   * Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes.
+   */
+}
 
 
 @ProxyCmp({

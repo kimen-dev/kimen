@@ -712,6 +712,117 @@ export const catalogData = {
       "whenNotToUse": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics.",
       "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates."
     },
+    "ki-date-picker": {
+      "description": "A locale-aware date field with an anchored keyboard-operable calendar.",
+      "events": {
+        "ki-change": "Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes."
+      },
+      "props": {
+        "apply-label": {
+          "type": "string",
+          "description": "Localized label of the confirmation button that saves a complete draft.",
+          "default": "Apply"
+        },
+        "cancel-label": {
+          "type": "string",
+          "description": "Localized label of the confirmation button that discards a draft.",
+          "default": "Cancel"
+        },
+        "change-label": {
+          "type": "string",
+          "description": "Localized name of the trigger when a date is saved. Use {date} for the current selection.",
+          "default": "Change date, {date}"
+        },
+        "choose-label": {
+          "type": "string",
+          "description": "Localized name of the calendar dialog and of the trigger when no date is saved.",
+          "default": "Choose date"
+        },
+        "confirm": {
+          "type": "boolean",
+          "description": "Require Apply before saving picks made in the calendar.",
+          "default": false
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Disables the text entry and calendar button and excludes the field from form data.",
+          "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Overrides the message shown when a date is missing, invalid or outside the bounds."
+        },
+        "first-day-of-week": {
+          "type": "number",
+          "description": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "help-text": {
+          "type": "string",
+          "description": "A format hint or explanation read with the field. It is replaced by a visible error."
+        },
+        "invalid-date-label": {
+          "type": "string",
+          "description": "Localized fallback message for an impossible, incomplete or out-of-bounds date.",
+          "default": "Enter a valid date within the allowed range."
+        },
+        "label": {
+          "type": "string",
+          "description": "Visible text and accessible name of the date field. Provide a label for every field.",
+          "required": true
+        },
+        "locale": {
+          "type": "string",
+          "description": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language."
+        },
+        "max": {
+          "type": "string",
+          "description": "Latest selectable date, inclusive. Use YYYY-MM-DD."
+        },
+        "min": {
+          "type": "string",
+          "description": "Earliest selectable date, inclusive. Use YYYY-MM-DD."
+        },
+        "mode": {
+          "type": "enum",
+          "values": [
+            "range",
+            "single"
+          ],
+          "description": "Select one date or a range with a start and an end date.",
+          "default": "single"
+        },
+        "name": {
+          "type": "string",
+          "description": "Form-data key. A range is submitted as a single value."
+        },
+        "next-month-label": {
+          "type": "string",
+          "description": "Localized accessible name of the next-month button.",
+          "default": "Next month"
+        },
+        "previous-month-label": {
+          "type": "string",
+          "description": "Localized accessible name of the previous-month button.",
+          "default": "Previous month"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Requires a complete date or pair of dates for native form submission.",
+          "default": false
+        },
+        "value": {
+          "type": "string",
+          "description": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.",
+          "default": ""
+        }
+      },
+      "slots": {},
+      "tag": "ki-date-picker",
+      "whenNotToUse": "Enter a known distant date, such as a birth date, or choose a time.",
+      "whenToUse": "Choose a nearby date or date range when the weekday matters, such as\na booking, a deadline or a schedule."
+    },
     "ki-dialog": {
       "description": "A modal dialog for one interrupting decision or short focused task.",
       "events": {

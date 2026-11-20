@@ -3222,6 +3222,730 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-date-picker/ki-date-picker.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-date-picker",
+      "docs": "A locale-aware date field with an anchored keyboard-operable calendar.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Choose a nearby date or date range when the weekday matters, such as\na booking, a deadline or a schedule."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Enter a known distant date, such as a birth date, or choose a time."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible label and accessible name of the text field."
+        },
+        {
+          "name": "part",
+          "text": "field - Enclosure of the text field and calendar button."
+        },
+        {
+          "name": "part",
+          "text": "input - Native text entry for a localized date or range."
+        },
+        {
+          "name": "part",
+          "text": "trigger - Button that opens and closes the calendar."
+        },
+        {
+          "name": "part",
+          "text": "help - Help text associated with the input."
+        },
+        {
+          "name": "part",
+          "text": "error - Live constraint message replacing help when the field is invalid."
+        },
+        {
+          "name": "part",
+          "text": "popup - Anchored non-modal calendar dialog."
+        },
+        {
+          "name": "part",
+          "text": "month - Live month and year heading."
+        },
+        {
+          "name": "part",
+          "text": "grid - Calendar grid with localized weekdays and date buttons."
+        },
+        {
+          "name": "part",
+          "text": "day - Date button in the calendar grid."
+        }
+      ],
+      "usage": {
+        "examples": "# DatePicker examples\n\n## Choose a departure date\n\n```html\n<ki-date-picker label=\"Departure\" name=\"departure\" locale=\"en-GB\" required\n  help-text=\"Enter a date in DD/MM/YYYY format.\" min=\"2026-11-10\">\n</ki-date-picker>\n```\n\nTyping `20/11/2026` and pressing Enter emits\n`ki-change` with `{ \"value\": \"2026-11-20\" }`.\n\n## Apply a stay range\n\n```html\n<ki-date-picker label=\"Stay\" name=\"stay\" mode=\"range\" confirm\n  value=\"2026-11-12/2026-11-16\" locale=\"en-GB\"\n  min=\"2026-11-10\" max=\"2026-11-30\">\n</ki-date-picker>\n```\n\nPick two endpoints and activate Apply to save the range. The form receives\none `stay` entry with the date pair.\n"
+      },
+      "props": [
+        {
+          "name": "applyLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "apply-label",
+          "reflectToAttr": false,
+          "docs": "Localized label of the confirmation button that saves a complete draft.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Apply'"
+            }
+          ],
+          "default": "'Apply'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "cancel-label",
+          "reflectToAttr": false,
+          "docs": "Localized label of the confirmation button that discards a draft.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Cancel'"
+            }
+          ],
+          "default": "'Cancel'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "changeLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "change-label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the trigger when a date is saved. Use {date} for the current selection.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Change date, {date}'"
+            }
+          ],
+          "default": "'Change date, {date}'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "chooseLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "choose-label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the calendar dialog and of the trigger when no date is saved.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Choose date'"
+            }
+          ],
+          "default": "'Choose date'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "confirm",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "confirm",
+          "reflectToAttr": true,
+          "docs": "Require Apply before saving picks made in the calendar.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Disables the text entry and calendar button and excludes the field from form data.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Overrides the message shown when a date is missing, invalid or outside the bounds.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "firstDayOfWeek",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "first-day-of-week",
+          "reflectToAttr": true,
+          "docs": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "6"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "A format hint or explanation read with the field. It is replaced by a visible error.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "invalidDateLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "invalid-date-label",
+          "reflectToAttr": false,
+          "docs": "Localized fallback message for an impossible, incomplete or out-of-bounds date.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Enter a valid date within the allowed range.'"
+            }
+          ],
+          "default": "'Enter a valid date within the allowed range.'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Visible text and accessible name of the date field. Provide a label for every field.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "locale",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "locale",
+          "reflectToAttr": true,
+          "docs": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": true,
+          "docs": "Latest selectable date, inclusive. Use YYYY-MM-DD.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "min",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min",
+          "reflectToAttr": true,
+          "docs": "Earliest selectable date, inclusive. Use YYYY-MM-DD.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "mode",
+          "type": "\"range\" | \"single\"",
+          "complexType": {
+            "original": "DatePickerMode",
+            "resolved": "\"range\" | \"single\"",
+            "references": {
+              "DatePickerMode": {
+                "location": "import",
+                "path": "./ki-date-picker.dates",
+                "id": "src/components/ki-date-picker/ki-date-picker.dates.ts::DatePickerMode",
+                "referenceLocation": "DatePickerMode"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "mode",
+          "reflectToAttr": true,
+          "docs": "Select one date or a range with a start and an end date.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'single'"
+            }
+          ],
+          "default": "'single'",
+          "values": [
+            {
+              "value": "range",
+              "type": "string"
+            },
+            {
+              "value": "single",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key. A range is submitted as a single value.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "nextMonthLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "next-month-label",
+          "reflectToAttr": false,
+          "docs": "Localized accessible name of the next-month button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Next month'"
+            }
+          ],
+          "default": "'Next month'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "previousMonthLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "previous-month-label",
+          "reflectToAttr": false,
+          "docs": "Localized accessible name of the previous-month button.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Previous month'"
+            }
+          ],
+          "default": "'Previous month'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires a complete date or pair of dates for native form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "DatePickerChangeDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "DatePickerChangeDetail",
+            "resolved": "DatePickerChangeDetail",
+            "references": {
+              "DatePickerChangeDetail": {
+                "location": "local",
+                "path": "src/components/ki-date-picker/ki-date-picker.tsx",
+                "id": "src/components/ki-date-picker/ki-date-picker.tsx::DatePickerChangeDetail"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "keydown",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "day",
+          "docs": "Date button in the calendar grid."
+        },
+        {
+          "name": "error",
+          "docs": "Live constraint message replacing help when the field is invalid."
+        },
+        {
+          "name": "field",
+          "docs": "Enclosure of the text field and calendar button."
+        },
+        {
+          "name": "grid",
+          "docs": "Calendar grid with localized weekdays and date buttons."
+        },
+        {
+          "name": "help",
+          "docs": "Help text associated with the input."
+        },
+        {
+          "name": "input",
+          "docs": "Native text entry for a localized date or range."
+        },
+        {
+          "name": "label",
+          "docs": "Visible label and accessible name of the text field."
+        },
+        {
+          "name": "month",
+          "docs": "Live month and year heading."
+        },
+        {
+          "name": "popup",
+          "docs": "Anchored non-modal calendar dialog."
+        },
+        {
+          "name": "trigger",
+          "docs": "Button that opens and closes the calendar."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-date-picker": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-dialog/ki-dialog.tsx",
       "encapsulation": "shadow",
       "tag": "ki-dialog",
@@ -3932,10 +4656,14 @@
       "parts": [],
       "states": [],
       "dependents": [
+        "ki-date-picker",
         "ki-stat"
       ],
       "dependencies": [],
       "dependencyGraph": {
+        "ki-date-picker": [
+          "ki-icon"
+        ],
         "ki-stat": [
           "ki-icon"
         ]
@@ -11734,6 +12462,16 @@
       "declaration": "export type KiCounterTone = 'danger' | 'primary' | 'success' | 'neutral';",
       "docstring": "",
       "path": "src/components/ki-counter/ki-counter.tsx"
+    },
+    "src/components/ki-date-picker/ki-date-picker.dates.ts::DatePickerMode": {
+      "declaration": "export type DatePickerMode = 'single' | 'range';",
+      "docstring": "",
+      "path": "src/components/ki-date-picker/ki-date-picker.dates.ts"
+    },
+    "src/components/ki-date-picker/ki-date-picker.tsx::DatePickerChangeDetail": {
+      "declaration": "export interface DatePickerChangeDetail {\n  value: string;\n}",
+      "docstring": "ISO date or date range committed by the user.",
+      "path": "src/components/ki-date-picker/ki-date-picker.tsx"
     },
     "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
       "declaration": "export interface KiDialogCloseDetail {\n  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */\n  reason: KiDialogCloseReason;\n}",

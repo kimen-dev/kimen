@@ -4500,6 +4500,707 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-date-picker.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiDatePicker",
+          "customElement": true,
+          "tagName": "ki-date-picker",
+          "description": "A locale-aware date field with an anchored keyboard-operable calendar.",
+          "whenToUse": "Choose a nearby date or date range when the weekday matters, such as\na booking, a deadline or a schedule.",
+          "whenNotToUse": "Enter a known distant date, such as a birth date, or choose a time.",
+          "attributes": [
+            {
+              "name": "apply-label",
+              "fieldName": "applyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Apply'",
+              "description": "Localized label of the confirmation button that saves a complete draft."
+            },
+            {
+              "name": "cancel-label",
+              "fieldName": "cancelLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "Localized label of the confirmation button that discards a draft."
+            },
+            {
+              "name": "change-label",
+              "fieldName": "changeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Change date, {date}'",
+              "description": "Localized name of the trigger when a date is saved. Use {date} for the current selection."
+            },
+            {
+              "name": "choose-label",
+              "fieldName": "chooseLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Choose date'",
+              "description": "Localized name of the calendar dialog and of the trigger when no date is saved."
+            },
+            {
+              "name": "confirm",
+              "fieldName": "confirm",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Require Apply before saving picks made in the calendar."
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the text entry and calendar button and excludes the field from form data."
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Overrides the message shown when a date is missing, invalid or outside the bounds."
+            },
+            {
+              "name": "first-day-of-week",
+              "fieldName": "firstDayOfWeek",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+              "minimum": 0,
+              "maximum": 6
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A format hint or explanation read with the field. It is replaced by a visible error."
+            },
+            {
+              "name": "invalid-date-label",
+              "fieldName": "invalidDateLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Enter a valid date within the allowed range.'",
+              "description": "Localized fallback message for an impossible, incomplete or out-of-bounds date."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible text and accessible name of the date field. Provide a label for every field.",
+              "required": true
+            },
+            {
+              "name": "locale",
+              "fieldName": "locale",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language."
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Latest selectable date, inclusive. Use YYYY-MM-DD."
+            },
+            {
+              "name": "min",
+              "fieldName": "min",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Earliest selectable date, inclusive. Use YYYY-MM-DD."
+            },
+            {
+              "name": "mode",
+              "fieldName": "mode",
+              "type": {
+                "text": "\"range\" | \"single\""
+              },
+              "default": "'single'",
+              "description": "Select one date or a range with a start and an end date."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key. A range is submitted as a single value."
+            },
+            {
+              "name": "next-month-label",
+              "fieldName": "nextMonthLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Next month'",
+              "description": "Localized accessible name of the next-month button."
+            },
+            {
+              "name": "previous-month-label",
+              "fieldName": "previousMonthLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Previous month'",
+              "description": "Localized accessible name of the previous-month button."
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires a complete date or pair of dates for native form submission."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "applyLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Apply'",
+              "description": "Localized label of the confirmation button that saves a complete draft.",
+              "attribute": "apply-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "cancelLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Cancel'",
+              "description": "Localized label of the confirmation button that discards a draft.",
+              "attribute": "cancel-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "changeLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Change date, {date}'",
+              "description": "Localized name of the trigger when a date is saved. Use {date} for the current selection.",
+              "attribute": "change-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "chooseLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Choose date'",
+              "description": "Localized name of the calendar dialog and of the trigger when no date is saved.",
+              "attribute": "choose-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "confirm",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Require Apply before saving picks made in the calendar.",
+              "attribute": "confirm",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the text entry and calendar button and excludes the field from form data.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Overrides the message shown when a date is missing, invalid or outside the bounds.",
+              "attribute": "error-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "firstDayOfWeek",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.",
+              "attribute": "first-day-of-week",
+              "reflects": true,
+              "minimum": 0,
+              "maximum": 6
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "A format hint or explanation read with the field. It is replaced by a visible error.",
+              "attribute": "help-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "invalidDateLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Enter a valid date within the allowed range.'",
+              "description": "Localized fallback message for an impossible, incomplete or out-of-bounds date.",
+              "attribute": "invalid-date-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible text and accessible name of the date field. Provide a label for every field.",
+              "attribute": "label",
+              "reflects": true,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "BCP 47 language tag for localized dates and weekday order. Defaults to the page language.",
+              "attribute": "locale",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Latest selectable date, inclusive. Use YYYY-MM-DD.",
+              "attribute": "max",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Earliest selectable date, inclusive. Use YYYY-MM-DD.",
+              "attribute": "min",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "privacy": "public",
+              "type": {
+                "text": "\"range\" | \"single\""
+              },
+              "default": "'single'",
+              "description": "Select one date or a range with a start and an end date.",
+              "attribute": "mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key. A range is submitted as a single value.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "nextMonthLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Next month'",
+              "description": "Localized accessible name of the next-month button.",
+              "attribute": "next-month-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "previousMonthLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Previous month'",
+              "description": "Localized accessible name of the previous-month button.",
+              "attribute": "previous-month-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires a complete date or pair of dates for native form submission.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Current ISO date, ISO start/end pair or empty string. The value attribute is the reset default.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<DatePickerChangeDetail>"
+              },
+              "description": "Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "day",
+              "description": "Date button in the calendar grid."
+            },
+            {
+              "name": "error",
+              "description": "Live constraint message replacing help when the field is invalid."
+            },
+            {
+              "name": "field",
+              "description": "Enclosure of the text field and calendar button."
+            },
+            {
+              "name": "grid",
+              "description": "Calendar grid with localized weekdays and date buttons."
+            },
+            {
+              "name": "help",
+              "description": "Help text associated with the input."
+            },
+            {
+              "name": "input",
+              "description": "Native text entry for a localized date or range."
+            },
+            {
+              "name": "label",
+              "description": "Visible label and accessible name of the text field."
+            },
+            {
+              "name": "month",
+              "description": "Live month and year heading."
+            },
+            {
+              "name": "popup",
+              "description": "Anchored non-modal calendar dialog."
+            },
+            {
+              "name": "trigger",
+              "description": "Button that opens and closes the calendar."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-control-border-width",
+              "description": "Stroke width of the boundary of a compact control."
+            },
+            {
+              "name": "--ki-control-radius-track",
+              "description": "Corner radius of a track containing adjacent controls."
+            },
+            {
+              "name": "--ki-control-size-sm",
+              "description": "Small control track height, 32 CSS px at the default root size."
+            },
+            {
+              "name": "--ki-control-size-touch",
+              "description": "Touch target size for controls on a coarse pointer."
+            },
+            {
+              "name": "--ki-date-picker-backdrop-filter",
+              "description": "Complete filter behind the calendar."
+            },
+            {
+              "name": "--ki-date-picker-bg",
+              "description": "Fill of the calendar dialog."
+            },
+            {
+              "name": "--ki-date-picker-bg-image",
+              "description": "Optional image layered over the calendar fill."
+            },
+            {
+              "name": "--ki-date-picker-border",
+              "description": "Calendar surface edge."
+            },
+            {
+              "name": "--ki-date-picker-day-hover-bg",
+              "description": "Hover fill of an available unselected day."
+            },
+            {
+              "name": "--ki-date-picker-day-hover-fg",
+              "description": "Ink on the hover fill."
+            },
+            {
+              "name": "--ki-date-picker-day-radius",
+              "description": "Radius of a day and the ends of a range."
+            },
+            {
+              "name": "--ki-date-picker-day-size",
+              "description": "Default size of a day target."
+            },
+            {
+              "name": "--ki-date-picker-fg",
+              "description": "Default calendar text."
+            },
+            {
+              "name": "--ki-date-picker-field-bg",
+              "description": "Fill of the text field."
+            },
+            {
+              "name": "--ki-date-picker-field-fg",
+              "description": "Text, icon and caret of the field."
+            },
+            {
+              "name": "--ki-date-picker-heading-family",
+              "description": "Family of the calendar month heading."
+            },
+            {
+              "name": "--ki-date-picker-outside-bg",
+              "description": "Fill behind dates in neighboring months."
+            },
+            {
+              "name": "--ki-date-picker-outside-fg",
+              "description": "Ink of dates in neighboring months."
+            },
+            {
+              "name": "--ki-date-picker-radius",
+              "description": "Calendar popup corner radius."
+            },
+            {
+              "name": "--ki-date-picker-range-bg",
+              "description": "Fill of the span between selected endpoints."
+            },
+            {
+              "name": "--ki-date-picker-range-fg",
+              "description": "Text of dates within the span."
+            },
+            {
+              "name": "--ki-date-picker-selected-bg",
+              "description": "Fill of a chosen day or range endpoint."
+            },
+            {
+              "name": "--ki-date-picker-selected-fg",
+              "description": "Text of a chosen day or range endpoint."
+            },
+            {
+              "name": "--ki-date-picker-shadow",
+              "description": "Calendar popup elevation."
+            },
+            {
+              "name": "--ki-date-picker-today-border",
+              "description": "Outline of the current date."
+            },
+            {
+              "name": "--ki-date-picker-weekday-bg",
+              "description": "Fill behind weekday names."
+            },
+            {
+              "name": "--ki-date-picker-weekday-fg",
+              "description": "Ink of weekday names."
+            },
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-glyph-size-md",
+              "description": "Medium glyph for body content (20px at the default root size)."
+            },
+            {
+              "name": "--ki-layout-spacing-3xl",
+              "description": "The 3xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-lg",
+              "description": "The lg spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-layout-spacing-xs",
+              "description": "The xs spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-outline-control",
+              "description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
+            },
+            {
+              "name": "--ki-outline-danger-high-em",
+              "description": "semantic color for outline danger high em."
+            },
+            {
+              "name": "--ki-surface-transparent",
+              "description": "Transparent surface backing for a background image that carries its own opacity."
+            },
+            {
+              "name": "--ki-text-danger-high-em",
+              "description": "semantic color for text danger high em."
+            },
+            {
+              "name": "--ki-text-high-em",
+              "description": "semantic color for text high em."
+            },
+            {
+              "name": "--ki-text-supporting",
+              "description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-1",
+              "description": "semantic dimension for typography line height body 1."
+            },
+            {
+              "name": "--ki-typography-line-height-caption-2",
+              "description": "semantic dimension for typography line height caption 2."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-caption-2",
+              "description": "semantic dimension for typography size caption 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiDatePicker",
+          "declaration": {
+            "name": "KiDatePicker",
+            "module": "dist/components/ki-date-picker.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-date-picker",
+          "declaration": {
+            "name": "KiDatePicker",
+            "module": "dist/components/ki-date-picker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-dialog.js",
       "declarations": [
         {

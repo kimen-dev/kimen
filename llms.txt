@@ -54,6 +54,7 @@ methods, CSS custom properties and examples.
 - [ki-chip](https://kimen.dev/llms/ki-chip.md): apply independent filters, represent values selected in an entry field, or offer a small contextual action alongside content.
 - [ki-chip-group](https://kimen.dev/llms/ki-chip-group.md): label related chips or let people change their reading order.
 - [ki-counter](https://kimen.dev/llms/ki-counter.md): mark unread or pending items on a trigger, or presence on an avatar.
+- [ki-date-picker](https://kimen.dev/llms/ki-date-picker.md): Choose a nearby date or date range when the weekday matters, such as a booking, a deadline or a schedule.
 - [ki-dialog](https://kimen.dev/llms/ki-dialog.md): destructive confirmations, blocking choices, and brief critical input that must be resolved before returning to the page.
 - [ki-divider](https://kimen.dev/llms/ki-divider.md): visually separate adjacent content when spacing alone is not enough: grouped settings sections, toolbar action groups, distinct regions inside a card — horizontal between stacked content, vertical between side-by-side content.
 - [ki-grid](https://kimen.dev/llms/ki-grid.md): lay out items on responsive tracks with consistent token spacing.

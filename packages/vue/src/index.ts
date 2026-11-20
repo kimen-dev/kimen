@@ -17,6 +17,7 @@ export { KiCheckboxGroup } from './ki-checkbox-group.js';
 export { KiChip } from './ki-chip.js';
 export { KiChipGroup } from './ki-chip-group.js';
 export { KiCounter } from './ki-counter.js';
+export { KiDatePicker } from './ki-date-picker.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
 export { KiGrid } from './ki-grid.js';
