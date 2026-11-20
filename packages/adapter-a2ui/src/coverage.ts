@@ -213,7 +213,11 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     kind: 'unmapped',
     reason: 'opening ki-dialog from a trigger needs host code',
   },
-  Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
+  Slider: {
+    catalog: ['ki-slider'],
+    kind: 'mapped',
+    properties: ['label', 'min', 'max', 'value', CHECKS],
+  },
   DateTimeInput: {
     kind: 'unmapped',
     reason: 'no date or time input in the catalog',
@@ -368,7 +372,11 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     kind: 'unmapped',
     reason: 'opening ki-dialog from a trigger needs host code',
   },
-  Slider: { kind: 'unmapped', reason: 'no range input in the catalog' },
+  Slider: {
+    catalog: ['ki-slider'],
+    kind: 'mapped',
+    properties: ['label', 'min', 'max', 'steps', 'value', V1_CHECKS],
+  },
   DateTimeInput: {
     kind: 'unmapped',
     reason: 'no date or time input in the catalog',

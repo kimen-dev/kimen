@@ -118,7 +118,7 @@ type rejects the message (`unknown-property`, scenario S9).
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
 | Modal         | unmapped  | —                             |
-| Slider        | unmapped  | —                             |
+| Slider        | mapped    | ki-slider                     |
 | DateTimeInput | unmapped  | —                             |
 | html          | forbidden | —                             |
 | RawHtml       | forbidden | —                             |
@@ -191,6 +191,8 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
 - `TextField.variant`: `longText` becomes `ki-textarea`, `obscured` becomes
   `ki-input type="password"`, `number` and `shortText` become `ki-input`;
   `validationRegexp` is not evaluated.
+- `Slider` maps the label, limits and current value to `ki-slider` and uses
+  the component's default step.
 - `ChoicePicker`: `mutuallyExclusive` becomes `ki-radio-group` with the first
   selected value; `multipleSelection` degrades (reason `unsupported-variant`);
   `displayStyle` and `filterable` are not rendered.
@@ -236,7 +238,7 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
 | Modal         | unmapped  | —                             |
-| Slider        | unmapped  | —                             |
+| Slider        | mapped    | ki-slider                     |
 | DateTimeInput | unmapped  | —                             |
 | html          | forbidden | —                             |
 | RawHtml       | forbidden | —                             |
@@ -304,19 +306,22 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
 - `Image` reads its label and hidden flag from `@accessibility`. The
   remaining `@accessibility` attributes and `@metadata` are accepted as
   metadata. The adapter accepts `@checks` without evaluating them.
-- `Text.variant` (`caption`, `body`; 1.0 dropped the headings), `weight`,
-  `Video.posterUrl` and `Slider.steps`: not rendered.
+- `Slider.steps` divides the span into the requested number of intervals.
+  Both versions map the label, limits and current value. When a division
+  count is omitted the component uses its default step. Slider edits stay
+  local, as with the other mapped fields.
+- `Text.variant` (`caption`, `body`; 1.0 dropped the headings), `weight` and
+  `Video.posterUrl`: not rendered.
 - `sendDataModel` metadata travels under `a2uiRendererDataModel` with
   `version: "1.0"`.
 - The remaining 0.9.1 lossy mappings apply unchanged.
 
 ## Declared gaps
 
-- **User input does not flow back into the data model.** The guarded renderer
-  exposes only click activations, so typing into a `TextField` or toggling a
-  `CheckBox` does not update the adapter's data model; an action's context and
-  the `sendDataModel` metadata carry the values the agent last set. Closing
-  this needs an input channel in `@kimen/catalog`.
+- **User input does not flow back into the data model.** The adapter keeps
+  edits to `TextField`, `CheckBox` and `Slider` local to the rendered control.
+  An A2UI action's context and the `sendDataModel` metadata use the values the
+  agent last set. Model writeback requires an adapter input channel.
 - **Full re-render per update.** Every accepted `updateComponents` or
   `updateDataModel` re-renders the whole surface through `renderUiSpec`, so
   scroll, focus and in-progress input are lost, and degradations are

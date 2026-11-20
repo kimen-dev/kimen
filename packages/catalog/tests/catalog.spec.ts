@@ -80,7 +80,9 @@ describe('catalog derivation', () => {
         (declaration.events ?? []).map((event) => event.name).sort(),
       );
       for (const constraint of Object.values<{ type: string }>(entry.props)) {
-        expect(['boolean', 'number', 'string', 'enum']).toContain(constraint.type);
+        expect(['boolean', 'number', 'number-or-string', 'string', 'enum']).toContain(
+          constraint.type,
+        );
       }
     }
   });

@@ -41,14 +41,19 @@ list of choices.
 - **Agent's choice, pending founder confirmation.** Format percent values as
   percentages of one hundred (60 displays as 60%). Currency defaults to EUR.
   Formatting uses the closest declared language, with the browser locale as a
-  fallback. Minimum and maximum naming suffixes can be localized.
+  fallback. The visible label falls back to “Slider” when empty. Minimum
+  and maximum naming suffixes can be localized.
 - **Agent's choice, pending founder confirmation.** Render at most 100 mark
   intervals. The larger thumb target applies on coarse pointers by default
   and in regions that use touch density.
 - **Agent's choice, pending founder confirmation.** A2UI 1.0 `steps` is an interval count. Divide
   the scale span by it to get the increment. The adapter uses the existing value resolution
   rules for each dialect and adds no slider-specific action or model writeback.
-  The catalog exposes `change` as the commit action event.
+  The catalog exposes `change` as the commit action event and adds a scalar
+  number-or-string constraint in schema 1.5.0 for the two value shapes.
+- **Agent's choice, pending founder confirmation.** The API gate classifies
+  the added Stencil loader namespace members as major. Both themes use
+  high-emphasis readout and help ink to clear 7:1 in contrast-more.
 
 ## Scenario family coverage
 

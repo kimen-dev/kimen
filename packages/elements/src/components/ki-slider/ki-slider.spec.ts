@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   formatSlider,
+  moveBySteps,
   normalizeScale,
   readSelection,
   scaleFraction,
@@ -20,6 +21,11 @@ describe('slider scale', () => {
   it('keeps a maximum on a partial step reachable', () => {
     const scale = normalizeScale(0, 10, 3);
     expect([snapValue(8, scale), snapValue(9.9, scale), snapValue(10, scale)]).toEqual([9, 10, 10]);
+  });
+
+  it('moves to the preceding grid step from a partial maximum', () => {
+    const scale = normalizeScale(0, 10, 3);
+    expect(moveBySteps(10, -1, scale)).toBe(9);
   });
 
   it('keeps coordinate ratios finite for extreme and collapsed scales', () => {

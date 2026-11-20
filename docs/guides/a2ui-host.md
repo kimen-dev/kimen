@@ -270,10 +270,10 @@ the two ever drift. Five classes, five behaviors:
 
 | Class | Behavior |
 | --- | --- |
-| `mapped` (Card, Button, TextField, Image, List, Tabs, …) | Renders as its neutral `ki-*` counterpart(s) |
+| `mapped` (Card, Button, TextField, Image, Slider, List, Tabs, …) | Renders as its neutral `ki-*` counterpart(s) |
 | `inline` (Text) | No element of its own; its resolved string becomes inert text in the parent slot |
 | `layout` (Row, Column) | No element of its own; its children join the parent slot in order |
-| `unmapped` (Icon, Modal, Slider, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
+| `unmapped` (Modal, Video, …) and any non-basic type | Degrades **per node** to a fixed fallback and reports the gap |
 | `forbidden` (`html`, `RawHtml`, `script`, `iframe`) | The **whole message** is rejected (`forbidden-type`) — across every updated component, reachable from the root or not |
 
 The asymmetry between the last two is deliberate: an attacker gains nothing by

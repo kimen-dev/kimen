@@ -29,7 +29,7 @@ it('rejects boolean Slider values', () => {
 it('dispatches the current numeric value through the declared commit action', () => {
   const surface = document.createElement('div');
   const onAction = vi.fn();
-  expect(renderUiSpec(sliderSpec(60), { actions: ['adjust'], onAction, surface }).ok).toBe(true);
+  expect(renderUiSpec(sliderSpec(60), { onAction, surface }).ok).toBe(true);
   const element = surface.querySelector<HTMLElement & { value: number }>('ki-slider');
   if (element === null) throw new Error('Expected a rendered slider');
   element.value = 75;

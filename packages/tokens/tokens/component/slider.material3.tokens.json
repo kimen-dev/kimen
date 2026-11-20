@@ -1,0 +1,99 @@
+{
+  "ki": {
+    "slider": {
+      "track": {
+        "height": {
+          "$value": "{ki.scale-control.track-height}",
+          "$description": "Inactive rail thickness."
+        },
+        "bg": {
+          "$value": "{ki.outline.control}",
+          "$description": "Inactive rail colour against the surrounding surface."
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image painted on the inactive rail."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.no-backdrop-filter}",
+          "$description": "Optional effect behind the inactive rail."
+        }
+      },
+      "fill": {
+        "bg": {
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "Colour of the active section of the rail."
+        },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image painted on the active rail."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.no-backdrop-filter}",
+          "$description": "Optional effect behind the active rail."
+        }
+      },
+      "thumb": {
+        "size": {
+          "$value": "{ki.scale-control.thumb-size}",
+          "$description": "Diameter of the visible grip within the pointer target."
+        },
+        "bg": { "$value": "{ki.surface.s0}", "$description": "Grip surface behind the outline." },
+        "bg-image": {
+          "$value": "{ki.surface-image.none}",
+          "$description": "Optional image painted on the grip."
+        },
+        "backdrop-filter": {
+          "$value": "{ki.effect.no-backdrop-filter}",
+          "$description": "Optional effect behind the grip."
+        },
+        "border": {
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "Outline colour of the visible grip."
+        },
+        "border-width": {
+          "$value": "{ki.scale-control.thumb-border-width}",
+          "$description": "Outline thickness of the visible grip."
+        },
+        "shadow": { "$value": "{ki.elevation.e2}", "$description": "Optional grip elevation." }
+      },
+      "mark-width": {
+        "$value": "{ki.scale-control.mark-width}",
+        "$description": "Thickness of each interval tick."
+      },
+      "vertical-length": {
+        "$value": "{ki.scale-control.vertical-length}",
+        "$description": "Length of the vertical rail."
+      },
+      "coarse-target": {
+        "$value": "{ki.scale-control.coarse-target}",
+        "$description": "Minimum target size on a coarse pointer."
+      },
+      "radius": {
+        "$value": "{ki.corner.activity-mark}",
+        "$description": "Round rail, grip and midpoint tick corners."
+      },
+      "gap": {
+        "$value": "{ki.spacing.activity-label-gap}",
+        "$description": "Gap between the slider control and its labels."
+      },
+      "label": {
+        "bg": {
+          "$value": "{ki.surface.transparent}",
+          "$description": "Background beneath the field label."
+        },
+        "fg": { "$value": "{ki.text.high-em}", "$description": "Ink of the field label." }
+      },
+      "text": {
+        "bg": {
+          "$value": "{ki.surface.transparent}",
+          "$description": "Background beneath the value readout and help."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Ink of the value readout and help."
+        }
+      }
+    }
+  }
+}

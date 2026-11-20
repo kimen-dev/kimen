@@ -29,7 +29,7 @@ import { isUrlProp, urlViolation } from './url-policy.js';
 
 /** One prop constraint, exactly as narrow as the manifest documents. */
 export interface CatalogPropConstraint {
-  readonly type: 'boolean' | 'enum' | 'number' | 'string';
+  readonly type: 'boolean' | 'enum' | 'number' | 'number-or-string' | 'string';
   /** Closed value set offered to authors (present exactly when `type` is `enum`). */
   readonly values?: readonly string[];
   /** Deprecated enum values accepted when validating existing specs. */
@@ -473,6 +473,10 @@ function checkUrl(
   }
 }
 
+export function acceptsNumberOrString(value: unknown): value is number | string {
+  return typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value));
+}
+
 export function acceptsEnumValue(value: unknown, constraint: CatalogPropConstraint): boolean {
   return (
     typeof value === 'string' &&
@@ -507,6 +511,17 @@ function checkProp(
         issues.push({
           code: 'prop-out-of-range',
           message: `${component} prop "${name}" must be ${range}`,
+          path,
+          value: String(value),
+        });
+      }
+      return;
+    }
+    case 'number-or-string': {
+      if (!acceptsNumberOrString(value)) {
+        issues.push({
+          code: 'invalid-prop-type',
+          message: `${component} prop "${name}" expects a number or string value`,
           path,
           value: String(value),
         });

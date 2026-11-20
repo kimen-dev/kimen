@@ -2,7 +2,7 @@
 
 | Attribute | Type | Default |
 | --- | --- | --- |
-| label | string | Required for an accessible name |
+| label | string | Slider |
 | help-text | string | — |
 | name | string | — |
 | disabled | boolean | false |

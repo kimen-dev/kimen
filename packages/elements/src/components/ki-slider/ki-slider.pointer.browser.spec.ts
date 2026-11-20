@@ -26,10 +26,13 @@ afterEach(async () => {
 });
 
 it('S10 increases each thumb target to at least 44 by 44 CSS pixels for a coarse pointer', async (context) => {
-  if (!(await media.emulateHoverCapability('none')) || !matchMedia('(pointer: coarse)').matches) {
+  const emulated = await media.emulateHoverCapability('none');
+  if (!emulated && !navigator.userAgent.includes('Chrome/')) {
     context.skip();
     return;
   }
+  expect(emulated).toBe(true);
+  await expect.poll(() => matchMedia('(pointer: coarse)').matches).toBe(true);
   fixture.innerHTML = '<ki-slider range label="Price" value="20,80"></ki-slider>';
   const lower = page.getByRole('slider', { name: 'Price minimum' });
   const upper = page.getByRole('slider', { name: 'Price maximum' });

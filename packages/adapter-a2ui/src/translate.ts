@@ -597,6 +597,47 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
     ),
   ],
   Row: (it) => [layout(it, 'row')],
+  Slider: (it) => {
+    const label = it.text('label');
+    const min = it.body['min'] === undefined ? 0 : it.body['min'];
+    const max = it.body['max'];
+    const steps = it.body['steps'];
+    if (it.body['value'] === undefined) {
+      throw it.malformed('value', 'Slider needs a value or a numeric data binding');
+    }
+    const value = it.value('value');
+    if (typeof min !== 'number' || !Number.isFinite(min)) {
+      throw it.malformed('min', 'Slider min must be a finite number');
+    }
+    if (typeof max !== 'number' || !Number.isFinite(max)) {
+      throw it.malformed('max', 'Slider max must be a finite number');
+    }
+    if (value !== undefined && (typeof value !== 'number' || !Number.isFinite(value))) {
+      throw it.malformed('value', 'Slider value must resolve to a finite number');
+    }
+    let step: number | undefined;
+    if (steps !== undefined) {
+      if (typeof steps !== 'number' || !Number.isInteger(steps) || steps < 1) {
+        throw it.malformed('steps', 'Slider steps must be a positive integer');
+      }
+      const span = max - min;
+      const increment = Number.isFinite(span) ? span / steps : max / steps - min / steps;
+      if (Number.isFinite(increment) && increment > 0) step = increment;
+    }
+    return [
+      node(
+        'ki-slider',
+        {
+          ...(label === '' ? {} : { label }),
+          min,
+          max,
+          ...(step === undefined ? {} : { step }),
+          ...(value === undefined ? {} : { value }),
+        },
+        [],
+      ),
+    ];
+  },
   Tabs: (it) => {
     const tabs = it.body['tabs'];
     if (!Array.isArray(tabs) || tabs.length === 0) {

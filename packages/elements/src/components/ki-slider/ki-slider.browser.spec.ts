@@ -8,7 +8,7 @@ import { defineCustomElement } from '../../../dist/components/ki-slider.js';
 
 type Slider = HTMLElement & { value?: number | string };
 const media = commands as unknown as {
-  emulateForcedColors: (value: 'active' | 'none' | null) => Promise<boolean>;
+  emulateForcedColors: (value: 'active' | 'none' | null) => Promise<void>;
   emulateReducedMotion: (value: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
 let fixture: HTMLElement;
@@ -137,11 +137,22 @@ describe('ki-slider', () => {
     await expectAccessible(fixture);
   });
 
+  it('keeps an accessible default name when an authored label is removed', async () => {
+    const host = await mount('<ki-slider label="Price" range minimum-label="lower"></ki-slider>');
+    await expect.element(thumb('Price lower')).toBeVisible();
+
+    host.removeAttribute('label');
+
+    await expect.element(thumb('Slider lower')).toBeVisible();
+    await expect.element(thumb('Slider maximum')).toBeVisible();
+  });
+
   it('S5 submits both the scalar and the range as one entry each', async () => {
     await mount(
       '<form><ki-slider name="volume" label="Volume" value="60"></ki-slider><ki-slider name="price" label="Price" value="20,80" range></ki-slider></form>',
     );
     const form = required(fixture.querySelector('form'));
+    await expect.element(thumb('Price maximum')).toBeVisible();
     let formData: FormData | undefined;
     form.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -244,7 +255,11 @@ describe('ki-slider', () => {
 
   it('keeps the track, fill, and thumb edge visible in forced colors', async (context) => {
     try {
-      if (!(await media.emulateForcedColors('active'))) {
+      await media.emulateForcedColors('active');
+      const paletteActive = () => matchMedia('(forced-colors: active)').matches;
+      if (navigator.userAgent.includes('Chrome/')) {
+        await expect.poll(paletteActive).toBe(true);
+      } else if (!paletteActive()) {
         context.skip();
         return;
       }
