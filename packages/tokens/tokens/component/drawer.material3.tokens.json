@@ -1,0 +1,16 @@
+{
+  "ki": {
+    "drawer": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.s1}",
+        "$description": "Material 3 raised surface color of the drawer."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Material 3 foreground color on the drawer surface."
+      }
+    }
+  }
+}

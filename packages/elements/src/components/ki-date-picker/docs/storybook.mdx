@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-date-picker" />
+
+# DatePicker
+
+Use `<ki-date-picker>` to select a booking or deadline. Use a format-hinted
+text field for a known date far away.
+
+```html
+<ki-date-picker label="Stay" name="stay" mode="range" confirm locale="en-GB"
+  value="2026-11-12/2026-11-16" min="2026-11-10" max="2026-11-30">
+</ki-date-picker>
+```
+
+The field accepts the locale's numeric date format and exposes ISO values in
+`ki-change` and form data. Separate two localized dates with an en dash or a
+spaced hyphen. The `confirm` option adds Cancel and Apply to calendar picks.
+
+The calendar is non-modal. Move with the arrow keys, Home/End, Page Up/Down,
+or Shift+Page Up/Down. Press Enter or Space to select, and Escape to return to
+the text field. Provide a label and localize the control labels as needed.
+
+Override the calendar surface, day and range colors with `--ki-date-picker-*`
+tokens. The `popup`, `grid`, `month`, `day`, `field` and `trigger` parts
+provide styling hooks.

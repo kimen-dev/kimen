@@ -1,0 +1,74 @@
+{
+  "ki": {
+    "fab-menu-item": {
+      "height": {
+        "$value": "{ki.layout.floating-action.md}",
+        "$description": "Minimum block size and inline target of an action."
+      },
+      "radius": {
+        "$value": "{ki.control.compact-pill.radius}",
+        "$description": "Pill radius of an action."
+      },
+      "bg": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Tinted surface of a floating action."
+      },
+      "fg": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Label and icon ink on the tinted action surface."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image painted above the action fill."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete optional filter behind the action."
+      },
+      "shadow": {
+        "$value": "{ki.elevation.e2}",
+        "$description": "Elevation of a resting action."
+      },
+      "hover-shadow": {
+        "$value": "{ki.elevation.e3}",
+        "$description": "Elevation of a hovered action."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Typeface for action labels."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-2}",
+        "$description": "Text size for action labels."
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "Text weight of an action label."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-2}",
+        "$description": "Line height of an action label."
+      },
+      "icon-size": {
+        "$value": "{ki.glyph.size.md}",
+        "$description": "Size of the glyph preceding an action label."
+      },
+      "content-gap": {
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Space between the action glyph and label."
+      },
+      "padding-block": {
+        "$value": "{ki.layout.spacing.md}",
+        "$description": "Block padding for a wrapping action label."
+      },
+      "padding-start": {
+        "$value": "{ki.layout.spacing.xl}",
+        "$description": "Inline-start padding of an action."
+      },
+      "padding-end": {
+        "$value": "{ki.layout.spacing.3xl}",
+        "$description": "Inline-end padding of an action."
+      }
+    }
+  }
+}

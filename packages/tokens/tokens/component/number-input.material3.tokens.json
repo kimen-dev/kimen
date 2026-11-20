@@ -1,0 +1,58 @@
+{
+  "ki": {
+    "number-input": {
+      "field-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Material 3 resting field fill."
+      },
+      "field-focus-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Material 3 focused field fill."
+      },
+      "field-disabled-fg": {
+        "$value": "{ki.text.low-em}",
+        "$description": "Material 3 disabled entry ink."
+      },
+      "border-block-start-width": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 omits the border at block start."
+      },
+      "border-block-end-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Material 3 field underline width."
+      },
+      "border-inline-width": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 omits the border at the inline edges."
+      },
+      "height": {
+        "$value": "{ki.space.14xl}",
+        "$description": "Material 3 medium field height before density."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.xs}",
+        "$description": "Material 3 field corners."
+      },
+      "padding-inline": {
+        "$value": "{ki.space.3xl}",
+        "$description": "Material 3 plain field and unit padding."
+      },
+      "font-size-touch": {
+        "$value": "{ki.typography.size.body-2}",
+        "$description": "Material 3 minimum input font size under a coarse pointer."
+      },
+      "label-line-height": {
+        "$value": "{ki.typography.line-height.caption-2}",
+        "$description": "Material 3 field label line height."
+      },
+      "label-font-size": {
+        "$value": "{ki.typography.size.caption-2}",
+        "$description": "Material 3 field label font size."
+      },
+      "label-font-weight": {
+        "$value": "{ki.typography.weight.body.normal}",
+        "$description": "Material 3 field label font weight."
+      }
+    }
+  }
+}

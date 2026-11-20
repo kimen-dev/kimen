@@ -182,7 +182,7 @@ values and observe default rendering.
 
 Use `primary` for the filled main action, `secondary` for an outlined
 surface action, `quaternary` for a neutral text action, and `ghost` for an
-accent text action. The catalog offers these four variants to agents.
+accent text action. The catalog also offers the outline variant added by #376.
 
 The icon button still accepts `tertiary` in existing markup and code. It
 shares the secondary role's tokens by default, with a development-only
@@ -195,6 +195,14 @@ transparent in Material 3.
 
 Agent's choice, pending founder confirmation: keep `quaternary` in this
 release. Whether to rename it to `text` remains open for the next major.
+
+## Amendment: persistent toggle selection (#376)
+
+The optional `toggle` mode reflects `selected` and exposes `aria-pressed`
+on the native control. Activation emits `ki-change` with the new state.
+The `outline` variant is available to both momentary and toggle buttons.
+The decorative `selected` slot can replace the default icon.
+See the [toggle contract](../094-toggle-icon-button/spec.md) for both states.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
@@ -311,17 +319,24 @@ Feature: Icon button
     Then the developer sees a deprecation warning recommending secondary
 
   # S17
-  Scenario: The catalog offers four recommended variants
+  Scenario: The catalog offers the current variants
     Given an agent choosing an icon button variant
     When the agent reads the catalog schema
-    Then the available variants are primary, secondary, quaternary and ghost
+    Then the available variants are primary, secondary, quaternary, ghost and outline
+
+  # S19
+  Scenario: An icon button can retain selection
+    Given an unselected icon button in toggle mode
+    When the person activates it
+    Then the icon button becomes selected and reports the new pressed state
+    And the icon button emits a change carrying the new state
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S16, S17 | |
+| Core behavior | S1, S2, S3, S16, S17, S19 | |
 | Keyboard path | S4, S5, S14 | |
 | Assistive-tech outcome | S6, S7, S8, S12, S13 | |
 | Form participation | S9 | |
@@ -337,8 +352,8 @@ founder decision it batches.
 ### Functional Requirements
 
 - **FR-001**: The icon button MUST expose a `variant` attribute defaulting
-  to `secondary`. The four recommended variants are `primary`, `secondary`,
-  `quaternary` and `ghost`. The component MUST still accept the deprecated
+  to `secondary`. The current variants are `primary`, `secondary`,
+  `quaternary`, `ghost` and `outline`. The component MUST still accept the deprecated
   `tertiary` value as described in the #344 amendment.
 - **FR-002**: The icon button MUST expose a `tone` attribute with values
   `neutral` (default), `success`, `danger`, orthogonal to `variant`.

@@ -1,0 +1,20 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as FabStories from '../ki-fab.stories';
+
+<Meta of={FabStories} />
+
+# FAB playground
+
+<Canvas of={FabStories.Playground} />
+<Controls of={FabStories.Playground} />
+
+## Sizes and variants
+
+<Canvas of={FabStories.Sizes} />
+<Canvas of={FabStories.Variants} />
+
+## Native link with a slotted icon
+
+<Canvas of={FabStories.LinkWithSlottedIcon} />
+
+Open the **Fixed On Scroll** story to try collapse and expansion as you scroll.

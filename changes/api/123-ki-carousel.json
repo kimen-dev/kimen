@@ -94,8 +94,6 @@
     "/packages/@kimen~1elements/exports/.~1ki-carousel-item": "f60a925484d60a4a8c6c764be062960b14120163f9ebfc7f66fc2f85f9ade9ee",
     "/packages/@kimen~1elements/modules/.~1components/symbols/CarouselLayout": "c6f9a389fcad330f74237935b5f83e5de8892a1ed08aa736d25ab533409412ef",
     "/packages/@kimen~1elements/modules/.~1components/symbols/CarouselSlideChangeDetail": "89cd9da2ce7c5caf51b8e7bfa2f47e82f0f7afe2526f06d67943b2ef6a2bf133",
-    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "6538d981536bfe5164e24b9d3637b5a6f321f3cb1eff42d0f3c4297494d5444d",
-    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "f2e5d344f61e3ef2af713938bf61279741d9823cbb1d12e52bab06879a81259e",
     "/packages/@kimen~1elements/modules/.~1components/symbols/KiCarouselCustomEvent": "474e1d4f4327079e1734cc4778ca80e64ce100bf9bcd53c8ca074b3eec877711",
     "/packages/@kimen~1elements/modules/.~1ki-carousel": "f4fa58c1e91872fefae98be4b0d57320cb43adb878e4eb6e02074529d76455cf",
     "/packages/@kimen~1elements/modules/.~1ki-carousel-item": "f4fa58c1e91872fefae98be4b0d57320cb43adb878e4eb6e02074529d76455cf",
@@ -111,8 +109,6 @@
     "/packages/@kimen~1elements/modules/.~1ki-carousel/target": "98a0da67474cd62de7aa4a996fa3da79f5bf029cf9ef15c1e16682786d7a55c8",
     "/packages/@kimen~1elements/modules/.~1loader/symbols/CarouselLayout": "c6f9a389fcad330f74237935b5f83e5de8892a1ed08aa736d25ab533409412ef",
     "/packages/@kimen~1elements/modules/.~1loader/symbols/CarouselSlideChangeDetail": "89cd9da2ce7c5caf51b8e7bfa2f47e82f0f7afe2526f06d67943b2ef6a2bf133",
-    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "70bd41e12d39b7114c29afc6f5864da6f0080b1e6ca24da9ffe717cac7a8a567",
-    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "8c904254f87ebf7d7dc9d97bf436770b27a33a6b1e506d55ee6a2d7aa7130263",
     "/packages/@kimen~1elements/modules/.~1loader/symbols/KiCarouselCustomEvent": "474e1d4f4327079e1734cc4778ca80e64ce100bf9bcd53c8ca074b3eec877711",
     "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/compact~1dark/--ki-carousel-control-backdrop-filter": "c75a5ebccb4db2d18d5591f667cc5fdc3929c84faa50f957a1d7a98c523b3706",
     "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/compact~1dark/--ki-carousel-control-bg": "66f6443d72b91802fe52a6b88da0458cf26c38a38d11a0f5803bfe16f56c853e",
@@ -539,7 +535,7 @@
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Add carousel and slide item APIs, including additions to the Stencil Components and JSX namespaces.",
+  "reason": "Add carousel and slide item APIs.",
   "release": "major",
   "schemaVersion": 2
 }

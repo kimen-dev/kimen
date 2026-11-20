@@ -1,0 +1,48 @@
+---
+title: ki-number-input
+description: Enter a number with optional steppers, bounds, a unit, and localized formatting.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use NumberInput when a person can type an exact quantity, limit, or price.
+Supply a visible `label`. Add `steppers` when incrementing or decrementing the
+value is common. Use `unit` for a separate suffix such as seconds.
+
+<Demo code={`<ki-number-input label="Seats" value="3" min="1" max="50" steppers></ki-number-input>`} />
+
+<Demo code={`<ki-number-input label="Timeout" value="30" min="0" unit="seconds"></ki-number-input>`} />
+
+## Localized display and form values
+
+Set `format` to `Intl.NumberFormatOptions` in JavaScript or to a JSON object in
+HTML. The nearest `lang` supplies the locale. The editor shows an ungrouped,
+full-precision number while focused, then reapplies the display format on
+blur. A percentage uses percentage points in the editor and a ratio in
+`value` and `FormData`. For example, entering `12,5` in German submits `0.125`.
+
+<Demo code={`<ki-number-input lang="de-DE" label="Discount" name="discount" value="0.125" min="0" max="1" step="0.005" format='{"style":"percent","maximumFractionDigits":1}'></ki-number-input>`} />
+
+Set `name` to include the field in the form and `required` when it must have a
+number. Set `help-text` for instructions and `error-text` for a validation
+message. A form reset restores the `value` attribute. Listen for `input` for
+live edits and `change` for a commit, then read the host's numeric `value`.
+
+## Keyboard and assistive technology
+
+Tab focuses the spinbutton. Arrow Up and Arrow Down adjust by `step`, which
+is 1 by default. Shift with either arrow or Page Up and Page Down adjust by
+ten steps. Home and End go to the minimum or maximum when supplied. The
+unit is part of the accessible description, and the optional stepper buttons
+have their own names and are disabled at the bounds. On blur, an out-of-range
+number moves to the nearest bound and a polite status explains the adjustment.
+Localize the buttons and messages through the label and message props.
+
+## API reference
+
+<CemApi tag="ki-number-input" />
+
+## Workshop
+
+[Open NumberInput in Storybook](/storybook/?path=/docs/docs-components-ki-number-input--docs)

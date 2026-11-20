@@ -38,6 +38,32 @@
           "$value": "{ki.space.zero}",
           "$description": "dimension used by the tabs component for the xl gap in material3: M3 tabs are contiguous, and material3 renders the M3 tab at every strip size (spec 050 D8)."
         }
+      },
+      "secondary": {
+        "unselected": {
+          "rest": {
+            "fg": {
+              "$value": "{ki.text.supporting}",
+              "$description": "Material 3 secondary tab resting foreground."
+            },
+            "bg": {
+              "$value": "{ki.surface.s0}",
+              "$description": "Material 3 secondary tab resting surface."
+            }
+          }
+        },
+        "selected": {
+          "rest": {
+            "fg": {
+              "$value": "{ki.text.high-em}",
+              "$description": "Material 3 secondary selected tab uses the high-emphasis neutral foreground."
+            },
+            "bg": {
+              "$value": "{ki.surface.s0}",
+              "$description": "Material 3 secondary selected tab resting surface."
+            }
+          }
+        }
       }
     }
   }

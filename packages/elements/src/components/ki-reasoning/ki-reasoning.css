@@ -1,0 +1,119 @@
+:host {
+  position: relative;
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+details {
+  background-color: var(--ki-reasoning-bg);
+  background-image: var(--ki-reasoning-bg-image);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: var(--ki-reasoning-backdrop-filter);
+  backdrop-filter: var(--ki-reasoning-backdrop-filter);
+  color: var(--ki-reasoning-fg);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-para);
+  overflow-wrap: anywhere;
+}
+
+summary {
+  display: inline-flex;
+  box-sizing: border-box;
+  min-inline-size: var(--ki-density-target-min);
+  max-inline-size: 100%;
+  min-block-size: var(--ki-density-target-min);
+  align-items: center;
+  gap: var(--ki-reasoning-summary-gap);
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary:focus-visible {
+  outline: var(--ki-focus-ring-width) solid var(--ki-focus-ring-color);
+  outline-offset: var(--ki-focus-ring-offset);
+}
+
+ki-icon {
+  flex: none;
+}
+
+details[open] .chevron {
+  rotate: 0.5turn;
+}
+
+[part="body"] {
+  display: grid;
+  gap: var(--ki-reasoning-summary-gap);
+  margin-block-start: var(--ki-reasoning-body-gap);
+  padding-inline-start: var(--ki-reasoning-body-indent);
+  border-inline-start: var(--ki-reasoning-border-width) solid var(--ki-reasoning-border);
+}
+
+details:not([open]) > [part="body"] {
+  display: none;
+}
+
+::slotted(ol),
+::slotted(ul) {
+  margin-block: 0;
+  padding-inline-start: var(--ki-reasoning-list-indent);
+}
+
+::slotted(p) {
+  margin-block: 0;
+}
+
+.status {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: var(--ki-typography-visually-hidden-size);
+  block-size: var(--ki-typography-visually-hidden-size);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes ki-reasoning-shimmer {
+  50% {
+    color: var(--ki-reasoning-shimmer-fg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .thinking {
+    animation: ki-reasoning-shimmer var(--ki-reasoning-shimmer-duration)
+      var(--ki-reasoning-shimmer-easing) infinite;
+  }
+
+  .chevron {
+    transition: rotate var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+}
+
+@media (forced-colors: active) {
+  details {
+    color: CanvasText;
+  }
+
+  .thinking {
+    animation: none;
+  }
+
+  summary:focus-visible {
+    outline-color: Highlight;
+  }
+
+  [part="body"] {
+    border-inline-start-color: CanvasText;
+  }
+}

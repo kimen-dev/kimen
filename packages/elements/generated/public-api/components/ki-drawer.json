@@ -1,0 +1,521 @@
+{
+  "component": {
+    "attributes": {
+      "close-label": {
+        "default": "'Close'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Title and accessible name. Provide a heading whenever the drawer opens.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "modal": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "placement": {
+        "default": "'end'",
+        "deprecatedSince": null,
+        "description": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bottom\" | \"end\" | \"start\""
+      },
+      "size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional CSS length. Overrides the 18rem themed width or bottom height cap.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-corner-control": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-space-scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-backdrop-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the dialog component for backdrop background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-dialog-divider-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the dialog component for the dividers under the heading and above the footer (Modal-header and Modal-actions 1px strokes). Zero removes them.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter applied behind the drawer surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised surface color of the drawer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layered over the drawer surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-close-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Preferred size of the Close button before the density minimum.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground color on the drawer surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-handle-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of the bottom-sheet handle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-handle-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline extent of the bottom-sheet handle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-handle-thickness": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the bottom-sheet handle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-heading-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the drawer title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Radius of the corners on the inner edge of the drawer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting elevation of the drawer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-drawer-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default inline size of a side sheet and block-size cap of a bottom sheet.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-2xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The 2xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The md spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-xl": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The xl spacing step for a stack or grid gap.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-medium-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-out": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decelerating interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-outline-low-em": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for outline low em.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-hover-overlay-inverse": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic color for surface hover overlay inverse.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-surface-transparent": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Transparent surface backing for a background image that carries its own opacity.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-title-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height title 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-title-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size title 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-semibold": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body semibold.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "An edge-aligned sheet for a focused task that keeps the current page in context.",
+    "events": {
+      "ki-close": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiDrawerCloseDetail>"
+      }
+    },
+    "methods": {
+      "close": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Requests dismissal. An application can veto it by canceling ki-close.",
+        "parameters": [],
+        "replacement": null,
+        "required": false,
+        "signature": "close() => Promise<void>",
+        "type": "Promise<void>"
+      },
+      "show": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Opens the sheet. A focused invoker receives focus again after modal dismissal.",
+        "parameters": [],
+        "replacement": null,
+        "required": false,
+        "signature": "show() => Promise<void>",
+        "type": "Promise<void>"
+      }
+    },
+    "parts": {
+      "body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The scrollable content region.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "close": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The built-in Close button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "dialog": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native sheet surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "footer": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The action row, collapsed when empty.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "handle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The decorative bottom-sheet swipe handle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "header": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The heading and action layout.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The visible title that names the sheet.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "closeLabel": {
+        "default": "'Close'",
+        "deprecatedSince": null,
+        "description": "Accessible name for the built-in Close button. Translate this for localized interfaces.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Title and accessible name. Provide a heading whenever the drawer opens.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "modal": {
+        "default": "true",
+        "deprecatedSince": null,
+        "description": "Makes the page behind the sheet inert. Set modal=\"false\" for continued page interaction.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Reflected live state. Setting it to false requests dismissal and may be vetoed.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "placement": {
+        "default": "'end'",
+        "deprecatedSince": null,
+        "description": "Logical edge. Use bottom for an action sheet with a swipe handle. Unknown values use end.",
+        "replacement": null,
+        "required": false,
+        "type": "\"bottom\" | \"end\" | \"start\""
+      },
+      "size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional CSS length. Overrides the 18rem themed width or bottom height cap.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The drawer's content, such as fields or a short list of actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "footer": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional actions such as Save. Wire these in the application.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "header-actions": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional actions between the heading and Close button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-drawer.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-drawer.d.ts",
+    "symbols": {
+      "KiDrawer": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiDrawer extends Components.KiDrawer, HTMLElement {\n}\nexport const KiDrawer: {\n    prototype: KiDrawer;\n    new (): KiDrawer;\n};"
+      },
+      "KiDrawerCloseDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiDrawerCloseDetail {\n    reason: KiDrawerCloseReason;\n}"
+      },
+      "KiDrawerCloseReason": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiDrawerCloseReason = 'button' | 'escape' | 'method' | 'swipe';"
+      },
+      "KiDrawerPlacement": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiDrawerPlacement = 'start' | 'end' | 'bottom';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-drawer.js"
+  }
+}

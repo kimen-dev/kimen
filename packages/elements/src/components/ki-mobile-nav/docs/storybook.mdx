@@ -1,0 +1,17 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as MobileNavStories from '../ki-mobile-nav.stories';
+
+<Meta title="Docs/Components/ki-mobile-nav" />
+
+# ki-mobile-nav
+
+Place three to five labeled destinations after the main content. The host
+reserves their space in the page flow. Use the same breakpoint to switch the
+mobile and desktop navigation.
+
+<Canvas of={MobileNavStories.Fixed} />
+<Canvas of={MobileNavStories.Floating} />
+<Canvas of={MobileNavStories.RightToLeft} />
+
+Tab and Shift+Tab move through destinations. Enter follows the focused link.
+Set `current` on the item matching the active route.

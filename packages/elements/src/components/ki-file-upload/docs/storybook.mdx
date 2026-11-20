@@ -1,0 +1,17 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as FileUploadStories from '../ki-file-upload.stories';
+
+<Meta of={FileUploadStories} name="Examples" />
+
+# File upload examples
+
+<Canvas of={FileUploadStories.Playground} />
+<Controls of={FileUploadStories.Playground} />
+
+## Upload progress and results
+
+<Canvas of={FileUploadStories.UploadResults} />
+
+## Disabled field
+
+<Canvas of={FileUploadStories.Disabled} />

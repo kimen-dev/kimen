@@ -1,0 +1,417 @@
+{
+  "component": {
+    "attributes": {
+      "count": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Positive unread count. Fractional values round down.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "count-label": {
+        "default": "'{label}, {count} new'",
+        "deprecatedSince": null,
+        "description": "Accessible count template, using the {label} and {count} placeholders.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "current": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Mark this destination as the current page.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination resolved by a native link. Omit for a static row.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "icon-name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Name of a registered Lucide glyph. Import its per-icon entry point first.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-control-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the panel outline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-font-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of sidebar controls and copy.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font size of navigation labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between panel regions and between row contents.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-icon-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading and toggle icon edge.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the row or toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting row background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over navigation row and toggle backgrounds.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-count-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter behind the count.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-count-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Expanded count pill background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-count-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the count background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-count-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Expanded count digits.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-current-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current destination background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-current-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Current destination ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-dot-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Unread dot fill in rail mode.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-dot-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inset of the dot from the row block-start and inline-end edges.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-dot-ring": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outer ring that separates the rail dot from the row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting row ink, with contrast-more support.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Base row and toggle height before density adjustment.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hovered navigation row background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hovered navigation row ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-padding": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline inset of an expanded row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner of a row or toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-item-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of the navigation label.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-sidebar-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Line height of navigation labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "One destination in a sidebar.",
+    "events": {},
+    "methods": {},
+    "parts": {
+      "count": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Expanded pill or rail dot.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "item": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Navigation link or static row.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Leading icon holder.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "count": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Positive unread count. Fractional values round down.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "countLabel": {
+        "default": "'{label}, {count} new'",
+        "deprecatedSince": null,
+        "description": "Accessible count template, using the {label} and {count} placeholders.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "current": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Mark this destination as the current page.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination resolved by a native link. Omit for a static row.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "iconName": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Name of a registered Lucide glyph. Import its per-icon entry point first.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The destination name as text or static inline content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "start": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "One decorative icon that overrides icon-name.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-sidebar-item.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-sidebar-item.d.ts",
+    "symbols": {
+      "KiSidebarItem": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiSidebarItem extends Components.KiSidebarItem, HTMLElement {\n}\nexport const KiSidebarItem: {\n    prototype: KiSidebarItem;\n    new (): KiSidebarItem;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-sidebar-item.js"
+  }
+}

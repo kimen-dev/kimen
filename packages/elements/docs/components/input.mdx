@@ -50,6 +50,24 @@ The `start`/`end` slots hold icon or text affixes inside the field, and
 <ki-input label="Account ID" value="ACC-2041" readonly></ki-input>
 ```
 
+## Submit action inside the field
+
+Use `action` for a one-field form with a single submit button. The action
+follows `end` inside the field border and has its own tab stop. Enter in the
+entry also submits the form.
+
+```html
+<form role="search">
+  <ki-input type="search" name="q" label="Search docs" placeholder="Components, tokens…">
+    <ki-button slot="action" size="sm" variant="secondary" type="submit">Search</ki-button>
+  </ki-input>
+</form>
+```
+
+An icon-only `ki-icon-button size="sm"` needs a `label` and a click handler
+that calls `form.requestSubmit()`. Place form-wide or unrelated actions beside
+the field. Use `end` for clear or reveal controls.
+
 ## Width
 
 By default, `ki-input` uses its content's preferred width and shrinks to fit
@@ -98,6 +116,8 @@ current value.
 | `--ki-input-height`          | Field block size                     |
 | `--ki-input-radius`          | Field corner radius                  |
 | `--ki-input-focus-ring-color`| Keyboard focus ring color            |
+| `--ki-input-action-gap`      | Gap before the action                |
+| `--ki-input-action-padding-end` | Inset from the inside end border  |
 
 States follow `--ki-input-{rest|hover|focus|invalid|readonly|disabled}-*`.
 Shadow parts: `::part(field)` (enclosure: background, border, radius, focus

@@ -1,0 +1,134 @@
+{
+  "ki": {
+    "number-input": {
+      "field-bg": {
+        "$value": "{ki.surface.special.light-s0-dark-s1}",
+        "$description": "Resting NumberInput field fill."
+      },
+      "field-bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional theme image layered over the field fill."
+      },
+      "field-backdrop-filter": {
+        "$value": "{ki.effect.component.no-backdrop-filter}",
+        "$description": "Complete backdrop filter behind the field."
+      },
+      "field-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Foreground of the numeric entry."
+      },
+      "field-border": {
+        "$value": "{ki.outline.control}",
+        "$description": "Resting NumberInput field boundary."
+      },
+      "field-focus-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Field fill while focused."
+      },
+      "field-focus-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Numeric entry ink while focused."
+      },
+      "field-invalid-border": {
+        "$value": "{ki.outline.danger-high-em}",
+        "$description": "Field boundary when a validation message is visible."
+      },
+      "field-disabled-bg": {
+        "$value": "{ki.surface.disabled-base-em}",
+        "$description": "Field fill when disabled."
+      },
+      "field-disabled-fg": {
+        "$value": "{ki.text.base-em}",
+        "$description": "Numeric entry ink when disabled."
+      },
+      "field-disabled-border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Boundary when the entire field is disabled."
+      },
+      "border-block-start-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Field border width at block start."
+      },
+      "border-block-end-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Field border width at block end."
+      },
+      "border-inline-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Field border width at either inline edge."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Field corners."
+      },
+      "height": {
+        "$value": "{ki.space.12xl}",
+        "$description": "Medium field height before applying regional density."
+      },
+      "padding-inline": {
+        "$value": "{ki.space.lg}",
+        "$description": "Inline padding for the plain field and unit suffix."
+      },
+      "stepper-padding-inline": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Editor inline padding between the steppers."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Font size of the numeric entry and its suffix."
+      },
+      "font-size-touch": {
+        "$value": "{ki.space.3xl}",
+        "$description": "Minimum input font size under a coarse pointer."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Line height of the numeric entry and its suffix."
+      },
+      "label-line-height": {
+        "$value": "{ki.typography.line-height.para}",
+        "$description": "Line height of the field label."
+      },
+      "label-font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Field label font size."
+      },
+      "label-font-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "Field label font weight."
+      },
+      "label-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "Gap between the label, field and supporting messages."
+      },
+      "stepper-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Resting stepper button fill."
+      },
+      "stepper-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Resting stepper icon ink."
+      },
+      "stepper-hover-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Stepper fill when hovered."
+      },
+      "stepper-hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Stepper icon ink when hovered."
+      },
+      "stepper-disabled-fg": {
+        "$value": "{ki.text.low-em}",
+        "$description": "Stepper icon ink when disabled."
+      },
+      "unit-bg": {
+        "$value": "{ki.surface.transparent}",
+        "$description": "Backing of the unit suffix within the field."
+      },
+      "unit-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Unit suffix ink. Medium emphasis in the standard contrast setting."
+      }
+    }
+  }
+}

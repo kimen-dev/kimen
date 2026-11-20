@@ -321,34 +321,40 @@ describe('agent surfaces', () => {
         declaration: { name: 'KiButton', module: 'src/components/ki-button/ki-button.tsx' },
       },
     ]);
-    // Spec 046 adds the loading state: the loading and loadingLabel members,
-    // their attributes, and the spinner part.
+    // Keep the full field list so accidental additions and missing
+    // members are both visible in the generated manifest.
     expect(declaration.members.map((member: ManifestMember) => member.name)).toEqual([
+      'command',
+      'commandfor',
       'disabled',
       'loading',
       'loadingLabel',
       'name',
+      'selected',
       'size',
+      'toggle',
       'tone',
       'type',
       'value',
       'variant',
     ]);
-    expect(declaration.attributes).toHaveLength(9);
+    expect(declaration.attributes).toHaveLength(13);
     expect(declaration.slots).toHaveLength(3);
     expect(declaration.cssParts.map((part: { name: string }) => part.name)).toEqual([
       'button',
       'label',
       'spinner',
     ]);
-    expect(declaration.events).toEqual([]);
+    expect(declaration.events).toMatchObject([
+      { name: 'ki-change', type: { text: 'CustomEvent<{ selected: boolean }>' } },
+    ]);
     expect(declaration.cssProperties).toEqual([]);
     expect(declaration.members.map((member: ManifestMember) => member.name)).toContain('variant');
     expect(
       declaration.members.find((member: ManifestMember) => member.name === 'variant'),
     ).toMatchObject({
       kind: 'field',
-      type: { text: '"ghost" | "primary" | "quaternary" | "secondary" | "tertiary"' },
+      type: { text: '"ghost" | "outline" | "primary" | "quaternary" | "secondary" | "tertiary"' },
       default: "'secondary'",
       attribute: 'variant',
       reflects: true,
@@ -679,6 +685,19 @@ describe('agent surfaces', () => {
         { name: 'maximum', text: '5' },
       ]),
     ).toEqual(['ki-button.variant: @minimum 9 is above @maximum 5']);
+  });
+
+  it('types a serialized attribute separately from its object property', async () => {
+    const docs = normalizeDocs(await readFixture('path-a-docs.json')) as DocsFixture;
+    const prop = docs.components[0]?.props?.[0];
+    if (prop === undefined) throw new Error('fixture must declare a prop');
+    prop.type = 'Intl.NumberFormatOptions | undefined';
+    prop.docsTags = [{ name: 'attributeType', text: 'string' }];
+
+    expect(validateDocs(docs)).toEqual([]);
+    const declaration = buildManifest(docs).modules[0].declarations[0];
+    expect(declaration.attributes[0]).toHaveProperty('type.text', 'string');
+    expect(declaration.members[0]).toHaveProperty('type.text', prop.type);
   });
 
   it('S1 buildManifest carries the url format a string prop declares with @format', async () => {

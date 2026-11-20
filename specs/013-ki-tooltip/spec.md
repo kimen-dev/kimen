@@ -23,6 +23,15 @@ tooltip pattern is new to the repo and requires the manual walkthrough flag."
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is complete. Behavior enters the system exactly once, here (Art. II).
 
+## Rich text extension
+
+The [rich tooltip contract](../132-rich-tooltip/spec.md) adds `heading` and
+`for` as an opt-in alternative to the wrapped-trigger `label` path described
+below. Resolve the trigger by ID in the same tree and use direct default-slot
+text for the explanation. The tooltip contains only text and exposes the
+heading and body as the trigger's description. Links, buttons, and other
+actions belong in a click-opened rich toggletip.
+
 ## Design-source analysis (Figma)
 
 The abstraction below is grounded in the Material 3 tooltip guidance plus the

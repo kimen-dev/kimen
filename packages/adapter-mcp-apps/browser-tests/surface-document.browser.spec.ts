@@ -8,7 +8,12 @@
 // server cannot inject anything into a self-contained resource).
 //
 // Wire fixtures and their specification citations: ../tests/spec-messages.ts.
-import { catalogData, NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
+import {
+  catalogData,
+  createLiveSurface,
+  NATIVE_PRIMITIVE_TAGS,
+  renderUiSpec,
+} from '@kimen/catalog';
 import type { Catalog } from '@kimen/catalog';
 import { afterEach, describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
@@ -194,6 +199,42 @@ function minimalNode(tag: string): {
 }
 
 describe('the delivered document is a complete Kimen surface', () => {
+  it('renders the default Popover arrow when omitted and restores it after a live unset', async () => {
+    const { view } = await embed();
+    const surface = view.document.createElement('main');
+    const trigger = view.document.createElement('button');
+    trigger.id = 'filter-trigger';
+    trigger.type = 'button';
+    trigger.textContent = 'Filters';
+    view.document.body.append(trigger, surface);
+    const node = {
+      component: 'ki-popover',
+      id: 'filters',
+      props: { for: trigger.id, label: 'Incident filters', open: true },
+      slots: { '': ['Open incidents'] },
+    };
+    const panel = () => surface.querySelector('ki-popover')?.shadowRoot;
+    const arrowWidth = () =>
+      panel()?.querySelector('[part="arrow"]')?.getBoundingClientRect().width ?? 0;
+
+    expect(renderUiSpec({ root: node, version: 1 }, { surface }).ok).toBe(true);
+    await expect.poll(arrowWidth).toBeGreaterThan(0);
+
+    surface.replaceChildren();
+    const live = createLiveSurface({ actions: [], surface });
+    expect(live.apply({ ops: [{ node, op: 'insert' }] }).ok).toBe(true);
+    await expect.poll(arrowWidth).toBeGreaterThan(0);
+
+    expect(live.apply({ ops: [{ id: node.id, op: 'set', props: { arrow: false } }] }).ok).toBe(
+      true,
+    );
+    await expect.poll(arrowWidth).toBe(0);
+    expect(panel()?.querySelector('[part="surface"]')?.matches(':popover-open')).toBe(true);
+
+    expect(live.apply({ ops: [{ id: node.id, op: 'set', props: { arrow: null } }] }).ok).toBe(true);
+    await expect.poll(arrowWidth).toBeGreaterThan(0);
+  });
+
   it('S16 renders a tool result as a registered, token-styled Kimen button', async () => {
     const host = await embed();
 
@@ -273,20 +314,36 @@ describe('the delivered document is a complete Kimen surface', () => {
       return definition === undefined || !(element instanceof definition);
     });
     expect(unregistered).toEqual([]);
-    // Every definition rendered its own tree under the document's policy.
+    // Shadow components render their own tree. Table styles its host in light DOM.
+    const shadowTags = tags.filter((tag) => tag !== 'ki-table');
     await expect
-      .poll(() => tags.filter((tag) => view.document.querySelector(tag)?.shadowRoot == null))
+      .poll(() => shadowTags.filter((tag) => view.document.querySelector(tag)?.shadowRoot == null))
       .toEqual([]);
+    const table = view.document.querySelector('ki-card > ki-table');
+    if (!table) throw new Error('The guarded surface did not render the Table host');
+    await expect.poll(() => view.getComputedStyle(table).overflowX).toBe('auto');
     await expect
       .poll(() => view.document.querySelector('ki-icon')?.shadowRoot?.querySelector('svg path'))
       .toBeInstanceOf(view.SVGPathElement);
+    // The native disclosure must also receive its component stylesheet under
+    // the policy. Without it the browser renders the summary as a list item.
+    await expect
+      .poll(() => {
+        const summary = view.document
+          .querySelector('ki-details')
+          ?.shadowRoot?.querySelector('summary');
+        return summary && view.getComputedStyle(summary).display;
+      })
+      .toBe('flex');
     // The document's policy loads images from data: only, and the URL policy
     // never lets a spec name one, so the sample image source is refused: that
-    // report is the policy working. Nothing else may be reported.
+    // report is the policy working.
+    // The document's default policy also blocks the sample audio source.
     const sample = new URL('Sample', view.document.baseURI).href;
-    expect(
-      host.violations.filter((violation) => violation !== `img-src blocked ${sample}`),
-    ).toEqual([]);
+    const expectedViolations = [`img-src blocked ${sample}`, `media-src blocked ${sample}`];
+    expect(host.violations.filter((violation) => !expectedViolations.includes(violation))).toEqual(
+      [],
+    );
   });
 
   it('S13 renders the stock glyph and rejects unselected names', async () => {

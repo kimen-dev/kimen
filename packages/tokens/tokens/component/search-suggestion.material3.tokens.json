@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "search-suggestion": {
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "Inherited body typeface on the declarative suggestion host."
+      }
+    }
+  }
+}

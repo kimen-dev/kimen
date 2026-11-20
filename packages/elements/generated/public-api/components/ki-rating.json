@@ -1,0 +1,513 @@
+{
+  "component": {
+    "attributes": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes an editable rating unavailable and excludes it from form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "icon-name": {
+        "default": "'star'",
+        "deprecatedSince": null,
+        "description": "Lucide icon name. Import custom names before mounting. Unavailable names use star.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max": {
+        "default": "5",
+        "deprecatedSince": null,
+        "description": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form field name for a selected editable score.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "option-label": {
+        "default": "'{value} stars'",
+        "deprecatedSince": null,
+        "description": "Accessible name pattern for the other choices. Use {value} for the choice.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "option-singular-label": {
+        "default": "'{value} star'",
+        "deprecatedSince": null,
+        "description": "Accessible name pattern for the one-star choice. Use {value} for the choice.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "precision": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "rated-label": {
+        "default": "'Rated {value} out of {max}'",
+        "deprecatedSince": null,
+        "description": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "readonly": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Displays a score without editing or submitting it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires an editable score before the form can be submitted.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "required-message": {
+        "default": "'Select a rating.'",
+        "deprecatedSince": null,
+        "description": "Validation message for an unanswered required rating.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "score-label": {
+        "default": "'{value} of {max}'",
+        "deprecatedSince": null,
+        "description": "Visible score pattern in input mode. Use {value} and {max} for the scores.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "value": {
+        "default": "0",
+        "deprecatedSince": null,
+        "description": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Glyph ink while the rating is unavailable.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between rating glyphs or targets.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-hover-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter for the hovered choice.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface of the choice under the pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-hover-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image over the hovered choice surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-label-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Backdrop of the visible question.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-label-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the visible question.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-label-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the question and scale.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-off-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Backdrop of an outlined glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-off-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of an outlined glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-on-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Backdrop of a filled glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-on-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a filled glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-score-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Backdrop of the visible score.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-score-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the visible score.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-score-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the glyphs and visible score.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Size of a rating glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-target-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corners of the interactive target.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-rating-target-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Default whole-step target size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "Displays a score or collects one choice on a small rating scale.",
+    "events": {
+      "ki-change": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fires once when a person changes the selection. The detail contains the numeric value.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<{ value: number }>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "choice": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native radio target for one selectable score.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "glyph": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Decorative artwork for one rating step.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible question above the editable scale.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "scale": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Read-only score image or editable radio group.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "score": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible numeric score.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "disabled": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Makes an editable rating unavailable and excludes it from form submission.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "iconName": {
+        "default": "'star'",
+        "deprecatedSince": null,
+        "description": "Lucide icon name. Import custom names before mounting. Unavailable names use star.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible question in input mode and accessible context in read-only mode. Always supply it.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "max": {
+        "default": "5",
+        "deprecatedSince": null,
+        "description": "Highest score and number of glyphs. Use a whole number from 1 to 10.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Form field name for a selected editable score.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "optionLabel": {
+        "default": "'{value} stars'",
+        "deprecatedSince": null,
+        "description": "Accessible name pattern for the other choices. Use {value} for the choice.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "optionSingularLabel": {
+        "default": "'{value} star'",
+        "deprecatedSince": null,
+        "description": "Accessible name pattern for the one-star choice. Use {value} for the choice.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "precision": {
+        "default": "1",
+        "deprecatedSince": null,
+        "description": "Choose 1 for whole steps or 0.5 for half steps. Other inputs use whole steps.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      },
+      "ratedLabel": {
+        "default": "'Rated {value} out of {max}'",
+        "deprecatedSince": null,
+        "description": "Accessible name pattern for the read-only image. Use {value} and {max} for the scores.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "readonly": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Displays a score without editing or submitting it.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "required": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Requires an editable score before the form can be submitted.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "requiredMessage": {
+        "default": "'Select a rating.'",
+        "deprecatedSince": null,
+        "description": "Validation message for an unanswered required rating.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "scoreLabel": {
+        "default": "'{value} of {max}'",
+        "deprecatedSince": null,
+        "description": "Visible score pattern in input mode. Use {value} and {max} for the scores.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "value": {
+        "default": "0",
+        "deprecatedSince": null,
+        "description": "Current score. Zero means unanswered in input mode. Editable scores use\nthe nearest allowed step. Read-only scores retain their decimal precision.",
+        "replacement": null,
+        "required": false,
+        "type": "number"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-rating.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-rating.d.ts",
+    "symbols": {
+      "KiRating": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiRating extends Components.KiRating, HTMLElement {\n}\nexport const KiRating: {\n    prototype: KiRating;\n    new (): KiRating;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-rating.js"
+  }
+}

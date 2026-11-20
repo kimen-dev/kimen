@@ -1,0 +1,382 @@
+{
+  "component": {
+    "attributes": {
+      "done-label": {
+        "default": "'Thought'",
+        "deprecatedSince": null,
+        "description": "Summary text when done and elapsed time is unavailable.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "duration-label": {
+        "default": "'Thought for {seconds} seconds'",
+        "deprecatedSince": null,
+        "description": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the disclosure shows its steps. Native toggles update this reflected property.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "singular-duration-label": {
+        "default": "'Thought for {seconds} second'",
+        "deprecatedSince": null,
+        "description": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "status": {
+        "default": "'thinking'",
+        "deprecatedSince": null,
+        "description": "Use thinking while steps arrive and done once the assistant finishes.",
+        "replacement": null,
+        "required": false,
+        "type": "\"done\" | \"thinking\""
+      },
+      "thinking-label": {
+        "default": "'Thinking…'",
+        "deprecatedSince": null,
+        "description": "Summary text while the assistant is thinking.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-duration-fast": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fast interaction transition duration.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-motion-easing-standard": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Standard interaction transition easing curve.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete filter behind the disclosure. None keeps the backdrop clear.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill behind the disclosure summary and its steps.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted over the disclosure fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-body-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block spacing between the summary and the step content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-body-indent": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline spacing between the rule and the content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the decorative rule at the inline start of the steps.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the steps rule.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium-emphasis ink for the disclosure summary and its steps.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-list-indent": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline space for markers on a slotted list.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-shimmer-duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Period of the thinking shimmer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-shimmer-easing": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Easing into and out of the thinking highlight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-shimmer-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Readable highlight at the midpoint of the thinking shimmer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-reasoning-summary-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Space between the summary text and glyphs and between separate step blocks.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-para": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height para.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-visually-hidden-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Nonzero edge for clipped text available to assistive technology.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A disclosure for the assistant's progress or plan, with a localized summary.",
+    "events": {
+      "ki-toggle": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Emitted after a native disclosure toggle. Setting open from the application is silent.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<KiReasoningToggleDetail>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The slotted content area with the inline-start rule.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "summary": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The native disclosure control that shows the current status.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "doneLabel": {
+        "default": "'Thought'",
+        "deprecatedSince": null,
+        "description": "Summary text when done and elapsed time is unavailable.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "duration": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional elapsed milliseconds. Done displays finite, nonnegative values rounded to seconds.",
+        "replacement": null,
+        "required": false,
+        "type": "number | undefined"
+      },
+      "durationLabel": {
+        "default": "'Thought for {seconds} seconds'",
+        "deprecatedSince": null,
+        "description": "Summary template for zero or multiple elapsed seconds. The {seconds} placeholder receives the rounded time.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "open": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Whether the disclosure shows its steps. Native toggles update this reflected property.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
+      "singularDurationLabel": {
+        "default": "'Thought for {seconds} second'",
+        "deprecatedSince": null,
+        "description": "Summary template for one elapsed second. The {seconds} placeholder receives the rounded time.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "status": {
+        "default": "'thinking'",
+        "deprecatedSince": null,
+        "description": "Use thinking while steps arrive and done once the assistant finishes.",
+        "replacement": null,
+        "required": false,
+        "type": "\"done\" | \"thinking\""
+      },
+      "thinkingLabel": {
+        "default": "'Thinking…'",
+        "deprecatedSince": null,
+        "description": "Summary text while the assistant is thinking.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {
+      "": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Supporting content shown when expanded, such as an ordered list of steps supplied by the application.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    }
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-reasoning.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-reasoning.d.ts",
+    "symbols": {
+      "KiReasoning": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiReasoning extends Components.KiReasoning, HTMLElement {\n}\nexport const KiReasoning: {\n    prototype: KiReasoning;\n    new (): KiReasoning;\n};"
+      },
+      "KiReasoningStatus": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiReasoningStatus = 'thinking' | 'done';"
+      },
+      "KiReasoningToggleDetail": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "interface KiReasoningToggleDetail {\n    open: boolean;\n}"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-reasoning.js"
+  }
+}

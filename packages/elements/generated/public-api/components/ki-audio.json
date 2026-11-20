@@ -1,0 +1,801 @@
+{
+  "component": {
+    "attributes": {
+      "error-label": {
+        "default": "'Audio could not be played'",
+        "deprecatedSince": null,
+        "description": "Message shown if playback cannot start or the recording fails to load.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "mute-label": {
+        "default": "'Mute'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the mute button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "pause-label": {
+        "default": "'Pause'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the pause button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "play-label": {
+        "default": "'Play'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the play button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "rates": {
+        "default": "'0.75,1,1.25,1.5,2'",
+        "deprecatedSince": null,
+        "description": "Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "seek-label": {
+        "default": "'Seek'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the timeline slider.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "speed-label": {
+        "default": "'Playback speed'",
+        "deprecatedSince": null,
+        "description": "Accessible label for the playback-rate picker.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "src": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source URL for the recording. Use an HTTP(S) URL or a relative URL.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "time-label": {
+        "default": "'{elapsed} of {duration}'",
+        "deprecatedSince": null,
+        "description": "Accessible time template. Keep the {elapsed} and {duration} placeholders.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "title": {
+        "default": "'Audio player'",
+        "deprecatedSince": null,
+        "description": "Visible title and accessible name of the player.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "transcript-href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "transcript-label": {
+        "default": "'Read the transcript'",
+        "deprecatedSince": null,
+        "description": "Text of the transcript link.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "unmute-label": {
+        "default": "'Unmute'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the unmute button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "cssProperties": {
+      "--ki-audio-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter applied to the player, off by default.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind the player and transcript link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image painted over the player background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Boundary of the player panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text on the player background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-progress-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the elapsed timeline and seek thumb.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the player panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-speed-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the playback speed button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-title-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Font family of the recording title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-audio-track-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the inactive timeline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral disabled foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest background.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for ghost neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled border.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-disabled-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral hover foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-rest-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "color used by the button component for primary neutral rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of the boundary of a compact control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-radius-track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of a track containing adjacent controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-size-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium control track height, 40 CSS px at the default root size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-control-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small control track height, 32 CSS px at the default root size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-corner-activity-mark": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Round corners for rings and typing dots.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-corner-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small radius for an outline around inline content.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-density-target-min": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between a focusable component and its keyboard focus ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-focus-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-glyph-size-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium glyph for body content (20px at the default root size).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-glyph-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small glyph for dense layouts (16px at the default root size).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-media-layout-inline-max": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum inline size of a self-contained media control panel.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scale-control-coarse-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Minimum grip target when a value scale has a coarse primary pointer.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-scale-control-track-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the inactive rail of a value scale.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spacing-action-inset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Interior space at the edge of an action surface or divider.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spacing-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-spacing-media-caption": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block spacing between a media frame and its caption.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-line-height-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography line height caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-body-1": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size body 1.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-size-caption-2": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic dimension for typography size caption 2.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-underline-offset": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Gap between text and its underline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-underline-thickness": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Stroke width of a resting text underline.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-weight-body-medium": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font weight for typography weight body medium.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A recording player with play, pause, a seek timeline, elapsed and total time,\nplayback speed, mute, and an optional transcript link.",
+    "events": {
+      "ended": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Forwarded when the recording ends. The catalog can bind a declared action here.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      },
+      "pause": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Forwarded when native playback pauses.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      },
+      "play": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Forwarded when the native playback state switches to playing.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      },
+      "timeupdate": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Forwarded when the native playback position is updated.",
+        "replacement": null,
+        "required": false,
+        "type": "CustomEvent<void>"
+      }
+    },
+    "methods": {},
+    "parts": {
+      "mute": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Mute and unmute control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "play": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Play and pause control.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "player": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The named group and themed surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "progress": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Played portion of the timeline rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "seek": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native seek slider.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "speed": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Native playback-rate picker.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "status": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Playback failure message.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "time": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Elapsed and total time readouts.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "title": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Visible recording title.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "track": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Timeline rail.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "transcript": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Transcript link.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "properties": {
+      "audioTitle": {
+        "default": "'Audio player'",
+        "deprecatedSince": null,
+        "description": "Visible title and accessible name of the player.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "errorLabel": {
+        "default": "'Audio could not be played'",
+        "deprecatedSince": null,
+        "description": "Message shown if playback cannot start or the recording fails to load.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "muteLabel": {
+        "default": "'Mute'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the mute button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "pauseLabel": {
+        "default": "'Pause'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the pause button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "playLabel": {
+        "default": "'Play'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the play button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "rates": {
+        "default": "'0.75,1,1.25,1.5,2'",
+        "deprecatedSince": null,
+        "description": "Comma-separated playback speeds between 0.25 and 4. Normal speed (1) is always available.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "seekLabel": {
+        "default": "'Seek'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the timeline slider.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "speedLabel": {
+        "default": "'Playback speed'",
+        "deprecatedSince": null,
+        "description": "Accessible label for the playback-rate picker.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "src": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Source URL for the recording. Use an HTTP(S) URL or a relative URL.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "timeLabel": {
+        "default": "'{elapsed} of {duration}'",
+        "deprecatedSince": null,
+        "description": "Accessible time template. Keep the {elapsed} and {duration} placeholders.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "transcriptHref": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "URL for the recording's text transcript. Use an HTTP(S) URL or a relative URL.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "transcriptLabel": {
+        "default": "'Read the transcript'",
+        "deprecatedSince": null,
+        "description": "Text of the transcript link.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      },
+      "unmuteLabel": {
+        "default": "'Unmute'",
+        "deprecatedSince": null,
+        "description": "Accessible name of the unmute button.",
+        "replacement": null,
+        "required": false,
+        "type": "string"
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-audio.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-audio.d.ts",
+    "symbols": {
+      "KiAudio": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiAudio extends Components.KiAudio, HTMLElement {\n}\nexport const KiAudio: {\n    prototype: KiAudio;\n    new (): KiAudio;\n};"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-audio.js"
+  }
+}

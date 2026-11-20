@@ -28,6 +28,12 @@ afterAll(() => {
   styles.remove();
 });
 
+function selectionIcon(control: Element) {
+  const icon = control.querySelector('[part~="selection-icon"]');
+  if (!icon) throw new Error('Missing filter selection icon');
+  return page.elementLocator(icon);
+}
+
 it('S1 selects a filter, renders its check, and reports selection', async () => {
   fixture.innerHTML = '<ki-chip value="eng">Engineering</ki-chip>';
   const change = vi.fn();
@@ -40,7 +46,7 @@ it('S1 selects a filter, renders its check, and reports selection', async () => 
   const initialFill = getComputedStyle(control).backgroundColor;
   await filter.click();
   await expect.element(filter).toHaveAttribute('aria-pressed', 'true');
-  await expect.element(filter.getByTestId('selection-icon')).toBeVisible();
+  await expect.element(selectionIcon(control)).toBeVisible();
   await expect.poll(() => getComputedStyle(control).backgroundColor).not.toBe(initialFill);
   expect(change).toHaveBeenCalledExactlyOnceWith(
     expect.objectContaining({ detail: { selected: true } }),
@@ -126,10 +132,9 @@ it('keeps the check and boundary in forced colors', async ({ skip }) => {
     }
     fixture.innerHTML =
       '<ki-chip selected>Design</ki-chip><ki-chip type="input" removable>Ana</ki-chip>';
-    await expect
-      .element(page.getByRole('button', { name: 'Design' }))
-      .toHaveAttribute('aria-pressed', 'true');
-    await expect.element(page.getByTestId('selection-icon')).toBeVisible();
+    const filter = page.getByRole('button', { name: 'Design' });
+    await expect.element(filter).toHaveAttribute('aria-pressed', 'true');
+    await expect.element(selectionIcon(filter.element())).toBeVisible();
     const input = fixture.querySelector('ki-chip[type="input"]');
     await expect.element(page.getByRole('button', { name: 'Remove Ana' })).toBeVisible();
     const pill = input?.shadowRoot?.querySelector('[part~="chip"]');

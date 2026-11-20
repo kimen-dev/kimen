@@ -538,7 +538,17 @@ describe('createCatalog — reserved attribute names (FR-015)', () => {
     },
   });
 
-  it.each(['style', 'class', 'slot', 'id', 'STYLE', 'Class', 'sLoT', 'ID'])(
+  it.each([
+    'style',
+    'class',
+    'slot',
+    'id',
+    'STYLE',
+    'Class',
+    'sLoT',
+    'ID',
+    'DATA-KI-MARKDOWN-ORIGINS',
+  ])(
     'S19 rejects a definition declaring the reserved prop "%s", naming the entry and the prop',
     (name) => {
       const created = createCatalog(withProp(name));
@@ -556,9 +566,9 @@ describe('createCatalog — reserved attribute names (FR-015)', () => {
     },
   );
 
-  it('S19 rejects every letter-case spelling of the four reserved names', () => {
+  it('S19 rejects every letter-case spelling of the reserved names', () => {
     const spelling = fc
-      .constantFrom('style', 'class', 'slot', 'id')
+      .constantFrom('style', 'class', 'slot', 'id', 'data-ki-markdown-origins')
       .chain((name) =>
         fc
           .array(fc.boolean(), { maxLength: name.length, minLength: name.length })

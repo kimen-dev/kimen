@@ -735,17 +735,8 @@ describe('A2UI 1.0 features translate into the neutral catalog', () => {
     const result = adapter.apply(
       create('s', {
         components: [
-          { id: 'root', component: 'Column', children: ['ready', 'volume', 'clip'] },
+          { id: 'root', component: 'Column', children: ['ready', 'clip'] },
           { id: 'ready', component: 'Text', text: 'Ready' },
-          {
-            id: 'volume',
-            component: 'Slider',
-            label: 'Volume',
-            min: 0,
-            max: 100,
-            steps: 5,
-            value: { '@path': '/volume' },
-          },
           {
             id: 'clip',
             component: 'Video',
@@ -758,16 +749,12 @@ describe('A2UI 1.0 features translate into the neutral catalog', () => {
 
     expect(result.ok).toBe(true);
     expect(degradations).toStrictEqual([
-      { componentId: 'volume', componentType: 'Slider', reason: 'unmapped-type', surfaceId: 's' },
       { componentId: 'clip', componentType: 'Video', reason: 'unmapped-type', surfaceId: 's' },
     ]);
     expect(surface.textContent).toContain('Ready');
     expect(
       [...surface.querySelectorAll('ki-badge')].map((b) => [b.textContent, b.getAttribute('tone')]),
-    ).toStrictEqual([
-      ['Unsupported component', 'warning'],
-      ['Unsupported component', 'warning'],
-    ]);
+    ).toStrictEqual([['Unsupported component', 'warning']]);
   });
 
   it('S15 degrades a value needing an unevaluated function without calling the agent', () => {

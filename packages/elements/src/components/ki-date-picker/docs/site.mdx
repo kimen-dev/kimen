@@ -1,0 +1,43 @@
+---
+title: ki-date-picker
+description: Select one date or a range with localized text entry and a keyboard-operable calendar.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a date picker for bookings and deadlines where the weekday matters. For a
+known date far away, such as a birth date, use a text field with a format hint
+or separate date fields. Use a dedicated time field for times.
+
+<Demo code={`<ki-date-picker label="Stay" name="stay" mode="range" confirm locale="en-GB" value="2026-11-12/2026-11-16" min="2026-11-10" max="2026-11-30"></ki-date-picker>`} />
+
+## Values and forms
+
+Read the saved ISO date or `start/end` pair from `value` or from the
+`ki-change` event's `detail.value`. A named field submits the same value.
+`min` and `max` include their endpoints. Form reset restores the current
+`value` attribute.
+
+People can type an ISO value or the numeric date used by the locale, such as
+`20/11/2026` in en-GB. Separate localized range endpoints with an en dash or
+a spaced hyphen. Dates commit when the user leaves the text field or presses
+Enter. With `confirm`, calendar picks wait for Apply.
+
+## Accessibility
+
+Provide a visible `label`, and use `help-text` to show the expected format.
+Translate `choose-label`, `change-label` (with `{date}`), the month navigation
+labels, Cancel and Apply when needed. The month heading and weekdays use
+`locale` or the page language. The calendar preserves Gregorian ISO dates.
+
+In the date grid, use the arrows to move a day or a week, Home and End for
+week boundaries, and Page Up and Page Down for months. Add Shift to jump a
+year. Enter and Space pick the focused date. Escape closes the calendar and
+returns focus to the text field.
+
+## API reference
+
+<CemApi tag="ki-date-picker" />
+
+[Open ki-date-picker in Storybook](/storybook/?path=/docs/docs-components-ki-date-picker--docs)

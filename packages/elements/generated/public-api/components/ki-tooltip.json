@@ -1,10 +1,26 @@
 {
   "component": {
     "attributes": {
+      "for": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID of the rich tooltip's external trigger in the same document or shadow tree.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Rich tooltip heading. Pair it with `for` and optional direct text in the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "label": {
         "default": "''",
         "deprecatedSince": null,
-        "description": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover.",
+        "description": "The entire plain tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a popover.",
         "replacement": null,
         "required": false,
         "type": "string"
@@ -219,6 +235,158 @@
         "required": false,
         "type": null
       },
+      "--ki-tooltip-rich-backdrop-filter": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Complete backdrop filter of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of the rich tooltip or rich popover.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-bg-image": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Optional image layer over the rich surface fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-border-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline ink of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Outline thickness of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the rich surface body text.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body text size of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body text weight of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-family": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Typeface of the rich surface heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the rich surface heading over the shared fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Distance between the rich heading and its body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text size of the rich surface heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-heading-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Text weight of the rich surface heading.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Body text line height of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-max-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Maximum inline size of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-padding-block": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Block-axis inset of the rich surface, before density scaling.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-padding-inline": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline-axis inset of the rich surface, before density scaling.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-radius": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Corner radius of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-rich-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Raised elevation of the rich surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-tooltip-shadow": {
         "default": null,
         "deprecatedSince": null,
@@ -236,7 +404,7 @@
         "type": null
       }
     },
-    "description": "A transient, text-only description bubble for one slotted trigger.",
+    "description": "A transient, text-only hint with an optional heading.",
     "events": {},
     "methods": {},
     "parts": {
@@ -250,10 +418,26 @@
       }
     },
     "properties": {
+      "for": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID of the rich tooltip's external trigger in the same document or shadow tree.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "heading": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Rich tooltip heading. Pair it with `for` and optional direct text in the default slot.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "label": {
         "default": "''",
         "deprecatedSince": null,
-        "description": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover.",
+        "description": "The entire plain tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a popover.",
         "replacement": null,
         "required": false,
         "type": "string"
@@ -271,7 +455,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Exactly one interactive trigger. The component reflects `label` to\nthe trigger's `aria-description`.",
+        "description": "One trigger for a plain tooltip, or direct explanatory text when\n`for` and `heading` are provided. Rich tooltips accept text only.",
         "replacement": null,
         "required": false,
         "type": null

@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiOption } from '@kimen/elements/component
 
 export const KiOption: StencilVueComponent<JSX.KiOption> = /*@__PURE__*/ defineContainer<JSX.KiOption>('ki-option', defineKiOption, [
   'value',
-  'disabled'
+  'disabled',
+  'description'
 ]);
 

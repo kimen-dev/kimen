@@ -15,6 +15,8 @@ const budgetFields = {
   mcpApps: ['raw', 'gzip', 'brotli'],
   mcpServer: ['raw', 'gzip', 'brotli'],
   tokenStylesheets: ['onmars', 'material3'],
+  // A reviewed exception to the uniform 25 kB worst-case (full Stencil runtime) ceiling.
+  worstCase: ['brotli'],
 };
 
 export function readComponentMetadata(componentRoot, tag) {
@@ -46,8 +48,23 @@ export function readComponentMetadata(componentRoot, tag) {
   ) {
     invalid('visual.material3Dark');
   }
+  if (
+    Object.hasOwn(metadata, 'tokenNamespace') &&
+    (typeof metadata.tokenNamespace !== 'string' ||
+      !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u.test(metadata.tokenNamespace))
+  ) {
+    invalid('tokenNamespace');
+  }
   if (Object.hasOwn(metadata, 'catalog') && typeof metadata.catalog !== 'boolean') {
     invalid('catalog');
+  }
+  if (
+    Object.hasOwn(metadata, 'catalogAction') &&
+    (metadata.catalog !== true ||
+      typeof metadata.catalogAction !== 'string' ||
+      metadata.catalogAction.trim() === '')
+  ) {
+    invalid('catalogAction');
   }
 
   if (

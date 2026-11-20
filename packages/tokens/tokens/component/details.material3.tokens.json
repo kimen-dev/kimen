@@ -1,0 +1,21 @@
+{
+  "ki": {
+    "details": {
+      "bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Material 3 disclosure surface color.",
+        "$type": "color"
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Material 3 disclosure frame and separator color.",
+        "$type": "color"
+      },
+      "summary-hover-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Material 3 hovered summary surface color.",
+        "$type": "color"
+      }
+    }
+  }
+}

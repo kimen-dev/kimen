@@ -1,0 +1,70 @@
+---
+title: Tree
+description: Browse, select or navigate a hierarchy of collapsible branches.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a tree for file browsers, nested categories, or an outline that people
+need to explore branch by branch. Use a list for a flat collection. Name the
+tree with `label` and put the item's text before its nested
+[`ki-tree-item`](../tree-item/) children.
+
+<Demo
+  layout="block"
+  code={`<ki-tree label="Project files">
+  <ki-tree-item expanded>
+    src
+    <ki-tree-item selected>ki-dialog.ts</ki-tree-item>
+    <ki-tree-item>ki-menu.ts</ki-tree-item>
+  </ki-tree-item>
+  <ki-tree-item>README.md</ki-tree-item>
+</ki-tree>`}
+/>
+
+## Multiple selection
+
+Set `selection="multiple"` to show checkboxes. Checking a branch selects
+its enabled descendants. A branch appears mixed when only some of its
+enabled descendants are selected. The `ki-selection-change` event carries
+the selected items in `detail.selectedItems`.
+
+<Demo
+  layout="block"
+  code={`<ki-tree label="Export files" selection="multiple">
+  <ki-tree-item expanded>
+    Reports
+    <ki-tree-item selected>Summary</ki-tree-item>
+    <ki-tree-item>Appendix</ki-tree-item>
+    <ki-tree-item disabled>Draft</ki-tree-item>
+  </ki-tree-item>
+</ki-tree>`}
+/>
+
+## Navigation and lazy branches
+
+For navigation, set `selection="none"` and give destinations an `href`.
+Listen for `ki-expand` and `ki-collapse` to observe disclosure changes.
+A `lazy` branch emits `ki-load` on first expansion. Append the returned
+child items to `event.detail.item`. If the request finishes with no
+items, set `lazy` to `false` to stop the spinner. Use `loading-label` to
+name the activity in the document language.
+
+## Keyboard
+
+Tab moves into and out of the tree as one stop. Up and Down move among
+visible items. Use the arrow toward the children to expand a branch or move
+to its first child, and the opposite arrow to collapse it or return to its
+parent. The arrows follow the reading direction. Home and End move to the
+ends of the visible tree. Type the beginning of an item name to reach it
+directly. Space selects or checks an item. Enter follows the destination on
+a link.
+
+## API reference
+
+<CemApi tag="ki-tree" />
+
+## Workshop
+
+[Open Tree in Storybook](/storybook/?path=/docs/docs-components-ki-tree--docs)
