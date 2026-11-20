@@ -57,7 +57,7 @@ function mount(attributes = savedDate, label = 'Departure') {
 
 async function openCalendar() {
   await trigger().click();
-  await expect.element(dialog()).toBeVisible();
+  await expect.element(dialog().getByRole('grid')).toBeVisible();
 }
 
 async function expectFocused(date: string) {
@@ -167,22 +167,25 @@ it('S9 closes on Escape and restores text field focus', async () => {
 });
 
 it('S10 names the controls, announces the month and exposes one tab stop', async () => {
-  const { picker } = mount();
+  mount();
   await expect.element(trigger()).toHaveAccessibleName('Change date, 12 Nov 2026');
+  await expect.element(trigger()).not.toHaveAttribute('aria-controls');
   await openCalendar();
   const grid = page.getByRole('grid', { name: 'November 2026' });
   await expect.element(grid).toBeVisible();
   await expect.element(dialog()).toHaveAttribute('aria-modal', 'false');
   await expect.element(trigger()).toHaveAttribute('aria-haspopup', 'dialog');
   await expect.element(trigger()).toHaveAttribute('aria-expanded', 'true');
-  expect(trigger().element().getAttribute('aria-controls')).toBe(dialog().element().id);
+  const calendarButton = trigger().element();
+  if (!(calendarButton instanceof HTMLButtonElement)) throw new Error('Missing calendar button');
+  expect(calendarButton.popoverTargetElement).toBe(dialog().element());
   await expect
     .element(page.getByRole('heading', { name: 'November 2026' }))
     .toHaveAttribute('aria-live', 'polite');
   const chosen = day('12 November 2026').element();
   expect(page.getByRole('gridcell', { selected: true }).element()).toBe(chosen.closest('td'));
   expect([...grid.element().querySelectorAll('button[tabindex="0"]')]).toEqual([chosen]);
-  await expectAccessible(picker);
+  await expectAccessible({ include: ['ki-date-picker'] });
 });
 
 it('S11 uses full weekday names in the requested weekday order', async () => {
@@ -219,8 +222,9 @@ it('S14 resets the live value to its authored default', async () => {
   await userEvent.keyboard('{Enter}');
   expect(picker.value).toBe('2026-11-20');
   form.reset();
+  await expect.poll(() => picker.value).toBe('2026-11-12');
   await expect.element(field()).toHaveValue('12/11/2026');
-  expect(picker.value).toBe('2026-11-12');
+  expect(new FormData(form).get('departure')).toBe('2026-11-12');
 });
 
 it('clears the field and form value when the value attribute is removed', async () => {
@@ -234,10 +238,30 @@ it('clears the field and form value when the value attribute is removed', async 
 });
 
 it('S15 gets its popup surface from the raised semantic color', async () => {
-  fixture.style.setProperty('--ki-surface-raised', 'rgb(249, 247, 243)');
   mount();
-  await openCalendar();
-  expect(getComputedStyle(dialog().element()).backgroundColor).toBe('rgb(249, 247, 243)');
+  const token = '--ki-surface-raised';
+  const root = document.documentElement.style;
+  const original = root.getPropertyValue(token);
+  const priority = root.getPropertyPriority(token);
+  const witness = document.createElement('div');
+  witness.style.backgroundColor = `var(${token})`;
+  fixture.append(witness);
+  const originalColor = getComputedStyle(witness).backgroundColor;
+
+  try {
+    root.setProperty(token, 'rgb(249, 247, 243)');
+    expect(getComputedStyle(witness).backgroundColor).not.toBe(originalColor);
+    await openCalendar();
+    await expect
+      .poll(
+        () =>
+          getComputedStyle(dialog().element()).backgroundColor ===
+          getComputedStyle(witness).backgroundColor,
+      )
+      .toBe(true);
+  } finally {
+    root.setProperty(token, original, priority);
+  }
 });
 
 it('S16 moves left visually in an RTL grid', async () => {
@@ -257,10 +281,17 @@ it('S17 preserves a visible today outline in forced colors', async (context) => 
     expect(matchMedia('(forced-colors: active)').matches).toBe(true);
     const { picker } = mount('');
     await openCalendar();
-    const today = picker.shadowRoot?.querySelector<HTMLButtonElement>('[aria-current="date"]');
+    const todayIndicator = () => picker.shadowRoot?.querySelector('[aria-current="date"]');
+    await expect.poll(() => Boolean(todayIndicator())).toBe(true);
+    const today = todayIndicator();
     if (!today) throw new Error('Missing today indicator');
-    expect(getComputedStyle(today).borderBlockStartStyle).toBe('solid');
-    expect(parseFloat(getComputedStyle(today).borderBlockStartWidth)).toBeGreaterThan(0);
+    const witness = document.createElement('div');
+    witness.style.color = 'CanvasText';
+    fixture.append(witness);
+    const border = getComputedStyle(today);
+    expect(border.borderBlockStartStyle).toBe('solid');
+    expect(parseFloat(border.borderBlockStartWidth)).toBeGreaterThan(0);
+    expect(border.borderBlockStartColor).toBe(getComputedStyle(witness).color);
     const ordinary = picker.shadowRoot?.querySelector('[part="day"]:not([aria-current])');
     if (!ordinary) throw new Error('Missing comparison day');
     expect(parseFloat(getComputedStyle(ordinary).borderBlockStartWidth)).toBe(0);

@@ -220,6 +220,9 @@ export class KiDatePicker {
     this.entry = undefined;
     this.showError = false;
     this.value = this.host.getAttribute('value') ?? '';
+    // A reset can coalesce with the edit's pending render while leaving its
+    // imperative write to the native input in place.
+    if (this.#input) this.#input.value = this.#displayValue(this.#resolvedLocale, this.#savedValue);
     this.syncForm();
   }
 
@@ -230,6 +233,10 @@ export class KiDatePicker {
 
   #parse(text: string): string | undefined {
     return parseEntry(text, this.mode, this.#resolvedLocale, ...this.#bounds);
+  }
+
+  #displayValue(locale: string, saved: string | undefined): string {
+    return saved === undefined ? this.value : formatValue(saved, locale);
   }
 
   #commit(value: string): void {
@@ -407,7 +414,7 @@ export class KiDatePicker {
                       type="button"
                       part="day"
                       data-date={date}
-                      class={{ day: true, outside: !date.startsWith(month), selected }}
+                      class={{ day: true, outside: !inRange && !date.startsWith(month), selected }}
                       tabIndex={available && date === this.active ? 0 : -1}
                       aria-label={formats.full.format(day)}
                       aria-current={date === this.#today ? 'date' : undefined}
@@ -416,7 +423,7 @@ export class KiDatePicker {
                         this.#pick(date);
                       }}
                     >
-                      {formats.day.format(day)}
+                      <span>{formats.day.format(day)}</span>
                     </button>
                   </td>
                 );
@@ -443,7 +450,7 @@ export class KiDatePicker {
             disabled={!this.#completeDraft}
             onClick={this.#applyDraft}
           >
-            {this.applyLabel}
+            <span>{this.applyLabel}</span>
           </button>
         </div>
       ),
@@ -473,7 +480,7 @@ export class KiDatePicker {
           }}
           id="input"
           part="input"
-          value={this.entry ?? (saved === undefined ? this.value : formatValue(saved, locale))}
+          value={this.entry ?? this.#displayValue(locale, saved)}
           disabled={this.#effectiveDisabled}
           required={this.required}
           aria-describedby={error ? 'error' : help ? 'help' : undefined}
@@ -492,8 +499,7 @@ export class KiDatePicker {
           tabIndex={0}
           aria-label={name}
           aria-haspopup="dialog"
-          aria-expanded={this.#open ? 'true' : 'false'}
-          aria-controls="calendar"
+          aria-expanded={String(this.#open)}
           disabled={this.#effectiveDisabled}
           popoverTarget="calendar"
         >

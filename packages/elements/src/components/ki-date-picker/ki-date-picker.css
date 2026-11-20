@@ -147,7 +147,6 @@ h2 {
   font-family: var(--ki-date-picker-heading-family);
   font-size: inherit;
   font-weight: var(--ki-typography-weight-body-semibold);
-  line-height: inherit;
 }
 
 table {
@@ -195,11 +194,6 @@ th {
 .in-range {
   color: var(--ki-date-picker-range-fg);
   background-color: var(--ki-date-picker-range-bg);
-}
-
-.in-range .day {
-  color: inherit;
-  background-color: var(--ki-surface-transparent);
 }
 
 .in-range:is(:last-child, :has(+ td:not(.in-range))) {
@@ -265,6 +259,10 @@ th {
 }
 
 @media (forced-colors: active) {
+  :host {
+    --_today-border: CanvasText;
+  }
+
   [part="field"]:focus-within,
   button:focus-visible {
     outline-color: Highlight;
