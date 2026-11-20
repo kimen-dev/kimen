@@ -1,0 +1,20 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as LinkStories from '../ki-link.stories';
+
+<Meta title="Docs/Components/ki-link examples" />
+
+# Link examples
+
+## Running text
+
+Keep the underline inside a sentence. The link inherits font size and weight.
+The external marker accompanies links that open in a new tab.
+
+<Canvas of={LinkStories.RunningText} />
+
+## Standalone navigation
+
+A navigation row can identify links through placement. Here the underline
+appears on hover and keyboard focus, and stays visible without hover.
+
+<Canvas of={LinkStories.Standalone} />

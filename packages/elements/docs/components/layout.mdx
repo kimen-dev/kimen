@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/Layout" />
+
+# Layout
+
+Use `ki-stack` for layout on one axis and `ki-grid` for responsive columns.
+Use a page shell for navigation, a card for a visible grouping surface, or
+a table for tabular data.
+
+```html
+<ki-stack direction="row" gap="md" justify="between" align="center" wrap>
+  <strong data-grow>Order summary</strong>
+  <ki-button variant="primary">Save</ki-button>
+</ki-stack>
+
+<ki-grid min-column="8rem" gap="xl">
+  <ki-card data-span="2">Overview</ki-card>
+  <ki-card>Orders</ki-card>
+  <ki-card>Customers</ki-card>
+</ki-grid>
+```
+
+| Element | Defaults | Optional behavior |
+| --- | --- | --- |
+| Stack | Column, medium gap, stretch alignment, start justification | Set direction, alignment, justification or wrapping. Mark a direct child `data-grow` to let it grow. |
+| Grid | Auto-filled 15rem minimum tracks and extra-large gap | Set a CSS length with `min-column` or a fixed count with `columns`. Mark a direct child `data-span="2"` to span two available tracks. |
+
+A fixed grid collapses to one column below 30rem of available inline size.
+Both layouts keep the visual sequence in source order. Descendant controls
+keep their own semantics and keyboard behavior.
+
+Gap props accept the non-negative Kimen spacing steps. Set `--ki-stack-gap`
+or `--ki-grid-gap` on an individual host to customize its default gap. Set
+`--ki-grid-min` to customize the default automatic track minimum. A supported
+non-default prop takes precedence over the corresponding default.

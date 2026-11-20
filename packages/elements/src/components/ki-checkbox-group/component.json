@@ -9,8 +9,13 @@
   "sizeBudget": {
     "mcpApps": {
       "raw": 9831,
-      "gzip": 2377,
-      "brotli": 1876
+      "gzip": 2047,
+      "brotli": 1698
+    },
+    "mcpServer": {
+      "raw": 14435,
+      "gzip": 2629,
+      "brotli": 1629
     }
   }
 }

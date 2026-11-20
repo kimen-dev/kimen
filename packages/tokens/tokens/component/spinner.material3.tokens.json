@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "spinner": {
+      "indicator": {
+        "$value": "{ki.surface.inverse-white}",
+        "$description": "Material 3 ink of the revolving segment, with 3:1 contrast against the ring track and page."
+      }
+    }
+  }
+}

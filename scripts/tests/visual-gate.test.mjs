@@ -5,12 +5,14 @@
 // - disarmed -> the README must document the two-step bootstrap that leads
 //   to arming, so the disarmed state is always a documented transition and
 //   never a silent permanent hole.
+// @spec:069-ki-icon
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { visualGalleryThemes } from '../../packages/elements/browser-tests/visual/theme-matrix.ts';
 import { discoverComponents } from '../lib/component-inventory.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -39,33 +41,27 @@ function parseArmedMarker(content) {
   return value === 'true';
 }
 
-// Mirrors the harness matrix, including the per-spec Material 3 dark opt-in.
-// toMatchScreenshot names baselines
-// `<name>-<browser>-<platform>.png`.
-function expectedLinuxBaselines(specFileName, engine = 'chromium', material3Dark = false) {
-  const dark = specFileName.endsWith('.visual.dark.browser.spec.ts');
+// The harness and audit read the same matrix. The screenshot matcher appends
+// the browser and platform to the capture name.
+function expectedLinuxBaselines(specFileName, engine = 'chromium') {
+  const scheme = specFileName.endsWith('.visual.dark.browser.spec.ts') ? 'dark' : 'light';
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
-  const scheme = dark ? 'dark' : 'light';
-  const themes = !dark || material3Dark ? ['onmars', 'material3'] : ['onmars'];
-  return themes.map((theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`);
+  return visualGalleryThemes(component, scheme).map(
+    (theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
+  );
 }
 
-function missingLinuxBaselines(
-  specFileNames,
-  existingBaselinesBySpec,
-  engines = ENGINES,
-  material3DarkSpecs = new Set(),
-) {
+function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines = ENGINES) {
   return engines.flatMap((engine) =>
     specFileNames.flatMap((spec) =>
-      expectedLinuxBaselines(spec, engine, material3DarkSpecs.has(spec))
+      expectedLinuxBaselines(spec, engine)
         .filter((baseline) => !(existingBaselinesBySpec.get(spec)?.has(baseline) ?? false))
         .map((baseline) => `${spec}/${baseline}`),
     ),
   );
 }
 
-async function visualSpecEntries() {
+async function visualSpecFiles() {
   const entries = await Promise.all([
     readdir(browserTestsDirectory, { withFileTypes: true }),
     readdir(componentsDirectory, { recursive: true, withFileTypes: true }),
@@ -73,7 +69,7 @@ async function visualSpecEntries() {
   const specs = entries.flat().filter((entry) => entry.isFile() && VISUAL_SPEC.test(entry.name));
   const names = specs.map(({ name }) => name);
   assert.equal(new Set(names).size, names.length, 'visual spec filenames must be unique');
-  return specs;
+  return names.toSorted();
 }
 
 async function committedLinuxBaselines(specFileNames) {
@@ -101,16 +97,20 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
   ]);
-  assert.deepEqual(
-    expectedLinuxBaselines('ki-checkbox-group.visual.dark.browser.spec.ts', 'webkit', true),
-    [
-      'ki-checkbox-group-onmars-dark-gallery-webkit-linux.png',
-      'ki-checkbox-group-material3-dark-gallery-webkit-linux.png',
-    ],
-  );
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',
     'ki-button-material3-light-gallery-webkit-linux.png',
+  ]);
+});
+
+test('S12 the icon gallery requires both themes in both schemes', () => {
+  assert.deepEqual(expectedLinuxBaselines('ki-icon.visual.browser.spec.ts'), [
+    'ki-icon-onmars-light-gallery-chromium-linux.png',
+    'ki-icon-material3-light-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-icon.visual.dark.browser.spec.ts'), [
+    'ki-icon-onmars-dark-gallery-chromium-linux.png',
+    'ki-icon-material3-dark-gallery-chromium-linux.png',
   ]);
 });
 
@@ -163,8 +163,7 @@ test('the baselines workflow regenerates every engine the release matrix checks'
 
 test('an armed visual gate keeps every committed linux baseline', async () => {
   const armed = parseArmedMarker(await readFile(armedMarkerPath, 'utf8'));
-  const entries = await visualSpecEntries();
-  const specs = entries.map(({ name }) => name).toSorted();
+  const specs = await visualSpecFiles();
 
   assert.ok(specs.length > 0, 'no visual specs found next to the harness');
   if (!armed) {
@@ -172,19 +171,7 @@ test('an armed visual gate keeps every committed linux baseline', async () => {
     // companion test below pins the documented path OUT of this state.
     return;
   }
-  const darkEntries = entries.filter(({ name }) => name.endsWith('.visual.dark.browser.spec.ts'));
-  const darkSpecs = await Promise.all(
-    darkEntries.map(async ({ name, parentPath }) => {
-      const source = await readFile(join(parentPath, name), 'utf8');
-      return /\bmaterial3Dark:\s*true\b/u.test(source) ? [name] : [];
-    }),
-  );
-  const missing = missingLinuxBaselines(
-    specs,
-    await committedLinuxBaselines(specs),
-    ENGINES,
-    new Set(darkSpecs.flat()),
-  );
+  const missing = missingLinuxBaselines(specs, await committedLinuxBaselines(specs));
   assert.deepEqual(
     missing,
     [],
@@ -195,9 +182,9 @@ test('an armed visual gate keeps every committed linux baseline', async () => {
 test('every discovered component has a light and dark visual spec', async () => {
   const [components, specFiles] = await Promise.all([
     discoverComponents({ workspaceRoot: repositoryRoot }),
-    visualSpecEntries(),
+    visualSpecFiles(),
   ]);
-  const specs = new Set(specFiles.map(({ name }) => name));
+  const specs = new Set(specFiles);
   const missing = components.flatMap(({ tag }) =>
     [`${tag}.visual.browser.spec.ts`, `${tag}.visual.dark.browser.spec.ts`].filter(
       (spec) => !specs.has(spec),

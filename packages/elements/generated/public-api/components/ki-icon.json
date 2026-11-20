@@ -1,0 +1,133 @@
+{
+  "component": {
+    "attributes": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "size": {
+        "default": "'inherit'",
+        "deprecatedSince": null,
+        "description": "Glyph size. Inherit follows the surrounding text at 1em.",
+        "replacement": null,
+        "required": false,
+        "type": "\"inherit\" | \"lg\" | \"md\" | \"sm\""
+      }
+    },
+    "cssProperties": {
+      "--ki-icon-size-lg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Large ki-icon with the surrounding text ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-size-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Medium ki-icon with the surrounding text ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-size-sm": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Small ki-icon with the surrounding text ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-stroke-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Lucide stroke width in viewBox units, scaled with the glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-typography-family-body": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "semantic font family for typography family body.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      }
+    },
+    "description": "A static Lucide glyph selected by name from the application's per-icon imports.",
+    "events": {},
+    "methods": {},
+    "parts": {},
+    "properties": {
+      "label": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "name": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+        "replacement": null,
+        "required": true,
+        "type": "string"
+      },
+      "size": {
+        "default": "'inherit'",
+        "deprecatedSince": null,
+        "description": "Glyph size. Inherit follows the surrounding text at 1em.",
+        "replacement": null,
+        "required": false,
+        "type": "\"inherit\" | \"lg\" | \"md\" | \"sm\""
+      }
+    },
+    "slots": {}
+  },
+  "exports": {
+    "deprecatedSince": null,
+    "replacement": null,
+    "target": "./dist/components/ki-icon.js"
+  },
+  "modules": {
+    "declaration": "./dist/components/ki-icon.d.ts",
+    "symbols": {
+      "KiIcon": {
+        "kinds": [
+          "type",
+          "value"
+        ],
+        "signature": "interface KiIcon extends Components.KiIcon, HTMLElement {\n}\nexport const KiIcon: {\n    prototype: KiIcon;\n    new (): KiIcon;\n};"
+      },
+      "KiIconSize": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type KiIconSize = 'sm' | 'md' | 'lg' | 'inherit';"
+      },
+      "defineCustomElement": {
+        "kinds": [
+          "value"
+        ],
+        "signature": "export const defineCustomElement: () => void;"
+      }
+    },
+    "target": "./dist/components/ki-icon.js"
+  }
+}

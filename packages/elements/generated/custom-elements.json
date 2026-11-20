@@ -13,7 +13,7 @@
           "tagName": "ki-alert",
           "description": "A persistent inline status message with token-backed tone semantics.",
           "whenToUse": "show a persistent inline message about the state of a page or\nsection, such as a failed save, completed operation, or service notice, that\nremains until the condition is resolved or the person dismisses it. Express\nseverity with `tone`, never custom styling.",
-          "whenNotToUse": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
+          "whenNotToUse": "transient confirmations that expire on their own belong to\n`ki-toast`, raised into a `ki-toaster`; tiny status descriptors attached to\nanother element belong to `ki-badge`; blocking decisions belong to\n`ki-dialog`; inline field-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.\n\nEvery non-neutral alert should carry an icon: in the onmars theme the tone\nis drawn on the icon alone.",
           "attributes": [
             {
               "name": "dismiss-label",
@@ -40,7 +40,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior."
+              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`."
             },
             {
               "name": "heading",
@@ -93,7 +93,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; those\nbelong to `ki-toast`.",
               "attribute": "dismissible",
               "reflects": true
             },
@@ -488,7 +488,7 @@
           "tagName": "ki-avatar",
           "description": "A static identity visual that shows a person or entity at a glance through\na fallback chain: portrait, then initials, then a built-in generic figure.",
           "whenToUse": "a compact identity visual for a person or entity — a comment\nauthor, a contact list item, a project member. Set `label` whenever the\navatar is the only carrier of the identity (no adjacent visible name);\ncompose several into `ki-avatar-group` for a compact \"who is involved\"\nstack with overflow.",
-          "whenNotToUse": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), for presence/verification adornments overlaid on the corner\n(a future overlay concern shared with the nav badge), or unlabeled when no\nadjacent text names the identity.",
+          "whenNotToUse": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), or unlabeled when no adjacent text names the identity.\nUse the counter slot for a decorative count or presence dot.",
           "attributes": [
             {
               "name": "initials",
@@ -574,7 +574,12 @@
             }
           ],
           "events": [],
-          "slots": [],
+          "slots": [
+            {
+              "name": "counter",
+              "description": "Decorative ki-counter. Counts sit at block-start inline-end\nand dots at block-end inline-end. Include its meaning in the avatar label."
+            }
+          ],
           "cssParts": [
             {
               "name": "avatar",
@@ -693,6 +698,10 @@
             {
               "name": "--ki-avatar-xxs-size",
               "description": "dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md)."
+            },
+            {
+              "name": "--ki-counter-ring-width",
+              "description": "Thickness of the separating ring."
             },
             {
               "name": "--ki-motion-duration-fast",
@@ -1039,7 +1048,7 @@
           "tagName": "ki-badge",
           "description": "A static, non-interactive status pill.",
           "whenToUse": "annotate an entity with short status text (a state, a\ncategory) whose meaning is carried by the label itself; the tone color\nonly reinforces the text, it never replaces it.",
-          "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (a future, separate concern).",
+          "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (use ki-counter).",
           "attributes": [
             {
               "name": "size",
@@ -3318,6 +3327,230 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-counter.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCounter",
+          "customElement": true,
+          "tagName": "ki-counter",
+          "description": "A decorative count or dot over a trigger or avatar.",
+          "whenToUse": "mark unread or pending items on a trigger, or presence on an\navatar. Supply the full meaning in the host's accessible name and use a\npage-owned polite live region for important updates.",
+          "whenNotToUse": "for an object's status (use ki-badge), a count inside a list\nrow (use text or ki-badge), or an announcement that needs its own semantics.",
+          "attributes": [
+            {
+              "name": "dot",
+              "fieldName": "dot",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a dot independently of the count, including when the value is zero."
+            },
+            {
+              "name": "for",
+              "fieldName": "for",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property."
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "99",
+              "description": "Largest count displayed in full. Higher values display the cap with a\nplus sign. Fractional caps round down; invalid caps use 99."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"neutral\" | \"primary\" | \"success\""
+              },
+              "default": "'danger'",
+              "description": "Semantic palette of the pill or dot. An unknown tone uses danger."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Count of unread or pending items. Finite values are rounded down.\nValues below one and non-finite values hide the count."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dot",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a dot independently of the count, including when the value is zero.",
+              "attribute": "dot",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "for",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Literal ID of a trigger in the same document or shadow root. Places the\nindicator at its block-start inline-end corner and hides it while the\ntrigger is unavailable. For a named host slot, omit this property.",
+              "attribute": "for",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "99",
+              "description": "Largest count displayed in full. Higher values display the cap with a\nplus sign. Fractional caps round down; invalid caps use 99.",
+              "attribute": "max",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"neutral\" | \"primary\" | \"success\""
+              },
+              "default": "'danger'",
+              "description": "Semantic palette of the pill or dot. An unknown tone uses danger.",
+              "attribute": "tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Count of unread or pending items. Finite values are rounded down.\nValues below one and non-finite values hide the count.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "indicator",
+              "description": "Painted pill or dot, including the surrounding ring."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-counter-backdrop-filter",
+              "description": "Complete backdrop filter for the indicator."
+            },
+            {
+              "name": "--ki-counter-bg",
+              "description": "Danger notification indicator fill."
+            },
+            {
+              "name": "--ki-counter-bg-image",
+              "description": "Optional image over the notification indicator fill."
+            },
+            {
+              "name": "--ki-counter-dot-size",
+              "description": "Width and height of the presence dot."
+            },
+            {
+              "name": "--ki-counter-fg",
+              "description": "Danger notification count text."
+            },
+            {
+              "name": "--ki-counter-font-family",
+              "description": "Font family for the count."
+            },
+            {
+              "name": "--ki-counter-font-size",
+              "description": "Font size for the count."
+            },
+            {
+              "name": "--ki-counter-font-weight",
+              "description": "Font weight for the count."
+            },
+            {
+              "name": "--ki-counter-neutral-bg",
+              "description": "Neutral notification indicator fill."
+            },
+            {
+              "name": "--ki-counter-neutral-fg",
+              "description": "Neutral notification count text."
+            },
+            {
+              "name": "--ki-counter-padding-inline",
+              "description": "Horizontal padding of a count pill."
+            },
+            {
+              "name": "--ki-counter-primary-bg",
+              "description": "Primary notification indicator fill."
+            },
+            {
+              "name": "--ki-counter-primary-fg",
+              "description": "Primary notification count text."
+            },
+            {
+              "name": "--ki-counter-radius",
+              "description": "Radius of the painted pill or dot."
+            },
+            {
+              "name": "--ki-counter-ring",
+              "description": "Surface-colored ring that separates the indicator from the trigger."
+            },
+            {
+              "name": "--ki-counter-ring-width",
+              "description": "Thickness of the separating ring."
+            },
+            {
+              "name": "--ki-counter-size",
+              "description": "Minimum width and height of a count pill."
+            },
+            {
+              "name": "--ki-counter-success-bg",
+              "description": "Success notification indicator fill."
+            },
+            {
+              "name": "--ki-counter-success-fg",
+              "description": "Success notification count text."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCounter",
+          "declaration": {
+            "name": "KiCounter",
+            "module": "dist/components/ki-counter.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-counter",
+          "declaration": {
+            "name": "KiCounter",
+            "module": "dist/components/ki-counter.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-dialog.js",
       "declarations": [
         {
@@ -3327,7 +3560,7 @@
           "tagName": "ki-dialog",
           "description": "A modal dialog for one interrupting decision or short focused task.",
           "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action.",
-          "whenNotToUse": "non-blocking feedback (`ki-alert`, future `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
+          "whenNotToUse": "non-blocking feedback (`ki-alert`, `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
           "attributes": [
             {
               "name": "close-on-backdrop",
@@ -3751,6 +3984,268 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-grid.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiGrid",
+          "customElement": true,
+          "tagName": "ki-grid",
+          "description": "A passive responsive grid for content items.",
+          "whenToUse": "lay out items on responsive tracks with consistent token spacing.",
+          "whenNotToUse": "for page shells, painted grouping (use ki-card), or a data grid.",
+          "attributes": [
+            {
+              "name": "columns",
+              "fieldName": "columns",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+              "minimum": 1
+            },
+            {
+              "name": "gap",
+              "fieldName": "gap",
+              "type": {
+                "text": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+              },
+              "default": "'xl'",
+              "description": "Kimen spacing step, xl by default. Unsupported values keep the default gap."
+            },
+            {
+              "name": "min-column",
+              "fieldName": "minColumn",
+              "type": {
+                "text": "string"
+              },
+              "default": "'15rem'",
+              "description": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "columns",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Positive whole track count. Below 30rem of available inline size the fixed\ngrid uses one column. Omit columns for automatic tracks.",
+              "attribute": "columns",
+              "reflects": false,
+              "minimum": 1
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "privacy": "public",
+              "type": {
+                "text": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+              },
+              "default": "'xl'",
+              "description": "Kimen spacing step, xl by default. Unsupported values keep the default gap.",
+              "attribute": "gap",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "minColumn",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'15rem'",
+              "description": "Minimum automatic track size as a CSS length. Defaults to 15rem and is ignored with fixed columns.",
+              "attribute": "min-column",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The content in reading order. A direct child with data-span=\"2\" spans two tracks when they fit."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "grid",
+              "description": "The grid layout containing the slotted content."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-grid-gap",
+              "description": "Default gap between grid tracks."
+            },
+            {
+              "name": "--ki-grid-min",
+              "description": "Default minimum size of an automatic grid track."
+            },
+            {
+              "name": "--ki-layout-grid-fixed-breakpoint",
+              "description": "Minimum available inline size for a fixed grid to use multiple tracks."
+            },
+            {
+              "name": "--ki-layout-grid-min",
+              "description": "Default minimum inline size of an automatic grid track."
+            },
+            {
+              "name": "--ki-layout-spacing-xl",
+              "description": "The xl spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiGrid",
+          "declaration": {
+            "name": "KiGrid",
+            "module": "dist/components/ki-grid.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-grid",
+          "declaration": {
+            "name": "KiGrid",
+            "module": "dist/components/ki-grid.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-icon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiIcon",
+          "customElement": true,
+          "tagName": "ki-icon",
+          "description": "A static Lucide glyph selected by name from the application's per-icon imports.",
+          "whenToUse": "show a named glyph next to text, or give a standalone meaningful\nglyph an accessible label. Import `@kimen/elements/icons/<name>` before\nmounting the component or rendering a guarded surface.",
+          "whenNotToUse": "make an icon interactive, accept arbitrary SVG or URLs, or\nreplace the accessible name of a control. Use the control's own label.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning."
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+              "required": true
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"inherit\" | \"lg\" | \"md\" | \"sm\""
+              },
+              "default": "'inherit'",
+              "description": "Glyph size. Inherit follows the surrounding text at 1em."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Lucide name made available by a per-icon import. An unavailable name draws no glyph.",
+              "attribute": "name",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"inherit\" | \"lg\" | \"md\" | \"sm\""
+              },
+              "default": "'inherit'",
+              "description": "Glyph size. Inherit follows the surrounding text at 1em.",
+              "attribute": "size",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-icon-size-lg",
+              "description": "Large ki-icon with the surrounding text ink."
+            },
+            {
+              "name": "--ki-icon-size-md",
+              "description": "Medium ki-icon with the surrounding text ink."
+            },
+            {
+              "name": "--ki-icon-size-sm",
+              "description": "Small ki-icon with the surrounding text ink."
+            },
+            {
+              "name": "--ki-icon-stroke-width",
+              "description": "Lucide stroke width in viewBox units, scaled with the glyph."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiIcon",
+          "declaration": {
+            "name": "KiIcon",
+            "module": "dist/components/ki-icon.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-icon",
+          "declaration": {
+            "name": "KiIcon",
+            "module": "dist/components/ki-icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-icon-button.js",
       "declarations": [
         {
@@ -3923,6 +4418,10 @@
             {
               "name": "",
               "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+            },
+            {
+              "name": "counter",
+              "description": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label."
             }
           ],
           "cssParts": [
@@ -4505,6 +5004,10 @@
               "description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
             },
             {
+              "name": "--ki-counter-ring-width",
+              "description": "Thickness of the separating ring."
+            },
+            {
               "name": "--ki-density-control-offset",
               "description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min."
             },
@@ -4602,6 +5105,306 @@
           "declaration": {
             "name": "KiIconButton",
             "module": "dist/components/ki-icon-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-image.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiImage",
+          "customElement": true,
+          "tagName": "ki-image",
+          "description": "Displays one accessible image in a reserved frame, with an optional caption\nand a fallback if the source is refused or fails to load.",
+          "whenToUse": "to show a photo, illustration, or diagram with a predictable\nlayout. Supply task-relevant alt text, or mark purely decorative media as\ndecorative. Set an explicit ratio when the layout must stay fixed.",
+          "whenNotToUse": "for a background decoration, a video, or an interactive\ncontrol. Use a separate control to open or otherwise act on an image.",
+          "attributes": [
+            {
+              "name": "alt",
+              "fieldName": "alt",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image."
+            },
+            {
+              "name": "decorative",
+              "fieldName": "decorative",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hide the media from assistive technology when it conveys no information."
+            },
+            {
+              "name": "fallback-label",
+              "fieldName": "fallbackLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Image unavailable'",
+              "description": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label."
+            },
+            {
+              "name": "fit",
+              "fieldName": "fit",
+              "type": {
+                "text": "\"contain\" | \"cover\""
+              },
+              "default": "'cover'",
+              "description": "Cover fills the frame. Contain preserves the whole image in it."
+            },
+            {
+              "name": "loading",
+              "fieldName": "loading",
+              "type": {
+                "text": "\"eager\" | \"lazy\""
+              },
+              "default": "'lazy'",
+              "description": "Native loading hint. Use eager for a critical image above the fold."
+            },
+            {
+              "name": "radius",
+              "fieldName": "radius",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"none\""
+              },
+              "default": "'lg'",
+              "description": "Corner radius of the media frame."
+            },
+            {
+              "name": "ratio",
+              "fieldName": "ratio",
+              "type": {
+                "text": "\"16:9\" | \"1:1\" | \"3:2\" | \"4:3\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load."
+            },
+            {
+              "name": "src",
+              "fieldName": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+              "required": true,
+              "format": "url"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "alt",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Describe what the image shows for the task at hand. Required and nonblank\nfor an informative image. Omit it for a decorative image.",
+              "attribute": "alt",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "decorative",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hide the media from assistive technology when it conveys no information.",
+              "attribute": "decorative",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "fallbackLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Image unavailable'",
+              "description": "Localizable fallback label. An informative fallback appends the image's\ndescription, when available, to this label.",
+              "attribute": "fallback-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "fit",
+              "privacy": "public",
+              "type": {
+                "text": "\"contain\" | \"cover\""
+              },
+              "default": "'cover'",
+              "description": "Cover fills the frame. Contain preserves the whole image in it.",
+              "attribute": "fit",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "privacy": "public",
+              "type": {
+                "text": "\"eager\" | \"lazy\""
+              },
+              "default": "'lazy'",
+              "description": "Native loading hint. Use eager for a critical image above the fold.",
+              "attribute": "loading",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "radius",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"none\""
+              },
+              "default": "'lg'",
+              "description": "Corner radius of the media frame.",
+              "attribute": "radius",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "ratio",
+              "privacy": "public",
+              "type": {
+                "text": "\"16:9\" | \"1:1\" | \"3:2\" | \"4:3\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "An explicit ratio reserves the same frame before load and on failure.\nAuto reserves 16:9 first and uses the intrinsic ratio after load.",
+              "attribute": "ratio",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Relative or HTTP(S) image URL. Refused sources are left unloaded.",
+              "attribute": "src",
+              "reflects": false,
+              "required": true,
+              "format": "url"
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-error",
+              "type": {
+                "text": "CustomEvent<void>"
+              },
+              "description": "Reports a load failure or rejected URL once per source attempt. Bubbles\nand crosses shadow boundaries so consumers can observe it on a surface."
+            }
+          ],
+          "slots": [
+            {
+              "name": "caption",
+              "description": "Optional visible context displayed below the media in a figcaption."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "caption",
+              "description": "The figcaption carrying the slotted caption."
+            },
+            {
+              "name": "fallback",
+              "description": "The unavailable-image indicator inside the frame."
+            },
+            {
+              "name": "figure",
+              "description": "The figure containing the frame and optional caption."
+            },
+            {
+              "name": "frame",
+              "description": "The reserved media box and its shape and backing surface."
+            },
+            {
+              "name": "image",
+              "description": "The native image and its fit within the frame."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-image-caption-fg",
+              "description": "Text colour of the visible caption."
+            },
+            {
+              "name": "--ki-image-caption-font-family",
+              "description": "Typeface of the visible caption."
+            },
+            {
+              "name": "--ki-image-caption-font-size",
+              "description": "Type size of the visible caption."
+            },
+            {
+              "name": "--ki-image-caption-gap",
+              "description": "Space between the image frame and its caption."
+            },
+            {
+              "name": "--ki-image-caption-line-height",
+              "description": "Line height of the visible caption."
+            },
+            {
+              "name": "--ki-image-fallback-backdrop-filter",
+              "description": "Complete filter applied behind the media surface."
+            },
+            {
+              "name": "--ki-image-fallback-bg",
+              "description": "Solid fill behind the image and fallback symbol."
+            },
+            {
+              "name": "--ki-image-fallback-bg-image",
+              "description": "Optional background image over the media fill."
+            },
+            {
+              "name": "--ki-image-fallback-fg",
+              "description": "Foreground of the fallback symbol."
+            },
+            {
+              "name": "--ki-image-fallback-icon-size",
+              "description": "Inline and block size of the unavailable-image symbol."
+            },
+            {
+              "name": "--ki-image-fallback-icon-stroke-width",
+              "description": "Stroke width of the unavailable-image symbol."
+            },
+            {
+              "name": "--ki-image-radius",
+              "description": "Corner radius of the default media frame."
+            },
+            {
+              "name": "--ki-image-radius-md",
+              "description": "Corner radius of the medium media frame."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiImage",
+          "declaration": {
+            "name": "KiImage",
+            "module": "dist/components/ki-image.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-image",
+          "declaration": {
+            "name": "KiImage",
+            "module": "dist/components/ki-image.js"
           }
         }
       ]
@@ -5547,6 +6350,290 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-link.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiLink",
+          "customElement": true,
+          "tagName": "ki-link",
+          "description": "A native navigation link with Kimen ink, underline, and focus styles.",
+          "whenToUse": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.",
+          "whenNotToUse": "perform an action on the current page. Use ki-button variant=\"ghost\" for that.",
+          "attributes": [
+            {
+              "name": "download",
+              "fieldName": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name."
+            },
+            {
+              "name": "external",
+              "fieldName": "external",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules."
+            },
+            {
+              "name": "external-label",
+              "fieldName": "externalLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'(opens in a new tab)'",
+              "description": "Localizable text appended to the accessible name in external mode."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+              "required": true,
+              "format": "url"
+            },
+            {
+              "name": "rel",
+              "fieldName": "rel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Space-separated native link relationships. External links always include noopener."
+            },
+            {
+              "name": "target",
+              "fieldName": "target",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native browsing-context name. External links use _blank."
+            },
+            {
+              "name": "underline",
+              "fieldName": "underline",
+              "type": {
+                "text": "\"always\" | \"hover\""
+              },
+              "default": "'always'",
+              "description": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"neutral\" | \"primary\""
+              },
+              "default": "'primary'",
+              "description": "Ink role. Primary uses accent ink and neutral uses body ink."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "download",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native download attribute. Set it to an empty string to let the browser\nchoose the file name, or supply a suggested file name.",
+              "attribute": "download",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "external",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requests a new tab with noopener and adds an icon and an accessible\nannouncement. An explicit download still follows native download rules.",
+              "attribute": "external",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "externalLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'(opens in a new tab)'",
+              "description": "Localizable text appended to the accessible name in external mode.",
+              "attribute": "external-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Destination URL. Relative URLs and fragments use native anchor resolution.",
+              "attribute": "href",
+              "reflects": false,
+              "required": true,
+              "format": "url"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Space-separated native link relationships. External links always include noopener.",
+              "attribute": "rel",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native browsing-context name. External links use _blank.",
+              "attribute": "target",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "underline",
+              "privacy": "public",
+              "type": {
+                "text": "\"always\" | \"hover\""
+              },
+              "default": "'always'",
+              "description": "Keep the underline in running text. Use hover for standalone navigation,\nwhere placement identifies the link and keyboard focus still underlines it.",
+              "attribute": "underline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"neutral\" | \"primary\""
+              },
+              "default": "'primary'",
+              "description": "Ink role. Primary uses accent ink and neutral uses body ink.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Descriptive link text. Use phrasing content without nested interactive controls."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "link",
+              "description": "The native anchor that renders the link and receives focus."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-target-min",
+              "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
+            },
+            {
+              "name": "--ki-focus-ring-color",
+              "description": "Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme."
+            },
+            {
+              "name": "--ki-focus-ring-offset",
+              "description": "Gap between a focusable component and its keyboard focus ring."
+            },
+            {
+              "name": "--ki-focus-ring-width",
+              "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once."
+            },
+            {
+              "name": "--ki-link-bg",
+              "description": "Transparent backing for primary link text."
+            },
+            {
+              "name": "--ki-link-bg-image",
+              "description": "Optional image overlay for link backing."
+            },
+            {
+              "name": "--ki-link-fg",
+              "description": "Accent ink for primary links."
+            },
+            {
+              "name": "--ki-link-font-family",
+              "description": "Body typeface used by link text."
+            },
+            {
+              "name": "--ki-link-icon-gap",
+              "description": "Space between the label and the external link icon."
+            },
+            {
+              "name": "--ki-link-icon-size",
+              "description": "External link icon edge relative to the inherited text size."
+            },
+            {
+              "name": "--ki-link-neutral-bg",
+              "description": "Transparent backing for neutral link text."
+            },
+            {
+              "name": "--ki-link-neutral-fg",
+              "description": "Body ink for neutral links."
+            },
+            {
+              "name": "--ki-link-radius",
+              "description": "Corner radius used by the link focus outline."
+            },
+            {
+              "name": "--ki-link-underline-offset",
+              "description": "Space between link text and its underline."
+            },
+            {
+              "name": "--ki-link-underline-thickness",
+              "description": "Resting underline thickness."
+            },
+            {
+              "name": "--ki-link-underline-thickness-hover",
+              "description": "Underline thickness under a hover-capable pointer."
+            },
+            {
+              "name": "--ki-typography-visually-hidden-size",
+              "description": "Nonzero edge for clipped text available to assistive technology."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiLink",
+          "declaration": {
+            "name": "KiLink",
+            "module": "dist/components/ki-link.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-link",
+          "declaration": {
+            "name": "KiLink",
+            "module": "dist/components/ki-link.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-list.js",
       "declarations": [
         {
@@ -5928,6 +7015,277 @@
           "declaration": {
             "name": "KiListItem",
             "module": "dist/components/ki-list-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-note.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiNote",
+          "customElement": true,
+          "tagName": "ki-note",
+          "description": "A compact, static explanation beside a control or inside a card.",
+          "whenToUse": "Add a short constraint, tip or consequence next to the content\nit explains. Put the consequence first when warning the reader.",
+          "whenNotToUse": "For updates that must be announced, use ki-alert. Use Toast\nfor transient confirmations and the field's help-text for field guidance.",
+          "attributes": [
+            {
+              "name": "icon",
+              "fieldName": "icon",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Uses caption text at sm and body text at md. Unknown values use md."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Selects the background tint and decorative icon. Unknown values use neutral."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the decorative icon. Set icon=\"false\" in HTML to hide it.",
+              "attribute": "icon",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Uses caption text at sm and body text at md. Unknown values use md.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Selects the background tint and decorative icon. Unknown values use neutral.",
+              "attribute": "tone",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Short explanatory text that carries the full meaning."
+            },
+            {
+              "name": "icon",
+              "description": "A decorative glyph that replaces the tone's built-in icon."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "icon",
+              "description": "The decorative icon frame."
+            },
+            {
+              "name": "message",
+              "description": "The explanatory text."
+            },
+            {
+              "name": "note",
+              "description": "The surface, including the tint, typography and spacing."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-note-backdrop-filter",
+              "description": "Complete filter behind the note."
+            },
+            {
+              "name": "--ki-note-bg",
+              "description": "Background of a neutral note."
+            },
+            {
+              "name": "--ki-note-bg-image",
+              "description": "Optional image over the note's solid background."
+            },
+            {
+              "name": "--ki-note-danger-bg",
+              "description": "Background of a danger note."
+            },
+            {
+              "name": "--ki-note-danger-fg",
+              "description": "Text ink of a danger note."
+            },
+            {
+              "name": "--ki-note-danger-icon",
+              "description": "Decorative icon ink of a danger note."
+            },
+            {
+              "name": "--ki-note-fg",
+              "description": "Text ink of a neutral note."
+            },
+            {
+              "name": "--ki-note-font-family",
+              "description": "Note text font family."
+            },
+            {
+              "name": "--ki-note-font-size",
+              "description": "Medium note text size."
+            },
+            {
+              "name": "--ki-note-gap",
+              "description": "Space between the icon and the text."
+            },
+            {
+              "name": "--ki-note-icon",
+              "description": "Decorative icon ink of a neutral note."
+            },
+            {
+              "name": "--ki-note-icon-offset",
+              "description": "Medium icon offset from the first line's block start."
+            },
+            {
+              "name": "--ki-note-icon-size",
+              "description": "Medium note icon size."
+            },
+            {
+              "name": "--ki-note-info-bg",
+              "description": "Background of an info note."
+            },
+            {
+              "name": "--ki-note-info-fg",
+              "description": "Text ink of an info note."
+            },
+            {
+              "name": "--ki-note-info-icon",
+              "description": "Decorative icon ink of an info note."
+            },
+            {
+              "name": "--ki-note-line-height",
+              "description": "Medium note text line height."
+            },
+            {
+              "name": "--ki-note-padding-block",
+              "description": "Medium note block padding."
+            },
+            {
+              "name": "--ki-note-padding-inline",
+              "description": "Medium note inline padding."
+            },
+            {
+              "name": "--ki-note-primary-bg",
+              "description": "Background of a primary note."
+            },
+            {
+              "name": "--ki-note-primary-fg",
+              "description": "Text ink of a primary note."
+            },
+            {
+              "name": "--ki-note-primary-icon",
+              "description": "Decorative icon ink of a primary note."
+            },
+            {
+              "name": "--ki-note-radius",
+              "description": "Note surface corner radius."
+            },
+            {
+              "name": "--ki-note-sm-font-size",
+              "description": "Small note caption size."
+            },
+            {
+              "name": "--ki-note-sm-icon-offset",
+              "description": "Small icon offset from the first line's block start."
+            },
+            {
+              "name": "--ki-note-sm-icon-size",
+              "description": "Small note icon size."
+            },
+            {
+              "name": "--ki-note-sm-line-height",
+              "description": "Small note caption line height."
+            },
+            {
+              "name": "--ki-note-sm-padding-block",
+              "description": "Small note block padding."
+            },
+            {
+              "name": "--ki-note-sm-padding-inline",
+              "description": "Small note inline padding."
+            },
+            {
+              "name": "--ki-note-success-bg",
+              "description": "Background of a success note."
+            },
+            {
+              "name": "--ki-note-success-fg",
+              "description": "Text ink of a success note."
+            },
+            {
+              "name": "--ki-note-success-icon",
+              "description": "Decorative icon ink of a success note."
+            },
+            {
+              "name": "--ki-note-warning-bg",
+              "description": "Background of a warning note."
+            },
+            {
+              "name": "--ki-note-warning-fg",
+              "description": "Text ink of a warning note."
+            },
+            {
+              "name": "--ki-note-warning-icon",
+              "description": "Decorative icon ink of a warning note."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiNote",
+          "declaration": {
+            "name": "KiNote",
+            "module": "dist/components/ki-note.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-note",
+          "declaration": {
+            "name": "KiNote",
+            "module": "dist/components/ki-note.js"
           }
         }
       ]
@@ -7902,6 +9260,410 @@
           "declaration": {
             "name": "KiSelect",
             "module": "dist/components/ki-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-spinner.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSpinner",
+          "customElement": true,
+          "tagName": "ki-spinner",
+          "description": "A compact status for an indeterminate wait.",
+          "whenToUse": "show brief inline activity such as saving a change or running a\ntool. Choose typing dots for an assistant that is thinking. Set a localized\nlabel that names the activity and mount the spinner when the wait starts.",
+          "whenNotToUse": "use ki-progress for page-level work or a known fraction of\na task. Use ki-alert for persistent notices.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+              "required": true
+            },
+            {
+              "name": "show-label",
+              "fieldName": "showLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"dots\" | \"ring\""
+              },
+              "default": "'ring'",
+              "description": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+              "attribute": "label",
+              "reflects": false,
+              "required": true
+            },
+            {
+              "kind": "field",
+              "name": "showLabel",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case.",
+              "attribute": "show-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"dots\" | \"ring\""
+              },
+              "default": "'ring'",
+              "description": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring.",
+              "attribute": "variant",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "dots",
+              "description": "Group of three animated dots, in the dots variant."
+            },
+            {
+              "name": "label",
+              "description": "Activity text, adjacent to the graphic when show-label is set."
+            },
+            {
+              "name": "ring",
+              "description": "Rotating ring with a track and indicator, in the ring variant."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-spinner-dot-delay",
+              "description": "Delay between consecutive typing dots."
+            },
+            {
+              "name": "--ki-spinner-dot-duration",
+              "description": "Typing pulse period."
+            },
+            {
+              "name": "--ki-spinner-dot-easing",
+              "description": "Easing of the typing pulse."
+            },
+            {
+              "name": "--ki-spinner-dot-gap",
+              "description": "Gap between dots."
+            },
+            {
+              "name": "--ki-spinner-dot-scale-min",
+              "description": "Smallest scale of a dot during the pulse."
+            },
+            {
+              "name": "--ki-spinner-dot-size",
+              "description": "Diameter of each dot at full size."
+            },
+            {
+              "name": "--ki-spinner-indicator",
+              "description": "Ink of the revolving ring segment."
+            },
+            {
+              "name": "--ki-spinner-label-bg",
+              "description": "Background of the inline activity label."
+            },
+            {
+              "name": "--ki-spinner-label-fg",
+              "description": "Ink of the visible label and the typing dots."
+            },
+            {
+              "name": "--ki-spinner-label-font-family",
+              "description": "Font family of the visible label."
+            },
+            {
+              "name": "--ki-spinner-label-font-size",
+              "description": "Font size of the visible label."
+            },
+            {
+              "name": "--ki-spinner-label-gap",
+              "description": "Gap between the graphic and the visible label."
+            },
+            {
+              "name": "--ki-spinner-label-line-height",
+              "description": "Line height of the visible label."
+            },
+            {
+              "name": "--ki-spinner-radius",
+              "description": "Round corners of the ring and dots."
+            },
+            {
+              "name": "--ki-spinner-ring-duration",
+              "description": "Standard ring rotation period."
+            },
+            {
+              "name": "--ki-spinner-ring-duration-reduced",
+              "description": "Ring rotation period when reduced motion is requested."
+            },
+            {
+              "name": "--ki-spinner-ring-easing",
+              "description": "Easing for ring rotation."
+            },
+            {
+              "name": "--ki-spinner-size",
+              "description": "Default ring diameter."
+            },
+            {
+              "name": "--ki-spinner-size-lg",
+              "description": "Large ring diameter."
+            },
+            {
+              "name": "--ki-spinner-size-sm",
+              "description": "Small ring diameter."
+            },
+            {
+              "name": "--ki-spinner-stroke",
+              "description": "Stroke width of the small and medium rings."
+            },
+            {
+              "name": "--ki-spinner-stroke-lg",
+              "description": "Stroke width of the large ring."
+            },
+            {
+              "name": "--ki-spinner-track",
+              "description": "Ink of the ring track."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSpinner",
+          "declaration": {
+            "name": "KiSpinner",
+            "module": "dist/components/ki-spinner.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-spinner",
+          "declaration": {
+            "name": "KiSpinner",
+            "module": "dist/components/ki-spinner.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-stack.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiStack",
+          "customElement": true,
+          "tagName": "ki-stack",
+          "description": "A passive flex layout for content on one axis.",
+          "whenToUse": "arrange content in a vertical sequence or a horizontal row with\nconsistent token spacing.",
+          "whenNotToUse": "for page shells, painted grouping (use ki-card), or tabular data.",
+          "attributes": [
+            {
+              "name": "align",
+              "fieldName": "align",
+              "type": {
+                "text": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\""
+              },
+              "default": "'stretch'",
+              "description": "Cross-axis alignment, stretch by default."
+            },
+            {
+              "name": "direction",
+              "fieldName": "direction",
+              "type": {
+                "text": "\"column\" | \"row\""
+              },
+              "default": "'column'",
+              "description": "Main axis, column by default."
+            },
+            {
+              "name": "gap",
+              "fieldName": "gap",
+              "type": {
+                "text": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+              },
+              "default": "'md'",
+              "description": "Kimen spacing step, md by default. Unsupported values keep the default gap."
+            },
+            {
+              "name": "justify",
+              "fieldName": "justify",
+              "type": {
+                "text": "\"between\" | \"center\" | \"end\" | \"start\""
+              },
+              "default": "'start'",
+              "description": "Main-axis distribution, start by default. Use between to distribute spare space."
+            },
+            {
+              "name": "wrap",
+              "fieldName": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allow items to continue on a new line. Defaults to false."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "align",
+              "privacy": "public",
+              "type": {
+                "text": "\"baseline\" | \"center\" | \"end\" | \"start\" | \"stretch\""
+              },
+              "default": "'stretch'",
+              "description": "Cross-axis alignment, stretch by default.",
+              "attribute": "align",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "direction",
+              "privacy": "public",
+              "type": {
+                "text": "\"column\" | \"row\""
+              },
+              "default": "'column'",
+              "description": "Main axis, column by default.",
+              "attribute": "direction",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "privacy": "public",
+              "type": {
+                "text": "\"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\" | \"zero\""
+              },
+              "default": "'md'",
+              "description": "Kimen spacing step, md by default. Unsupported values keep the default gap.",
+              "attribute": "gap",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "justify",
+              "privacy": "public",
+              "type": {
+                "text": "\"between\" | \"center\" | \"end\" | \"start\""
+              },
+              "default": "'start'",
+              "description": "Main-axis distribution, start by default. Use between to distribute spare space.",
+              "attribute": "justify",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allow items to continue on a new line. Defaults to false.",
+              "attribute": "wrap",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The content in reading order. A direct child with data-grow takes a share of free space."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "stack",
+              "description": "The flex layout containing the slotted content."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-layout-spacing-md",
+              "description": "The md spacing step for a stack or grid gap."
+            },
+            {
+              "name": "--ki-stack-gap",
+              "description": "Default gap of a stack."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiStack",
+          "declaration": {
+            "name": "KiStack",
+            "module": "dist/components/ki-stack.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-stack",
+          "declaration": {
+            "name": "KiStack",
+            "module": "dist/components/ki-stack.js"
           }
         }
       ]
@@ -9967,6 +11729,511 @@
           "declaration": {
             "name": "KiTextarea",
             "module": "dist/components/ki-textarea.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-toast.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiToast",
+          "customElement": true,
+          "tagName": "ki-toast",
+          "description": "A short, transient message about something the person just did, shown\nwithout blocking the page. It leaves on its own after its time, which stops\nwhile the person points at the toaster, works inside it or is away from the\npage; a toast with an action, or reporting an error, waits for the person.",
+          "whenToUse": "confirm an action that happened elsewhere on screen (\"Changes\nsaved\", \"Link copied\"), report a background result (\"Export ready\"), or\noffer a quick undo. Raise it into a `ki-toaster`, in markup or with its\n`show()` method; express urgency with `tone`.",
+          "whenNotToUse": "anything the person must read or act on to continue belongs\nto `ki-dialog`; form validation belongs to the field's error text; a lasting\ncondition of the page belongs to `ki-alert`, which stays inline.\n\nAssistive technology note: a toast announces as it appears, so append it\nwhen the event happens; a toast present at initial page load is exposed with\nits role but its announcement is not guaranteed. The heading and the message\nare the whole announcement: the icon, the action and the dismiss button\nstay outside the live region.",
+          "attributes": [
+            {
+              "name": "dismiss-label",
+              "fieldName": "dismissLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Dismiss'",
+              "description": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot."
+            },
+            {
+              "name": "dismissed",
+              "fieldName": "dismissed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person."
+            },
+            {
+              "name": "dismissible",
+              "fieldName": "dismissible",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person."
+            },
+            {
+              "name": "duration",
+              "fieldName": "duration",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+              "minimum": 0
+            },
+            {
+              "name": "heading",
+              "fieldName": "heading",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure."
+            },
+            {
+              "name": "queued",
+              "fieldName": "queued",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
+              },
+              "default": "'neutral'",
+              "description": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dismissLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Dismiss'",
+              "description": "Accessible name of the dismiss button. Override for localization; the\ndefault English word is the component's only built-in text.\n\nWhen to use: whenever the document language is not English.\nWhen NOT to use: do not put the message here; use the default slot.",
+              "attribute": "dismiss-label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "dismissed",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflected state: true once the toast has left. The timer, the dismiss\nbutton, Escape and the action set it; the page may set or clear it.\nWhile true the host stays in the document but renders nothing and leaves\nthe accessibility tree. Clearing it shows the toast again with its full\ntime.\n\nWhen to use: show a toast again, or close it from the page.\nWhen NOT to use: do not read programmatic changes as dismissals;\n`ki-dismiss` reports only the timer and the person.",
+              "attribute": "dismissed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "dismissible",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Shows the dismiss button, a ghost `ki-icon-button` named by\n`dismiss-label`. Escape still dismisses a focused toast without it.\n\nWhen to use: keep it on unless the toast leaves on its own and the page\noffers no other way to read it again.\nWhen NOT to use: do not turn it off on a toast that waits for the person.",
+              "attribute": "dismissible",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "duration",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "How long the toast stays, in milliseconds, before it leaves on its own;\n`0` keeps it until it is dismissed. Ignored (treated as `0`) when the toast\nholds an action or its tone is `danger`. Unset, or not a finite number of\nzero or more, it is 5000. The time stops while the pointer rests on the\ntoaster, while focus is inside it, or while the page is hidden, and\ncontinues with what was left. Changing it restarts the time.\n\nWhen to use: give a longer message more time.\nWhen NOT to use: do not shorten it below what a person needs to read the\nmessage.",
+              "attribute": "duration",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional bold first line, inside the live region. Empty strings render no\nheading. It is a `strong` element, never a document heading.\n\nWhen to use: a short label for the event (\"Changes saved\").\nWhen NOT to use: do not use it for page structure.",
+              "attribute": "heading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "queued",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Output-only state written by an enclosing `ki-toaster`: true while the\ntoast waits for a place. A queued toast renders nothing, is absent from\nthe accessibility tree and its time does not run. Authors do not set it;\nthe toaster overwrites it.",
+              "attribute": "queued",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
+              },
+              "default": "'neutral'",
+              "description": "Picks the icon and its ink, and the live-region urgency: `danger` exposes\n`role=\"alert\"` and never leaves on its own; `neutral`, `info`, `success`,\n`warning`, absent and unrecognized values expose `role=\"status\"`. The\nsurface and the text look the same in every tone. Unknown values render\nneutral.\n\nWhen to use: choose the tone that describes what happened.\nWhen NOT to use: do not use tone for emphasis; a lasting failure belongs\nin `ki-alert`.",
+              "attribute": "tone",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-dismiss",
+              "type": {
+                "text": "CustomEvent<KiToastDismissDetail>"
+              },
+              "description": "Fired once when the toast leaves because its time ran out\n(`reason: \"timeout\"`), the person used the dismiss button (`\"button\"`),\npressed Escape inside it (`\"escape\"`) or activated its action\n(`\"action\"`), after it is hidden and focus has been handed on. Not\ncancelable. When to use: remove the element, or record that the message\nwas seen. When NOT to use: do not expect it for programmatic `dismissed`\nchanges."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Message text. It lives inside the live-region boundary."
+            },
+            {
+              "name": "action",
+              "description": "At most one action, as a `ki-button size=\"sm\" variant=\"ghost\"`.\nIts own click handler runs, then the toast leaves (`reason: \"action\"`). A\ntoast holding an action never leaves on its own. When NOT to use: a response\nthe person cannot skip belongs in `ki-dialog`."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "action",
+              "description": "Wrapper around the `action` slot, rendered only when it holds content."
+            },
+            {
+              "name": "dismiss",
+              "description": "The dismiss `ki-icon-button`, rendered only when `dismissible`."
+            },
+            {
+              "name": "heading",
+              "description": "Optional bold first line, rendered only when non-empty."
+            },
+            {
+              "name": "icon",
+              "description": "The tone icon, drawn by the component in the tone's ink."
+            },
+            {
+              "name": "message",
+              "description": "Message wrapper around the default slot."
+            },
+            {
+              "name": "toast",
+              "description": "The flat surface: fill, image, edge, radius, padding,\nelevation and backdrop filter."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-density-space-scale",
+              "description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip)."
+            },
+            {
+              "name": "--ki-motion-distance-sm",
+              "description": "Motion travel distance sm (4px): small slide/settle offsets."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-toast-backdrop-filter",
+              "description": "filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342)."
+            },
+            {
+              "name": "--ki-toast-bg",
+              "description": "color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself)."
+            },
+            {
+              "name": "--ki-toast-bg-image",
+              "description": "image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6)."
+            },
+            {
+              "name": "--ki-toast-border",
+              "description": "color used by the toast component for its hairline edge (issue #353)."
+            },
+            {
+              "name": "--ki-toast-border-width",
+              "description": "dimension used by the toast component for its hairline edge."
+            },
+            {
+              "name": "--ki-toast-danger-icon",
+              "description": "color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-fg",
+              "description": "color used by the toast component for the heading ink (issue #353)."
+            },
+            {
+              "name": "--ki-toast-gap",
+              "description": "dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px)."
+            },
+            {
+              "name": "--ki-toast-heading-font-family",
+              "description": "Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface."
+            },
+            {
+              "name": "--ki-toast-icon-size",
+              "description": "dimension used by the toast component for the tone icon."
+            },
+            {
+              "name": "--ki-toast-info-icon",
+              "description": "color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-message-fg",
+              "description": "color used by the toast component for the message ink (issue #353)."
+            },
+            {
+              "name": "--ki-toast-neutral-icon",
+              "description": "color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-padding",
+              "description": "dimension used by the toast component for its padding (issue #353: 12px)."
+            },
+            {
+              "name": "--ki-toast-radius",
+              "description": "dimension used by the toast component for its corners (issue #353: 16px)."
+            },
+            {
+              "name": "--ki-toast-shadow",
+              "description": "shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6)."
+            },
+            {
+              "name": "--ki-toast-success-icon",
+              "description": "color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-warning-icon",
+              "description": "color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353)."
+            },
+            {
+              "name": "--ki-toast-width",
+              "description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-2",
+              "description": "semantic dimension for typography line height body 2."
+            },
+            {
+              "name": "--ki-typography-line-height-para",
+              "description": "semantic dimension for typography line height para."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-size-body-2",
+              "description": "semantic dimension for typography size body 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-semibold",
+              "description": "semantic font weight for typography weight body semibold."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiToast",
+          "declaration": {
+            "name": "KiToast",
+            "module": "dist/components/ki-toast.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-toast",
+          "declaration": {
+            "name": "KiToast",
+            "module": "dist/components/ki-toast.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-toaster.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiToaster",
+          "customElement": true,
+          "tagName": "ki-toaster",
+          "description": "The one place toasts appear: it paints its `ki-toast` children in the top\nlayer at a corner of the viewport, stacks them in arrival order, shows the\nnewest few and queues the older ones, without covering the page beside\nthem.",
+          "whenToUse": "once per page (or once inside a modal `ki-dialog`), as the place\nevery `ki-toast` of the application appears in: append toasts to it, or call\n`show()`. Choose the corner with `placement`.",
+          "whenNotToUse": "do not put anything but `ki-toast` elements in it; do not use\nit for persistent content, which belongs in the page or in `ki-alert`.\n\nAssistive technology note: while it shows toasts the toaster is a group\nnamed by `label`, never a landmark; F6 moves focus into it and Escape on a\ntoast returns focus to where it was. An empty toaster exposes nothing and\ncovers nothing.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Notifications'",
+              "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here."
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A toast holding focus keeps\nits place until focus leaves the toaster; the oldest other one waits\ninstead. A value below 1 or not a whole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+              "minimum": 1
+            },
+            {
+              "name": "placement",
+              "fieldName": "placement",
+              "type": {
+                "text": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}"
+              },
+              "default": "'bottom-end'",
+              "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Notifications'",
+              "description": "Accessible name of the group the toaster exposes while it shows toasts.\nOverride for localization.\n\nWhen to use: provide the name in the document language.\nWhen NOT to use: do not put a message here.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "description": "How many toasts show at once: the newest ones. Older toasts wait, and come\nback with their full time as shown ones leave. A toast holding focus keeps\nits place until focus leaves the toaster; the oldest other one waits\ninstead. A value below 1 or not a whole number shows 3.\n\nWhen to use: lower it on small screens or busy applications.\nWhen NOT to use: do not raise it to show every toast; a tall stack covers\nthe page.",
+              "attribute": "max",
+              "reflects": true,
+              "minimum": 1
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "privacy": "public",
+              "type": {
+                "text": "\"bottom-center\" | \"bottom-end\" | \"top-center\" | \"top-end\" | string & {}"
+              },
+              "default": "'bottom-end'",
+              "description": "Corner or edge of the viewport the stack sits against; `end` follows the\nwriting direction. On a coarse pointer and a viewport narrower than 40rem\nthe stack always sits at the bottom center. Unknown values place the stack\nat the bottom end.\n\nWhen to use: keep toasts away from where the page's own controls live.\nWhen NOT to use: do not change it per toast; one toaster keeps one place.",
+              "attribute": "placement",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "privacy": "public",
+              "description": "Raises a toast: creates a `ki-toast` from `tone`, `title` (its heading),\n`message`, `duration`, `dismissible` and `action` (a ghost\n`ki-button size=\"sm\"` in its `action` slot that calls `onClick`), appends\nit to the toaster and resolves with it. Once the toast has left it is\nremoved from the page. The toaster does not bundle `ki-toast` or\n`ki-button`: define them, as for toasts written in markup.\nWhen to use: raise a toast from script without writing its markup.\nWhen NOT to use: a toast written in markup stays the page's own: append\nit instead, and it is never removed.",
+              "return": {
+                "type": {
+                  "text": "Promise<HTMLElement>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "KiToastShowOptions"
+                  },
+                  "description": "",
+                  "optional": false,
+                  "rest": false
+                }
+              ],
+              "signature": "show(options: KiToastShowOptions) => Promise<HTMLElement>"
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The `ki-toast` elements, in arrival order. Other children are not\ncounted, queued or placed."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "stack",
+              "description": "The stack in the top layer: placement, edge distance, gap\nbetween toasts and width."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-toast-width",
+              "description": "dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem)."
+            },
+            {
+              "name": "--ki-toaster-gap",
+              "description": "dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014)."
+            },
+            {
+              "name": "--ki-toaster-inset-block",
+              "description": "dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014)."
+            },
+            {
+              "name": "--ki-toaster-inset-inline",
+              "description": "dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014)."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiToaster",
+          "declaration": {
+            "name": "KiToaster",
+            "module": "dist/components/ki-toaster.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-toaster",
+          "declaration": {
+            "name": "KiToaster",
+            "module": "dist/components/ki-toaster.js"
           }
         }
       ]

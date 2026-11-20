@@ -1,0 +1,18 @@
+{
+  "ki": {
+    "image": {
+      "radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Corner radius of the default media frame."
+      },
+      "fallback-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Solid fill behind the image and fallback symbol."
+      },
+      "fallback-fg": {
+        "$value": "{ki.text.med-em}",
+        "$description": "Foreground of the fallback symbol."
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+---
+title: ki-stack
+description: Arrange content on one axis using Kimen spacing steps.
+---
+
+import CemApi from '../../../../../../site/docs/src/components/CemApi.astro';
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
+Use a stack for a vertical sequence or a horizontal toolbar. Set `align` on
+the cross axis, `justify` on the main axis and `wrap` to allow another line.
+A direct child with `data-grow` takes a share of the available space.
+
+<Demo layout="block" code={`<ki-stack direction="row" gap="sm" align="center" wrap>
+  <strong data-grow>Order summary</strong>
+  <ki-button variant="secondary">Cancel</ki-button>
+  <ki-button variant="primary">Save</ki-button>
+</ki-stack>`} />
+
+The stack preserves the reading and focus order of its children, including in
+right-to-left layouts. Use a card for a grouping with a visible surface. Use
+navigation or a sidebar for a page shell.
+
+## API reference
+
+<CemApi tag="ki-stack" />
+
+## Workshop
+
+[Open ki-stack in Storybook](/storybook/?path=/docs/docs-components-ki-stack--docs)
