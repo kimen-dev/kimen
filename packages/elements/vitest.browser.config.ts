@@ -185,7 +185,66 @@ export default defineConfig({
           }
           throw new Error(`Touch target not found: ${selector}`);
         }),
+        // A one-finger swipe toward the inline start: press near the end edge of
+        // the target, move across 80% of its width and lift.
+        //
+        // NOT Input.synthesizeScrollGesture: on Aura (Linux) Chromium hands the
+        // touches it synthesizes for DevTools straight to the view, past the
+        // platform gesture recognizer, so the page receives touchstart, touchmove
+        // and touchend but no scroll gesture ever starts. Input.dispatchTouchEvent
+        // runs the touches through the browser's own gesture detection on every
+        // platform, the same path tapWithCoarsePointer relies on.
         swipeWithCoarsePointer: defineBrowserCommand(async ({ page }, selector: string) => {
+          const session = await cdpSessions.get(page);
+          if (!session) throw new Error('Touch emulation must be enabled before swiping');
+          for (const frame of page.frames()) {
+            const target = frame.locator(selector);
+            if ((await target.count()) === 0) continue;
+            // A touch outside the visible viewport is dropped, so bring the target
+            // into view and keep the stroke inside the part of it the viewport shows.
+            const element = target.first();
+            await element.scrollIntoViewIfNeeded();
+            const bounds = await element.boundingBox();
+            if (!bounds) throw new Error(`Swipe target is not visible: ${selector}`);
+            const viewport = page.viewportSize();
+            const left = Math.max(bounds.x, 0);
+            const right = Math.min(bounds.x + bounds.width, viewport?.width ?? Infinity);
+            const top = Math.max(bounds.y, 0);
+            const bottom = Math.min(bounds.y + bounds.height, viewport?.height ?? Infinity);
+            const width = right - left;
+            if (width <= 0 || bottom <= top) {
+              throw new Error(`Swipe target is outside the viewport: ${selector}`);
+            }
+            const y = (top + bottom) / 2;
+            const start = left + width * 0.9;
+            const distance = width * 0.8;
+            const steps = 12;
+            const pause = (milliseconds: number): Promise<void> =>
+              new Promise((resolve) => {
+                setTimeout(resolve, milliseconds);
+              });
+            await session.send('Input.dispatchTouchEvent', {
+              type: 'touchStart',
+              touchPoints: [{ x: start, y }],
+            });
+            for (let step = 1; step <= steps; step += 1) {
+              await pause(16);
+              await session.send('Input.dispatchTouchEvent', {
+                type: 'touchMove',
+                touchPoints: [{ x: start - (distance * step) / steps, y }],
+              });
+            }
+            // Rest the finger before lifting it: a release that still carries
+            // velocity starts a fling, which could carry past the next position.
+            await pause(200);
+            await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+            return;
+          }
+          throw new Error(`Swipe target not found: ${selector}`);
+        }),
+        // TEMPORARY DIAGNOSTIC (remove before the final commit): the previous
+        // synthesized gesture, reporting the stroke and the real window bounds.
+        synthesizedSwipeDiagnostic: defineBrowserCommand(async ({ page }, selector: string) => {
           const session = await cdpSessions.get(page);
           if (!session) throw new Error('Touch emulation must be enabled before swiping');
           for (const frame of page.frames()) {
@@ -193,14 +252,23 @@ export default defineConfig({
             if ((await target.count()) === 0) continue;
             const bounds = await target.first().boundingBox();
             if (!bounds) throw new Error(`Swipe target is not visible: ${selector}`);
-            await session.send('Input.synthesizeScrollGesture', {
+            const stroke = {
               x: bounds.x + bounds.width * 0.9,
               y: bounds.y + bounds.height / 2,
               xDistance: -bounds.width * 0.8,
+            };
+            let windowBounds: unknown;
+            try {
+              windowBounds = await session.send('Browser.getWindowForTarget', {});
+            } catch (error) {
+              windowBounds = String(error);
+            }
+            await session.send('Input.synthesizeScrollGesture', {
+              ...stroke,
               preventFling: true,
               gestureSourceType: 'touch',
             });
-            return;
+            return { stroke, bounds, viewport: page.viewportSize(), windowBounds };
           }
           throw new Error(`Swipe target not found: ${selector}`);
         }),
