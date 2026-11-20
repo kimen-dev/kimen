@@ -47,6 +47,7 @@ export { KiSegment } from './ki-segment.js';
 export { KiSegmentedControl } from './ki-segmented-control.js';
 export { KiSelect } from './ki-select.js';
 export { KiSkeleton } from './ki-skeleton.js';
+export { KiSlider } from './ki-slider.js';
 export { KiSpinner } from './ki-spinner.js';
 export { KiStack } from './ki-stack.js';
 export { KiStat } from './ki-stat.js';

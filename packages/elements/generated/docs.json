@@ -10405,6 +10405,615 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-slider/ki-slider.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-slider",
+      "docs": "Adjusts a value or an interval on a bounded scale.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "coarse adjustments such as volume, balance or a price filter,\nwith a descriptive label."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "when people need to enter exact numbers or choose among a\nfew named options. Use a number input or radio group for those tasks."
+        },
+        {
+          "name": "part",
+          "text": "field - Layout containing the visible label, value, controls and help."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible text used to name the control."
+        },
+        {
+          "name": "part",
+          "text": "value - Formatted value or interval shown beside the label."
+        },
+        {
+          "name": "part",
+          "text": "track - Inactive rail between the two ends of the scale."
+        },
+        {
+          "name": "part",
+          "text": "fill - Active portion of the rail."
+        },
+        {
+          "name": "part",
+          "text": "thumb - Focusable pointer target for one end of the selection."
+        },
+        {
+          "name": "part",
+          "text": "mark - Decorative scale mark at an interval boundary."
+        },
+        {
+          "name": "part",
+          "text": "center-tick - Midpoint mark on a centered scale."
+        },
+        {
+          "name": "part",
+          "text": "help - Supporting text associated with each thumb."
+        },
+        {
+          "name": "event",
+          "text": "change - Bubbles once when a pointer operation commits a different\nselection or a keyboard action changes it. Read the current host value.\nFor updates during a drag, listen for the standard bubbling `input` event.\nProgrammatic updates and form resets are silent."
+        }
+      ],
+      "usage": {
+        "examples": "# Slider examples\n\nImport the element and one theme stylesheet before mounting the examples.\n\n```js\nimport '@kimen/tokens/css';\nimport { defineCustomElement } from '@kimen/elements/ki-slider';\n\ndefineCustomElement();\n```\n\n```html\n<form>\n  <ki-slider label=\"Volume\" name=\"volume\" help-text=\"Playback level\"\n    min=\"0\" max=\"100\" step=\"1\" value=\"60\" marks=\"5\" format=\"percent\"></ki-slider>\n  <ki-slider label=\"Price per night\" name=\"price\" range\n    value=\"20,80\" format=\"currency\" currency=\"EUR\"></ki-slider>\n  <button type=\"reset\">Reset</button>\n</form>\n\n<ki-slider label=\"Exposure\" centered min=\"-50\" max=\"50\" value=\"-20\"></ki-slider>\n<ki-slider label=\"Bass\" orientation=\"vertical\" max=\"10\" value=\"4\"></ki-slider>\n```\n\nA named slider contributes one form entry. The form above starts with\n`volume=60` and `price=20,80`. Range values always run from lower to upper.\nThe closest `lang` controls the display format. Localize the thumb suffixes\nthrough `minimum-label` and `maximum-label`.\n\n```js\nconst volume = document.querySelector('ki-slider[name=\"volume\"]');\nvolume.addEventListener('input', () => previewVolume(volume.value));\nvolume.addEventListener('change', () => saveVolume(volume.value));\n```\n\nThe neutral catalog exposes the `change` action event. Bind it to a declared\naction to receive the current value on commit.\n"
+      },
+      "props": [
+        {
+          "name": "centered",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "centered",
+          "reflectToAttr": false,
+          "docs": "Shows a midpoint tick and fills from that point to a single thumb.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "currency",
+          "reflectToAttr": false,
+          "docs": "ISO 4217 code used with currency format.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'EUR'"
+            }
+          ],
+          "default": "'EUR'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Makes the slider unavailable for pointer, keyboard and form submission.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "format",
+          "type": "\"currency\" | \"number\" | \"percent\"",
+          "complexType": {
+            "original": "KiSliderFormat",
+            "resolved": "\"currency\" | \"number\" | \"percent\"",
+            "references": {
+              "KiSliderFormat": {
+                "location": "local",
+                "path": "src/components/ki-slider/ki-slider.tsx",
+                "id": "src/components/ki-slider/ki-slider.tsx::KiSliderFormat"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "format",
+          "reflectToAttr": false,
+          "docs": "Display format for the readout and accessible values.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'number'"
+            }
+          ],
+          "default": "'number'",
+          "values": [
+            {
+              "value": "currency",
+              "type": "string"
+            },
+            {
+              "value": "number",
+              "type": "string"
+            },
+            {
+              "value": "percent",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": false,
+          "docs": "Optional supporting text, read as the description of each thumb.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Visible base name. Use a task-specific, localized label.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Slider'"
+            }
+          ],
+          "default": "'Slider'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "marks",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "marks",
+          "reflectToAttr": false,
+          "docs": "Number of evenly spaced tick intervals, up to 100. Zero hides ticks.",
+          "docsTags": [
+            {
+              "name": "maximum",
+              "text": "100"
+            },
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "default",
+              "text": "0"
+            }
+          ],
+          "default": "0",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": false,
+          "docs": "Inclusive upper bound. A maximum below min collapses the scale.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "100"
+            }
+          ],
+          "default": "100",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maximumLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maximum-label",
+          "reflectToAttr": false,
+          "docs": "Localized suffix for the upper thumb's accessible name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'maximum'"
+            }
+          ],
+          "default": "'maximum'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "min",
+          "reflectToAttr": false,
+          "docs": "Inclusive lower bound and step origin.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "0"
+            }
+          ],
+          "default": "0",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minimumLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minimum-label",
+          "reflectToAttr": false,
+          "docs": "Localized suffix for the lower thumb's accessible name.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'minimum'"
+            }
+          ],
+          "default": "'minimum'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Native form key. Omit when the value should remain local to the control.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "complexType": {
+            "original": "KiSliderOrientation",
+            "resolved": "\"horizontal\" | \"vertical\"",
+            "references": {
+              "KiSliderOrientation": {
+                "location": "local",
+                "path": "src/components/ki-slider/ki-slider.tsx",
+                "id": "src/components/ki-slider/ki-slider.tsx::KiSliderOrientation"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "orientation",
+          "reflectToAttr": false,
+          "docs": "Axis of the scale. A vertical scale increases towards the top.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'horizontal'"
+            }
+          ],
+          "default": "'horizontal'",
+          "values": [
+            {
+              "value": "horizontal",
+              "type": "string"
+            },
+            {
+              "value": "vertical",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "range",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "range",
+          "reflectToAttr": false,
+          "docs": "Enables two non-crossing thumbs in minimum then maximum tab order.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "step",
+          "reflectToAttr": false,
+          "docs": "Positive increment. Values snap from min and max is always reachable.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "1"
+            }
+          ],
+          "default": "1",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number | string | undefined",
+          "complexType": {
+            "original": "number | string | undefined",
+            "resolved": "number | string | undefined",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Current selection as a number or, in range mode, a comma-separated pair.\nHTML attributes also accept the scalar as numeric text. Defaults to min\nfor one thumb and to both bounds for a range. User updates are normalized.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "center-tick",
+          "docs": "Midpoint mark on a centered scale."
+        },
+        {
+          "name": "field",
+          "docs": "Layout containing the visible label, value, controls and help."
+        },
+        {
+          "name": "fill",
+          "docs": "Active portion of the rail."
+        },
+        {
+          "name": "help",
+          "docs": "Supporting text associated with each thumb."
+        },
+        {
+          "name": "label",
+          "docs": "Visible text used to name the control."
+        },
+        {
+          "name": "mark",
+          "docs": "Decorative scale mark at an interval boundary."
+        },
+        {
+          "name": "thumb",
+          "docs": "Focusable pointer target for one end of the selection."
+        },
+        {
+          "name": "track",
+          "docs": "Inactive rail between the two ends of the scale."
+        },
+        {
+          "name": "value",
+          "docs": "Formatted value or interval shown beside the label."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-spinner/ki-spinner.tsx",
       "encapsulation": "shadow",
       "tag": "ki-spinner",
@@ -13666,6 +14275,16 @@
       "declaration": "export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';",
       "docstring": "",
       "path": "src/components/ki-select/ki-select.tsx"
+    },
+    "src/components/ki-slider/ki-slider.tsx::KiSliderFormat": {
+      "declaration": "export type KiSliderFormat = 'number' | 'percent' | 'currency';",
+      "docstring": "",
+      "path": "src/components/ki-slider/ki-slider.tsx"
+    },
+    "src/components/ki-slider/ki-slider.tsx::KiSliderOrientation": {
+      "declaration": "export type KiSliderOrientation = 'horizontal' | 'vertical';",
+      "docstring": "",
+      "path": "src/components/ki-slider/ki-slider.tsx"
     },
     "src/components/ki-stack/ki-stack.tsx::KiStackDirection": {
       "declaration": "export type KiStackDirection = 'column' | 'row';",
