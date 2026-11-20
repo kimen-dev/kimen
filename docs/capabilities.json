@@ -184,24 +184,6 @@
       "plannedText": ""
     },
     {
-      "id": "protocol-adapters-remaining",
-      "state": "planned",
-      "evidence": [],
-      "destinations": [
-        "catalog-package-status",
-        "catalog-readme-status",
-        "emitter-readme-status",
-        "elements-workshop-status",
-        "kimen-package-status",
-        "kimen-readme-status",
-        "roadmap-status",
-        "root-readme-status",
-        "site-status"
-      ],
-      "availableText": "",
-      "plannedText": "AG-UI and json-render protocol adapters planned"
-    },
-    {
       "id": "runtime-catalog",
       "state": "available",
       "evidence": ["build", "catalog-sync", "test"],

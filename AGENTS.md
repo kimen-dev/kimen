@@ -1,6 +1,6 @@
 # AGENTS.md
 
-<!-- Constitution stamp: v2.0.0. Bootstrap file, maintained by hand until the
+<!-- Constitution stamp: v2.0.1. Bootstrap file, maintained by hand until the
      Art. I generation pipeline exists (Fase 2); then it becomes a generated
      artifact like every other agent surface. -->
 
@@ -8,7 +8,8 @@
 
 Kimen is an open-source, AI-First generative UI library: StencilJS web
 components (`ki-` prefix), a neutral schema-constrained catalog, and disposable
-protocol adapters (A2UI and MCP Apps today; AG-UI and json-render planned).
+protocol adapters (A2UI and MCP Apps; AG-UI streams carry A2UI and need no
+adapter of their own).
 One-person, AI-First operation: agents implement, deterministic gates verify,
 and a single founder merges.
 
