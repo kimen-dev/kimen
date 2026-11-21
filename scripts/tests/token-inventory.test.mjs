@@ -157,6 +157,45 @@ test('extracts and resolves multiple embedded references after merge while retai
   );
 });
 
+// Spec 001 S15: a theme's translucent ramp variants are mixes of its own ramp
+// step, so a theme that reassigns the step gets matching variants. That one
+// shape is the theme layer's only expression; the semantic layer still aliases.
+test('the theme layer may derive a translucent variant of a ramp step, and nothing else', () => {
+  const result = composition([
+    source('primitive.tokens.json', 'primitive', {
+      ki: { color: { $type: 'color', gray: token('#000000') } },
+    }),
+    source('theme.tokens.json', 'theme', {
+      ki: {
+        color: {
+          $type: 'color',
+          brand: token('#336699'),
+          derived: token('color-mix(in srgb, {ki.color.brand} 12%, transparent)'),
+          twoColours: token('color-mix(in srgb, {ki.color.brand} 12%, #ffffff)'),
+          oklch: token('color-mix(in oklch, {ki.color.brand} 12%, transparent)'),
+        },
+      },
+    }),
+    source('semantic.tokens.json', 'semantic', {
+      ki: {
+        surface: {
+          $type: 'color',
+          tint: token('color-mix(in srgb, {ki.color.brand} 12%, transparent)', {
+            $description: 'A semantic mix is still a literal',
+          }),
+        },
+      },
+    }),
+  ]);
+
+  assert.deepEqual(
+    result.issues.filter(({ code }) => code === 'non-primitive-literal').map(({ path }) => path),
+    ['ki.color.brand', 'ki.color.oklch', 'ki.color.twoColours', 'ki.surface.tint'],
+  );
+  const derived = result.records.find(({ path }) => path === 'ki.color.derived');
+  assert.equal(derived.resolvedValue, 'color-mix(in srgb, #336699 12%, transparent)');
+});
+
 test('an overlay inherits the existing public contract and may not add tokens', () => {
   const result = composition([
     source('primitive.tokens.json', 'primitive', {

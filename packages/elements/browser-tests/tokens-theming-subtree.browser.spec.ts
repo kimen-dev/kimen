@@ -4,6 +4,8 @@
 // restyles that element's subtree and nothing else. And the document-level
 // counterpart (S14): the colour scheme the tokens stylesheet declares for the
 // page is a default, so the scheme a host page declares for itself wins.
+// A region that names its own theme and redefines its brand ramp gets
+// translucent ramp variants (S15) of that ramp.
 //
 // Every assertion reads what real components PAINT — the computed colours,
 // shadows, radii and typeface of a ki-button and a ki-input, through their
@@ -13,7 +15,7 @@
 // (the alias-inheritance trap) is exactly the defect a token-name assertion
 // cannot see.
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { commands } from 'vitest/browser';
+import { commands, userEvent } from 'vitest/browser';
 
 import material3Css from '@kimen/tokens/css/material3?raw';
 import onmarsCss from '@kimen/tokens/css?raw';
@@ -24,7 +26,7 @@ type Theme = 'material3' | 'onmars';
 type Scheme = 'dark' | 'light';
 
 interface Context {
-  theme?: Theme | 'acme';
+  theme?: Theme | 'acme' | 'cyanotype';
   scheme?: Scheme;
 }
 
@@ -429,5 +431,60 @@ describe('token reassignment in a themed subtree', () => {
     expect(fill(regionIn(main))).toBe(REASSIGNED);
     expect(fill(main)).not.toBe(REASSIGNED);
     expect(appearanceIn(main)).toEqual(reference.onmars.light);
+  });
+});
+
+describe('palette reassignment in a themed region', () => {
+  const STYLE_ID = 'subtree-region-palette';
+  // A cyanotype sheet: blue paper and a blue accent instead of onmars' ivory
+  // and terracotta, redefined on the palette alone. Nothing semantic is
+  // restated, so whatever follows it was recomputed by the stylesheet.
+  const REGION_PALETTE = `[data-ki-theme='cyanotype'] {
+    --ki-color-gray-50: #e8f0f8;
+    --ki-color-gray-100: #d9e6f2;
+    --ki-color-brand-500: #0b57d0;
+  }`;
+
+  afterEach(async () => {
+    document.getElementById(STYLE_ID)?.remove();
+    await browserCommands.resetPointer();
+  });
+
+  /** The colour the browser computes for `value`, serialized as it paints it. */
+  function computed(value: string): string {
+    const probe = document.createElement('i');
+    probe.style.backgroundColor = value;
+    document.body.append(probe);
+    try {
+      return getComputedStyle(probe).backgroundColor;
+    } finally {
+      probe.remove();
+    }
+  }
+
+  async function hoverFill(button: Element): Promise<string> {
+    const control = button.shadowRoot?.querySelector('button');
+    if (control === null || control === undefined) {
+      throw new Error('ki-button must render a native button');
+    }
+    await userEvent.hover(button);
+    return getComputedStyle(control).backgroundColor;
+  }
+
+  it('S15 hovers a quiet button in the region with its own brand step at the onmars alpha', async () => {
+    injectStylesheet(REGION_PALETTE, STYLE_ID);
+    const quiet = '<ki-button variant="ghost">Read more</ki-button>';
+    const main = await mount(
+      {},
+      `${quiet}<section data-ki-theme="cyanotype" style="${REGION_STYLE}">${quiet}</section>`,
+    );
+    const outside = main.querySelector(':scope > ki-button');
+    const inside = regionIn(main).querySelector(':scope > ki-button');
+    if (outside === null || inside === null) {
+      throw new Error('the fixture must mount a quiet button inside and outside the region');
+    }
+
+    expect(await hoverFill(inside)).toBe(computed('color-mix(in srgb, #0b57d0 12%, transparent)'));
+    expect(await hoverFill(outside)).toBe(computed('color-mix(in srgb, #bc4c26 12%, transparent)'));
   });
 });

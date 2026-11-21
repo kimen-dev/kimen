@@ -387,6 +387,29 @@ function normalizeShadow(value) {
     .join(',');
 }
 
+// A translucent ramp variant is an sRGB mix of its step with `transparent`
+// (spec 001 S15). The mix is premultiplied, so it is the step's channels at
+// the scaled alpha: the same effective value an rgba() literal publishes, and
+// the snapshot records it that way. Any other mix is left as written.
+const TRANSPARENT_MIX =
+  /color-mix\(in srgb,(#[0-9a-f]{6}|rgba?\(\d+,\d+,\d+(?:,[\d.]+)?\)) (\d+(?:\.\d+)?)%,transparent\)/giu;
+
+function mixedWithTransparent(_, colour, percent) {
+  let channels;
+  let alpha = 1;
+  if (colour.startsWith('#')) {
+    channels = [1, 3, 5].map((start) => Number.parseInt(colour.slice(start, start + 2), 16));
+  } else {
+    const parts = colour
+      .slice(colour.indexOf('(') + 1, -1)
+      .split(',')
+      .map(Number);
+    channels = parts.slice(0, 3);
+    alpha = parts[3] ?? 1;
+  }
+  return `rgba(${channels.join(',')},${Number(((alpha * Number(percent)) / 100).toFixed(4))})`;
+}
+
 function normalizeCssValue(value, propertyName) {
   let normalized = value
     .trim()
@@ -395,7 +418,8 @@ function normalizeCssValue(value, propertyName) {
     .replaceAll(/\(\s+/gu, '(')
     .replaceAll(/\s+\)/gu, ')')
     .replaceAll(/\s*,\s*/gu, ',')
-    .replaceAll(/\s*\/\s*/gu, '/');
+    .replaceAll(/\s*\/\s*/gu, '/')
+    .replaceAll(TRANSPARENT_MIX, mixedWithTransparent);
   if (normalized.toLowerCase() === 'linear') normalized = 'cubic-bezier(0,0,1,1)';
   if (propertyName.endsWith('-shadow') && normalized.toLowerCase() !== 'none') {
     normalized = normalizeShadow(normalized);

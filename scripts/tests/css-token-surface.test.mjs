@@ -113,6 +113,32 @@ test('[S10] stylesheet surface resolves light-dark() inside a composite and acro
   );
 });
 
+// A translucent ramp variant is a colour mix of its step (spec 001 S15). The
+// snapshot records effective values, and an sRGB mix of a colour with
+// `transparent` is that colour at the scaled alpha: the same value an rgba()
+// literal published, carried differently.
+test('[S10] a colour mix of a colour with transparent publishes as the rgba() it computes to', () => {
+  const surface = build(
+    stylesheet.replace(
+      '--ki-shadow: 0px 1px 2px var(--ki-color);',
+      '--ki-step: #bc4c26;\n  --ki-shadow: 0px 1px 2px color-mix(in srgb, light-dark(var(--ki-step), rgba(10, 20, 30, 0.5)) 12%, transparent);',
+    ),
+  );
+
+  assert.equal(surface['./css'].contexts.light['--ki-shadow'], '0 1px 2px 0 rgba(188,76,38,0.12)');
+  assert.equal(surface['./css'].contexts.dark['--ki-shadow'], '0 1px 2px 0 rgba(10,20,30,0.06)');
+});
+
+test('[S10] any other colour mix publishes its expression unchanged', () => {
+  for (const mix of [
+    'color-mix(in oklch,#bc4c26 12%,transparent)',
+    'color-mix(in srgb,#bc4c26 12%,#ffffff)',
+  ]) {
+    const surface = build(stylesheet.replace('var(--ki-color);', `${mix};`));
+    assert.equal(surface['./css'].contexts.light['--ki-shadow'], `0 1px 2px 0 ${mix}`);
+  }
+});
+
 test('[S10] a themed export publishes its overrides resolved over the default stylesheet', () => {
   const surface = buildThemed();
 

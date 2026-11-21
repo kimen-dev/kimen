@@ -9,6 +9,7 @@ import {
   lightConfig,
   material3DarkConfig,
   material3LightConfig,
+  resolvedColorMix,
   sharedConfig,
   withDensity,
   withMode,
@@ -570,15 +571,19 @@ function pickScheme(value, scheme) {
   }
 }
 
+// A translucent ramp variant (S15) is a colour mix of its step: once its step
+// is substituted, it is the rgba() Style Dictionary resolved for it.
 function resolveAll(declarations, scheme) {
   const resolved = new Map();
   const resolve = (name) => {
     if (!resolved.has(name)) {
       resolved.set(
         name,
-        pickScheme(declarations.get(name), scheme).replaceAll(
-          /var\((--[a-z0-9-]+)\)/gu,
-          (_, reference) => resolve(reference),
+        resolvedColorMix(
+          pickScheme(declarations.get(name), scheme).replaceAll(
+            /var\((--[a-z0-9-]+)\)/gu,
+            (_, reference) => resolve(reference),
+          ),
         ),
       );
     }

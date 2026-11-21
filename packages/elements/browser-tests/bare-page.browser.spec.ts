@@ -66,6 +66,17 @@ interface Rgba {
 }
 
 function parseRgb(value: string): Rgba {
+  // A colour computed from color-mix() — such as a translucent ramp variant
+  // (spec 001 S15) — serializes as color(srgb …), with channels from 0 to 1.
+  const srgb = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)/u.exec(value);
+  if (srgb !== null) {
+    return {
+      r: Number(srgb[1]) * 255,
+      g: Number(srgb[2]) * 255,
+      b: Number(srgb[3]) * 255,
+      a: srgb[4] === undefined ? 1 : Number(srgb[4]),
+    };
+  }
   const parts = value.match(/[\d.]+/gu);
   if (parts === null || parts.length < 3) {
     return { r: 0, g: 0, b: 0, a: 0 };
