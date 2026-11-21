@@ -132,8 +132,9 @@ describe('155 — a rejection says how to proceed', () => {
     expect(result.diagnostics[0]).toMatchObject({
       path: 'ops[0].props.open',
       rule: 'user-state-conflict',
-      value: 'false',
     });
+    // Spec 159 FR-004: the state is in the remedy, never in `value`.
+    expect(result.diagnostics[0]).not.toHaveProperty('value');
     expect(result.diagnostics[0]?.message).toMatch(
       /closed "confirm-delete"; set open to false in a batch of its own first/u,
     );
