@@ -371,9 +371,15 @@ S13 runs on the three error-line markups: the shared one of spec 042
   declared with `pnpm api:declare field-custom-error minor`. No existing
   prop, event, part or default changes meaning.
 - **Bundle budget** (Art. IV): one watched prop, one flag and a few lines of
-  wiring per control; no runtime dependency, no new styles. Each component's
-  budget is measured on the branch; any raise of a `sizeBudget` entry is
-  reviewed in the PR.
+  wiring per control; no runtime dependency, no new styles. Measured on the
+  branch against `main` at `967cd05f`, the same generated artifacts grow by
+  15,328 / 2,748 / 1,444 B (raw / gzip / brotli) in the MCP Apps document and
+  26,855 / 4,624 / 1,754 B in `kimen-mcp`, mostly the twelve prop
+  descriptions the catalog and agent docs embed. The growth is recorded in
+  each control's `sizeBudget`, split evenly and rounded up. Two worst cases
+  (full Stencil runtime) cross the uniform 25 kB ceiling and take a reviewed
+  exception of 25,200 B brotli: `ki-combobox` (24.91 kB to 25.05 kB) and
+  `ki-time-input` (24.97 kB to 25,001 B).
 - **Accessibility** (Art. V): no new interaction pattern; the error line,
   description and live region of spec 042 carry the custom error. The new
   case is an error that arrives without an action of the person's, which the
