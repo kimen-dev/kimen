@@ -33,7 +33,7 @@
     "@types/node": "26.6.6",
     "@vitest/browser-playwright": "5.1.0",
     "ng-packagr": "22.2.6",
-    "playwright": "1.65.0",
+    "playwright": "1.65.1",
     "rxjs": "7.8.2",
     "vitest": "5.1.0"
   },
