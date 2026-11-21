@@ -10,6 +10,11 @@
 # and opentelemetry-api 1.45, and the fix is regenerating the lock.
 
 [[IgnoredVulns]]
+id = "GHSA-qx49-fqc8-xw99"
+effectiveUntil = 2027-01-05T00:00:00Z
+reason = "mcp 1.29.0 (OAuth client could send credentials to an authorization server chosen by the MCP server). Fixed in 1.30.0; Semgrep 1.185.0 pins mcp==1.29.0. Semgrep only serves MCP, under `semgrep mcp`, which no workflow runs; it never acts as an MCP or OAuth client."
+
+[[IgnoredVulns]]
 id = "GHSA-5h93-6whr-6q8j"
 effectiveUntil = 2027-01-05T00:00:00Z
 reason = "mcp 1.29.0 (HTTP and SSE client transports follow cross-origin redirects with custom headers). Fixed in 1.30.0; Semgrep 1.185.0 pins mcp==1.29.0 and so does 1.186.0, the latest. Semgrep only serves MCP, under `semgrep mcp`, which no workflow runs; it never opens an MCP client connection."
