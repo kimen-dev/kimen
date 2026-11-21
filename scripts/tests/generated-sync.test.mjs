@@ -29,6 +29,11 @@ async function aRepository(t, paths) {
   const root = await mkdtemp(join(tmpdir(), 'kimen-generated-sync-'));
   t.after(() => rm(root, { force: true, recursive: true }));
   git(root, 'init', '--quiet');
+  // A commit or merge starts `git maintenance run --auto --detach`. Under the
+  // geometric strategy (the default in Git 2.55) it repacks once 100 objects
+  // are loose, so a surfaces-sized fixture got a background repack still
+  // writing into .git when the cleanup above removed it (ENOTEMPTY).
+  git(root, 'config', 'maintenance.auto', 'false');
   git(root, 'config', 'user.name', 'fixture');
   git(root, 'config', 'user.email', 'fixture@kimen.local');
   await Promise.all(paths.map((path) => put(root, path)));
@@ -41,6 +46,23 @@ async function aRepository(t, paths) {
   git(root, 'commit', '--quiet', '--allow-empty', '-m', 'test: generated baseline');
   return root;
 }
+
+test('a fixture repository commits without starting background git maintenance', async (t) => {
+  const root = await aRepository(t, []);
+  const events = join(root, '.git', 'trace2-events.json');
+  execFileSync('git', ['commit', '--quiet', '--allow-empty', '-m', 'test: probe'], {
+    cwd: root,
+    env: { ...process.env, GIT_TRACE2_EVENT: events },
+    stdio: 'pipe',
+  });
+  const maintenance = (await readFile(events, 'utf8'))
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => JSON.parse(line))
+    .filter(({ event, argv }) => event === 'child_start' && /^(gc|maintenance)$/u.test(argv[1]))
+    .map(({ argv }) => argv.join(' '));
+  assert.deepEqual(maintenance, []);
+});
 
 test('S9-S10 generated sync requires the exact tracked output set and clean bytes', async (t) => {
   const subject = await import(subjectUrl.href).catch((error) => {
