@@ -30,8 +30,11 @@ const BASE_BUDGETS = {
   // 618df310: the collect checks, the dispatch-time validity gate and the agent
   // texts add 2,350 / 744 / 685 B to the MCP Apps document and 5,770 / 1,764 /
   // 1,285 B to kimen-mcp, which also carries the document.
-  mcpApps: { raw: 784_592, gzip: 178_093, brotli: 140_991 },
-  mcpServer: { raw: 2_580_925, gzip: 486_461, brotli: 381_626 },
+  // Spec 154 (action per event, approved 2026-11-21) measured against main
+  // f79f91f1: the per-event wiring and checks and the agent texts add 1,115 /
+  // 318 / 179 B to the MCP Apps document and 4,125 / 1,047 / 1,048 B to kimen-mcp.
+  mcpApps: { raw: 785_707, gzip: 178_411, brotli: 141_170 },
+  mcpServer: { raw: 2_585_050, gzip: 487_508, brotli: 382_674 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
