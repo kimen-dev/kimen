@@ -47,6 +47,21 @@ Listen for `ki-input` and use `event.detail.value` as the query. Set `loading`
 while fetching, replace the field's `ki-option` children with the latest
 results, and clear `loading`. Use `change` to respond to a committed selection.
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the committed
+choice. The field is invalid, blocks its form and is announced as invalid at
+once. Choosing, removing or clearing a choice withdraws the error; typing
+filter text does not. Remove the attribute when a new attempt starts:
+setting the same text again while it is still set shows nothing.
+
+```html
+<ki-combobox label="Assignee" name="assignee" value="ana" custom-error="Ana is on leave this week.">
+  <ki-option value="ana">Ana Ruiz</ki-option>
+  <ki-option value="juan">Juan Antón</ki-option>
+</ki-combobox>
+```
+
 ## Attributes
 
 - `add-label` (string, default 'Add “{text}”'): Localizable free-entry offer. {text} is replaced by the trimmed query.

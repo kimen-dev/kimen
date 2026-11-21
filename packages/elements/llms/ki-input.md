@@ -60,6 +60,18 @@ and announces when the user reaches the limit.
 <ki-input label="Price" appearance="filled" value="49.00"><span slot="start">EUR</span><span slot="end">/ month</span></ki-input>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on a submitted answer,
+such as a server-side check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next keystroke withdraws the
+error. Remove the attribute when a new attempt starts: setting the same text
+again while it is still set shows nothing.
+
+```html
+<ki-input label="Work email" name="email" type="email" value="ana@example.com" custom-error="This email is already registered."></ki-input>
+```
+
 ## Attributes
 
 - `ai-suggestion-text` (string, default 'Suggested by AI'): Localized provenance description read alongside help or an error when the end slot contains an AI label. Use this to translate the description.

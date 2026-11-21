@@ -29,9 +29,11 @@ handles resend. Let the person know when the code expires and when a new
 code is issued.
 
 Use `error-text` to customize a constraint message. For a code rejected by
-the server, set the error with `setCustomValidity(message)` and call
-`reportValidity()` on the custom-elements build. Clear the error with
-`setCustomValidity('')` when the person edits or requests a new code.
+the server, set `custom-error`: the field shows it at once and the person's
+next edit withdraws it; remove it when a new code is issued. On the
+custom-elements build, `setCustomValidity(message)` with `reportValidity()`
+does the same imperatively; clear it with `setCustomValidity('')` when the
+person edits or requests a new code.
 
 Listen for `ki-input` to follow edits and `ki-complete` to know when all boxes
 are filled. Only submit on completion if the person cannot lose work. A

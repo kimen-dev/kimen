@@ -36,6 +36,18 @@ User toggles dispatch composed `input` and `change` events — apply the setting
 <ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on a setting it could
+not apply. The switch is invalid, blocks its form and is announced as
+invalid at once. Toggling it withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-switch name="two-step" checked custom-error="Add a phone number before turning on two-step sign-in.">Two-step sign-in</ki-switch>
+```
+
 ## Attributes
 
 - `checked` (boolean, default false): Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.

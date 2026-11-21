@@ -46,6 +46,21 @@ A `disabled` group is skipped in Tab order and contributes no form entry; do not
 </ki-radio-group>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+choice. The group is invalid, blocks its form and is announced as invalid at
+once. Choosing another option withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-radio-group label="Plan" name="plan" value="team" custom-error="The Team plan is sold out this month.">
+  <ki-radio value="solo">Solo</ki-radio>
+  <ki-radio value="team">Team</ki-radio>
+</ki-radio-group>
+```
+
 ## Attributes
 
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted choice ("This plan is sold out"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` group left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.

@@ -50,3 +50,18 @@ group.addEventListener('ki-change', (event) => {
   <ki-checkbox value="reviews">Review requests</ki-checkbox>
 </ki-checkbox-group>
 ```
+
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+selection. The group is invalid, blocks its form and is announced as invalid
+at once. Toggling any option withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-checkbox-group label="Regions" name="regions" custom-error="We do not deliver to the Americas yet.">
+  <ki-checkbox value="eu" checked>Europe</ki-checkbox>
+  <ki-checkbox value="am" checked>Americas</ki-checkbox>
+</ki-checkbox-group>
+```

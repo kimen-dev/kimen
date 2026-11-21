@@ -49,6 +49,18 @@ Boolean attributes use presence semantics — omit `checked` to express unchecke
 <ki-checkbox indeterminate>Select all rows</ki-checkbox>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+answer. The checkbox is invalid, blocks its form and is announced as invalid
+at once. Toggling it withdraws the error. Remove the attribute when a new
+attempt starts: setting the same text again while it is still set shows
+nothing. Inside a `ki-checkbox-group`, set it on the group.
+
+```html
+<ki-checkbox name="newsletter" checked custom-error="Confirm your email address before subscribing.">Send me the newsletter</ki-checkbox>
+```
+
 ## Attributes
 
 - `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.

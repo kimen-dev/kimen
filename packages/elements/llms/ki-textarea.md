@@ -70,6 +70,18 @@ localize the default length error.
 <ki-textarea label="Short bio" appearance="filled" maxlength="12" show-count help-text="Keep it short" value="Designs generative interfaces."></ki-textarea>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted text,
+such as a moderation check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next keystroke withdraws the
+error. Remove the attribute when a new attempt starts: setting the same text
+again while it is still set shows nothing.
+
+```html
+<ki-textarea label="Bio" name="bio" value="Call me at 555-0100" custom-error="Remove the phone number from your bio."></ki-textarea>
+```
+
 ## Attributes
 
 - `appearance` ("default" | "filled" | "outlined" | undefined, default 'default'): Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
