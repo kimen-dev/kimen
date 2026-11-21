@@ -77,3 +77,11 @@ Feature: ki-icon displays an imported Lucide glyph
     Given the stock MCP surface has selected circle-check
     When a spec names circle-check or the unselected house
     Then the server and packaged surface accept circle-check and diagnose house
+
+  # S14
+  Scenario: Offer specs only the selected glyphs, never a component's own
+    Given the stock MCP surface has selected circle-check and its components draw x and triangle-alert
+    When a spec names circle-check, x or triangle-alert
+    Then the server and packaged surface accept circle-check
+    And both reject x and triangle-alert with the unavailable-icon issue
+    And a component's icon-name prop is held to the same selection
