@@ -477,6 +477,12 @@
       "neutral": {
         "border": {
           "$value": "{ki.outline.low-em}"
+        },
+        "icon-bg": {
+          "$value": "{ki.alert.neutral.bg}"
+        },
+        "icon-fg": {
+          "$value": "{ki.text.high-em}"
         }
       },
       "info": {

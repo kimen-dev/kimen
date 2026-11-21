@@ -866,11 +866,11 @@
             },
             {
               "name": "--ki-alert-neutral-icon-bg",
-              "description": "color used by the alert component for the neutral icon frame (MarsUI Alert master Feature-icon Surface/primary-base-em-alpha at 12%: the master variable itself, not the heavier primary-tint content fill, so the primary glyph clears 4.5:1 in dark)."
+              "description": "color used by the alert component for the neutral icon frame (MarsUI Alert master Feature-icon Surface/primary-base-em-alpha at 12%: the master variable itself, not the heavier primary-tint content fill, so the primary glyph clears 4.5:1 in dark). onmars v2 keeps the accent off it: the frame takes the neutral card surface."
             },
             {
               "name": "--ki-alert-neutral-icon-fg",
-              "description": "color used by the alert component for the neutral icon glyph (MarsUI Alert master Feature-icon glyph Text/primary-high-em)."
+              "description": "color used by the alert component for the neutral icon glyph (MarsUI Alert master Feature-icon glyph Text/primary-high-em). onmars v2 draws it in the neutral text.high-em ink."
             },
             {
               "name": "--ki-alert-padding-block",

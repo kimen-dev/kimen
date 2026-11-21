@@ -336,6 +336,8 @@
   --ki-alert-border-width:var(--ki-space-xxs);
   --ki-alert-neutral-bg:var(--ki-surface-s2);
   --ki-alert-neutral-border:var(--ki-outline-med-em);
+  --ki-alert-neutral-icon-bg:var(--ki-surface-primary-base-em-alpha);
+  --ki-alert-neutral-icon-fg:var(--ki-text-primary-high-em);
   --ki-alert-success-bg:var(--ki-surface-s1);
   --ki-alert-success-border:var(--ki-outline-med-em);
   --ki-alert-danger-bg:var(--ki-surface-danger-low-em);
@@ -803,6 +805,7 @@
     --ki-surface-danger-tint:var(--ki-surface-danger-base-em);
     --ki-effect-component-backdrop-filter:none;
     --ki-effect-component-listbox-backdrop-filter:none;
+    --ki-alert-neutral-icon-bg:var(--ki-surface-primary-base-em);
   }
 }
 
@@ -819,6 +822,7 @@
   --ki-surface-danger-tint:var(--ki-surface-danger-base-em);
   --ki-effect-component-backdrop-filter:none;
   --ki-effect-component-listbox-backdrop-filter:none;
+  --ki-alert-neutral-icon-bg:var(--ki-surface-primary-base-em);
 }
 
 @media (prefers-contrast: more) {

@@ -176,9 +176,17 @@ export const MODE_SOURCES = Object.freeze({
   ]),
 });
 
+// onmars re-asserts, under reduced transparency (and so under more contrast,
+// which implies it), the v2 values the shared mode file would turn back to
+// another theme's look. It follows the shared file and precedes contrast-more.
+const ONMARS_REDUCED_TRANSPARENCY = 'tokens/modes/onmars.reduced-transparency.tokens.json';
+
 export function withMode(config, mode) {
   let sources = MODE_SOURCES[mode];
   if (sources === undefined) throw new Error(`unknown mode ${JSON.stringify(mode)}`);
+  if (config === lightConfig || config === darkConfig) {
+    sources = [sources[0], ONMARS_REDUCED_TRANSPARENCY, ...sources.slice(1)];
+  }
   if (config === darkConfig && mode === 'contrast-more') {
     sources = [...sources, 'tokens/modes/onmars.contrast-more.dark.tokens.json'];
   }

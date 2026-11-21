@@ -1173,6 +1173,25 @@ describe('ki-alert default tone glyph', () => {
     expect(inks.size).toBe(4);
   });
 
+  // A2-D4: in onmars a neutral alert's slotted icon keeps the accent off: it
+  // sits in the card surface and takes the neutral ink.
+  it('S26 draws the onmars neutral icon in the card surface and the neutral ink', async () => {
+    cleanup();
+    const el = await mountComposed({ heading: 'Heads up', tone: 'neutral', icon: ICON });
+    const frame = getComputedStyle(part(el, 'icon'));
+    const probe = document.createElement('span');
+    document.body.append(probe);
+    probe.style.color = 'var(--ki-text-high-em)';
+    const ink = getComputedStyle(probe).color;
+    probe.style.color = 'var(--ki-text-primary-high-em)';
+    const accent = getComputedStyle(probe).color;
+    probe.remove();
+
+    expect(frame.backgroundColor).toBe(getComputedStyle(part(el, 'card')).backgroundColor);
+    expect(frame.color).toBe(ink);
+    expect(frame.color).not.toBe(accent);
+  });
+
   it('S36 default glyphs keep zero axe violations across the four tones', async () => {
     cleanup();
     const main = document.createElement('main');

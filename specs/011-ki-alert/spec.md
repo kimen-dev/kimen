@@ -230,6 +230,12 @@ retired.
   adding an icon (supersedes the guidance part of FR-021).
 - **A2-D3 Reduced transparency.** The mode keeps whatever elevation the
   theme gives the card; onmars v2 gives it none (S34 amended).
+- **A2-D4 The neutral icon** *(2026-11-21)*. In onmars v2 a slotted icon on a
+  neutral alert sits in the neutral card surface and is drawn in
+  `text.high-em`, not in the accent: the accent stays on selection, links
+  and focus. Reduced transparency keeps it there (an onmars-only mode layer,
+  `tokens/modes/onmars.reduced-transparency.tokens.json`). Material 3 keeps
+  its primary frame.
 
 ### Edge cases
 
