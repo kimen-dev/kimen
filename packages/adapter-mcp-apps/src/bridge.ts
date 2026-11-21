@@ -1,9 +1,10 @@
 /**
  * The surface-side bridge (spec 030): the boundary where untrusted MCP Apps
  * protocol traffic meets the guarded renderer. It owns no render path of its
- * own — every surface mutation is a call to the injected guarded renderer
- * (default `renderUiSpec`), so a test can substitute a double and prove the
- * guarantee.
+ * own: a full spec is judged by the guarded renderer (`preflightUiSpec`) and
+ * painted by a new live surface (`createLiveSurface`, spec 035), and an update
+ * is one live batch, which the live surface validates at the same boundary
+ * (spec 157).
  *
  * It is the View half of the MCP Apps 2026-01-26 lifecycle
  * (`specification/2026-01-26/apps.mdx`, "Lifecycle", :1272-1383):
@@ -21,9 +22,14 @@
  * - Once ready, `ui/notifications/tool-result` (apps.mdx:1145-1155) renders
  *   the `CallToolResult.structuredContent.kimenSurface.spec` through the
  *   guarded renderer; everything before `ready` is ignored and reported.
+ *   When the payload also carries an `update` computed on the current page
+ *   revision, the live surface applies it instead, so what the person is
+ *   typing, the focus and the scroll survive; in every other case the full
+ *   spec paints (spec 157).
  * - A declared action leaves as a standard `tools/call` (apps.mdx:493-495,
- *   1336-1338, 1490) to the adapter's fixed app-only action tool. Undeclared
- *   actions never leave (S6).
+ *   1336-1338, 1490) to the adapter's fixed app-only action tool, naming the
+ *   page revision and, when it has one, the bound node's id (spec 157).
+ *   Undeclared actions never leave (S6).
  * - The host's `theme` (apps.mdx:544-545) — in the handshake result or a later
  *   `ui/notifications/host-context-changed` — is handed to the document as its
  *   color scheme (S19); any value the protocol does not define is ignored (S20).
@@ -34,8 +40,14 @@
  *   the adapter builds from the dispatched action and data alone (relay.ts).
  *   At most one relay per acknowledgment, never retried, never after teardown.
  */
-import type { ActionEvent, RenderBudgets, RenderOptions, RenderResult } from '@kimen/catalog';
-import { renderUiSpec } from '@kimen/catalog';
+import type {
+  LiveActionEvent,
+  LiveSurface,
+  PreflightOptions,
+  RenderBudgets,
+  RenderDiagnostic,
+} from '@kimen/catalog';
+import { createLiveSurface, DEFAULT_RENDER_BUDGETS, preflightUiSpec } from '@kimen/catalog';
 
 import type {
   Implementation,
@@ -83,9 +95,6 @@ export const KIMEN_APP_INFO: Implementation = {
   version: '0.0.0',
 };
 
-/** The guarded-renderer contract the bridge depends on (injection seam, S4/S5). */
-export type GuardedRender = (input: unknown, options: RenderOptions) => RenderResult;
-
 /** Where the surface is in the MCP Apps lifecycle. */
 export type SurfaceState = 'closed' | 'idle' | 'initializing' | 'ready' | 'refused';
 
@@ -120,7 +129,10 @@ export interface SurfaceBridge {
   start(): void;
   /** Handles one inbound host message. */
   receive(message: unknown): ReceiveResult;
-  /** Attempts to send one action to the host; only declared actions leave, only once ready (S6). */
+  /**
+   * Attempts to send one action to the host, with the page revision; only
+   * declared actions leave, only once ready (S6).
+   */
   dispatch(
     action: string,
     data?: Readonly<Record<string, boolean | number | string>>,
@@ -137,8 +149,6 @@ export interface SurfaceBridgeOptions {
   readonly surface: Element;
   /** Sends one JSON-RPC message to the host (the postMessage channel). */
   readonly send: (message: SurfaceOutboundMessage) => void;
-  /** Guarded renderer; defaults to `renderUiSpec`. The bridge mutates the DOM only through it. */
-  readonly render?: GuardedRender;
   /** Receives every refusal (unknown component, undeclared prop or action, version skew, ...). */
   readonly onRefusal?: (refusal: BridgeRefusal) => void;
   /**
@@ -198,6 +208,33 @@ function declaredActionsOf(spec: unknown): ReadonlySet<string> {
   return new Set();
 }
 
+function sameActions(left: ReadonlySet<string>, right: ReadonlySet<string>): boolean {
+  return left.size === right.size && [...left].every((action) => right.has(action));
+}
+
+/**
+ * The `update` of a surface payload (spec 157 FR-001), or undefined when it
+ * is not `{ baseRevision, batch }` with a non-negative integer revision. The
+ * batch stays untrusted: only the live surface judges it.
+ */
+function readUpdate(update: unknown): { baseRevision: number; batch: unknown } | undefined {
+  if (!isRecord(update) || !('batch' in update)) {
+    return undefined;
+  }
+  const baseRevision = update['baseRevision'];
+  return typeof baseRevision === 'number' && Number.isSafeInteger(baseRevision) && baseRevision >= 0
+    ? { baseRevision, batch: update['batch'] }
+    : undefined;
+}
+
+/**
+ * The bytes a full paint adds around the spec's root: it reaches the live
+ * surface as one inserted node. A spec the guarded renderer accepts at its
+ * byte budget must never be refused by the batch budget (spec 157 FR-011).
+ */
+const INSERT_ENVELOPE_BYTES =
+  JSON.stringify({ ops: [{ node: null, op: 'insert' }] }).length - 'null'.length;
+
 /**
  * Negotiates a host-announced MCP Apps protocol version against the adapter's
  * matrix (S8): an undeclared version is refused, naming the supported set — no
@@ -226,12 +263,30 @@ export function negotiateProtocolVersion(
 }
 
 export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridge {
-  const render: GuardedRender = options.render ?? renderUiSpec;
   const supported = options.supportedVersions ?? MCP_APPS_PROTOCOL_VERSIONS;
   const appInfo = options.appInfo ?? KIMEN_APP_INFO;
+  const budgets = options.budgets !== undefined ? { budgets: options.budgets } : {};
+  // The catalog-schema-version gate is preflight's alone: it runs on every
+  // result before anything paints or applies, with the spec's own declaration
+  // first and this option as the fallback, exactly as the guarded renderer.
+  const preflightOptions: PreflightOptions = {
+    ...budgets,
+    ...(options.catalogSchemaVersion !== undefined
+      ? { catalogSchemaVersion: options.catalogSchemaVersion }
+      : {}),
+  };
+  const specBytes = options.budgets?.maxBytes ?? DEFAULT_RENDER_BUDGETS.maxBytes;
 
   let state: SurfaceState = 'idle';
   let hostContext: Readonly<Record<string, unknown>> = {};
+  /** The live surface painted from the last accepted full spec. */
+  let live: LiveSurface | undefined;
+  /**
+   * The page revision (spec 157 FR-004): +1 per full paint and per applied
+   * update, never repeated. Not the live surface's own count, which starts
+   * again with every full paint.
+   */
+  let revision = 0;
   let declaredActions: ReadonlySet<string> = new Set();
   let nextId = 1;
   let initializeId: RequestId | undefined;
@@ -275,7 +330,7 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     });
   };
 
-  const dispatch = (action: string, data: ActionData = {}): DispatchResult => {
+  const dispatch = (action: string, data: ActionData = {}, node?: string): DispatchResult => {
     if (state !== 'ready') {
       const refusal: BridgeRefusal = {
         detail: `action "${action}" cannot leave a surface in state "${state}"`,
@@ -302,24 +357,122 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     pendingActions.set(id, { action, data: { ...data } });
     // `tools/call` (apps.mdx:493-495): the host proxies it to the server and
     // MUST reject it unless the tool's visibility includes "app" (:399-400).
-    // The tool name is the adapter's constant, never spec data.
+    // The tool name is the adapter's constant, never spec data. `id` comes
+    // from the spec and `revision` from this page: nothing the person typed.
     options.send({
       id,
       jsonrpc: JSONRPC_VERSION,
       method: METHOD_TOOLS_CALL,
-      params: { arguments: { action, data }, name: KIMEN_ACTION_TOOL },
+      params: {
+        arguments: { action, data, ...(node === undefined ? {} : { id: node }), revision },
+        name: KIMEN_ACTION_TOOL,
+      },
     });
     return { sent: true };
   };
 
-  const onAction = (event: ActionEvent): void => {
-    dispatch(event.action, event.data);
+  const onAction = (event: LiveActionEvent): void => {
+    dispatch(event.action, event.data, event.id);
   };
 
   /**
-   * Renders a `CallToolResult` through the guarded renderer. The only render
-   * input is `structuredContent.kimenSurface.spec` ("structured data optimized
-   * for UI rendering", apps.mdx:1474); `content` text is never rendered.
+   * The guardrail refused hostile content (unknown component, undeclared
+   * prop, version skew, budget) fail-closed and atomic: nothing changed, so
+   * every component that DID render is a catalog component (S4). Each
+   * diagnostic is an observable, inert refusal.
+   */
+  const refuseAll = (diagnostics: readonly RenderDiagnostic[]): ReceiveResult => {
+    const refusals = diagnostics.map((diagnostic) => ({
+      detail: diagnostic.message,
+      reason: diagnostic.rule,
+      value: diagnostic.value,
+    }));
+    refusals.forEach(report);
+    return { handled: true, ok: false, refusals };
+  };
+
+  /**
+   * Paints a full spec the guarded renderer accepted: a new live surface,
+   * fixed to the spec's declared actions, receives the root as one inserted
+   * node in a detached container that then replaces the previous content in
+   * one operation. A refused paint leaves the previous content intact.
+   */
+  const paint = (spec: unknown, actions: ReadonlySet<string>): ReceiveResult => {
+    const mount = options.surface.ownerDocument.createElement('div');
+    const next = createLiveSurface({
+      actions: [...actions],
+      batchBudgets: { maxBytes: specBytes + INSERT_ENVELOPE_BYTES },
+      onAction,
+      surface: mount,
+      ...budgets,
+    });
+    const root = isRecord(spec) ? spec['root'] : undefined;
+    const painted = next.apply({ ops: [{ node: root, op: 'insert' }] });
+    if (!painted.ok) {
+      return refuseAll(painted.diagnostics);
+    }
+    options.surface.replaceChildren(mount);
+    live = next;
+    // The accepted spec's declared actions become the outbound allowlist; a
+    // later dispatch outside it is refused (S6).
+    declaredActions = actions;
+    revision += 1;
+    return ACCEPTED;
+  };
+
+  const notApplied = (value: string, detail: string): BridgeRefusal => ({
+    detail: `the update was not applied and the full spec painted instead: ${detail}`,
+    reason: 'update-not-applied',
+    value,
+  });
+
+  /**
+   * Applies a result's update (spec 157 FR-003 step 2). Returns why it was not
+   * applied, or undefined once the live surface committed it.
+   */
+  const applyUpdate = (raw: unknown, actions: ReadonlySet<string>): BridgeRefusal | undefined => {
+    const update = readUpdate(raw);
+    if (update === undefined) {
+      return notApplied(
+        'malformed-update',
+        'it is not { baseRevision, batch } with a non-negative integer revision',
+      );
+    }
+    if (live === undefined || update.baseRevision !== revision) {
+      return notApplied(
+        'stale-revision',
+        `it was computed on revision ${String(update.baseRevision)}; the page is at revision ${String(revision)}`,
+      );
+    }
+    if (!sameActions(actions, declaredActions)) {
+      // The live surface's actions are fixed at its creation: only a full
+      // paint can make the allowlist the actions this result declares.
+      return notApplied(
+        'declared-actions',
+        'the full spec declares other actions than the surface was painted with',
+      );
+    }
+    const applied = live.apply(update.batch);
+    const [first] = applied.diagnostics;
+    if (!applied.ok) {
+      return notApplied(
+        first?.rule ?? 'rejected-batch',
+        first === undefined
+          ? 'the live surface rejected the batch'
+          : `${first.path}: ${first.message}`,
+      );
+    }
+    revision += 1;
+    return undefined;
+  };
+
+  /**
+   * Renders a `CallToolResult` (spec 157 FR-003). The only render input is
+   * `structuredContent.kimenSurface` ("structured data optimized for UI
+   * rendering", apps.mdx:1474); `content` text is never rendered. The full
+   * spec is judged first, so an invalid one refuses the whole result and
+   * nothing changes; then its update applies when it can, and otherwise the
+   * full spec paints.
    */
   const renderToolResult = (result: Record<string, unknown>, required: boolean): ReceiveResult => {
     const structured = result['structuredContent'];
@@ -333,35 +486,19 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
         : ACCEPTED;
     }
     const spec = payload['spec'];
-
-    const renderOptions: RenderOptions = {
-      onAction,
-      surface: options.surface,
-      ...(options.budgets !== undefined ? { budgets: options.budgets } : {}),
-      ...(options.catalogSchemaVersion !== undefined
-        ? { catalogSchemaVersion: options.catalogSchemaVersion }
-        : {}),
-    };
-
-    const rendered = render(spec, renderOptions);
-    if (!rendered.ok) {
-      // The guardrail refused hostile content (unknown component, undeclared
-      // prop, version skew, budget) fail-closed and atomic: nothing rendered,
-      // so every component that DID render is a catalog component (S4). Each
-      // diagnostic is an observable, inert refusal.
-      const refusals = rendered.diagnostics.map((diagnostic) => ({
-        detail: diagnostic.message,
-        reason: diagnostic.rule,
-        value: diagnostic.value,
-      }));
-      refusals.forEach(report);
-      return { handled: true, ok: false, refusals };
+    const verdict = preflightUiSpec(spec, preflightOptions);
+    if (!verdict.ok) {
+      return refuseAll(verdict.diagnostics);
     }
-
-    // On success the accepted spec's declared actions become the outbound
-    // allowlist; a later dispatch outside it is refused (S6).
-    declaredActions = declaredActionsOf(spec);
-    return ACCEPTED;
+    const actions = declaredActionsOf(spec);
+    if (payload['update'] !== undefined) {
+      const withheld = applyUpdate(payload['update'], actions);
+      if (withheld === undefined) {
+        return ACCEPTED;
+      }
+      report(withheld);
+    }
+    return paint(spec, actions);
   };
 
   /**

@@ -83,6 +83,26 @@ const result = surfaceToolResult(
 The result is a `CallToolResult`: the spec travels in
 `structuredContent.kimenSurface`, the text in `content`.
 
+Every action call names the page revision the person acted on and, when the
+spec gave the bound node an id, that id: `{ action, data, revision, id? }`.
+To change the surface without erasing what the person is typing, answer with
+the full spec and an update computed on that revision: a live batch
+(`@kimen/catalog`, spec 035) that turns the surface the person saw into the
+full spec.
+
+```ts
+// 2b. Answer an action on revision 3 with the full spec plus an update.
+const updated = surfaceToolResult(fullSpec, '13 items in stock', {
+  baseRevision: 3, // the `revision` argument of the action call
+  batch: { ops: [{ op: 'insert', parent: 'items', node: newItem }] },
+});
+```
+
+The surface applies the update only on that revision, only when the full
+spec declares the surface's own actions and only when the live surface
+accepts the batch; otherwise it paints the full spec, as without an update
+(spec 157).
+
 ```ts
 // 3. Answer a declared action. Ask for relay when the person's choice needs
 //    the model; leave it off for a UI-only action such as a refresh.
@@ -101,7 +121,7 @@ renders the surface (spec 040).
 Inside the surface document, `createSurfaceBridge` speaks the MCP Apps
 2026-01-26 lifecycle: it opens with `ui/initialize`, confirms with
 `ui/notifications/initialized`, renders `ui/notifications/tool-result`
-through the guarded renderer, answers `ui/resource-teardown` and `ping`,
+through the guarded renderer and its live surface, answers `ui/resource-teardown` and `ping`,
 ignores non-protocol traffic, and lets only declared actions leave as
 `tools/call` to `kimen_surface_action` — relayed to the model as one
 `ui/message` when the server's answer asks for it. A host negotiating a protocol version

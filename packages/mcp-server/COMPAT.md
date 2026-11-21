@@ -53,6 +53,11 @@ result's text outline.
   surface to relay it (spec 040); the surface sends one `ui/message` only to
   a host that advertises `hostCapabilities.message.text`, so a host without
   it receives no relay. `ui/update-model-context` is not used.
+- **Full specs only.** The action tool accepts the bound node's `id` and the
+  page `revision` the surface sends (spec 157) and ignores them; calls
+  without them, from a cached older document, are accepted too. Every render
+  answers a full spec, never a live update, so each result repaints the
+  surface, and a removable chip stays until the model renders again.
 - **URL properties are refused.** The surface declares no network origin, so
   no URL could load or open there.
 - **Real hosts are not exercised by CI.** Interoperability is proven against

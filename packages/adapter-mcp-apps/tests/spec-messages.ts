@@ -68,13 +68,19 @@ export const toolInputPartial = (): Fixture => ({
  * after apps.mdx:1450-1468: `content` text for the model, `structuredContent`
  * for the UI (apps.mdx:1473-1475), here carrying the Kimen surface payload.
  */
-export const toolResult = (spec: unknown, text = 'Current inventory'): Fixture => ({
+export const toolResult = (
+  spec: unknown,
+  text = 'Current inventory',
+  update?: unknown,
+): Fixture => ({
   jsonrpc: '2.0',
   method: 'ui/notifications/tool-result',
   params: {
     _meta: { source: 'inventory-api', timestamp: '2025-11-10T15:30:00Z' },
     content: [{ text, type: 'text' }],
-    structuredContent: { [KIMEN_SURFACE_KEY]: { spec } },
+    structuredContent: {
+      [KIMEN_SURFACE_KEY]: update === undefined ? { spec } : { spec, update },
+    },
   },
 });
 
@@ -138,17 +144,28 @@ export const expectedInitialized = (): Fixture => ({
 /**
  * Expected View → Host `tools/call` for one declared action: the standard MCP
  * request the spec shows at apps.mdx:1400-1410, aimed at the adapter's
- * app-only action tool (apps.mdx:370-384, 1490).
+ * app-only action tool (apps.mdx:370-384, 1490). The arguments also name the
+ * page revision the person acted on and, when the bound node has one, its
+ * stable id (spec 157 FR-007). Revision 1 is a page that painted one result.
  */
 export const expectedActionCall = (
   id: number | string,
   action: string,
   data: Record<string, boolean | number | string> = {},
+  where: { readonly revision: number; readonly node?: string } = { revision: 1 },
 ): Fixture => ({
   id,
   jsonrpc: '2.0',
   method: 'tools/call',
-  params: { arguments: { action, data }, name: KIMEN_ACTION_TOOL },
+  params: {
+    arguments: {
+      action,
+      data,
+      ...(where.node === undefined ? {} : { id: where.node }),
+      revision: where.revision,
+    },
+    name: KIMEN_ACTION_TOOL,
+  },
 });
 
 /**
@@ -195,6 +212,50 @@ export const expectedEmptyResult = (id: number | string): Fixture => ({
   id,
   jsonrpc: '2.0',
   result: {},
+});
+
+/** One entry of the list "tasks" (spec 157 fixtures). */
+const taskItem = (text: string, index: number): Fixture => ({
+  component: 'ki-list-item',
+  id: `task-${String(index)}`,
+  slots: { '': [text] },
+});
+
+/**
+ * A title field, an "Add" button and the list "tasks", as a server describes
+ * them in a full spec (spec 157 fixtures). Every node a batch names has an id.
+ */
+export const tasksSpec = (
+  items: readonly string[],
+  actions: readonly string[] = ['add'],
+): Fixture => ({
+  actions: [...actions],
+  root: {
+    component: 'ki-stack',
+    id: 'page',
+    slots: {
+      '': [
+        {
+          component: 'ki-input',
+          id: 'title',
+          props: { label: 'Title', name: 'title', value: '' },
+        },
+        { action: 'add', component: 'ki-button', id: 'add', slots: { '': ['Add'] } },
+        {
+          component: 'ki-list',
+          id: 'tasks',
+          props: { label: 'Tasks' },
+          slots: { '': items.map(taskItem) },
+        },
+      ],
+    },
+  },
+  version: 1,
+});
+
+/** The live batch (spec 035) that appends one item to the list "tasks". */
+export const addItemBatch = (text: string, index: number): Fixture => ({
+  ops: [{ node: taskItem(text, index), op: 'insert', parent: 'tasks' }],
 });
 
 /** A small catalog spec with one declared action. */

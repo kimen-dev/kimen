@@ -7,12 +7,15 @@
  * answer. Nothing here renders; the document's only render path is the guarded
  * renderer over the neutral catalog.
  */
+import { NODE_ID_GRAMMAR } from '@kimen/catalog';
+
 import { SURFACE_DOCUMENT } from './generated/surface-document.js';
 import {
   KIMEN_ACTION_KEY,
   KIMEN_ACTION_TOOL,
   KIMEN_SURFACE_KEY,
   SURFACE_MIME_TYPE,
+  type SurfaceUpdate,
   surfaceResourceUri,
 } from './protocol.js';
 
@@ -70,7 +73,10 @@ export function declareToolSurface(name = 'surface'): {
  * The app-only tool that receives every declared action of a Kimen surface
  * (spec 030 S6). Register it on the same MCP server as the surface tool and
  * validate `action` server-side: the surface only sends actions its rendered
- * spec declared, but the server is the authority.
+ * spec declared, but the server is the authority. `id` (the bound node's
+ * stable id) and `revision` (the page revision the person acted on) are
+ * optional (spec 157): a server may ignore them, and a cached older document
+ * does not send them.
  */
 export interface KimenActionTool {
   readonly name: typeof KIMEN_ACTION_TOOL;
@@ -83,6 +89,8 @@ export interface KimenActionTool {
         readonly type: 'object';
         readonly additionalProperties: { readonly type: readonly string[] };
       };
+      readonly id: { readonly type: 'string'; readonly pattern: string };
+      readonly revision: { readonly type: 'integer'; readonly minimum: 0 };
     };
     readonly required: readonly ['action'];
     readonly additionalProperties: false;
@@ -115,6 +123,8 @@ export function declareActionTool(name = 'surface'): KimenActionTool {
           additionalProperties: { type: ['boolean', 'number', 'string'] },
           type: 'object',
         },
+        id: { pattern: NODE_ID_GRAMMAR.source, type: 'string' },
+        revision: { minimum: 0, type: 'integer' },
       },
       required: ['action'],
       type: 'object',
@@ -127,7 +137,7 @@ export function declareActionTool(name = 'surface'): KimenActionTool {
 export interface SurfaceToolResult {
   readonly content: readonly { readonly type: 'text'; readonly text: string }[];
   readonly structuredContent: {
-    readonly kimenSurface: { readonly spec: unknown };
+    readonly kimenSurface: { readonly spec: unknown; readonly update?: SurfaceUpdate };
   };
 }
 
@@ -139,11 +149,21 @@ export interface SurfaceToolResult {
  * carries the same outcome as text for the model and for hosts without
  * interactive surfaces (apps.mdx:1473, 1559). The text fallback is data — it
  * is never an alternate render path.
+ *
+ * `update` (spec 157) is a live batch computed on the page revision the
+ * person's action call carried. The surface applies it, keeping what the
+ * person is typing, only on that revision and when the live surface accepts
+ * it; otherwise it paints `spec`. So `spec` must always describe the whole
+ * surface, and the batch must turn the surface of `baseRevision` into it.
  */
-export function surfaceToolResult(spec: unknown, textFallback: string): SurfaceToolResult {
+export function surfaceToolResult(
+  spec: unknown,
+  textFallback: string,
+  update?: SurfaceUpdate,
+): SurfaceToolResult {
   return {
     content: [{ text: textFallback, type: 'text' }],
-    structuredContent: { [KIMEN_SURFACE_KEY]: { spec } },
+    structuredContent: { [KIMEN_SURFACE_KEY]: update === undefined ? { spec } : { spec, update } },
   };
 }
 

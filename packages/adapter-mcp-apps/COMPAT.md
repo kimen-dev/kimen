@@ -49,10 +49,10 @@ JSON-RPC 2.0 over `postMessage`, View = this surface document:
 | Host → View | `McpUiInitializeResult` | version negotiated; `hostContext` kept; its `theme` (`light` or `dark`) becomes the document's color scheme; `hostCapabilities.message.text` present means the host accepts relayed actions |
 | View → Host | `ui/notifications/initialized` | sent only after a supported result |
 | Host → View | `ui/notifications/tool-input`, `tool-input-partial`, `tool-cancelled` | acknowledged, never rendered |
-| Host → View | `ui/notifications/tool-result` (`CallToolResult`) | `structuredContent.kimenSurface.spec` rendered through the guarded renderer |
+| Host → View | `ui/notifications/tool-result` (`CallToolResult`) | `structuredContent.kimenSurface = { spec, update? }` (spec 157): `spec` is judged by the guarded renderer; its `update` `{ baseRevision, batch }` is applied by the live surface only when `baseRevision` is the page revision, `spec` declares the surface's own actions and the batch is accepted; otherwise `spec` paints in full |
 | Host → View | `ui/notifications/host-context-changed` | merged into the host context; a `theme` of `light` or `dark` switches the document's color scheme, any other value is ignored |
-| View → Host | `tools/call` → `kimen_surface_action` `{ action, data }` | one per declared action; the tool name is fixed by the adapter |
-| Host → View | `CallToolResult` of `kimen_surface_action` | a surface it carries re-renders; `structuredContent.kimenAction = { action, relay: true }` for the exact action sent asks for its relay |
+| View → Host | `tools/call` → `kimen_surface_action` `{ action, data, revision, id? }` | one per declared action; the tool name is fixed by the adapter; `revision` is the page revision at the gesture, `id` the bound node's stable id when the spec gave it one (spec 157) |
+| Host → View | `CallToolResult` of `kimen_surface_action` | a surface it carries is handled as a `tool-result` (its update applies or its spec paints); `structuredContent.kimenAction = { action, relay: true }` for the exact action sent asks for its relay |
 | View → Host | `ui/message` `{ role: "user", content: [one text block] }` | the relay (spec 040): at most one per acknowledgment that asks for it, only to a host advertising text messages; text `kimen-surface-action ` + `{ action, data }` as escaped JSON, one line, at most 8192 bytes, never retried |
 | Host → View | `ui/message` result or error | success is silent; an error or `isError` is reported as `relay-failed` |
 | View → Host | `ui/notifications/size-changed` | on content size change, after the handshake |
@@ -85,9 +85,13 @@ protocol displays operable, token-styled Kimen components:
 
 | Part | Content | Size (raw / gzip) |
 | --- | --- | --- |
-| one inline `<style>` | the default theme's token stylesheet, light and dark (`@kimen/tokens/css`), and the page contract (`@kimen/tokens/css/base`), minified | 128 kB / 15 kB |
-| one inline `<script>` | every catalog component definition, the stock `circle-check` glyph, the guarded renderer and catalog validator (`@kimen/catalog`, spec 028), and the host bridge | 516 kB / 132 kB |
-| whole document | | 644 kB / 148 kB (120 kB brotli) |
+| one inline `<style>` | the default theme's token stylesheet, light and dark (`@kimen/tokens/css`), and the page contract (`@kimen/tokens/css/base`), minified | 213 kB / 25 kB |
+| one inline `<script>` | every catalog component definition, the stock `circle-check` glyph, the guarded renderer, catalog validator and live surface (`@kimen/catalog`, specs 028 and 035), and the host bridge | 1,296 kB / 344 kB |
+| whole document | | 1,509 kB / 370 kB (280 kB brotli) |
+
+Measured on 2026-11-21 (main `f79f91f1` plus spec 157, macOS zlib and brotli);
+the limits that bind are the ones `tests/resource.spec.ts` derives, not these
+figures.
 
 - **The registered set is the catalog.** The generator reads the component
   list from `@kimen/catalog` at build time; nothing is hand-listed, so a
@@ -114,6 +118,15 @@ protocol displays operable, token-styled Kimen components:
   `node scripts/generate-surface.mjs --check` verifies it.
 - **Budgeted.** `tests/resource.spec.ts` enforces raw, gzip and brotli limits
   calculated from the component inventory by `scripts/lib/bundle-size-budget.mjs`.
+- **Live, not repainted (spec 157).** The document paints through the live
+  surface (spec 035). A full spec makes a new live surface; an update changes
+  only the nodes its batch names, so the other elements keep their identity,
+  focus, typed values and scroll. The page revision starts at 0, advances by
+  one per full paint and per applied update, and never repeats. An update that
+  is not applied is reported as `update-not-applied` (its value names why:
+  `stale-revision`, `declared-actions`, `malformed-update` or the live
+  surface's rule) and the full spec paints instead. An update batch may use the
+  full spec's byte budget and the live surface's 64-op budget.
 
 Host↔surface traffic follows the wire vocabulary above, mediated by the
 host's audit path. The real-browser suite (`browser-tests/`, Chromium) loads
@@ -140,9 +153,23 @@ and `allow-scripts` alone) and drives it only through `postMessage`.
   surface and server.
 - **What a relay carries.** Exactly the dispatched action and its data (the
   bound control's spec properties and live state), never the server's
-  answer or host data. A relay above 8192 bytes is not sent and
-  never cut (`relay-too-large`). Consent is the host's: the surface shows
-  nothing when it relays.
+  answer or host data, and never the call's `id` or `revision`. A relay above
+  8192 bytes is not sent and never cut (`relay-too-large`). Consent is the
+  host's: the surface shows nothing when it relays.
+- **The server computes updates.** The surface checks an update's revision,
+  declared actions and batch, never that the batch turns the old content into
+  `spec`: a server whose batch disagrees with its own full spec shows the
+  batch's result. `spec` must always describe the whole surface. A server
+  that never sends an update (such as `@kimen/mcp-server`) gets a full repaint
+  per result, as before.
+- **Strict schemas need the two new arguments.** `declareActionTool` declares
+  `id` and `revision` as optional. A server that copied the older schema by
+  hand with `additionalProperties: false` rejects every call from this
+  document until it accepts them; a server that ignores them keeps working.
+- **Removable chips wait for the server.** On a live surface a `ki-chip`'s
+  removal request is prevented: its bound action still leaves, and the chip
+  stays until a result removes it (an update or a full spec without it). The
+  static renderer let the chip remove itself.
 - The surface consumes already-delivered protocol messages; transport and
   iframe sandboxing are the host's obligation (the document stays safe by
   construction even if the host does not enforce its content policy). A host
@@ -150,4 +177,7 @@ and `allow-scripts` alone) and drives it only through `postMessage`.
   the document's policy will see that injection refused by the digests.
 - Verified in Chromium only; Firefox and WebKit have not run the real-browser
   suite, and no production host (Claude, ChatGPT, VS Code, Goose) has been
-  tested yet.
+  tested yet. The live updates of spec 157 are exercised by the hand-written
+  host double (`browser-tests/live-updates.browser.spec.ts`) and the
+  reference `AppBridge` accepts the new call arguments
+  (`browser-tests/relay.browser.spec.ts`); no production host has run them.

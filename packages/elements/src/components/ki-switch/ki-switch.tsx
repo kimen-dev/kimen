@@ -354,7 +354,10 @@ export class KiSwitch {
 
     const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
     this.input.setCustomValidity(customError || this.customValidity);
-    if (this.input.validity.valid) {
+    // A disabled native input keeps its customError flag but reports an empty
+    // message, which setValidity rejects; a disabled switch takes no part in
+    // validation anyway.
+    if (this.effectiveDisabled || this.input.validity.valid) {
       this.internals.setValidity({});
       this.message = '';
       this.userInvalid = false;
@@ -364,7 +367,7 @@ export class KiSwitch {
     this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
     this.message = this.internals.validationMessage;
     // A custom error shows at once, without a submission (D2).
-    if (customError !== '' && !this.effectiveDisabled) {
+    if (customError !== '') {
       this.userInvalid = true;
     }
   }
