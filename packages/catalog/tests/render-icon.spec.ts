@@ -8,6 +8,7 @@ import {
   createStreamingRenderer,
   preflightUiSpec,
   renderUiSpec,
+  selectSpecIcons,
   validateUiSpec,
 } from '../src/index.js';
 
@@ -110,5 +111,102 @@ describe('ki-icon at the guarded catalog boundary', () => {
       diagnostics: [{ path: 'root.action', rule: 'action-not-allowed', value: 'clear' }],
       ok: false,
     });
+  });
+});
+
+// Spec 069 S14: a declared selection, not registration, decides which glyph
+// names a spec may use. Components register the glyphs they draw themselves.
+describe('the spec-facing icon selection', () => {
+  const selectionKey = Symbol.for('kimen.spec-icons.v1');
+  const tiles: Catalog = {
+    catalogSchemaVersion: CATALOG_SCHEMA_VERSION,
+    components: {
+      ...catalog.components,
+      'ki-tile': {
+        description: 'A tile with a decorative glyph.',
+        events: {},
+        props: {
+          heading: { description: 'Heading.', required: true, type: 'string' },
+          'icon-name': { description: 'Glyph.', type: 'string' },
+        },
+        slots: {},
+        tag: 'ki-tile',
+        whenNotToUse: 'For an action.',
+        whenToUse: 'For a tile.',
+      },
+    },
+  };
+  const tile = (name?: string) => ({
+    root: {
+      component: 'ki-tile',
+      props: name === undefined ? { heading: 'Tile' } : { heading: 'Tile', 'icon-name': name },
+    },
+    version: 1,
+  });
+
+  beforeEach(() => {
+    // The stock glyph, plus one a component imported to draw its own control.
+    vi.stubGlobal(
+      Symbol.for('kimen.icon-registry.v1'),
+      new Map([
+        [registered, '<circle />'],
+        ['x', '<path />'],
+      ]),
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    Reflect.deleteProperty(globalThis, selectionKey);
+  });
+
+  it('S14 refuses a registered glyph the surface did not select, in ki-icon and icon-name alike', () => {
+    selectSpecIcons([registered]);
+
+    expect(preflightUiSpec(spec(registered), { catalog: tiles }).ok).toBe(true);
+    expect(preflightUiSpec(tile(registered), { catalog: tiles }).ok).toBe(true);
+    expect(preflightUiSpec(tile(), { catalog: tiles }).ok).toBe(true);
+    expect(preflightUiSpec(spec('x'), { catalog: tiles })).toMatchObject({
+      diagnostics: [{ path: 'root.props.name', rule: 'unavailable-icon', value: 'x' }],
+      ok: false,
+    });
+    expect(preflightUiSpec(tile('x'), { catalog: tiles })).toMatchObject({
+      diagnostics: [{ path: 'root.props.icon-name', rule: 'unavailable-icon', value: 'x' }],
+      ok: false,
+    });
+  });
+
+  it('S14 refuses a selected name that is not imported, since it cannot draw', () => {
+    selectSpecIcons([registered, unimported]);
+
+    expect(preflightUiSpec(spec(unimported), { catalog: tiles })).toMatchObject({
+      diagnostics: [{ rule: 'unavailable-icon', value: unimported }],
+      ok: false,
+    });
+  });
+
+  it('S14 holds live updates and streams to the selection', () => {
+    selectSpecIcons([registered]);
+    const surface = document.createElement('div');
+    const live = createLiveSurface({ catalog: tiles, surface });
+    expect(live.apply({ ops: [{ node: node(registered), op: 'insert' }] }).ok).toBe(true);
+    expect(
+      live.apply({ ops: [{ id: 'status-icon', op: 'set', props: { name: 'x' } }] }).diagnostics[0]
+        ?.rule,
+    ).toBe('unavailable-icon');
+
+    const renderer = createStreamingRenderer({
+      catalog: tiles,
+      surface: document.createElement('div'),
+    });
+    expect(renderer.push(node('x')).diagnostics[0]?.rule).toBe('unavailable-icon');
+  });
+
+  it('S14 keeps the import-based behaviour where no selection is declared', () => {
+    expect(preflightUiSpec(spec('x'), { catalog: tiles }).ok).toBe(true);
+    expect(preflightUiSpec(tile('x'), { catalog: tiles }).ok).toBe(true);
+    expect(preflightUiSpec(tile(unimported), { catalog: tiles }).diagnostics[0]?.rule).toBe(
+      'unavailable-icon',
+    );
   });
 });

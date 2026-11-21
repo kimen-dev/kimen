@@ -86,6 +86,14 @@ Feature: ki-icon displays an imported Lucide glyph
     Given the stock MCP surface has selected circle-check
     When a spec names circle-check or the unselected house
     Then the server and packaged surface accept circle-check and diagnose house
+
+  # S14
+  Scenario: Offer specs only the selected glyphs, never a component's own
+    Given the stock MCP surface has selected circle-check and its components draw x and triangle-alert
+    When a spec names circle-check, x or triangle-alert
+    Then the server and packaged surface accept circle-check
+    And both reject x and triangle-alert with the unavailable-icon issue
+    And a component's icon-name prop is held to the same selection
 ```
 
 | Family | Scenarios |
@@ -95,7 +103,7 @@ Feature: ki-icon displays an imported Lucide glyph
 | Assistive-tech outcome | S3, S7 |
 | Form participation | S4 |
 | Theming | S5, S9, S12 |
-| Guarded surfaces | S6, S11, S13 |
+| Guarded surfaces | S6, S11, S13, S14 |
 
 ## Requirements
 
@@ -103,6 +111,7 @@ Feature: ki-icon displays an imported Lucide glyph
 - Size defaults to `inherit` (1em). `sm`, `md` and `lg` resolve to theme tokens with defaults of 16, 20 and 24 CSS px at a 16px root.
 - A nonblank label exposes one named image. An unlabelled glyph is hidden from assistive technology. Icons have no pointer or keyboard action, motion, or form value.
 - Applications import the names their surfaces use. Unknown or unimported icons have no glyph. The guarded catalog reports missing glyphs through its diagnostics. Names never cause fetches or provide SVG source.
+- A guarded surface may declare the glyph names a spec may use (`selectSpecIcons` in `@kimen/catalog`). With a declaration, a spec name, in `ki-icon`'s `name` or any component's `icon-name`, is accepted only when it is declared and imported; every other name produces `unavailable-icon`, including the glyphs components import to draw themselves. Without one, an imported glyph is accepted. The stock MCP Apps document and the bundled server declare the stock selection, so they accept and reject the same names.
 - A2UI `Icon` maps to `ki-icon`; the adapter translates standard protocol names to Lucide names where needed. The application owns imports and labels.
 - The icon inherits ink. Use semantic high-emphasis text inks on the page surface for meaningful icons (minimum 3:1). Verify the contrast of other ink and background pairs in the chosen mode.
 - The package includes the full Lucide ISC and Feather MIT notice as supplied by the source.
@@ -119,4 +128,5 @@ Additive public API includes the element, its three props, the theme tokens and 
 - **Agent's choice, pending founder confirmation.** Keep the adapter's existing accessibility metadata policy and report A2UI SVG path objects as an unsupported variant. Standard A2UI names resolve to corresponding Lucide names.
 - **Agent's choice, pending founder confirmation.** Record the additive feature in a major API declaration because the protected release comparator still classifies the generated Components and JSX namespace changes from #316 as major.
 - **Agent's choice, pending founder confirmation.** Select `circle-check` for the stock self-contained MCP Apps surface. Build the document and the bundled server's preflight from the same selection. Other hosts choose their own imports.
-- **Amended 2026-11-21 (spec 011 A2).** The glyphs a component draws itself register in the realm that defines it, so the packaged surface also accepts the names its components import. `ki-alert` now draws `info`, `circle-check`, `triangle-alert` and `octagon-alert`, so S13's unselected example is `house`, which no stock component draws. The bundled server defines no components and still refuses those component-owned names: aligning the two inventories is open.
+- **Amended 2026-11-21 (spec 011 A2).** The glyphs a component draws itself register in the realm that defines it. `ki-alert` now draws `info`, `circle-check`, `triangle-alert` and `octagon-alert`, so S13's unselected example is `house`, which no stock component draws.
+- **Decided 2026-11-21 (founder, Art. VIII guardrail).** The guardrail keeps the stricter side: the glyph names a spec may use are the explicit stock selection (`scripts/lib/stock-surface-icons.mjs`, today `circle-check`), never every glyph a bundled component registers. Components keep drawing their own glyphs. The guard reads a declared selection (`selectSpecIcons`, realm-wide like the icon registry) for `ki-icon`'s `name` and every `icon-name` prop; the document and the bundled server both declare the stock selection at build time, so they answer the same way and render-time acceptance never depends on which component modules a surface imports (S14). A host that declares nothing keeps the import-based behaviour.

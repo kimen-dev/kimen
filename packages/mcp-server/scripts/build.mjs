@@ -26,9 +26,8 @@ import { build } from 'esbuild';
 const { bundledNpmPackages, MCP_BUNDLE_INVENTORY_PREFIX, mergeBundledPackages } = await import(
   new URL('../../../scripts/lib/bundled-package-inventory.mjs', import.meta.url).href
 );
-const { stockSurfaceIconModules } = await import(
-  new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href
-);
+const { STOCK_SURFACE_ICON_SELECTION, stockSurfaceIconModules, stockSurfaceIconSelectionPlugin } =
+  await import(new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href);
 const here = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(here, '..');
 const manifestFile = resolve(packageRoot, '../elements/generated/custom-elements.json');
@@ -127,6 +126,8 @@ async function bundle() {
     stdin: {
       contents: [
         ...stockSurfaceIconModules.map((file) => `import ${JSON.stringify(file)};`),
+        // Spec 069 S14: the same spec-facing selection as the document.
+        `import ${JSON.stringify(STOCK_SURFACE_ICON_SELECTION)};`,
         `import ${JSON.stringify(resolve(packageRoot, 'src/main.ts'))};`,
       ].join('\n'),
       resolveDir: packageRoot,
@@ -137,7 +138,7 @@ async function bundle() {
     metafile: true,
     outfile: outFile,
     platform: 'node',
-    plugins: [tsExtensionPlugin],
+    plugins: [tsExtensionPlugin, stockSurfaceIconSelectionPlugin(packageRoot)],
     target: 'node22',
     write: false,
   });

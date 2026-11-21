@@ -116,10 +116,11 @@ followed by JSON; read it as data.
 
 ## Limits worth knowing before you choose
 
-- **`kimen-mcp` surfaces** refuse URL props (no images, links or audio), ship
-  one icon (`circle-check`), and always paint the default Kimen theme in
-  light or dark as the host asks. The glyphs components draw themselves
-  (close ×, chevrons, + and −) are always included.
+- **`kimen-mcp` surfaces** refuse URL props (no images, links or audio), offer
+  specs one icon name (`circle-check`, in `ki-icon` and any `icon-name`), and
+  always paint the default Kimen theme in light or dark as the host asks.
+  The glyphs components draw themselves (close ×, chevrons, + and −) are
+  always drawn, but a spec cannot name them.
 - **A2UI** reaches the 18 types of A2UI's basic catalog only (Text, Button,
   Card, TextField, …); the rest of the Kimen catalog is not reachable through
   A2UI yet. Bound text fields, checkboxes, sliders and single-selection

@@ -281,8 +281,17 @@ To use `ki-icon` in a guarded surface, import each glyph by name in the host
 entry point, for example `import '@kimen/elements/icons/circle-check'`. The
 renderer looks up the `name` in the current realm and reports
 `unavailable-icon` on that prop when the glyph is missing. The same check
-runs for streams and live batches. An icon is passive, so a binding on the
-icon itself produces `action-not-allowed`.
+runs for streams and live batches, and for any component's `icon-name`. An
+icon is passive, so a binding on the icon itself produces `action-not-allowed`.
+
+Components also import the glyphs they draw for their own controls, so a
+glyph being registered does not mean a spec should use it. Declare the names
+a spec may use with `selectSpecIcons(['circle-check'])`: from then on the
+renderer accepts only declared, imported names in `ki-icon`'s `name` and in
+`icon-name`, in every render, stream and live surface of the realm. The stock
+MCP Apps document and `kimen-mcp` both declare their stock selection, so they
+accept and reject the same names. Without a declaration, any imported glyph
+is accepted.
 
 `preflightUiSpec(input, options?)` returns the renderer's verdict without a
 DOM: it runs exactly the preparation `renderUiSpec` runs before its first

@@ -85,6 +85,50 @@ describe('Kimen MCP server: render (038 S9-S11)', () => {
     });
   });
 
+  it.each([
+    ['ki-icon name x', { component: 'ki-icon', props: { name: 'x' } }, 'root.props.name'],
+    [
+      'ki-icon name triangle-alert',
+      { component: 'ki-icon', props: { name: 'triangle-alert' } },
+      'root.props.name',
+    ],
+    [
+      'ki-empty-state icon-name x',
+      { component: 'ki-empty-state', props: { heading: 'Nothing here', 'icon-name': 'x' } },
+      'root.props.icon-name',
+    ],
+  ])(
+    'S14: the binary refuses the component glyph in %s like the document',
+    async (_, root, path) => {
+      const refused = await render({ root, version: 1 });
+      expect(refused.isError).toBe(true);
+      expect(refused.structuredContent).toMatchObject({
+        ok: false,
+        issues: [expect.objectContaining({ code: 'unavailable-icon', path })],
+      });
+      const validated = await server.client.callTool({
+        arguments: { spec: { root, version: 1 } },
+        name: 'kimen_validate_spec',
+      });
+      expect(validated.structuredContent).toMatchObject({
+        ok: false,
+        issues: [expect.objectContaining({ code: 'unavailable-icon', path })],
+      });
+    },
+  );
+
+  it('S14: the binary accepts the stock glyph in an icon-name prop too', async () => {
+    const spec = {
+      root: {
+        component: 'ki-empty-state',
+        props: { heading: 'Nothing here', 'icon-name': 'circle-check' },
+      },
+      version: 1,
+    };
+    const accepted = await render(spec);
+    expect(accepted.isError).not.toBe(true);
+  });
+
   it('S10: a spec containing an "iframe" is never rendered: the validation issues come back instead', async () => {
     const spec = {
       root: { component: 'iframe', props: { src: 'https://evil.example' } },

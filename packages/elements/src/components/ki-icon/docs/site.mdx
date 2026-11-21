@@ -30,7 +30,9 @@ The SVG follows the surrounding text ink and defaults to `1em`. Use
 Use a semantic high-emphasis text ink on the page surface. Check the contrast
 if you choose a medium-emphasis ink or a different background.
 
-Guarded applications import the glyph names they allow. A name with no import
+Guarded applications import the glyph names they allow, and declare them with
+`selectSpecIcons` from `@kimen/catalog` so the glyphs components draw for
+themselves are not offered to specs. A name that is not declared and imported
 produces a catalog diagnostic. Standalone icons with unavailable names render
 empty.
 

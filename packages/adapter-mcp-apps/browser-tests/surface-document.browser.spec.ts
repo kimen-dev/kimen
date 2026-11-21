@@ -188,8 +188,12 @@ function minimalNode(tag: string): {
       props[name] = constraint.values?.[0] ?? 'Sample';
     }
   }
+  // Glyph names come from the stock selection (spec 069 S14).
   if (tag === 'ki-icon') {
     props['name'] = 'circle-check';
+  }
+  if ('icon-name' in props) {
+    props['icon-name'] = 'circle-check';
   }
   if (tag === 'ki-image') {
     // An informative image needs alt text; the decorative form needs none.
@@ -379,6 +383,47 @@ describe('the delivered document is a complete Kimen surface', () => {
     await expect
       .element(surfaceFrame().getByRole('img', { name: 'Unselected' }))
       .not.toBeInTheDocument();
+    expect(host.violations).toEqual([]);
+  });
+
+  it('S14 offers specs only the stock selection, never the glyphs its components draw', async () => {
+    const host = await embed({ hostContext: { theme: 'light' } });
+    const iconSpec = (name: string, label: string) => ({
+      root: { component: 'ki-icon', props: { label, name } },
+      version: 1,
+    });
+    // Components in this document draw these glyphs themselves: the names are
+    // registered here, which is exactly why registration cannot be the test.
+    const registry = (
+      host.view as unknown as Record<symbol, ReadonlyMap<string, string> | undefined>
+    )[Symbol.for('kimen.icon-registry.v1')];
+    expect(registry?.has('x')).toBe(true);
+    expect(registry?.has('triangle-alert')).toBe(true);
+
+    host.send(toolResult(iconSpec('circle-check', 'Confirmed')));
+    await expect.element(surfaceFrame().getByRole('img', { name: 'Confirmed' })).toBeVisible();
+
+    host.send(toolResult(iconSpec('x', 'Close glyph')));
+    host.send(toolResult(iconSpec('triangle-alert', 'Warning glyph')));
+    host.send(
+      toolResult({
+        root: { component: 'ki-empty-state', props: { heading: 'Nothing here', 'icon-name': 'x' } },
+        version: 1,
+      }),
+    );
+    // Sent after the three specs, so seeing it applied proves all were processed.
+    host.send(hostContextChanged({ theme: 'dark' }));
+    await expect.poll(() => rendering(host).scheme).toBe('dark');
+
+    // Each refusal is atomic: the confirmed glyph is still the surface.
+    await expect.element(surfaceFrame().getByRole('img', { name: 'Confirmed' })).toBeVisible();
+    await expect
+      .element(surfaceFrame().getByRole('img', { name: 'Close glyph' }))
+      .not.toBeInTheDocument();
+    await expect
+      .element(surfaceFrame().getByRole('img', { name: 'Warning glyph' }))
+      .not.toBeInTheDocument();
+    await expect.element(surfaceFrame().getByText('Nothing here')).not.toBeInTheDocument();
     expect(host.violations).toEqual([]);
   });
 
