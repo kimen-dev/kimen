@@ -35,11 +35,41 @@ package still carries a `workspace:` runtime range.
 | Mode | Entry point | Package state | Authority | Result |
 |---|---|---|---|---|
 | Dry run | Manual `release` workflow dispatch at the revision to validate | Current exact versions; `private: true` is accepted | Read-only repository token; no OIDC publisher runs | Core, candidate, independent verification, Chromium/Firefox/WebKit (four shards each) and the capability binding all execute; nothing is published |
+| Nightly dry run | The `release` schedule, 05:41 UTC, on the latest commit of `main` | As for a dry run | As for a dry run; `publish` also requires a tag ref, and GitHub runs a schedule on the default branch only | The same jobs as a dry run; nothing is published |
 | Release | The release App pushes an annotated `vX.Y.Z` tag after the release PR is merged | All three packages are version `X.Y.Z`, `private: false`, and carry exact repository metadata | Only `publish`, after every validation job, receives `id-token: write` in the protected `npm` environment | Missing versions publish; byte-identical existing versions are skipped |
 
 Dry run never creates tags, changes versions or carries dormant publication
 authority. A non-tag dispatch always emits a manifest whose `mode` is
 `dry-run` and whose `tag` is `null`.
+
+### Reading the nightly dry run
+
+Pull request and merge-queue CI run Chromium only. The nightly dry run tests
+`main` in Firefox and WebKit every day, together with packaging and the clean
+consumer install. A regression then shows up the morning after it lands, not
+when a release tag is validated. The run is not a required check, so a red
+night blocks no pull request and no merge group.
+
+- Find the runs under Actions → release, filtered by the `schedule` event, or
+  with `gh run list --workflow release.yml --event schedule`.
+- In a green run every validation job passed. `publish` shows as skipped, as
+  it always does outside a tag.
+- When a run fails, GitHub notifies the user who last changed its `cron` line,
+  according to that user's Actions notification settings.
+- The failing job names the failing part. `browser (webkit 3/4)` is the third
+  WebKit shard of the browser gate or its consumer check. `validate-core`
+  covers the core gates, packaging and the candidate build. A failed browser
+  shard skips `capability-claims`, because it needs every shard.
+  `gh run view <run-id> --log-failed` prints the failing steps.
+- The `ci` nightly tests the same `main` in Chromium at 04:23 UTC. If it
+  failed too, the regression is not specific to one engine.
+- A failure that passes on "Re-run failed jobs" is a flake. One that repeats
+  is a regression; fix it in a pull request before the next release tag.
+- To reproduce a shard, run
+  `KIMEN_BROWSER_SHARD=3/4 bash scripts/gates/gates-browser.sh webkit`. Linux
+  matches the hosted runner; WebKit on macOS behaves differently.
+- GitHub disables the schedules of a public repository after 60 days without
+  activity. Re-enable the workflow from its Actions page.
 
 ## Automated release flow
 
@@ -157,9 +187,9 @@ surface. The release builder omits the MCP package's development dependencies
 from the packed manifest.
 
 `publish` needs `validate-core`, every browser shard, `verify-candidate` and
-`capability-claims`; it runs only for release manifests. The publisher has no
-checkout and performs no dependency install, build, versioning or repository
-script execution. Its only elevated permission is short-lived OIDC
+`capability-claims`; it runs only on a tag ref, for release manifests. The
+publisher has no checkout and performs no dependency install, build,
+versioning or repository script execution. Its only elevated permission is short-lived OIDC
 (`id-token: write`) in the protected `npm` environment.
 
 Every owned job uses a full-SHA-pinned action, explicit job permissions and
