@@ -8,9 +8,9 @@
 
 **Created**: 2026-11-21
 
-**Status**: Draft. Awaiting founder confirmation of the scenarios and of the
-amendment to spec 028 below; every scenario is a guardrail scenario
-(Art. VIII).
+**Status**: Approved. The founder approved the scenarios and the amendment
+to spec 028 below verbatim on 2026-11-21 ("Aprobado tal cual"); every
+scenario is a guardrail scenario (Art. VIII).
 
 **Input**: Founder decision of 2026-11-21 on the improvements to land before
 `@kimen/catalog`, `@kimen/emitter` and the adapters are published:
@@ -330,10 +330,10 @@ only what the host hears changes.
   `116-ki-prompt-input` I-5, `126-fullscreen-dialog`), and spec 028 MUST be
   amended as below.
 
-### Amendment to spec 028 (proposed)
+### Amendment to spec 028 (applied)
 
 `specs/028-guarded-renderer/spec.md`, FR-003, the sentences from "The
-activation event of a bound node" to "rejects the spec (S19)." Today:
+activation event of a bound node" to "rejects the spec (S19)." Before:
 
 > The activation event of a bound node derives from its catalog entry: the
 > one event the entry declares (`change` on the form controls, `ki-change`
@@ -342,7 +342,7 @@ activation event of a bound node" to "rejects the spec (S19)." Today:
 > on an entry declaring more than one event is ambiguous and rejects the
 > spec (S19).
 
-Proposed:
+After:
 
 > A binding names one declared action, or, per declared event, the action
 > that event fires (`154-action-per-event`). A binding by name alone fires
@@ -360,14 +360,14 @@ Proposed:
 
 Scenario S19, in `feature.feature` and in the Gherkin block of `spec.md`,
 keeps its id, its `When` and its outcome; only its two `Given` lines change.
-Today:
+Before:
 
 ```text
       Given a catalog component that declares more than one event
       And a spec binding the declared action "pick" to that component
 ```
 
-Proposed:
+After:
 
 ```text
       Given a catalog component that declares more than one event and no rule that picks one

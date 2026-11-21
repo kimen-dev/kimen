@@ -36,13 +36,34 @@ The displayed action identifier is text and carries no execution authority.
 </ki-confirmation>
 ```
 
-Map the two decisions in trusted host code. This MCP Apps example uses a
-ready `SurfaceBridge` whose rendered spec declares `approve-send-email` and
-`deny-send-email` in its top-level `actions`. Keep a guarded node's scalar
-`action` binding unset because the component declares two events. Its
-`props.action` carries the visible tool identifier. A trusted host that
-applies an origin allowlist can supply that identifier after rendering, since
-guarded spec data under that prop name passes through the URL policy.
+A guarded UI spec binds each decision to its own action, one per event. A
+binding by name alone is rejected, because the component declares two
+events. `props.action` carries the visible tool identifier as text, never as
+a URL, so the card renders under an origin allowlist too.
+
+```json
+{
+  "version": 1,
+  "actions": ["approve-send-email", "deny-send-email"],
+  "root": {
+    "component": "ki-confirmation",
+    "props": {
+      "heading": "Send this email?",
+      "action": "send_email",
+      "approve-label": "Send email",
+      "deny-label": "Keep draft",
+      "consequence": "Recipients will get the message immediately."
+    },
+    "action": { "ki-approve": "approve-send-email", "ki-deny": "deny-send-email" }
+  }
+}
+```
+
+The action data carries the card's props, not the event's detail. When the
+decision needs the conversation preference, map the two events in trusted
+host code instead. This MCP Apps example uses a ready `SurfaceBridge` whose
+rendered spec declares `approve-send-email` and `deny-send-email` in its
+top-level `actions` and leaves the card unbound.
 
 ```js
 const prompt = document.querySelector('#send-email-prompt');

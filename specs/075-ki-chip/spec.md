@@ -29,10 +29,11 @@ for mutually exclusive choices.
   previous enabled, focusable chip or the group. A standalone chip leaves
   focus recovery to its consumer.
 - **Agent's choice, pending founder confirmation.** Assist emits `ki-activate`
-  for guarded surfaces. The catalog resolves the primary action from the
-  validated chip kind. An input chip must be removable to bind removal. Live
-  surfaces handle removal through an application patch and keep their model
-  ordered when a user reorders a group.
+  for guarded surfaces. Live surfaces handle removal through an application
+  patch and keep their model ordered when a user reorders a group.
+- **Confirmed by the founder on 2026-11-21 (`154-action-per-event`).** A
+  binding by name resolves the chip's action from the validated chip kind, and
+  an input chip must be removable to bind removal.
 - **Agent's choice, pending founder confirmation.** A reorderable group moves its
   direct children in DOM order. Alt+Left/Right follows inline direction. The
   handle also supports click or tap to pick up and place. Reordering keeps the

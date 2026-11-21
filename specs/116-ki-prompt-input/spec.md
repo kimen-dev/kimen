@@ -13,7 +13,7 @@
 
 ## Interpretations
 
-Each entry is an agent's choice, pending founder confirmation.
+Each entry is an agent's choice, pending founder confirmation, except I-5, which the founder confirmed on 2026-11-21 (`154-action-per-event`).
 
 - **I-1 Draft lifecycle.** A send requires non-whitespace text or an accepted file, carries the original text and a snapshot of the files, then clears the draft and returns focus to the textarea. The application sets `status`. `submitted` disables Send, and `streaming` exposes Stop and the writing status. People may prepare the next draft in either busy state. Enter used as a send shortcut does not insert a newline while busy. Composition keystrokes, repeated keydown, and Shift+Enter have their normal editing behavior without sending.
 - **I-2 Attachments.** `max-size` is bytes per file. Omitted or invalid limits are unrestricted, zero is enforceable, and fractional counts are rounded down. MIME types and extensions are case-insensitive. The limits apply when new files arrive. Clearing `accept` removes previously selected files so they cannot be sent while hidden. Keep valid files in arrival order even if their batch contains rejections. Accepted files and supplementary items share the named list when attachments are enabled. The application owns supplementary items and the tools slot, including the model picker. A disabled composer makes both slots inert.
