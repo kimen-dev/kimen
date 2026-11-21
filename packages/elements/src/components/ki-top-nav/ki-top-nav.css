@@ -42,10 +42,17 @@
   );
 }
 
+/* The row is as wide as the bar and never wider. What a slotted control puts
+ * past its own box (a button's 1px status region sits just beyond its inline
+ * end, an icon button's touch target reaches 2px past its square) stops at
+ * the bar's edge instead of widening the page. Positioned so the clip also
+ * holds such out-of-flow boxes; menus open in the top layer, outside it. */
 .bar {
+  position: relative;
   box-sizing: border-box;
   min-inline-size: 0;
   padding-inline: var(--ki-top-nav-padding-inline);
+  overflow-inline: clip;
 }
 
 :host([sticky]) .bar {
@@ -92,6 +99,12 @@ nav {
   align-items: center;
   align-self: stretch;
   min-inline-size: 0;
+}
+
+/* Collapsed, the landmark holds only the trigger: it never shrinks below it
+ * (44px on a coarse pointer), and a long brand gives way instead. */
+.header.compact nav {
+  flex-shrink: 0;
 }
 
 .links:not(.nav-menu) {

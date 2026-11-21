@@ -181,6 +181,25 @@ it('S2: measures the breakpoint against the row, whatever box-sizing the page gi
   await expect.element(page.getByRole('link', { name: 'Overview' })).toBeVisible();
 });
 
+// Integrator feedback 0.1.1, item 3: laid edge to edge, the bar widened its
+// scroll container by the 1px status region a trailing icon button keeps
+// just past its inline end.
+it('S2: a bar flush with its container never widens it', async () => {
+  fixture.innerHTML = `<div style="inline-size: 21rem; overflow-x: auto">
+    <ki-top-nav style="--ki-top-nav-padding-inline: 0">${brand}${links}${notifications}</ki-top-nav>
+  </div>`;
+  const scroller = required(fixture.firstElementChild as HTMLElement | null);
+  await expect.element(navigation()).toBeVisible();
+  await expect.element(page.getByRole('button', { name: 'Notifications, 3 unread' })).toBeVisible();
+
+  expect(scroller.scrollWidth).toBe(scroller.clientWidth);
+  await navigation().click();
+  await expect.element(page.getByRole('menu')).toBeVisible();
+  await userEvent.keyboard('{Escape}');
+  await expect.element(page.getByRole('menu')).not.toBeInTheDocument();
+  expect(scroller.scrollWidth).toBe(scroller.clientWidth);
+});
+
 it('S3: keeps three direct actions and exposes the remaining two in order', async () => {
   fixture.innerHTML = screen('', actions);
   await overflow().click();
