@@ -215,7 +215,7 @@ export const expectedEmptyResult = (id: number | string): Fixture => ({
 });
 
 /** One entry of the list "tasks" (spec 157 fixtures). */
-export const taskItem = (text: string, index: number): Fixture => ({
+const taskItem = (text: string, index: number): Fixture => ({
   component: 'ki-list-item',
   id: `task-${String(index)}`,
   slots: { '': [text] },
