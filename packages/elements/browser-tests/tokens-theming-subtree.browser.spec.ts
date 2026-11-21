@@ -4,8 +4,8 @@
 // restyles that element's subtree and nothing else. And the document-level
 // counterpart (S14): the colour scheme the tokens stylesheet declares for the
 // page is a default, so the scheme a host page declares for itself wins.
-// A region that names its own theme and redefines its brand ramp gets
-// translucent ramp variants (S15) of that ramp.
+// A region that names its own theme and redefines the palette on itself gets
+// semantic tokens (S16) and translucent ramp variants (S15) of that palette.
 //
 // Every assertion reads what real components PAINT — the computed colours,
 // shadows, radii and typeface of a ki-button and a ki-input, through their
@@ -443,6 +443,11 @@ describe('palette reassignment in a themed region', () => {
     --ki-color-gray-50: #e8f0f8;
     --ki-color-gray-100: #d9e6f2;
     --ki-color-brand-500: #0b57d0;
+  }
+  .cyanotype {
+    --ki-color-gray-50: #e8f0f8;
+    --ki-color-gray-100: #d9e6f2;
+    --ki-color-brand-500: #0b57d0;
   }`;
 
   afterEach(async () => {
@@ -462,6 +467,20 @@ describe('palette reassignment in a themed region', () => {
     }
   }
 
+  /** What a region paints from two semantic surfaces, read off real elements. */
+  function surfacesOf(region: HTMLElement): string[] {
+    return ['--ki-surface-s1', '--ki-surface-s2'].map((token) => {
+      const swatch = document.createElement('i');
+      swatch.style.cssText = `display:block;background-color:var(${token})`;
+      region.append(swatch);
+      try {
+        return getComputedStyle(swatch).backgroundColor;
+      } finally {
+        swatch.remove();
+      }
+    });
+  }
+
   async function hoverFill(button: Element): Promise<string> {
     const control = button.shadowRoot?.querySelector('button');
     if (control === null || control === undefined) {
@@ -470,6 +489,26 @@ describe('palette reassignment in a themed region', () => {
     await userEvent.hover(button);
     return getComputedStyle(control).backgroundColor;
   }
+
+  it('S16 resolves the semantic surfaces of a themed region from the palette declared on it', async () => {
+    injectStylesheet(REGION_PALETTE, STYLE_ID);
+    const main = await mount({}, `${COMPONENTS}${region({ theme: 'cyanotype' })}`);
+
+    expect(surfacesOf(regionIn(main))).toEqual([computed('#e8f0f8'), computed('#d9e6f2')]);
+    expect(surfacesOf(main)).toEqual([computed('#f9f7f4'), computed('#f3f0eb')]);
+  });
+
+  it('S16 leaves the semantic surfaces alone on a plain element, which recomputes no alias', async () => {
+    // The trap the theming guides warn about: the palette token changes on
+    // the element, but the semantic tokens were computed on the root.
+    injectStylesheet(REGION_PALETTE, STYLE_ID);
+    const main = await mount(
+      {},
+      `${COMPONENTS}<section class="cyanotype" style="${REGION_STYLE}">${COMPONENTS}</section>`,
+    );
+
+    expect(surfacesOf(regionIn(main))).toEqual(surfacesOf(main));
+  });
 
   it('S15 hovers a quiet button in the region with its own brand step at the onmars alpha', async () => {
     injectStylesheet(REGION_PALETTE, STYLE_ID);
