@@ -289,3 +289,76 @@ it('S1 applies a pending requested value when its option arrives', async () => {
   await expect.element(radio('Month')).toBeChecked();
   expect(control.value).toBe('month');
 });
+
+const answers = [
+  '<ki-segment value="now">Quiero usarlo ya</ki-segment>',
+  '<ki-segment value="learn">Quiero entenderlo</ki-segment>',
+  '<ki-segment value="manual">Lo haré a mano</ki-segment>',
+].join('');
+
+/** What a label shows: whether its text is clipped, and on how many lines. */
+function labelLayout(name: string): { clipped: boolean; lines: number } {
+  const button = radio(name).element();
+  const label = button.querySelector<HTMLElement>('.label');
+  if (!label) throw new Error(`Missing label for ${name}`);
+  const range = document.createRange();
+  range.selectNodeContents(label.querySelector('slot')?.assignedNodes()[0] ?? label);
+  const lineHeight = Number.parseFloat(getComputedStyle(label).lineHeight);
+  return {
+    clipped:
+      label.scrollWidth > label.clientWidth + 0.5 || label.scrollHeight > label.clientHeight + 0.5,
+    lines: Math.round(range.getBoundingClientRect().height / lineHeight),
+  };
+}
+
+it.each(['full-width', ''])(
+  'S15 wraps long labels onto a second line in a 343px row (%s), keeping equal option heights',
+  async (width) => {
+    fixture.style.inlineSize = '343px';
+    const control = await mount(group(answers, `value="now" ${width}`));
+    await expect.element(radio('Quiero usarlo ya')).toBeChecked();
+
+    const names = ['Quiero usarlo ya', 'Quiero entenderlo', 'Lo haré a mano'];
+    const layouts = names.map(labelLayout);
+    // No label is cut short, and none takes more than two lines.
+    expect(layouts.map(({ clipped }) => clipped)).toEqual([false, false, false]);
+    expect(Math.max(...layouts.map(({ lines }) => lines))).toBe(2);
+    // The options keep one height, and the control stays inside its row.
+    const heights = names.map((name) => radio(name).element().getBoundingClientRect().height);
+    for (const height of heights) expect(height).toBeCloseTo(heights[0] ?? 0, 1);
+    expect(control.getBoundingClientRect().width).toBeLessThanOrEqual(343);
+  },
+);
+
+it('S15 keeps a one-line label at the token track height', async () => {
+  fixture.style.inlineSize = '343px';
+  const control = await mount(group(options + week, 'value="day"'));
+  await expect.element(radio('Day')).toBeChecked();
+
+  const track = control.shadowRoot?.querySelector('[part="track"]');
+  expect(track?.getBoundingClientRect().height).toBeCloseTo(40, 0);
+});
+
+it('S15 ends a label that needs more than two lines with an ellipsis', async () => {
+  fixture.style.inlineSize = '240px';
+  await mount(
+    group(
+      `${options}<ki-segment value="long">Una etiqueta demasiado larga para caber en dos líneas</ki-segment>`,
+      'value="day" full-width',
+    ),
+  );
+  await expect.element(radio('Day')).toBeChecked();
+
+  const label = radio('Una etiqueta demasiado larga para caber en dos líneas')
+    .element()
+    .querySelector<HTMLElement>('.label');
+  if (!label) throw new Error('Missing long label');
+  const lineHeight = Number.parseFloat(getComputedStyle(label).lineHeight);
+  expect(label.getBoundingClientRect().height).toBeLessThanOrEqual(2 * lineHeight + 0.5);
+  // The full text still names the option.
+  await expect
+    .element(
+      page.getByRole('radio', { name: 'Una etiqueta demasiado larga para caber en dos líneas' }),
+    )
+    .toBeVisible();
+});

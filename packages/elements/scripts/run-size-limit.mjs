@@ -6,6 +6,11 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { readComponentMetadataByTag } from './component-metadata.mjs';
+import { VENDORED_RUNTIME } from './vendor-stencil-client.mjs';
+
+// The Stencil client runtime: the dependency's, and the copy the
+// per-component modules import by relative path (vendor-stencil-client.mjs).
+const RUNTIME = Object.freeze(['@stencil/core', `./${VENDORED_RUNTIME}`]);
 
 const compareText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 const toDistPath = (tag, projectRoot) =>
@@ -131,7 +136,7 @@ export function createSizeLimitConfig({
       {
         name: `${subject.id} marginal cost (runtime excluded)`,
         path,
-        ignore: ['@stencil/core'],
+        ignore: [...RUNTIME],
         limit: '9 KB',
       },
       {

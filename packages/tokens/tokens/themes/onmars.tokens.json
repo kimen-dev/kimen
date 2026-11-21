@@ -38,19 +38,19 @@
         "$type": "color",
         "$description": "onmars brand ramp. Source: MarsUI Figma, Color Type collection, Brand/MarsUI (Primary mode).",
         "500-alpha-1": {
-          "$value": "{ki.foundation.migrated.themes-onmars.color.brand.500-alpha-1}"
+          "$value": "color-mix(in srgb, {ki.color.brand.500} 12%, transparent)"
         },
         "500-alpha-2": {
-          "$value": "{ki.foundation.migrated.themes-onmars.color.brand.500-alpha-2}"
+          "$value": "color-mix(in srgb, {ki.color.brand.500} 20%, transparent)"
         },
         "500-alpha-3": {
-          "$value": "{ki.foundation.migrated.themes-onmars.color.brand.500-alpha-3}"
+          "$value": "color-mix(in srgb, {ki.color.brand.500} 24%, transparent)"
         },
         "500-alpha-4": {
-          "$value": "{ki.foundation.migrated.themes-onmars.color.brand.500-alpha-4}"
+          "$value": "color-mix(in srgb, {ki.color.brand.500} 40%, transparent)"
         },
         "500-alpha-5": {
-          "$value": "{ki.foundation.migrated.themes-onmars.color.brand.500-alpha-5}"
+          "$value": "color-mix(in srgb, {ki.color.brand.500} 56%, transparent)"
         },
         "high-em": {
           "$value": "{ki.color.gray.950}"

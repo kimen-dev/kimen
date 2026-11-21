@@ -96,3 +96,26 @@ Feature: Tokens and theming with onmars as the default theme
     And the host page's own stylesheet declares the color scheme "light" for the page
     When the document renders under a dark system color scheme
     Then a button and a text field render as they do in a light document
+
+  # S15
+  Scenario: a theme that redefines a colour ramp gets matching translucent variants
+    Given an onmars document with a themed region whose theme redefines the brand ramp step "500"
+    When a quiet button inside the region and a quiet button outside it are hovered
+    Then the hover fill inside the region is the region's brand step at the onmars alpha
+    And the hover fill outside the region keeps the onmars terracotta
+
+  # S16
+  Scenario: a themed region that redefines the palette recomputes its semantic tokens
+    Given an onmars document with a region that declares its own theme name
+    And the page's stylesheet redefines the neutral ramp on that region
+    When the document renders
+    Then the semantic surfaces inside the region resolve from the region's ramp
+    And the semantic surfaces outside the region keep the onmars values
+
+  # S17
+  Scenario: the page contract lays out components that have not registered yet
+    Given a document that loads the Kimen tokens stylesheet and the page contract
+    And no script has registered the segmented control or the radio group
+    When the document renders their markup
+    Then each segment and each radio sits on its own line
+    And the same markup lays out as the components style it once they register

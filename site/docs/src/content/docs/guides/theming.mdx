@@ -13,14 +13,28 @@ and no runtime code.
 Tokens are layered (the [Design tokens guide](/docs/guides/tokens/)
 covers each layer in depth):
 
-1. **Primitive** — raw ramps (`--ki-color-brand-500`, `--ki-space-md`).
-   Never consumed by components directly.
+1. **Palette** — the primitive and theme ramps (`--ki-color-brand-500`,
+   `--ki-color-gray-100`, `--ki-space-md`). Components never read them
+   directly; the semantic layer does.
 2. **Semantic** — meaning, not appearance (`--ki-surface-s0…s5`,
    `--ki-text-high-em`, `--ki-outline-low-em`). This is the layer a brand
    reassigns to re-theme everything.
 3. **Component** — the public styling contract of each element
    (`--ki-button-primary-neutral-rest-bg`, `--ki-button-md-height`). Each
    component page lists its own under *CSS custom properties*.
+
+### Who reassigns what
+
+- **A theme** is a complete restyle, like Material 3 or your brand's own. It
+  may redefine the palette (`--ki-color-*` ramps) and the semantic tokens
+  that do not fit it. Material 3 does both. A translucent variant such as
+  `--ki-color-brand-500-alpha-1` is a mix of its ramp step, so a theme that
+  redefines `--ki-color-brand-500` gets matching variants without restating
+  them.
+- **An application** that uses a theme reassigns semantic tokens, and
+  component tokens for a single component. It leaves the palette alone:
+  every semantic pair is contrast-checked against the theme's palette, and a
+  palette step an application changes is checked by nobody.
 
 ## Themes
 
@@ -47,6 +61,43 @@ signals errors. Cards and controls use flat surfaces with hairline edges.
 
 The UI and body stack starts with Instrument Sans. The display and serif
 stacks start with Newsreader. Each stack includes system fallbacks.
+
+## Theming a region
+
+`data-ki-theme` works on any element, not only on `<html>`. An element that
+carries it redeclares every token, which recomputes every alias from the
+values on that element. That makes it the place to restyle a region, palette
+included. Any name works; a name without a theme stylesheet starts from the
+default theme:
+
+```html
+<section data-ki-theme="cyanotype">…</section>
+```
+
+```css
+[data-ki-theme='cyanotype'] {
+  --ki-color-gray-50: #e8f0f8;   /* the surfaces built on it follow */
+  --ki-color-gray-100: #d9e6f2;
+  --ki-color-brand-500: #0b57d0; /* and so do its translucent variants */
+}
+```
+
+Inside the section every semantic surface, text, tint and hover wash
+resolves from that palette.
+
+Without the attribute, the same rule does much less. A custom property that
+aliases another, such as `--ki-surface-s1: var(--ki-color-gray-50)`, is
+resolved on the element that declares it, and Kimen declares its tokens on
+the root and on theme roots. On a plain element the palette token changes
+and nothing that aliases it does, so the region keeps the page's surfaces.
+Your own aliases behave the same way: declare a page alias such as
+`--page-accent: var(--ki-surface-primary-low-em)` on
+`:root, [data-ki-theme]`, not on `:root` alone, so each themed region
+recomputes it.
+
+The attribute restyles what reads tokens. It paints nothing itself, so give
+the region its surface:
+`background-color: var(--ki-surface-s0); color: var(--ki-text-high-em)`.
 
 ## Color scheme
 
@@ -75,6 +126,30 @@ deliberately single-scheme and already says so in its own CSS
 declaration wins and the tokens follow it. It has to be CSS: a
 `<meta name="color-scheme">` alone does not pin the page.
 
+### `color-scheme` in a theme
+
+`data-ki-color-scheme` is the scheme switch, and it works by specificity: its
+rule, `[data-ki-color-scheme='dark'] { color-scheme: dark }`, has the
+specificity of one attribute. A theme that declares `color-scheme` with that
+specificity or more overrides it, and a light/dark toggle stops working:
+
+```css
+/* Breaks the toggle: (0,2,0) beats [data-ki-color-scheme] on the root */
+:root[data-ki-theme='acme'] { color-scheme: light dark; }
+
+/* Breaks it too when loaded after the tokens: (0,1,0) ties, and order wins */
+[data-ki-theme='acme'] { color-scheme: dark; }
+```
+
+Leave `color-scheme` out of a theme: the token stylesheet already declares
+`light dark` and the attribute pins it. A theme that only works in one
+scheme declares that default at zero specificity, in the theme stylesheet
+loaded after the tokens, so the attribute still wins:
+
+```css
+:where([data-ki-theme='acme']) { color-scheme: dark; }
+```
+
 ### The page contract
 
 Tokens are custom properties: loading them paints nothing. The opt-in page
@@ -89,6 +164,14 @@ text from `--ki-text-high-em`, and the body family:
 It publishes no tokens of its own — it only consumes them, so it never
 widens the token surface — and it declares no color scheme: the token
 stylesheet owns that.
+
+It also covers the moment before the component scripts run. An unregistered
+custom element is an inline box, so the items of a group run together:
+three `ki-segment` labels read as one word. Until each tag registers, the
+page contract lays out segments, radios, checkboxes, options and the items
+of menus, lists, tabs, trees, steppers, timelines and navigation as blocks,
+one per line. The rule paints nothing, has zero specificity, and stops
+matching the moment a tag registers.
 
 Skipping it is supported in both schemes. Without it the page keeps the
 browser's own canvas and text color for the active scheme, and every
@@ -130,14 +213,45 @@ that declares it follows it. A region that needs its own contrast declares
 it next to its theme: `<section data-ki-theme="material3"
 data-ki-contrast="more">`.
 
-To give your own theme different values under a mode, restate them under the
-same media query (and the declaration, if you use it):
+### Modes and your own theme
+
+A mode reassigns a fixed set of tokens, listed per mode in the generated
+[token reference](/docs/tokens/reference/) (*Preference modes*). If your
+theme sets one of them, such as `--ki-outline-control` or
+`--ki-text-supporting`, your rule and the mode's rule declare the same
+property on the same element, and yours wins: the mode loses that token.
+Kimen cannot rank its mode above an arbitrary theme rule without
+`!important`, which would stop you from choosing your own mode values.
+
+So restate every listed token your theme sets, under the media query and
+under the declaration, after your theme's own rule:
 
 ```css
+/* Your theme, loaded after the token stylesheet */
+[data-ki-theme='acme'] {
+  --ki-outline-control: #8c857c;
+}
+
+/* More contrast: the person's preference… */
 @media (prefers-contrast: more) {
-  :root { --ki-outline-control: #000000; }
+  [data-ki-theme='acme'] {
+    --ki-outline-control: var(--ki-inverse-white-alpha-64);
+  }
+}
+
+/* …and the page's own declaration, on the theme root or an ancestor */
+[data-ki-theme='acme']:is([data-ki-contrast='more'], [data-ki-contrast='more'] *) {
+  --ki-outline-control: var(--ki-inverse-white-alpha-64);
 }
 ```
+
+Use Kimen's mode value (the reference lists it) or your own that meets the
+mode's floor: 4.5:1 for control boundaries and 7:1 for neutral text. More
+contrast also applies reduced transparency, so restate the
+reduced-transparency tokens your theme sets under
+`(prefers-reduced-transparency: reduce), (prefers-contrast: more)` and both
+declarations. A theme on `:root` restates them the same way, with `:root`
+in place of the theme root.
 
 ## Density
 
@@ -225,6 +339,8 @@ them:
 When you need to customize a component, reach for surfaces in this order —
 if a consumer would ever need `!important`, that is an API bug to report:
 
-1. **Tokens** — reassign at `:root` (theme-wide) or on a subtree.
+1. **Tokens** — reassign at `:root` (theme-wide) or on a theme root
+   (`[data-ki-theme]`) for a region; a component token can also go on one
+   component.
 2. **`::part()`** — style exposed parts for one-off structural tweaks.
 3. **Slots** — replace content entirely.

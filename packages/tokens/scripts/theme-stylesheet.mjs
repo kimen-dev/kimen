@@ -119,6 +119,15 @@ export function compositionDeclarations(dictionary) {
       throw new Error(`${name} is produced by more than one token`);
     }
     const expression = line.slice(prefix.length, -1);
+    // A translucent ramp variant is a colour mix of its step (spec 001 S15).
+    // The Style Dictionary config resolves the one shape it can compute
+    // exactly; any other mix would publish a value no gate can measure.
+    if (expression.startsWith('color-mix(') && !String(token.$value).startsWith('rgba(')) {
+      throw new Error(
+        `${name} is a colour mix the build cannot resolve exactly: ${expression}. ` +
+          'Write color-mix(in srgb, {opaque.ramp.step} N%, transparent) with a whole percentage.',
+      );
+    }
     const reference = REFERENCE.exec(expression);
     declarations.set(name, {
       expression:

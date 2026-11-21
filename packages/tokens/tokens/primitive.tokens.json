@@ -75,22 +75,22 @@
           "$value": "#0a0a0a"
         },
         "500-alpha-1": {
-          "$value": "#3a3a3a1a"
+          "$value": "color-mix(in srgb, {ki.color.dark.500} 10%, transparent)"
         },
         "500-alpha-2": {
-          "$value": "#3a3a3a2e"
+          "$value": "color-mix(in srgb, {ki.color.dark.500} 18%, transparent)"
         },
         "500-alpha-3": {
-          "$value": "#3a3a3a3d"
+          "$value": "color-mix(in srgb, {ki.color.dark.500} 24%, transparent)"
         },
         "500-alpha-4": {
-          "$value": "#3a3a3a5c"
+          "$value": "color-mix(in srgb, {ki.color.dark.500} 36%, transparent)"
         },
         "500-alpha-5": {
-          "$value": "#3a3a3a85"
+          "$value": "color-mix(in srgb, {ki.color.dark.500} 52%, transparent)"
         },
         "500-alpha-6": {
-          "$value": "#3a3a3aa3"
+          "$value": "color-mix(in srgb, {ki.color.dark.500} 64%, transparent)"
         },
         "700-blur-base-light": {
           "$value": "#242424cc"
@@ -134,19 +134,19 @@
           "$value": "#032630"
         },
         "500-alpha-1": {
-          "$value": "#13b9ec1f"
+          "$value": "color-mix(in srgb, {ki.color.info.500} 12%, transparent)"
         },
         "500-alpha-2": {
-          "$value": "#13b9ec33"
+          "$value": "color-mix(in srgb, {ki.color.info.500} 20%, transparent)"
         },
         "500-alpha-3": {
-          "$value": "#13b9ec3d"
+          "$value": "color-mix(in srgb, {ki.color.info.500} 24%, transparent)"
         },
         "500-alpha-4": {
-          "$value": "#13b9ec66"
+          "$value": "color-mix(in srgb, {ki.color.info.500} 40%, transparent)"
         },
         "500-alpha-5": {
-          "$value": "#13b9ec8f"
+          "$value": "color-mix(in srgb, {ki.color.info.500} 56%, transparent)"
         }
       },
       "success": {
@@ -184,19 +184,19 @@
           "$value": "#0d260e"
         },
         "500-alpha-1": {
-          "$value": "#409b3f1f"
+          "$value": "color-mix(in srgb, {ki.color.success.500} 12%, transparent)"
         },
         "500-alpha-2": {
-          "$value": "#409b3f33"
+          "$value": "color-mix(in srgb, {ki.color.success.500} 20%, transparent)"
         },
         "500-alpha-3": {
-          "$value": "#409b3f3d"
+          "$value": "color-mix(in srgb, {ki.color.success.500} 24%, transparent)"
         },
         "500-alpha-4": {
-          "$value": "#409b3f66"
+          "$value": "color-mix(in srgb, {ki.color.success.500} 40%, transparent)"
         },
         "500-alpha-5": {
-          "$value": "#409b3f8f"
+          "$value": "color-mix(in srgb, {ki.color.success.500} 56%, transparent)"
         }
       },
       "warning": {
@@ -234,19 +234,19 @@
           "$value": "#321f01"
         },
         "500-alpha-1": {
-          "$value": "#f8ac3a1f"
+          "$value": "color-mix(in srgb, {ki.color.warning.500} 12%, transparent)"
         },
         "500-alpha-2": {
-          "$value": "#f8ac3a33"
+          "$value": "color-mix(in srgb, {ki.color.warning.500} 20%, transparent)"
         },
         "500-alpha-3": {
-          "$value": "#f8ac3a3d"
+          "$value": "color-mix(in srgb, {ki.color.warning.500} 24%, transparent)"
         },
         "500-alpha-4": {
-          "$value": "#f8ac3a66"
+          "$value": "color-mix(in srgb, {ki.color.warning.500} 40%, transparent)"
         },
         "500-alpha-5": {
-          "$value": "#f8ac3a8f"
+          "$value": "color-mix(in srgb, {ki.color.warning.500} 56%, transparent)"
         }
       },
       "danger": {
@@ -284,19 +284,19 @@
           "$value": "#440b08"
         },
         "500-alpha-1": {
-          "$value": "#f051491f"
+          "$value": "color-mix(in srgb, {ki.color.danger.500} 12%, transparent)"
         },
         "500-alpha-2": {
-          "$value": "#f0514933"
+          "$value": "color-mix(in srgb, {ki.color.danger.500} 20%, transparent)"
         },
         "500-alpha-3": {
-          "$value": "#f051493d"
+          "$value": "color-mix(in srgb, {ki.color.danger.500} 24%, transparent)"
         },
         "500-alpha-4": {
-          "$value": "#f0514966"
+          "$value": "color-mix(in srgb, {ki.color.danger.500} 40%, transparent)"
         },
         "500-alpha-5": {
-          "$value": "#f051498f"
+          "$value": "color-mix(in srgb, {ki.color.danger.500} 56%, transparent)"
         }
       },
       "white": {
@@ -1271,26 +1271,6 @@
               "950": {
                 "$type": "color",
                 "$value": "#170e25"
-              },
-              "500-alpha-1": {
-                "$type": "color",
-                "$value": "#845abe1f"
-              },
-              "500-alpha-2": {
-                "$type": "color",
-                "$value": "#845abe33"
-              },
-              "500-alpha-3": {
-                "$type": "color",
-                "$value": "#845abe3d"
-              },
-              "500-alpha-4": {
-                "$type": "color",
-                "$value": "#845abe66"
-              },
-              "500-alpha-5": {
-                "$type": "color",
-                "$value": "#845abe8f"
               },
               "secondary-text-on-primary-light": {
                 "$type": "color",

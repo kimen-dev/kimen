@@ -50,6 +50,13 @@ Feature: Switch
       | in the initial markup  |
       | after the first render |
 
+  # S25
+  Scenario: A script click toggles the switch as it toggles a native checkbox
+    Given a switch labeled "Newsletter" that is off
+    When a script clicks the switch
+    Then the switch is on
+    And the page observes exactly one input event followed by exactly one change event
+
   # Family: keyboard path
   # S5
   Scenario: The keyboard reaches the switch with visible focus

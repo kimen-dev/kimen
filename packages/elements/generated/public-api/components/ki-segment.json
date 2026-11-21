@@ -279,7 +279,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Noninteractive visible option label.",
+        "description": "Noninteractive visible option label. A label wider than its share of\nthe row wraps onto a second line and every option of the row keeps one\nheight; text that would need a third line ends with an ellipsis, and the\nfull text stays the option's accessible name. Keep it to a few words.",
         "replacement": null,
         "required": false,
         "type": null

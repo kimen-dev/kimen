@@ -1,4 +1,5 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
+import onmarsFontsCss from '@kimen/tokens/css/onmars-fonts.css?inline';
 // @spec:019-ki-avatar
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
@@ -9,7 +10,7 @@ import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-avatar.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
-import { alphaOf, paintContrast } from './contracts';
+import { alphaOf, applyTextSpacing, paintContrast } from './contracts';
 
 type KiAvatarElement = HTMLElement & {
   label?: string;
@@ -24,6 +25,8 @@ const browserCommands = commands as unknown as {
 
 const STYLE_ID = 'ki-avatar-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-avatar-browser-material3-token-style';
+const FONT_STYLE_ID = 'ki-avatar-browser-font-style';
+const AVATAR_SIZES = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 const BROKEN_PORTRAIT = 'data:image/png;base64,broken';
 
 beforeAll(() => {
@@ -64,6 +67,61 @@ function ensureMaterial3Tokens(): void {
   document.head.appendChild(style);
 }
 
+/** The onmars body family a consumer loads, so text widths match every OS. */
+async function ensureThemeFont(): Promise<void> {
+  if (!document.getElementById(FONT_STYLE_ID)) {
+    const style = document.createElement('style');
+    style.id = FONT_STYLE_ID;
+    style.textContent = onmarsFontsCss;
+    document.head.appendChild(style);
+  }
+  expect(await document.fonts.load('600 11px "Instrument Sans"')).toHaveLength(1);
+}
+
+function initialsOf(el: KiAvatarElement): Element {
+  const initials = el.shadowRoot?.querySelector('[part="initials"]');
+  if (!initials) {
+    throw new Error('ki-avatar did not render its initials');
+  }
+  return initials;
+}
+
+/** The painted text run, letter spacing included. */
+function runOf(initials: Element): DOMRect {
+  const range = document.createRange();
+  range.selectNodeContents(initials);
+  return range.getBoundingClientRect();
+}
+
+/**
+ * How far any box inside the avatar that clips its overflow cuts into the
+ * initials, in px. Geometry, not scrollWidth: engines round a centered
+ * overflow differently (WebKit counts the whole run, Blink and Gecko only the
+ * end-side half), and a cut is a cut on every engine.
+ */
+function initialsCut(el: KiAvatarElement): number {
+  const initials = initialsOf(el);
+  const run = runOf(initials);
+  const clips = (value: string): boolean => value === 'hidden' || value === 'clip';
+  let cut = 0;
+  for (let node: Element | null = initials; node !== null; node = node.parentElement) {
+    const style = getComputedStyle(node);
+    const box = node.getBoundingClientRect();
+    // The clip edge is the padding box: the border box less its borders.
+    const left = box.left + Number.parseFloat(style.borderLeftWidth);
+    const right = box.right - Number.parseFloat(style.borderRightWidth);
+    const top = box.top + Number.parseFloat(style.borderTopWidth);
+    const bottom = box.bottom - Number.parseFloat(style.borderBottomWidth);
+    if (clips(style.overflowX)) {
+      cut = Math.max(cut, left - run.left, run.right - right);
+    }
+    if (clips(style.overflowY)) {
+      cut = Math.max(cut, top - run.top, run.bottom - bottom);
+    }
+  }
+  return cut;
+}
+
 function landmark(): HTMLElement {
   let main = document.querySelector('main');
   if (!main) {
@@ -77,6 +135,10 @@ function cleanup(): void {
   document.documentElement.removeAttribute('data-ki-theme');
   document.documentElement.removeAttribute('data-ki-color-scheme');
   landmark().replaceChildren();
+}
+
+async function nextFrame(): Promise<void> {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
 async function until(condition: () => boolean): Promise<void> {
@@ -180,6 +242,43 @@ describe('ki-avatar', () => {
     expect(el.shadowRoot?.querySelector('[part="image"]')).toBeNull();
     // The swap never changes the avatar size (FR-001).
     expect(boxOf(el).getBoundingClientRect().width).toBe(40);
+  });
+
+  // Release v0.1.2 (Linux WebKit): the ki-chip gallery's xxs "AG" avatar, set
+  // in the system fallback face, ran 20.2px wide in its 18px circle under the
+  // WCAG 1.4.12 text-spacing overrides, and the circle's overflow clip cut
+  // 1.1px off each side. The clip exists for the portrait alone: the
+  // component never truncates initials (FR-003), whatever their width.
+  it('never clips its initials, even past the circle under the 1.4.12 text spacing', async () => {
+    cleanup();
+    await ensureThemeFont();
+    const avatars: KiAvatarElement[] = [];
+    for (const size of AVATAR_SIZES) {
+      avatars.push(await mount(landmark(), { label: 'Wanda Maximoff', initials: 'WM', size }));
+    }
+    const restore = applyTextSpacing(landmark());
+    try {
+      await nextFrame();
+      await nextFrame();
+      const smallest = avatars[0];
+      if (!smallest) {
+        throw new Error('no avatar mounted');
+      }
+
+      // Two wide capitals with the user's spacing outgrow the 20px circle...
+      expect(runOf(initialsOf(smallest)).width).toBeGreaterThan(boxOf(smallest).clientWidth);
+      // ...and the avatar still cuts none of them, at any size.
+      expect(
+        avatars
+          .filter((avatar) => initialsCut(avatar) > 0.5)
+          .map(
+            (avatar) =>
+              `${avatar.getAttribute('size') ?? ''}: ${initialsCut(avatar).toFixed(2)}px cut`,
+          ),
+      ).toEqual([]);
+    } finally {
+      restore();
+    }
   });
 
   it('S3 shows the built-in generic figure without portrait and initials', async () => {
