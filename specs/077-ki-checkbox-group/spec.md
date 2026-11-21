@@ -15,7 +15,7 @@ option and the shared field-message presentation for help and errors.
 | --- | --- | --- |
 | Core behavior | S1, S11, S12 | |
 | Keyboard path | S2, S3, S9 | |
-| Assistive-tech outcome | S4, S6, S7 | |
+| Assistive-tech outcome | S4, S6, S7, S13, S14, S15 | |
 | Form participation | S5, S6, S7, S8, S9, S11 | |
 | Theming | S10 | |
 
@@ -132,4 +132,24 @@ Feature: ki-checkbox-group collects independent choices
     When the surface is translated
     Then Regions contains individually labeled checkboxes
     And Europe and Asia-Pacific are checked
+
+  # S13
+  Scenario: A hidden legend still names the group, and is announced once
+    Given Regions has its legend hidden
+    When the page renders
+    Then no legend is displayed above the options
+    And the accessibility tree carries "Regions" only as the group's name
+
+  # S14
+  Scenario: A question written on the page names the group
+    Given a heading "Where do you ship?" and a checkbox group without a label that references the heading
+    When the page renders
+    Then the accessibility tree exposes a group named "Where do you ship?"
+    And the question is announced only by the heading and as the group's name
+
+  # S15
+  Scenario: The group's own label follows the page question in its name
+    Given a heading "Where do you ship?" and a checkbox group labeled "Pick all that apply" that references the heading
+    When the page renders
+    Then the accessibility tree exposes a group named "Where do you ship? Pick all that apply"
 ```

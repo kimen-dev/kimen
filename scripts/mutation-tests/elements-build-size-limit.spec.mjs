@@ -102,7 +102,7 @@ describe('element size-budget mutation boundary', () => {
       {
         name: 'paired marginal cost (runtime excluded)',
         path: '/tmp/paired.ts',
-        ignore: ['@stencil/core'],
+        ignore: ['@stencil/core', './stencil-client.js'],
         limit: '9 KB',
       },
       {
@@ -113,7 +113,7 @@ describe('element size-budget mutation boundary', () => {
       {
         name: 'ki-gamma marginal cost (runtime excluded)',
         path: '/workspace/elements/dist/components/ki-gamma.js',
-        ignore: ['@stencil/core'],
+        ignore: ['@stencil/core', './stencil-client.js'],
         limit: '9 KB',
       },
       {
@@ -124,7 +124,7 @@ describe('element size-budget mutation boundary', () => {
       {
         name: 'ki-zeta marginal cost (runtime excluded)',
         path: '/workspace/elements/dist/components/ki-zeta.js',
-        ignore: ['@stencil/core'],
+        ignore: ['@stencil/core', './stencil-client.js'],
         limit: '9 KB',
       },
       {

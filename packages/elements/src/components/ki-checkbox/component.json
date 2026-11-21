@@ -6,5 +6,16 @@
     "hoverWitness": false
   },
   "catalog": true,
-  "formBinding": "boolean"
+  "formBinding": "boolean",
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 282,
+      "gzip": 33,
+      "brotli": 25
+    },
+    "mcpServer": {
+      "raw": 414,
+      "gzip": 110
+    }
+  }
 }

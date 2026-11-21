@@ -98,11 +98,18 @@ Feature: Segmented control applies one in-place choice
     When Week becomes disabled
     Then Day is the sole selected option and the group tab stop
     And no change event occurs
+
+  # S15
+  Scenario: Wrap a long label instead of truncating it
+    Given Answer has the options "Quiero usarlo ya", "Quiero entenderlo" and "Lo haré a mano" in a 343px row
+    When the control is displayed
+    Then every label shows its full text on at most two lines
+    And the options keep one height
 ```
 
 | Family | Scenarios |
 | --- | --- |
-| Core behavior | S1, S2, S12, S13, S14 |
+| Core behavior | S1, S2, S12, S13, S14, S15 |
 | Keyboard path | S3, S4, S10 |
 | Assistive-tech outcome | S5 |
 | Form participation | S6 |
@@ -113,7 +120,7 @@ Feature: Segmented control applies one in-place choice
 - Supply a group label and two to five direct `ki-segment` children with distinct nonempty values. Give each segment visible text or an accessible name with `aria-label`. A leading icon belongs in the `start` slot.
 - The selected option owns the single tab stop. Arrow keys move focus and select with wrapping. Space and Enter activate the focused option. Activation of the current option is silent.
 - Selection applies immediately. `ki-change` bubbles and carries the resolved string in `detail.value`. Programmatic changes and fallback selection are silent.
-- The three track sizes default to 28, 32 and 40 CSS pixels. Full width shares the row equally. A selected option changes surface, ink and elevation together. Forced colours use a Highlight border.
+- The three track sizes default to 28, 32 and 40 CSS pixels. Full width shares the row equally. A label wider than its share wraps onto a second line, the options keep one height, and only text that needs a third line ends with an ellipsis. A selected option changes surface, ink and elevation together. Forced colours use a Highlight border.
 - Token-backed surfaces accept solid colour, image and backdrop filter overrides. Validate text pairs in both themes and schemes across standard, contrast-more and reduced-transparency modes. Capture the onmars and Material 3 galleries in both schemes.
 - Ship both elements in the catalog and generated framework wrappers. Authors use tabs for panel navigation, a radio group for submitted form values and a select for longer lists.
 

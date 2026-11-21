@@ -29,6 +29,12 @@ fieldset:disabled {
   line-height: var(--ki-radio-group-label-line-height);
 }
 
+/* label-hidden: out of view and out of reading order; the fieldset still
+ * takes its name from the legend through an id reference. */
+[part="label"].hidden {
+  display: none;
+}
+
 .options {
   display: flex;
   flex-direction: column;

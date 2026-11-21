@@ -50,3 +50,19 @@ group.addEventListener('ki-change', (event) => {
   <ki-checkbox value="reviews">Review requests</ki-checkbox>
 </ki-checkbox-group>
 ```
+
+## Name the group from the page
+
+When the question is already written on the page, point the host's
+`aria-labelledby` at it and omit `label`. The group takes its accessible name
+from the heading, so the question is shown and read once. `label-hidden`
+instead keeps a `label` as the name while hiding it from view and from
+reading order.
+
+```html
+<h2 id="shipping-question">Where do you ship?</h2>
+<ki-checkbox-group aria-labelledby="shipping-question" name="regions">
+  <ki-checkbox value="eu">Europe</ki-checkbox>
+  <ki-checkbox value="am">Americas</ki-checkbox>
+</ki-checkbox-group>
+```
