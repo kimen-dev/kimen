@@ -23066,7 +23066,7 @@
         },
         {
           "name": "slot",
-          "text": "- Noninteractive visible option label."
+          "text": "- Noninteractive visible option label. A label wider than its share of\nthe row wraps onto a second line and every option of the row keeps one\nheight; text that would need a third line ends with an ellipsis, and the\nfull text stays the option's accessible name. Keep it to a few words."
         },
         {
           "name": "slot",
@@ -23167,7 +23167,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Noninteractive visible option label."
+          "docs": "Noninteractive visible option label. A label wider than its share of\nthe row wraps onto a second line and every option of the row keeps one\nheight; text that would need a third line ends with an ellipsis, and the\nfull text stays the option's accessible name. Keep it to a few words."
         },
         {
           "name": "start",
@@ -23223,7 +23223,7 @@
           "mutable": false,
           "attr": "full-width",
           "reflectToAttr": true,
-          "docs": "Distribute the available inline space evenly among all segments.",
+          "docs": "Distribute the available inline space evenly among all segments. A label\nwider than its equal share wraps onto a second line.",
           "docsTags": [
             {
               "name": "default",

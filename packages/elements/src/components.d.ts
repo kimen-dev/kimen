@@ -3440,7 +3440,7 @@ export namespace Components {
      */
     interface KiSegmentedControl {
         /**
-          * Distribute the available inline space evenly among all segments.
+          * Distribute the available inline space evenly among all segments. A label wider than its equal share wraps onto a second line.
           * @default false
          */
         "fullWidth": boolean;
@@ -10797,7 +10797,7 @@ declare namespace LocalJSX {
      */
     interface KiSegmentedControl {
         /**
-          * Distribute the available inline space evenly among all segments.
+          * Distribute the available inline space evenly among all segments. A label wider than its equal share wraps onto a second line.
           * @default false
          */
         "fullWidth"?: boolean;

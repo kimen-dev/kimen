@@ -4,7 +4,7 @@
       "full-width": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Distribute the available inline space evenly among all segments.",
+        "description": "Distribute the available inline space evenly among all segments. A label\nwider than its equal share wraps onto a second line.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -174,7 +174,7 @@
       "fullWidth": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Distribute the available inline space evenly among all segments.",
+        "description": "Distribute the available inline space evenly among all segments. A label\nwider than its equal share wraps onto a second line.",
         "replacement": null,
         "required": false,
         "type": "boolean"

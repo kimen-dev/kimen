@@ -65,7 +65,7 @@ content noninteractive.
 
 ## Attributes
 
-- `full-width` (boolean, default false): Distribute the available inline space evenly among all segments.
+- `full-width` (boolean, default false): Distribute the available inline space evenly among all segments. A label wider than its equal share wraps onto a second line.
 - `label` (string, required): Required accessible name of the group. Use a short name for the setting.
 - `size` ("md" | "sm" | "xs", default 'md'): Track size. The default heights are 28, 32 and 40 CSS px respectively; surrounding density settings can increase or decrease targets.
 - `value` (string, default ''): Resolved selected value. Set it to choose an option programmatically. Omit it to select the first available option. The value is empty when there are no available options. Programmatic changes are silent.

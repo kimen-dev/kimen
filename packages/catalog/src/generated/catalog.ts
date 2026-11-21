@@ -4049,7 +4049,7 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Noninteractive visible option label.",
+        "": "Noninteractive visible option label. A label wider than its share of\nthe row wraps onto a second line and every option of the row keeps one\nheight; text that would need a third line ends with an ellipsis, and the\nfull text stays the option's accessible name. Keep it to a few words.",
         "start": "Decorative leading icon. Supply aria-label for an icon-only option."
       },
       "tag": "ki-segment",
@@ -4064,7 +4064,7 @@ export const catalogData = {
       "props": {
         "full-width": {
           "type": "boolean",
-          "description": "Distribute the available inline space evenly among all segments.",
+          "description": "Distribute the available inline space evenly among all segments. A label\nwider than its equal share wraps onto a second line.",
           "default": false
         },
         "label": {
