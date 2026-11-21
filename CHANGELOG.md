@@ -7,6 +7,19 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [0.2.0] - 2026-11-21
+
+### Added
+
+- **catalog:** repair live-surface focus and clear forced numbers (spec 155) ([#566](https://github.com/kimen-dev/kimen/pull/566))
+- **catalog:** let an action collect other fields' values (spec 153) ([#570](https://github.com/kimen-dev/kimen/pull/570))
+- **elements:** custom-error on twelve form controls (spec 156) ([#569](https://github.com/kimen-dev/kimen/pull/569))
+
+### Fixed
+
+- **elements:** keep a custom error set during a checkbox toggle; disabled switch validity ([#573](https://github.com/kimen-dev/kimen/pull/573))
+- **mutation:** unblock the daily mutation run and its stale specs ([#571](https://github.com/kimen-dev/kimen/pull/571))
+
 ## [0.1.3] - 2026-11-21
 
 ### Fixed
