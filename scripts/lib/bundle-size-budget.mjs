@@ -26,8 +26,12 @@ const BASE_BUDGETS = {
   // feedback, item 1; approved 2026-11-21) measured +1,066 B raw for kimen-mcp, which
   // embeds the token stylesheets; the raw base absorbs it. The compressed growth fits,
   // and the MCP Apps document stays within its base.
-  mcpApps: { raw: 782_242, gzip: 177_349, brotli: 140_306 },
-  mcpServer: { raw: 2_575_155, gzip: 484_697, brotli: 380_341 },
+  // Spec 153 (action collect, approved 2026-11-21) measured against main
+  // 618df310: the collect checks, the dispatch-time validity gate and the agent
+  // texts add 2,350 / 744 / 685 B to the MCP Apps document and 5,770 / 1,764 /
+  // 1,285 B to kimen-mcp, which also carries the document.
+  mcpApps: { raw: 784_592, gzip: 178_093, brotli: 140_991 },
+  mcpServer: { raw: 2_580_925, gzip: 486_461, brotli: 381_626 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.

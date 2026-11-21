@@ -2,7 +2,8 @@
  * The render result's text content (spec 038 D1, FR-008): a deterministic
  * plain-text outline of an already-validated spec, for the model and for
  * hosts that do not display MCP Apps surfaces. One line per component —
- * slot, tag, props, bound action — and one per text child; every piece of
+ * slot, tag, props, bound action and the fields it collects — and one per
+ * text child; every piece of
  * spec data is JSON-quoted, so it stays on its line.
  *
  * Plain text even where a host renders tool text as Markdown: the outline
@@ -40,7 +41,8 @@ function nodeLines(root: UiSpecNode): string[] {
       continue;
     }
     const action = node.action === undefined ? '' : ` → action ${JSON.stringify(node.action)}`;
-    lines.push(`${prefix}${node.component}${propsText(node.props)}${action}`);
+    const collect = node.collect === undefined ? '' : ` collecting ${JSON.stringify(node.collect)}`;
+    lines.push(`${prefix}${node.component}${propsText(node.props)}${action}${collect}`);
     const children: (typeof stack)[number][] = [];
     for (const [slotName, slotChildren] of Object.entries(node.slots ?? {})) {
       for (const child of slotChildren) {

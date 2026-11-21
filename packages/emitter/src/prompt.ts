@@ -5,7 +5,7 @@
  * (research D3). Deterministic text (S11), version-stamped (S10).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
-import { NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
+import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
 import type { Derivation, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
@@ -157,13 +157,14 @@ export function catalogPrompt(
     '',
     '## Format rules',
     '- Emit exactly ONE JSON document: {"version": 1, "actions": [...], "root": <node>} — no prose, no markdown fences around your final answer.',
-    '- A <node> is {"id": "<id>", "component": "<tag>", "props": {...}, "action": "<name>", "slots": {"<slot>": [<node or "text">, ...]}}; "id", "props", "action" and "slots" are optional.',
+    '- A <node> is {"id": "<id>", "component": "<tag>", "props": {...}, "action": "<name>", "collect": {"<name>": "<id>"}, "slots": {"<slot>": [<node or "text">, ...]}}; "id", "props", "action", "collect" and "slots" are optional.',
     '- "id" is a stable identity for a node the host may update later (a live surface addresses its operations by id): lowercase letters, digits, "-" and "_", starting with a letter or digit, at most 64 characters, unique within the document.',
     '- Only the components listed below exist. Only their listed props. Enum props allow only their listed values.',
     '- Props marked "required" MUST be present with a non-blank value unless marked "may be empty": a spec that omits one is rejected.',
     '- Props marked "URL" accept only http(s) URLs or relative references; every other scheme is rejected, and the host may accept only absolute URLs of the origins it allows.',
     '- Props marked "node id" name another node of the same spec: give that node an "id" and use the same value; any other value is rejected.',
     '- Every "action" you bind MUST appear in the top-level "actions" list; actions are named intents delivered to the host as data.',
+    `- "collect" lets a node with an "action" carry the values of other fields, so a form needs one action on its button and none on its fields: each key names an entry of the action data, each value is the "id" of a node of the same spec whose component has a "checked", "selected" or "value" prop. The action fires only when every collected field is valid. At most ${String(COLLECT_MAX_ENTRIES)} entries, and a key may not be one of the node's own props.`,
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',
     '- Styling is not expressible in a spec; appearance belongs to the host theme.',
     '',

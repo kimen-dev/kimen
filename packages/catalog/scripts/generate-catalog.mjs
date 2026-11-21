@@ -37,8 +37,13 @@ import { NATIVE_PRIMITIVES } from './primitives.mjs';
  * form-action `type` (an enum offering `button` with `submit` or `reset`)
  * offers agents `button` alone. A 1.5.0 boundary refuses a 1.6.0 spec
  * rather than resolving references it cannot contain.
+ * 1.7.0 (spec 153): a bound node may `collect` other fields by id, and its
+ * action carries their live values once every one of them is valid; every
+ * action event names the bound node's `id`. Additive: a 1.6.0 spec keeps its
+ * meaning, and a 1.6.0 boundary refuses a 1.7.0 spec rather than dispatching
+ * an action without the fields it was meant to carry.
  */
-export const CATALOG_SCHEMA_VERSION = '1.6.0';
+export const CATALOG_SCHEMA_VERSION = '1.7.0';
 
 /**
  * A spec owns no form, so a submit or reset button in it could only act on

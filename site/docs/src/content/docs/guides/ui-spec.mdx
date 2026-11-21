@@ -142,7 +142,47 @@ Over the validation layer it enforces the safe-render semantics:
   is rejected naming both versions.
 - **Declarative actions only.** A bound control dispatches its one declared
   action, as data, on the single `onAction` channel — exactly one action
-  fires even for nested action-bound nodes; no other callback exists.
+  fires even for nested action-bound nodes; no other callback exists. The
+  event names the node's `id` when it has one.
+
+## A form
+
+A spec has no native form. A bound button names, by id, the fields its
+action takes (`collect`, catalog schema `1.7.0`); the fields need no action
+of their own:
+
+```json
+{
+  "version": 1,
+  "actions": ["add"],
+  "root": {
+    "component": "div",
+    "slots": {
+      "": [
+        { "id": "f-title", "component": "ki-input", "props": { "label": "Title", "required": true } },
+        { "id": "f-qty", "component": "ki-number-input", "props": { "label": "Quantity" } },
+        {
+          "component": "ki-button",
+          "props": { "variant": "primary" },
+          "action": "add",
+          "collect": { "title": "f-title", "quantity": "f-qty" },
+          "slots": { "": ["Add"] }
+        }
+      ]
+    }
+  }
+}
+```
+
+When the person activates **Add**, every collected field is asked for
+validity first: an invalid one stops the action, shows its own message and
+the first one takes the focus. Otherwise the host receives `add` with the
+fields' live values next to the button's props, typed as the controls hold
+them: `{ variant: 'primary', title: 'Buy milk', quantity: 2 }`. An empty
+number field adds no key, and Enter does not submit. A `collect` without an
+`action`, naming no node of the spec or a node with no value, taking the
+name of one of the button's own props, or with more than 32 entries is
+rejected before anything renders.
 
 A re-render on the same surface replaces the previous tree (and its action
 listeners) atomically once validation succeeds; a rejected re-render leaves

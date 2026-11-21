@@ -35,6 +35,7 @@ import {
   type ActionEvent,
   attachText,
   authoredLiveScalar,
+  collectingDispatch,
   createNodeElement,
   DEFAULT_RENDER_BUDGETS,
   declaredEvents,
@@ -73,8 +74,6 @@ type Scalar = boolean | number | string;
 
 /** The action event of a live surface (035 FR-008, D7). */
 export interface LiveActionEvent extends ActionEvent {
-  /** The bound node's stable id, when it has one. */
-  readonly id?: string | undefined;
   /** The surface revision at the moment of the gesture. */
   readonly revision: number;
 }
@@ -240,6 +239,8 @@ interface MNode {
   readonly component: string;
   props: Record<string, Scalar>;
   readonly action: string | undefined;
+  /** The fields its action collects (spec 153); like `action`, only a replace changes it. */
+  readonly collect: Readonly<Record<string, string>> | undefined;
   readonly slots: Map<string, MEntry[]>;
   parent: MNode | null;
   slot: string;
@@ -325,6 +326,7 @@ function rebaseGuard(diagnostic: RenderDiagnostic, prefix: string): RenderDiagno
 function fromPlain(node: UiSpecNode, parent: MNode | null, slot: string): MNode {
   const model: MNode = {
     action: node.action,
+    collect: node.collect,
     component: node.component,
     id: node.id,
     kind: 'node',
@@ -350,6 +352,7 @@ function fromPlain(node: UiSpecNode, parent: MNode | null, slot: string): MNode 
 function cloneNode(node: MNode, parent: MNode | null, ids: Map<string, MNode>): MNode {
   const copy: MNode = {
     action: node.action,
+    collect: node.collect,
     component: node.component,
     id: node.id,
     kind: 'node',
@@ -409,6 +412,7 @@ function toPlain(node: MNode): UiSpecNode {
     component: node.component,
     ...(Object.keys(node.props).length > 0 ? { props: { ...node.props } } : {}),
     ...(node.action === undefined ? {} : { action: node.action }),
+    ...(node.collect === undefined ? {} : { collect: { ...node.collect } }),
     ...(Object.keys(slots).length > 0 ? { slots } : {}),
   };
 }
@@ -1081,6 +1085,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     const element = createNodeElement(doc, node.component, context.allowedUrlOrigins, sourceScope);
     const model: MNode = {
       action: node.action,
+      collect: node.collect,
       component: node.component,
       dom: element,
       id: node.id,
@@ -1127,19 +1132,25 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       entry,
       () => model.props,
       action !== undefined && onAction !== undefined
-        ? (data) => {
-            const path = pathOf(model);
-            if (path === null) {
-              return;
-            }
-            onAction({
-              action,
-              data,
-              ...(model.id === undefined ? {} : { id: model.id }),
-              path,
-              revision,
-            });
-          }
+        ? collectingDispatch(
+            model.collect,
+            // Resolved at the gesture: the field the surface holds now.
+            (id) => live.ids.get(id)?.dom,
+            components,
+            (data) => {
+              const path = pathOf(model);
+              if (path === null) {
+                return;
+              }
+              onAction({
+                action,
+                data,
+                ...(model.id === undefined ? {} : { id: model.id }),
+                path,
+                revision,
+              });
+            },
+          )
         : undefined,
     );
     trackUserState(element, entry, model);

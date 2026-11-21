@@ -18,12 +18,12 @@
         {
           "name": "validateUiSpec",
           "signature": "validateUiSpec(input, options?) => ValidationReport",
-          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, invalid-child, action-not-allowed, url-scheme, url-origin, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
+          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, invalid-child, action-not-allowed, collect-without-action, collect-unknown-node, collect-no-value, collect-key-conflict, collect-budget, url-scheme, url-origin, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
         },
         {
           "name": "renderUiSpec",
           "signature": "renderUiSpec(input, options) => RenderResult",
-          "summary": "Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies) plus the native primitives it carries, only actions declared in the spec dispatch (delivered as data to options.onAction), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure."
+          "summary": "Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies) plus the native primitives it carries, only actions declared in the spec dispatch (delivered as data to options.onAction, with the live values of the fields a node collects once each of them is valid), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure."
         },
         {
           "name": "preflightUiSpec",

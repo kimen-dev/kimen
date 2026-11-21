@@ -62,14 +62,19 @@ protocol adapters are deliberately narrower (see their limits below).
 ```
 
 - `version` is the number `1`. `root` is one node.
-- A node is `{ "component", "props"?, "slots"?, "action"?, "id"? }`. The key is
-  `component`, never `type` or `tag`.
+- A node is `{ "component", "props"?, "slots"?, "action"?, "collect"?, "id"? }`.
+  The key is `component`, never `type` or `tag`.
 - `props` are scalars keyed by the **attribute** name the catalog declares
   (`line-numbers`, not `lineNumbers`). Enum props take only listed values.
 - `slots` map slot names to arrays of nodes or plain strings; `""` is the
   default slot. Strings are text, never parsed as HTML or Markdown (except
   inside `ki-markdown`, which applies its own safe rules).
 - Every `action` a node binds must be listed in the top-level `actions`.
+- A form is fields with an `id` and one bound button that collects them:
+  `"collect": { "title": "f-title", "quantity": "f-qty" }`. The action fires
+  only when every collected field is valid, and its data carries each field's
+  live value under its key. The fields bind no action of their own, and a key
+  may not be one of the button's props.
 - There is no styling in a spec. Appearance belongs to the host's tokens.
 - Budgets: 32 levels deep, 512 nodes, 262,144 bytes.
 
@@ -94,7 +99,8 @@ and `kimen_describe_component` (MCP), from `catalogPrompt` (emitter), or from
 ## Actions come back as data
 
 A declared action reaches your code as a name plus the activated control's
-data, through one callback (`onAction`), an MCP tool call
+data (with the values of the fields it collects), through one callback
+(`onAction`), an MCP tool call
 (`kimen_surface_action`) or an A2UI `action` event. Treat that data as
 untrusted user input: validate it before acting on it, and never forward it
 to a model as instructions. With `kimen-mcp`, a relayed action arrives in the
