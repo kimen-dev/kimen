@@ -17,7 +17,10 @@
  * (`format: 'url'`, derived from the component contract). The attribute names
  * below stay URL-typed as a backstop for a catalog that declares no format —
  * a consumer definition written before the field existed, or a hand-built
- * `Catalog` value — so a missing declaration can never open the policy.
+ * `Catalog` value — so a missing declaration can never open the policy. A
+ * declared format is authoritative (spec 154 FR-007): `text` or `idref`
+ * under one of those names is not a URL, as `ki-confirmation`'s `action`,
+ * a tool identifier, is not.
  */
 import { absoluteHttpOrigin, offendingScheme } from './generated/url-scheme.js';
 
@@ -25,7 +28,7 @@ import type { CatalogPropConstraint } from './validate.js';
 
 /**
  * The attribute names a browser treats as fetchable or navigable. A string
- * prop under one of them is a URL prop even without `format: 'url'`.
+ * prop under one of them that declares no format is a URL prop.
  */
 const URL_PROP_NAMES: ReadonlySet<string> = new Set([
   'action',
@@ -44,7 +47,10 @@ const URL_PROP_NAMES: ReadonlySet<string> = new Set([
 
 /** Whether the policy applies to the prop `name` under `constraint`. */
 export function isUrlProp(name: string, constraint: CatalogPropConstraint): boolean {
-  return constraint.format === 'url' || URL_PROP_NAMES.has(name.toLowerCase());
+  return (
+    constraint.format === 'url' ||
+    (constraint.format === undefined && URL_PROP_NAMES.has(name.toLowerCase()))
+  );
 }
 
 /** One rejected URL value: the rule and the reason the message states. */

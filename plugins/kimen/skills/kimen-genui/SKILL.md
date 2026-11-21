@@ -70,6 +70,14 @@ protocol adapters are deliberately narrower (see their limits below).
   default slot. Strings are text, never parsed as HTML or Markdown (except
   inside `ki-markdown`, which applies its own safe rules).
 - Every `action` a node binds must be listed in the top-level `actions`.
+- `action` is one name, which fires on the event the component's contract
+  names, or a map from events the component declares to action names, so
+  each answer reports its own action:
+  `"action": { "ki-approve": "tool.approved", "ki-deny": "tool.denied" }` on a
+  `ki-confirmation`. A component that declares several events and no rule
+  for picking one (`ki-confirmation`, `ki-table`, `ki-search`, …) binds only
+  with the map. A `ki-dialog` bound per event reports every close, the host's
+  own included.
 - A form is fields with an `id` and one bound button that collects them:
   `"collect": { "title": "f-title", "quantity": "f-qty" }`. The action fires
   only when every collected field is valid, and its data carries each field's

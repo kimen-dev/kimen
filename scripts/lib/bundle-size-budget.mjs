@@ -36,8 +36,12 @@ const BASE_BUDGETS = {
   // main f79f91f1 on macOS: +18,218 / 5,856 / 4,981 B for the document and
   // +18,736 / 5,951 / 5,025 B for kimen-mcp, added here exactly so the headroom stays
   // what it was. The founder approved re-basing by the cost measured there (2026-11-21).
-  mcpApps: { raw: 802_810, gzip: 183_949, brotli: 145_972 },
-  mcpServer: { raw: 2_599_661, gzip: 492_412, brotli: 386_651 },
+  // Spec 154 (action per event, approved 2026-11-21) measured against main
+  // fb7f11c0: the per-event wiring and checks, now in the live surface the document
+  // ships too, and the agent texts add 1,156 / 331 / 300 B to the MCP Apps document
+  // and 4,166 / 1,109 / 974 B to kimen-mcp.
+  mcpApps: { raw: 803_966, gzip: 184_280, brotli: 146_272 },
+  mcpServer: { raw: 2_603_827, gzip: 493_521, brotli: 387_625 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.

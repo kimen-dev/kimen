@@ -70,9 +70,11 @@ Each **node** has up to six fields:
   keyed by the attribute name the catalog declares. Unknown names are rejected
   (`unknown-prop`), wrong-typed values are rejected (`invalid-prop-type`), and
   enum-constrained props accept only their declared values.
-- **`action`** — optional. One name from the document's `actions` list. When
-  the rendered node is activated, the host receives that name — as data, on a
-  single callback channel — never a code payload.
+- **`action`** — optional. One name from the document's `actions` list, or
+  an object that maps events the component's catalog entry declares to names
+  from that list (see [An action per event](#an-action-per-event), catalog
+  schema `1.8.0`). When the rendered node is activated, the host receives
+  that name — as data, on a single callback channel — never a code payload.
 - **`collect`** — optional, and only on a node with an `action`. The other
   fields the action carries: each key names an entry of the action data, each
   value is the `id` of a node of the same spec (see [A form](#a-form)).
@@ -132,6 +134,59 @@ The person types "Buy milk" and 2, then activates **Add**. The host receives
   `selected` and `value`), `collect-key-conflict` (a key equals a prop the
   node's own component declares) and `collect-budget` (more than
   `COLLECT_MAX_ENTRIES`, 32, entries).
+
+### An action per event
+
+A node bound by name fires its action on one event, the one its catalog
+entry derives. A component that reports several answers binds each of them
+to its own action instead:
+
+```json
+{
+  "version": 1,
+  "actions": ["tool.approved", "tool.denied"],
+  "root": {
+    "component": "ki-confirmation",
+    "props": {
+      "heading": "Delete these 12 files?",
+      "action": "delete_files",
+      "approve-label": "Delete",
+      "deny-label": "Keep files"
+    },
+    "action": { "ki-approve": "tool.approved", "ki-deny": "tool.denied" }
+  }
+}
+```
+
+The person activates **Keep files**, and the host receives `tool.denied`.
+
+- **Each key is an event the component declares,** as its catalog entry
+  lists them (the emitter's prompt and schema list them per component). A
+  click is not one unless the component declares it.
+- **Each listed event fires whenever the component reports it.** The rules a
+  binding by name follows for its event do not apply: a `ki-dialog` bound
+  per event reports both `ki-confirm` and `ki-close`, with or without a
+  confirm label, and `ki-close` arrives on every close, the host's own
+  included, so read it as "it closed", not "it was refused".
+- **The data is the same** as for a binding by name: the node's props with
+  its live `checked`, `selected` or `value`, and the fields it collects. The
+  event's own detail is not carried: a `ki-table` sort does not say the
+  column.
+- **`collect` applies to every bound event,** its validity check included.
+  An invalid field stops a `ki-dialog`'s close action too, and the dialog has
+  already closed by then; put a form's fields behind a button that collects
+  them, and bind the dialog's `ki-close` on its own.
+- **Some components bind only per event.** `ki-code-input`,
+  `ki-confirmation`, `ki-file-upload`, `ki-message`, `ki-popover`,
+  `ki-search`, `ki-table`, `ki-time-input` and `ki-tree-item` declare several
+  events and no rule that picks one, so a binding by name is rejected
+  (`ambiguous-activation-event`).
+- **Rejected:** `undeclared-event` (a key the entry does not declare),
+  `undeclared-action` (a value outside the `actions` list, at
+  `<node>.action.<event>`), `malformed-spec` (an object with no event) and
+  `action-not-allowed` (a native element, a glyph, `ki-markdown` or a source
+  reference, which bind no action in either form). A `ki-pagination` with
+  `href-template` navigates natively and binds nothing.
 
 ## What may a spec contain?
 
@@ -214,6 +269,7 @@ exists — the offending `value`. The codes:
 | `invalid-prop-type` | A declared prop with a wrong-typed or out-of-enum value |
 | `unknown-slot` | A slot name the component does not declare |
 | `undeclared-action` | A node binds an action absent from the document's `actions` list |
+| `undeclared-event` | A binding per event names an event the component's catalog entry does not declare |
 | `collect-without-action` | A node has `collect` but no `action` |
 | `collect-unknown-node` | A `collect` value is not the `id` of a node of the same spec or live surface |
 | `collect-no-value` | A `collect` value names a node whose entry declares none of `checked`, `selected` and `value` |
@@ -271,10 +327,13 @@ On top of catalog validation the renderer enforces the safe-render semantics:
 
 - **No code path from spec data.** Text children attach as inert text nodes
   (never `innerHTML`); the catalog exposes no event-handler props; and any
-  string prop under a URL-bearing name (`href`, `src`, `action`, `formaction`,
-  `poster`, …) accepts only `http`, `https` and relative references — every
-  other scheme is rejected naming the prop and the scheme (rule
-  `url-scheme`), including control-character smuggling like `java\tscript:`.
+  string prop the catalog marks `format: "url"`, or that declares no format
+  under a URL-bearing name (`href`, `src`, `action`, `formaction`, `poster`,
+  …), accepts only `http`, `https` and relative references — every other
+  scheme is rejected naming the prop and the scheme (rule `url-scheme`),
+  including control-character smuggling like `java\tscript:`. A prop marked
+  `format: "text"` is never a URL, whatever its name: `ki-confirmation`'s
+  `action` is a tool identifier such as `github:create_issue`.
 - **Declared budgets.** Depth, node count and payload size, all overridable
   per render (`budgets`, lower or higher than the defaults) and all
   falsifiable on both sides: a spec exactly at a budget renders; one beyond
@@ -296,17 +355,22 @@ On top of catalog validation the renderer enforces the safe-render semantics:
   Note that the standalone `validateUiSpec` checks the three-field neutral
   document — the version gate is the renderer's.
 - **Declarative actions only.** Activating a bound control dispatches exactly
-  one declared action on the single `onAction` channel. The activation event
-  comes from the component's catalog entry: the one event it declares
-  (`change` on `ki-checkbox`, `ki-switch`, `ki-radio-group`, `ki-select`,
-  `ki-input` and `ki-textarea`; `ki-change` on `ki-tabs`), or `click` when it
-  declares none. A declared-event activation never cancels the control's own
-  change, and its `data` adds the control's live `checked`/`value` (only where
-  the catalog declares that prop) to the spec's props. A node with `collect`
-  adds its fields' values on any activation, once every field is valid (see
-  [A form](#a-form)). A binding on a
-  component that declares more than one event is rejected
-  (`ambiguous-activation-event`). A click activation suppresses the native
+  one declared action on the single `onAction` channel. A binding by name
+  fires on the event the component's catalog entry derives: its declared
+  `activationEvent` (`change` on `ki-combobox`, `ki-page-change` on
+  `ki-pagination`), else the one event it declares (`change` on
+  `ki-checkbox`, `ki-switch`, `ki-radio-group`, `ki-select`, `ki-input` and
+  `ki-textarea`; `ki-change` on `ki-tabs`), else `click`. Three components
+  pick the event from their own state: `ki-chip` by its kind, `ki-dialog` by
+  its confirm label and `ki-prompt-input` by its status. A binding per event
+  fires each listed event (see [An action per
+  event](#an-action-per-event)). A declared-event activation never cancels
+  the control's own change, and its `data` adds the control's live
+  `checked`/`value` (only where the catalog declares that prop) to the spec's
+  props. A node with `collect` adds its fields' values on any activation,
+  once every field is valid (see [A form](#a-form)). A binding by name on a
+  component that declares more than one event and has no rule of its own is
+  rejected (`ambiguous-activation-event`). A click activation suppresses the native
   default and stops bubbling, so a button inside a form submits nothing; the
   innermost bound node claims each interaction, so nested action-bound nodes
   dispatch once. A spec owns no form, so it never submits or resets one of

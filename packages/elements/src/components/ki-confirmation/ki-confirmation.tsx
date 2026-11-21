@@ -43,7 +43,10 @@ export class KiConfirmation {
   /** Question naming the proposed action. Provide it before asking for a decision. */
   @Prop() heading!: string;
 
-  /** Tool identifier shown to the person and available for reporting by the host. */
+  /**
+   * Tool identifier shown to the person and available for reporting by the host.
+   * @format text
+   */
   @Prop() action!: string;
 
   /** Verb or short phrase that describes what approval does, such as "Send email". */

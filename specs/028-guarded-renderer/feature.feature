@@ -180,8 +180,8 @@ Feature: Guarded renderer
 
     # S19
     Scenario: A binding whose activation event is ambiguous never wires
-      Given a catalog component that declares more than one event
-      And a spec binding the declared action "pick" to that component
+      Given a catalog component that declares more than one event and no rule that picks one
+      And a spec binding the declared action "pick" to that component by name alone
       When the renderer validates the spec
       Then no part of the spec renders
       And the diagnostic names the component and its declared events
