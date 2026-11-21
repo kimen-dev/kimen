@@ -2,7 +2,8 @@
  * @kimen/adapter-mcp-apps (spec 030, constitution Art. VIII): the MCP Apps
  * (SEP-1865) protocol adapter. It exposes Kimen surfaces to MCP Apps hosts as
  * predeclared, self-contained `ui://` resources whose only render path is the
- * guarded renderer over the neutral catalog (@kimen/catalog) — the durable
+ * guarded renderer over the neutral catalog (@kimen/catalog), reached through
+ * its live surface so a result can change only what it names — the durable
  * catalog and `ki-*` elements never learn the MCP Apps vocabulary. Disposable
  * by design: the exact supported protocol revision lives in `COMPAT.md` and
  * `MCP_APPS_PROTOCOL_VERSIONS`, and a breaking protocol release is absorbed
@@ -32,7 +33,6 @@ export {
 export type {
   BridgeRefusal,
   DispatchResult,
-  GuardedRender,
   ReceiveResult,
   SurfaceBridge,
   SurfaceBridgeOptions,
@@ -75,6 +75,7 @@ export type {
   SizeChangedNotification,
   SurfaceOutboundMessage,
   SurfacePayload,
+  SurfaceUpdate,
   ViewResponse,
 } from './protocol.js';
 export { SURFACE_DOCUMENT } from './generated/surface-document.js';

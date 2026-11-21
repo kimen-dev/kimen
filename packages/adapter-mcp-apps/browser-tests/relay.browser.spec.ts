@@ -85,7 +85,9 @@ it('S15 relays an activated control to the reference host message handler', asyn
   await expect.poll(() => messages).toHaveLength(1);
   expect(calls).toEqual([
     expect.objectContaining({
-      arguments: { action: 'confirm', data: {} },
+      // The page revision travels with the call (spec 157); the relay below
+      // still carries only the action and its data.
+      arguments: { action: 'confirm', data: {}, revision: 1 },
       name: KIMEN_ACTION_TOOL,
     }),
   ]);

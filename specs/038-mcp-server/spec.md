@@ -65,7 +65,7 @@ catalog is mirrored as resources for hosts and people that read them.
 | `kimen_describe_component` | `tag` | props (type, allowed or documented values, default, required, range, URL format), slots, events, design tokens (`--ki-*` custom properties) and parts, plus the emitter's authoring block for that component |
 | `kimen_validate_spec` | `spec` (object, or JSON text) | `{ ok, issues[] }`, each issue `{ code, path, message, value? }`, plus a text summary |
 | `kimen_render_spec` | `spec` (object, or JSON text) | valid: the MCP Apps surface result (D1); invalid: an error result with the same issues and no surface payload |
-| `kimen_surface_action` | `{ action, data }` | app-only (D6): acknowledgment of a declared action, or an error naming an undeclared one |
+| `kimen_surface_action` | `{ action, data?, id?, revision? }` (`id` and `revision` accepted and ignored, spec 157) | app-only (D6): acknowledgment of a declared action, or an error naming an undeclared one |
 
 | Resource | MIME type | Content |
 | --- | --- | --- |
