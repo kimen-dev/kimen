@@ -56,6 +56,7 @@ import {
 import type {
   Catalog,
   CatalogEntry,
+  CatalogPropConstraint,
   NodeValidationScope,
   UiSpecNode,
   ValidationContext,
@@ -249,6 +250,8 @@ interface MNode {
   dom?: Element;
   /** The user interacted with this element's own value channel. */
   touched: boolean;
+  /** User-state props a `set` agreed with, still the user's (spec 159); absent when none. */
+  held?: Set<string>;
 }
 
 type MEntry = MNode | MText;
@@ -528,10 +531,35 @@ function undeclaredSlot(
 }
 
 /**
+ * The user's live value of user-state prop `name` of a live `node` (D5), or
+ * undefined when nothing there is the user's: the element is untouched, or
+ * it shows what the agent last wrote and no `set` agreed with the user
+ * since (spec 159). A diagnostic never repeats it (159 FR-004).
+ */
+function usersValue(
+  node: MNode,
+  name: string,
+  constraint: CatalogPropConstraint,
+): Scalar | undefined {
+  if (node.dom === undefined || !node.touched) {
+    return undefined;
+  }
+  const live = readLiveScalar(node.dom, name, constraint);
+  if (live === undefined || node.held?.has(name)) {
+    return live;
+  }
+  const written = authoredLiveScalar(
+    node.dom,
+    name,
+    ownEntry(node.props, name) ?? constraint.default,
+  );
+  return live === written ? undefined : live;
+}
+
+/**
  * What the user changed inside `node`'s subtree (the node itself included)
- * that a `replace` or `remove` would discard (035 S21, D5): a touched
- * element whose live user-state value differs from what the agent last
- * wrote. Discarding it needs `force` AND the host's permission.
+ * that a `replace` or `remove` would discard (035 S21, D5). Discarding it
+ * needs `force` AND the host's permission.
  */
 function heldUserState(
   node: MNode,
@@ -541,22 +569,13 @@ function heldUserState(
 ): RenderDiagnostic | null {
   for (const member of subtree(node)) {
     const origin = member.origin;
-    if (origin?.dom === undefined || !origin.touched) {
+    if (origin === undefined) {
       continue;
     }
     const entry = ownEntry(ctx.components, member.component);
     for (const name of USER_STATE_PROPS) {
       const constraint = ownEntry(entry?.props, name);
-      if (constraint === undefined) {
-        continue;
-      }
-      const live = readLiveScalar(origin.dom, name, constraint);
-      const written = authoredLiveScalar(
-        origin.dom,
-        name,
-        ownEntry(origin.props, name) ?? constraint.default,
-      );
-      if (live === undefined || live === written) {
+      if (constraint === undefined || usersValue(origin, name, constraint) === undefined) {
         continue;
       }
       if (!force) {
@@ -564,7 +583,6 @@ function heldUserState(
           `${at}.id`,
           'user-state-conflict',
           `the user changed "${name}" of node "${String(member.id)}"; this op would discard it without force`,
-          String(live),
         );
       }
       if (!ctx.allowUserStateOverride) {
@@ -572,7 +590,6 @@ function heldUserState(
           `${at}.id`,
           'user-state-override-denied',
           `the host does not allow discarding the user's "${name}" of node "${String(member.id)}"`,
-          String(live),
         );
       }
     }
@@ -679,10 +696,9 @@ function applyInsert(
 }
 
 /**
- * The user-state check of one `set` (D5, FR-006): on an element the user
- * interacted with, a user-state prop whose live value differs from what the
- * agent last wrote is the user's. Changing it away from the live value needs
- * `force` AND the host's permission.
+ * The user-state check of one `set` (D5, FR-006): changing a value that is
+ * the user's away from its live value needs `force` AND the host's
+ * permission.
  */
 function userStateConflict(
   node: MNode,
@@ -694,41 +710,24 @@ function userStateConflict(
 ): RenderDiagnostic | null {
   const origin = node.origin;
   const constraint = ownEntry(ownEntry(ctx.components, node.component)?.props, name);
+  if (!USER_STATE_PROPS.has(name) || origin?.dom === undefined || constraint === undefined) {
+    return null;
+  }
+  const live = usersValue(origin, name, constraint);
   if (
-    !USER_STATE_PROPS.has(name) ||
-    origin?.dom === undefined ||
-    !origin.touched ||
-    constraint === undefined
+    live === undefined ||
+    live === authoredLiveScalar(origin.dom, name, next ?? constraint.default)
   ) {
     return null;
   }
-  const live = readLiveScalar(origin.dom, name, constraint);
-  if (live === undefined) {
-    return null;
-  }
-  const written = authoredLiveScalar(
-    origin.dom,
-    name,
-    ownEntry(origin.props, name) ?? constraint.default,
-  );
-  const wanted = authoredLiveScalar(origin.dom, name, next ?? constraint.default);
-  if (live === written || live === wanted) {
-    return null;
-  }
   if (!force) {
-    return fail(
-      `${at}.props.${name}`,
-      'user-state-conflict',
-      conflictMessage(name, node.id, live),
-      String(live),
-    );
+    return fail(`${at}.props.${name}`, 'user-state-conflict', conflictMessage(name, node.id, live));
   }
   if (!ctx.allowUserStateOverride) {
     return fail(
       `${at}.props.${name}`,
       'user-state-override-denied',
       `the host does not allow overriding the user's "${name}"`,
-      String(live),
     );
   }
   return null;
@@ -822,6 +821,23 @@ function applySet(
   }
   for (const [name, value] of Object.entries(op.props)) {
     const previous = ownEntry(node.props, name);
+    const userState = USER_STATE_PROPS.has(name);
+    const overriding = force && ctx.allowUserStateOverride && userState;
+    const constraint = ownEntry(entry?.props, name);
+    // A set the check let through on a value that is still the user's agreed
+    // with it: the value stays theirs until a forced override (spec 159).
+    // Not `open`: agreeing that the user closed a dialog hands it back, which
+    // is how it is reopened (155 S6). Only the commit's live nodes are ever
+    // touched.
+    if (
+      userState &&
+      !overriding &&
+      name !== 'open' &&
+      constraint !== undefined &&
+      usersValue(node, name, constraint) !== undefined
+    ) {
+      (node.held ??= new Set()).add(name);
+    }
     if (value === null) {
       node.props = Object.fromEntries(Object.entries(node.props).filter(([key]) => key !== name));
     } else {
@@ -831,7 +847,6 @@ function applySet(
     if (ctx.dom === null || element === undefined) {
       continue;
     }
-    const overriding = force && ctx.allowUserStateOverride && USER_STATE_PROPS.has(name);
     const current = ownEntry(node.props, name);
     // A native layout element's props are CSSOM layout (spec 037 D4): the
     // whole layout is re-derived and only changed style properties written.
@@ -842,8 +857,9 @@ function applySet(
       // The component's own setter, with a validated scalar of the declared
       // type, or `undefined` for a removed prop with no default: a number
       // field has no empty value to fall back to (155 FR-004).
-      Reflect.set(element, name, current ?? ownEntry(entry?.props, name)?.default);
+      Reflect.set(element, name, current ?? constraint?.default);
       node.touched = false;
+      node.held?.clear();
     }
   }
   // Unsetting `type` re-pins the declarative no-submit default on every

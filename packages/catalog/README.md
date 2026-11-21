@@ -342,13 +342,14 @@ it nowhere, and it never takes focus from where the person is. No `set`,
 `replace` or `remove` overwrites or discards a `checked`, `open`,
 `selected` or `value` the user changed (in the node or, for
 `replace`/`remove`, anywhere in its subtree) unless the op says
-`force: true` and the host allowed it (`allowUserStateOverride`); a dialog
-the person closed is reopened with `open: false` and then `open: true` in
-two batches. A batch applied while another is being applied (from
-`onAction`) is rejected as `reentrant-batch`. Action events carry the node
-`id`, its current `path`, the `revision` and live `data`; `snapshot()`
-returns the content as deep-frozen plain data. The batch and op shapes are
-exported as `LiveBatch` and `LiveOp` types. See the
+`force: true` and the host allowed it (`allowUserStateOverride`), even
+after a `set` that agreed with the user; a dialog the person closed is
+reopened with `open: false` and then `open: true` in two batches. No
+rejection repeats the user's value. A batch applied while another is being
+applied (from `onAction`) is rejected as `reentrant-batch`. Action events
+carry the node `id`, its current `path`, the `revision` and live `data`;
+`snapshot()` returns the content as deep-frozen plain data. The batch and
+op shapes are exported as `LiveBatch` and `LiveOp` types. See the
 [UI-spec guide](../../docs/guides/ui-spec.md#live-surface).
 
 ## Registering your own components

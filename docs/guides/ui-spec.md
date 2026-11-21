@@ -427,7 +427,10 @@ text: a batch is untrusted data whatever its type says.
   created the surface with `allowUserStateOverride: true` (forced without
   it: `user-state-override-denied`). A forced `set` of `null` writes the
   prop's catalog default to the component, or empties it when there is
-  none, as for a number field.
+  none, as for a number field. A `set` that agrees with the user is
+  accepted, but their `checked`, `selected` and `value` stay theirs: a
+  later `set` to another value is still rejected. No rejection repeats the
+  user's value.
 - **Reopening a dialog the person closed.** After Escape or Cancel, a `set`
   of `open: true` is a conflict: the surface still records the dialog as
   open and reads the closed one as the person's choice. Send `open: false`
