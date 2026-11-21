@@ -863,8 +863,9 @@ function applySet(
       // type, or `undefined` for a removed prop with no default: a number
       // field has no empty value to fall back to (155 FR-004).
       Reflect.set(element, name, current ?? ownEntry(entry?.props, name)?.default);
-      node.touched = false;
-      node.held.clear();
+      // Only this prop is handed back: it now shows what the agent wrote.
+      // Every other prop the user changed stays theirs (spec 160 FR-001).
+      node.held.delete(name);
     }
   }
   // Unsetting `type` re-pins the declarative no-submit default on every

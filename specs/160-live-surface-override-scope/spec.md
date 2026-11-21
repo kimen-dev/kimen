@@ -8,10 +8,10 @@
 
 **Created**: 2026-11-21
 
-**Status**: Draft. S1 to S3 are a security boundary (Art. VIII) and await
-the founder's explicit confirmation, together with the amendment of
-`035-live-surface` D5 and FR-006 and of `159-live-surface-unsent-input`
-FR-002.
+**Status**: Approved. The founder confirmed S1 to S3 verbatim on 2026-11-21
+("Sí, aprobados"), including the Art. VIII security-boundary confirmation
+and the amendment of `035-live-surface` D5 and FR-006 and of
+`159-live-surface-unsent-input` FR-002.
 
 **Input**: a clean-context review of PR #574 (spec 159). The defect is older
 than 159 and is reproduced by `packages/catalog/tests/live-override-scope.spec.ts`,

@@ -244,7 +244,8 @@ The ops are `insert`, `set` (`null` removes a prop), `text`, `remove` and
   `checked`, `open`, `selected` or `value`, a batch that would overwrite or
   discard it is rejected (`user-state-conflict`), unless the op says
   `force: true` and the host created the surface with
-  `allowUserStateOverride: true`.
+  `allowUserStateOverride: true`. A forced `set` covers only the props it
+  names: forcing a search closed leaves the query the person typed theirs.
 - **Reopening a dialog the person closed** takes two batches: `open: false`,
   then `open: true`. The rejection of a single `open: true` says so.
 - **Focus is repaired, never taken.** If, once the batch has settled, focus

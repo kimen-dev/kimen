@@ -194,7 +194,10 @@ This is a security boundary of the live surface, not a UI component. Like
   overrides.
 - **FR-002**: a forced override that the host allows hands the control back,
   as today: afterwards an ordinary `set` applies until the person interacts
-  with the control again.
+  with the control again. *Amended by `160-live-surface-override-scope`
+  (approved by the founder on 2026-11-21): a forced `set` hands back only
+  the props it names; the person's other input on the control stays
+  theirs.*
 - **FR-003**: `open` keeps the behaviour of 035: a `set` that agrees with the
   person's open or closed state hands it back, so the two batches of spec 155
   S6 reopen a dialog the person closed.
@@ -208,7 +211,8 @@ This is a security boundary of the live surface, not a UI component. Like
 ### Key Entities
 
 - **Held input**: a user-state prop of a touched element that an agreeing
-  `set` left the person's. It ends with a forced override, and with an
+  `set` left the person's. It ends with a forced override that names it
+  (spec 160), and with an
   accepted `reset` once spec 155 Task 4 lands.
 
 ## Constitutional Surface *(mandatory)*

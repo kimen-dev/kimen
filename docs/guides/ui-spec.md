@@ -425,7 +425,9 @@ text: a batch is untrusted data whatever its type says.
   and a `replace` or `remove` of that node or of any ancestor, is rejected
   (`user-state-conflict`) unless the op says `force: true` **and** the host
   created the surface with `allowUserStateOverride: true` (forced without
-  it: `user-state-override-denied`). A forced `set` of `null` writes the
+  it: `user-state-override-denied`). A forced `set` hands back only the
+  props it names: forcing a search closed leaves the query the user typed
+  theirs. A forced `set` of `null` writes the
   prop's catalog default to the component, or empties it when there is
   none, as for a number field. A `set` that agrees with the user is
   accepted, but their `checked`, `selected` and `value` stay theirs: a
