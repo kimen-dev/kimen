@@ -101,8 +101,8 @@ export interface ActionEvent {
 /**
  * Declared render budgets (FR-006): nesting depth, node count and payload
  * size. A spec exactly at a budget passes (S14); one beyond it is rejected
- * before any node attaches (S9). The defaults are safe; a host may tighten
- * them but the renderer never renders past them.
+ * before any node attaches (S9). The defaults are safe; a host may lower or
+ * raise them, and the renderer never renders past the ones in force.
  */
 export interface RenderBudgets {
   readonly maxDepth: number;

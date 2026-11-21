@@ -90,7 +90,9 @@ write, so a rejected spec leaves the surface untouched.
   id-addressed `insert`, `set`, `text`, `remove` and `replace` operations:
   the whole batch is validated first, and only the named nodes change, so
   focus, typed values and scroll survive. Give nodes stable `id`s in the
-  first spec.
+  first spec. Check `ok` on every result: a rejection is returned, not
+  thrown, and leaves earlier batches applied. When a batch removes the row
+  that had focus, name the next row's control in the batch's `focus`.
 
 ## Your own components
 

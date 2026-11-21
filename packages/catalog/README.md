@@ -315,16 +315,24 @@ batches of `insert`, `set`, `text`, `remove` and `replace` operations
 addressed by the optional node `id` (spec 035). Each batch is validated
 against the state it would produce — purity wall, per-batch budgets,
 optional `ifRevision`, then the same catalog, guard and budget checks as a
-spec — before any DOM write; a rejected batch changes nothing and the
-surface keeps accepting batches. Applied batches touch only what they name,
-so focus, caret, typed text and scroll survive. No `set`, `replace` or
-`remove` overwrites or discards a `checked`/`value`/`open` the user changed
-(in the node or, for `replace`/`remove`, anywhere in its subtree) unless the
-op says `force: true` and the host allowed it (`allowUserStateOverride`).
-A batch applied while another is being applied (from `onAction`) is
-rejected as `reentrant-batch`. Action events carry the
-node `id`, its current `path`, the `revision` and live `data`; `snapshot()`
-returns the content as deep-frozen plain data. See the
+spec — before any DOM write. A rejected batch is the return value of
+`apply` (never a throw), changes nothing and leaves earlier batches applied;
+the surface keeps accepting batches. The five limits (64 ops and 65,536
+bytes per batch; 512 nodes, 32 levels and 262,144 bytes of state) are host
+options at creation, lower or higher than the defaults. Applied batches
+touch only what they name, so focus, caret, typed text and scroll survive;
+a batch may name a `focus` node that receives focus when the batch leaves
+it nowhere, and it never takes focus from where the person is. No `set`,
+`replace` or `remove` overwrites or discards a `checked`, `open`,
+`selected` or `value` the user changed (in the node or, for
+`replace`/`remove`, anywhere in its subtree) unless the op says
+`force: true` and the host allowed it (`allowUserStateOverride`); a dialog
+the person closed is reopened with `open: false` and then `open: true` in
+two batches. A batch applied while another is being applied (from
+`onAction`) is rejected as `reentrant-batch`. Action events carry the node
+`id`, its current `path`, the `revision` and live `data`; `snapshot()`
+returns the content as deep-frozen plain data. The batch and op shapes are
+exported as `LiveBatch` and `LiveOp` types. See the
 [UI-spec guide](../../docs/guides/ui-spec.md#live-surface).
 
 ## Registering your own components

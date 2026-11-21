@@ -38,7 +38,7 @@
         {
           "name": "createLiveSurface",
           "signature": "createLiveSurface(options) => LiveSurface",
-          "summary": "A long-lived surface changed through atomic batches of insert, set, text, remove and replace ops addressed by stable node ids: apply(batch) validates the whole batch and the state it would produce (purity wall, per-batch budgets, optional ifRevision, catalog, guards, state budgets) before any DOM write, rejects it whole with diagnostics while the surface stays live, and otherwise touches only the attributes, text and subtrees it names so focus, typed values and scroll survive. No set, replace or remove overwrites or discards checked/value/open the user changed unless forced and allowed by the host. Action events carry id, current path, revision and live data; snapshot() returns deep-frozen plain data."
+          "summary": "A long-lived surface changed through atomic batches of insert, set, text, remove and replace ops addressed by stable node ids: apply(batch) validates the whole batch and the state it would produce (purity wall, per-batch budgets, optional ifRevision, catalog, guards, state budgets) before any DOM write, rejects it whole with diagnostics while the surface stays live, and otherwise touches only the attributes, text and subtrees it names so focus, typed values and scroll survive. A rejection is the return value, never a throw, and leaves earlier batches applied: several batches are not one change. The five limits (64 ops and 65,536 bytes per batch; 512 nodes, 32 levels and 262,144 bytes of state) are host options at creation, lower or higher than the defaults. A batch may name a focus node: if the batch leaves keyboard focus nowhere, it goes there; focus that is somewhere never moves. No set, replace or remove overwrites or discards checked/open/selected/value the user changed unless forced and allowed by the host; a dialog the person closed is reopened with open: false, then open: true in a later batch. Action events carry id, current path, revision and live data; snapshot() returns deep-frozen plain data. The batch and op shapes are exported as the LiveBatch and LiveOp types."
         },
         {
           "name": "createCatalog",
@@ -47,7 +47,7 @@
         },
         {
           "name": "DEFAULT_RENDER_BUDGETS",
-          "summary": "The declared render budgets (maxDepth 32, maxNodes 512, maxBytes 262144). A spec exactly at a budget passes; one beyond it is rejected before any node attaches. Hosts may tighten them via options.budgets; the renderer never renders past them. Standalone validation has its own ceilings, VALIDATION_MAX_BYTES (262144 UTF-8 bytes, overridable per call with maxBytes) and VALIDATION_MAX_DEPTH (256)."
+          "summary": "The declared render budgets (maxDepth 32, maxNodes 512, maxBytes 262144). A spec exactly at a budget passes; one beyond it is rejected before any node attaches. Hosts may lower or raise them via options.budgets; the renderer never renders past the ones in force. Standalone validation has its own ceilings, VALIDATION_MAX_BYTES (262144 UTF-8 bytes, overridable per call with maxBytes) and VALIDATION_MAX_DEPTH (256)."
         },
         {
           "name": "catalogData",
