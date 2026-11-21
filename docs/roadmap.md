@@ -86,8 +86,9 @@ Publication to npm with trusted publishing and signed provenance; catalog and
 llms.txt versioned alongside the public API. The
 [documentation site](https://kimen.dev/docs/) is generated
 from the single source of truth. The current release contract covers
-`@kimen/elements` and `@kimen/tokens`; the publication scope for the catalog
-and adapters is an open decision — see [releasing.md](./releasing.md).
+`@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server`; the catalog, the
+emitter, the adapters and the framework wrappers remain unpublished until a
+founder decision — see [releasing.md](./releasing.md).
 
 Follow progress through issues and pull requests.
 
@@ -96,6 +97,7 @@ Follow progress through issues and pull requests.
 - **available** — Emitter kit: model-agnostic prompt, catalog-specialized JSON Schema and tool definition so any LLM emits valid specs, with a single-round repair loop
 - **available** — Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
+- **available** — Live surface: a long-lived surface stays current through atomic, id-addressed batches validated by the same guardrail, so focus, typed text and scroll survive
 - **available** — Kimen MCP server: over stdio, agents list and describe the catalog, validate UI specs with correctable issues and render them as MCP Apps surfaces through the guarded renderer
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer
