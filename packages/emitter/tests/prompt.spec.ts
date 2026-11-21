@@ -160,9 +160,19 @@ describe('catalogPrompt', () => {
   it('S19 states the optional node id and its grammar in the format rules', () => {
     const prompt = promptOrThrow(catalogData);
     expect(prompt).toContain('{"id": "<id>", "component": "<tag>"');
-    expect(prompt).toContain('"id", "props", "action" and "slots" are optional');
+    expect(prompt).toContain('"id", "props", "action", "collect" and "slots" are optional');
     expect(prompt).toContain('unique within the document');
     expect(prompt).toContain('at most 64 characters');
+  });
+
+  it('states how a bound node collects other fields (spec 153)', () => {
+    const prompt = promptOrThrow(catalogData);
+    expect(prompt).toContain('"collect": {"<name>": "<id>"}');
+    expect(prompt).toContain(
+      '"collect" lets a node with an "action" carry the values of other fields',
+    );
+    expect(prompt).toContain('The action fires only when every collected field is valid');
+    expect(prompt).toContain('At most 32 entries');
   });
 
   it('S10 stamps the catalog schema version on the prompt', () => {

@@ -62,8 +62,9 @@ here:
   the existing element; no element outside a `replace` or `remove` is
   recreated; nothing outside the batch is reordered. Focus, selection,
   scroll and typed values survive (proven in a real browser).
-- **D5** User-owned state (`checked`, `value`, `open` — a control's own
-  value channel) that the user has changed is never overwritten nor
+- **D5** User-owned state (`checked`, `open`, `selected`, `value` — a
+  control's own value channel; `selected` since the chips of #448) that the
+  user has changed is never overwritten nor
   discarded by the agent unless the op says `force: true` AND the host
   enabled `allowUserStateOverride` (default off). This binds `set` on the
   node, and `replace` and `remove` of the node or of ANY of its ancestors
@@ -517,8 +518,8 @@ guarantees is that it does not destroy them (S4–S6, S13).
   `replace` swaps only that subtree in place. Every new element crosses the
   same builder as `renderUiSpec` (attributes, inert text nodes, declared
   activation event). No other element is created, removed or moved.
-- **FR-006** (D5): `checked`, `value` and `open` are user-owned on an
-  element whose catalog entry declares them, once a user interaction event
+- **FR-006** (D5): `checked`, `open`, `selected` and `value` are user-owned
+  on an element whose catalog entry declares them, once a user interaction event
   (`input`, `change` or a declared event of that entry) was emitted by that
   element. A `set` that would change such a prop away from the element's
   live value is rejected as `user-state-conflict` unless the op carries

@@ -32,3 +32,15 @@ field and suggestion hit areas.
   ></ki-time-input>
 </div>
 ```
+
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted time,
+such as a booking check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next edit or pick of a time
+withdraws the error. Remove the attribute when a new attempt starts: setting
+the same text again while it is still set shows nothing.
+
+```html
+<ki-time-input label="Start time" name="start" lang="en-GB" value="09:30" custom-error="That slot was just booked."></ki-time-input>
+```

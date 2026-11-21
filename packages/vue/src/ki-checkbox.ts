@@ -19,7 +19,8 @@ export const KiCheckbox: StencilVueComponent<JSX.KiCheckbox, JSX.KiCheckbox["che
   'value',
   'labelHint',
   'helpText',
-  'errorText'
+  'errorText',
+  'customError'
 ], [],
 'checked', 'change', undefined);
 

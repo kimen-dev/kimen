@@ -344,6 +344,27 @@ describe('uiSpecJsonSchema', () => {
     expect(strict({ actions: ['confirm'], root: node('confirm'), version: 1 })).toBe(true);
   });
 
+  it('offers collect as a bounded map of node ids under draft-2020-12 only (spec 153)', () => {
+    const validate = compile(deriveOrThrow(catalogData, { components: ['ki-button'] }));
+    const spec = (collect: unknown) => ({
+      actions: ['add'],
+      root: { action: 'add', collect, component: 'ki-button' },
+      version: 1,
+    });
+    expect(validate(spec({ quantity: 'f-qty', title: 'f-title' }))).toBe(true);
+    expect(validate(spec({ title: 'Not an id' }))).toBe(false);
+    const thirtyThree = Object.fromEntries(
+      Array.from({ length: 33 }, (_, index) => [`v${String(index)}`, 'f-title']),
+    );
+    expect(validate(spec(thirtyThree))).toBe(false);
+    // A map of free names has no form in the strict subset: the key is absent.
+    const strict = deriveOrThrow(catalogData, {
+      components: ['ki-button'],
+      target: 'openai-strict',
+    });
+    expect(JSON.stringify(strict)).not.toContain('"collect"');
+  });
+
   it('refuses the removed anthropic-strict target like any unknown target', () => {
     // Removed on purpose (FR-003): the profile could not meet the provider's
     // documented limits. A caller still passing it must fail closed, never

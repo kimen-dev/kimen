@@ -8,7 +8,7 @@
  * points (FR-011).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint } from '@kimen/catalog';
-import { NATIVE_PRIMITIVE_TAGS, NODE_ID_GRAMMAR } from '@kimen/catalog';
+import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS, NODE_ID_GRAMMAR } from '@kimen/catalog';
 
 import type { Derivation, EmitterIssue, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
@@ -172,6 +172,18 @@ function componentBranch(
     properties['action'] = strict ? { anyOf: [action, { type: 'null' }] } : action;
     if (strict) {
       required.push('action');
+    }
+    // The fields a bound action collects (spec 153): data names mapped to
+    // node ids; the prompt states the rules. OpenAI's strict subset closes
+    // every object over listed properties, so a map of free names has no
+    // form there and only the default dialect offers it; the boundary
+    // accepts it from any emitter.
+    if (!strict) {
+      properties['collect'] = {
+        additionalProperties: { pattern: NODE_ID_GRAMMAR.source, type: 'string' },
+        maxProperties: COLLECT_MAX_ENTRIES,
+        type: 'object',
+      };
     }
   }
   const slotNames = Object.keys(entry.slots);

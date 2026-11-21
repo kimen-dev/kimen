@@ -239,9 +239,9 @@ This is a security boundary of the live surface, not a UI component. Like
 
 ## Assumptions
 
-- Spec 155 Task 3 (PR #566) touches the same file and adds a remedy message
-  for `open`; this change is rebased on it if it merges first. Its S6 test
-  then stops expecting `value: 'false'`.
+- Spec 155 Task 3 (PR #566) merged first and added the remedy message for
+  `open`; this change builds on it, and its S6 test no longer expects
+  `value: 'false'`.
 - Spec 155 Task 4 (`reset`) clears the held input together with the touched
   mark.
 - An accepted agreeing `set` still tells the agent that its guess equals

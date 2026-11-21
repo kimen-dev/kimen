@@ -15,6 +15,7 @@ export const KiCheckboxGroup: StencilVueComponent<JSX.KiCheckboxGroup> = /*@__PU
   'name',
   'helpText',
   'errorText',
+  'customError',
   'disabled',
   'min',
   'max',

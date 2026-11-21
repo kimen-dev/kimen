@@ -29,3 +29,15 @@ Boolean attributes use presence semantics — omit `checked` to express unchecke
 ```html
 <ki-checkbox indeterminate>Select all rows</ki-checkbox>
 ```
+
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+answer. The checkbox is invalid, blocks its form and is announced as invalid
+at once. Toggling it withdraws the error. Remove the attribute when a new
+attempt starts: setting the same text again while it is still set shows
+nothing. Inside a `ki-checkbox-group`, set it on the group.
+
+```html
+<ki-checkbox name="newsletter" checked custom-error="Confirm your email address before subscribing.">Send me the newsletter</ki-checkbox>
+```

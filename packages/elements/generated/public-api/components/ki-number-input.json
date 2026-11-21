@@ -1,6 +1,14 @@
 {
   "component": {
     "attributes": {
+      "custom-error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted number (\"Only 40 seats left\"). While it holds text the field is\ninvalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting at the person's next\nedit or step of the number, or when the form is reset, so it never blocks\nthe corrected answer. It outranks `error-text`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for `required`, the bounds or unreadable\ntext, which the field reports itself; `error-text` words those. Setting\nthe same text again while the prop still holds it shows nothing: remove\nit first, then set it again.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "decrease-label": {
         "default": "'Decrease {label}'",
         "deprecatedSince": null,
@@ -20,7 +28,7 @@
       "error-text": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Validation hint to show when the entry fails a constraint.",
+        "description": "Validation hint to show when the entry fails a constraint. A `custom-error` outranks it.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -587,6 +595,14 @@
       }
     },
     "properties": {
+      "customError": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted number (\"Only 40 seats left\"). While it holds text the field is\ninvalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting at the person's next\nedit or step of the number, or when the form is reset, so it never blocks\nthe corrected answer. It outranks `error-text`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for `required`, the bounds or unreadable\ntext, which the field reports itself; `error-text` words those. Setting\nthe same text again while the prop still holds it shows nothing: remove\nit first, then set it again.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "decreaseLabel": {
         "default": "'Decrease {label}'",
         "deprecatedSince": null,
@@ -606,7 +622,7 @@
       "errorText": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Validation hint to show when the entry fails a constraint.",
+        "description": "Validation hint to show when the entry fails a constraint. A `custom-error` outranks it.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"

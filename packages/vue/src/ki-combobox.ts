@@ -14,6 +14,7 @@ export const KiCombobox: StencilVueComponent<JSX.KiCombobox, JSX.KiCombobox["val
   'placeholder',
   'helpText',
   'errorText',
+  'customError',
   'name',
   'value',
   'multiple',

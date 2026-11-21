@@ -63,8 +63,24 @@ export class KiNumberInput {
   /** Context or instructions displayed beneath the field when it has no visible error. */
   @Prop() helpText?: string;
 
-  /** Validation hint to show when the entry fails a constraint. */
+  /** Validation hint to show when the entry fails a constraint. A `custom-error` outranks it. */
   @Prop() errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted number ("Only 40 seats left"). While it holds text the field is
+   * invalid, blocks its form, shows the text in place of the help text at
+   * once and is announced as invalid. It stops counting at the person's next
+   * edit or step of the number, or when the form is reset, so it never blocks
+   * the corrected answer. It outranks `error-text`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for `required`, the bounds or unreadable
+   * text, which the field reports itself; `error-text` words those. Setting
+   * the same text again while the prop still holds it shows nothing: remove
+   * it first, then set it again.
+   */
+  @Prop() customError?: string;
 
   /** Whether the user must enter a number before submitting the form. */
   @Prop({ reflect: true }) required = false;
@@ -135,6 +151,8 @@ export class KiNumberInput {
   private input: HTMLInputElement | undefined;
   private editing = false;
   private editorPointerFocus = false;
+  // Whether the person's edit or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
   private committedValue: number | undefined;
   private localUpdate = false;
   private formatOptions: Intl.NumberFormatOptions | undefined;
@@ -182,6 +200,33 @@ export class KiNumberInput {
     this.adjustment = '';
   }
 
+  /**
+   * Answers at once whether the field satisfies its constraints and carries
+   * no `custom-error`, firing `invalid` when it does not, as a native field
+   * does. Custom-elements build only.
+   * When NOT to use: use `reportValidity()` instead when the person should
+   * see the problem.
+   */
+  checkValidity(): boolean {
+    return this.internals.checkValidity();
+  }
+
+  /**
+   * Like `checkValidity()`, and when the field is invalid it shows its
+   * message and the browser moves focus to it. Custom-elements build only.
+   * When NOT to use: do not call it on every keystroke; it interrupts the
+   * person.
+   */
+  reportValidity(): boolean {
+    return this.internals.reportValidity();
+  }
+
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncForm();
+  }
+
   @Watch('min')
   @Watch('max')
   @Watch('required')
@@ -200,7 +245,9 @@ export class KiNumberInput {
     const rangeUnderflow = value !== undefined && min !== undefined && value < min;
     const rangeOverflow = value !== undefined && max !== undefined && value > max;
     const valueMissing = this.required && value === undefined && !badInput;
-    const invalid = badInput || rangeUnderflow || rangeOverflow || valueMissing;
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const invalid =
+      badInput || rangeUnderflow || rangeOverflow || valueMissing || customError !== '';
     const disabled = this.effectiveDisabled;
     this.internals.setFormValue(
       disabled || badInput || rangeUnderflow || rangeOverflow ? null : String(value ?? ''),
@@ -215,15 +262,20 @@ export class KiNumberInput {
       valueMissing && input?.validationMessage
         ? input.validationMessage
         : this.invalidNumberMessage;
-    this.message = fieldValidationMessage('', this.errorText, fallback) || ' ';
+    this.message = fieldValidationMessage(customError, this.errorText, fallback) || ' ';
     this.internals.setValidity(
-      { badInput, rangeUnderflow, rangeOverflow, valueMissing },
+      { badInput, rangeUnderflow, rangeOverflow, valueMissing, customError: customError !== '' },
       this.message,
       input,
     );
+    // A custom error shows at once, without a commit or a submission (D2).
+    if (customError !== '') {
+      this.showError = true;
+    }
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.committedValue = readNumberAttribute(this.host.getAttribute('value'));
     this.setValue(this.committedValue);
     this.draft = undefined;
@@ -333,6 +385,7 @@ export class KiNumberInput {
 
   private readonly handleInput = (event: Event): void => {
     if (this.effectiveDisabled) return;
+    this.customErrorWithdrawn = true;
     this.draft = (event.target as HTMLInputElement).value;
     this.adjustment = '';
     this.setValue(this.codec.parse(this.draft));
@@ -362,6 +415,7 @@ export class KiNumberInput {
 
   private applyStep(next: number): void {
     if (this.effectiveDisabled || next === this.value) return;
+    this.customErrorWithdrawn = true;
     this.draft = undefined;
     this.adjustment = '';
     this.setValue(next);

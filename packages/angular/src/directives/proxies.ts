@@ -449,14 +449,14 @@ export declare interface KiCarouselItem extends Components.KiCarouselItem {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiCheckbox,
-  inputs: ['checked', 'disabled', 'errorText', 'helpText', 'indeterminate', 'labelHint', 'name', 'required', 'size', 'value']
+  inputs: ['checked', 'customError', 'disabled', 'errorText', 'helpText', 'indeterminate', 'labelHint', 'name', 'required', 'size', 'value']
 })
 @Component({
   selector: 'ki-checkbox',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['checked', 'disabled', 'errorText', 'helpText', 'indeterminate', 'labelHint', 'name', 'required', 'size', 'value'],
+  inputs: ['checked', 'customError', 'disabled', 'errorText', 'helpText', 'indeterminate', 'labelHint', 'name', 'required', 'size', 'value'],
 })
 export class KiCheckbox {
   protected el: HTMLKiCheckboxElement;
@@ -472,14 +472,14 @@ export declare interface KiCheckbox extends Components.KiCheckbox {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiCheckboxGroup,
-  inputs: ['disabled', 'errorText', 'helpText', 'label', 'labelHidden', 'max', 'min', 'name', 'orientation', 'value']
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'label', 'labelHidden', 'max', 'min', 'name', 'orientation', 'value']
 })
 @Component({
   selector: 'ki-checkbox-group',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHidden', 'max', 'min', 'name', 'orientation', 'value'],
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHidden', 'max', 'min', 'name', 'orientation', 'value'],
 })
 export class KiCheckboxGroup {
   protected el: HTMLKiCheckboxGroupElement;
@@ -595,14 +595,14 @@ export declare interface KiCodeBlock extends Components.KiCodeBlock {
 
 @ProxyCmp({
   defineCustomElementFn: defineKiCodeInput,
-  inputs: ['disabled', 'errorText', 'helpText', 'label', 'length', 'name', 'required', 'size', 'type', 'value']
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'label', 'length', 'name', 'required', 'size', 'type', 'value']
 })
 @Component({
   selector: 'ki-code-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'length', 'name', 'required', 'size', 'type', 'value'],
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'length', 'name', 'required', 'size', 'type', 'value'],
 })
 export class KiCodeInput {
   protected el: HTMLKiCodeInputElement;
@@ -620,14 +620,14 @@ export declare interface KiCodeInput extends Components.KiCodeInput {
 
 @ProxyCmp({
   defineCustomElementFn: defineKiCombobox,
-  inputs: ['addLabel', 'allowCustom', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', 'label', 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value']
+  inputs: ['addLabel', 'allowCustom', 'customError', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', 'label', 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value']
 })
 @Component({
   selector: 'ki-combobox',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['addLabel', 'allowCustom', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', { name: 'label', required: true }, 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value'],
+  inputs: ['addLabel', 'allowCustom', 'customError', 'disabled', 'emptyLabel', 'errorText', 'filter', 'helpText', { name: 'label', required: true }, 'loading', 'loadingLabel', 'multiple', 'name', 'placeholder', 'removeLabel', 'required', 'resultCountLabel', 'resultOneLabel', 'value'],
 })
 export class KiCombobox {
   protected el: HTMLKiComboboxElement;
@@ -742,14 +742,14 @@ export declare interface KiCounter extends Components.KiCounter {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiDatePicker,
-  inputs: ['applyLabel', 'cancelLabel', 'changeLabel', 'chooseLabel', 'confirm', 'disabled', 'errorText', 'firstDayOfWeek', 'helpText', 'invalidDateLabel', 'label', 'locale', 'max', 'min', 'mode', 'name', 'nextMonthLabel', 'previousMonthLabel', 'required', 'value']
+  inputs: ['applyLabel', 'cancelLabel', 'changeLabel', 'chooseLabel', 'confirm', 'customError', 'disabled', 'errorText', 'firstDayOfWeek', 'helpText', 'invalidDateLabel', 'label', 'locale', 'max', 'min', 'mode', 'name', 'nextMonthLabel', 'previousMonthLabel', 'required', 'value']
 })
 @Component({
   selector: 'ki-date-picker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['applyLabel', 'cancelLabel', 'changeLabel', 'chooseLabel', 'confirm', 'disabled', 'errorText', 'firstDayOfWeek', 'helpText', 'invalidDateLabel', { name: 'label', required: true }, 'locale', 'max', 'min', 'mode', 'name', 'nextMonthLabel', 'previousMonthLabel', 'required', 'value'],
+  inputs: ['applyLabel', 'cancelLabel', 'changeLabel', 'chooseLabel', 'confirm', 'customError', 'disabled', 'errorText', 'firstDayOfWeek', 'helpText', 'invalidDateLabel', { name: 'label', required: true }, 'locale', 'max', 'min', 'mode', 'name', 'nextMonthLabel', 'previousMonthLabel', 'required', 'value'],
 })
 export class KiDatePicker {
   protected el: HTMLKiDatePickerElement;
@@ -1176,14 +1176,14 @@ export declare interface KiIndicator extends Components.KiIndicator {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiInput,
-  inputs: ['aiSuggestionText', 'appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'showCount', 'size', 'type', 'value']
+  inputs: ['aiSuggestionText', 'appearance', 'autocomplete', 'customError', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'showCount', 'size', 'type', 'value']
 })
 @Component({
   selector: 'ki-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['aiSuggestionText', 'appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'showCount', 'size', 'type', 'value'],
+  inputs: ['aiSuggestionText', 'appearance', 'autocomplete', 'customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'showCount', 'size', 'type', 'value'],
 })
 export class KiInput {
   protected el: HTMLKiInputElement;
@@ -1458,14 +1458,14 @@ export declare interface KiNote extends Components.KiNote {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiNumberInput,
-  inputs: ['decreaseLabel', 'disabled', 'errorText', 'format', 'helpText', 'increaseLabel', 'invalidNumberMessage', 'label', 'max', 'maximumMessage', 'min', 'minimumMessage', 'name', 'required', 'step', 'steppers', 'unit', 'value']
+  inputs: ['customError', 'decreaseLabel', 'disabled', 'errorText', 'format', 'helpText', 'increaseLabel', 'invalidNumberMessage', 'label', 'max', 'maximumMessage', 'min', 'minimumMessage', 'name', 'required', 'step', 'steppers', 'unit', 'value']
 })
 @Component({
   selector: 'ki-number-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['decreaseLabel', 'disabled', 'errorText', 'format', 'helpText', 'increaseLabel', 'invalidNumberMessage', { name: 'label', required: true }, 'max', 'maximumMessage', 'min', 'minimumMessage', 'name', 'required', 'step', 'steppers', 'unit', 'value'],
+  inputs: ['customError', 'decreaseLabel', 'disabled', 'errorText', 'format', 'helpText', 'increaseLabel', 'invalidNumberMessage', { name: 'label', required: true }, 'max', 'maximumMessage', 'min', 'minimumMessage', 'name', 'required', 'step', 'steppers', 'unit', 'value'],
 })
 export class KiNumberInput {
   protected el: HTMLKiNumberInputElement;
@@ -1648,14 +1648,14 @@ export declare interface KiRadio extends Components.KiRadio {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiRadioGroup,
-  inputs: ['disabled', 'errorText', 'helpText', 'label', 'labelHidden', 'labelHint', 'name', 'required', 'size', 'value']
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'label', 'labelHidden', 'labelHint', 'name', 'required', 'size', 'value']
 })
 @Component({
   selector: 'ki-radio-group',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHidden', 'labelHint', 'name', 'required', 'size', 'value'],
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHidden', 'labelHint', 'name', 'required', 'size', 'value'],
 })
 export class KiRadioGroup {
   protected el: HTMLKiRadioGroupElement;
@@ -1863,14 +1863,14 @@ export declare interface KiSegmentedControl extends Components.KiSegmentedContro
 
 @ProxyCmp({
   defineCustomElementFn: defineKiSelect,
-  inputs: ['disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'required', 'size', 'value']
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'placeholder', 'required', 'size', 'value']
 })
 @Component({
   selector: 'ki-select',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'placeholder', 'required', 'size', 'value'],
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'placeholder', 'required', 'size', 'value'],
 })
 export class KiSelect {
   protected el: HTMLKiSelectElement;
@@ -2235,14 +2235,14 @@ export declare interface KiSuggestions extends Components.KiSuggestions {
 
 @ProxyCmp({
   defineCustomElementFn: defineKiSwitch,
-  inputs: ['checked', 'disabled', 'helpText', 'name', 'size', 'value']
+  inputs: ['checked', 'customError', 'disabled', 'helpText', 'name', 'size', 'value']
 })
 @Component({
   selector: 'ki-switch',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['checked', 'disabled', 'helpText', 'name', 'size', 'value'],
+  inputs: ['checked', 'customError', 'disabled', 'helpText', 'name', 'size', 'value'],
 })
 export class KiSwitch {
   protected el: HTMLKiSwitchElement;
@@ -2354,14 +2354,14 @@ export declare interface KiTabs extends Components.KiTabs {
 
 @ProxyCmp({
   defineCustomElementFn: defineKiTextarea,
-  inputs: ['appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'maxlength', 'maxlengthErrorText', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'showCount', 'size', 'value']
+  inputs: ['appearance', 'autocomplete', 'customError', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'maxlength', 'maxlengthErrorText', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'showCount', 'size', 'value']
 })
 @Component({
   selector: 'ki-textarea',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['appearance', 'autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'maxlength', 'maxlengthErrorText', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'showCount', 'size', 'value'],
+  inputs: ['appearance', 'autocomplete', 'customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'maxlength', 'maxlengthErrorText', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'showCount', 'size', 'value'],
 })
 export class KiTextarea {
   protected el: HTMLKiTextareaElement;
@@ -2377,14 +2377,14 @@ export declare interface KiTextarea extends Components.KiTextarea {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiTimeInput,
-  inputs: ['disabled', 'errorText', 'helpText', 'invalidTimeText', 'label', 'listLabel', 'max', 'min', 'name', 'pickerLabel', 'required', 'step', 'timeZone', 'value']
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'invalidTimeText', 'label', 'listLabel', 'max', 'min', 'name', 'pickerLabel', 'required', 'step', 'timeZone', 'value']
 })
 @Component({
   selector: 'ki-time-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'errorText', 'helpText', 'invalidTimeText', { name: 'label', required: true }, 'listLabel', 'max', 'min', 'name', 'pickerLabel', 'required', 'step', 'timeZone', 'value'],
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'invalidTimeText', { name: 'label', required: true }, 'listLabel', 'max', 'min', 'name', 'pickerLabel', 'required', 'step', 'timeZone', 'value'],
 })
 export class KiTimeInput {
   protected el: HTMLKiTimeInputElement;

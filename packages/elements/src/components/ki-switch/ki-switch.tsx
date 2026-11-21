@@ -121,9 +121,25 @@ export class KiSwitch {
    * turning it on changes.
    * When NOT to use: do not repeat the label. A switch has no constraint of
    * its own, so it takes no error text; an error the application sets with
-   * `setCustomValidity` shows in this line's place.
+   * `custom-error` or `setCustomValidity` shows in this line's place.
    */
   @Prop({ reflect: true }) helpText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted setting ("Two-step sign-in needs a phone number"). While it
+   * holds text the switch is invalid, blocks its form, shows the text in
+   * place of the help text at once and is announced as invalid. It stops
+   * counting when the person toggles the switch, or when the form is reset,
+   * so it never blocks the corrected answer. It outranks an error set with
+   * `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for help that is not an error; use
+   * `help-text`. Setting the same text again while the prop still holds it
+   * shows nothing: remove it first, then set it again.
+   */
+  @Prop({ reflect: true }) customError?: string;
 
   @State() private formDisabled = false;
   // Whether the application's error has been reported to the person (a
@@ -145,6 +161,9 @@ export class KiSwitch {
   // reapplied on every validity sync, so the control's own revalidation never
   // drops it.
   private customValidity = '';
+
+  // Whether the person's toggle or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
 
   /**
    * Validity of the control, as on a native form control: which constraint
@@ -270,6 +289,7 @@ export class KiSwitch {
   @Watch('disabled')
   protected disabledChanged(): void {
     this.syncInput();
+    this.syncValidity();
     this.syncUserInvalid();
   }
 
@@ -278,22 +298,31 @@ export class KiSwitch {
     this.syncFormValue();
   }
 
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncValidity();
+  }
+
   formAssociatedCallback(): void {
     this.resetChecked = checkedFromMarkup(this.host.hasAttribute('checked'), this.checked);
     this.syncFormValue();
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.checked = this.resetChecked;
     this.userInvalid = false;
     this.syncInput();
     this.syncFormValue();
+    this.syncValidity();
   }
 
   formDisabledCallback(disabled: boolean): void {
     this.formDisabled = disabled;
     this.syncInput();
     this.syncFormValue();
+    this.syncValidity();
     this.syncUserInvalid();
   }
 
@@ -323,7 +352,8 @@ export class KiSwitch {
       return;
     }
 
-    this.input.setCustomValidity(this.customValidity);
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    this.input.setCustomValidity(customError || this.customValidity);
     if (this.input.validity.valid) {
       this.internals.setValidity({});
       this.message = '';
@@ -333,6 +363,10 @@ export class KiSwitch {
 
     this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
     this.message = this.internals.validationMessage;
+    // A custom error shows at once, without a submission (D2).
+    if (customError !== '' && !this.effectiveDisabled) {
+      this.userInvalid = true;
+    }
   }
 
   private syncInput(): void {
@@ -356,6 +390,10 @@ export class KiSwitch {
   private readonly handleInput = (event: Event): void => {
     this.checked = (event.currentTarget as HTMLInputElement).checked;
     this.syncFormValue();
+    if (!this.customErrorWithdrawn) {
+      this.customErrorWithdrawn = true;
+      this.syncValidity();
+    }
   };
 
   private readonly handleChange = (event: Event): void => {
