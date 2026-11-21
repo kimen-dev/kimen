@@ -154,12 +154,12 @@ Skip this step if you installed the Claude Code, Codex or Antigravity plugin
 or the Gemini CLI extension: they start the server for you.
 
 Each client starts the server itself over stdio with
-`npx -y -p @kimen/mcp-server@0.1.1 kimen-mcp`. The server takes no arguments.
+`npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp`. The server takes no arguments.
 
 ### Claude Code
 
 ```sh
-claude mcp add --transport stdio --scope user kimen -- npx -y -p @kimen/mcp-server@0.1.1 kimen-mcp
+claude mcp add --transport stdio --scope user kimen -- npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp
 ```
 
 `--scope user` makes it available in every project. To share it with a
@@ -180,7 +180,7 @@ Windows `%APPDATA%\Claude\claude_desktop_config.json`):
   "mcpServers": {
     "kimen": {
       "command": "npx",
-      "args": ["-y", "-p", "@kimen/mcp-server@0.1.1", "kimen-mcp"]
+      "args": ["-y", "-p", "@kimen/mcp-server@0.1.2", "kimen-mcp"]
     }
   }
 }
@@ -200,7 +200,7 @@ connect only to remote servers, so a local `kimen-mcp` is a desktop feature.
 ### Codex
 
 ```sh
-codex mcp add kimen -- npx -y -p @kimen/mcp-server@0.1.1 kimen-mcp
+codex mcp add kimen -- npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp
 ```
 
 This writes to `~/.codex/config.toml`, which the Codex CLI, the IDE
@@ -209,7 +209,7 @@ extension and the desktop app share:
 ```toml
 [mcp_servers.kimen]
 command = "npx"
-args = ["-y", "-p", "@kimen/mcp-server@0.1.1", "kimen-mcp"]
+args = ["-y", "-p", "@kimen/mcp-server@0.1.2", "kimen-mcp"]
 ```
 
 ### Antigravity
@@ -223,7 +223,7 @@ Add the server to `~/.gemini/config/mcp_config.json` (all workspaces) or
   "mcpServers": {
     "kimen": {
       "command": "npx",
-      "args": ["-y", "-p", "@kimen/mcp-server@0.1.1", "kimen-mcp"]
+      "args": ["-y", "-p", "@kimen/mcp-server@0.1.2", "kimen-mcp"]
     }
   }
 }
@@ -240,7 +240,7 @@ Add the server to `opencode.json` in the project, or to
   "mcp": {
     "kimen": {
       "type": "local",
-      "command": ["npx", "-y", "-p", "@kimen/mcp-server@0.1.1", "kimen-mcp"],
+      "command": ["npx", "-y", "-p", "@kimen/mcp-server@0.1.2", "kimen-mcp"],
       "enabled": true
     }
   }
@@ -253,9 +253,9 @@ Add the server to `opencode.json` in the project, or to
 
 One click adds the server, after you review it:
 
-- [Add to Cursor](https://cursor.com/install-mcp?name=kimen&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIi1wIiwiQGtpbWVuL21jcC1zZXJ2ZXJAMC4xLjEiLCJraW1lbi1tY3AiXX0%3D)
-- [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522kimen%2522%252C%2522type%2522%253A%2522stdio%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522-p%2522%252C%2522%2540kimen%252Fmcp-server%25400.1.1%2522%252C%2522kimen-mcp%2522%255D%257D)
-  ([VS Code Insiders](https://vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522kimen%2522%252C%2522type%2522%253A%2522stdio%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522-p%2522%252C%2522%2540kimen%252Fmcp-server%25400.1.1%2522%252C%2522kimen-mcp%2522%255D%257D))
+- [Add to Cursor](https://cursor.com/install-mcp?name=kimen&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIi1wIiwiQGtpbWVuL21jcC1zZXJ2ZXJAMC4xLjIiLCJraW1lbi1tY3AiXX0%3D)
+- [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522kimen%2522%252C%2522type%2522%253A%2522stdio%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522-p%2522%252C%2522%2540kimen%252Fmcp-server%25400.1.2%2522%252C%2522kimen-mcp%2522%255D%257D)
+  ([VS Code Insiders](https://vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522kimen%2522%252C%2522type%2522%253A%2522stdio%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522-p%2522%252C%2522%2540kimen%252Fmcp-server%25400.1.2%2522%252C%2522kimen-mcp%2522%255D%257D))
 
 Both links carry the same `npx` command as the other clients. VS Code adds
 the server to your editor configuration, which it forwards to Copilot
@@ -266,7 +266,7 @@ configuration by hand, see [Other clients](#other-clients).
 
 | Client | File | Shape |
 | --- | --- | --- |
-| Gemini CLI | `.gemini/settings.json` or `~/.gemini/settings.json` | `mcpServers.kimen` with `command` and `args`; or `gemini mcp add -s user kimen npx -y -p @kimen/mcp-server@0.1.1 kimen-mcp` |
+| Gemini CLI | `.gemini/settings.json` or `~/.gemini/settings.json` | `mcpServers.kimen` with `command` and `args`; or `gemini mcp add -s user kimen npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp` |
 | VS Code (GitHub Copilot) | `.mcp.json` at the workspace root | `mcpServers.kimen` with `"type": "stdio"`, `command`, `args`; MCP Apps needs `chat.mcp.apps.enabled` |
 | Cursor | `.cursor/mcp.json` or `~/.cursor/mcp.json` | `mcpServers.kimen` with `"type": "stdio"`, `command`, `args` |
 | Devin Desktop (Windsurf) | `.devin/mcp_config.json` | `mcpServers.kimen` with `command` and `args` |
@@ -279,7 +279,7 @@ Node 25, the network. The flags need that file's path, which `npx` hides in
 its cache, so install the package and run the file with `node`:
 
 ```sh
-npm install --global @kimen/mcp-server@0.1.1
+npm install --global @kimen/mcp-server@0.1.2
 KIMEN_MCP="$(npm root --global)/@kimen/mcp-server/dist/kimen-mcp.mjs"
 claude mcp add --transport stdio --scope user kimen -- \
   node --permission --allow-fs-read="$KIMEN_MCP" "$KIMEN_MCP"
@@ -305,7 +305,7 @@ export KIMEN_MCP="$PWD/packages/mcp-server/dist/kimen-mcp.mjs"
 ```
 
 Then use `node "$KIMEN_MCP"` wherever this guide uses
-`npx -y -p @kimen/mcp-server@0.1.1 kimen-mcp`; in JSON and TOML,
+`npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp`; in JSON and TOML,
 `"command": "node"` with the absolute path as the only argument.
 
 ## Step 3: check it works
@@ -357,7 +357,7 @@ The `kimen-genui` skill carries a short recipe for each of the three.
 ## Troubleshooting
 
 - **The server does not start.** Run
-  `npx -y -p @kimen/mcp-server@0.1.1 kimen-mcp < /dev/null`: it should exit at
+  `npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp < /dev/null`: it should exit at
   once, silently, with status 0. A syntax or version error means Node is
   older than 22. With a file path instead of npx, "Cannot find module" means
   the file was not built or the path is not absolute. The server refuses any
