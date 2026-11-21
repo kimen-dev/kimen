@@ -352,6 +352,36 @@ test('[S10] the page contract must not redeclare the colour scheme the token sty
   );
 });
 
+// Spec 001 S17: before its elements register, the page contract lays them out
+// as blocks so their items do not run together. It is layout, not paint: one
+// zero-specificity rule over Kimen tags that have not registered, declaring
+// display: block and nothing else.
+const preRegistration =
+  ':where(ki-segment, ki-radio):where(:not(:defined)) {\n  display: block;\n}\n';
+
+test('[S10] the page contract may lay out unregistered Kimen elements as blocks', () => {
+  assert.deepEqual(buildPageContract(`${pageContract}${preRegistration}`)['./css/base'], {
+    pageContract: true,
+    target: './dist/css/base.css',
+  });
+});
+
+test('[S10] the pre-registration rule declares display: block on unregistered Kimen tags only', () => {
+  for (const [rule, message] of [
+    [preRegistration.replace('display: block', 'display: flex'), /display: flex/u],
+    [preRegistration.replace('display: block;', 'display: block;\n  color: red;'), /color: red/u],
+    [preRegistration.replace('ki-radio', 'my-radio'), /display: block/u],
+    [preRegistration.replace(':where(:not(:defined))', ':not(:defined)'), /display: block/u],
+    [preRegistration.replace(':where(:not(:defined))', ''), /display: block/u],
+  ]) {
+    assert.throws(
+      () => buildPageContract(`${pageContract}${rule}`),
+      message,
+      `rejects ${JSON.stringify(rule)}`,
+    );
+  }
+});
+
 // Modes (specs 043/044): each mode is a media-query block and a declaration
 // rule with the same declarations, after the token rule, in contract order.
 const modeBlocks = (activation, media, declarations, theme) => {

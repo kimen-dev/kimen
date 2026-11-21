@@ -200,10 +200,34 @@ console.log(
 //
 // This sheet publishes NO tokens: it only consumes them. That is what keeps it
 // outside the public token surface (scripts/lib/css-token-surface.mjs).
+//
+// Before registration (spec 001 S17) a custom element is an inline box, so
+// the items of a group — segments, radios, options — run together as one line
+// of text when the component script is late or fails. Until each tag
+// registers, its items lay out as blocks: a readable list, no paint, zero
+// specificity so any page rule wins, and nothing once the tag is defined.
+const PRE_REGISTRATION_BLOCKS = [
+  'ki-segment',
+  'ki-radio',
+  'ki-checkbox',
+  'ki-option',
+  'ki-menu-item',
+  'ki-list-item',
+  'ki-tab',
+  'ki-tree-item',
+  'ki-step',
+  'ki-timeline-item',
+  'ki-sidebar-item',
+  'ki-mobile-nav-item',
+];
 const pageContractCss = `:root {
   background-color: var(--ki-surface-base);
   color: var(--ki-text-high-em);
   font-family: var(--ki-typography-family-body);
+}
+
+:where(${PRE_REGISTRATION_BLOCKS.join(', ')}):where(:not(:defined)) {
+  display: block;
 }
 `;
 

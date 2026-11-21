@@ -682,6 +682,19 @@ function contextDeclarations({
   return result;
 }
 
+// The page contract may declare one literal, in one place (spec 001 S17):
+// before its elements register, it lays Kimen tags out as blocks, so the items
+// of a group do not run together on one line. That rule is layout, not paint —
+// `display: block` on `:where(ki-…):where(:not(:defined))`, at zero
+// specificity, and nothing else — and it stops matching the moment a tag
+// registers.
+const PRE_REGISTRATION =
+  /^:where\(ki-[a-z0-9]+(?:-[a-z0-9]+)*(?:,ki-[a-z0-9]+(?:-[a-z0-9]+)*)*\):where\(:not\(:defined\)\)$/u;
+
+function isPreRegistrationLayout(rule, property, value) {
+  return PRE_REGISTRATION.test(rule.selector) && property === 'display' && value === 'block';
+}
+
 /**
  * The page contract (`./css/base`) is the one exported stylesheet that PUBLISHES
  * no tokens: it only consumes them, so it carries none of the token surface and
@@ -706,6 +719,7 @@ function onePageContract({ subpath, target, css }) {
       if (property.startsWith('--')) {
         throw new Error(`${label} must not publish token ${property}`);
       }
+      if (isPreRegistrationLayout(rule, property, value)) continue;
       const references = [...value.matchAll(/var\(\s*(--[a-zA-Z0-9-]+)/gu)].map(
         (match) => match[1],
       );

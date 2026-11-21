@@ -3,3 +3,7 @@
   color: var(--ki-text-high-em);
   font-family: var(--ki-typography-family-body);
 }
+
+:where(ki-segment, ki-radio, ki-checkbox, ki-option, ki-menu-item, ki-list-item, ki-tab, ki-tree-item, ki-step, ki-timeline-item, ki-sidebar-item, ki-mobile-nav-item):where(:not(:defined)) {
+  display: block;
+}
