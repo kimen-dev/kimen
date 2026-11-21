@@ -1,6 +1,6 @@
 {
   "name": "@kimen/elements",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "license": "Apache-2.0",
   "description": "Kimen web components (ki-*). Standards-first Stencil components, tokens-only styling, agent-legible by contract.",
@@ -118,7 +118,7 @@
     "@vitest/browser-playwright": "5.1.0",
     "axe-core": "4.14.0",
     "jsqr": "1.4.0",
-    "playwright": "1.65.0",
+    "playwright": "1.65.1",
     "remark-gfm": "4.0.1",
     "size-limit": "14.3.0",
     "storybook": "10.6.7",
