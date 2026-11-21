@@ -44,8 +44,11 @@ const UNANALYSED_IMPORT = [
   '  )',
 ].join('\n');
 
+// A plain comment, not a `/*!` legal one: minifiers drop it, so consumer
+// bundles stay the size they were with Stencil's own file. The package NOTICE
+// carries Stencil's licence.
 const BANNER = [
-  '/*!',
+  '/*',
   ' * Stencil client runtime, copied from @stencil/core/internal/client by',
   ' * scripts/vendor-stencil-client.mjs: the lazy-loader import that bundlers',
   ' * read as an empty glob is left unanalysed. Stencil is MIT licensed:',
