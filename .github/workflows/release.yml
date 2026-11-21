@@ -1,6 +1,14 @@
 # Immutable Kimen candidate validation and trusted npm publication.
 # A manual dispatch is validation-only. Only a vX.Y.Z tag can enter release
 # mode, and build-candidate verifies that it points at protected main.
+#
+# The nightly schedule is that same dry run on main. PR and merge-queue CI
+# test Chromium only (ci.yml), so a change that breaks Firefox, WebKit,
+# packaging or the consumer contract turns the next night red, not the
+# release tag that would have shipped it. This workflow is not a required
+# check: a red night blocks no pull request and no merge group. GitHub runs a
+# schedule on the default branch, never on a tag, so validate-core builds a
+# dry-run candidate and publish, which also requires a tag ref, never starts.
 name: release
 
 on:
@@ -8,6 +16,8 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  schedule:
+    - cron: '41 5 * * *' # nightly, 05:41 UTC: the release dry run on main
 
 permissions: {}
 
@@ -418,7 +428,10 @@ jobs:
 
   publish:
     needs: [validate-core, verify-candidate, browser, capability-claims]
-    if: needs.validate-core.outputs.mode == 'release'
+    # Only a run on a tag publishes. A scheduled run is on main, a branch, so
+    # this job never starts there and never enters the npm environment, whose
+    # deployment policy admits only v*.*.* tags in any case.
+    if: github.ref_type == 'tag' && needs.validate-core.outputs.mode == 'release'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
