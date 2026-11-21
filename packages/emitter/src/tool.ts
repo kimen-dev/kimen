@@ -34,7 +34,7 @@ export function uiSpecTool(
   }
   return {
     artifact: {
-      description: `Emit exactly one Kimen UI spec (${versionStamp(catalog)}): a JSON document composing only cataloged components with their declared props, slots and actions. The host validates and renders it through the Kimen guardrail; invalid specs are rejected with named issues.`,
+      description: `Emit exactly one Kimen UI spec (${versionStamp(catalog)}): a JSON document composing only cataloged components with their declared props, slots and actions, where a bound node may collect other fields' values. The host validates and renders it through the Kimen guardrail; invalid specs are rejected with named issues.`,
       inputSchema: schema.artifact,
       name: 'emit_ui',
     },

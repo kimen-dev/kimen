@@ -70,8 +70,9 @@ defineCustomElements(); // agent output can name any catalog tag
 
 const result = renderUiSpec(spec, {
   surface: document.querySelector('#genui')!,
-  onAction: ({ action, data, path }) => {
-    // action: a declared name; data: the control's props and live value.
+  onAction: ({ action, data, id, path }) => {
+    // action: a declared name; id: the node's id, when it has one;
+    // data: the control's props and live value, plus the collected fields.
     // Untrusted input: validate before acting.
   },
 });
@@ -90,7 +91,9 @@ write, so a rejected spec leaves the surface untouched.
   id-addressed `insert`, `set`, `text`, `remove` and `replace` operations:
   the whole batch is validated first, and only the named nodes change, so
   focus, typed values and scroll survive. Give nodes stable `id`s in the
-  first spec.
+  first spec. Check `ok` on every result: a rejection is returned, not
+  thrown, and leaves earlier batches applied. When a batch removes the row
+  that had focus, name the next row's control in the batch's `focus`.
 
 ## Your own components
 

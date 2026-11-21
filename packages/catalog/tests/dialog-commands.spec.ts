@@ -180,9 +180,11 @@ describe('guarded dialog commands', () => {
     const event = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
     surface.querySelector('ki-button')?.dispatchEvent(event);
     expect(event.defaultPrevented).toBe(false);
+    // The event names its bound node's id outside the live surface too (153 S9).
     expect(onAction).toHaveBeenCalledExactlyOnceWith({
       action: 'preview-requested',
       data: { command: 'show-modal', commandfor: 'preview' },
+      id: 'preview-trigger',
       path: 'root.slots.[0]',
     });
     expect(validateUiSpec({ ...input, actions: [] })).toMatchObject({
@@ -235,6 +237,7 @@ describe('guarded dialog commands', () => {
     expect(onAction).toHaveBeenCalledExactlyOnceWith({
       action: 'preview-selected',
       data: { ...trigger.props, selected: true, toggle: true },
+      id: 'preview-trigger',
       path: 'root.slots.[0]',
     });
   });

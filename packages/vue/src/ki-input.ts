@@ -27,7 +27,8 @@ export const KiInput: StencilVueComponent<JSX.KiInput, JSX.KiInput["value"]> = /
   'autocomplete',
   'helpText',
   'aiSuggestionText',
-  'errorText'
+  'errorText',
+  'customError'
 ], [],
 'value', 'input', undefined);
 

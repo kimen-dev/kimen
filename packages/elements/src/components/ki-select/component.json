@@ -9,5 +9,17 @@
   "budgetGroup": {
     "members": ["ki-select", "ki-option"]
   },
-  "formBinding": "select"
+  "formBinding": "select",
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 1278,
+      "gzip": 229,
+      "brotli": 121
+    },
+    "mcpServer": {
+      "raw": 2238,
+      "gzip": 386,
+      "brotli": 147
+    }
+  }
 }

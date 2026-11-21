@@ -85,11 +85,11 @@ protocol displays operable, token-styled Kimen components:
 
 | Part | Content | Size (raw / gzip) |
 | --- | --- | --- |
-| one inline `<style>` | the default theme's token stylesheet, light and dark (`@kimen/tokens/css`), and the page contract (`@kimen/tokens/css/base`), minified | 212 kB / 25 kB |
-| one inline `<script>` | every catalog component definition, the stock `circle-check` glyph, the guarded renderer, catalog validator and live surface (`@kimen/catalog`, specs 028 and 035), and the host bridge | 1,270 kB / 338 kB |
-| whole document | | 1,482 kB / 363 kB (276 kB brotli) |
+| one inline `<style>` | the default theme's token stylesheet, light and dark (`@kimen/tokens/css`), and the page contract (`@kimen/tokens/css/base`), minified | 213 kB / 25 kB |
+| one inline `<script>` | every catalog component definition, the stock `circle-check` glyph, the guarded renderer, catalog validator and live surface (`@kimen/catalog`, specs 028 and 035), and the host bridge | 1,296 kB / 344 kB |
+| whole document | | 1,509 kB / 370 kB (280 kB brotli) |
 
-Measured on 2026-11-21 (main `618df310` plus spec 157, macOS zlib and brotli);
+Measured on 2026-11-21 (main `f79f91f1` plus spec 157, macOS zlib and brotli);
 the limits that bind are the ones `tests/resource.spec.ts` derives, not these
 figures.
 

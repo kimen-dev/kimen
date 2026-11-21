@@ -262,7 +262,23 @@ activation cancels nothing and reports the
 control's live `checked`/`value`; the innermost bound node claims an
 interaction, so exactly one action fires even for nested action-bound nodes
 or a button inside a form; a binding on a component declaring several events
-is rejected; no other callback exists).
+is rejected; no other callback exists). Every action event names its node's
+`id` when it has one.
+
+A bound node may `collect` other fields by id (spec 153, catalog schema
+`1.7.0`): `"collect": { "title": "f-title", "quantity": "f-qty" }` on a
+button bound to `add`. At the gesture every named field is asked for
+validity — `reportValidity()` when the element has it, otherwise its
+`:invalid` state — and an invalid one stops the action and takes the focus,
+the first in document order. Otherwise the action data carries, under each
+key, the field's live `checked`, `selected` or `value` (the first its entry
+declares, only when it has the declared type), next to the node's props.
+Validation rejects `collect-without-action`, `collect-unknown-node`,
+`collect-no-value` (the named node declares no such prop),
+`collect-key-conflict` (a key shadows one of the node's own props) and
+`collect-budget` (more than `COLLECT_MAX_ENTRIES`, 32). A stream resolves a
+`collect` within the pushed node, and a live batch that leaves one naming no
+node is rejected whole.
 
 `createStreamingRenderer` renders a streamed spec progressively: a node
 attaches only after it fully validates; an invalid node halts the stream
@@ -315,16 +331,24 @@ batches of `insert`, `set`, `text`, `remove` and `replace` operations
 addressed by the optional node `id` (spec 035). Each batch is validated
 against the state it would produce — purity wall, per-batch budgets,
 optional `ifRevision`, then the same catalog, guard and budget checks as a
-spec — before any DOM write; a rejected batch changes nothing and the
-surface keeps accepting batches. Applied batches touch only what they name,
-so focus, caret, typed text and scroll survive. No `set`, `replace` or
-`remove` overwrites or discards a `checked`/`value`/`open` the user changed
-(in the node or, for `replace`/`remove`, anywhere in its subtree) unless the
-op says `force: true` and the host allowed it (`allowUserStateOverride`).
-A batch applied while another is being applied (from `onAction`) is
-rejected as `reentrant-batch`. Action events carry the
-node `id`, its current `path`, the `revision` and live `data`; `snapshot()`
-returns the content as deep-frozen plain data. See the
+spec — before any DOM write. A rejected batch is the return value of
+`apply` (never a throw), changes nothing and leaves earlier batches applied;
+the surface keeps accepting batches. The five limits (64 ops and 65,536
+bytes per batch; 512 nodes, 32 levels and 262,144 bytes of state) are host
+options at creation, lower or higher than the defaults. Applied batches
+touch only what they name, so focus, caret, typed text and scroll survive;
+a batch may name a `focus` node that receives focus when the batch leaves
+it nowhere, and it never takes focus from where the person is. No `set`,
+`replace` or `remove` overwrites or discards a `checked`, `open`,
+`selected` or `value` the user changed (in the node or, for
+`replace`/`remove`, anywhere in its subtree) unless the op says
+`force: true` and the host allowed it (`allowUserStateOverride`); a dialog
+the person closed is reopened with `open: false` and then `open: true` in
+two batches. A batch applied while another is being applied (from
+`onAction`) is rejected as `reentrant-batch`. Action events carry the node
+`id`, its current `path`, the `revision` and live `data`; `snapshot()`
+returns the content as deep-frozen plain data. The batch and op shapes are
+exported as `LiveBatch` and `LiveOp` types. See the
 [UI-spec guide](../../docs/guides/ui-spec.md#live-surface).
 
 ## Registering your own components

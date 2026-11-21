@@ -4,7 +4,15 @@ import type { KiCheckboxGroup } from './ki-checkbox-group';
 
 type Args = Pick<
   KiCheckboxGroup,
-  'label' | 'name' | 'orientation' | 'helpText' | 'errorText' | 'disabled' | 'min' | 'max'
+  | 'label'
+  | 'name'
+  | 'orientation'
+  | 'helpText'
+  | 'errorText'
+  | 'customError'
+  | 'disabled'
+  | 'min'
+  | 'max'
 >;
 
 const meta = {

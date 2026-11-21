@@ -13,6 +13,7 @@ export const KiTimeInput: StencilVueComponent<JSX.KiTimeInput, JSX.KiTimeInput["
   'label',
   'helpText',
   'errorText',
+  'customError',
   'name',
   'required',
   'disabled',

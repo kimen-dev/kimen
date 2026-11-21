@@ -291,8 +291,9 @@ the interaction families belong to the catalog components it paints.
   than two full specs. A full spec the guarded renderer accepts is never
   refused by a batch budget.
 - **FR-012 (boundaries)**: `@kimen/catalog` and `@kimen/elements` do not
-  change (Art. VIII). The adapter types the batch as `unknown` until
-  `@kimen/catalog` exports the live batch type (spec 155).
+  change (Art. VIII). The adapter types the batch as `unknown`, like `spec`:
+  both are untrusted data the page validates. `LiveBatch`, which
+  `@kimen/catalog` exports since spec 155, describes what a server builds.
 - **FR-013 (documents)**: the adapter's `COMPAT.md` (the `tool-result` and
   `tools/call` rows, the action-answer row, the document size table),
   `README.md`, `docs/guides/mcp-apps.md` and the server's README and
@@ -377,11 +378,13 @@ What changes is prose and tests:
   `@kimen/elements`: no change.
 - **Bundle budget** (Art. IV): the document starts using the live surface,
   which the bundler dropped before because nothing imported it. Measured
-  against main `618df310` on macOS: +16,944 B raw, +5,311 B gzip and +4,586 B
-  brotli for the document, and +17,462 / +5,452 / +4,701 B for `kimen-mcp`,
-  which embeds it. The founder approved re-basing both budgets
-  (`scripts/lib/bundle-size-budget.mjs`) by exactly the measured growth on
-  2026-11-21, so the headroom stays what it was. No new runtime dependency.
+  against main `f79f91f1` on macOS, after specs 153, 155 and 156 landed:
+  +18,218 B raw, +5,856 B gzip and +4,981 B brotli for the document, and
+  +18,736 / +5,951 / +5,025 B for `kimen-mcp`, which embeds it. That includes
+  the live-surface code spec 155 added, which now ships in both. The founder
+  approved re-basing both budgets (`scripts/lib/bundle-size-budget.mjs`) by
+  exactly the cost measured on that main (2026-11-21), so the headroom stays
+  what it was. No new runtime dependency.
 - **Accessibility** (Art. V): no new interaction pattern. The keyboard focus
   survives an applied update (S1), which today's full repaint loses.
 - **Tokens** (Art. VI): none.

@@ -200,11 +200,27 @@ export class KiRadioGroup {
    * Message shown in place of the help text once a `required` group is left
    * without a choice, and its `validationMessage` ("Choose a plan"). Without
    * it the browser's own message shows, in the browser's language. An error
-   * set with `setCustomValidity` outranks it.
-   * When NOT to use: do not use it for server-side or cross-field errors; call
-   * `setCustomValidity` for those.
+   * set with `custom-error` or `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; set
+   * `custom-error` or call `setCustomValidity` for those.
    */
   @Prop({ reflect: true }) errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted choice ("This plan is sold out"). While it holds text the group
+   * is invalid, blocks its form, shows the text in place of the help text at
+   * once and is announced as invalid. It stops counting when the person
+   * chooses another option, or when the form is reset, so it never blocks the
+   * corrected answer. It outranks `error-text` and an error set with
+   * `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for a `required` group left without a
+   * choice; `error-text` words that. Setting the same text again while the
+   * prop still holds it shows nothing: remove it first, then set it again.
+   */
+  @Prop({ reflect: true }) customError?: string;
 
   /**
    * Validation message for the current group validity state: the error set
@@ -243,6 +259,12 @@ export class KiRadioGroup {
     this.syncValidity();
   }
 
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncValidity();
+  }
+
   // The name may come from the page (S29): re-resolve when the ids change.
   @Watch('aria-labelledby')
   private labelledByChanged(): void {
@@ -269,6 +291,9 @@ export class KiRadioGroup {
   // reapplied on every validity sync, so the control's own revalidation never
   // drops it.
   private customValidity = '';
+
+  // Whether the person's choice or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
 
   /**
    * Validity of the control, as on a native form control: which constraint
@@ -389,6 +414,7 @@ export class KiRadioGroup {
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.userInvalid = false;
     this.selectByValue(this.resetValue);
   }
@@ -432,6 +458,7 @@ export class KiRadioGroup {
     }
 
     this.pendingValue = '';
+    this.customErrorWithdrawn = true;
     this.setSelectedRadio(radio);
     // `change` follows `input` in the same task, as on a native radio, a
     // ki-checkbox or a ki-switch. It cannot be dispatched from here: this
@@ -622,7 +649,9 @@ export class KiRadioGroup {
     }
 
     const valueMissing = this.required && !this.selectedRadio;
-    if (this.effectiveDisabled || (!valueMissing && this.customValidity === '')) {
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const applicationError = customError || this.customValidity;
+    if (this.effectiveDisabled || (!valueMissing && applicationError === '')) {
       this.internals.setValidity({});
       this.message = '';
       this.userInvalid = false;
@@ -635,11 +664,15 @@ export class KiRadioGroup {
       return;
     }
 
-    if (this.customValidity !== '') {
+    if (applicationError !== '') {
       // The application's error outranks the platform message, as on a
       // native field; a missing value still shows in the flags.
-      this.internals.setValidity({ customError: true, valueMissing }, this.customValidity, anchor);
+      this.internals.setValidity({ customError: true, valueMissing }, applicationError, anchor);
       this.message = this.internals.validationMessage;
+      // A custom error shows at once, without a submission (D2).
+      if (customError !== '') {
+        this.userInvalid = true;
+      }
       return;
     }
 
