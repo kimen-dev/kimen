@@ -8,8 +8,8 @@
 
 **Created**: 2026-11-21
 
-**Status**: Draft. Awaiting founder confirmation of the scenarios; every one
-of them is a guardrail scenario (Art. VIII).
+**Status**: Approved. The founder confirmed S1 to S12 verbatim on 2026-11-21
+("Aprobado tal cual"), including the Art. VIII guardrail confirmation.
 
 **Input**: Founder decision of 2026-11-21 on the improvements to land before
 `@kimen/catalog`, `@kimen/emitter` and the adapters are published: a spec
