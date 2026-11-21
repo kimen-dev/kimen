@@ -311,8 +311,11 @@ as before.
   `ActionEvent` gains `id`; validation issues gain five codes; the catalog
   schema version becomes `1.7.0`. All additive. `@kimen/elements` is
   untouched, so `check:api` passes without a declaration.
-- **Bundle budget** (Art. IV): a few hundred bytes in the catalog and in
-  the MCP Apps document; no new dependency.
+- **Bundle budget** (Art. IV): measured against `main` 618df310, the MCP
+  Apps document grows by 2,350 / 744 / 685 B and `kimen-mcp`, which also
+  carries the document, by 5,770 / 1,764 / 1,285 B (raw / gzip / brotli);
+  the base budgets absorb it as approved shared-code growth. No new
+  dependency.
 - **Accessibility** (Art. V): no new interaction pattern. A blocked action
   moves the focus to the first invalid field, where the field's own message
   is exposed.

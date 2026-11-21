@@ -10,7 +10,13 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 
-import { type ActionEvent, type Catalog, createCatalog, renderUiSpec } from '../src/index.js';
+import {
+  type ActionEvent,
+  type Catalog,
+  createCatalog,
+  createLiveSurface,
+  renderUiSpec,
+} from '../src/index.js';
 
 /** A labelled native text input in a shadow root, form-associated, focus delegated. */
 abstract class AcmeFieldBase extends HTMLElement {
@@ -185,8 +191,14 @@ interface Field {
   readonly required?: boolean;
 }
 
-/** Renders the fields and an "Add" button that collects each of them by its id. */
-const mount = (fields: readonly Field[]): ActionEvent[] => {
+/**
+ * Renders the fields and an "Add" button that collects each of them by its
+ * id, in document order unless `collectOrder` lists the ids otherwise.
+ */
+const mount = (
+  fields: readonly Field[],
+  collectOrder: readonly string[] = fields.map(({ id }) => id),
+): ActionEvent[] => {
   const actions: ActionEvent[] = [];
   const result = renderUiSpec(
     {
@@ -202,7 +214,7 @@ const mount = (fields: readonly Field[]): ActionEvent[] => {
             })),
             {
               action: 'add',
-              collect: Object.fromEntries(fields.map(({ id }) => [id, id])),
+              collect: Object.fromEntries(collectOrder.map((id) => [id, id])),
               component: 'acme-button',
               props: { variant: 'primary' },
               slots: { '': ['Add'] },
@@ -269,6 +281,57 @@ describe('a collecting node asks every field for validity before its action leav
     expect(actions).toEqual([]);
     expect(byLabel('Title').shownMessage).not.toBe('');
     expect(byLabel('Owner').shownMessage).not.toBe('');
+    expect(document.activeElement).toBe(byLabel('Title'));
+  });
+
+  it('S4 the focus goes to the first invalid field in document order, whatever the collect order', async () => {
+    // Neither this order, its reverse nor its sorted keys start with Title.
+    const actions = mount(
+      [
+        { component: 'acme-text', id: 'title', label: 'Title', required: true },
+        { component: 'acme-text', id: 'owner', label: 'Owner', required: true },
+        { component: 'acme-text', id: 'notes', label: 'Notes', required: true },
+      ],
+      ['owner', 'title', 'notes'],
+    );
+
+    await activateAdd();
+
+    expect(actions).toEqual([]);
+    expect(document.activeElement).toBe(byLabel('Title'));
+  });
+
+  it('S4 a live surface asks its collected fields too', async () => {
+    const actions: ActionEvent[] = [];
+    const live = createLiveSurface({
+      actions: ['add'],
+      catalog,
+      onAction: (event) => actions.push(event),
+      surface,
+    });
+    const applied = live.apply({
+      ops: [
+        {
+          node: { component: 'acme-text', id: 'title', props: { label: 'Title', required: true } },
+          op: 'insert',
+        },
+        {
+          node: {
+            action: 'add',
+            collect: { title: 'title' },
+            component: 'acme-button',
+            slots: { '': ['Add'] },
+          },
+          op: 'insert',
+        },
+      ],
+    });
+    expect(applied.ok).toBe(true);
+
+    await activateAdd();
+
+    expect(actions).toEqual([]);
+    expect(byLabel('Title').shownMessage).not.toBe('');
     expect(document.activeElement).toBe(byLabel('Title'));
   });
 
