@@ -4423,7 +4423,7 @@
         }
       ],
       "usage": {
-        "examples": "# Checkbox group examples\n\n## Submit several selections\n\n```html\n<form id=\"settings\">\n  <ki-checkbox-group\n    id=\"regions\"\n    label=\"Regions\"\n    name=\"regions\"\n    min=\"1\"\n    help-text=\"Choose the regions you serve.\"\n    error-text=\"Choose at least one region.\"\n  >\n    <ki-checkbox value=\"eu\" checked>Europe</ki-checkbox>\n    <ki-checkbox value=\"am\">Americas</ki-checkbox>\n    <ki-checkbox value=\"apac\">Asia-Pacific</ki-checkbox>\n  </ki-checkbox-group>\n  <button type=\"submit\">Save regions</button>\n</form>\n```\n\nReading `new FormData(form).getAll('regions')` returns each checked value\nin option order. Keep individual option labels visible and give each option\na distinct value when you need to select it independently from JavaScript.\n\n## Read and update selection\n\n```js\nimport { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';\nimport { defineCustomElement as defineCheckboxGroup } from '@kimen/elements/ki-checkbox-group';\n\ndefineCheckbox();\ndefineCheckboxGroup();\n\nconst group = document.querySelector('#regions');\ngroup.value = ['eu', 'apac'];\n\ngroup.addEventListener('ki-change', (event) => {\n  const selectedRegions = event.detail.value;\n  console.log(selectedRegions);\n});\n```\n\n## Horizontal choices\n\n```html\n<ki-checkbox-group label=\"Notifications\" orientation=\"horizontal\">\n  <ki-checkbox value=\"mentions\">Mentions</ki-checkbox>\n  <ki-checkbox value=\"reviews\">Review requests</ki-checkbox>\n</ki-checkbox-group>\n```\n"
+        "examples": "# Checkbox group examples\n\n## Submit several selections\n\n```html\n<form id=\"settings\">\n  <ki-checkbox-group\n    id=\"regions\"\n    label=\"Regions\"\n    name=\"regions\"\n    min=\"1\"\n    help-text=\"Choose the regions you serve.\"\n    error-text=\"Choose at least one region.\"\n  >\n    <ki-checkbox value=\"eu\" checked>Europe</ki-checkbox>\n    <ki-checkbox value=\"am\">Americas</ki-checkbox>\n    <ki-checkbox value=\"apac\">Asia-Pacific</ki-checkbox>\n  </ki-checkbox-group>\n  <button type=\"submit\">Save regions</button>\n</form>\n```\n\nReading `new FormData(form).getAll('regions')` returns each checked value\nin option order. Keep individual option labels visible and give each option\na distinct value when you need to select it independently from JavaScript.\n\n## Read and update selection\n\n```js\nimport { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';\nimport { defineCustomElement as defineCheckboxGroup } from '@kimen/elements/ki-checkbox-group';\n\ndefineCheckbox();\ndefineCheckboxGroup();\n\nconst group = document.querySelector('#regions');\ngroup.value = ['eu', 'apac'];\n\ngroup.addEventListener('ki-change', (event) => {\n  const selectedRegions = event.detail.value;\n  console.log(selectedRegions);\n});\n```\n\n## Horizontal choices\n\n```html\n<ki-checkbox-group label=\"Notifications\" orientation=\"horizontal\">\n  <ki-checkbox value=\"mentions\">Mentions</ki-checkbox>\n  <ki-checkbox value=\"reviews\">Review requests</ki-checkbox>\n</ki-checkbox-group>\n```\n\n## Name the group from the page\n\nWhen the question is already written on the page, point the host's\n`aria-labelledby` at it and omit `label`. The group takes its accessible name\nfrom the heading, so the question is shown and read once. `label-hidden`\ninstead keeps a `label` as the name while hiding it from view and from\nreading order.\n\n```html\n<h2 id=\"shipping-question\">Where do you ship?</h2>\n<ki-checkbox-group aria-labelledby=\"shipping-question\" name=\"regions\">\n  <ki-checkbox value=\"eu\">Europe</ki-checkbox>\n  <ki-checkbox value=\"am\">Americas</ki-checkbox>\n</ki-checkbox-group>\n```\n"
       },
       "props": [
         {
@@ -4518,7 +4518,7 @@
           "mutable": false,
           "attr": "label",
           "reflectToAttr": true,
-          "docs": "Visible legend and accessible name for these choices.",
+          "docs": "Visible legend and accessible name for these choices.\nWhen NOT to use: do not omit it unless the host's `aria-labelledby` names\nthe group from the page.\n\nNaming from the page: set `aria-labelledby` on the host to the ids of\nelements in the same document or shadow root, such as the heading that\nalready asks the question. The group then takes its name from them,\nfollowed by its own `label` when set. The ids are read when the group\nrenders and whenever the attribute changes.\nWhen to use: the question is written on the page above the options; omit\n`label` so the question is not shown, or read, twice.\nWhen NOT to use: do not reference elements inside another component's\nshadow root, which an id reference cannot reach.",
           "docsTags": [],
           "values": [
             {
@@ -4527,6 +4527,35 @@
           ],
           "optional": false,
           "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelHidden",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hidden",
+          "reflectToAttr": true,
+          "docs": "Hides the legend from view and from reading order while it stays the\ngroup's accessible name, so a screen reader announces it once, as the\ngroup's name.\nWhen to use: the layout already makes the question obvious to sighted\npeople but the group still needs a name of its own.\nWhen NOT to use: do not hide a legend that repeats a question already on\nthe page; point `aria-labelledby` at that question instead.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
           "getter": false,
           "setter": false
         },
@@ -20816,7 +20845,7 @@
         }
       ],
       "usage": {
-        "examples": "The group owns the `label` (mandatory; the radiogroup's accessible name), the form `name` and the selected `value`; user selection dispatches a composed `change` event, while programmatic `value` writes stay silent:\n\n```html\n<ki-radio-group label=\"Delivery speed\" name=\"delivery\" value=\"standard\">\n  <ki-radio value=\"standard\">Standard (3–5 days)</ki-radio>\n  <ki-radio value=\"express\">Express (1–2 days)</ki-radio>\n  <ki-radio value=\"overnight\">Overnight</ki-radio>\n</ki-radio-group>\n```\n\nWithout an initial `value` the group renders unselected and operable; `required` blocks form submission through the platform `valueMissing` validity until an option is chosen:\n\n```html\n<form>\n  <ki-radio-group label=\"Billing cycle\" name=\"cycle\" required>\n    <ki-radio value=\"monthly\">Monthly</ki-radio>\n    <ki-radio value=\"yearly\">Yearly</ki-radio>\n  </ki-radio-group>\n  <ki-button variant=\"primary\">Continue</ki-button>\n</form>\n```\n\nA `disabled` group is skipped in Tab order and contributes no form entry; do not use it for pending or loading semantics:\n\n```html\n<ki-radio-group label=\"Region\" name=\"region\" value=\"eu\" disabled>\n  <ki-radio value=\"eu\">Europe</ki-radio>\n  <ki-radio value=\"us\">United States</ki-radio>\n</ki-radio-group>\n```\n"
+        "examples": "The group owns the `label` (mandatory; the radiogroup's accessible name), the form `name` and the selected `value`; user selection dispatches a composed `change` event, while programmatic `value` writes stay silent:\n\n```html\n<ki-radio-group label=\"Delivery speed\" name=\"delivery\" value=\"standard\">\n  <ki-radio value=\"standard\">Standard (3–5 days)</ki-radio>\n  <ki-radio value=\"express\">Express (1–2 days)</ki-radio>\n  <ki-radio value=\"overnight\">Overnight</ki-radio>\n</ki-radio-group>\n```\n\nWithout an initial `value` the group renders unselected and operable; `required` blocks form submission through the platform `valueMissing` validity until an option is chosen:\n\n```html\n<form>\n  <ki-radio-group label=\"Billing cycle\" name=\"cycle\" required>\n    <ki-radio value=\"monthly\">Monthly</ki-radio>\n    <ki-radio value=\"yearly\">Yearly</ki-radio>\n  </ki-radio-group>\n  <ki-button variant=\"primary\">Continue</ki-button>\n</form>\n```\n\nA `disabled` group is skipped in Tab order and contributes no form entry; do not use it for pending or loading semantics:\n\n```html\n<ki-radio-group label=\"Region\" name=\"region\" value=\"eu\" disabled>\n  <ki-radio value=\"eu\">Europe</ki-radio>\n  <ki-radio value=\"us\">United States</ki-radio>\n</ki-radio-group>\n```\n\nWhen the question is already written on the page, name the group from it with `aria-labelledby` on the host and omit `label`, so the question is shown and read once:\n\n```html\n<h2 id=\"plan-question\">Which plan suits you?</h2>\n<ki-radio-group aria-labelledby=\"plan-question\" name=\"plan\">\n  <ki-radio value=\"basic\">Basic</ki-radio>\n  <ki-radio value=\"pro\">Pro</ki-radio>\n</ki-radio-group>\n```\n\nWhen the layout makes the question obvious but the group still needs its own name, `label-hidden` hides the label from view and from reading order; it stays the group's accessible name and is announced once:\n\n```html\n<ki-radio-group label=\"Your answer\" label-hidden name=\"answer\">\n  <ki-radio value=\"yes\">Yes</ki-radio>\n  <ki-radio value=\"no\">No</ki-radio>\n</ki-radio-group>\n```\n"
       },
       "props": [
         {
@@ -20911,7 +20940,7 @@
           "mutable": false,
           "attr": "label",
           "reflectToAttr": true,
-          "docs": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
+          "docs": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it unless the host's `aria-labelledby` names\nthe group from the page; a group with neither fails accessibility gates.\n\nNaming from the page: set `aria-labelledby` on the host to the ids of\nelements in the same document or shadow root, such as the heading that\nalready asks the question. The group then takes its name from them,\nfollowed by its own `label` and `label-hint` when set. The ids are read\nwhen the group renders and whenever the attribute changes.\nWhen to use: the question is written on the page above the options; omit\n`label` so the question is not shown, or read, twice.\nWhen NOT to use: do not reference elements inside another component's\nshadow root, which an id reference cannot reach.",
           "docsTags": [],
           "values": [
             {
@@ -20920,6 +20949,35 @@
           ],
           "optional": false,
           "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelHidden",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hidden",
+          "reflectToAttr": true,
+          "docs": "Hides the `label` (and its hint) from view and from reading order while it\nstays the radiogroup's accessible name, so a screen reader announces it\nonce, as the group's name.\nWhen to use: the layout already makes the question obvious to sighted\npeople (a heading in a card, an icon row) but the group still needs a\nname of its own.\nWhen NOT to use: do not hide a label that repeats a question already on\nthe page; point `aria-labelledby` at that question instead. Do not hide\nthe only description of what a choice decides; that is `help-text`.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
           "getter": false,
           "setter": false
         },

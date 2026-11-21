@@ -115,6 +115,10 @@ defineCustomElements();
 - Every control needs an accessible name: its `label` attribute or slotted
   text, as the contract specifies. Do not add `role` or `aria-*` that
   duplicate what the component already exposes.
+- When a question is already written on the page, name `ki-radio-group` or
+  `ki-checkbox-group` from it with the host's `aria-labelledby` and omit
+  `label`. To keep a `label` as the name but not show it, use `label-hidden`;
+  never hide it with `::part()` and a clip, which leaves it in reading order.
 
 ## Frameworks
 

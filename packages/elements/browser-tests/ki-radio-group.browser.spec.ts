@@ -5,7 +5,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineInput } from '../dist/components/ki-input.js';
 import { defineCustomElement as defineRadio } from '../dist/components/ki-radio.js';
 import { defineCustomElement as defineRadioGroup } from '../dist/components/ki-radio-group.js';
@@ -1079,5 +1079,121 @@ describe('ki-radio-group with options hidden by the hidden attribute', () => {
     await tabInto(el);
 
     expect(first?.shadowRoot?.activeElement).toBe(radioAt(el, 0));
+  });
+});
+
+interface AxNode {
+  readonly role: string;
+  readonly name: string;
+}
+
+const axCommands = commands as unknown as {
+  accessibilityTree: () => Promise<AxNode[] | null>;
+  ariaSnapshotByRole: (role: 'radiogroup', name: string) => Promise<string>;
+};
+
+// The engine's accessibility tree is read over CDP, which only Chromium
+// exposes; Firefox and WebKit answer null. Headless Chromium reports
+// `HeadlessChrome/`, hence no word boundary.
+const IS_CHROMIUM = navigator.userAgent.includes('Chrome/');
+
+/** Every node of the Chromium accessibility tree whose name contains `text`. */
+async function nodesNaming(text: string): Promise<AxNode[]> {
+  await settleFrames(2);
+  const nodes = await axCommands.accessibilityTree();
+  if (nodes === null) throw new Error('Chromium stopped answering its accessibility tree');
+  return nodes.filter((node) => node.name.includes(text));
+}
+
+async function mountNamedFromPage(groupAttributes: string): Promise<KiRadioGroupElement> {
+  ensureTokens();
+  document.body.innerHTML = `<main>
+    <h2 id="question">Which plan suits you?</h2>
+    <h3 id="other">Billing period</h3>
+    <ki-radio-group ${groupAttributes}>
+      <ki-radio value="basic">Basic</ki-radio>
+      <ki-radio value="pro">Pro</ki-radio>
+    </ki-radio-group>
+  </main>`;
+  const el = document.querySelector('ki-radio-group') as KiRadioGroupElement;
+  await customElements.whenDefined('ki-radio-group');
+  await expect.poll(() => el.shadowRoot?.querySelector('[role="radiogroup"]')).toBeTruthy();
+  await settleFrames();
+  return el;
+}
+
+describe('ki-radio-group naming in a real browser', () => {
+  it('S28 a hidden label is not displayed and names the group once', async () => {
+    cleanup();
+    const el = await mount({ label: 'Your answer', 'label-hidden': true });
+    const label = el.shadowRoot?.querySelector<HTMLElement>('[part="label"]');
+
+    expect(label?.getClientRects()).toHaveLength(0);
+    await expect.element(page.getByRole('radiogroup', { name: 'Your answer' })).toBeVisible();
+    if (IS_CHROMIUM) {
+      // The name reaches assistive technology once: as the group's name, never
+      // also as text read in passing before the options.
+      expect((await nodesNaming('Your answer')).map(({ role }) => role)).toEqual(['radiogroup']);
+    }
+    await expectAccessible(el);
+  });
+
+  it('S28 label-hidden="false" still hides the label, as every boolean attribute does', async () => {
+    cleanup();
+    const el = await mount({ label: 'Your answer', 'label-hidden': 'false' });
+
+    expect(el.shadowRoot?.querySelector('[part="label"]')?.getClientRects()).toHaveLength(0);
+    await expect.element(page.getByRole('radiogroup', { name: 'Your answer' })).toBeVisible();
+  });
+
+  it('S29 a heading on the page names a group that has no label of its own', async () => {
+    cleanup();
+    const el = await mountNamedFromPage('aria-labelledby="question" name="plan"');
+
+    expect(el.shadowRoot?.querySelector('[part="label"]')).toBeNull();
+    if (IS_CHROMIUM) {
+      // The engine's own tree: the heading reads the question and the group
+      // carries it as its name; nothing else announces it. Chromium also
+      // computes a name for the host, which keeps the author's attribute:
+      // a generic node, whose name ARIA prohibits and screen readers skip,
+      // as for any element without a role. Inline text boxes are the
+      // heading's own text runs.
+      const announced = (await nodesNaming('Which plan suits you?'))
+        .map(({ role }) => role)
+        .filter((role) => role !== 'generic' && role !== 'InlineTextBox');
+      expect(announced.sort()).toEqual(['StaticText', 'heading', 'radiogroup']);
+    }
+    // Playwright's accessible-name computation in every engine. Vitest's own
+    // role locators resolve id references only, never element references.
+    expect(await axCommands.ariaSnapshotByRole('radiogroup', 'Which plan suits you?')).toMatch(
+      /^- radiogroup "Which plan suits you\?":/u,
+    );
+    // After the snapshot, as aria-snapshot-reflection does: axe reads the
+    // same reflected getter.
+    await expectAccessible(el.closest('main') ?? document.body);
+  });
+
+  it('S29 the group follows a change of the referenced ids', async () => {
+    cleanup();
+    const el = await mountNamedFromPage('aria-labelledby="question"');
+
+    el.setAttribute('aria-labelledby', 'other');
+
+    expect(await axCommands.ariaSnapshotByRole('radiogroup', 'Billing period')).toMatch(
+      /^- radiogroup "Billing period":/u,
+    );
+    el.removeAttribute('aria-labelledby');
+    el.setAttribute('label', 'Plan');
+    await expect.element(page.getByRole('radiogroup', { name: 'Plan', exact: true })).toBeVisible();
+  });
+
+  it('S30 the group own label follows the page heading in its name', async () => {
+    cleanup();
+    await mountNamedFromPage('aria-labelledby="question" label="Choose one"');
+
+    expect(
+      await axCommands.ariaSnapshotByRole('radiogroup', 'Which plan suits you? Choose one'),
+    ).toMatch(/^- radiogroup "Which plan suits you\? Choose one":/u);
+    await expect.element(page.getByText('Choose one')).toBeVisible();
   });
 });

@@ -804,9 +804,14 @@ export namespace Components {
          */
         "helpText"?: string;
         /**
-          * Visible legend and accessible name for these choices.
+          * Visible legend and accessible name for these choices. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page.  Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
          */
         "label": string;
+        /**
+          * Hides the legend from view and from reading order while it stays the group's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people but the group still needs a name of its own. When NOT to use: do not hide a legend that repeats a question already on the page; point `aria-labelledby` at that question instead.
+          * @default false
+         */
+        "labelHidden": boolean;
         /**
           * Maximum number of checked options, as a nonnegative integer.
          */
@@ -3090,9 +3095,14 @@ export namespace Components {
          */
         "helpText"?: string;
         /**
-          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page; a group with neither fails accessibility gates.  Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` and `label-hint` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
          */
         "label": string;
+        /**
+          * Hides the `label` (and its hint) from view and from reading order while it stays the radiogroup's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people (a heading in a card, an icon row) but the group still needs a name of its own. When NOT to use: do not hide a label that repeats a question already on the page; point `aria-labelledby` at that question instead. Do not hide the only description of what a choice decides; that is `help-text`.
+          * @default false
+         */
+        "labelHidden": boolean;
         /**
           * Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
@@ -7933,9 +7943,14 @@ declare namespace LocalJSX {
          */
         "helpText"?: string;
         /**
-          * Visible legend and accessible name for these choices.
+          * Visible legend and accessible name for these choices. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page.  Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
          */
         "label": string;
+        /**
+          * Hides the legend from view and from reading order while it stays the group's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people but the group still needs a name of its own. When NOT to use: do not hide a legend that repeats a question already on the page; point `aria-labelledby` at that question instead.
+          * @default false
+         */
+        "labelHidden"?: boolean;
         /**
           * Maximum number of checked options, as a nonnegative integer.
          */
@@ -10401,9 +10416,14 @@ declare namespace LocalJSX {
          */
         "helpText"?: string;
         /**
-          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page; a group with neither fails accessibility gates.  Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` and `label-hint` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
          */
         "label": string;
+        /**
+          * Hides the `label` (and its hint) from view and from reading order while it stays the radiogroup's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people (a heading in a card, an icon row) but the group still needs a name of its own. When NOT to use: do not hide a label that repeats a question already on the page; point `aria-labelledby` at that question instead. Do not hide the only description of what a choice decides; that is `help-text`.
+          * @default false
+         */
+        "labelHidden"?: boolean;
         /**
           * Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
@@ -12395,6 +12415,7 @@ declare namespace LocalJSX {
     }
     interface KiCheckboxGroupAttributes {
         "label": string;
+        "labelHidden": boolean;
         "name": string;
         "helpText": string;
         "errorText": string;
@@ -12865,6 +12886,7 @@ declare namespace LocalJSX {
         "name": string;
         "value": string;
         "label": string;
+        "labelHidden": boolean;
         "size": KiRadioGroupSize;
         "labelHint": string;
         "required": boolean;

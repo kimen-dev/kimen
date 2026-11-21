@@ -67,12 +67,29 @@ group.addEventListener('ki-change', (event) => {
 </ki-checkbox-group>
 ```
 
+## Name the group from the page
+
+When the question is already written on the page, point the host's
+`aria-labelledby` at it and omit `label`. The group takes its accessible name
+from the heading, so the question is shown and read once. `label-hidden`
+instead keeps a `label` as the name while hiding it from view and from
+reading order.
+
+```html
+<h2 id="shipping-question">Where do you ship?</h2>
+<ki-checkbox-group aria-labelledby="shipping-question" name="regions">
+  <ki-checkbox value="eu">Europe</ki-checkbox>
+  <ki-checkbox value="am">Americas</ki-checkbox>
+</ki-checkbox-group>
+```
+
 ## Attributes
 
 - `disabled` (boolean, default false): Makes the group unavailable and excludes it from form submission.
 - `error-text` (string | undefined): Localized message displayed for a failing selection limit.
 - `help-text` (string | undefined): One line of guidance displayed under the choices.
-- `label` (string, required): Visible legend and accessible name for these choices.
+- `label` (string, required): Visible legend and accessible name for these choices. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page. Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
+- `label-hidden` (boolean, default false): Hides the legend from view and from reading order while it stays the group's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people but the group still needs a name of its own. When NOT to use: do not hide a legend that repeats a question already on the page; point `aria-labelledby` at that question instead.
 - `max` (number | undefined): Maximum number of checked options, as a nonnegative integer.
 - `min` (number | undefined): Minimum number of checked options, as a nonnegative integer.
 - `name` (string | undefined): Form-data key repeated for each selected option.

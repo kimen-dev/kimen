@@ -15,7 +15,7 @@ option and the shared field-message presentation for help and errors.
 | --- | --- | --- |
 | Core behavior | S1, S11, S12 | |
 | Keyboard path | S2, S3, S9 | |
-| Assistive-tech outcome | S4, S6, S7 | |
+| Assistive-tech outcome | S4, S6, S7, S13, S14, S15 | |
 | Form participation | S5, S6, S7, S8, S9, S11 | |
 | Theming | S10 | |
 

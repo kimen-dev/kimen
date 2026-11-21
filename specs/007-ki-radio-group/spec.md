@@ -410,7 +410,7 @@ Feature: Radio group
 |---|---|---|
 | Core behavior | S1, S2, S3, S4, S19, S26, S27 | |
 | Keyboard path | S5, S6, S7, S8, S9, S20, S21, S25 | |
-| Assistive-tech outcome | S10, S11, S22, S23 | |
+| Assistive-tech outcome | S10, S11, S22, S23, S28, S29, S30 | |
 | Form participation | S12, S13, S14, S15, S24 | |
 | Theming | S16, S17, S18 | |
 

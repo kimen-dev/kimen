@@ -406,3 +406,78 @@ it('S1 updates selection with no checkbox motion under reduced motion', async ()
     await media.emulateReducedMotion('no-preference');
   }
 });
+
+interface AxNode {
+  readonly role: string;
+  readonly name: string;
+}
+
+const accessibility = commands as unknown as {
+  accessibilityTree: () => Promise<AxNode[] | null>;
+  ariaSnapshotByRole: (role: 'group', name: string) => Promise<string>;
+};
+
+// The engine's accessibility tree is read over CDP, which only Chromium
+// exposes; Firefox and WebKit answer null. Headless Chromium reports
+// `HeadlessChrome/`, hence no word boundary.
+const IS_CHROMIUM = navigator.userAgent.includes('Chrome/');
+
+async function rolesNaming(text: string): Promise<string[]> {
+  const nodes = await accessibility.accessibilityTree();
+  if (nodes === null) throw new Error('Chromium stopped answering its accessibility tree');
+  // Generic nodes are not announced (ARIA prohibits naming them), and inline
+  // text boxes are a static text's own runs.
+  return nodes
+    .filter((node) => node.name === text)
+    .map(({ role }) => role)
+    .filter((role) => role !== 'generic' && role !== 'InlineTextBox')
+    .sort();
+}
+
+async function mountNamedFromPage(attributes: string): Promise<Group> {
+  document.body.innerHTML = `<main>
+    <h2 id="question">Where do you ship?</h2>
+    <ki-checkbox-group name="regions" ${attributes}>${options}</ki-checkbox-group>
+  </main>`;
+  const group = document.querySelector<Group>('ki-checkbox-group');
+  if (!group) throw new Error('The group did not mount');
+  await expect.element(option('Europe')).toBeVisible();
+  return group;
+}
+
+it('S13 a hidden legend is not displayed and names the group once', async () => {
+  const { group } = await mount({ attributes: 'label-hidden' });
+
+  expect(group.shadowRoot?.querySelector('[part="label"]')?.getClientRects()).toHaveLength(0);
+  await expect.element(groupRole()).toBeVisible();
+  if (IS_CHROMIUM) {
+    expect(await rolesNaming('Regions')).toEqual(['group']);
+  }
+  await expectAccessible(group);
+});
+
+it('S14 a heading on the page names a group that has no label of its own', async () => {
+  const group = await mountNamedFromPage('aria-labelledby="question"');
+
+  expect(group.shadowRoot?.querySelector('[part="label"]')).toBeNull();
+  if (IS_CHROMIUM) {
+    expect(await rolesNaming('Where do you ship?')).toEqual(['StaticText', 'group', 'heading']);
+  }
+  // Playwright's accessible-name computation in every engine; Vitest's own
+  // role locators resolve id references only, never element references.
+  expect(await accessibility.ariaSnapshotByRole('group', 'Where do you ship?')).toMatch(
+    /^- group "Where do you ship\?":/u,
+  );
+  // After the snapshot, as aria-snapshot-reflection does: axe reads the same
+  // reflected getter.
+  await expectAccessible(group.closest('main') ?? document.body);
+});
+
+it('S15 the group own label follows the page heading in its name', async () => {
+  await mountNamedFromPage('aria-labelledby="question" label="Pick all that apply"');
+
+  expect(
+    await accessibility.ariaSnapshotByRole('group', 'Where do you ship? Pick all that apply'),
+  ).toMatch(/^- group "Where do you ship\? Pick all that apply":/u);
+  await expect.element(page.getByText('Pick all that apply')).toBeVisible();
+});

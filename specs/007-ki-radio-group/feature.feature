@@ -133,6 +133,26 @@ Feature: Radio group
     When the accessibility tree is queried
     Then the group is exposed as invalid
 
+  # S28
+  Scenario: A hidden label still names the group, and is announced once
+    Given a radio group labeled "Your answer" with its label hidden
+    When the page renders
+    Then no label is displayed above the options
+    And the accessibility tree carries "Your answer" only as the radiogroup's name
+
+  # S29
+  Scenario: A question written on the page names the group
+    Given a heading "Which plan suits you?" and a radio group without a label that references the heading
+    When the page renders
+    Then the accessibility tree exposes a radiogroup named "Which plan suits you?"
+    And the question is announced only by the heading and as the group's name
+
+  # S30
+  Scenario: The group's own label follows the page question in its name
+    Given a heading "Which plan suits you?" and a radio group labeled "Choose one" that references the heading
+    When the page renders
+    Then the accessibility tree exposes a radiogroup named "Which plan suits you? Choose one"
+
   # Family: form participation
   # S12
   Scenario: The selected option's value submits with the form
