@@ -285,6 +285,13 @@ Feature: Checkbox
       | disabled  | after the first render | disabled |
       | required  | after the first render | required |
 
+  # S23
+  Scenario: A script click checks the checkbox as it checks a native checkbox
+    Given an unchecked checkbox labeled "Email notifications"
+    When a script clicks the checkbox
+    Then the checkbox is checked
+    And the page observes exactly one input event followed by exactly one change event
+
   # Family: keyboard path
   # S5
   Scenario: The keyboard reaches the checkbox with visible focus

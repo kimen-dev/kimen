@@ -98,6 +98,13 @@ Feature: Segmented control applies one in-place choice
     When Week becomes disabled
     Then Day is the sole selected option and the group tab stop
     And no change event occurs
+
+  # S15
+  Scenario: Wrap a long label instead of truncating it
+    Given Answer has the options "Quiero usarlo ya", "Quiero entenderlo" and "Lo haré a mano" in a 343px row
+    When the control is displayed
+    Then every label shows its full text on at most two lines
+    And the options keep one height
 ```
 
 | Family | Scenarios |
