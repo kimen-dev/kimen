@@ -174,14 +174,13 @@ function componentBranch(
       required.push('action');
     }
     // The fields a bound action collects (spec 153): data names mapped to
-    // node ids. OpenAI's strict subset closes every object over listed
-    // properties, so a map of free names has no form there and only the
-    // default dialect offers it; the boundary accepts it from any emitter.
+    // node ids; the prompt states the rules. OpenAI's strict subset closes
+    // every object over listed properties, so a map of free names has no
+    // form there and only the default dialect offers it; the boundary
+    // accepts it from any emitter.
     if (!strict) {
       properties['collect'] = {
         additionalProperties: { pattern: NODE_ID_GRAMMAR.source, type: 'string' },
-        description:
-          'Fields whose live values the bound action carries: each key names an entry of the action data (never one of this component\'s props), each value is the "id" of a field of the same spec.',
         maxProperties: COLLECT_MAX_ENTRIES,
         type: 'object',
       };
