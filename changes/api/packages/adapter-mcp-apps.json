@@ -1,0 +1,365 @@
+{
+  "modules": {
+    ".": {
+      "declaration": "./dist/index.d.ts",
+      "symbols": {
+        "AcknowledgeSurfaceActionOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface AcknowledgeSurfaceActionOptions {\n    readonly relay?: boolean;\n}"
+        },
+        "ActionCallRequest": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface ActionCallRequest {\n    readonly jsonrpc: '2.0';\n    readonly id: RequestId;\n    readonly method: 'tools/call';\n    readonly params: {\n        readonly name: typeof KIMEN_ACTION_TOOL;\n        readonly arguments: {\n            readonly action: string;\n            readonly data: Readonly<Record<string, boolean | number | string>>;\n        };\n    };\n}"
+        },
+        "BridgeRefusal": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface BridgeRefusal {\n    readonly reason: string;\n    readonly detail: string;\n    readonly value?: string | undefined;\n}"
+        },
+        "DispatchResult": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface DispatchResult {\n    readonly sent: boolean;\n    readonly refusal?: BridgeRefusal | undefined;\n}"
+        },
+        "GuardedRender": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type GuardedRender = (input: unknown, options: RenderOptions) => RenderResult;"
+        },
+        "Implementation": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface Implementation {\n    readonly name: string;\n    readonly version: string;\n}"
+        },
+        "InitializeRequest": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface InitializeRequest {\n    readonly jsonrpc: '2.0';\n    readonly id: RequestId;\n    readonly method: 'ui/initialize';\n    readonly params: {\n        readonly appInfo: Implementation;\n        readonly appCapabilities: Readonly<Record<string, unknown>>;\n        readonly protocolVersion: string;\n    };\n}"
+        },
+        "InitializedNotification": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface InitializedNotification {\n    readonly jsonrpc: '2.0';\n    readonly method: 'ui/notifications/initialized';\n    readonly params: Readonly<Record<string, never>>;\n}"
+        },
+        "JSONRPC_METHOD_NOT_FOUND": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const JSONRPC_METHOD_NOT_FOUND = -32601;"
+        },
+        "JSONRPC_VERSION": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const JSONRPC_VERSION = \"2.0\";"
+        },
+        "JsonRpcMessage": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type JsonRpcMessage = {\n    readonly kind: 'request';\n    readonly id: RequestId;\n    readonly method: string;\n    readonly params: Record<string, unknown>;\n} | {\n    readonly kind: 'notification';\n    readonly method: string;\n    readonly params: Record<string, unknown>;\n} | {\n    readonly kind: 'result';\n    readonly id: RequestId;\n    readonly result: Record<string, unknown>;\n} | {\n    readonly kind: 'error';\n    readonly id: RequestId | null;\n    readonly error: {\n        readonly code: number;\n        readonly message: string;\n    };\n};"
+        },
+        "KIMEN_ACTION_KEY": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const KIMEN_ACTION_KEY = \"kimenAction\";"
+        },
+        "KIMEN_ACTION_TOOL": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const KIMEN_ACTION_TOOL = \"kimen_surface_action\";"
+        },
+        "KIMEN_APP_INFO": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const KIMEN_APP_INFO: Implementation;"
+        },
+        "KIMEN_SURFACE_KEY": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const KIMEN_SURFACE_KEY = \"kimenSurface\";"
+        },
+        "KimenActionTool": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface KimenActionTool {\n    readonly name: typeof KIMEN_ACTION_TOOL;\n    readonly description: string;\n    readonly inputSchema: {\n        readonly type: 'object';\n        readonly properties: {\n            readonly action: {\n                readonly type: 'string';\n            };\n            readonly data: {\n                readonly type: 'object';\n                readonly additionalProperties: {\n                    readonly type: readonly string[];\n                };\n            };\n        };\n        readonly required: readonly [\n            'action'\n        ];\n        readonly additionalProperties: false;\n    };\n    readonly _meta: {\n        readonly ui: {\n            readonly resourceUri: string;\n            readonly visibility: readonly [\n                'app'\n            ];\n        };\n    };\n}"
+        },
+        "KimenSurfaceResource": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface KimenSurfaceResource {\n    readonly uri: string;\n    readonly name: string;\n    readonly mimeType: string;\n    readonly text: string;\n    readonly _meta: {\n        readonly ui: {\n            readonly csp: SurfaceContentPolicy;\n        };\n    };\n}"
+        },
+        "MCP_APPS_PROTOCOL_VERSIONS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const MCP_APPS_PROTOCOL_VERSIONS: readonly string[];"
+        },
+        "METHOD_HOST_CONTEXT_CHANGED": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_HOST_CONTEXT_CHANGED = \"ui/notifications/host-context-changed\";"
+        },
+        "METHOD_INITIALIZE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_INITIALIZE = \"ui/initialize\";"
+        },
+        "METHOD_INITIALIZED": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_INITIALIZED = \"ui/notifications/initialized\";"
+        },
+        "METHOD_MESSAGE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_MESSAGE = \"ui/message\";"
+        },
+        "METHOD_PING": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_PING = \"ping\";"
+        },
+        "METHOD_RESOURCE_TEARDOWN": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_RESOURCE_TEARDOWN = \"ui/resource-teardown\";"
+        },
+        "METHOD_SIZE_CHANGED": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_SIZE_CHANGED = \"ui/notifications/size-changed\";"
+        },
+        "METHOD_TOOLS_CALL": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_TOOLS_CALL = \"tools/call\";"
+        },
+        "METHOD_TOOL_CANCELLED": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_TOOL_CANCELLED = \"ui/notifications/tool-cancelled\";"
+        },
+        "METHOD_TOOL_INPUT": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_TOOL_INPUT = \"ui/notifications/tool-input\";"
+        },
+        "METHOD_TOOL_INPUT_PARTIAL": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_TOOL_INPUT_PARTIAL = \"ui/notifications/tool-input-partial\";"
+        },
+        "METHOD_TOOL_RESULT": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const METHOD_TOOL_RESULT = \"ui/notifications/tool-result\";"
+        },
+        "MessageRequest": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface MessageRequest {\n    readonly jsonrpc: '2.0';\n    readonly id: RequestId;\n    readonly method: 'ui/message';\n    readonly params: {\n        readonly role: 'user';\n        readonly content: readonly [\n            {\n                readonly type: 'text';\n                readonly text: string;\n            }\n        ];\n    };\n}"
+        },
+        "RELAY_MAX_BYTES": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const RELAY_MAX_BYTES = 8192;"
+        },
+        "ReceiveResult": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface ReceiveResult {\n    readonly handled: boolean;\n    readonly ok: boolean;\n    readonly refusals: readonly BridgeRefusal[];\n}"
+        },
+        "RequestId": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type RequestId = number | string;"
+        },
+        "SURFACE_ACTION_RELAY_PREFIX": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const SURFACE_ACTION_RELAY_PREFIX = \"kimen-surface-action \";"
+        },
+        "SURFACE_DOCUMENT": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "generated data: the surface document built from the elements bundle on every build"
+        },
+        "SURFACE_MIME_TYPE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const SURFACE_MIME_TYPE = \"text/html;profile=mcp-app\";"
+        },
+        "SizeChangedNotification": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SizeChangedNotification {\n    readonly jsonrpc: '2.0';\n    readonly method: 'ui/notifications/size-changed';\n    readonly params: {\n        readonly width: number;\n        readonly height: number;\n    };\n}"
+        },
+        "SurfaceActionAcknowledgment": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SurfaceActionAcknowledgment {\n    readonly content: readonly {\n        readonly type: 'text';\n        readonly text: string;\n    }[];\n    readonly structuredContent: {\n        readonly kimenAction: {\n            readonly action: string;\n            readonly relay: boolean;\n        };\n    };\n}"
+        },
+        "SurfaceBridge": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SurfaceBridge {\n    start(): void;\n    receive(message: unknown): ReceiveResult;\n    dispatch(action: string, data?: Readonly<Record<string, boolean | number | string>>): DispatchResult;\n    reportSize(width: number, height: number): void;\n    readonly state: SurfaceState;\n    readonly hostContext: Readonly<Record<string, unknown>>;\n}"
+        },
+        "SurfaceBridgeOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SurfaceBridgeOptions {\n    readonly surface: Element;\n    readonly send: (message: SurfaceOutboundMessage) => void;\n    readonly render?: GuardedRender;\n    readonly onRefusal?: (refusal: BridgeRefusal) => void;\n    readonly onColorScheme?: (scheme: SurfaceColorScheme) => void;\n    readonly supportedVersions?: readonly string[];\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly appInfo?: Implementation;\n}"
+        },
+        "SurfaceColorScheme": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type SurfaceColorScheme = 'dark' | 'light';"
+        },
+        "SurfaceContentPolicy": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SurfaceContentPolicy {\n    readonly connectDomains: readonly string[];\n    readonly resourceDomains: readonly string[];\n}"
+        },
+        "SurfaceOutboundMessage": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type SurfaceOutboundMessage = ActionCallRequest | InitializedNotification | InitializeRequest | MessageRequest | SizeChangedNotification | ViewResponse;"
+        },
+        "SurfacePayload": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SurfacePayload {\n    readonly spec: unknown;\n}"
+        },
+        "SurfaceState": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type SurfaceState = 'closed' | 'idle' | 'initializing' | 'ready' | 'refused';"
+        },
+        "SurfaceToolResult": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SurfaceToolResult {\n    readonly content: readonly {\n        readonly type: 'text';\n        readonly text: string;\n    }[];\n    readonly structuredContent: {\n        readonly kimenSurface: {\n            readonly spec: unknown;\n        };\n    };\n}"
+        },
+        "UI_SCHEME": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const UI_SCHEME = \"ui://\";"
+        },
+        "ViewResponse": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type ViewResponse = {\n    readonly jsonrpc: '2.0';\n    readonly id: RequestId;\n    readonly result: Record<string, never>;\n} | {\n    readonly jsonrpc: '2.0';\n    readonly id: RequestId;\n    readonly error: {\n        readonly code: number;\n        readonly message: string;\n    };\n};"
+        },
+        "acknowledgeSurfaceAction": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function acknowledgeSurfaceAction(action: string, options?: AcknowledgeSurfaceActionOptions): SurfaceActionAcknowledgment;"
+        },
+        "createKimenSurfaceResource": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function createKimenSurfaceResource(name?: string): KimenSurfaceResource;"
+        },
+        "createSurfaceBridge": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridge;"
+        },
+        "declareActionTool": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function declareActionTool(name?: string): KimenActionTool;"
+        },
+        "declareToolSurface": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function declareToolSurface(name?: string): {\n    readonly ui: {\n        readonly resourceUri: string;\n    };\n};"
+        },
+        "isSupportedProtocolVersion": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function isSupportedProtocolVersion(version: string): boolean;"
+        },
+        "negotiateProtocolVersion": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function negotiateProtocolVersion(announced: string, supportedVersions?: readonly string[]): {\n    readonly ok: boolean;\n    readonly supportedVersions: readonly string[];\n    readonly refusal?: BridgeRefusal;\n};"
+        },
+        "parseJsonRpcMessage": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function parseJsonRpcMessage(message: unknown): JsonRpcMessage | null;"
+        },
+        "surfaceResourceUri": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function surfaceResourceUri(name: string): string;"
+        },
+        "surfaceToolResult": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function surfaceToolResult(spec: unknown, textFallback: string): SurfaceToolResult;"
+        }
+      },
+      "target": "./dist/index.js"
+    }
+  },
+  "package": "@kimen/adapter-mcp-apps"
+}
