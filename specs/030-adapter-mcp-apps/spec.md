@@ -354,7 +354,9 @@ renderer contract, which this adapter consumes and never re-implements.
   inline, no external network origin in the document or its declared content
   policy — so a host can audit and cache it before rendering.
 - **FR-003**: The only render path inside a surface MUST be the guarded
-  renderer over the neutral catalog (spec `028-guarded-renderer`). The four
+  renderer over the neutral catalog (spec `028-guarded-renderer`), reached
+  through the live surface (spec `035-live-surface`), whose every batch
+  crosses the same boundary (amended by spec 157, 2026-11-21). The four
   guardrail invariants hold at this protocol boundary: only catalog
   components render, only declared actions dispatch, unknown props are
   rejected and reported, and no code-execution path exists from spec or
@@ -415,6 +417,9 @@ renderer contract, which this adapter consumes and never re-implements.
   resolves through a `ui://` URI, audits, caches and renders.
 - **Surface spec**: the catalog-schema payload derived from tool input and
   results; the only input the renderer accepts.
+- **Surface update**: an optional live batch and the page revision it was
+  computed on, carried next to the full spec in a tool result; applied only
+  on that revision and only when the live surface accepts it (spec 157).
 - **Declared action**: a named interaction declared in the surface spec; the
   only application traffic allowed to leave the surface, as its `tools/call`
   and, when the server asks for it, its spec 040 relay.
@@ -436,9 +441,9 @@ renderer contract, which this adapter consumes and never re-implements.
   surface document embeds the renderer, the catalog validator, every catalog
   component definition and the default token stylesheets, so it receives its
   own size budget, enforced by the package's test suite
-  (`tests/resource.spec.ts`): at most 600 kB raw, 135 kB gzip and 112 kB
-  brotli — about 5% above the document measured on 2026-11-14 (571 kB raw,
-  128 kB gzip, 106 kB brotli, 29 components). Any protocol runtime
+  (`tests/resource.spec.ts`) within the raw, gzip and brotli limits
+  `scripts/lib/bundle-size-budget.mjs` calculates from the component
+  inventory (amended by spec 157, 2026-11-21). Any protocol runtime
   dependency is subject to the audit-and-pin supply-chain gate.
 - **Accessibility** (Art. V): no new interaction pattern; each catalog
   component's APG pattern applies unchanged inside the surface.
@@ -535,6 +540,11 @@ renderer contract, which this adapter consumes and never re-implements.
   light/dark theme (`McpUiHostContext.theme`, apps.mdx:544-545), and its
   content policy names its script and stylesheet by digest instead of
   allowing any inline code.
+- **Amendment — live updates (2026-11-21)**: spec 157 makes the document
+  paint through the live surface. A tool result may carry an update next to
+  its full spec; the action call carries the bound node's `id` and the page
+  revision. No S-ID is retired or added here; FR-003, Key Entities and the
+  bundle budget sentence are amended.
 - Mapping host **style variables** (`hostContext.styles`, apps.mdx:895-908)
   onto `--ki-*` tokens stays out of scope: there is no verified one-to-one
   mapping between the host's standardized variables and the token layers,

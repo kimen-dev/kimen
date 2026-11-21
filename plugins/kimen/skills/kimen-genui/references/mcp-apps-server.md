@@ -74,6 +74,8 @@ server.registerTool(
     inputSchema: z.object({
       action: z.string(),
       data: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])).optional(),
+      id: z.string().optional(),       // the bound node's id, when the spec gave it one
+      revision: z.number().int().nonnegative().optional(), // the page revision the person acted on
     }).strict(),
     _meta: { ...ACTION_TOOL._meta },
   },
@@ -98,6 +100,14 @@ server.registerTool(
   fallback.
 - The server is the authority on actions: check the name against what you
   rendered and validate `data` before acting.
+- Every action call also carries `revision` (the page revision the person
+  acted on) and, when the bound node has an `id` in the spec, that `id`. A
+  strict input schema must accept both, or every call is rejected.
+- A result with only a spec repaints the surface and loses what the person
+  was typing. To keep it, answer `surfaceToolResult(fullSpec, text, {
+  baseRevision: revision, batch })` with a live batch (`@kimen/catalog`) that
+  turns the surface the person saw into `fullSpec`. The surface applies it
+  only on that revision and otherwise paints `fullSpec`.
 - With `relay: true`, a host that advertises text messages receives one user
   message `kimen-surface-action {"action":…,"data":…}` built by the surface.
   Say in the rendering tool's description that the model must read it as
