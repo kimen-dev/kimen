@@ -230,6 +230,12 @@ export class KiDatePicker {
     if (prop === 'value') {
       this.entry = undefined;
       this.value ||= '';
+      // A value write or a reset can coalesce with an edit's pending render,
+      // which then matches the previous render and leaves the edit's text in
+      // the native input.
+      if (this.#input) {
+        this.#input.value = this.#displayValue(this.#resolvedLocale, this.#savedValue);
+      }
     }
     if (disabled || prop === 'value') this.#closeCalendar();
     if (prop === 'mode' || prop === 'locale' || prop === 'min' || prop === 'max') {
@@ -264,14 +270,10 @@ export class KiDatePicker {
 
   formResetCallback(): void {
     this.#customErrorWithdrawn = true;
-    this.#closeCalendar();
-    this.entry = undefined;
     this.showError = false;
     this.value = this.host.getAttribute('value') ?? '';
-    // A reset can coalesce with the edit's pending render while leaving its
-    // imperative write to the native input in place.
-    if (this.#input) this.#input.value = this.#displayValue(this.#resolvedLocale, this.#savedValue);
-    this.syncForm();
+    // Take the value-write path even when the default equals the current value.
+    this.syncForm(undefined, undefined, 'value');
   }
 
   @Listen('invalid')

@@ -48,6 +48,13 @@
   line-height: var(--_ki-radio-group-label-line-height);
 }
 
+/* label-hidden: out of view and out of reading order. The radiogroup still
+ * takes its name from it: a node its aria-labelledby names directly counts
+ * even when hidden, so the label is announced once, as that name (S28). */
+[part="label"].hidden {
+  display: none;
+}
+
 [role="radiogroup"] {
   display: flex;
   flex-direction: column;

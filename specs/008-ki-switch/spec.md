@@ -240,6 +240,13 @@ Feature: Switch
       | in the initial markup  |
       | after the first render |
 
+  # S25
+  Scenario: A script click toggles the switch as it toggles a native checkbox
+    Given a switch labeled "Newsletter" that is off
+    When a script clicks the switch
+    Then the switch is on
+    And the page observes exactly one input event followed by exactly one change event
+
   # Family: keyboard path
   # S5
   Scenario: The keyboard reaches the switch with visible focus
@@ -372,7 +379,7 @@ Feature: Switch
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S17, S22 | |
+| Core behavior | S1, S2, S3, S4, S17, S22, S25 | |
 | Keyboard path | S5, S6, S20 | |
 | Assistive-tech outcome | S7, S8, S9 | |
 | Form participation | S10, S11, S12, S13, S18, S21 | |

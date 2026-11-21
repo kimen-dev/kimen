@@ -6,8 +6,8 @@
 # Semgrep declares, up to its latest release. The workflows only ever run
 # `semgrep scan` over this repository, with --metrics=off and without --trace.
 # When `effectiveUntil` passes the scan reports them again, so the decision is
-# revisited instead of becoming permanent: by then Semgrep may allow mcp 1.30
-# and opentelemetry-api 1.45, and the fix is regenerating the lock.
+# revisited instead of becoming permanent: by then Semgrep may allow mcp 1.30,
+# opentelemetry-api 1.45 and wcmatch 11.2, and the fix is regenerating the lock.
 
 [[IgnoredVulns]]
 id = "GHSA-qx49-fqc8-xw99"
@@ -43,3 +43,8 @@ reason = "opentelemetry-api 1.37.0 (quadratic-time parsing of an untrusted trace
 id = "GHSA-mf5v-w3w3-f6cg"
 effectiveUntil = 2027-01-05T00:00:00Z
 reason = "opentelemetry-api 1.37.0 (quadratic-time parsing of an untrusted traceparent value). Fixed in 1.45.2; Semgrep 1.185.0 requires ~=1.37.0 and so does 1.186.0, the latest. Semgrep extracts a traceparent only under --trace, one it formats itself from its own environment, and no workflow passes --trace."
+
+[[IgnoredVulns]]
+id = "GHSA-53pm-wgxf-c6qf"
+effectiveUntil = 2027-01-05T00:00:00Z
+reason = "wcmatch 8.5.2 (polynomial-time ReDoS when matching untrusted names against multi-star patterns). Fixed in 11.2; Semgrep 1.185.0 requires wcmatch~=8.3 and so does 1.186.0, the latest. Semgrep matches only the paths of the checkout it scans against the fixed in-tree excludes in scripts/gates/semgrep-scan.sh, none of them multi-star; the worst case is a slower scan, bounded by the job timeout."

@@ -4046,7 +4046,7 @@
         },
         {
           "name": "event",
-          "text": "change - Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
+          "text": "change - Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. `click()` from a script, or a page `<label>` for the\ncheckbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
         }
       ],
       "usage": {
@@ -4449,7 +4449,7 @@
         }
       ],
       "usage": {
-        "examples": "# Checkbox group examples\n\n## Submit several selections\n\n```html\n<form id=\"settings\">\n  <ki-checkbox-group\n    id=\"regions\"\n    label=\"Regions\"\n    name=\"regions\"\n    min=\"1\"\n    help-text=\"Choose the regions you serve.\"\n    error-text=\"Choose at least one region.\"\n  >\n    <ki-checkbox value=\"eu\" checked>Europe</ki-checkbox>\n    <ki-checkbox value=\"am\">Americas</ki-checkbox>\n    <ki-checkbox value=\"apac\">Asia-Pacific</ki-checkbox>\n  </ki-checkbox-group>\n  <button type=\"submit\">Save regions</button>\n</form>\n```\n\nReading `new FormData(form).getAll('regions')` returns each checked value\nin option order. Keep individual option labels visible and give each option\na distinct value when you need to select it independently from JavaScript.\n\n## Read and update selection\n\n```js\nimport { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';\nimport { defineCustomElement as defineCheckboxGroup } from '@kimen/elements/ki-checkbox-group';\n\ndefineCheckbox();\ndefineCheckboxGroup();\n\nconst group = document.querySelector('#regions');\ngroup.value = ['eu', 'apac'];\n\ngroup.addEventListener('ki-change', (event) => {\n  const selectedRegions = event.detail.value;\n  console.log(selectedRegions);\n});\n```\n\n## Horizontal choices\n\n```html\n<ki-checkbox-group label=\"Notifications\" orientation=\"horizontal\">\n  <ki-checkbox value=\"mentions\">Mentions</ki-checkbox>\n  <ki-checkbox value=\"reviews\">Review requests</ki-checkbox>\n</ki-checkbox-group>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on the submitted\nselection. The group is invalid, blocks its form and is announced as invalid\nat once. Toggling any option withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-checkbox-group label=\"Regions\" name=\"regions\" custom-error=\"We do not deliver to the Americas yet.\">\n  <ki-checkbox value=\"eu\" checked>Europe</ki-checkbox>\n  <ki-checkbox value=\"am\" checked>Americas</ki-checkbox>\n</ki-checkbox-group>\n```\n"
+        "examples": "# Checkbox group examples\n\n## Submit several selections\n\n```html\n<form id=\"settings\">\n  <ki-checkbox-group\n    id=\"regions\"\n    label=\"Regions\"\n    name=\"regions\"\n    min=\"1\"\n    help-text=\"Choose the regions you serve.\"\n    error-text=\"Choose at least one region.\"\n  >\n    <ki-checkbox value=\"eu\" checked>Europe</ki-checkbox>\n    <ki-checkbox value=\"am\">Americas</ki-checkbox>\n    <ki-checkbox value=\"apac\">Asia-Pacific</ki-checkbox>\n  </ki-checkbox-group>\n  <button type=\"submit\">Save regions</button>\n</form>\n```\n\nReading `new FormData(form).getAll('regions')` returns each checked value\nin option order. Keep individual option labels visible and give each option\na distinct value when you need to select it independently from JavaScript.\n\n## Read and update selection\n\n```js\nimport { defineCustomElement as defineCheckbox } from '@kimen/elements/ki-checkbox';\nimport { defineCustomElement as defineCheckboxGroup } from '@kimen/elements/ki-checkbox-group';\n\ndefineCheckbox();\ndefineCheckboxGroup();\n\nconst group = document.querySelector('#regions');\ngroup.value = ['eu', 'apac'];\n\ngroup.addEventListener('ki-change', (event) => {\n  const selectedRegions = event.detail.value;\n  console.log(selectedRegions);\n});\n```\n\n## Horizontal choices\n\n```html\n<ki-checkbox-group label=\"Notifications\" orientation=\"horizontal\">\n  <ki-checkbox value=\"mentions\">Mentions</ki-checkbox>\n  <ki-checkbox value=\"reviews\">Review requests</ki-checkbox>\n</ki-checkbox-group>\n```\n\n## Name the group from the page\n\nWhen the question is already written on the page, point the host's\n`aria-labelledby` at it and omit `label`. The group takes its accessible name\nfrom the heading, so the question is shown and read once. `label-hidden`\ninstead keeps a `label` as the name while hiding it from view and from\nreading order.\n\n```html\n<h2 id=\"shipping-question\">Where do you ship?</h2>\n<ki-checkbox-group aria-labelledby=\"shipping-question\" name=\"regions\">\n  <ki-checkbox value=\"eu\">Europe</ki-checkbox>\n  <ki-checkbox value=\"am\">Americas</ki-checkbox>\n</ki-checkbox-group>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on the submitted\nselection. The group is invalid, blocks its form and is announced as invalid\nat once. Toggling any option withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-checkbox-group label=\"Regions\" name=\"regions\" custom-error=\"We do not deliver to the Americas yet.\">\n  <ki-checkbox value=\"eu\" checked>Europe</ki-checkbox>\n  <ki-checkbox value=\"am\" checked>Americas</ki-checkbox>\n</ki-checkbox-group>\n```\n"
       },
       "props": [
         {
@@ -4570,7 +4570,7 @@
           "mutable": false,
           "attr": "label",
           "reflectToAttr": true,
-          "docs": "Visible legend and accessible name for these choices.",
+          "docs": "Visible legend and accessible name for these choices.\nWhen NOT to use: do not omit it unless the host's `aria-labelledby` names\nthe group from the page.\n\nNaming from the page: set `aria-labelledby` on the host to the ids of\nelements in the same document or shadow root, such as the heading that\nalready asks the question. The group then takes its name from them,\nfollowed by its own `label` when set. The ids are read when the group\nrenders and whenever the attribute changes.\nWhen to use: the question is written on the page above the options; omit\n`label` so the question is not shown, or read, twice.\nWhen NOT to use: do not reference elements inside another component's\nshadow root, which an id reference cannot reach.",
           "docsTags": [],
           "values": [
             {
@@ -4579,6 +4579,35 @@
           ],
           "optional": false,
           "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelHidden",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hidden",
+          "reflectToAttr": true,
+          "docs": "Hides the legend from view and from reading order while it stays the\ngroup's accessible name, so a screen reader announces it once, as the\ngroup's name.\nWhen to use: the layout already makes the question obvious to sighted\npeople but the group still needs a name of its own.\nWhen NOT to use: do not hide a legend that repeats a question already on\nthe page; point `aria-labelledby` at that question instead.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
           "getter": false,
           "setter": false
         },
@@ -20994,11 +21023,11 @@
         },
         {
           "name": "event",
-          "text": "change - Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
+          "text": "change - Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\n`click()` on a `ki-radio` from a script selects it like a native radio: one\n`input`, then one `change`.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
         }
       ],
       "usage": {
-        "examples": "The group owns the `label` (mandatory; the radiogroup's accessible name), the form `name` and the selected `value`; user selection dispatches a composed `change` event, while programmatic `value` writes stay silent:\n\n```html\n<ki-radio-group label=\"Delivery speed\" name=\"delivery\" value=\"standard\">\n  <ki-radio value=\"standard\">Standard (3–5 days)</ki-radio>\n  <ki-radio value=\"express\">Express (1–2 days)</ki-radio>\n  <ki-radio value=\"overnight\">Overnight</ki-radio>\n</ki-radio-group>\n```\n\nWithout an initial `value` the group renders unselected and operable; `required` blocks form submission through the platform `valueMissing` validity until an option is chosen:\n\n```html\n<form>\n  <ki-radio-group label=\"Billing cycle\" name=\"cycle\" required>\n    <ki-radio value=\"monthly\">Monthly</ki-radio>\n    <ki-radio value=\"yearly\">Yearly</ki-radio>\n  </ki-radio-group>\n  <ki-button variant=\"primary\">Continue</ki-button>\n</form>\n```\n\nA `disabled` group is skipped in Tab order and contributes no form entry; do not use it for pending or loading semantics:\n\n```html\n<ki-radio-group label=\"Region\" name=\"region\" value=\"eu\" disabled>\n  <ki-radio value=\"eu\">Europe</ki-radio>\n  <ki-radio value=\"us\">United States</ki-radio>\n</ki-radio-group>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on the submitted\nchoice. The group is invalid, blocks its form and is announced as invalid at\nonce. Choosing another option withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-radio-group label=\"Plan\" name=\"plan\" value=\"team\" custom-error=\"The Team plan is sold out this month.\">\n  <ki-radio value=\"solo\">Solo</ki-radio>\n  <ki-radio value=\"team\">Team</ki-radio>\n</ki-radio-group>\n```\n"
+        "examples": "The group owns the `label` (mandatory; the radiogroup's accessible name), the form `name` and the selected `value`; user selection dispatches a composed `change` event, while programmatic `value` writes stay silent:\n\n```html\n<ki-radio-group label=\"Delivery speed\" name=\"delivery\" value=\"standard\">\n  <ki-radio value=\"standard\">Standard (3–5 days)</ki-radio>\n  <ki-radio value=\"express\">Express (1–2 days)</ki-radio>\n  <ki-radio value=\"overnight\">Overnight</ki-radio>\n</ki-radio-group>\n```\n\nWithout an initial `value` the group renders unselected and operable; `required` blocks form submission through the platform `valueMissing` validity until an option is chosen:\n\n```html\n<form>\n  <ki-radio-group label=\"Billing cycle\" name=\"cycle\" required>\n    <ki-radio value=\"monthly\">Monthly</ki-radio>\n    <ki-radio value=\"yearly\">Yearly</ki-radio>\n  </ki-radio-group>\n  <ki-button variant=\"primary\">Continue</ki-button>\n</form>\n```\n\nA `disabled` group is skipped in Tab order and contributes no form entry; do not use it for pending or loading semantics:\n\n```html\n<ki-radio-group label=\"Region\" name=\"region\" value=\"eu\" disabled>\n  <ki-radio value=\"eu\">Europe</ki-radio>\n  <ki-radio value=\"us\">United States</ki-radio>\n</ki-radio-group>\n```\n\nWhen the question is already written on the page, name the group from it with `aria-labelledby` on the host and omit `label`, so the question is shown and read once:\n\n```html\n<h2 id=\"plan-question\">Which plan suits you?</h2>\n<ki-radio-group aria-labelledby=\"plan-question\" name=\"plan\">\n  <ki-radio value=\"basic\">Basic</ki-radio>\n  <ki-radio value=\"pro\">Pro</ki-radio>\n</ki-radio-group>\n```\n\nWhen the layout makes the question obvious but the group still needs its own name, `label-hidden` hides the label from view and from reading order; it stays the group's accessible name and is announced once:\n\n```html\n<ki-radio-group label=\"Your answer\" label-hidden name=\"answer\">\n  <ki-radio value=\"yes\">Yes</ki-radio>\n  <ki-radio value=\"no\">No</ki-radio>\n</ki-radio-group>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on the submitted\nchoice. The group is invalid, blocks its form and is announced as invalid at\nonce. Choosing another option withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-radio-group label=\"Plan\" name=\"plan\" value=\"team\" custom-error=\"The Team plan is sold out this month.\">\n  <ki-radio value=\"solo\">Solo</ki-radio>\n  <ki-radio value=\"team\">Team</ki-radio>\n</ki-radio-group>\n```\n"
       },
       "props": [
         {
@@ -21119,7 +21148,7 @@
           "mutable": false,
           "attr": "label",
           "reflectToAttr": true,
-          "docs": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
+          "docs": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it unless the host's `aria-labelledby` names\nthe group from the page; a group with neither fails accessibility gates.\n\nNaming from the page: set `aria-labelledby` on the host to the ids of\nelements in the same document or shadow root, such as the heading that\nalready asks the question. The group then takes its name from them,\nfollowed by its own `label` and `label-hint` when set. The ids are read\nwhen the group renders and whenever the attribute changes.\nWhen to use: the question is written on the page above the options; omit\n`label` so the question is not shown, or read, twice.\nWhen NOT to use: do not reference elements inside another component's\nshadow root, which an id reference cannot reach.",
           "docsTags": [],
           "values": [
             {
@@ -21128,6 +21157,35 @@
           ],
           "optional": false,
           "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "labelHidden",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label-hidden",
+          "reflectToAttr": true,
+          "docs": "Hides the `label` (and its hint) from view and from reading order while it\nstays the radiogroup's accessible name, so a screen reader announces it\nonce, as the group's name.\nWhen to use: the layout already makes the question obvious to sighted\npeople (a heading in a card, an icon row) but the group still needs a\nname of its own.\nWhen NOT to use: do not hide a label that repeats a question already on\nthe page; point `aria-labelledby` at that question instead. Do not hide\nthe only description of what a choice decides; that is `help-text`.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
           "getter": false,
           "setter": false
         },
@@ -23216,7 +23274,7 @@
         },
         {
           "name": "slot",
-          "text": "- Noninteractive visible option label."
+          "text": "- Noninteractive visible option label. A label wider than its share of\nthe row wraps onto a second line and every option of the row keeps one\nheight; text that would need a third line ends with an ellipsis, and the\nfull text stays the option's accessible name. Keep it to a few words."
         },
         {
           "name": "slot",
@@ -23317,7 +23375,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Noninteractive visible option label."
+          "docs": "Noninteractive visible option label. A label wider than its share of\nthe row wraps onto a second line and every option of the row keeps one\nheight; text that would need a third line ends with an ellipsis, and the\nfull text stays the option's accessible name. Keep it to a few words."
         },
         {
           "name": "start",
@@ -23373,7 +23431,7 @@
           "mutable": false,
           "attr": "full-width",
           "reflectToAttr": true,
-          "docs": "Distribute the available inline space evenly among all segments.",
+          "docs": "Distribute the available inline space evenly among all segments. A label\nwider than its equal share wraps onto a second line.",
           "docsTags": [
             {
               "name": "default",
@@ -27775,7 +27833,7 @@
         },
         {
           "name": "event",
-          "text": "change - Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
+          "text": "change - Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. `click()` from a\nscript, or a page `<label>` for the switch, toggles it like a native\ncheckbox: one `input`, then one `change`. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
         }
       ],
       "usage": {
@@ -32132,11 +32190,11 @@
         },
         {
           "name": "slot",
-          "text": "- Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\"."
+          "text": "- Header mode: up to five direct native anchors; mark the current one with\naria-current=\"page\". They stay the page's own anchors, so the page's link\nrules reach them and outrank the bar's link styles (CSS Scoping gives the\npage's styles precedence over a component's `::slotted()` rules, whatever\ntheir specificity). `a { color: inherit }` is safe: the links then take the\nbar's item ink. A rule that sets `color`, `text-decoration`, `font-*` or\n`padding` on every `a` restyles them too: scope it away from the bar, for\nexample `:where(main, footer) a` or `a:not(ki-top-nav > a)`, and restyle the\nbar's links with the `--ki-top-nav-item-*` tokens."
         },
         {
           "name": "slot",
-          "text": "brand - Header mode: the brand link or wordmark."
+          "text": "brand - Header mode: the brand link or wordmark. Page link rules reach it\nas they reach the primary links."
         },
         {
           "name": "slot",
@@ -32613,7 +32671,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\"."
+          "docs": "Header mode: up to five direct native anchors; mark the current one with\naria-current=\"page\". They stay the page's own anchors, so the page's link\nrules reach them and outrank the bar's link styles (CSS Scoping gives the\npage's styles precedence over a component's `::slotted()` rules, whatever\ntheir specificity). `a { color: inherit }` is safe: the links then take the\nbar's item ink. A rule that sets `color`, `text-decoration`, `font-*` or\n`padding` on every `a` restyles them too: scope it away from the bar, for\nexample `:where(main, footer) a` or `a:not(ki-top-nav > a)`, and restyle the\nbar's links with the `--ki-top-nav-item-*` tokens."
         },
         {
           "name": "actions",
@@ -32621,7 +32679,7 @@
         },
         {
           "name": "brand",
-          "docs": "Header mode: the brand link or wordmark."
+          "docs": "Header mode: the brand link or wordmark. Page link rules reach it\nas they reach the primary links."
         },
         {
           "name": "leading",

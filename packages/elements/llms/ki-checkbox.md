@@ -89,7 +89,7 @@ nothing. Inside a `ki-checkbox-group`, set it on the group.
 
 ## Events
 
-- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
+- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. `click()` from a script, or a page `<label>` for the checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 ## Methods
 

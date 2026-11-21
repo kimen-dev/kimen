@@ -1,4 +1,13 @@
-import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
+import {
+  AttachInternals,
+  Component,
+  Element,
+  forceUpdate,
+  h,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
 import {
   booleanFromAttributePresence,
   observeAttributePresence,
@@ -47,6 +56,8 @@ type KiRadioElement = HTMLElement & {
  * decorative error symbol.
  * @event change - Fired once after the user selects a different radio, composed
  * across the shadow boundary; `value` is already current when listeners run.
+ * `click()` on a `ki-radio` from a script selects it like a native radio: one
+ * `input`, then one `change`.
  * When to use: react to the committed choice. When NOT to use: do not expect
  * it for programmatic `value` writes, which are silent.
  */
@@ -73,6 +84,8 @@ export class KiRadioGroup {
   private rosterObserver?: MutationObserver;
   private presenceObserver: MutationObserver | undefined;
   private resetValue = '';
+  private group: HTMLElement | undefined;
+  private labelElement: HTMLElement | undefined;
   private suppressValueWatch = false;
   // A value requested by attribute, property or reset that no option matches
   // yet. `value` stays a projection of the selection (FR-002), so the request
@@ -100,9 +113,35 @@ export class KiRadioGroup {
 
   /**
    * Visible label and accessible-name source for the radiogroup.
-   * When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+   * When NOT to use: do not omit it unless the host's `aria-labelledby` names
+   * the group from the page; a group with neither fails accessibility gates.
+   *
+   * Naming from the page: set `aria-labelledby` on the host to the ids of
+   * elements in the same document or shadow root, such as the heading that
+   * already asks the question. The group then takes its name from them,
+   * followed by its own `label` and `label-hint` when set. The ids are read
+   * when the group renders and whenever the attribute changes.
+   * When to use: the question is written on the page above the options; omit
+   * `label` so the question is not shown, or read, twice.
+   * When NOT to use: do not reference elements inside another component's
+   * shadow root, which an id reference cannot reach.
    */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * Hides the `label` (and its hint) from view and from reading order while it
+   * stays the radiogroup's accessible name, so a screen reader announces it
+   * once, as the group's name.
+   * When to use: the layout already makes the question obvious to sighted
+   * people (a heading in a card, an icon row) but the group still needs a
+   * name of its own.
+   * When NOT to use: do not hide a label that repeats a question already on
+   * the page; point `aria-labelledby` at that question instead. Do not hide
+   * the only description of what a choice decides; that is `help-text`.
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) labelHidden = false;
 
   /**
    * Token-backed size of every `ki-radio` the group holds: the circle is 18
@@ -226,12 +265,22 @@ export class KiRadioGroup {
     this.syncValidity();
   }
 
+  // The name may come from the page (S29): re-resolve when the ids change.
+  @Watch('aria-labelledby')
+  private labelledByChanged(): void {
+    forceUpdate(this.host);
+  }
+
   // Presence semantics: a present attribute means `true` whatever its value
   // (`disabled="false"` still disables). Runs before the first render, while
   // the authored attributes are the only state there is.
   private applyAttributePresence(): void {
     this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
     this.required = booleanFromAttributePresence(this.required, this.host.hasAttribute('required'));
+    this.labelHidden = booleanFromAttributePresence(
+      this.labelHidden,
+      this.host.hasAttribute('label-hidden'),
+    );
   }
 
   private get effectiveDisabled(): boolean {
@@ -311,9 +360,10 @@ export class KiRadioGroup {
     this.presenceObserver?.disconnect();
     this.presenceObserver = observeAttributePresence(
       this.host,
-      ['disabled', 'required'],
+      ['disabled', 'required', 'label-hidden'],
       (attribute) => {
-        this[attribute] = true;
+        if (attribute === 'label-hidden') this.labelHidden = true;
+        else this[attribute] = true;
       },
     );
     // Added on every connection, as disconnectedCallback removes them: a group
@@ -338,6 +388,10 @@ export class KiRadioGroup {
 
   componentDidLoad(): void {
     this.syncRoster();
+  }
+
+  componentDidRender(): void {
+    this.syncName();
   }
 
   disconnectedCallback(): void {
@@ -683,20 +737,71 @@ export class KiRadioGroup {
     return target instanceof HTMLElement && target.localName === 'ki-radio';
   }
 
+  /** Elements the host's `aria-labelledby` names, in its own tree. */
+  private pageLabels(): Element[] {
+    const root = this.host.getRootNode();
+    if (!(root instanceof Document || root instanceof ShadowRoot)) {
+      return [];
+    }
+    const ids = (this.host.getAttribute('aria-labelledby') ?? '').split(/\s+/u);
+    return ids.flatMap((id) => {
+      const element = id ? root.getElementById(id) : null;
+      return element ? [element] : [];
+    });
+  }
+
+  // An id reference cannot leave the shadow root, but an element reference
+  // can point into the trees that contain it: the radiogroup takes the page's
+  // elements, then its own label, as aria-labelledby="page-ids group-label"
+  // would (S29). Without page labels the static id reference stays in place.
+  private syncName(): void {
+    const group = this.group;
+    if (!group) {
+      return;
+    }
+    const page = this.pageLabels();
+    const own = this.labelElement ? [this.labelElement] : [];
+    if (page.length > 0) {
+      // ARIA element reflection (Baseline 2025), which Stencil's DOM
+      // declarations predate: assigned through its setter.
+      Object.assign(group, { ariaLabelledByElements: [...page, ...own] });
+    } else if (own.length === 0) {
+      group.removeAttribute('aria-labelledby');
+    } else if (group.getAttribute('aria-labelledby') !== this.labelId) {
+      group.setAttribute('aria-labelledby', this.labelId);
+    }
+  }
+
   render() {
     const messages = {
       help: fieldText(this.helpText),
       error: this.userInvalid ? this.message : '',
     };
+    const labelText = fieldText(this.label);
+    const hint = fieldText(this.labelHint);
+    const hasLabel = Boolean(labelText || hint);
     return (
       <div>
-        <span part="label" id={this.labelId}>
-          {this.label}
-          <LabelHint hint={fieldText(this.labelHint)} />
-        </span>
+        {hasLabel && (
+          <span
+            part="label"
+            id={this.labelId}
+            class={{ hidden: this.labelHidden }}
+            ref={(element) => {
+              this.labelElement = element;
+            }}
+          >
+            {this.label}
+            <LabelHint hint={hint} />
+          </span>
+        )}
+        {/* syncName() owns the name: the label's id, or element references
+            to the page's labels followed by the label (S29). */}
         <div
           role="radiogroup"
-          aria-labelledby={this.labelId}
+          ref={(element) => {
+            this.group = element;
+          }}
           aria-disabled={this.effectiveDisabled ? 'true' : null}
           aria-required={this.required ? 'true' : null}
           aria-invalid={fieldInvalid(messages)}

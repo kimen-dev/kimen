@@ -730,7 +730,8 @@ export namespace Components {
      * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
-     * when listeners run. When to use: react to the committed selection. When NOT
+     * when listeners run. `click()` from a script, or a page `<label>` for the
+     * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
      * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface KiCheckbox {
@@ -811,9 +812,14 @@ export namespace Components {
          */
         "helpText"?: string;
         /**
-          * Visible legend and accessible name for these choices.
+          * Visible legend and accessible name for these choices. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page.  Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
          */
         "label": string;
+        /**
+          * Hides the legend from view and from reading order while it stays the group's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people but the group still needs a name of its own. When NOT to use: do not hide a legend that repeats a question already on the page; point `aria-labelledby` at that question instead.
+          * @default false
+         */
+        "labelHidden": boolean;
         /**
           * Maximum number of checked options, as a nonnegative integer.
          */
@@ -3097,6 +3103,8 @@ export namespace Components {
      * authored selection on options; set this group's `value` instead.
      * @event change - Fired once after the user selects a different radio, composed
      * across the shadow boundary; `value` is already current when listeners run.
+     * `click()` on a `ki-radio` from a script selects it like a native radio: one
+     * `input`, then one `change`.
      * When to use: react to the committed choice. When NOT to use: do not expect
      * it for programmatic `value` writes, which are silent.
      */
@@ -3119,9 +3127,14 @@ export namespace Components {
          */
         "helpText"?: string;
         /**
-          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page; a group with neither fails accessibility gates.  Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` and `label-hint` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
          */
         "label": string;
+        /**
+          * Hides the `label` (and its hint) from view and from reading order while it stays the radiogroup's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people (a heading in a card, an icon row) but the group still needs a name of its own. When NOT to use: do not hide a label that repeats a question already on the page; point `aria-labelledby` at that question instead. Do not hide the only description of what a choice decides; that is `help-text`.
+          * @default false
+         */
+        "labelHidden": boolean;
         /**
           * Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
@@ -3459,7 +3472,7 @@ export namespace Components {
      */
     interface KiSegmentedControl {
         /**
-          * Distribute the available inline space evenly among all segments.
+          * Distribute the available inline space evenly among all segments. A label wider than its equal share wraps onto a second line.
           * @default false
          */
         "fullWidth": boolean;
@@ -4097,7 +4110,9 @@ export namespace Components {
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
      * @event change - Fired once after a user toggle commits, composed across the shadow
-     * boundary; `checked` is already current when listeners run. When to use:
+     * boundary; `checked` is already current when listeners run. `click()` from a
+     * script, or a page `<label>` for the switch, toggles it like a native
+     * checkbox: one `input`, then one `change`. When to use:
      * apply the on/off effect. When NOT to use: do not expect it for programmatic
      * `checked` writes, which are silent.
      */
@@ -5359,7 +5374,8 @@ declare global {
      * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
-     * when listeners run. When to use: react to the committed selection. When NOT
+     * when listeners run. `click()` from a script, or a page `<label>` for the
+     * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
      * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface HTMLKiCheckboxElement extends Components.KiCheckbox, HTMLStencilElement {
@@ -6349,6 +6365,8 @@ declare global {
      * authored selection on options; set this group's `value` instead.
      * @event change - Fired once after the user selects a different radio, composed
      * across the shadow boundary; `value` is already current when listeners run.
+     * `click()` on a `ki-radio` from a script selects it like a native radio: one
+     * `input`, then one `change`.
      * When to use: react to the committed choice. When NOT to use: do not expect
      * it for programmatic `value` writes, which are silent.
      */
@@ -6792,7 +6810,9 @@ declare global {
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
      * @event change - Fired once after a user toggle commits, composed across the shadow
-     * boundary; `checked` is already current when listeners run. When to use:
+     * boundary; `checked` is already current when listeners run. `click()` from a
+     * script, or a page `<label>` for the switch, toggles it like a native
+     * checkbox: one `input`, then one `change`. When to use:
      * apply the on/off effect. When NOT to use: do not expect it for programmatic
      * `checked` writes, which are silent.
      */
@@ -7889,7 +7909,8 @@ declare namespace LocalJSX {
      * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
-     * when listeners run. When to use: react to the committed selection. When NOT
+     * when listeners run. `click()` from a script, or a page `<label>` for the
+     * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
      * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface KiCheckbox {
@@ -7978,9 +7999,14 @@ declare namespace LocalJSX {
          */
         "helpText"?: string;
         /**
-          * Visible legend and accessible name for these choices.
+          * Visible legend and accessible name for these choices. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page.  Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
          */
         "label": string;
+        /**
+          * Hides the legend from view and from reading order while it stays the group's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people but the group still needs a name of its own. When NOT to use: do not hide a legend that repeats a question already on the page; point `aria-labelledby` at that question instead.
+          * @default false
+         */
+        "labelHidden"?: boolean;
         /**
           * Maximum number of checked options, as a nonnegative integer.
          */
@@ -10442,6 +10468,8 @@ declare namespace LocalJSX {
      * authored selection on options; set this group's `value` instead.
      * @event change - Fired once after the user selects a different radio, composed
      * across the shadow boundary; `value` is already current when listeners run.
+     * `click()` on a `ki-radio` from a script selects it like a native radio: one
+     * `input`, then one `change`.
      * When to use: react to the committed choice. When NOT to use: do not expect
      * it for programmatic `value` writes, which are silent.
      */
@@ -10468,9 +10496,14 @@ declare namespace LocalJSX {
          */
         "helpText"?: string;
         /**
-          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page; a group with neither fails accessibility gates.  Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` and `label-hint` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
          */
         "label": string;
+        /**
+          * Hides the `label` (and its hint) from view and from reading order while it stays the radiogroup's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people (a heading in a card, an icon row) but the group still needs a name of its own. When NOT to use: do not hide a label that repeats a question already on the page; point `aria-labelledby` at that question instead. Do not hide the only description of what a choice decides; that is `help-text`.
+          * @default false
+         */
+        "labelHidden"?: boolean;
         /**
           * Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
          */
@@ -10844,7 +10877,7 @@ declare namespace LocalJSX {
      */
     interface KiSegmentedControl {
         /**
-          * Distribute the available inline space evenly among all segments.
+          * Distribute the available inline space evenly among all segments. A label wider than its equal share wraps onto a second line.
           * @default false
          */
         "fullWidth"?: boolean;
@@ -11502,7 +11535,9 @@ declare namespace LocalJSX {
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
      * @event change - Fired once after a user toggle commits, composed across the shadow
-     * boundary; `checked` is already current when listeners run. When to use:
+     * boundary; `checked` is already current when listeners run. `click()` from a
+     * script, or a page `<label>` for the switch, toggles it like a native
+     * checkbox: one `input`, then one `change`. When to use:
      * apply the on/off effect. When NOT to use: do not expect it for programmatic
      * `checked` writes, which are silent.
      */
@@ -12477,6 +12512,7 @@ declare namespace LocalJSX {
     }
     interface KiCheckboxGroupAttributes {
         "label": string;
+        "labelHidden": boolean;
         "name": string;
         "helpText": string;
         "errorText": string;
@@ -12953,6 +12989,7 @@ declare namespace LocalJSX {
         "name": string;
         "value": string;
         "label": string;
+        "labelHidden": boolean;
         "size": KiRadioGroupSize;
         "labelHint": string;
         "required": boolean;
@@ -13570,7 +13607,8 @@ declare module "@stencil/core" {
              * semantics; omit `checked` to express unchecked.
              * @event change - Fired once after a user toggle (pointer, slotted label or Space)
              * commits, composed across the shadow boundary; `checked` is already current
-             * when listeners run. When to use: react to the committed selection. When NOT
+             * when listeners run. `click()` from a script, or a page `<label>` for the
+             * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
              * to use: do not expect it for programmatic `checked` writes, which are silent.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
@@ -14035,6 +14073,8 @@ declare module "@stencil/core" {
              * authored selection on options; set this group's `value` instead.
              * @event change - Fired once after the user selects a different radio, composed
              * across the shadow boundary; `value` is already current when listeners run.
+             * `click()` on a `ki-radio` from a script selects it like a native radio: one
+             * `input`, then one `change`.
              * When to use: react to the committed choice. When NOT to use: do not expect
              * it for programmatic `value` writes, which are silent.
              */
@@ -14284,7 +14324,9 @@ declare module "@stencil/core" {
              * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
              * choices, and ki-button for actions.
              * @event change - Fired once after a user toggle commits, composed across the shadow
-             * boundary; `checked` is already current when listeners run. When to use:
+             * boundary; `checked` is already current when listeners run. `click()` from a
+             * script, or a page `<label>` for the switch, toggles it like a native
+             * checkbox: one `input`, then one `change`. When to use:
              * apply the on/off effect. When NOT to use: do not expect it for programmatic
              * `checked` writes, which are silent.
              */

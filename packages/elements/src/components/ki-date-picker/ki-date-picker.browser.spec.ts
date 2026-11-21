@@ -227,6 +227,20 @@ it('S14 resets the live value to its authored default', async () => {
   expect(new FormData(form).get('departure')).toBe('2026-11-12');
 });
 
+it('resets an uncommitted entry before it renders', async () => {
+  const { picker, form } = mount();
+  await field().click();
+  const input = field().element() as HTMLInputElement;
+  // The value stays at its default, so only the reset itself can restore the field.
+  input.value = '20/11/2026';
+  input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+  form.reset();
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  expect(picker.value).toBe('2026-11-12');
+  await expect.element(field()).toHaveValue('12/11/2026');
+});
+
 it('clears the field and form value when the value attribute is removed', async () => {
   const { picker, form, events } = mount();
   await expect.element(field()).toHaveValue('12/11/2026');
@@ -235,6 +249,26 @@ it('clears the field and form value when the value attribute is removed', async 
   expect(picker.value).toBe('');
   expect(new FormData(form).get('departure')).toBe('');
   expect(events).toEqual([]);
+});
+
+it('clears the field when code empties the value before a typed commit renders', async () => {
+  const { picker, form, events } = mount('');
+  await field().click();
+  const input = field().element() as HTMLInputElement;
+  // The entry, its commit and the outside clear land in one task, so the
+  // clear arrives before the commit's pending render.
+  input.value = '24/12/2026';
+  input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+  input.dispatchEvent(
+    new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true }),
+  );
+  picker.value = '';
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  expect(events).toEqual([{ value: '2026-12-24' }]);
+  expect(picker.value).toBe('');
+  await expect.element(field()).toHaveValue('');
+  expect(new FormData(form).get('departure')).toBe('');
 });
 
 it('S15 gets its popup surface from the raised semantic color', async () => {

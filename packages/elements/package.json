@@ -21,8 +21,8 @@
     "NOTICE"
   ],
   "scripts": {
-    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/build-surfaces.mjs",
-    "test": "node --test scripts/icon-modules.test.mjs && vitest run && vitest run --config vitest.node.config.ts",
+    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/vendor-stencil-client.mjs && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/build-surfaces.mjs",
+    "test": "node --test scripts/icon-modules.test.mjs scripts/vendor-stencil-client.test.mjs && vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.browser.config.ts",
     "size": "node scripts/run-size-limit.mjs",

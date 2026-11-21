@@ -17,7 +17,7 @@ the same bar as agent-written code.
 3. **One fast quality result defines ordinary PR readiness** (Art. III/X):
    format, lint, strict types, boundaries, build, tests in Chromium, axe and
    relevant API/token/budget integrity. Mutation runs daily; packaging and the
-   three-browser matrix run before release.
+   three-browser matrix run nightly on `main` and before release.
 4. **DCO sign-off, no CLA**: every commit is signed off
    (`git commit -s`), certifying the
    [Developer Certificate of Origin](https://developercertificate.org/).

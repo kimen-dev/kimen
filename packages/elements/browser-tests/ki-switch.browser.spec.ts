@@ -201,6 +201,59 @@ describe('ki-switch in a real browser', () => {
     expect(counts.change()).toBe(1);
   });
 
+  it('S25 a script click toggles the switch like a native checkbox, then reports one input and one change', async () => {
+    const { form, el } = await mountInForm('name="newsletter"');
+    const events: string[] = [];
+    for (const type of ['click', 'input', 'change']) {
+      el.addEventListener(type, () => {
+        events.push(`${type}:${String(el.checked)}`);
+      });
+    }
+
+    el.click();
+
+    // The state flips before the events, and each event reaches the page once,
+    // in the order a native checkbox's click() produces them.
+    expect(el.checked).toBe(true);
+    expect(formValue(form, 'newsletter')).toBe('on');
+    expect(events.filter((entry) => !entry.startsWith('click'))).toEqual([
+      'input:true',
+      'change:true',
+    ]);
+    expect(events.filter((entry) => entry.startsWith('click'))).toHaveLength(1);
+    await expect.element(page.getByRole('switch', { name: 'Newsletter' })).toBeChecked();
+
+    el.click();
+
+    expect(el.checked).toBe(false);
+    expect(formValue(form, 'newsletter')).toBeNull();
+  });
+
+  it('S25 a script click on a disabled switch changes nothing and reports nothing', async () => {
+    const el = await mount('disabled');
+    const counts = eventCounts(el);
+
+    el.click();
+
+    expect(el.checked).toBe(false);
+    expect(counts.input()).toBe(0);
+    expect(counts.change()).toBe(0);
+  });
+
+  it('S25 activating an outer label toggles the switch once', async () => {
+    cleanup();
+    document.body.innerHTML = `<label id="outer">Outer label <ki-switch>Email notifications</ki-switch></label>`;
+    const el = document.querySelector('ki-switch') as KiSwitchElement;
+    await waitForHydration(el);
+    const counts = eventCounts(el);
+
+    (document.getElementById('outer') as HTMLLabelElement).click();
+
+    expect(el.checked).toBe(true);
+    expect(counts.input()).toBe(1);
+    expect(counts.change()).toBe(1);
+  });
+
   it('S2 toggling the switch again turns it off', async () => {
     const el = await mount('checked');
 

@@ -472,14 +472,14 @@ export declare interface KiCheckbox extends Components.KiCheckbox {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiCheckboxGroup,
-  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'label', 'max', 'min', 'name', 'orientation', 'value']
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'label', 'labelHidden', 'max', 'min', 'name', 'orientation', 'value']
 })
 @Component({
   selector: 'ki-checkbox-group',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'max', 'min', 'name', 'orientation', 'value'],
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHidden', 'max', 'min', 'name', 'orientation', 'value'],
 })
 export class KiCheckboxGroup {
   protected el: HTMLKiCheckboxGroupElement;
@@ -1648,14 +1648,14 @@ export declare interface KiRadio extends Components.KiRadio {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiRadioGroup,
-  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'label', 'labelHint', 'name', 'required', 'size', 'value']
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', 'label', 'labelHidden', 'labelHint', 'name', 'required', 'size', 'value']
 })
 @Component({
   selector: 'ki-radio-group',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHint', 'name', 'required', 'size', 'value'],
+  inputs: ['customError', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'labelHidden', 'labelHint', 'name', 'required', 'size', 'value'],
 })
 export class KiRadioGroup {
   protected el: HTMLKiRadioGroupElement;

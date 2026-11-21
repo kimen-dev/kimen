@@ -1,0 +1,35 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-checkbox-group/attributes/label": "6629f13caa16dd480fd06dd6109b724b96f62d33278b87416d2f729f7bf94df2",
+    "/packages/@kimen~1elements/components/ki-checkbox-group/attributes/label-hidden": "208fc4a17d2d1d92abceecccbbf67c0582ae42f251bfafd26881f5b87230976e",
+    "/packages/@kimen~1elements/components/ki-checkbox-group/properties/label": "6629f13caa16dd480fd06dd6109b724b96f62d33278b87416d2f729f7bf94df2",
+    "/packages/@kimen~1elements/components/ki-checkbox-group/properties/labelHidden": "208fc4a17d2d1d92abceecccbbf67c0582ae42f251bfafd26881f5b87230976e",
+    "/packages/@kimen~1elements/components/ki-checkbox/events/change": "ca73d39e7aa77eafdf01671fa7b56e18e544159d720a92e586aca8ac438a6ce8",
+    "/packages/@kimen~1elements/components/ki-radio-group/attributes/label-hidden": "e17f9f590ef9c090c88f904088be4faab030304e7dbcec4fdfd827999e71df97",
+    "/packages/@kimen~1elements/components/ki-radio-group/attributes/label/description": "78e54986b280b53481e2938d7319464ef1dff88b38347f47078e87ba3e1979d0",
+    "/packages/@kimen~1elements/components/ki-radio-group/events/change": "ac30bfe6ef533b6b1333ee5988d0a55603e506e5957a7d3c44a605811ddc78fd",
+    "/packages/@kimen~1elements/components/ki-radio-group/properties/label/description": "78e54986b280b53481e2938d7319464ef1dff88b38347f47078e87ba3e1979d0",
+    "/packages/@kimen~1elements/components/ki-radio-group/properties/labelHidden": "e17f9f590ef9c090c88f904088be4faab030304e7dbcec4fdfd827999e71df97",
+    "/packages/@kimen~1elements/components/ki-segment/slots/": "1b3e52d49bbace107748196b429fa6638615f38908a428601b8942effb87889e",
+    "/packages/@kimen~1elements/components/ki-segmented-control/attributes/full-width": "a79c34030d4944762b57c92f5640a00219e9f3f664ac4b0b8b3d22f1e3c4aa7d",
+    "/packages/@kimen~1elements/components/ki-segmented-control/properties/fullWidth": "a79c34030d4944762b57c92f5640a00219e9f3f664ac4b0b8b3d22f1e3c4aa7d",
+    "/packages/@kimen~1elements/components/ki-switch/events/change": "5dfd085d353e011cd3aa27bbf9142d0bb865e1f97d92ce90ba2cf39af5a4a067",
+    "/packages/@kimen~1elements/components/ki-top-nav/slots/": "7956065e86d28cd6713d1c821028bdaf6b8283464578d700e7d7ff511cfae87a",
+    "/packages/@kimen~1elements/components/ki-top-nav/slots/brand": "f90ce424ed48eab4e67f10be633218d52c0d07084e96ad5c81038e0ad7b2e297",
+    "/packages/@kimen~1elements/modules/./symbols/KiRadioGroup": "790fa6458321fe944ad2a6e6cd2fe91e2f2515e4ddcd36bda941291e6ed1a6ba",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "29ac5b8dbc343c7458fea4e246f8e1cac3e7b7c629e791a63b0cf058703189ad",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "bb93cd7ffbf72f537c0470fb12b95a69fd0d464151c0beebd588e8b9b75be981",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "c137c4f363208addd90ac552382dc12e3d28335b810554ce5f832bb17b9abc8a",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "17fcdfad8b53bb2428ed38489daf8191eb22edda8903557d58d2e49825be334d"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "Integrator feedback on 0.1.1: label-hidden on ki-radio-group and ki-checkbox-group, naming from the host's aria-labelledby, and contract text for script click(), wrapped segment labels and ki-top-nav page link rules. The comparator classifies the class signature and loader Components/JSX namespace additions as major; the props are additive.",
+  "release": "major",
+  "schemaVersion": 2
+}
