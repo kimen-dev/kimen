@@ -112,6 +112,24 @@
       "plannedText": ""
     },
     {
+      "id": "live-surface",
+      "state": "available",
+      "evidence": ["build", "test", "test-browser"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "emitter-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "Live surface: a long-lived surface stays current through atomic, id-addressed batches validated by the same guardrail, so focus, typed text and scroll survive",
+      "plannedText": ""
+    },
+    {
       "id": "mutation-quality-gate",
       "state": "hardening",
       "evidence": ["infra-tests"],

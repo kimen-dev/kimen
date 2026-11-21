@@ -116,15 +116,17 @@ it('names exactly the sections each published package answers for', () => {
     {
       '@kimen/elements': bundleNotices,
       '@kimen/tokens': ['onmars theme fonts (SIL OFL 1.1)'],
+      '@kimen/catalog': [],
+      '@kimen/emitter': [],
+      '@kimen/adapter-a2ui': [],
       '@kimen/adapter-mcp-apps': bundleNotices,
       '@kimen/mcp-server': [...bundleNotices, ...mcpNotices],
     },
   );
   assert.equal(Object.isFrozen(PACKAGE_NOTICE_SECTIONS), true);
-  assert.equal(Object.isFrozen(PACKAGE_NOTICE_SECTIONS['@kimen/elements']), true);
-  assert.equal(Object.isFrozen(PACKAGE_NOTICE_SECTIONS['@kimen/tokens']), true);
-  assert.equal(Object.isFrozen(PACKAGE_NOTICE_SECTIONS['@kimen/adapter-mcp-apps']), true);
-  assert.equal(Object.isFrozen(PACKAGE_NOTICE_SECTIONS['@kimen/mcp-server']), true);
+  for (const titles of Object.values(PACKAGE_NOTICE_SECTIONS)) {
+    assert.equal(Object.isFrozen(titles), true);
+  }
 });
 
 it('a notice with no titled section is all header', () => {
@@ -252,6 +254,9 @@ it('writes a byte copy of the licence and the derived notice into each published
     {
       '@kimen/elements': 'packages/elements',
       '@kimen/tokens': 'packages/tokens',
+      '@kimen/catalog': 'packages/catalog',
+      '@kimen/emitter': 'packages/emitter',
+      '@kimen/adapter-a2ui': 'packages/adapter-a2ui',
       '@kimen/adapter-mcp-apps': 'packages/adapter-mcp-apps',
       '@kimen/mcp-server': 'packages/mcp-server',
     },
@@ -264,6 +269,9 @@ it('writes a byte copy of the licence and the derived notice into each published
   assert.deepEqual(written, [
     { name: '@kimen/elements', directory: 'packages/elements' },
     { name: '@kimen/tokens', directory: 'packages/tokens' },
+    { name: '@kimen/catalog', directory: 'packages/catalog' },
+    { name: '@kimen/emitter', directory: 'packages/emitter' },
+    { name: '@kimen/adapter-a2ui', directory: 'packages/adapter-a2ui' },
     { name: '@kimen/adapter-mcp-apps', directory: 'packages/adapter-mcp-apps' },
     { name: '@kimen/mcp-server', directory: 'packages/mcp-server' },
   ]);
@@ -288,6 +296,12 @@ it('writes a byte copy of the licence and the derived notice into each published
     await readFile(join(root, 'packages/tokens/NOTICE'), 'utf8'),
     `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: onmars theme fonts (SIL OFL 1.1)\n${RULE}\n\nFonts body.\n`,
   );
+  for (const directory of ['packages/catalog', 'packages/emitter', 'packages/adapter-a2ui']) {
+    assert.equal(
+      await readFile(join(root, directory, 'NOTICE'), 'utf8'),
+      'Kimen\nCopyright 2026 Example\n',
+    );
+  }
 });
 
 it('leaves a package untouched when its notice cannot be derived', async () => {

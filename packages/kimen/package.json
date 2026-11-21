@@ -51,6 +51,11 @@
         "text": "Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed"
       },
       {
+        "id": "live-surface",
+        "state": "available",
+        "text": "Live surface: a long-lived surface stays current through atomic, id-addressed batches validated by the same guardrail, so focus, typed text and scroll survive"
+      },
+      {
         "id": "mcp-server",
         "state": "available",
         "text": "Kimen MCP server: over stdio, agents list and describe the catalog, validate UI specs with correctable issues and render them as MCP Apps surfaces through the guarded renderer"
