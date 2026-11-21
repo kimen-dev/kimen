@@ -7,6 +7,20 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [0.1.2] - 2026-11-21
+
+### Added
+
+- **agents:** bundle a pinned kimen-mcp in the plugin, Gemini extension, install links and MCP Registry metadata ([#519](https://github.com/kimen-dev/kimen/pull/519))
+
+### Fixed
+
+- design-system review of 2026-11-20 (items 1–12) ([#548](https://github.com/kimen-dev/kimen/pull/548))
+- design-review follow-ups (M3 low-em inks, neutral alert icon, DESIGN.md) ([#552](https://github.com/kimen-dev/kimen/pull/552))
+- **catalog:** offer specs only the stock glyph selection (069 S14) ([#556](https://github.com/kimen-dev/kimen/pull/556))
+- **deps:** update dependency astro to v7.4.12 ([#546](https://github.com/kimen-dev/kimen/pull/546))
+- **deps:** update dependency @anthropic-ai/claude-code to v2.1.324 ([#545](https://github.com/kimen-dev/kimen/pull/545))
+
 ## [0.1.1] - 2026-11-20
 
 ### Fixed
