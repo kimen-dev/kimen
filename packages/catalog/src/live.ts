@@ -11,7 +11,9 @@
  * budgets). Only a
  * batch that passes every layer touches the DOM, and it touches only what it
  * names: existing elements keep their identity, focus, typed values and
- * scroll. A rejected batch changes nothing and the surface stays live.
+ * scroll. A rejected batch changes nothing and the surface stays live. Focus
+ * a batch leaves nowhere is repaired once the change settles, never taken
+ * from where the person is (spec 155, `focus-repair.ts`).
  *
  * `renderUiSpec` and `createStreamingRenderer` keep their semantics (D1).
  * Nothing here names a protocol or a domain (Art. VIII).
@@ -25,6 +27,7 @@ import {
   isDialogInvoker,
   writeDialogId,
 } from './dialog-commands.js';
+import { createFocusRepair, holdsFocus } from './focus-repair.js';
 import { catalogData } from './generated/catalog.js';
 import { writeNativeLayout } from './primitives.js';
 import {
@@ -91,6 +94,75 @@ export const DEFAULT_LIVE_BATCH_BUDGETS: LiveBatchBudgets = {
   maxOps: 64,
 };
 
+/**
+ * Inserts a node at the top level, or into a parent's slot before a sibling
+ * (035 D3).
+ */
+export interface LiveInsertOp {
+  readonly op: 'insert';
+  /** The parent's id; absent, the surface's top level. */
+  readonly parent?: string | undefined;
+  /** The parent's slot, default `''`; only with a parent. */
+  readonly slot?: string | undefined;
+  /** The sibling to insert before, in the same parent and slot; absent, last. */
+  readonly before?: string | undefined;
+  /** The new node, validated as the root of a spec. */
+  readonly node: UiSpecNode;
+}
+
+/** Sets props of a node; `null` removes one. */
+export interface LiveSetOp {
+  readonly op: 'set';
+  readonly id: string;
+  readonly props: Readonly<Record<string, boolean | number | string | null>>;
+  /** Overrides what the person changed, where the host allows it (035 D5). */
+  readonly force?: boolean | undefined;
+}
+
+/** Replaces the text of one slot that holds only text. */
+export interface LiveTextOp {
+  readonly op: 'text';
+  readonly id: string;
+  /** Default `''`. */
+  readonly slot?: string | undefined;
+  readonly text: string;
+}
+
+/** Removes a node and its subtree. */
+export interface LiveRemoveOp {
+  readonly op: 'remove';
+  readonly id: string;
+  /** Discards what the person changed inside it, where the host allows it. */
+  readonly force?: boolean | undefined;
+}
+
+/** Replaces a node and its subtree in place. */
+export interface LiveReplaceOp {
+  readonly op: 'replace';
+  readonly id: string;
+  /** The new node, validated as the root of a spec. */
+  readonly node: UiSpecNode;
+  /** Discards what the person changed inside it, where the host allows it. */
+  readonly force?: boolean | undefined;
+}
+
+export type LiveOp = LiveInsertOp | LiveSetOp | LiveTextOp | LiveRemoveOp | LiveReplaceOp;
+
+/**
+ * One atomic change of a live surface (035 D3). `apply` still takes it as
+ * untrusted data: these types help a producer write it, they prove nothing.
+ */
+export interface LiveBatch {
+  /** Rejects the batch unless the surface is at this revision (035 D6). */
+  readonly ifRevision?: number | undefined;
+  readonly ops: readonly LiveOp[];
+  /**
+   * The id of the node that receives keyboard focus if, once the batch has
+   * settled, focus is nowhere (155 D1). Focus that is somewhere never moves.
+   */
+  readonly focus?: string | undefined;
+}
+
 export interface LiveSurfaceOptions {
   /** The host-owned mount point; the surface only touches what it inserted. */
   readonly surface: Element;
@@ -134,7 +206,11 @@ export interface LiveSnapshot {
 }
 
 export interface LiveSurface {
-  /** Validates and applies one untrusted batch atomically. */
+  /**
+   * Validates and applies one untrusted batch (a `LiveBatch`, or its JSON
+   * text) atomically. A rejection is the return value, never a throw, and
+   * leaves every earlier batch applied.
+   */
   apply(batch: unknown): LiveBatchResult;
   /** The current content as deep-frozen plain data. */
   snapshot(): LiveSnapshot;
@@ -181,8 +257,22 @@ interface MState {
   readonly ids: Map<string, MNode>;
 }
 
+/**
+ * An op as the batch schema yields it: its node is still untrusted data until
+ * `validateNode` checks it as a spec root.
+ */
+type ParsedOp<Op extends LiveOp = LiveOp> = Op extends { readonly node: UiSpecNode }
+  ? Omit<Op, 'node'> & { readonly node: unknown }
+  : Op;
+
+interface ParsedBatch extends Omit<LiveBatch, 'ops'> {
+  readonly ops: readonly ParsedOp[];
+}
+
 const idRef = z.string();
-const opSchema = z.discriminatedUnion('op', [
+// Annotated against the public types: a public field the schema stops
+// yielding, or yields with another type, fails the build.
+const opSchema: z.ZodType<ParsedOp> = z.discriminatedUnion('op', [
   z.strictObject({
     op: z.literal('insert'),
     parent: idRef.optional(),
@@ -210,12 +300,11 @@ const opSchema = z.discriminatedUnion('op', [
     force: z.boolean().optional(),
   }),
 ]);
-const batchSchema = z.strictObject({
+const batchSchema: z.ZodType<ParsedBatch> = z.strictObject({
+  focus: idRef.optional(),
   ifRevision: z.number().int().nonnegative().optional(),
   ops: z.array(opSchema),
 });
-
-type LiveOp = z.infer<typeof opSchema>;
 
 const BATCH_LABELS = { root: 'batch', surface: 'a live batch' };
 
@@ -404,6 +493,8 @@ interface ApplyContext {
     readonly surface: Element;
     readonly doc: Document;
     readonly dialogIdFor: DialogIdFor;
+    /** Set when a `replace` swaps out the subtree that held focus (155 FR-003). */
+    readonly focus: { replacement?: MNode };
   } | null;
   readonly components: Readonly<Record<string, CatalogEntry>>;
   readonly allowUserStateOverride: boolean;
@@ -529,7 +620,7 @@ function placeDom(ctx: ApplyContext, state: MState, node: MNode, index: number):
 
 function applyInsert(
   state: MState,
-  op: Extract<LiveOp, { op: 'insert' }>,
+  op: Extract<ParsedOp, { op: 'insert' }>,
   at: string,
   index: number,
   ctx: ApplyContext,
@@ -624,7 +715,7 @@ function userStateConflict(
     return fail(
       `${at}.props.${name}`,
       'user-state-conflict',
-      `the user changed "${name}" of node "${String(node.id)}"; set it with force to override`,
+      conflictMessage(name, node.id, live),
       String(live),
     );
   }
@@ -637,6 +728,22 @@ function userStateConflict(
     );
   }
   return null;
+}
+
+/**
+ * What the agent can do about a conflict (155 FR-005). A disclosure the person
+ * opened or closed is first set to the person's state in a batch of its own;
+ * the agent's change is then an ordinary one in a later batch (a single batch
+ * is checked against the state before it). Any other value needs force.
+ */
+function conflictMessage(name: string, id: string | undefined, live: Scalar): string {
+  if (name === 'open' && typeof live === 'boolean') {
+    return (
+      `the user ${live ? 'opened' : 'closed'} "${String(id)}"; set open to ${String(live)} ` +
+      'in a batch of its own first, then change it in a later batch'
+    );
+  }
+  return `the user changed "${name}" of node "${String(id)}"; set it with force to override`;
 }
 
 /**
@@ -681,7 +788,7 @@ function collectTargets(
 
 function applySet(
   state: MState,
-  op: Extract<LiveOp, { op: 'set' }>,
+  op: Extract<ParsedOp, { op: 'set' }>,
   at: string,
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
@@ -728,11 +835,10 @@ function applySet(
       writeProp(element, node.component, name, current, ctx.dom.dialogIdFor, entry);
     }
     if (overriding) {
-      const live = current ?? ownEntry(entry?.props, name)?.default;
-      if (live !== undefined) {
-        // The component's own setter, with a validated scalar of the declared type.
-        Reflect.set(element, name, live);
-      }
+      // The component's own setter, with a validated scalar of the declared
+      // type, or `undefined` for a removed prop with no default: a number
+      // field has no empty value to fall back to (155 FR-004).
+      Reflect.set(element, name, current ?? ownEntry(entry?.props, name)?.default);
       node.touched = false;
     }
   }
@@ -746,7 +852,7 @@ function applySet(
 
 function applyText(
   state: MState,
-  op: Extract<LiveOp, { op: 'text' }>,
+  op: Extract<ParsedOp, { op: 'text' }>,
   at: string,
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
@@ -796,7 +902,7 @@ function applyText(
 
 function applyRemove(
   state: MState,
-  op: Extract<LiveOp, { op: 'remove' }>,
+  op: Extract<ParsedOp, { op: 'remove' }>,
   at: string,
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
@@ -819,7 +925,7 @@ function applyRemove(
 
 function applyReplace(
   state: MState,
-  op: Extract<LiveOp, { op: 'replace' }>,
+  op: Extract<ParsedOp, { op: 'replace' }>,
   at: string,
   index: number,
   ctx: ApplyContext,
@@ -847,6 +953,9 @@ function applyReplace(
     if (node.slot !== '') {
       node.dom.setAttribute('slot', node.slot);
     }
+    if (holdsFocus(old.dom)) {
+      ctx.dom.focus.replacement = node;
+    }
     old.dom.parentNode?.replaceChild(node.dom, old.dom);
   }
   return null;
@@ -854,7 +963,7 @@ function applyReplace(
 
 function applyOps(
   state: MState,
-  ops: readonly LiveOp[],
+  ops: readonly ParsedOp[],
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
   for (const [index, op] of ops.entries()) {
@@ -937,6 +1046,14 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     const top = live.roots.indexOf(current);
     return top < 0 ? null : `surface[${String(top)}]${segments.join('')}`;
   };
+
+  const focusRepair = createFocusRepair(doc);
+  /** Focus goes to `node` if the batch left it nowhere, while `node` is on the surface. */
+  const repairFocusTo = (node: MNode): void => {
+    focusRepair.request(() => (pathOf(node) === null ? undefined : node.dom));
+  };
+  const unknownFocus = (id: string): RenderDiagnostic =>
+    fail('batch.focus', 'unknown-id', `no node of the resulting surface has the id "${id}"`, id);
 
   const trackUserState = (element: Element, entry: CatalogEntry | undefined, model: MNode) => {
     if (
@@ -1216,6 +1333,13 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       ]);
     }
     if (batch.ops.length === 0) {
+      if (batch.focus !== undefined) {
+        const target = live.ids.get(batch.focus);
+        if (target === undefined) {
+          return result([unknownFocus(batch.focus)]);
+        }
+        repairFocusTo(target);
+      }
       return result([]);
     }
     // 5. Every new node validated as a spec root.
@@ -1248,6 +1372,11 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     if (shadowFailure !== null) {
       return result([shadowFailure]);
     }
+    // The focus names a node of the RESULTING state: one the batch inserts
+    // may be named, one it removes may not (155 S3).
+    if (batch.focus !== undefined && !shadow.ids.has(batch.focus)) {
+      return result([unknownFocus(batch.focus)]);
+    }
     const stateDiagnostics = validateState(shadow);
     if (stateDiagnostics.length > 0) {
       return result(stateDiagnostics);
@@ -1278,10 +1407,11 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     // 8. Commit: the same ops, now with minimal DOM writes. They replay
     // exactly what step 6 validated on an identical copy, so they cannot
     // fail; a divergence would be a defect, never a partial apply to hide.
+    const focus: { replacement?: MNode } = {};
     const diverged = applyOps(live, batch.ops, {
       allowUserStateOverride,
       components,
-      dom: { dialogIdFor, doc, surface },
+      dom: { dialogIdFor, doc, focus, surface },
       materialize: (index) => {
         const node = built.get(index);
         if (node === undefined) {
@@ -1306,6 +1436,12 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     dialogIds = nextDialogIds;
     revision += 1;
     cached = null;
+    // 9. Focus the batch left nowhere: to the node it names, else to the
+    // replacement of the node that held it (155 FR-003).
+    const focusTarget = batch.focus === undefined ? focus.replacement : live.ids.get(batch.focus);
+    if (focusTarget !== undefined) {
+      repairFocusTo(focusTarget);
+    }
     return result([]);
   };
 

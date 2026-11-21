@@ -159,6 +159,63 @@ accumulated stream, so a stream that never closes still trips its payload
 budget; and once halted — by an invalid node, a tripped budget, version skew
 or `close()` — every further push is rejected.
 
+## Live surface
+
+A surface that lives for hours — a board the agent keeps current while the
+person works in it — must change in place, because `renderUiSpec` replaces
+the whole tree and with it focus, typed text and scroll. `createLiveSurface`
+applies small **batches of operations addressed by node `id`**:
+
+```ts
+import { createLiveSurface, type LiveBatch } from '@kimen/catalog';
+
+const live = createLiveSurface({
+  surface: document.querySelector('#board'),
+  actions: ['remove-task'], // the declared action set, fixed at creation
+  onAction: (event) => handle(event), // { action, id, path, revision, data }
+});
+
+const batch: LiveBatch = {
+  ifRevision: live.revision, // optional optimistic concurrency
+  focus: 'delete-t3', // where focus goes if this batch leaves it nowhere
+  ops: [
+    { op: 'set', id: 'confirm', props: { open: false } },
+    { op: 'remove', id: 't2' },
+  ],
+};
+const result = live.apply(batch);
+if (!result.ok) console.warn(result.diagnostics); // a rejection is returned, never thrown
+```
+
+The ops are `insert`, `set` (`null` removes a prop), `text`, `remove` and
+`replace`; there is no move op.
+
+- **Atomic per batch.** Every op is applied to a copy of the state and the
+  resulting state is validated like a spec before any DOM write. A rejected
+  batch changes nothing and the surface keeps accepting batches. Atomicity
+  stops at the batch: a batch rejected after others leaves those applied.
+- **Only what it names changes.** Other elements keep their identity, focus,
+  typed values and scroll.
+- **Five limits, all host options.** Per batch (`batchBudgets`): 64 ops and
+  65,536 bytes. Per resulting state (`budgets`): 512 nodes, 32 levels and
+  262,144 bytes. The host may lower or raise each one at creation; with a
+  raised batch budget a whole page fits in one batch.
+- **The person's state wins.** Once the person changed a control's own
+  `checked`, `open`, `selected` or `value`, a batch that would overwrite or
+  discard it is rejected (`user-state-conflict`), unless the op says
+  `force: true` and the host created the surface with
+  `allowUserStateOverride: true`.
+- **Reopening a dialog the person closed** takes two batches: `open: false`,
+  then `open: true`. The rejection of a single `open: true` says so.
+- **Focus is repaired, never taken.** If, once the batch has settled, focus
+  is nowhere, it goes to the node named in `focus`, or, without one, to the
+  replacement of the node that held it. Focus the person has anywhere else
+  never moves. Name a control that can take focus, such as the next row's
+  Delete button.
+- **One batch at a time, and actions name their node.** A batch applied
+  while another is being applied is rejected as `reentrant-batch`; action
+  events carry the node's `id`, its current `path` and the `revision`.
+
 ## What validation does not protect against
 
 URL-scheme allowlisting and markup inertness are render-path invariants

@@ -215,8 +215,9 @@ On top of catalog validation the renderer enforces the safe-render semantics:
   other scheme is rejected naming the prop and the scheme (rule
   `url-scheme`), including control-character smuggling like `java\tscript:`.
 - **Declared budgets.** Depth, node count and payload size, all overridable
-  per render and all falsifiable on both sides: a spec exactly at a budget
-  renders; one beyond it is rejected before any node attaches.
+  per render (`budgets`, lower or higher than the defaults) and all
+  falsifiable on both sides: a spec exactly at a budget renders; one beyond
+  it is rejected before any node attaches.
 
   ```ts
   import { DEFAULT_RENDER_BUDGETS } from '@kimen/catalog';
@@ -310,6 +311,7 @@ const live = createLiveSurface({
 live.apply({ ops: [{ op: 'insert', node: { id: 'decisions', component: 'ki-list' } }] });
 const result = live.apply({
   ifRevision: live.revision, // optional optimistic concurrency
+  focus: 'dec-8', // optional: where focus goes if this batch leaves it nowhere
   ops: [
     { op: 'insert', parent: 'decisions', node: { id: 'dec-8', component: 'ki-list-item', slots: { '': ['Use Postgres'] } } },
     { op: 'set', id: 'note', props: { label: 'Why?' } },
@@ -317,29 +319,66 @@ const result = live.apply({
     { op: 'remove', id: 'q-2' },
     { op: 'replace', id: 'cmp-1', node: { id: 'cmp-1', component: 'ki-card' } },
   ],
-}); // { ok, revision, diagnostics }
+});
+if (!result.ok) console.warn(result.diagnostics); // { ok, revision, diagnostics }
 live.snapshot(); // { revision, actions, nodes } — deep-frozen plain data
 ```
 
+The batch and op shapes are exported as types (`LiveBatch`, `LiveOp` and
+`LiveInsertOp`, `LiveSetOp`, `LiveTextOp`, `LiveRemoveOp`, `LiveReplaceOp`)
+for code that writes batches. `apply` still takes `unknown`, and also JSON
+text: a batch is untrusted data whatever its type says.
+
 - **Atomic and fail-closed per batch.** The batch crosses the purity wall,
-  per-batch budgets (`batchBudgets: { maxOps, maxBytes }`, default 64 ops and
-  64 KiB) and the `ifRevision` check; every op is applied to a copy of the
-  state and the **resulting** state is validated exactly like a spec (catalog,
-  props, declared actions, slots, unique ids, tag grammar, URL allowlist,
-  `budgets` on depth, node count and payload). Any failure rejects the whole
-  batch with diagnostics naming the op (`ops[3].node.component`) or state
-  path, and nothing changes. Unlike a stream, the surface stays live: the
-  next valid batch applies. Removing content frees budget.
+  the per-batch budgets and the `ifRevision` check; every op is applied to a
+  copy of the state and the **resulting** state is validated exactly like a
+  spec (catalog, props, declared actions, slots, unique ids, tag grammar, URL
+  allowlist, the state budgets). Any failure rejects the whole batch with
+  diagnostics naming the op (`ops[3].node.component`) or state path, and
+  nothing changes. Unlike a stream, the surface stays live: the next valid
+  batch applies. Removing content frees budget.
+- **Five limits, all host options.** Per batch, `batchBudgets`: 64 ops
+  (`batch-op-budget`) and 65,536 bytes of serialized batch
+  (`batch-size-budget`). Per resulting state, `budgets`: 512 nodes
+  (`node-count-budget`), 32 levels (`depth-budget`) and 262,144 bytes of
+  serialized nodes (`size-budget`). The host sets each one at creation, lower
+  or higher than its default; a host that raises `batchBudgets` can send a
+  whole page as one batch, applied whole or not at all. Two fixed ceilings
+  apply first and no option moves them: 8 MiB and 256 levels of JSON nesting
+  at the purity wall.
+- **A rejection is a return value.** `apply` never throws for a rejected
+  batch and reports it through no callback or log: check `ok`. Atomicity
+  stops at the batch: several batches are not one change, and a batch
+  rejected after others leaves those applied.
 - **Minimal DOM change.** `set` writes only the attributes whose value changes
   (`null` unsets); `text` updates a slot's text node in place; `insert` places
   one new subtree before its `before` sibling (or last); `remove` and
   `replace` touch only the named subtree. Nothing else is recreated or
   reordered; there is no move op.
-- **The user's state wins.** Once the user changed a control's own `checked`,
-  `value` or `open`, a `set` that would change it, and a `replace` or
-  `remove` of that node or of any ancestor, is rejected
+- **The user's state wins.** Once the user changed a control's own
+  `checked`, `open`, `selected` or `value`, a `set` that would change it,
+  and a `replace` or `remove` of that node or of any ancestor, is rejected
   (`user-state-conflict`) unless the op says `force: true` **and** the host
-  created the surface with `allowUserStateOverride: true`.
+  created the surface with `allowUserStateOverride: true` (forced without
+  it: `user-state-override-denied`). A forced `set` of `null` writes the
+  prop's catalog default to the component, or empties it when there is
+  none, as for a number field.
+- **Reopening a dialog the person closed.** After Escape or Cancel, a `set`
+  of `open: true` is a conflict: the surface still records the dialog as
+  open and reads the closed one as the person's choice. Send `open: false`
+  in a batch of its own first, then `open: true` in a later batch; one batch
+  with both is checked against the state before it and is rejected too. The
+  rejection says so.
+- **Focus is repaired, never taken.** A batch may name a node in `focus`.
+  Once the batch has settled (its components have rendered, and a closing
+  dialog has handed focus back), focus that is then nowhere (the page body)
+  goes to that node; focus anywhere else, inside the surface or in the host
+  page, is never moved. Without `focus`, replacing the node that held focus
+  gives it to the replacement. The id must name a node of the resulting
+  surface (`unknown-id` at `batch.focus`), and the node must be able to take
+  focus: name the Delete button of the next row, not the row. To delete a row
+  after a confirmation, close the dialog and remove the row in one batch that
+  names the next row's control.
 - **Only declared names.** A slot or prop name must be one the node's
   catalog entry declares as its own: inherited names such as `toString` are
   `unknown-slot`/`unknown-prop`, and `__proto__`, `constructor` and
@@ -351,7 +390,8 @@ live.snapshot(); // { revision, actions, nodes } — deep-frozen plain data
   `path` (`surface[0].slots.footer[1]`), the `revision` and the same live
   `data` as `renderUiSpec`, computed from the node's current props.
 
-The contract is [spec 035](../../specs/035-live-surface/spec.md).
+The contracts are [spec 035](../../specs/035-live-surface/spec.md) and
+[spec 155](../../specs/155-live-surface-reset-focus/spec.md).
 
 ## Registering your own components
 
