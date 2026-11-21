@@ -101,6 +101,14 @@ nav {
   min-inline-size: 0;
 }
 
+/* The slotted links' own ink is a ::slotted() rule, which any page rule on
+ * `a` outranks. A page's `a { color: inherit }` then inherits this: the
+ * bar's item ink, not its title ink. */
+.links,
+.links.popup {
+  color: var(--ki-top-nav-item-fg);
+}
+
 /* Collapsed, the landmark holds only the trigger: it never shrinks below it
  * (44px on a coarse pointer), and a long brand gives way instead. */
 .header.compact nav {

@@ -5620,9 +5620,9 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\".",
+        "": "Header mode: up to five direct native anchors; mark the current one with\naria-current=\"page\". They stay the page's own anchors, so the page's link\nrules reach them and outrank the bar's link styles (CSS Scoping gives the\npage's styles precedence over a component's `::slotted()` rules, whatever\ntheir specificity). `a { color: inherit }` is safe: the links then take the\nbar's item ink. A rule that sets `color`, `text-decoration`, `font-*` or\n`padding` on every `a` restyles them too: scope it away from the bar, for\nexample `:where(main, footer) a` or `a:not(ki-top-nav > a)`, and restyle the\nbar's links with the `--ki-top-nav-item-*` tokens.",
         "actions": "Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow.",
-        "brand": "Header mode: the brand link or wordmark.",
+        "brand": "Header mode: the brand link or wordmark. Page link rules reach it\nas they reach the primary links.",
         "leading": "App bar: a named Back or Open navigation control.",
         "search": "App bar: an accessible search control that can shrink inside its row."
       },

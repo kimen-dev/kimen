@@ -31878,11 +31878,11 @@
         },
         {
           "name": "slot",
-          "text": "- Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\"."
+          "text": "- Header mode: up to five direct native anchors; mark the current one with\naria-current=\"page\". They stay the page's own anchors, so the page's link\nrules reach them and outrank the bar's link styles (CSS Scoping gives the\npage's styles precedence over a component's `::slotted()` rules, whatever\ntheir specificity). `a { color: inherit }` is safe: the links then take the\nbar's item ink. A rule that sets `color`, `text-decoration`, `font-*` or\n`padding` on every `a` restyles them too: scope it away from the bar, for\nexample `:where(main, footer) a` or `a:not(ki-top-nav > a)`, and restyle the\nbar's links with the `--ki-top-nav-item-*` tokens."
         },
         {
           "name": "slot",
-          "text": "brand - Header mode: the brand link or wordmark."
+          "text": "brand - Header mode: the brand link or wordmark. Page link rules reach it\nas they reach the primary links."
         },
         {
           "name": "slot",
@@ -32359,7 +32359,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\"."
+          "docs": "Header mode: up to five direct native anchors; mark the current one with\naria-current=\"page\". They stay the page's own anchors, so the page's link\nrules reach them and outrank the bar's link styles (CSS Scoping gives the\npage's styles precedence over a component's `::slotted()` rules, whatever\ntheir specificity). `a { color: inherit }` is safe: the links then take the\nbar's item ink. A rule that sets `color`, `text-decoration`, `font-*` or\n`padding` on every `a` restyles them too: scope it away from the bar, for\nexample `:where(main, footer) a` or `a:not(ki-top-nav > a)`, and restyle the\nbar's links with the `--ki-top-nav-item-*` tokens."
         },
         {
           "name": "actions",
@@ -32367,7 +32367,7 @@
         },
         {
           "name": "brand",
-          "docs": "Header mode: the brand link or wordmark."
+          "docs": "Header mode: the brand link or wordmark. Page link rules reach it\nas they reach the primary links."
         },
         {
           "name": "leading",

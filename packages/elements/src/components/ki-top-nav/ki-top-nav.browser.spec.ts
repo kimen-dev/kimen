@@ -123,6 +123,28 @@ it('S1: shows five primary links and a current-page indicator on a wide bar', as
   );
 });
 
+// Integrator feedback 0.1.1, item 4: a page rule on every `a` outranks the
+// bar's ::slotted() link styles (CSS Scoping). The common reset
+// `a { color: inherit }` must leave the links in the bar's item ink.
+it('S1: keeps the item ink on its links under a page `a { color: inherit }` rule', async () => {
+  const host = wideHeader();
+  const overview = required(host.querySelector<HTMLElement>('a[href="#overview"]'));
+  await expect.element(page.getByRole('link', { name: 'Overview' })).toBeVisible();
+  const ink = getComputedStyle(overview).color;
+  const reset = document.createElement('style');
+  reset.textContent = 'a { color: inherit; text-decoration: underline; }';
+  document.head.append(reset);
+  try {
+    expect(getComputedStyle(overview).color).toBe(ink);
+    host.setAttribute('collapse-at', '60rem');
+    await navigation().click();
+    await expect.element(page.getByRole('menu')).toBeVisible();
+    expect(getComputedStyle(overview).color).toBe(ink);
+  } finally {
+    reset.remove();
+  }
+});
+
 it('S2: responds to the authored CSS breakpoint and preserves the actual links', async () => {
   const host = mountHeader('collapse-at="30em" style="inline-size: 40rem"');
   await expect.element(page.getByRole('link', { name: 'Overview' })).toBeVisible();
