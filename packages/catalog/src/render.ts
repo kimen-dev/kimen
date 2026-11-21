@@ -38,6 +38,7 @@ import type {
 import {
   acceptsEnumValue,
   acceptsNumberOrString,
+  collectedValueProp,
   ownEntry,
   toPlainData,
   validatePlainData,
@@ -94,6 +95,8 @@ export interface RenderResult {
 /** The data-only payload delivered on the renderer's single action channel. */
 export interface ActionEvent {
   readonly action: string;
+  /** The bound node's stable id, when it has one (spec 153 FR-006). */
+  readonly id?: string | undefined;
   readonly path: string;
   readonly data: Readonly<Record<string, boolean | number | string>>;
 }
@@ -517,6 +520,86 @@ function liveData(
   return data;
 }
 
+type ActionData = Readonly<Record<string, Scalar>>;
+
+/**
+ * Whether one collected field lets the action leave (spec 153 FR-003). A
+ * field that answers `reportValidity()` decides, and shows its own message
+ * when invalid; otherwise the platform's `:invalid` state decides, so a
+ * control without that method still blocks. A field barred from constraint
+ * validation, such as a disabled one, is never invalid.
+ */
+function reportsValid(element: Element): boolean {
+  const report: unknown = Reflect.get(element, 'reportValidity');
+  const reported: unknown =
+    typeof report === 'function' ? Reflect.apply(report, element, []) : undefined;
+  return typeof reported === 'boolean' ? reported : !element.matches(':invalid');
+}
+
+/** The element that comes first in document order, if any. */
+function firstInDocument(elements: readonly Element[]): Element | undefined {
+  let first: Element | undefined;
+  for (const element of elements) {
+    if (
+      first === undefined ||
+      (element.compareDocumentPosition(first) & element.DOCUMENT_POSITION_FOLLOWING) !== 0
+    ) {
+      first = element;
+    }
+  }
+  return first;
+}
+
+/**
+ * A bound node's dispatch extended with the fields it collects (spec 153
+ * FR-003, FR-004). At the gesture every named field is resolved and asked
+ * for validity, all of them so each invalid one shows its message; if any is
+ * invalid nothing is dispatched and the first invalid field in document
+ * order takes the focus. Otherwise each name carries its field's live
+ * `checked`, `selected` or `value`, read as a declared-event activation reads
+ * its own state, so only a value of the declared type crosses the channel.
+ * Without `collect`, the dispatch is returned unchanged.
+ */
+export function collectingDispatch(
+  collect: Readonly<Record<string, string>> | undefined,
+  fieldOf: (id: string) => Element | undefined,
+  entries: Readonly<Record<string, CatalogEntry>>,
+  dispatch: (data: ActionData) => void,
+): (data: ActionData) => void {
+  if (collect === undefined) {
+    return dispatch;
+  }
+  const named = Object.entries(collect);
+  return (data) => {
+    const fields = named.flatMap(([name, id]) => {
+      const element = fieldOf(id);
+      return element === undefined ? [] : [{ element, name }];
+    });
+    const invalid = [...new Set(fields.map(({ element }) => element))].filter(
+      (element) => !reportsValid(element),
+    );
+    const first = firstInDocument(invalid);
+    if (first !== undefined) {
+      const focus: unknown = Reflect.get(first, 'focus');
+      if (typeof focus === 'function') {
+        Reflect.apply(focus, first, []);
+      }
+      return;
+    }
+    const collected: Record<string, Scalar> = { ...data };
+    for (const { element, name } of fields) {
+      const entry = ownEntry(entries, element.localName);
+      const prop = entry === undefined ? undefined : collectedValueProp(entry);
+      const value =
+        prop === undefined ? undefined : readLiveScalar(element, prop.name, prop.constraint);
+      if (value !== undefined) {
+        collected[name] = value;
+      }
+    }
+    dispatch(collected);
+  };
+}
+
 /**
  * Interactions already owned by a bound node. Listeners run innermost-first
  * while an event bubbles, so the innermost bound node claims the event and
@@ -809,35 +892,52 @@ export function wireActivation(
   }
 }
 
+/** What every node of one built tree shares. */
+interface BuildScope {
+  readonly doc: Document;
+  readonly onAction: ((event: ActionEvent) => void) | undefined;
+  readonly entries: Readonly<Record<string, CatalogEntry>>;
+  readonly idFor: DialogIdFor;
+  readonly allowedUrlOrigins: readonly string[] | undefined;
+  readonly sourceScope: symbol;
+  /** The tree's elements by node id, where a collect finds its fields (spec 153). */
+  readonly nodes: Map<string, Element>;
+}
+
 /**
  * Builds one validated node into a detached element (FR-004). Props become
  * attributes, text children become inert text nodes, and a bound action
  * routes the node's selected activation (FR-003) to the renderer's single
  * channel. No spec string is ever evaluated.
  */
-function buildNode(
-  node: UiSpecNode,
-  path: string,
-  doc: Document,
-  onAction: ((event: ActionEvent) => void) | undefined,
-  entries: Readonly<Record<string, CatalogEntry>>,
-  idFor: DialogIdFor,
-  allowedUrlOrigins: readonly string[] | undefined,
-  sourceScope: symbol,
-): Element {
-  const element = createNodeElement(doc, node.component, allowedUrlOrigins, sourceScope);
+function buildNode(node: UiSpecNode, path: string, scope: BuildScope): Element {
+  const { doc, entries, idFor, onAction } = scope;
+  const element = createNodeElement(
+    doc,
+    node.component,
+    scope.allowedUrlOrigins,
+    scope.sourceScope,
+  );
+  if (node.id !== undefined) {
+    scope.nodes.set(node.id, element);
+  }
   const props = node.props ?? {};
   writeProps(element, node.component, props, idFor, ownEntry(entries, node.component));
   writeDialogId(element, node.id, idFor);
-  const action = node.action;
+  const { action, id } = node;
   wireActivation(
     element,
     ownEntry(entries, node.component),
     () => props,
     action !== undefined && onAction !== undefined
-      ? (data) => {
-          onAction({ action, data, path });
-        }
+      ? collectingDispatch(
+          node.collect,
+          (target) => scope.nodes.get(target),
+          entries,
+          (data) => {
+            onAction({ action, data, ...(id === undefined ? {} : { id }), path });
+          },
+        )
       : undefined,
   );
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
@@ -845,16 +945,7 @@ function buildNode(
       if (typeof child === 'string') {
         attachText(element, child, slotName, doc);
       } else {
-        const childElement = buildNode(
-          child,
-          `${path}.slots.${slotName}[${String(index)}]`,
-          doc,
-          onAction,
-          entries,
-          idFor,
-          allowedUrlOrigins,
-          sourceScope,
-        );
+        const childElement = buildNode(child, `${path}.slots.${slotName}[${String(index)}]`, scope);
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
         }
@@ -1036,16 +1127,18 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
   }
   const doc = ownerDocument(options.surface);
   options.surface.replaceChildren(
-    buildNode(
-      prepared.spec.root,
-      'root',
+    buildNode(prepared.spec.root, 'root', {
+      allowedUrlOrigins: options.allowedUrlOrigins,
       doc,
-      options.onAction,
-      catalog.components,
-      scopedDialogIds(options.surface, referenceTargets(prepared.spec.root, catalog.components)),
-      options.allowedUrlOrigins,
-      Symbol(),
-    ),
+      entries: catalog.components,
+      idFor: scopedDialogIds(
+        options.surface,
+        referenceTargets(prepared.spec.root, catalog.components),
+      ),
+      nodes: new Map(),
+      onAction: options.onAction,
+      sourceScope: Symbol(),
+    }),
   );
   return { diagnostics: [], ok: true };
 }
@@ -1160,17 +1253,20 @@ export function createStreamingRenderer(
       // grammar below it), never a `root` shared by every pushed chunk.
       const chunkPath = `stream[${String(attachedChunks)}]`;
       attachedChunks += 1;
+      // A chunk validates on its own, so its collect resolves within it.
       options.surface.appendChild(
-        buildNode(
-          report.spec.root,
-          chunkPath,
+        buildNode(report.spec.root, chunkPath, {
+          allowedUrlOrigins: context.allowedUrlOrigins,
           doc,
-          options.onAction,
-          catalog.components,
-          scopedDialogIds(options.surface, referenceTargets(report.spec.root, catalog.components)),
-          context.allowedUrlOrigins,
+          entries: catalog.components,
+          idFor: scopedDialogIds(
+            options.surface,
+            referenceTargets(report.spec.root, catalog.components),
+          ),
+          nodes: new Map(),
+          onAction: options.onAction,
           sourceScope,
-        ),
+        }),
       );
       return { diagnostics: [], ok: true };
     },

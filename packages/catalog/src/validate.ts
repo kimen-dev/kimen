@@ -123,6 +123,13 @@ export interface UiSpecNode {
   readonly props?: Readonly<Record<string, boolean | number | string>> | undefined;
   /** Binding to one of the spec's declared actions (dispatch is 028's job). */
   readonly action?: string | undefined;
+  /**
+   * The other fields a bound node's action carries (spec 153): each key
+   * names an entry of the action data, each value is the id of a node of the
+   * same spec whose live value fills it at the gesture. Every named field is
+   * asked for validity first; an invalid one stops the action.
+   */
+  readonly collect?: Readonly<Record<string, string>> | undefined;
   /** Children per slot name; `""` is the default slot. Strings are text. */
   readonly slots?: Readonly<Record<string, readonly (UiSpecNode | string)[]>> | undefined;
 }
@@ -138,6 +145,11 @@ export interface UiSpec {
 export interface ValidationIssue {
   readonly code:
     | 'action-not-allowed'
+    | 'collect-budget'
+    | 'collect-key-conflict'
+    | 'collect-no-value'
+    | 'collect-unknown-node'
+    | 'collect-without-action'
     | 'depth-budget'
     | 'duplicate-id'
     | 'forbidden-key'
@@ -177,6 +189,26 @@ export interface ValidationReport {
  * accumulated stream) are the guarded renderer's contract (028 FR-006).
  */
 export const VALIDATION_MAX_BYTES = 262_144;
+
+/** The most fields one node may collect (spec 153 FR-002, `collect-budget`). */
+export const COLLECT_MAX_ENTRIES = 32;
+
+/**
+ * The prop whose live value a collected field contributes (spec 153 FR-004):
+ * the first of `checked`, `selected` and `value` its catalog entry declares.
+ * A field whose entry declares none has nothing to collect.
+ */
+export function collectedValueProp(
+  entry: CatalogEntry,
+): { readonly name: string; readonly constraint: CatalogPropConstraint } | undefined {
+  for (const name of ['checked', 'selected', 'value']) {
+    const constraint = ownEntry(entry.props, name);
+    if (constraint !== undefined) {
+      return { constraint, name };
+    }
+  }
+  return undefined;
+}
 
 export const FORBIDDEN_KEYS: ReadonlySet<string> = new Set([
   '__proto__',
@@ -423,6 +455,7 @@ const uiSpecNodeSchema: z.ZodType<UiSpecNode> = z.lazy(() =>
     component: z.string(),
     props: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])).optional(),
     action: z.string().optional(),
+    collect: z.record(z.string(), z.string()).optional(),
     slots: z.record(z.string(), z.array(z.union([z.string(), uiSpecNodeSchema]))).optional(),
   }),
 );
@@ -632,11 +665,21 @@ export interface NodeValidationScope {
   readonly commandTargets: { readonly id: string; readonly path: string }[];
   /** Every `idref` prop value of the scope, resolved after all nodes (spec 152). */
   readonly references: { readonly id: string; readonly path: string }[];
+  /** Every `collect` target of the scope, resolved after all nodes (spec 153). */
+  readonly collects: { readonly id: string; readonly path: string }[];
+  /** The ids of the scope's nodes whose entry declares a value to collect. */
+  readonly collectable: Set<string>;
 }
 
 /** A fresh scope for one tree or one live surface state. */
 export function createValidationScope(): NodeValidationScope {
-  return { commandTargets: [], ids: new Map<string, string>(), references: [] };
+  return {
+    collectable: new Set<string>(),
+    collects: [],
+    commandTargets: [],
+    ids: new Map<string, string>(),
+    references: [],
+  };
 }
 
 function checkDialogCommand(node: UiSpecNode, path: string, context: CheckContext): void {
@@ -687,7 +730,76 @@ export function checkCommandTargets(scope: NodeValidationScope): ValidationIssue
       });
     }
   }
+  // Spec 153: a collected field is a node of the same spec or surface whose
+  // entry declares a value; anything else would leave the action short.
+  for (const { id, path } of scope.collects) {
+    const component = scope.ids.get(id);
+    if (component === undefined) {
+      issues.push({
+        code: 'collect-unknown-node',
+        message: `collect names "${id}", which no node of the same surface carries as its id`,
+        path,
+        value: id,
+      });
+    } else if (!scope.collectable.has(id)) {
+      issues.push({
+        code: 'collect-no-value',
+        message: `collect names "${id}", a ${component} that declares no checked, selected or value to collect`,
+        path,
+        value: id,
+      });
+    }
+  }
   return issues;
+}
+
+/**
+ * The checks of one node's `collect` that need no other node (spec 153):
+ * it requires an action, a bounded number of entries, and names that do not
+ * shadow the node's own props. Each target id is resolved later against the
+ * whole scope.
+ */
+function checkCollect(
+  node: UiSpecNode,
+  entry: CatalogEntry | undefined,
+  path: string,
+  context: CheckContext,
+): void {
+  const { collect } = node;
+  if (collect === undefined) {
+    return;
+  }
+  const at = `${path}.collect`;
+  if (node.action === undefined) {
+    context.issues.push({
+      code: 'collect-without-action',
+      message: `${node.component} collects fields but binds no action that could carry them`,
+      path: at,
+    });
+    return;
+  }
+  const entries = Object.entries(collect);
+  if (entries.length > COLLECT_MAX_ENTRIES) {
+    context.issues.push({
+      code: 'collect-budget',
+      message: `${node.component} collects ${String(entries.length)} fields; at most ${String(COLLECT_MAX_ENTRIES)} are allowed`,
+      path: at,
+      value: String(entries.length),
+    });
+    return;
+  }
+  for (const [name, id] of entries) {
+    if (entry !== undefined && ownEntry(entry.props, name) !== undefined) {
+      context.issues.push({
+        code: 'collect-key-conflict',
+        message: `${node.component} declares a prop "${name}"; a collected value may not take its name`,
+        path: `${at}.${name}`,
+        value: name,
+      });
+    } else {
+      context.scope.collects.push({ id, path: `${at}.${name}` });
+    }
+  }
 }
 
 /**
@@ -763,6 +875,9 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   const { declaredActions, entries, issues, scope } = context;
   checkId(node, path, scope.ids, issues);
   const entry = ownEntry(entries, node.component);
+  if (node.id !== undefined && entry !== undefined && collectedValueProp(entry) !== undefined) {
+    scope.collectable.add(node.id);
+  }
   if (entry === undefined) {
     issues.push({
       code: 'unknown-component',
@@ -836,6 +951,7 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
       });
     }
   }
+  checkCollect(node, entry, path, context);
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     if (entry !== undefined && !Object.hasOwn(entry.slots, slotName)) {
       issues.push({

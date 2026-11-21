@@ -50,6 +50,7 @@ export {
   type Catalog,
   type CatalogEntry,
   type CatalogPropConstraint,
+  COLLECT_MAX_ENTRIES,
   NODE_ID_GRAMMAR,
   type UiSpec,
   type UiSpecNode,
