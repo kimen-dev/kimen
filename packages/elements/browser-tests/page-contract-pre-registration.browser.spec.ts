@@ -87,7 +87,7 @@ describe('unregistered group items', () => {
     for (const tag of ['ki-segment', 'ki-radio']) {
       const offsets = lineOffsets(main, tag);
       expect(offsets, `${tag} items stack, one per line`).toEqual(
-        offsets.toSorted((left, right) => left - right),
+        [...offsets].sort((left, right) => left - right),
       );
       expect(new Set(offsets).size, `${tag} items stack, one per line`).toBe(offsets.length);
     }
@@ -98,8 +98,8 @@ describe('unregistered group items', () => {
     if (selector === null) {
       throw new Error('the page contract must carry its pre-registration rule');
     }
-    const tags = selector[1].split(',').map((tag) => tag.trim());
-    const known = new Set(componentTags);
+    const tags = (selector[1] ?? '').split(',').map((tag) => tag.trim());
+    const known = new Set<string>(componentTags);
 
     expect(tags.length).toBeGreaterThan(0);
     expect(tags.filter((tag) => !known.has(tag))).toEqual([]);
