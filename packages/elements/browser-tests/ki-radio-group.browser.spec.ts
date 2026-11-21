@@ -1115,7 +1115,7 @@ async function mountNamedFromPage(groupAttributes: string): Promise<KiRadioGroup
       <ki-radio value="pro">Pro</ki-radio>
     </ki-radio-group>
   </main>`;
-  const el = document.querySelector('ki-radio-group') as KiRadioGroupElement;
+  const el = document.querySelector('ki-radio-group') as unknown as KiRadioGroupElement;
   await customElements.whenDefined('ki-radio-group');
   await expect.poll(() => el.shadowRoot?.querySelector('[role="radiogroup"]')).toBeTruthy();
   await settleFrames();
