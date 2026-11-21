@@ -1172,6 +1172,7 @@ export namespace Components {
     interface KiConfirmation {
         /**
           * Tool identifier shown to the person and available for reporting by the host.
+          * @format text
          */
         "action": string;
         /**
@@ -8411,6 +8412,7 @@ declare namespace LocalJSX {
     interface KiConfirmation {
         /**
           * Tool identifier shown to the person and available for reporting by the host.
+          * @format text
          */
         "action": string;
         /**

@@ -260,7 +260,7 @@ describe('an action event names its node, and older specs keep their meaning', (
   });
 
   it('S10 a spec written for catalog schema 1.6.0 renders and acts as before', () => {
-    expect(CATALOG_SCHEMA_VERSION).toBe('1.7.0');
+    expect(CATALOG_SCHEMA_VERSION).toBe('1.8.0');
     const { onAction, result } = render({
       actions: ['add'],
       catalogSchemaVersion: '1.6.0',

@@ -49,11 +49,12 @@ import {
   type RenderResult,
   toDiagnostic,
   versionDiagnostic,
-  wireActivation,
+  wireAction,
   writeProp,
   writeProps,
 } from './render.js';
 import type {
+  ActionBinding,
   Catalog,
   CatalogEntry,
   NodeValidationScope,
@@ -238,7 +239,8 @@ interface MNode {
   readonly id: string | undefined;
   readonly component: string;
   props: Record<string, Scalar>;
-  readonly action: string | undefined;
+  /** Its binding, by name or per event (spec 154); only a replace changes it. */
+  readonly action: ActionBinding | undefined;
   /** The fields its action collects (spec 153); like `action`, only a replace changes it. */
   readonly collect: Readonly<Record<string, string>> | undefined;
   readonly slots: Map<string, MEntry[]>;
@@ -411,7 +413,9 @@ function toPlain(node: MNode): UiSpecNode {
     ...(node.id === undefined ? {} : { id: node.id }),
     component: node.component,
     ...(Object.keys(node.props).length > 0 ? { props: { ...node.props } } : {}),
-    ...(node.action === undefined ? {} : { action: node.action }),
+    ...(node.action === undefined
+      ? {}
+      : { action: typeof node.action === 'string' ? node.action : { ...node.action } }),
     ...(node.collect === undefined ? {} : { collect: { ...node.collect } }),
     ...(Object.keys(slots).length > 0 ? { slots } : {}),
   };
@@ -1126,32 +1130,33 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
         }
       });
     }
-    const action = node.action;
-    wireActivation(
+    wireAction(
       element,
       entry,
       () => model.props,
-      action !== undefined && onAction !== undefined
-        ? collectingDispatch(
-            model.collect,
-            // Resolved at the gesture: the field the surface holds now.
-            (id) => live.ids.get(id)?.dom,
-            components,
-            (data) => {
-              const path = pathOf(model);
-              if (path === null) {
-                return;
-              }
-              onAction({
-                action,
-                data,
-                ...(model.id === undefined ? {} : { id: model.id }),
-                path,
-                revision,
-              });
-            },
-          )
-        : undefined,
+      model.action,
+      onAction === undefined
+        ? undefined
+        : (action) =>
+            collectingDispatch(
+              model.collect,
+              // Resolved at the gesture: the field the surface holds now.
+              (id) => live.ids.get(id)?.dom,
+              components,
+              (data) => {
+                const path = pathOf(model);
+                if (path === null) {
+                  return;
+                }
+                onAction({
+                  action,
+                  data,
+                  ...(model.id === undefined ? {} : { id: model.id }),
+                  path,
+                  revision,
+                });
+              },
+            ),
     );
     trackUserState(element, entry, model);
     for (const [slotName, children] of Object.entries(node.slots ?? {})) {

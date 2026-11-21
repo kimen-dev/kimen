@@ -183,6 +183,33 @@ describe('Kimen MCP server: validation (038 S5-S8, S15)', () => {
     expect(tool?.description).toContain('"collect"?: {"<data name>": "<node id>", ...}');
   });
 
+  it('judges a binding per event and names an event the component does not declare (spec 154)', async () => {
+    const spec = (event: string) => ({
+      actions: ['tool.denied'],
+      root: {
+        action: { [event]: 'tool.denied' },
+        component: 'ki-confirmation',
+        props: {
+          action: 'github:create_issue',
+          'approve-label': 'Create',
+          'deny-label': 'Skip',
+          heading: 'Create the issue?',
+        },
+      },
+      version: 1,
+    });
+    expect((await validate(spec('ki-deny'))).report.ok).toBe(true);
+    const { report } = await validate(spec('ki-cancel'));
+    expect(report.issues).toEqual([
+      expect.objectContaining({ code: 'undeclared-event', value: 'ki-cancel' }),
+    ]);
+    const { tools } = await server.client.listTools();
+    const tool = tools.find((candidate) => candidate.name === 'kimen_validate_spec');
+    expect(tool?.description).toContain(
+      '"action"?: "<declared action>" or {"<declared event>": "<declared action>", ...}',
+    );
+  });
+
   it('S7: specs exactly at the renderer budgets validate', async () => {
     expect((await validate(nested(32))).report.ok).toBe(true);
     expect((await validate(wide(512))).report.ok).toBe(true);

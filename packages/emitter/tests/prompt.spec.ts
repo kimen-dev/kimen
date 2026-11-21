@@ -1,4 +1,5 @@
 // @spec:033-emitter-kit
+// @spec:154-action-per-event
 // Prompt derivation (S7, S8, S10, S11): guidance flows verbatim for
 // built-in AND registered components, the embedded example is
 // self-consistent with the validation boundary, and output is
@@ -37,8 +38,8 @@ function registeredCatalog(): Catalog {
   return created.catalog;
 }
 
-function promptOrThrow(catalog: Catalog): string {
-  const derivation = catalogPrompt(catalog);
+function promptOrThrow(catalog: Catalog, options?: Parameters<typeof catalogPrompt>[1]): string {
+  const derivation = catalogPrompt(catalog, options);
   if (!derivation.ok) {
     throw new Error(`prompt derivation must succeed: ${derivation.issues[0]?.message ?? ''}`);
   }
@@ -171,7 +172,7 @@ describe('catalogPrompt', () => {
     expect(prompt).toContain(
       '"collect" lets a node with an "action" carry the values of other fields',
     );
-    expect(prompt).toContain('The action fires only when every collected field is valid');
+    expect(prompt).toContain('Each bound event fires only when every collected field is valid');
     expect(prompt).toContain('At most 32 entries');
   });
 
@@ -183,15 +184,30 @@ describe('catalogPrompt', () => {
     expect(promptOrThrow(catalogData)).toBe(promptOrThrow(catalogData));
   });
 
-  it('presents catalog events as the activation event, never as a nameable binding (review regression)', () => {
-    // The UiSpec format has no event selector: the renderer wires an action to
-    // the component's one declared event (spec 028 FR-003), or click when it
-    // declares none — so the prompt must not tell the model it can bind a
-    // named event via "action", and must state what "action" fires on.
+  it('states what an action name fires on and how a binding per event names events (spec 154)', () => {
+    // An action name fires on the event the renderer derives (spec 028
+    // FR-003), so the prompt states it per component; a binding per event
+    // names listed events, and a multi-event component with no rule of its
+    // own takes only that form.
+    const blockOf = (tag: string): string => {
+      const prompt = promptOrThrow(catalogData, { components: [tag] });
+      return prompt.slice(prompt.indexOf(`### <${tag}>`));
+    };
+    const perEvent = '{"<event>": "<action>"} fires each listed event\'s own action';
+    expect(blockOf('ki-alert')).toContain('an action name fires on `ki-dismiss`');
+    expect(blockOf('ki-combobox')).toContain('an action name fires on `change`');
+    expect(blockOf('ki-dialog')).toContain(
+      'an action name fires on ki-confirm when "confirm-label" is set and on ki-close otherwise',
+    );
+    expect(blockOf('ki-confirmation')).toContain(
+      'an action name alone is rejected, so map each event that should act',
+    );
+    for (const tag of ['ki-alert', 'ki-chip', 'ki-confirmation', 'ki-dialog']) {
+      expect(blockOf(tag)).toContain(perEvent);
+    }
     const prompt = promptOrThrow(catalogData);
-    expect(prompt).toContain('ki-dismiss');
-    expect(prompt).not.toContain('bind via "action"');
-    expect(prompt).not.toContain('click activation only');
-    expect(prompt).toContain('an "action" on this component fires on its one listed event');
+    expect(prompt).toContain('"action": "<name>" or {"<event>": "<name>"}');
+    expect(prompt).toContain('{"ki-approve": "tool.approved", "ki-deny": "tool.denied"}');
+    expect(prompt).not.toContain('a binding is rejected when more than one is listed');
   });
 });

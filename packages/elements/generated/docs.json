@@ -7231,7 +7231,12 @@
           "attr": "action",
           "reflectToAttr": false,
           "docs": "Tool identifier shown to the person and available for reporting by the host.",
-          "docsTags": [],
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "text"
+            }
+          ],
           "values": [
             {
               "type": "string"

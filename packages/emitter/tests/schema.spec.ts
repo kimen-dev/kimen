@@ -1,6 +1,7 @@
 // @spec:033-emitter-kit
 // @spec:002-ki-button
 // @spec:022-ki-icon-button
+// @spec:154-action-per-event
 // Schema derivation (S1-S5, S10-S12, S15-S19): the catalog-specialized JSON
 // Schema behaves under an independent oracle (ajv, draft 2020-12) exactly
 // as the contract promises, deterministically, with provider lowerings
@@ -342,6 +343,68 @@ describe('uiSpecJsonSchema', () => {
     expect(strict({ actions: [''], root: node(null), version: 1 })).toBe(false);
     expect(strict({ actions: ['confirm'], root: node(''), version: 1 })).toBe(false);
     expect(strict({ actions: ['confirm'], root: node('confirm'), version: 1 })).toBe(true);
+  });
+
+  it('offers a binding per event over the declared events of each component (spec 154)', () => {
+    const validate = compile(
+      deriveOrThrow(catalogData, { components: ['ki-badge', 'ki-confirmation'] }),
+    );
+    const card = (action: unknown) => ({
+      actions: ['tool.approved', 'tool.denied'],
+      root: {
+        action,
+        component: 'ki-confirmation',
+        props: {
+          action: 'delete_files',
+          'approve-label': 'Delete',
+          'deny-label': 'Keep',
+          heading: 'Delete?',
+        },
+      },
+      version: 1,
+    });
+    const bound = card({ 'ki-approve': 'tool.approved', 'ki-deny': 'tool.denied' });
+    expect(validate(bound)).toBe(true);
+    expect(validateUiSpec(bound).ok).toBe(true);
+    expect(validate(card('tool.approved'))).toBe(true);
+    expect(validate(card({ 'ki-cancel': 'tool.denied' }))).toBe(false);
+    expect(validate(card({}))).toBe(false);
+    expect(validate(card({ 'ki-deny': '' }))).toBe(false);
+    // A component that declares no event takes an action name only.
+    expect(
+      validate({
+        actions: ['a'],
+        root: { action: { click: 'a' }, component: 'ki-badge' },
+        version: 1,
+      }),
+    ).toBe(false);
+
+    // The strict subset lists every event, each an action name or null.
+    const strict = compile(
+      deriveOrThrow(catalogData, { components: ['ki-confirmation'], target: 'openai-strict' }),
+    );
+    const entry = catalogData.components['ki-confirmation'];
+    const placeholders = (names: readonly string[], value: unknown) =>
+      Object.fromEntries(names.map((name) => [name, value]));
+    const strictCard = (action: unknown) => ({
+      actions: ['tool.denied'],
+      root: {
+        action,
+        component: 'ki-confirmation',
+        id: null,
+        props: {
+          ...placeholders(Object.keys(entry.props), null),
+          action: 'delete_files',
+          'approve-label': 'Delete',
+          'deny-label': 'Keep',
+          heading: 'Delete?',
+        },
+        slots: placeholders(Object.keys(entry.slots), []),
+      },
+      version: 1,
+    });
+    expect(strict(strictCard({ 'ki-approve': null, 'ki-deny': 'tool.denied' }))).toBe(true);
+    expect(strict(strictCard({ 'ki-deny': 'tool.denied' }))).toBe(false);
   });
 
   it('offers collect as a bounded map of node ids under draft-2020-12 only (spec 153)', () => {
