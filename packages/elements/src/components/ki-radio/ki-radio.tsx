@@ -3,6 +3,7 @@ import {
   booleanFromAttributePresence,
   observeAttributePresence,
 } from '../../utils/boolean-presence';
+import { forwardHostClick } from '../../utils/host-click';
 
 /* eslint-disable jsx-a11y/label-has-associated-control -- The slotted option label is the accessible text for the native input inside the shadow label. */
 
@@ -55,6 +56,7 @@ export class KiRadio {
   }
 
   private presenceObserver: MutationObserver | undefined;
+  private releaseHostClick: (() => void) | undefined;
 
   connectedCallback(): void {
     // `disabled="false"` written after hydration: Stencil parses it to `false`
@@ -64,6 +66,12 @@ export class KiRadio {
     this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
       this.normalizeDisabled();
     });
+    // `radio.click()` selects the option, as on a native radio (S27 of
+    // ki-radio-group, which owns the selection and its events).
+    this.releaseHostClick?.();
+    this.releaseHostClick = forwardHostClick(this.host, () =>
+      this.host.shadowRoot?.querySelector('input'),
+    );
   }
 
   componentWillLoad(): void {
@@ -73,6 +81,8 @@ export class KiRadio {
   disconnectedCallback(): void {
     this.presenceObserver?.disconnect();
     this.presenceObserver = undefined;
+    this.releaseHostClick?.();
+    this.releaseHostClick = undefined;
   }
 
   render() {

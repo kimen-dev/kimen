@@ -14,6 +14,7 @@ import {
   observeAttributePresence,
 } from '../../utils/boolean-presence';
 import { FieldMessage, fieldDescribedBy, fieldInvalid, fieldText } from '../../utils/field-message';
+import { forwardHostClick } from '../../utils/host-click';
 import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
 
 export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';
@@ -41,7 +42,9 @@ export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';
  * application set with `setCustomValidity` once the form is submitted; a polite
  * live region, starting with a decorative error symbol.
  * @event change - Fired once after a user toggle commits, composed across the shadow
- * boundary; `checked` is already current when listeners run. When to use:
+ * boundary; `checked` is already current when listeners run. `click()` from a
+ * script, or a page `<label>` for the switch, toggles it like a native
+ * checkbox: one `input`, then one `change`. When to use:
  * apply the on/off effect. When NOT to use: do not expect it for programmatic
  * `checked` writes, which are silent.
  */
@@ -132,6 +135,7 @@ export class KiSwitch {
   private input: HTMLInputElement | undefined;
   private resetChecked = false;
   private presenceObserver: MutationObserver | undefined;
+  private releaseHostClick: (() => void) | undefined;
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -223,6 +227,10 @@ export class KiSwitch {
       ['checked', 'disabled'],
       this.handlePresentAttribute,
     );
+    // `host.click()` and a page <label> for the switch toggle it, as on a
+    // native checkbox (S25).
+    this.releaseHostClick?.();
+    this.releaseHostClick = forwardHostClick(this.host, () => this.input);
   }
 
   componentWillLoad(): void {
@@ -238,6 +246,8 @@ export class KiSwitch {
   disconnectedCallback(): void {
     this.presenceObserver?.disconnect();
     this.presenceObserver = undefined;
+    this.releaseHostClick?.();
+    this.releaseHostClick = undefined;
   }
 
   // Correct ONLY the case Stencil gets wrong: a present-but-falsy attribute set

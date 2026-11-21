@@ -1786,7 +1786,7 @@ Parts:
 - `label-hint`: The `label-hint` text after the slotted label, inside the label wrapper and part of the accessible name; rendered only while a hint is set.
 
 Events:
-- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
+- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. `click()` from a script, or a page `<label>` for the checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 Methods: none
 
@@ -1931,11 +1931,28 @@ group.addEventListener('ki-change', (event) => {
 </ki-checkbox-group>
 ```
 
+## Name the group from the page
+
+When the question is already written on the page, point the host's
+`aria-labelledby` at it and omit `label`. The group takes its accessible name
+from the heading, so the question is shown and read once. `label-hidden`
+instead keeps a `label` as the name while hiding it from view and from
+reading order.
+
+```html
+<h2 id="shipping-question">Where do you ship?</h2>
+<ki-checkbox-group aria-labelledby="shipping-question" name="regions">
+  <ki-checkbox value="eu">Europe</ki-checkbox>
+  <ki-checkbox value="am">Americas</ki-checkbox>
+</ki-checkbox-group>
+```
+
 Attributes:
 - `disabled` (boolean, default false): Makes the group unavailable and excludes it from form submission.
 - `error-text` (string | undefined): Localized message displayed for a failing selection limit.
 - `help-text` (string | undefined): One line of guidance displayed under the choices.
-- `label` (string, required): Visible legend and accessible name for these choices.
+- `label` (string, required): Visible legend and accessible name for these choices. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page. Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
+- `label-hidden` (boolean, default false): Hides the legend from view and from reading order while it stays the group's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people but the group still needs a name of its own. When NOT to use: do not hide a legend that repeats a question already on the page; point `aria-labelledby` at that question instead.
 - `max` (number | undefined): Maximum number of checked options, as a nonnegative integer.
 - `min` (number | undefined): Minimum number of checked options, as a nonnegative integer.
 - `name` (string | undefined): Form-data key repeated for each selected option.
@@ -7171,11 +7188,31 @@ A `disabled` group is skipped in Tab order and contributes no form entry; do not
 </ki-radio-group>
 ```
 
+When the question is already written on the page, name the group from it with `aria-labelledby` on the host and omit `label`, so the question is shown and read once:
+
+```html
+<h2 id="plan-question">Which plan suits you?</h2>
+<ki-radio-group aria-labelledby="plan-question" name="plan">
+  <ki-radio value="basic">Basic</ki-radio>
+  <ki-radio value="pro">Pro</ki-radio>
+</ki-radio-group>
+```
+
+When the layout makes the question obvious but the group still needs its own name, `label-hidden` hides the label from view and from reading order; it stays the group's accessible name and is announced once:
+
+```html
+<ki-radio-group label="Your answer" label-hidden name="answer">
+  <ki-radio value="yes">Yes</ki-radio>
+  <ki-radio value="no">No</ki-radio>
+</ki-radio-group>
+```
+
 Attributes:
 - `disabled` (boolean, default false): Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the options, read with the group as its description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
-- `label` (string, required): Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+- `label` (string, required): Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page; a group with neither fails accessibility gates. Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` and `label-hint` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
+- `label-hidden` (boolean, default false): Hides the `label` (and its hint) from view and from reading order while it stays the radiogroup's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people (a heading in a card, an icon row) but the group still needs a name of its own. When NOT to use: do not hide a label that repeats a question already on the page; point `aria-labelledby` at that question instead. Do not hide the only description of what a choice decides; that is `help-text`.
 - `label-hint` (string | undefined): Short text shown after the group label and read with it as part of the radiogroup name, so people know before submitting whether to choose: "(optional)" on the few optional questions of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what the choice decides in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
 - `name` (string | undefined): Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
 - `required` (boolean, default false): Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
@@ -7192,7 +7229,7 @@ Parts:
 - `label-hint`: The `label-hint` text after the group label text, inside the label and part of the radiogroup's accessible name; rendered only while a hint is set.
 
 Events:
-- `change` (Event): Fired once after the user selects a different radio, composed across the shadow boundary; `value` is already current when listeners run. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
+- `change` (Event): Fired once after the user selects a different radio, composed across the shadow boundary; `value` is already current when listeners run. `click()` on a `ki-radio` from a script selects it like a native radio: one `input`, then one `change`. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
 
 Methods: none
 
@@ -7767,7 +7804,7 @@ Attributes:
 - `value` (string, required): Required nonempty option identifier. Each value must be unique in its group.
 
 Slots:
-- (default): Noninteractive visible option label.
+- (default): Noninteractive visible option label. A label wider than its share of the row wraps onto a second line and every option of the row keeps one height; text that would need a third line ends with an ellipsis, and the full text stays the option's accessible name. Keep it to a few words.
 - `start`: Decorative leading icon. Supply aria-label for an icon-only option.
 
 Parts:
@@ -7866,7 +7903,7 @@ accessible name and hover or focus tooltip from `aria-label`. Keep slotted
 content noninteractive.
 
 Attributes:
-- `full-width` (boolean, default false): Distribute the available inline space evenly among all segments.
+- `full-width` (boolean, default false): Distribute the available inline space evenly among all segments. A label wider than its equal share wraps onto a second line.
 - `label` (string, required): Required accessible name of the group. Use a short name for the setting.
 - `size` ("md" | "sm" | "xs", default 'md'): Track size. The default heights are 28, 32 and 40 CSS px respectively; surrounding density settings can increase or decrease targets.
 - `value` (string, default ''): Resolved selected value. Set it to choose an option programmatically. Omit it to select the first available option. The value is empty when there are no available options. Programmatic changes are silent.
@@ -9382,7 +9419,7 @@ Parts:
 - `track`: On/off channel.
 
 Events:
-- `change` (Event): Fired once after a user toggle commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: apply the on/off effect. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
+- `change` (Event): Fired once after a user toggle commits, composed across the shadow boundary; `checked` is already current when listeners run. `click()` from a script, or a page `<label>` for the switch, toggles it like a native checkbox: one `input`, then one `change`. When to use: apply the on/off effect. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 Methods: none
 
@@ -11074,9 +11111,9 @@ Attributes:
 - `variant` ("app-bar" | "header", default 'header'): Header for primary navigation, or app-bar for the current screen. Defaults to header.
 
 Slots:
-- (default): Header mode: up to five direct native anchors; mark the current one with aria-current="page".
+- (default): Header mode: up to five direct native anchors; mark the current one with aria-current="page". They stay the page's own anchors, so the page's link rules reach them and outrank the bar's link styles (CSS Scoping gives the page's styles precedence over a component's `::slotted()` rules, whatever their specificity). `a { color: inherit }` is safe: the links then take the bar's item ink. A rule that sets `color`, `text-decoration`, `font-*` or `padding` on every `a` restyles them too: scope it away from the bar, for example `:where(main, footer) a` or `a:not(ki-top-nav > a)`, and restyle the bar's links with the `--ki-top-nav-item-*` tokens.
 - `actions`: Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow.
-- `brand`: Header mode: the brand link or wordmark.
+- `brand`: Header mode: the brand link or wordmark. Page link rules reach it as they reach the primary links.
 - `leading`: App bar: a named Back or Open navigation control.
 - `search`: App bar: an accessible search control that can shrink inside its row.
 

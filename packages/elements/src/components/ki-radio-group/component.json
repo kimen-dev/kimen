@@ -9,5 +9,17 @@
   "budgetGroup": {
     "members": ["ki-radio-group", "ki-radio"]
   },
-  "formBinding": "select"
+  "formBinding": "select",
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 2396,
+      "gzip": 727,
+      "brotli": 583
+    },
+    "mcpServer": {
+      "raw": 3885,
+      "gzip": 1268,
+      "brotli": 810
+    }
+  }
 }
