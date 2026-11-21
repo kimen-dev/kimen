@@ -22,7 +22,7 @@ The package exports these stylesheets:
 | Export | What it is |
 | --- | --- |
 | `@kimen/tokens/css` | The onmars default theme: every `--ki-*` token, both schemes, plus the `color-scheme` contract they resolve from |
-| `@kimen/tokens/css/base` | The page contract: page background/foreground and body font, painted from tokens |
+| `@kimen/tokens/css/base` | The page contract: page background/foreground and body font, painted from tokens, and group items laid out as blocks until their tags register |
 | `@kimen/tokens/css/material3` | The Material 3 reference theme: its overrides of the default theme, opt-in via `data-ki-theme` |
 | `@kimen/tokens/css/onmars-fonts.css` | Optional Instrument Sans and Newsreader for onmars v2 |
 | `@kimen/tokens/css/material3-fonts.css` | Optional local metric-adjusted fallback for self-hosted Roboto |
@@ -46,6 +46,14 @@ paints the page from them — background from `--ki-surface-base`, text from
 publishes no tokens of its own — it only consumes them, so it never widens the
 token surface — and it declares no colour scheme: the token stylesheet owns
 that.
+
+It also covers the time before the component scripts run. An unregistered
+custom element is an inline box, so three `ki-segment` labels read as one
+word. Until each tag registers, the page contract lays out the items of
+Kimen groups as blocks: segments, radios, checkboxes, options, and menu,
+list, tab, tree, step, timeline, sidebar and mobile-nav items. The rule is
+`:where(…):where(:not(:defined)) { display: block }`: no paint, zero
+specificity, nothing once the tag is defined.
 
 Skipping it is supported in both schemes: the page keeps the browser's own
 canvas and text colour for the active scheme, and every component stays
@@ -121,9 +129,14 @@ page it does not own can carry its own theme and scheme:
 
 A scheme subtree redeclares nothing (`light-dark()` resolves where a token is
 used). A themed subtree redeclares every token on its own root so that every
-alias is recomputed there; that is also the element to reassign tokens on —
-`[data-ki-theme='acme'] { --ki-color-brand-500: … }` — because a reassignment
-on a plain element does not reach the tokens that alias it. Neither attribute
+alias is recomputed there; that is also the element to reassign tokens on,
+palette included — `[data-ki-theme='acme'] { --ki-color-brand-500: … }`
+restyles every semantic token, tint and translucent variant built on that
+step inside the region. The name can be any name: one without a theme
+stylesheet starts from onmars. A reassignment on a plain element (`.acme`)
+changes that custom property and none of the tokens that alias it, so the
+region keeps the page's semantic values. Page aliases of Kimen tokens follow
+the same rule: declare them on `:root, [data-ki-theme]`. Neither attribute
 paints the element that carries it: give a region its surface with
 `background-color: var(--ki-surface-s0); color: var(--ki-text-high-em)`.
 
@@ -145,6 +158,28 @@ A theme re-asserts, after its own rule, the mode values its overrides
 displaced, so precedence never depends on the order the stylesheets load.
 The declarations only switch a mode on; they take effect on the root and on
 theme roots, because those are the elements that redeclare every alias.
+
+A theme of your own that sets a token a mode reassigns replaces the mode's
+value too: both rules declare the same property on the same element, and the
+theme's wins. The token reference lists every token each mode reassigns
+(*Preference modes*), with Kimen's value. Restate the ones your theme sets,
+after its own rule, under the media query and under the declaration:
+
+```css
+[data-ki-theme='acme'] { --ki-outline-control: #8c857c; }
+
+@media (prefers-contrast: more) {
+  [data-ki-theme='acme'] { --ki-outline-control: var(--ki-inverse-white-alpha-64); }
+}
+
+[data-ki-theme='acme']:is([data-ki-contrast='more'], [data-ki-contrast='more'] *) {
+  --ki-outline-control: var(--ki-inverse-white-alpha-64);
+}
+```
+
+Kimen does not rank its modes above a theme's rule: only `!important`
+could, and then no theme could choose its own mode values without
+`!important` either.
 
 `pnpm --filter @kimen/tokens contrast` sweeps every theme × scheme in the
 standard appearance and in each mode, with the stronger thresholds under more
@@ -192,10 +227,11 @@ page that wants that writes it in its own stylesheet, after Kimen's:
 
 The token graph is layered **primitive → theme → semantic → component**:
 
-1. **Primitive** — raw ramps (`--ki-color-brand-500`, `--ki-space-md`).
+1. **Primitive** — raw ramps (`--ki-color-gray-500`, `--ki-space-md`).
    Never consumed by components directly.
-2. **Theme** — a brand's choices over the primitives: palette, typography and
-   shape decisions that distinguish onmars from material3.
+2. **Theme** — a brand's choices over the primitives: palette
+   (`--ki-color-brand-*`), typography and shape decisions that distinguish
+   onmars from material3.
 3. **Semantic** — meaning, not appearance (`--ki-surface-s0`…`s5`,
    `--ki-text-high-em`, `--ki-outline-low-em`). The layer a brand reassigns
    to re-theme everything.
@@ -297,12 +333,36 @@ for a separately hosted Roboto file.
 
 ## Theme authoring
 
-A complete theme reassigns theme-layer tokens and semantic-layer tokens while
-sharing primitives. The public contract is the `--ki-*` custom-property name
-set: a theme reassigns names of that set and never adds one, and its
-stylesheet ships only the tokens whose value differs from the default theme.
-Only colours may depend on the colour scheme — a token whose light and dark
-values differ in anything else fails the build.
+Who reassigns which layer:
+
+- **A theme** — a complete restyle, such as material3 or a brand's own — may
+  redefine the palette (the primitive and theme `--ki-color-*` ramps) and the
+  semantic tokens that do not fit it. material3 does both. The translucent
+  variants `--ki-color-<ramp>-500-alpha-<n>` are
+  `color-mix(in srgb, var(--ki-color-<ramp>-500) N%, transparent)`, so a theme
+  that redefines the step gets matching variants without restating them.
+- **An application** that uses a theme reassigns semantic tokens, and
+  component tokens for one component. It leaves the palette to the theme:
+  every semantic pair is contrast-checked against the theme's palette, and a
+  palette step changed by an application is checked by nobody.
+
+The public contract is the `--ki-*` custom-property name set: a theme
+reassigns names of that set and never adds one, and its stylesheet ships
+only the tokens whose value differs from the default theme. Only colours may
+depend on the colour scheme — a token whose light and dark values differ in
+anything else fails the build.
+
+A theme declares on `:root` or on `[data-ki-theme='name']`, in a stylesheet
+loaded after `@kimen/tokens/css`. Two declarations need care:
+
+- **Mode tokens.** Restate each token it sets that a preference mode also
+  reassigns, under the mode (see *Preference modes* above).
+- **`color-scheme`.** `data-ki-color-scheme` pins the scheme with the
+  specificity of one attribute. A theme rule that declares `color-scheme`
+  with that specificity or more (`[data-ki-theme='acme']`,
+  `:root[data-ki-theme='acme']`) overrides the attribute and breaks a
+  light/dark toggle. A single-scheme theme declares its default at zero
+  specificity: `:where([data-ki-theme='acme']) { color-scheme: dark; }`.
 
 The approved public contract for this feature is documented in the
 [theming contract](https://github.com/kimen-dev/kimen/blob/main/specs/001-tokens-theming/contracts/theming-contract.md).
@@ -339,7 +399,8 @@ only after a later minor has shipped the deprecation. See the
 
 Do not import token source JSON from application code. Do not patch generated
 files under `dist/`. Do not create a theme by overriding component CSS first;
-reassign the theme and semantic token layers instead.
+reassign the palette and semantic token layers instead. In an application on
+a theme, do not reassign palette steps: reassign semantic tokens.
 
 ## License
 

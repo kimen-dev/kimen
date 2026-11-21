@@ -21,6 +21,18 @@ values, enforced by lint. Tokens are layered:
 4. **Component** — the public styling contract of each element
    (`--ki-button-primary-neutral-rest-bg`, `--ki-button-md-height`…).
 
+Who reassigns which layer:
+
+- **A theme** (a complete restyle, like material3 or a brand's own) may
+  redefine the palette — the primitive and theme ramps, `--ki-color-*` —
+  and the semantic tokens that do not fit it. Translucent variants
+  (`--ki-color-brand-500-alpha-1`…) are mixes of their ramp step, so they
+  follow a redefined step on their own.
+- **An application** using a theme reassigns semantic tokens, and component
+  tokens for one component, never palette steps: every semantic pair is
+  contrast-checked against the theme's palette, and a step an application
+  changes is checked by nobody.
+
 ## Themes
 
 **Onmars** is the default theme (it is `tokens.css`, no attribute needed).
@@ -123,14 +135,51 @@ which recomputes every alias — name the subtree and reassign there:
 
 ```css
 [data-ki-theme='acme'] {
-  --ki-color-brand-500: #0b57d0;  /* every component in the section follows */
+  --ki-color-gray-50: #e8f0f8;    /* s1 and everything built on it */
+  --ki-color-brand-500: #0b57d0;  /* the accent and its translucent variants */
 }
 ```
+
+Every component in the section follows, hover washes and focus glows
+included: the translucent variants are mixes of `--ki-color-brand-500`.
 
 The same redeclaration means page-level reassignments made on `:root` do not
 flow into a themed subtree: it starts from its theme's own values. Repeat
 them for the subtree if you want both
-(`:root, [data-ki-theme='acme'] { … }`).
+(`:root, [data-ki-theme='acme'] { … }`). Your page's own aliases of Kimen
+tokens work the same way: `--page-accent: var(--ki-surface-primary-low-em)`
+declared on `:root` alone keeps the root's colour inside every region.
+
+### Modes and your own theme
+
+A preference mode (more contrast, reduced transparency) reassigns a fixed
+set of tokens, listed in *Docs → Tokens reference → Preference modes*. A
+theme rule that sets one of them declares the same property on the same
+element as the mode, and wins: the mode loses that token. Restate each such
+token under the mode's media query and its declaration, after the theme's
+own rule:
+
+```css
+[data-ki-theme='acme'] { --ki-outline-control: #8c857c; }
+
+@media (prefers-contrast: more) {
+  [data-ki-theme='acme'] { --ki-outline-control: var(--ki-inverse-white-alpha-64); }
+}
+
+[data-ki-theme='acme']:is([data-ki-contrast='more'], [data-ki-contrast='more'] *) {
+  --ki-outline-control: var(--ki-inverse-white-alpha-64);
+}
+```
+
+### `color-scheme` in a theme
+
+Leave it out: the token stylesheet declares `light dark` and
+`data-ki-color-scheme` pins it with the specificity of one attribute. A
+theme rule of that specificity or more (`[data-ki-theme='acme']`,
+`:root[data-ki-theme='acme']`) overrides the attribute and breaks a
+light/dark toggle. A theme that only works in one scheme declares that
+default at zero specificity, loaded after the tokens:
+`:where([data-ki-theme='acme']) { color-scheme: dark; }`.
 
 ## The page contract
 
@@ -146,6 +195,12 @@ from `--ki-text-high-em`, and the body typeface:
 It publishes no tokens of its own — it only consumes them, so it never widens
 the token surface — and it declares no colour scheme: the token stylesheet
 owns that.
+
+Until a tag registers, the page contract also lays out the items of Kimen
+groups (segments, radios, checkboxes, options, menu, list, tab, tree, step,
+timeline and navigation items) as blocks, so a late or failed component
+script leaves a readable list instead of one run of text. The rule paints
+nothing, has zero specificity and stops matching once the tag is defined.
 
 Skipping it is supported in both schemes. Without it the page keeps the
 browser's own canvas and text colour for the active scheme, and every
