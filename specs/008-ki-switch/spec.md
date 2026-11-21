@@ -372,7 +372,7 @@ Feature: Switch
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S17, S22 | |
+| Core behavior | S1, S2, S3, S4, S17, S22, S25 | |
 | Keyboard path | S5, S6, S20 | |
 | Assistive-tech outcome | S7, S8, S9 | |
 | Form participation | S10, S11, S12, S13, S18, S21 | |

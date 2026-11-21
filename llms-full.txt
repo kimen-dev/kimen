@@ -1786,7 +1786,7 @@ Parts:
 - `label-hint`: The `label-hint` text after the slotted label, inside the label wrapper and part of the accessible name; rendered only while a hint is set.
 
 Events:
-- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
+- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. `click()` from a script, or a page `<label>` for the checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 Methods: none
 
@@ -7192,7 +7192,7 @@ Parts:
 - `label-hint`: The `label-hint` text after the group label text, inside the label and part of the radiogroup's accessible name; rendered only while a hint is set.
 
 Events:
-- `change` (Event): Fired once after the user selects a different radio, composed across the shadow boundary; `value` is already current when listeners run. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
+- `change` (Event): Fired once after the user selects a different radio, composed across the shadow boundary; `value` is already current when listeners run. `click()` on a `ki-radio` from a script selects it like a native radio: one `input`, then one `change`. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
 
 Methods: none
 
@@ -9382,7 +9382,7 @@ Parts:
 - `track`: On/off channel.
 
 Events:
-- `change` (Event): Fired once after a user toggle commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: apply the on/off effect. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
+- `change` (Event): Fired once after a user toggle commits, composed across the shadow boundary; `checked` is already current when listeners run. `click()` from a script, or a page `<label>` for the switch, toggles it like a native checkbox: one `input`, then one `change`. When to use: apply the on/off effect. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 Methods: none
 

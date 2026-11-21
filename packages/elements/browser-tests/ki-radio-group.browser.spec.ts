@@ -144,6 +144,60 @@ describe('ki-radio-group in a real browser', () => {
     expect(events).toEqual(['input:true:email', 'change:true:email']);
   });
 
+  it('S27 a script click on an option selects it like a native radio, then reports one input and one change', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact' }, form);
+    const [email, sms] = [...el.querySelectorAll<KiRadioElement>('ki-radio')];
+    const events: string[] = [];
+    for (const type of ['click', 'input', 'change']) {
+      el.addEventListener(type, () => {
+        events.push(`${type}:${el.value}`);
+      });
+    }
+
+    sms?.click();
+
+    expect(el.value).toBe('sms');
+    expect(new FormData(form).get('contact')).toBe('sms');
+    expect(events.filter((entry) => !entry.startsWith('click'))).toEqual([
+      'input:sms',
+      'change:sms',
+    ]);
+    expect(events.filter((entry) => entry.startsWith('click'))).toHaveLength(1);
+    await expect.element(page.getByRole('radio', { name: 'SMS' })).toBeChecked();
+
+    // Clicking the selected option again, as on a native radio, reports nothing.
+    sms?.click();
+    email?.click();
+
+    expect(el.value).toBe('email');
+    expect(events.filter((entry) => !entry.startsWith('click'))).toEqual([
+      'input:sms',
+      'change:sms',
+      'input:email',
+      'change:email',
+    ]);
+  });
+
+  it('S27 a script click on a disabled option selects nothing and reports nothing', async () => {
+    cleanup();
+    const el = await mount();
+    const sms = el.querySelectorAll<KiRadioElement>('ki-radio')[1];
+    if (!sms) throw new Error('Missing SMS option');
+    sms.disabled = true;
+    await settleFrames();
+    const events: string[] = [];
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+
+    sms.click();
+
+    expect(el.value).toBe('');
+    expect(events).toEqual([]);
+  });
+
   it('S1 reports change in the same task as input, as a native radio does', async () => {
     cleanup();
     const el = await mount();

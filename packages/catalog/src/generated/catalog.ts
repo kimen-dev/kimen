@@ -813,7 +813,7 @@ export const catalogData = {
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
-        "change": "Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
+        "change": "Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. `click()` from a script, or a page `<label>` for the\ncheckbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
       },
       "props": {
         "checked": {
@@ -3638,7 +3638,7 @@ export const catalogData = {
     "ki-radio-group": {
       "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
-        "change": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
+        "change": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\n`click()` on a `ki-radio` from a script selects it like a native radio: one\n`input`, then one `change`.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
       },
       "props": {
         "disabled": {
@@ -4802,7 +4802,7 @@ export const catalogData = {
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
-        "change": "Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
+        "change": "Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. `click()` from a\nscript, or a page `<label>` for the switch, toggles it like a native\ncheckbox: one `input`, then one `change`. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
       },
       "props": {
         "checked": {

@@ -241,7 +241,7 @@
       "change": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent.",
+        "description": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\n`click()` on a `ki-radio` from a script selects it like a native radio: one\n`input`, then one `change`.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent.",
         "replacement": null,
         "required": false,
         "type": "Event"

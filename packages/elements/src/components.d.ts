@@ -730,7 +730,8 @@ export namespace Components {
      * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
-     * when listeners run. When to use: react to the committed selection. When NOT
+     * when listeners run. `click()` from a script, or a page `<label>` for the
+     * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
      * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface KiCheckbox {
@@ -3069,6 +3070,8 @@ export namespace Components {
      * authored selection on options; set this group's `value` instead.
      * @event change - Fired once after the user selects a different radio, composed
      * across the shadow boundary; `value` is already current when listeners run.
+     * `click()` on a `ki-radio` from a script selects it like a native radio: one
+     * `input`, then one `change`.
      * When to use: react to the committed choice. When NOT to use: do not expect
      * it for programmatic `value` writes, which are silent.
      */
@@ -4061,7 +4064,9 @@ export namespace Components {
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
      * @event change - Fired once after a user toggle commits, composed across the shadow
-     * boundary; `checked` is already current when listeners run. When to use:
+     * boundary; `checked` is already current when listeners run. `click()` from a
+     * script, or a page `<label>` for the switch, toggles it like a native
+     * checkbox: one `input`, then one `change`. When to use:
      * apply the on/off effect. When NOT to use: do not expect it for programmatic
      * `checked` writes, which are silent.
      */
@@ -5311,7 +5316,8 @@ declare global {
      * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
-     * when listeners run. When to use: react to the committed selection. When NOT
+     * when listeners run. `click()` from a script, or a page `<label>` for the
+     * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
      * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface HTMLKiCheckboxElement extends Components.KiCheckbox, HTMLStencilElement {
@@ -6301,6 +6307,8 @@ declare global {
      * authored selection on options; set this group's `value` instead.
      * @event change - Fired once after the user selects a different radio, composed
      * across the shadow boundary; `value` is already current when listeners run.
+     * `click()` on a `ki-radio` from a script selects it like a native radio: one
+     * `input`, then one `change`.
      * When to use: react to the committed choice. When NOT to use: do not expect
      * it for programmatic `value` writes, which are silent.
      */
@@ -6744,7 +6752,9 @@ declare global {
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
      * @event change - Fired once after a user toggle commits, composed across the shadow
-     * boundary; `checked` is already current when listeners run. When to use:
+     * boundary; `checked` is already current when listeners run. `click()` from a
+     * script, or a page `<label>` for the switch, toggles it like a native
+     * checkbox: one `input`, then one `change`. When to use:
      * apply the on/off effect. When NOT to use: do not expect it for programmatic
      * `checked` writes, which are silent.
      */
@@ -7841,7 +7851,8 @@ declare namespace LocalJSX {
      * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
-     * when listeners run. When to use: react to the committed selection. When NOT
+     * when listeners run. `click()` from a script, or a page `<label>` for the
+     * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
      * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface KiCheckbox {
@@ -10366,6 +10377,8 @@ declare namespace LocalJSX {
      * authored selection on options; set this group's `value` instead.
      * @event change - Fired once after the user selects a different radio, composed
      * across the shadow boundary; `value` is already current when listeners run.
+     * `click()` on a `ki-radio` from a script selects it like a native radio: one
+     * `input`, then one `change`.
      * When to use: react to the committed choice. When NOT to use: do not expect
      * it for programmatic `value` writes, which are silent.
      */
@@ -11418,7 +11431,9 @@ declare namespace LocalJSX {
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
      * @event change - Fired once after a user toggle commits, composed across the shadow
-     * boundary; `checked` is already current when listeners run. When to use:
+     * boundary; `checked` is already current when listeners run. `click()` from a
+     * script, or a page `<label>` for the switch, toggles it like a native
+     * checkbox: one `input`, then one `change`. When to use:
      * apply the on/off effect. When NOT to use: do not expect it for programmatic
      * `checked` writes, which are silent.
      */
@@ -13462,7 +13477,8 @@ declare module "@stencil/core" {
              * semantics; omit `checked` to express unchecked.
              * @event change - Fired once after a user toggle (pointer, slotted label or Space)
              * commits, composed across the shadow boundary; `checked` is already current
-             * when listeners run. When to use: react to the committed selection. When NOT
+             * when listeners run. `click()` from a script, or a page `<label>` for the
+             * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
              * to use: do not expect it for programmatic `checked` writes, which are silent.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
@@ -13927,6 +13943,8 @@ declare module "@stencil/core" {
              * authored selection on options; set this group's `value` instead.
              * @event change - Fired once after the user selects a different radio, composed
              * across the shadow boundary; `value` is already current when listeners run.
+             * `click()` on a `ki-radio` from a script selects it like a native radio: one
+             * `input`, then one `change`.
              * When to use: react to the committed choice. When NOT to use: do not expect
              * it for programmatic `value` writes, which are silent.
              */
@@ -14176,7 +14194,9 @@ declare module "@stencil/core" {
              * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
              * choices, and ki-button for actions.
              * @event change - Fired once after a user toggle commits, composed across the shadow
-             * boundary; `checked` is already current when listeners run. When to use:
+             * boundary; `checked` is already current when listeners run. `click()` from a
+             * script, or a page `<label>` for the switch, toggles it like a native
+             * checkbox: one `input`, then one `change`. When to use:
              * apply the on/off effect. When NOT to use: do not expect it for programmatic
              * `checked` writes, which are silent.
              */

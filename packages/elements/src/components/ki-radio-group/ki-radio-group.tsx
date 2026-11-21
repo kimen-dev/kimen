@@ -47,6 +47,8 @@ type KiRadioElement = HTMLElement & {
  * decorative error symbol.
  * @event change - Fired once after the user selects a different radio, composed
  * across the shadow boundary; `value` is already current when listeners run.
+ * `click()` on a `ki-radio` from a script selects it like a native radio: one
+ * `input`, then one `change`.
  * When to use: react to the committed choice. When NOT to use: do not expect
  * it for programmatic `value` writes, which are silent.
  */

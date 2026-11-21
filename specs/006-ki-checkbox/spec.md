@@ -385,7 +385,7 @@ Feature: Checkbox
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S19, S20, S4, S22 | |
+| Core behavior | S1, S2, S3, S19, S20, S4, S22, S23 | |
 | Keyboard path | S5, S6 | |
 | Assistive-tech outcome | S7, S8, S9 | |
 | Form participation | S10, S11, S12, S13, S14, S15 | |
