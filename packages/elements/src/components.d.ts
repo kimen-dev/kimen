@@ -740,12 +740,16 @@ export namespace Components {
          */
         "checked": boolean;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted answer ("This plan needs a signed contract"). While it holds text the checkbox is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the checkbox, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` checkbox left unchecked; `error-text` words that. Inside a `ki-checkbox-group`, set it on the group. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
           * @default false
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -789,6 +793,10 @@ export namespace Components {
      * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
      */
     interface KiCheckboxGroup {
+        /**
+          * An error of the application's own, such as a server-side verdict on the submitted selection ("Pick regions we deliver to"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles an option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for the `min` and `max` limits the group enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
         /**
           * Makes the group unavailable and excludes it from form submission.
           * @default false
@@ -991,12 +999,16 @@ export namespace Components {
      */
     interface KiCodeInput {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted code ("This code has expired"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit of the code, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for an incomplete code, which the field reports itself; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disable editing, sequential focus and form participation.
           * @default false
          */
         "disabled": boolean;
         /**
-          * Message for a failing code constraint. Omit to use the browser's message.
+          * Message for a failing code constraint. Omit to use the browser's message. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -1062,6 +1074,10 @@ export namespace Components {
          */
         "allowCustom": boolean;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted choice ("Ana is on leave this week"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person commits another selection (choosing, removing or clearing a choice; typing filter text is not a change), or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` field left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disables editing, navigation and form submission.
           * @default false
          */
@@ -1072,7 +1088,7 @@ export namespace Components {
          */
         "emptyLabel": string;
         /**
-          * Message used when a required selection is missing, in place of the browser's message.
+          * Message used when a required selection is missing, in place of the browser's message. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -1358,12 +1374,16 @@ export namespace Components {
          */
         "confirm": boolean;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted date ("No flights on that day"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit of the text or pick of another date, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a missing, unreadable or out-of-bounds date, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disables the text entry and calendar button and excludes the field from form data.
           * @default false
          */
         "disabled": boolean;
         /**
-          * Overrides the message shown when a date is missing, invalid or outside the bounds.
+          * Overrides the message shown when a date is missing, invalid or outside the bounds. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -2195,12 +2215,16 @@ export namespace Components {
          */
         "autocomplete"?: string;
         /**
+          * An error of the application's own, such as a server-side or cross-field verdict on the submitted answer ("Already registered"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next change of the answer, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required` or other constraints the field enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
           * @default false
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -2633,6 +2657,10 @@ export namespace Components {
      */
     interface KiNumberInput {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted number ("Only 40 seats left"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or step of the number, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Stepper's accessible name. The field label replaces {label}.
           * @default 'Decrease {label}'
          */
@@ -2643,7 +2671,7 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
-          * Validation hint to show when the entry fails a constraint.
+          * Validation hint to show when the entry fails a constraint. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -3074,12 +3102,16 @@ export namespace Components {
      */
     interface KiRadioGroup {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted choice ("This plan is sold out"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` group left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
           * @default false
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -3466,12 +3498,16 @@ export namespace Components {
      */
     interface KiSelect {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted choice ("We do not ship there"). While it holds text the select is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` select left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
           * @default false
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -4072,12 +4108,16 @@ export namespace Components {
          */
         "checked": boolean;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted setting ("Two-step sign-in needs a phone number"). While it holds text the switch is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the switch, or when the form is reset, so it never blocks the corrected answer. It outranks an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for help that is not an error; use `help-text`. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
           * @default false
          */
         "disabled": boolean;
         /**
-          * One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `setCustomValidity` shows in this line's place.
+          * One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `custom-error` or `setCustomValidity` shows in this line's place.
          */
         "helpText"?: string;
         /**
@@ -4244,12 +4284,16 @@ export namespace Components {
          */
         "autocomplete"?: string;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted text ("This title is taken"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next change of the text, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required` or a length limit the field enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
           * @default false
          */
         "disabled": boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -4332,12 +4376,16 @@ export namespace Components {
      */
     interface KiTimeInput {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted time ("That slot was just booked"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or pick of a time, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disables typing, suggestions and form participation.
           * @default false
          */
         "disabled": boolean;
         /**
-          * Validation message to show after blur or a blocked form submission.
+          * Validation message to show after blur or a blocked form submission. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -7851,12 +7899,16 @@ declare namespace LocalJSX {
          */
         "checked"?: boolean;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted answer ("This plan needs a signed contract"). While it holds text the checkbox is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the checkbox, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` checkbox left unchecked; `error-text` words that. Inside a `ki-checkbox-group`, set it on the group. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
           * @default false
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -7904,6 +7956,10 @@ declare namespace LocalJSX {
      * @cssprop --ki-checkbox-group-gap - Space between options and group sections.
      */
     interface KiCheckboxGroup {
+        /**
+          * An error of the application's own, such as a server-side verdict on the submitted selection ("Pick regions we deliver to"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles an option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for the `min` and `max` limits the group enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
         /**
           * Makes the group unavailable and excludes it from form submission.
           * @default false
@@ -8142,12 +8198,16 @@ declare namespace LocalJSX {
      */
     interface KiCodeInput {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted code ("This code has expired"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit of the code, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for an incomplete code, which the field reports itself; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disable editing, sequential focus and form participation.
           * @default false
          */
         "disabled"?: boolean;
         /**
-          * Message for a failing code constraint. Omit to use the browser's message.
+          * Message for a failing code constraint. Omit to use the browser's message. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -8225,6 +8285,10 @@ declare namespace LocalJSX {
          */
         "allowCustom"?: boolean;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted choice ("Ana is on leave this week"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person commits another selection (choosing, removing or clearing a choice; typing filter text is not a change), or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` field left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disables editing, navigation and form submission.
           * @default false
          */
@@ -8235,7 +8299,7 @@ declare namespace LocalJSX {
          */
         "emptyLabel"?: string;
         /**
-          * Message used when a required selection is missing, in place of the browser's message.
+          * Message used when a required selection is missing, in place of the browser's message. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -8541,12 +8605,16 @@ declare namespace LocalJSX {
          */
         "confirm"?: boolean;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted date ("No flights on that day"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit of the text or pick of another date, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a missing, unreadable or out-of-bounds date, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disables the text entry and calendar button and excludes the field from form data.
           * @default false
          */
         "disabled"?: boolean;
         /**
-          * Overrides the message shown when a date is missing, invalid or outside the bounds.
+          * Overrides the message shown when a date is missing, invalid or outside the bounds. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -9426,12 +9494,16 @@ declare namespace LocalJSX {
          */
         "autocomplete"?: string;
         /**
+          * An error of the application's own, such as a server-side or cross-field verdict on the submitted answer ("Already registered"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next change of the answer, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required` or other constraints the field enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
           * @default false
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -9896,6 +9968,10 @@ declare namespace LocalJSX {
      */
     interface KiNumberInput {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted number ("Only 40 seats left"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or step of the number, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Stepper's accessible name. The field label replaces {label}.
           * @default 'Decrease {label}'
          */
@@ -9906,7 +9982,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
-          * Validation hint to show when the entry fails a constraint.
+          * Validation hint to show when the entry fails a constraint. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -10371,12 +10447,16 @@ declare namespace LocalJSX {
      */
     interface KiRadioGroup {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted choice ("This plan is sold out"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` group left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
           * @default false
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -10807,12 +10887,16 @@ declare namespace LocalJSX {
      */
     interface KiSelect {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted choice ("We do not ship there"). While it holds text the select is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` select left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
           * @default false
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -11429,6 +11513,10 @@ declare namespace LocalJSX {
          */
         "checked"?: boolean;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted setting ("Two-step sign-in needs a phone number"). While it holds text the switch is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the switch, or when the form is reset, so it never blocks the corrected answer. It outranks an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for help that is not an error; use `help-text`. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
           * @default false
          */
@@ -11438,7 +11526,7 @@ declare namespace LocalJSX {
          */
         "form"?: string;
         /**
-          * One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `setCustomValidity` shows in this line's place.
+          * One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `custom-error` or `setCustomValidity` shows in this line's place.
          */
         "helpText"?: string;
         /**
@@ -11617,12 +11705,16 @@ declare namespace LocalJSX {
          */
         "autocomplete"?: string;
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted text ("This title is taken"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next change of the text, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required` or a length limit the field enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
           * @default false
          */
         "disabled"?: boolean;
         /**
-          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+          * Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
          */
         "errorText"?: string;
         /**
@@ -11709,12 +11801,16 @@ declare namespace LocalJSX {
      */
     interface KiTimeInput {
         /**
+          * An error of the application's own, such as a server-side verdict on the submitted time ("That slot was just booked"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or pick of a time, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
+         */
+        "customError"?: string;
+        /**
           * Disables typing, suggestions and form participation.
           * @default false
          */
         "disabled"?: boolean;
         /**
-          * Validation message to show after blur or a blocked form submission.
+          * Validation message to show after blur or a blocked form submission. A `custom-error` outranks it.
          */
         "errorText"?: string;
         /**
@@ -12377,12 +12473,14 @@ declare namespace LocalJSX {
         "labelHint": string;
         "helpText": string;
         "errorText": string;
+        "customError": string;
     }
     interface KiCheckboxGroupAttributes {
         "label": string;
         "name": string;
         "helpText": string;
         "errorText": string;
+        "customError": string;
         "disabled": boolean;
         "min": number;
         "max": number;
@@ -12425,6 +12523,7 @@ declare namespace LocalJSX {
         "label": string;
         "helpText": string;
         "errorText": string;
+        "customError": string;
         "name": string;
         "required": boolean;
         "disabled": boolean;
@@ -12438,6 +12537,7 @@ declare namespace LocalJSX {
         "placeholder": string;
         "helpText": string;
         "errorText": string;
+        "customError": string;
         "name": string;
         "value": string | string[];
         "multiple": boolean;
@@ -12495,6 +12595,7 @@ declare namespace LocalJSX {
         "label": string;
         "helpText": string;
         "errorText": string;
+        "customError": string;
         "required": boolean;
         "disabled": boolean;
         "name": string;
@@ -12682,6 +12783,7 @@ declare namespace LocalJSX {
         "helpText": string;
         "aiSuggestionText": string;
         "errorText": string;
+        "customError": string;
     }
     interface KiLinkAttributes {
         "href": string;
@@ -12763,6 +12865,7 @@ declare namespace LocalJSX {
         "label": string;
         "helpText": string;
         "errorText": string;
+        "customError": string;
         "required": boolean;
         "disabled": boolean;
         "name": string;
@@ -12856,6 +12959,7 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "helpText": string;
         "errorText": string;
+        "customError": string;
     }
     interface KiRatingAttributes {
         "label": string;
@@ -12937,6 +13041,7 @@ declare namespace LocalJSX {
         "required": boolean;
         "helpText": string;
         "errorText": string;
+        "customError": string;
     }
     interface KiSidebarAttributes {
         "label": string;
@@ -13050,6 +13155,7 @@ declare namespace LocalJSX {
         "name": string;
         "value": string;
         "helpText": string;
+        "customError": string;
     }
     interface KiTabAttributes {
         "value": string;
@@ -13093,11 +13199,13 @@ declare namespace LocalJSX {
         "autocomplete": string;
         "helpText": string;
         "errorText": string;
+        "customError": string;
     }
     interface KiTimeInputAttributes {
         "label": string;
         "helpText": string;
         "errorText": string;
+        "customError": string;
         "name": string;
         "required": boolean;
         "disabled": boolean;

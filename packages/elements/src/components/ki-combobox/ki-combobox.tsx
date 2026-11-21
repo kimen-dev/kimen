@@ -82,8 +82,24 @@ export class KiCombobox {
   /** Guidance shown below the field and read as its description. */
   @Prop() helpText?: string;
 
-  /** Message used when a required selection is missing, in place of the browser's message. */
+  /** Message used when a required selection is missing, in place of the browser's message. A `custom-error` outranks it. */
   @Prop() errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted choice ("Ana is on leave this week"). While it holds text the
+   * field is invalid, blocks its form, shows the text in place of the help
+   * text at once and is announced as invalid. It stops counting when the
+   * person commits another selection (choosing, removing or clearing a
+   * choice; typing filter text is not a change), or when the form is reset,
+   * so it never blocks the corrected answer. It outranks `error-text`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for a `required` field left without a
+   * choice; `error-text` words that. Setting the same text again while the
+   * prop still holds it shows nothing: remove it first, then set it again.
+   */
+  @Prop() customError?: string;
 
   /** Form-data key. Multiple choices contribute one entry each under this name. */
   @Prop({ reflect: true }) name?: string;
@@ -150,6 +166,8 @@ export class KiCombobox {
   private observer?: MutationObserver;
   private presenceObserver?: MutationObserver;
   private requiredMessage?: string;
+  // Whether the person's committed selection or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
 
   connectedCallback(): void {
     this.observer = new MutationObserver(() => {
@@ -319,8 +337,42 @@ export class KiCombobox {
       this.requiredMessage = donor.validationMessage;
     }
     const errorText = this.errorText?.trim() ?? '';
-    const message = valueMissing ? errorText || (this.requiredMessage ?? '') : '';
-    this.internals.setValidity({ valueMissing }, message, this.input);
+    const customError = this.customErrorWithdrawn ? '' : (this.customError?.trim() ?? '');
+    const message = customError || (valueMissing ? errorText || (this.requiredMessage ?? '') : '');
+    this.internals.setValidity(
+      { valueMissing, customError: customError !== '' },
+      message,
+      this.input,
+    );
+    // A custom error shows at once, without a submission (D2).
+    if (customError !== '') this.userInvalid = true;
+  }
+
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncForm();
+  }
+
+  /**
+   * Answers at once whether the field satisfies `required` and carries no
+   * `custom-error`, firing `invalid` when it does not, as a native field
+   * does. Custom-elements build only.
+   * When NOT to use: use `reportValidity()` instead when the person should
+   * see the problem.
+   */
+  checkValidity(): boolean {
+    return this.internals.checkValidity();
+  }
+
+  /**
+   * Like `checkValidity()`, and when the field is invalid it shows its
+   * message and the browser moves focus to it. Custom-elements build only.
+   * When NOT to use: do not call it on every keystroke; it interrupts the
+   * person.
+   */
+  reportValidity(): boolean {
+    return this.internals.reportValidity();
   }
 
   formDisabledCallback(disabled: boolean): void {
@@ -329,6 +381,7 @@ export class KiCombobox {
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.dismiss();
     this.userInvalid = false;
     this.value = normalizedValues(this.initialValue, this.multiple);
@@ -356,6 +409,8 @@ export class KiCombobox {
     if (sameSelection(previous, this.selected)) {
       return;
     }
+    this.customErrorWithdrawn = true;
+    this.syncForm();
     this.host.dispatchEvent(new globalThis.Event('change', { bubbles: true, composed: true }));
   }
 

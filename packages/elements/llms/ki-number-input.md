@@ -62,9 +62,10 @@ if (discount) {
 
 ## Attributes
 
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted number ("Only 40 seats left"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or step of the number, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `decrease-label` (string, default 'Decrease {label}'): Stepper's accessible name. The field label replaces {label}.
 - `disabled` (boolean, default false): Prevents editing and excludes the control from form submission.
-- `error-text` (string | undefined): Validation hint to show when the entry fails a constraint.
+- `error-text` (string | undefined): Validation hint to show when the entry fails a constraint. A `custom-error` outranks it.
 - `format` (string): Intl.NumberFormat options for display. In HTML or a catalog spec, supply these options as JSON text. The form value retains its original precision.
 - `help-text` (string | undefined): Context or instructions displayed beneath the field when it has no visible error.
 - `increase-label` (string, default 'Increase {label}'): Stepper's accessible name. The field label replaces {label}.

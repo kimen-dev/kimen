@@ -75,6 +75,8 @@ export class KiDatePicker {
   #trigger: HTMLButtonElement | undefined;
   #popup: HTMLElement | undefined;
   #focusDayAfterRender = false;
+  // Whether the person's edit or a form reset withdrew `custom-error`.
+  #customErrorWithdrawn = false;
   #today = '';
   #formats?: { locale: string; value: ReturnType<typeof calendarFormats> };
 
@@ -88,8 +90,23 @@ export class KiDatePicker {
   @Prop({ reflect: true }) label!: string;
   /** A format hint or explanation read with the field. It is replaced by a visible error. */
   @Prop({ reflect: true }) helpText?: string;
-  /** Overrides the message shown when a date is missing, invalid or outside the bounds. */
+  /** Overrides the message shown when a date is missing, invalid or outside the bounds. A `custom-error` outranks it. */
   @Prop({ reflect: true }) errorText?: string;
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted date ("No flights on that day"). While it holds text the field
+   * is invalid, blocks its form, shows the text in place of the help text at
+   * once and is announced as invalid. It stops counting at the person's next
+   * edit of the text or pick of another date, or when the form is reset, so
+   * it never blocks the corrected answer. It outranks `error-text`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for a missing, unreadable or out-of-bounds
+   * date, which the field reports itself; `error-text` words those. Setting
+   * the same text again while the prop still holds it shows nothing: remove
+   * it first, then set it again.
+   */
+  @Prop({ reflect: true }) customError?: string;
   /** Requires a complete date or pair of dates for native form submission. */
   @Prop({ reflect: true }) required = false;
   /** Disables the text entry and calendar button and excludes the field from form data. */
@@ -172,6 +189,33 @@ export class KiDatePicker {
     this.draft = undefined;
   }
 
+  /**
+   * Answers at once whether the field holds a complete, readable date within
+   * its bounds and carries no `custom-error`, firing `invalid` when it does
+   * not, as a native field does. Custom-elements build only.
+   * When NOT to use: use `reportValidity()` instead when the person should
+   * see the problem.
+   */
+  checkValidity(): boolean {
+    return this.internals.checkValidity();
+  }
+
+  /**
+   * Like `checkValidity()`, and when the field is invalid it shows its
+   * message and the browser moves focus to it. Custom-elements build only.
+   * When NOT to use: do not call it on every keystroke; it interrupts the
+   * person.
+   */
+  reportValidity(): boolean {
+    return this.internals.reportValidity();
+  }
+
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.#customErrorWithdrawn = false;
+    this.syncForm();
+  }
+
   @Watch('value')
   @Watch('mode')
   @Watch('min')
@@ -193,8 +237,9 @@ export class KiDatePicker {
     }
     const value = this.entry === undefined ? this.#savedValue : this.#parse(this.entry);
     const missing = this.required && value === '';
+    const customError = this.#customErrorWithdrawn ? '' : (this.customError?.trim() ?? '');
     this.internals.setFormValue(disabled ? null : (value ?? null));
-    if (disabled || (!missing && value !== undefined)) {
+    if (disabled || (!missing && value !== undefined && customError === '')) {
       this.internals.setValidity({});
       this.showError = false;
       return;
@@ -202,12 +247,14 @@ export class KiDatePicker {
     const nativeMessage = this.#input?.validationMessage;
     const fallback = missing && nativeMessage ? nativeMessage : this.invalidDateLabel;
     const override = this.errorText?.trim() ?? '';
-    const message = override === '' ? fallback : override;
+    const message = customError || (override === '' ? fallback : override);
     this.internals.setValidity(
-      missing ? { valueMissing: true } : { badInput: true },
+      { valueMissing: missing, badInput: value === undefined, customError: customError !== '' },
       message,
       this.#input,
     );
+    // A custom error shows at once, without a commit or a submission (D2).
+    if (customError !== '') this.showError = true;
   }
 
   formDisabledCallback(disabled: boolean): void {
@@ -216,6 +263,7 @@ export class KiDatePicker {
   }
 
   formResetCallback(): void {
+    this.#customErrorWithdrawn = true;
     this.#closeCalendar();
     this.entry = undefined;
     this.showError = false;
@@ -243,6 +291,7 @@ export class KiDatePicker {
     this.entry = undefined;
     if (this.#input) this.#input.value = formatValue(value, this.#resolvedLocale);
     if (this.value !== value) {
+      this.#customErrorWithdrawn = true;
       this.value = value;
       this.kiChange.emit({ value });
     } else {
@@ -251,6 +300,7 @@ export class KiDatePicker {
   }
 
   #onInput = (event: globalThis.Event): void => {
+    this.#customErrorWithdrawn = true;
     this.entry = (event.target as HTMLInputElement).value;
     this.syncForm();
   };

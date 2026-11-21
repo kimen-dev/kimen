@@ -73,8 +73,25 @@ export class KiTimeInput {
   /** Guidance read with the field until a validation error replaces it. */
   @Prop({ reflect: true }) helpText?: string;
 
-  /** Validation message to show after blur or a blocked form submission. */
+  /** Validation message to show after blur or a blocked form submission. A `custom-error` outranks it. */
   @Prop({ reflect: true }) errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted time ("That slot was just booked"). While it holds text the
+   * field is invalid, blocks its form, shows the text in place of the help
+   * text at once and is announced as invalid. It stops counting at the
+   * person's next edit or pick of a time, or when the form is reset, so it
+   * never blocks the corrected answer. It outranks `error-text` and an error
+   * set with `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for `required`, the bounds or unreadable
+   * text, which the field reports itself; `error-text` words those. Setting
+   * the same text again while the prop still holds it shows nothing: remove
+   * it first, then set it again.
+   */
+  @Prop({ reflect: true }) customError?: string;
 
   /** Name under which the canonical time is submitted. */
   @Prop({ reflect: true }) name?: string;
@@ -123,7 +140,10 @@ export class KiTimeInput {
   private list: HTMLDivElement | undefined;
   private draftMinutes: number | undefined;
   private revealError = false;
-  private customError = '';
+  // The application's own error (setCustomValidity); '' when none.
+  private customValidity = '';
+  // Whether the person's edit or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
   private lastScrolledSlot: number | undefined;
   private locale!: ReturnType<typeof createTimeLocale>;
 
@@ -154,7 +174,13 @@ export class KiTimeInput {
 
   /** Adds a form error from the application. An empty string clears it. */
   setCustomValidity(message: string): void {
-    this.customError = message;
+    this.customValidity = message;
+    this.syncForm();
+  }
+
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
     this.syncForm();
   }
 
@@ -229,6 +255,7 @@ export class KiTimeInput {
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.revealError = false;
     this.value = this.host.getAttribute('value') ?? '';
     this.valueChanged();
@@ -281,17 +308,20 @@ export class KiTimeInput {
   private syncForm(reveal = false): string | null {
     const flags = this.effectiveDisabled ? {} : this.constraint();
     const invalidTime = Object.keys(flags).length > 0;
-    if (!this.effectiveDisabled && this.customError !== '') {
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const applicationError = customError || this.customValidity;
+    if (!this.effectiveDisabled && applicationError !== '') {
       flags.customError = true;
     }
     const invalid = Object.keys(flags).length > 0;
     const canonical = this.draftMinutes === undefined ? '' : formatCanonicalTime(this.draftMinutes);
-    this.revealError = invalid && (reveal || this.revealError);
+    // A custom error shows at once, without a blur or a submission (D2).
+    this.revealError = invalid && (reveal || this.revealError || customError !== '');
     this.internals.setFormValue(invalid || this.effectiveDisabled ? null : canonical);
     const browserMessage = flags.valueMissing ? (this.input?.validationMessage ?? '') : '';
     const fallback = browserMessage || fieldText(this.invalidTimeText) || invalidTimeMessage;
     const message = invalid
-      ? fieldValidationMessage(this.customError, this.errorText, fallback)
+      ? fieldValidationMessage(applicationError, this.errorText, fallback)
       : '';
     this.internals.setValidity(flags, message, this.input);
     this.shownError = this.revealError ? message : '';
@@ -317,6 +347,7 @@ export class KiTimeInput {
   private readonly handleInput = (event: InputEvent): void => {
     event.stopPropagation();
     const text = (event.target as HTMLInputElement).value;
+    this.customErrorWithdrawn = true;
     this.draftMinutes = this.locale.parse(text);
     this.setDraft(text);
     this.syncForm();
@@ -355,6 +386,7 @@ export class KiTimeInput {
   }
 
   private selectSlot(minutes: number): void {
+    this.customErrorWithdrawn = true;
     this.closeList();
     this.commit(formatCanonicalTime(minutes));
     this.input?.focus();

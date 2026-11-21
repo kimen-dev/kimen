@@ -69,6 +69,7 @@ group.addEventListener('ki-change', (event) => {
 
 ## Attributes
 
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted selection ("Pick regions we deliver to"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles an option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for the `min` and `max` limits the group enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Makes the group unavailable and excludes it from form submission.
 - `error-text` (string | undefined): Localized message displayed for a failing selection limit.
 - `help-text` (string | undefined): One line of guidance displayed under the choices.

@@ -62,8 +62,9 @@ to the form unless completing the code can safely advance the flow.
 
 ## Attributes
 
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted code ("This code has expired"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit of the code, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for an incomplete code, which the field reports itself; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Disable editing, sequential focus and form participation.
-- `error-text` (string | undefined): Message for a failing code constraint. Omit to use the browser's message.
+- `error-text` (string | undefined): Message for a failing code constraint. Omit to use the browser's message. A `custom-error` outranks it.
 - `help-text` (string | undefined): Instructions saying where the code was sent and how long it is valid.
 - `label` (string, required): Visible accessible name. Supply a label in the language of the form.
 - `length` (number, default 6, minimum 4, maximum 8): Number of cells and maximum code length. Unsupported lengths fall back to six.

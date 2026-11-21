@@ -242,16 +242,36 @@ export class KiInput {
    * constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say
    * how to fix the answer ("Enter an email address like name@example.com").
    * Without it the browser's own message shows, in the browser's language. An
-   * error set with `setCustomValidity` outranks it.
-   * When NOT to use: do not use it for server-side or cross-field errors; call
-   * `setCustomValidity` for those.
+   * error set with `custom-error` or `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; set
+   * `custom-error` or call `setCustomValidity` for those.
    */
   @Prop({ reflect: true }) errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side or cross-field
+   * verdict on the submitted answer ("Already registered"). While it holds
+   * text the field is invalid, blocks its form, shows the text in place of
+   * the help text at once and is announced as invalid. It stops counting at
+   * the person's next change of the answer, or when the form is reset, so it
+   * never blocks the corrected answer. It outranks `error-text` and an error
+   * set with `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for `required` or other constraints the
+   * field enforces itself; `error-text` words those. Setting the same text
+   * again while the prop still holds it shows nothing: remove it first, then
+   * set it again.
+   */
+  @Prop({ reflect: true }) customError?: string;
 
   // The application's own error (setCustomValidity); '' when none. It is
   // reapplied on every validity sync, so the control's own revalidation never
   // drops it.
   private customValidity = '';
+
+  // Whether the person's change or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
 
   /**
    * Validity of the control, as on a native form control: which constraint
@@ -267,9 +287,9 @@ export class KiInput {
   }
 
   /**
-   * Validation message for the current validity state: the error set with
-   * `setCustomValidity`, else `error-text`, else the browser's. Empty when the
-   * control is valid.
+   * Validation message for the current validity state: the `custom-error`,
+   * else the error set with `setCustomValidity`, else `error-text`, else the
+   * browser's. Empty when the control is valid.
    * Custom-elements build only.
    * When NOT to use: do not parse or localize the browser's message in
    * application code.
@@ -350,6 +370,12 @@ export class KiInput {
     this.syncValidity();
   }
 
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncValidity();
+  }
+
   @Watch('maxlength')
   @Watch('minlength')
   @Watch('type')
@@ -366,6 +392,7 @@ export class KiInput {
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.value = this.host.getAttribute('value') ?? '';
     this.clearUserInvalid();
     this.syncFormValue();
@@ -383,6 +410,7 @@ export class KiInput {
   private readonly handleInput = (event: Event): void => {
     const value = (event.target as HTMLInputElement).value;
     const announcement = this.announcementFor(this.value, value);
+    this.customErrorWithdrawn = true;
     this.value = value;
     if (announcement !== undefined) {
       this.countAnnouncement = announcement;
@@ -449,7 +477,9 @@ export class KiInput {
   }
 
   private syncValidity(): void {
-    this.input?.setCustomValidity(this.customValidity);
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const applicationError = customError || this.customValidity;
+    this.input?.setCustomValidity(applicationError);
     if (!this.input || this.effectiveDisabled) {
       // Disabled controls are barred from constraint validation; drop any
       // lingering user-invalid affordance so a now-inert field is not styled
@@ -469,10 +499,14 @@ export class KiInput {
 
     this.internals.setValidity(
       this.input.validity,
-      fieldValidationMessage(this.customValidity, this.errorText, this.input.validationMessage),
+      fieldValidationMessage(applicationError, this.errorText, this.input.validationMessage),
       this.input,
     );
     this.message = this.internals.validationMessage;
+    // A custom error shows at once, without a commit or a submission (D2).
+    if (customError !== '') {
+      this.setUserInvalid();
+    }
   }
 
   // Imperatively mirror validity-affecting props onto the internal input so its

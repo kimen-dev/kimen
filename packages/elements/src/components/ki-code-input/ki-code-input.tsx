@@ -58,6 +58,8 @@ export class KiCodeInput {
   private composing = false;
   private userInvalid = false;
   private customValidity = '';
+  // Whether the person's edit or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
 
   /** Visible accessible name. Supply a label in the language of the form. */
   @Prop({ reflect: true }) label!: string;
@@ -65,8 +67,25 @@ export class KiCodeInput {
   /** Instructions saying where the code was sent and how long it is valid. */
   @Prop({ reflect: true }) helpText?: string;
 
-  /** Message for a failing code constraint. Omit to use the browser's message. */
+  /** Message for a failing code constraint. Omit to use the browser's message. A `custom-error` outranks it. */
   @Prop({ reflect: true }) errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted code ("This code has expired"). While it holds text the field
+   * is invalid, blocks its form, shows the text in place of the help text at
+   * once and is announced as invalid. It stops counting at the person's next
+   * edit of the code, or when the form is reset, so it never blocks the
+   * corrected answer. It outranks `error-text` and an error set with
+   * `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for an incomplete code, which the field
+   * reports itself; `error-text` words that. Setting the same text again
+   * while the prop still holds it shows nothing: remove it first, then set it
+   * again.
+   */
+  @Prop({ reflect: true }) customError?: string;
 
   /** Key for the single value submitted to the enclosing form. */
   @Prop({ reflect: true }) name?: string;
@@ -177,6 +196,12 @@ export class KiCodeInput {
     this.syncValue();
   }
 
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncValidity();
+  }
+
   @Watch('errorText')
   protected syncValidity(): void {
     const input = this.input;
@@ -186,26 +211,33 @@ export class KiCodeInput {
       return;
     }
 
-    input.setCustomValidity(this.customValidity);
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const applicationError = customError || this.customValidity;
+    input.setCustomValidity(applicationError);
     // The committed code already satisfies the character constraint. Determine
     // completeness from that snapshot and use the browser's messages on errors.
     const complete = this.value.length === this.codeLength;
-    if (this.customValidity === '' && (complete || (!this.required && this.value === ''))) {
+    if (applicationError === '' && (complete || (!this.required && this.value === ''))) {
       this.internals.setValidity({});
       this.clearError();
       return;
     }
 
     const message = fieldValidationMessage(
-      this.customValidity,
+      applicationError,
       this.errorText,
       input.validationMessage,
     );
     this.internals.setValidity(input.validity, message, input);
+    // A custom error shows at once, without a commit or a submission (D2).
+    if (customError !== '') {
+      this.userInvalid = true;
+    }
     this.shownError = this.userInvalid ? message : '';
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.clearError();
     this.value = this.host.getAttribute('value') ?? '';
     this.syncValue();
@@ -289,6 +321,7 @@ export class KiCodeInput {
       this.syncFormState();
       return;
     }
+    this.customErrorWithdrawn = true;
     this.value = code;
     const complete = code.length === this.codeLength;
     this.kiInput.emit({ value: code });

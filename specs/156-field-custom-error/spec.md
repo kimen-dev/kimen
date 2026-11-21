@@ -7,9 +7,10 @@
 
 **Created**: 2026-11-21
 
-**Status**: Draft, awaiting the founder's approval of the Gherkin contract
-(Art. II). The design it implements (improvement 14, block C1) was approved
-on 2026-11-21.
+**Status**: Approved. The founder approved the contract S1 to S14 and its
+decisions D1 to D8 on 2026-11-21 ("Aprobado el contrato 156, adelante con la
+implementación"). The design it implements (improvement 14, block C1) was
+approved the same day.
 
 **Input**: A generated UI spec cannot put an error of the application next to
 a field. On `main` (`618df310`) `error-text` is only the wording of the

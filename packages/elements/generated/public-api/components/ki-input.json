@@ -25,6 +25,14 @@
         "required": false,
         "type": "string | undefined"
       },
+      "custom-error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An error of the application's own, such as a server-side or cross-field\nverdict on the submitted answer (\"Already registered\"). While it holds\ntext the field is invalid, blocks its form, shows the text in place of\nthe help text at once and is announced as invalid. It stops counting at\nthe person's next change of the answer, or when the form is reset, so it\nnever blocks the corrected answer. It outranks `error-text` and an error\nset with `setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for `required` or other constraints the\nfield enforces itself; `error-text` words those. Setting the same text\nagain while the prop still holds it shows nothing: remove it first, then\nset it again.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
@@ -36,7 +44,7 @@
       "error-text": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `custom-error` or `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -1243,6 +1251,14 @@
         "required": false,
         "type": "string | undefined"
       },
+      "customError": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An error of the application's own, such as a server-side or cross-field\nverdict on the submitted answer (\"Already registered\"). While it holds\ntext the field is invalid, blocks its form, shows the text in place of\nthe help text at once and is announced as invalid. It stops counting at\nthe person's next change of the answer, or when the form is reset, so it\nnever blocks the corrected answer. It outranks `error-text` and an error\nset with `setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for `required` or other constraints the\nfield enforces itself; `error-text` words those. Setting the same text\nagain while the prop still holds it shows nothing: remove it first, then\nset it again.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
@@ -1254,7 +1270,7 @@
       "errorText": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+        "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `custom-error` or `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"

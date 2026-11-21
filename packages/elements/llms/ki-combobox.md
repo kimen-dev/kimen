@@ -51,9 +51,10 @@ results, and clear `loading`. Use `change` to respond to a committed selection.
 
 - `add-label` (string, default 'Add “{text}”'): Localizable free-entry offer. {text} is replaced by the trimmed query.
 - `allow-custom` (boolean, default false): Offers to add trimmed query text when no known or selected choice already matches it.
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted choice ("Ana is on leave this week"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person commits another selection (choosing, removing or clearing a choice; typing filter text is not a change), or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` field left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Disables editing, navigation and form submission.
 - `empty-label` (string, default 'No results'): Localizable status when there are no choices to display.
-- `error-text` (string | undefined): Message used when a required selection is missing, in place of the browser's message.
+- `error-text` (string | undefined): Message used when a required selection is missing, in place of the browser's message. A `custom-error` outranks it.
 - `filter` ("contains" | "none" | "starts-with", default 'contains'): Filters by label. Set to none when the application provides results from a remote search.
 - `help-text` (string | undefined): Guidance shown below the field and read as its description.
 - `label` (string, required): Visible label and accessible name. Supply it even when placeholder text is also set.
