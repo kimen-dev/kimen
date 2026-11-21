@@ -182,10 +182,14 @@ export class KiTopNav {
   }
 
   private readonly syncCompact = (): void => {
-    if (!this.probe) return;
+    const bar = this.host.shadowRoot?.querySelector<HTMLElement>('.bar');
+    if (!this.probe || !bar) return;
     const inlineSize = (element: HTMLElement) =>
       Number.parseFloat(getComputedStyle(element).inlineSize);
-    const compact = inlineSize(this.host) < inlineSize(this.probe);
+    // The breakpoint compares the width the row lays out in: the bar fills the
+    // host's content box. The host's own inline size would include its padding
+    // whenever the page gives it `box-sizing: border-box`.
+    const compact = inlineSize(bar) < inlineSize(this.probe);
     if (this.compact === compact) return;
 
     if (!this.appBar) {

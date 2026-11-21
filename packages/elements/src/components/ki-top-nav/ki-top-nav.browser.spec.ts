@@ -157,6 +157,30 @@ it('S2: responds to the authored CSS breakpoint and preserves the actual links',
   await expect.element(navigation()).toBeVisible();
 });
 
+// Integrator feedback 0.1.1, item 2: a header with no collapse-at attribute
+// must fold at the 48rem default on a phone-width page.
+it('S2: folds at the default 48rem breakpoint on a 375px page with no collapse-at', async () => {
+  await page.viewport(375, 700);
+  const host = mountHeader();
+
+  await expect.element(navigation()).toBeVisible();
+  expect(host.hasAttribute('collapse-at')).toBe(false);
+  await expect.element(page.getByRole('link', { name: 'Overview' })).not.toBeInTheDocument();
+});
+
+// The breakpoint is the width the bar lays out in. A page-wide
+// `* { box-sizing: border-box }` and a container class with padding on the
+// host gave a 50rem box with a 46rem row that still never folded.
+it('S2: measures the breakpoint against the row, whatever box-sizing the page gives the host', async () => {
+  const host = mountHeader(
+    'style="box-sizing: border-box; inline-size: 50rem; padding-inline: 2rem"',
+  );
+
+  await expect.element(navigation()).toBeVisible();
+  host.style.boxSizing = 'content-box';
+  await expect.element(page.getByRole('link', { name: 'Overview' })).toBeVisible();
+});
+
 it('S3: keeps three direct actions and exposes the remaining two in order', async () => {
   fixture.innerHTML = screen('', actions);
   await overflow().click();
