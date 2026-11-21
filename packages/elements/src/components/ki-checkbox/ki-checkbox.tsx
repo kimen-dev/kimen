@@ -436,7 +436,11 @@ export class KiCheckbox {
       return;
     }
 
-    this.customErrorWithdrawn = true;
+    // One toggle fires `input` and then `change`: withdraw on the first only,
+    // so an error the application sets while hearing `input` stands.
+    if (this.checked !== this.input.checked) {
+      this.customErrorWithdrawn = true;
+    }
     this.checked = this.input.checked;
     this.indeterminate = false;
     this.syncFormValue();
