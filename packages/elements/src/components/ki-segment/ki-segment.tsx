@@ -14,7 +14,10 @@ const TOOLTIP_TAG = ['ki', 'tooltip'].join('-');
  * @whenToUse offer one mutually exclusive choice with text or a named icon.
  * @whenNotToUse standalone, for navigation, or for form submission.
  *
- * @slot - Noninteractive visible option label.
+ * @slot - Noninteractive visible option label. A label wider than its share of
+ * the row wraps onto a second line and every option of the row keeps one
+ * height; text that would need a third line ends with an ellipsis, and the
+ * full text stays the option's accessible name. Keep it to a few words.
  * @slot start - Decorative leading icon. Supply aria-label for an icon-only option.
  * @part button - The native option surface with radio semantics.
  */

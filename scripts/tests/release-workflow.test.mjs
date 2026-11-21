@@ -359,6 +359,61 @@ test('@spec:018-project-integrity-hardening S6 publication needs the complete pr
   assert.doesNotMatch(publish, /always\(\)|failure\(\)|cancelled\(\)|continue-on-error/u);
 });
 
+// The nightly schedule is a release dry run on main (docs/releasing.md): it
+// runs every validation job and can never publish. GitHub runs a schedule on
+// the default branch, never on a tag, so validate-core builds a dry-run
+// candidate, and publish, which requires a tag ref besides, never starts. Only
+// publish enters the npm environment or holds an OIDC token, and the workflow
+// reads no secret, so a scheduled run needs neither.
+test('@spec:018-project-integrity-hardening S7 the nightly release dry run validates everything and can never publish', async () => {
+  const ciWorkflow = await readFile(
+    new URL('../../.github/workflows/ci.yml', import.meta.url),
+    'utf8',
+  );
+  const triggers = /^on:\n((?: {2}.*\n|\n)+?)(?=\S)/mu.exec(releaseWorkflow)?.[1] ?? '';
+  const events = [...triggers.matchAll(/^ {2}([a-z_]+):/gmu)].map((match) => match[1]);
+  assert.deepEqual(events, ['workflow_dispatch', 'push', 'schedule']);
+
+  // One daily run, an hour or more away from the Chromium nightly in ci.yml.
+  const crons = [...triggers.matchAll(/cron: '([^']+)'/gu)].map((match) => match[1]);
+  assert.equal(crons.length, 1, 'one nightly schedule');
+  assert.match(crons[0], /^\d+ \d+ \* \* \*$/u, 'the schedule runs daily');
+  const minuteOfDay = (cron) => {
+    const [minute, hour] = cron.split(' ').map(Number);
+    return hour * 60 + minute;
+  };
+  const ciCron = /^ {4}- cron: '([^']+)'/mu.exec(ciWorkflow)?.[1];
+  assert.ok(ciCron, 'ci.yml keeps its nightly schedule');
+  const gap = Math.abs(minuteOfDay(crons[0]) - minuteOfDay(ciCron));
+  assert.ok(Math.min(gap, 24 * 60 - gap) >= 60, 'the dry run is offset from the ci nightly');
+
+  // Release mode is set in one place, and only for a run on a tag.
+  const validateCore = readJob(releaseWorkflow, 'validate-core');
+  assert.equal(occurrenceCount(validateCore, "mode='release'"), 1);
+  assert.match(
+    validateCore,
+    /^ {10}mode='dry-run'\n {10}tag_arguments=\(\)\n {10}if \[\[ "\$GITHUB_REF_TYPE" == 'tag' \]\]; then\n {12}mode='release'$/mu,
+  );
+
+  // Publication needs a tag ref as well as a release manifest...
+  const publish = readJob(releaseWorkflow, 'publish');
+  assert.match(
+    publish,
+    /^ {4}if: github\.ref_type == 'tag' && needs\.validate-core\.outputs\.mode == 'release'$/mu,
+  );
+  assert.match(publish, /^ {4}environment:\n {6}name: npm$/mu);
+  // ...while every validation job runs unconditionally, outside the npm
+  // environment and without an OIDC token.
+  for (const jobName of ['validate-core', 'browser', 'verify-candidate', 'capability-claims']) {
+    assert.doesNotMatch(
+      readJob(releaseWorkflow, jobName),
+      /^ {4}(?:if|environment):|id-token/mu,
+      jobName,
+    );
+  }
+  assert.doesNotMatch(releaseWorkflow, /\$\{\{\s*secrets\./u, 'release reads no secret');
+});
+
 // `npm publish --provenance` signs the statement before it uploads anything:
 // it trades the job's OIDC token for a short-lived certificate at Fulcio and
 // records the signature in Rekor (the defaults of npm's bundled

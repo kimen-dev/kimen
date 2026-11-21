@@ -50,6 +50,13 @@ Feature: Radio group
       | disabled  | the option "SMS" | in the initial markup  | unavailable |
       | disabled  | the option "SMS" | after the first render | unavailable |
 
+  # S27
+  Scenario: A script click on an option selects it as it selects a native radio
+    Given the "Contact preference" group with no option selected
+    When a script clicks the "SMS" option
+    Then "SMS" is the selected option and the group's value reads "sms"
+    And the page observes exactly one input event followed by exactly one change event
+
   # Family: keyboard path
   # S5
   Scenario: Tab reaches the group as a single stop on the selected option
@@ -125,6 +132,26 @@ Feature: Radio group
     Given a required radio group whose form submission was just blocked for lack of selection
     When the accessibility tree is queried
     Then the group is exposed as invalid
+
+  # S28
+  Scenario: A hidden label still names the group, and is announced once
+    Given a radio group labeled "Your answer" with its label hidden
+    When the page renders
+    Then no label is displayed above the options
+    And the accessibility tree carries "Your answer" only as the radiogroup's name
+
+  # S29
+  Scenario: A question written on the page names the group
+    Given a heading "Which plan suits you?" and a radio group without a label that references the heading
+    When the page renders
+    Then the accessibility tree exposes a radiogroup named "Which plan suits you?"
+    And the question is announced only by the heading and as the group's name
+
+  # S30
+  Scenario: The group's own label follows the page question in its name
+    Given a heading "Which plan suits you?" and a radio group labeled "Choose one" that references the heading
+    When the page renders
+    Then the accessibility tree exposes a radiogroup named "Which plan suits you? Choose one"
 
   # Family: form participation
   # S12

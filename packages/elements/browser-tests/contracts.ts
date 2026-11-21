@@ -13,7 +13,7 @@ interface Rgba {
 }
 
 const WHITE: Rgba = { a: 1, b: 255, g: 255, r: 255 };
-const COLOR_PATTERN = /rgba?\([^)]*\)/gu;
+const COLOR_PATTERN = /rgba?\([^)]*\)|color\(srgb [^)]*\)/gu;
 const OPAQUE = 0.995;
 
 /** Every element under `root`, descending into open shadow roots. */
@@ -46,6 +46,18 @@ function flatParent(node: Element): Element | null {
 }
 
 function parseColor(value: string): Rgba {
+  // A colour computed from color-mix() or relative colour syntax — such as a
+  // translucent ramp variant (spec 001 S15) — serializes as color(srgb …),
+  // with channels from 0 to 1.
+  const srgb = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)/u.exec(value);
+  if (srgb !== null) {
+    return {
+      a: srgb[4] === undefined ? 1 : Number(srgb[4]),
+      b: Number(srgb[3]) * 255,
+      g: Number(srgb[2]) * 255,
+      r: Number(srgb[1]) * 255,
+    };
+  }
   const parts = value.match(/[\d.]+/gu);
   if (parts === null || parts.length < 3) {
     return { a: 0, b: 0, g: 0, r: 0 };

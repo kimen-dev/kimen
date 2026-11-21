@@ -11,6 +11,7 @@ import { defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/co
 
 export const KiCheckboxGroup: StencilVueComponent<JSX.KiCheckboxGroup> = /*@__PURE__*/ defineContainer<JSX.KiCheckboxGroup>('ki-checkbox-group', defineKiCheckboxGroup, [
   'label',
+  'labelHidden',
   'name',
   'helpText',
   'errorText',

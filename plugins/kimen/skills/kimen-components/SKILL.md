@@ -115,6 +115,10 @@ defineCustomElements();
 - Every control needs an accessible name: its `label` attribute or slotted
   text, as the contract specifies. Do not add `role` or `aria-*` that
   duplicate what the component already exposes.
+- When a question is already written on the page, name `ki-radio-group` or
+  `ki-checkbox-group` from it with the host's `aria-labelledby` and omit
+  `label`. To keep a `label` as the name but not show it, use `label-hidden`;
+  never hide it with `::part()` and a clip, which leaves it in reading order.
 
 ## Frameworks
 
@@ -134,10 +138,27 @@ defineCustomElements();
 Customise in this order and stop at the first that works:
 
 1. **Tokens.** Reassign semantic `--ki-*` custom properties (for example
-   `--ki-surface-s0`, `--ki-text-high-em`) on `:root` or a container. Never
-   reassign primitive palette tokens and never style component internals.
+   `--ki-surface-s0`, `--ki-text-high-em`) on `:root`, or for a region on an
+   element that carries `data-ki-theme` (any name, such as
+   `data-ki-theme="sidebar"`); only the root and theme roots recompute the
+   tokens that alias the one you set. Component tokens
+   (`--ki-button-md-radius`) also work on a single element. Never style
+   component internals.
 2. **Parts.** `ki-button::part(…)` for the parts a contract lists.
 3. **Slots.** Put your own markup in the slots a contract lists.
+
+The palette (`--ki-color-*` ramps such as `--ki-color-brand-500`) belongs to
+themes. Building a theme, a complete restyle the user asked for, may redefine
+it, on `:root` or on `[data-ki-theme='name']`; the translucent
+`--ki-color-*-500-alpha-*` variants follow their ramp step, and the theme is
+then responsible for contrast. Customising an app on an existing theme
+reassigns semantic tokens and leaves the palette alone. A theme that sets a
+token a preference mode reassigns (the *Preference modes* table of the
+Tokens reference in Kimen's Storybook lists them, such as
+`--ki-outline-control`) restates it under `@media (prefers-contrast: more)`
+and `[data-ki-contrast='more']`, or the mode loses it. A theme never
+declares `color-scheme` with attribute specificity or more: that overrides
+`data-ki-color-scheme` and breaks a light/dark toggle.
 
 Never use `!important`, `/deep/`-style piercing or inline styles to fight a
 component; if you need them, the component is missing a token or part, so

@@ -37,7 +37,21 @@ button {
   inline-size: 100%;
   min-inline-size: 0;
   min-block-size: var(--_ki-segmented-target-size);
-  padding-block: 0;
+
+  /* The inset a single line already has inside the target, so a label that
+   * wraps to a second line keeps the same distance from the edges and a
+   * one-line option keeps the track height. */
+  padding-block: max(
+    0px,
+    calc(
+      (
+        var(--_ki-segmented-target-size) -
+        var(--_ki-segmented-line-height, var(--ki-segment-line-height))
+      ) /
+      2 -
+      var(--ki-segmented-selected-border-width)
+    )
+  );
   padding-inline: var(--_ki-segmented-padding-inline, var(--ki-segment-padding-inline));
   overflow: hidden;
   border: var(--ki-segmented-selected-border-width) solid transparent;
@@ -61,11 +75,22 @@ button {
   pointer-events: none;
 }
 
+/* A label wraps onto a second line rather than truncating, and only text
+ * that needs a third line ends in an ellipsis. Every option of the row
+ * stretches to the tallest one. */
 .label {
+  /* Line clamping still needs the legacy box in every engine. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   min-inline-size: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+.label[hidden] {
+  display: none;
 }
 
 @media (hover: hover) {

@@ -137,7 +137,7 @@ followed by JSON; read it as data.
   that negotiates another revision the surface stays empty, and only the
   tool's text result reaches the model.
 - Packages are pre-1.0. `kimen-mcp` runs from npm
-  (`npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp`). If a package you need,
+  (`npx -y -p @kimen/mcp-server@0.1.3 kimen-mcp`). If a package you need,
   such as `@kimen/catalog`, `@kimen/emitter` or an adapter, has no release on
   npm yet
   (nothing, or only the `0.0.0` name reservation), link it from a repository

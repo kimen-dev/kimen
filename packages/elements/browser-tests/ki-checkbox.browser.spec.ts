@@ -208,6 +208,47 @@ describe('ki-checkbox in a real browser', () => {
     expect(events).toEqual(['input:true', 'change:true', 'input:false', 'change:false']);
   });
 
+  it('S23 a script click checks it like a native checkbox, then reports one input and one change', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount('Email notifications', { name: 'updates' }, form);
+    const events: string[] = [];
+    for (const type of ['click', 'input', 'change']) {
+      el.addEventListener(type, () => {
+        events.push(`${type}:${String(el.checked)}`);
+      });
+    }
+
+    el.click();
+
+    expect(el.checked).toBe(true);
+    expect(formEntries(form)).toEqual({ updates: 'on' });
+    expect(events.filter((entry) => !entry.startsWith('click'))).toEqual([
+      'input:true',
+      'change:true',
+    ]);
+    expect(events.filter((entry) => entry.startsWith('click'))).toHaveLength(1);
+
+    el.click();
+
+    expect(el.checked).toBe(false);
+    expect(formEntries(form)).toEqual({});
+  });
+
+  it('S23 a script click on a disabled checkbox changes nothing and reports nothing', async () => {
+    cleanup();
+    const el = await mount('Email notifications', { disabled: true });
+    const events: string[] = [];
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+
+    el.click();
+
+    expect(el.checked).toBe(false);
+    expect(events).toEqual([]);
+  });
+
   it('S4 applies boolean presence semantics to attributes set after hydration', async () => {
     cleanup();
     const el = await mount();

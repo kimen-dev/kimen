@@ -28,3 +28,22 @@ A `disabled` group is skipped in Tab order and contributes no form entry; do not
   <ki-radio value="us">United States</ki-radio>
 </ki-radio-group>
 ```
+
+When the question is already written on the page, name the group from it with `aria-labelledby` on the host and omit `label`, so the question is shown and read once:
+
+```html
+<h2 id="plan-question">Which plan suits you?</h2>
+<ki-radio-group aria-labelledby="plan-question" name="plan">
+  <ki-radio value="basic">Basic</ki-radio>
+  <ki-radio value="pro">Pro</ki-radio>
+</ki-radio-group>
+```
+
+When the layout makes the question obvious but the group still needs its own name, `label-hidden` hides the label from view and from reading order; it stays the group's accessible name and is announced once:
+
+```html
+<ki-radio-group label="Your answer" label-hidden name="answer">
+  <ki-radio value="yes">Yes</ki-radio>
+  <ki-radio value="no">No</ki-radio>
+</ki-radio-group>
+```

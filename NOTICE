@@ -209,8 +209,10 @@ Reviewed upstream release: 4.45.3.
 
 The lazy-loading builds of @kimen/elements and the MCP Apps surface embedded
 in @kimen/adapter-mcp-apps and @kimen/mcp-server distribute Stencil's client
-runtime (internal/client). The per-component element modules import it from
-the @stencil/core dependency.
+runtime (internal/client). The per-component element modules ship a copy of
+it as dist/components/stencil-client.js, whose lazy-loader import is left for
+bundlers not to analyse; that copy reads its build flags from the
+@stencil/core dependency.
 
 The MIT License (MIT)
 

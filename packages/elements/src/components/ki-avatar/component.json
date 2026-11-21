@@ -12,7 +12,7 @@
     },
     "mcpServer": {
       "raw": 193,
-      "gzip": 89,
+      "gzip": 92,
       "brotli": 100
     },
     "tokenStylesheets": {

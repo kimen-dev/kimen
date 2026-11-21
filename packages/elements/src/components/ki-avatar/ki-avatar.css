@@ -61,7 +61,6 @@
   box-sizing: border-box;
   inline-size: var(--_avatar-size);
   block-size: var(--_avatar-size);
-  overflow: hidden;
   border: var(--ki-avatar-border-width) solid var(--ki-avatar-border-color);
   border-radius: var(--ki-avatar-radius);
   background: var(--ki-avatar-bg);
@@ -72,8 +71,12 @@
 }
 
 /* A loaded portrait covers the token surface entirely: the surface and its
- * hairline drop so no border rings the photo (design-extraction decision 4). */
+ * hairline drop so no border rings the photo (design-extraction decision 4).
+ * Only the portrait is clipped to the shape. Initials are never truncated
+ * (FR-003): two capitals with the WCAG 1.4.12 text spacing can outgrow the
+ * 20px circle, and they overflow it rather than lose their edges. */
 [part="avatar"].has-portrait {
+  overflow: hidden;
   border: none;
   background: none;
 }
