@@ -358,6 +358,27 @@ describe('a custom error shows at once and makes the control invalid', () => {
     expect(shown(field)).toBeNull();
   });
 
+  it('S2 disabling a ki-switch with a custom error reports no error and shows it again once enabled', async () => {
+    const field = await mountField('ki-switch', 'custom-error="Choose another answer"');
+    await expect.poll(() => shown(field)).toBe('Choose another answer');
+    const errors: unknown[] = [];
+    const original = console.error;
+    console.error = (...args: unknown[]) => {
+      errors.push(args);
+    };
+    try {
+      (field as Field & { disabled: boolean }).disabled = true;
+      await nextFrame();
+    } finally {
+      console.error = original;
+    }
+
+    expect(errors).toEqual([]);
+    expect(shown(field)).toBeNull();
+    (field as Field & { disabled: boolean }).disabled = false;
+    await expect.poll(() => shown(field)).toBe('Choose another answer');
+  });
+
   it('S3 submitting with the keyboard lands on the field with the custom error', async () => {
     const { submits } = await mountForm(
       '<ki-input label="Name" name="name"></ki-input><ki-input label="Email" name="email" value="ana@example.com" custom-error="Already registered"></ki-input>',
@@ -421,6 +442,20 @@ describe("the person's change withdraws the custom error", () => {
       expect(field.customError).toBe('Choose another answer');
     });
   }
+
+  it('S6 a custom error set while the person toggles a ki-checkbox outlasts that toggle', async () => {
+    const field = await mountField('ki-checkbox');
+    // The application validates the new answer as it arrives, on `input`;
+    // the same toggle's `change` follows and must not withdraw that verdict.
+    field.addEventListener('input', () => {
+      field.setAttribute('custom-error', 'Choose another answer');
+    });
+
+    await page.getByRole('checkbox', { name: 'Answer' }).click();
+
+    await expect.poll(() => shown(field)).toBe('Choose another answer');
+    expect(field.checkValidity()).toBe(false);
+  });
 
   it('S6 typing filter text in a ki-combobox does not withdraw its custom error', async () => {
     const field = await mountField('ki-combobox', 'custom-error="Choose another answer"');
