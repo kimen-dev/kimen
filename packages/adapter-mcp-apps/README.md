@@ -30,7 +30,9 @@ never touching core.
   S16–S18). It follows the host's light/dark theme (S19).
 - **Stock glyph.** Use `name: 'circle-check'` for `ki-icon` in a stock
   `ui://` resource. The document includes that Lucide glyph at build time.
-  The guarded renderer rejects an unavailable name with `unavailable-icon`.
+  It is the only name a spec may use, in `ki-icon` or any `icon-name`; the
+  guarded renderer rejects every other name with `unavailable-icon`, even a
+  glyph a component draws for its own controls.
 - **Validated boundary.** Inbound host traffic is classified as JSON-RPC 2.0
   and gated by the MCP Apps lifecycle before it can affect rendering: nothing
   renders before the `ui/initialize` handshake completes, and a non-protocol

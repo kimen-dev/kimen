@@ -105,8 +105,8 @@ server.registerTool(
 - The surface is offline by design (empty `_meta.ui.csp`): images, links and
   media do not load. Only the host's light or dark theme is applied; host
   fonts and colours are not.
-- The stock document registers the whole catalog and one icon
-  (`circle-check`); it is large (over 1 MB raw), so hosts cache it.
+- The stock document registers the whole catalog and offers specs one icon
+  name (`circle-check`); it is large (over 1 MB raw), so hosts cache it.
 - Supported revision: MCP Apps `2026-01-26`. Under a host that negotiates
   another revision the surface stays empty; the model still gets the text
   result.

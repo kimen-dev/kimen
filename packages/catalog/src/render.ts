@@ -49,9 +49,27 @@ const builtInCatalog: Catalog = catalogData;
 // Using the shared key lets the catalog check availability without relying
 // on a component bundle or importing glyphs on the host's behalf.
 const iconRegistryKey = Symbol.for('kimen.icon-registry.v1');
+// The glyph names a spec may use, when the surface declares them (spec 069
+// S14). Components import glyphs to draw themselves, and those register in
+// the same realm; registration alone would offer them to every spec. The
+// stock MCP Apps document and the bundled server declare the same selection.
+const specIconsKey = Symbol.for('kimen.spec-icons.v1');
 const realm = globalThis as typeof globalThis & {
   [iconRegistryKey]?: ReadonlyMap<string, string>;
+  [specIconsKey]?: ReadonlySet<string>;
 };
+
+/**
+ * Declares the glyph names a spec may use in this realm: `ki-icon`'s `name`
+ * and every component's `icon-name`. Each name must also be imported
+ * (`@kimen/elements/icons/<name>`) to draw. Once declared, every other name
+ * is refused with `unavailable-icon`, including the glyphs components import
+ * for their own controls. Without a declaration, an imported glyph is
+ * accepted. A later call replaces the selection.
+ */
+export function selectSpecIcons(names: Iterable<string>): void {
+  Object.defineProperty(globalThis, specIconsKey, { configurable: true, value: new Set(names) });
+}
 
 /** One scalar prop value of the neutral format. */
 type Scalar = boolean | number | string;
@@ -280,16 +298,24 @@ export function guardNode(
       value: node.component,
     });
   }
-  if (node.component === 'ki-icon') {
-    const name = ownEntry(node.props, 'name');
-    if (typeof name !== 'string' || realm[iconRegistryKey]?.has(name) !== true) {
-      state.diagnostics.push({
-        message: 'ki-icon requires a name imported by this surface',
-        path: `${path}.props.name`,
-        rule: 'unavailable-icon',
-        value: typeof name === 'string' ? name : undefined,
-      });
-    }
+  // The props a spec names a glyph through: ki-icon's name, which it cannot
+  // draw without, and any component's icon-name when it is set.
+  const iconProp = node.component === 'ki-icon' ? 'name' : 'icon-name';
+  const glyph = ownEntry(node.props, iconProp);
+  if (
+    (glyph !== undefined || iconProp === 'name') &&
+    !(
+      typeof glyph === 'string' &&
+      realm[iconRegistryKey]?.has(glyph) === true &&
+      realm[specIconsKey]?.has(glyph) !== false
+    )
+  ) {
+    state.diagnostics.push({
+      message: `${node.component} requires a ${iconProp} this surface offers`,
+      path: `${path}.props.${iconProp}`,
+      rule: 'unavailable-icon',
+      value: typeof glyph === 'string' ? glyph : undefined,
+    });
   }
   // Renderer-native activation guard (FR-003, S19): a bound action needs one
   // event in its current mode. Chip type, composer status, and a dialog
@@ -973,7 +999,8 @@ export type PreflightOptions = Omit<RenderOptions, 'onAction' | 'surface'>;
  * first attach — purity wall, version gate, payload budget, catalog
  * validation, then the renderer-native depth, node-count, tag, activation,
  * icon availability and prop-name guards. Icon availability reflects the
- * glyphs imported in this realm. Nothing is rendered, and the input is
+ * glyphs imported in this realm and, once declared, the spec-facing
+ * selection (`selectSpecIcons`). Nothing is rendered, and the input is
  * never mutated.
  */
 export function preflightUiSpec(input: unknown, options: PreflightOptions = {}): RenderResult {

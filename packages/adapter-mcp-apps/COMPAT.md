@@ -94,8 +94,11 @@ protocol displays operable, token-styled Kimen components:
   component the guarded renderer may render always has its definition
   (scenario S18).
 - **One stock glyph.** The stock document and server preflight both import
-  `circle-check`. Other Lucide names produce `unavailable-icon` on
-  `ki-icon`'s `name` prop. Each custom surface selects its own per-icon imports.
+  `circle-check` and declare it as the only name a spec may use
+  (`selectSpecIcons`). Every other name produces `unavailable-icon` on
+  `ki-icon`'s `name` or a component's `icon-name`, including the glyphs the
+  bundled components draw for themselves. Each custom surface selects its own
+  per-icon imports.
 - **Content policy by digest.** The document's own policy is
   `default-src 'none'; script-src 'sha256-…'; style-src 'sha256-…'; img-src
   data:; base-uri 'none'; form-action 'none'`: the two digests are the inline

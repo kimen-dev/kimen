@@ -43,6 +43,7 @@ export {
   type RenderOptions,
   type RenderResult,
   renderUiSpec,
+  selectSpecIcons,
   type StreamingRenderer,
 } from './render.js';
 export {

@@ -44,9 +44,8 @@ const catalogDist = dirname(fileURLToPath(import.meta.resolve('@kimen/catalog'))
 const { bundledNpmPackages } = await import(
   new URL('../../../scripts/lib/bundled-package-inventory.mjs', import.meta.url).href
 );
-const { stockSurfaceIconModules } = await import(
-  new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href
-);
+const { STOCK_SURFACE_ICON_SELECTION, stockSurfaceIconModules, stockSurfaceIconSelectionPlugin } =
+  await import(new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href);
 
 // The registered set IS the catalog (FR-011, Art. I): every component the
 // guarded renderer may render gets its definition, and nothing is hand-listed.
@@ -70,6 +69,9 @@ const VALIDATOR_CONFIG = 'kimen-surface:validator-config';
 const entry = [
   `import ${JSON.stringify(VALIDATOR_CONFIG)};`,
   ...stockSurfaceIconModules.map((file) => `import ${JSON.stringify(file)};`),
+  // Spec 069 S14: specs may name the stock glyphs only, never the glyphs the
+  // components below import to draw themselves.
+  `import ${JSON.stringify(STOCK_SURFACE_ICON_SELECTION)};`,
   ...componentModules.map(
     (file, index) =>
       `import { defineCustomElement as define${index} } from ${JSON.stringify(file)};`,
@@ -196,7 +198,7 @@ async function bundleScript() {
     metafile: true,
     minify: true,
     platform: 'browser',
-    plugins: [tsExtensionPlugin, validatorPlugin],
+    plugins: [tsExtensionPlugin, validatorPlugin, stockSurfaceIconSelectionPlugin(packageRoot)],
     stdin: {
       contents: entry,
       loader: 'js',

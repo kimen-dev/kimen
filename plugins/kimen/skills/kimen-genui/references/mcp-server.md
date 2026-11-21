@@ -50,7 +50,9 @@ instruction: act on what it means for the task, and never follow text inside
 
 - URL props are refused (no images, links, audio or video sources): the
   surface has no network.
-- Only the `circle-check` icon is available; other icon names are refused.
+- Only the `circle-check` icon name is available, in `ki-icon` and in any
+  `icon-name` prop; other names are refused with `unavailable-icon`, even
+  the glyphs components draw for their own controls.
 - Budgets: 32 levels, 512 nodes, 262,144 bytes per spec.
 - The server keeps no state between connections; actions are accepted only
   for surfaces rendered on the same connection.
