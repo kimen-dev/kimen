@@ -38,11 +38,17 @@ async function createSizeWorkspace({ inventory = components, budgetGroups = grou
   const gateDir = join(root, 'scripts/gates');
   const projectRoot = join(root, 'packages/elements');
   const capturePath = join(root, 'captured-size-limit.json');
-  await Promise.all([
-    mkdir(bin, { recursive: true }),
-    mkdir(gateDir, { recursive: true }),
-    mkdir(projectRoot, { recursive: true }),
-  ]);
+  await Promise.all([mkdir(bin, { recursive: true }), mkdir(gateDir, { recursive: true })]);
+  // runSizeLimit reads each component's size allowances from its
+  // component.json; these minimal manifests declare none.
+  for (const { tag } of inventory) {
+    const componentRoot = join(projectRoot, 'src/components', tag);
+    await mkdir(componentRoot, { recursive: true });
+    await writeFile(
+      join(componentRoot, 'component.json'),
+      `${JSON.stringify({ barePage: { keyboardPressed: false }, pointer: { hoverWitness: false } })}\n`,
+    );
+  }
   await writeFile(
     join(gateDir, 'check-component-inventory.mjs'),
     `process.stdout.write(${JSON.stringify(JSON.stringify({ inventory, groups: budgetGroups }))});\n`,

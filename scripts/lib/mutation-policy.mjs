@@ -114,11 +114,12 @@ const classifyKnownPath = (path) => {
   if (/\.d\.[cm]?tsx?$/.test(path)) {
     return excluded(path, 'type declarations contain no runtime logic to mutate');
   }
-  if (/^(?:\.agents|\.claude)\//.test(path)) {
+  if (/^(?:\.agents|\.claude|\.specify)\//.test(path)) {
     return excluded(path, 'local agent tooling is operational input outside shipped core logic');
   }
   if (
     /(?:^|\/)[^/]+\.config\.[cm]?[jt]s$/.test(path) ||
+    /(?:^|\/)\.size-limit\.[cm]?[jt]s$/.test(path) ||
     /(?:^|\/)vitest\.setup\.mjs$/.test(path) ||
     /(?:^|\/)\.storybook(?:\/|$)/.test(path) ||
     /^\.github\/workflows\//.test(path)

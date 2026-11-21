@@ -9,9 +9,11 @@
 const config = {
   plugins: ['@stryker-mutator/vitest-runner'],
   ignorePatterns: [
-    // .claude/skills is a tracked directory SYMLINK (Claude compatibility
-    // view of .agents/skills); fs.copyFile into the sandbox follows it and
+    // Agent tooling tracks directory SYMLINKS: .claude/skills (Claude's view
+    // of .agents/skills) and .agents/skills/kimen-* (links into
+    // plugins/kimen/skills). fs.copyFile into the sandbox follows them and
     // fails (ENOTSUP/EISDIR). Agent tooling is never a mutation input anyway.
+    '/.agents',
     '/.claude',
     '/.nx',
     '/.stryker-tmp',

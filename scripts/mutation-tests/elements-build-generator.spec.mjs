@@ -15,8 +15,9 @@ const componentGenerator = require('../../tools/kimen-plugin/src/generators/comp
 const tag = 'ki-avatar-card2';
 const feature = '018-project-integrity-hardening';
 const componentRoot = `packages/elements/src/components/${tag}`;
-const browserSpec = `packages/elements/browser-tests/${tag}.browser.spec.ts`;
+const browserSpec = `${componentRoot}/${tag}.browser.spec.ts`;
 const tokenSource = 'packages/tokens/tokens/component/avatar-card2.tokens.json';
+const material3TokenSource = 'packages/tokens/tokens/component/avatar-card2.material3.tokens.json';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -58,16 +59,26 @@ describe('component generator mutation boundary', () => {
     expect(tree.exists(`${componentRoot}/${tag}.spec.tsx`)).toBe(false);
     expect(tree.read(browserSpec, 'utf8')).toContain('// @spec:018-project-integrity-hardening');
     expect(tree.read(browserSpec, 'utf8')).toContain(
-      "import { defineCustomElement } from '../dist/components/ki-avatar-card2.js';",
+      "import { defineCustomElement } from '../../../dist/components/ki-avatar-card2.js';",
     );
-    expect(tree.read(browserSpec, 'utf8')).toContain('type KiAvatarCard2Element');
+    expect(tree.read(browserSpec, 'utf8')).toContain("document.createElement('ki-avatar-card2')");
     expect(JSON.parse(tree.read(tokenSource, 'utf8'))).toEqual({
       ki: {
         'avatar-card2': {
           'text-color': {
             $type: 'color',
-            $value: '{ki.text.base}',
+            $value: '{ki.text.high-em}',
             $description: 'Text color used by the ki-avatar-card2 component.',
+          },
+        },
+      },
+    });
+    expect(JSON.parse(tree.read(material3TokenSource, 'utf8'))).toEqual({
+      ki: {
+        'avatar-card2': {
+          'text-color': {
+            $value: '{ki.text.high-em}',
+            $description: 'Material 3 text color used by the ki-avatar-card2 component.',
           },
         },
       },
@@ -80,9 +91,9 @@ describe('component generator mutation boundary', () => {
     await componentGenerator(tree, { name: 'ki-avatar' });
 
     expect(
-      tree.read('packages/elements/browser-tests/ki-avatar.browser.spec.ts', 'utf8'),
+      tree.read('packages/elements/src/components/ki-avatar/ki-avatar.browser.spec.ts', 'utf8'),
     ).toContain(
-      '// TODO(spec): add &#39;// @spec:&lt;feature-dir&gt;&#39; when the approved feature exists (Art. II).',
+      '// TODO(spec): add a marker such as @spec:NNN-ki-name for the approved feature (Art. II).',
     );
   });
 
@@ -110,12 +121,12 @@ describe('component generator mutation boundary', () => {
     expect(info).toHaveBeenNthCalledWith(1, 'Component ki-avatar-card2 scaffolded. Next steps:');
     expect(info).toHaveBeenNthCalledWith(
       2,
-      '  1. pnpm exec nx run @kimen/elements:build && pnpm run format  (derives direct exports, budgets and machine surfaces, then formats them)',
+      '  1. Replace TODO(spec) with the approved component contract and its scenario tests.',
     );
     expect(info).toHaveBeenNthCalledWith(
       3,
-      '  2. Replace every TODO(spec) with content from the APPROVED spec (Art. II: no behavior without a spec).',
+      '  2. Update the component fixtures, stories, docs and both theme token sources.',
     );
-    expect(info).toHaveBeenNthCalledWith(4, '  3. bash scripts/gates/gates-suite.sh');
+    expect(info).toHaveBeenNthCalledWith(4, '  3. pnpm regen && bash scripts/gates/gates-suite.sh');
   });
 });
