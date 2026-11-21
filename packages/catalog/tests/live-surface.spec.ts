@@ -756,8 +756,9 @@ describe("035 — the user's own state is never overwritten implicitly", () => {
     expect(result.diagnostics[0]).toMatchObject({
       path: 'ops[0].props.checked',
       rule: 'user-state-conflict',
-      value: 'true',
     });
+    // Spec 159 FR-004: the rejection never repeats the user's value.
+    expect(result.diagnostics[0]).not.toHaveProperty('value');
     expect(box.checked).toBe(true);
     expect(surface.innerHTML).toBe(html);
     // Agreeing with the user is not a conflict, nor is another prop.

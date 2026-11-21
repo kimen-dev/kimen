@@ -318,9 +318,11 @@ optional `ifRevision`, then the same catalog, guard and budget checks as a
 spec — before any DOM write; a rejected batch changes nothing and the
 surface keeps accepting batches. Applied batches touch only what they name,
 so focus, caret, typed text and scroll survive. No `set`, `replace` or
-`remove` overwrites or discards a `checked`/`value`/`open` the user changed
-(in the node or, for `replace`/`remove`, anywhere in its subtree) unless the
-op says `force: true` and the host allowed it (`allowUserStateOverride`).
+`remove` overwrites or discards a `checked`/`selected`/`value`/`open` the
+user changed (in the node or, for `replace`/`remove`, anywhere in its
+subtree) unless the op says `force: true` and the host allowed it
+(`allowUserStateOverride`). A `set` that agrees with the user does not
+change that, except for `open`, and no rejection repeats the user's value.
 A batch applied while another is being applied (from `onAction`) is
 rejected as `reentrant-batch`. Action events carry the
 node `id`, its current `path`, the `revision` and live `data`; `snapshot()`

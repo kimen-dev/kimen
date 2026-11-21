@@ -392,8 +392,9 @@ describe('live surface — review regressions in Chromium', () => {
     expect(replaced.diagnostics[0]).toMatchObject({
       path: 'ops[0].id',
       rule: 'user-state-conflict',
-      value: 'hola',
     });
+    // Spec 159 FR-004: the rejection never repeats the typed text.
+    expect(JSON.stringify(replaced.diagnostics)).not.toContain('hola');
     const removed = live.apply({ ops: [{ id: 'panel', op: 'remove' }] });
     expect(removed.diagnostics[0]?.rule).toBe('user-state-conflict');
     expect(surface.querySelector('acme-field')).toBe(field);

@@ -336,10 +336,16 @@ live.snapshot(); // { revision, actions, nodes } — deep-frozen plain data
   `replace` touch only the named subtree. Nothing else is recreated or
   reordered; there is no move op.
 - **The user's state wins.** Once the user changed a control's own `checked`,
-  `value` or `open`, a `set` that would change it, and a `replace` or
-  `remove` of that node or of any ancestor, is rejected
+  `selected`, `value` or `open`, a `set` that would change it, and a
+  `replace` or `remove` of that node or of any ancestor, is rejected
   (`user-state-conflict`) unless the op says `force: true` **and** the host
-  created the surface with `allowUserStateOverride: true`.
+  created the surface with `allowUserStateOverride: true` (else
+  `user-state-override-denied`). A `set` that agrees with the user is
+  accepted, but their `checked`, `selected` and `value` stay theirs: a later
+  `set` to another value is still rejected. A `set` agreeing with the user's
+  `open` hands it back, so a dialog the user closed reopens with
+  `open: false` and then, in a later batch, `open: true`. No rejection
+  repeats the user's value.
 - **Only declared names.** A slot or prop name must be one the node's
   catalog entry declares as its own: inherited names such as `toString` are
   `unknown-slot`/`unknown-prop`, and `__proto__`, `constructor` and

@@ -70,7 +70,12 @@ here:
   (a `remove` plus an `insert` of the same id in one batch included).
   *Revised by the founder after the adversarial review of PR #191: the
   first draft let `replace`/`remove` of a node discard its user state by
-  design; that decision is withdrawn.*
+  design; that decision is withdrawn.* *Amended by `159-live-surface-unsent-input`
+  (approved by the founder on 2026-11-21): a `set` that agrees with the
+  user's `checked`, `selected` or `value` leaves it the user's, so a later
+  batch cannot take it over without the same `force` and permission; only
+  `open` is handed back by agreement. No rejection carries the user's
+  value.*
 - **D6** A monotonic `revision` per surface; an optional `ifRevision` on
   the batch for optimistic concurrency (a mismatch rejects with a
   diagnostic); `snapshot()` returns the current content as frozen plain
@@ -522,7 +527,11 @@ guarantees is that it does not destroy them (S4–S6, S13).
   attribute and the component's own property are written. The same holds
   for `replace` and `remove` (both accept `force`): they are rejected while
   the node or any descendant holds a user-owned value that differs from
-  what the agent last wrote (S21).
+  what the agent last wrote (S21). A `set` that agrees with a user-owned
+  `checked`, `selected` or `value` is accepted but does not count as the
+  agent's write: the value stays user-owned until a forced override the
+  host allows (spec 159 FR-001). Neither diagnostic carries the user's live
+  value (spec 159 FR-004).
 - **FR-007** (D6): `revision` starts at 0 and advances by exactly one per
   applied non-empty batch. `ifRevision` different from the current revision
   rejects the batch as `stale-revision` with the current revision as value.

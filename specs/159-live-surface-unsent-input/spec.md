@@ -8,9 +8,9 @@
 
 **Created**: 2026-11-21
 
-**Status**: Draft. Every scenario is a security-boundary scenario, and the
-contract amends `035-live-surface` D5 and FR-006, so it needs explicit
-founder confirmation before any code changes.
+**Status**: Approved. The founder confirmed S1 to S5 verbatim on 2026-11-21
+("Sí, aprobados"), including the Art. VIII security-boundary confirmation
+and the amendment of `035-live-surface` D5 and FR-006.
 
 **Input**: the finding recorded while writing spec 155. Two defects in
 `packages/catalog/src/live.ts` on `main` (`95e9d291`), both reproduced by
@@ -244,8 +244,8 @@ This is a security boundary of the live surface, not a UI component. Like
   then stops expecting `value: 'false'`.
 - Spec 155 Task 4 (`reset`) clears the held input together with the touched
   mark.
-- **Founder decision pending**: an accepted agreeing `set` still tells the
-  agent that its guess equals the person's value. Rejecting every `set` of a
-  held prop, agreeing or not, would remove that signal, but it would also
-  reject the agreeing `set` that 035 S13 accepts today. This contract keeps
-  the agreeing `set` accepted.
+- An accepted agreeing `set` still tells the agent that its guess equals
+  the person's value. Rejecting every `set` of a held prop, agreeing or not,
+  would remove that signal, but it would also reject the agreeing `set` that
+  035 S13 accepts today. The approved contract keeps the agreeing `set`
+  accepted; the signal is a known residual.
