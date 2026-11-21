@@ -51,7 +51,7 @@
       },
       "bg": {
         "$value": "{ki.surface.transparent}",
-        "$description": "Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image."
+        "$description": "Base background color of the dialog. Onmars v1 used a transparent backing beneath its translucent image."
       },
       "bg-image": {
         "$value": "{ki.surface-image.dialog}",
@@ -59,7 +59,7 @@
       },
       "bg-start": {
         "$value": "{ki.surface.special.blur-base-light}",
-        "$description": "Legacy start color of the onmars v1 dialog glass image.",
+        "$description": "Legacy start color of the onmars v1 translucent dialog image.",
         "$deprecated": "Set the complete background image through the image token.",
         "$extensions": {
           "dev.kimen.deprecation": {
@@ -71,7 +71,7 @@
       },
       "bg-end": {
         "$value": "{ki.surface.special.light-s0-dark-s2}",
-        "$description": "Legacy end color of the onmars v1 dialog glass image.",
+        "$description": "Legacy end color of the onmars v1 translucent dialog image.",
         "$deprecated": "Set the complete background image through the image token.",
         "$extensions": {
           "dev.kimen.deprecation": {
@@ -84,7 +84,7 @@
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
         "$type": "dimension",
-        "$description": "backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5).",
+        "$description": "backdrop blur used by the dialog component surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; none in onmars v2 and material3; perf-measure before enabling per DNA section 5).",
         "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
         "$extensions": {
           "dev.kimen.deprecation": {

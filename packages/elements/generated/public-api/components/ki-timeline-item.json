@@ -28,7 +28,7 @@
       "tone": {
         "default": "'neutral'",
         "deprecatedSince": null,
-        "description": "Marker tone. The event text carries the meaning.",
+        "description": "Marker tone. The event text carries the meaning. Without an icon, a\nnon-neutral tone draws a solid dot in its ink.",
         "replacement": null,
         "required": false,
         "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""
@@ -63,6 +63,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-layout-spacing-md": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "The md spacing step for a stack or grid gap.",
         "replacement": null,
         "required": false,
         "type": null
@@ -357,7 +365,7 @@
       "tone": {
         "default": "'neutral'",
         "deprecatedSince": null,
-        "description": "Marker tone. The event text carries the meaning.",
+        "description": "Marker tone. The event text carries the meaning. Without an icon, a\nnon-neutral tone draws a solid dot in its ink.",
         "replacement": null,
         "required": false,
         "type": "\"danger\" | \"neutral\" | \"primary\" | \"success\" | \"warning\""

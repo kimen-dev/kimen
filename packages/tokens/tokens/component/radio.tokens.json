@@ -62,7 +62,7 @@
         "hover": {
           "bg": {
             "$value": "{ki.surface.s1}",
-            "$description": "color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3."
+            "$description": "color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3."
           },
           "fg": {
             "$value": "{ki.text.primary-high-em}",

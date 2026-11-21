@@ -19,7 +19,9 @@ A persistent inline status message with token-backed tone semantics.
 
 ### Tones
 
-Severity is expressed with `tone`, never custom styling.
+Severity is expressed with `tone`, never custom styling. Every tone but
+`neutral` tints the card and draws its own glyph at the top of it; slot an
+`icon` to replace the glyph.
 
 <Demo
   layout="block"

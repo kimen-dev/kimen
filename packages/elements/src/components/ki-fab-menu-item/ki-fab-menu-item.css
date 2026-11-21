@@ -19,7 +19,7 @@
   padding-block: var(--ki-fab-menu-item-padding-block);
   padding-inline: var(--ki-fab-menu-item-padding-start) var(--ki-fab-menu-item-padding-end);
   appearance: none;
-  border: 0;
+  border: var(--ki-fab-menu-item-border-width) solid var(--ki-fab-menu-item-border-color);
   border-radius: var(--ki-fab-menu-item-radius);
   background-color: var(--ki-fab-menu-item-bg);
   background-image: var(--ki-fab-menu-item-bg-image);

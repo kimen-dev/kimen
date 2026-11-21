@@ -30,7 +30,7 @@
       "--ki-badge-border-width": {
         "default": null,
         "deprecatedSince": null,
-        "description": "dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral glass type draws its 1px bevel via ki.badge.neutral.border-width. material3 keeps its border via its override).",
+        "description": "dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral type draws its 1px edge via ki.badge.neutral.border-width. material3 keeps its border via its override).",
         "replacement": null,
         "required": false,
         "type": null
@@ -142,7 +142,7 @@
       "--ki-badge-neutral-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the badge component for neutral background (MarsUI secondary glass Tag: Surface/special/secondary_alpha_base Gray-100 alpha light / Dark-700 blur base dark — the same fill as ki-button secondary; completes the glass bevel/blur/shadow the component already draws. material3 keeps the opaque s2 chip via its override).",
+        "description": "color used by the badge component for neutral background (MarsUI secondary Tag: Surface/special/secondary_alpha_base, the same fill as ki-button secondary; opaque white in onmars v2, translucent only where a theme turns that back on. material3 keeps the opaque s2 chip via its override).",
         "replacement": null,
         "required": false,
         "type": null
@@ -150,7 +150,7 @@
       "--ki-badge-neutral-border": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the badge component for neutral border (MarsUI secondary Tag bevel: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width).",
+        "description": "color used by the badge component for neutral border (MarsUI secondary Tag edge: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width).",
         "replacement": null,
         "required": false,
         "type": null
@@ -158,7 +158,7 @@
       "--ki-badge-neutral-border-width": {
         "default": null,
         "deprecatedSince": null,
-        "description": "dimension used by the badge component for the neutral (secondary glass) border width: MarsUI draws the 1px bevel only on this type.",
+        "description": "dimension used by the badge component for the neutral border width: MarsUI draws the 1px edge only on this type.",
         "replacement": null,
         "required": false,
         "type": null

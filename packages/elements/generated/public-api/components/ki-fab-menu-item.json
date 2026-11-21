@@ -54,7 +54,7 @@
       "--ki-fab-menu-item-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Tinted surface of a floating action.",
+        "description": "Surface of a floating action: a tonal fill, or in onmars v2 the raised surface with a hairline, so the accent stays on selection.",
         "replacement": null,
         "required": false,
         "type": null
@@ -63,6 +63,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Optional image painted above the action fill.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-border-color": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Color of the action edge, drawn at border-width.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-fab-menu-item-border-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Width of the action edge. A tonal action draws none; onmars v2 edges its surface actions with a hairline.",
         "replacement": null,
         "required": false,
         "type": null
@@ -78,7 +94,7 @@
       "--ki-fab-menu-item-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Label and icon ink on the tinted action surface.",
+        "description": "Label and icon ink on the action surface.",
         "replacement": null,
         "required": false,
         "type": null

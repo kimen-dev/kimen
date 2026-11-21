@@ -38,7 +38,7 @@
       "--ki-avatar-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification).",
+        "description": "color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification). onmars v2 fills it with the neutral surface.s3, since a list of people is not a list of selected items.",
         "replacement": null,
         "required": false,
         "type": null
@@ -62,7 +62,7 @@
       "--ki-avatar-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant.",
+        "description": "color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant. onmars v2 sets the initials in the text.supporting ink (med-em, stronger under more contrast) on its neutral fill.",
         "replacement": null,
         "required": false,
         "type": null
@@ -70,7 +70,7 @@
       "--ki-avatar-font-family": {
         "default": null,
         "deprecatedSince": null,
-        "description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter).",
+        "description": "font family used by the avatar component for initials: the body family (Instrument Sans in onmars v2).",
         "replacement": null,
         "required": false,
         "type": null

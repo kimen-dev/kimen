@@ -102,7 +102,7 @@
       "--ki-status-shadow": {
         "default": null,
         "deprecatedSince": null,
-        "description": "shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers. The effect's backdrop blur is deliberately NOT applied: a 4px dot has no glass surface to blur (brief §5 perf note, glass restraint).",
+        "description": "shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers, flat in onmars v2. Its backdrop blur is not applied: a 4px dot has nothing to blur (brief §5 perf note).",
         "replacement": null,
         "required": false,
         "type": null

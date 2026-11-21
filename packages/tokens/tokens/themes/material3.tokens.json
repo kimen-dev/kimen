@@ -84,7 +84,7 @@
           "$value": "{ki.color.white.100}"
         },
         "secondary-text-on-success": {
-          "$value": "{ki.color.white.72}"
+          "$value": "{ki.color.white.80}"
         }
       }
     },

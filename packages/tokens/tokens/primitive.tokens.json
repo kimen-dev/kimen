@@ -649,7 +649,7 @@
       "$type": "dimension",
       "none": {
         "$value": "0px",
-        "$description": "Blur/0: backdrop blur disabled. Themes without glass surfaces (material3) alias the component backdrop blur here."
+        "$description": "Blur/0: backdrop blur disabled. Themes without translucent surfaces (onmars v2, material3) alias the component backdrop blur here."
       },
       "8": {
         "$value": "4px",
@@ -1014,7 +1014,7 @@
         }
       },
       "onmars-v1": {
-        "$description": "Temporary onmars v1 glass images. Read the legacy stop properties on the theme scope during their deprecation window.",
+        "$description": "Temporary onmars v1 translucent images. Read the legacy stop properties on the theme scope during their deprecation window.",
         "dialog-bg-image": {
           "$value": "linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))"
         },
@@ -1821,6 +1821,25 @@
             "$description": "M3 md.ref.palette.neutral-variant (baseline)."
           }
         },
+        "text-ink": {
+          "$type": "color",
+          "$description": "Private Kimen text inks for Material 3 where the shared values read below 4.5:1 (design-system review 2026-11-20), inlined where they are read. M3 has no info, success or warning roles, so the light med-em inks stay within the Kimen hues, a step darker than onmars to clear the lavender M3 surfaces; on the light success fill of the dark scheme, secondary text takes the dark on-colour at 80%.",
+          "info-med-em-light": {
+            "$value": "#0c7292"
+          },
+          "success-med-em-light": {
+            "$value": "#0b794c"
+          },
+          "warning-med-em-light": {
+            "$value": "#965d09"
+          },
+          "secondary-on-success-dark": {
+            "$value": "rgba(13, 38, 14, 0.8)"
+          },
+          "low-em-light": {
+            "$value": "#6e6973"
+          }
+        },
         "state-layer": {
           "$type": "color",
           "$description": "M3 state-layer colors: md.sys.state.{hover,focus,pressed,dragged}.state-layer-opacity (8% / 12% / 12% / 16%) of md.sys.color.on-surface (light #1d1b20 = neutral10, dark #e6e0e9 = neutral90). Pressed shares the focus value (both 12%).",
@@ -2551,6 +2570,15 @@
           "text-primary-low-em-dark": {
             "$value": "#b18475"
           },
+          "text-info-med-em-light": {
+            "$value": "#0c7697"
+          },
+          "text-success-med-em-light": {
+            "$value": "#0b7d4e"
+          },
+          "text-warning-med-em-light": {
+            "$value": "#9b6009"
+          },
           "text-info-low-em-light": {
             "$value": "#25768f"
           },
@@ -2725,6 +2753,13 @@
           },
           "$description": "The two schemes share layer geometry. Transparent layers mask the shapes used only by the other scheme."
         },
+        "type-scale": {
+          "$type": "dimension",
+          "$description": "Calma's type steps that fall between the space scale: caption-1 at 11px, legible for counters and dense meta in Instrument Sans.",
+          "caption-1-size": {
+            "$value": "0.6875rem"
+          }
+        },
         "tracking": {
           "$type": "dimension",
           "xs": {
@@ -2790,7 +2825,7 @@
       },
       "spring": {
         "$value": [0.34, 1.56, 0.64, 1],
-        "$description": "Gentle overshoot curve for glass pops and playful state transfers (completes the MarsUI single-curve family; no Figma motion variable exists)."
+        "$description": "Gentle overshoot curve for pops and playful state transfers (completes the MarsUI single-curve family; onmars v2 drops the overshoot)."
       },
       "linear": {
         "$value": [0, 0, 1, 1],

@@ -3,6 +3,8 @@ title: ki-chip-group
 description: A labelled collection of filter, input or assist chips.
 ---
 
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
 Put chips directly inside `ki-chip-group` and provide an accessible `label`.
 An input group is exposed as a list. Other groups are exposed as labelled
 groups. Chips inherit the group's type unless they declare their own.
@@ -13,10 +15,11 @@ focus on the moved chip and announces its position. Localize the message with
 `reorder-announcement` using the `{label}`, `{position}` and `{total}`
 placeholders. Listen to `ki-reorder` to store the new order.
 
-```html
-<ki-chip-group label="Recipients" type="input" reorderable focus-target="recipient">
+<Demo
+  layout="block"
+  code={`<ki-chip-group label="Recipients" type="input" reorderable focus-target="recipient">
   <ki-chip value="ana" removable>Ana García</ki-chip>
   <ki-chip value="luis" removable>Luis</ki-chip>
 </ki-chip-group>
-<input id="recipient" aria-label="Add recipient">
-```
+<input id="recipient" aria-label="Add recipient">`}
+/>

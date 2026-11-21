@@ -75,12 +75,14 @@ same name.
 
 ### Slots and states
 
-Decorative slotted media carries `aria-hidden="true"`; the slotted text is the
-accessible name.
+The `start` and `end` slots each take one decorative icon, sized to the
+button's icon box; never put text there. The default slot holds the label,
+which is the accessible name. `ki-icon` is hidden from assistive technology
+by default; give other slotted media `aria-hidden="true"`.
 
 <Demo
   code={`<ki-button variant="secondary">
-  <span slot="start" aria-hidden="true">New</span>
+  <ki-icon slot="start" name="plus"></ki-icon>
   With slots
 </ki-button>
 <ki-button variant="primary" disabled>Disabled</ki-button>`}

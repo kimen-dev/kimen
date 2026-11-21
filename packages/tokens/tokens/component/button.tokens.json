@@ -210,7 +210,7 @@
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
         "$type": "dimension",
-        "$description": "backdrop blur used by the button component glass variants (primary/secondary). material3 resolves to blur none via the semantic override.",
+        "$description": "backdrop blur used by the button component primary and secondary variants; none in onmars v2 and material3.",
         "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
         "$extensions": {
           "dev.kimen.deprecation": {
@@ -223,7 +223,7 @@
       "backdrop-filter": {
         "$type": "other",
         "$value": "{ki.effect.component.backdrop-filter}",
-        "$description": "Complete backdrop filter for glass button and icon-button variants."
+        "$description": "Complete backdrop filter for button and icon-button variants; none in onmars v2."
       },
       "focus-ring": {
         "color": {
@@ -268,7 +268,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2)."
             }
           },
           "hover": {
@@ -282,7 +282,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2)."
             }
           },
           "active": {
@@ -312,7 +312,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary neutral active border (MarsUI bevel top/inline edge).",
+              "$description": "color used by the button component for primary neutral active border (MarsUI top/inline edge; none in onmars v2).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -350,7 +350,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary success rest border (MarsUI top/inline edge; none in onmars v2)."
             }
           },
           "hover": {
@@ -364,7 +364,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary success hover border (MarsUI top/inline edge; none in onmars v2)."
             }
           },
           "active": {
@@ -394,7 +394,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary success active border (MarsUI bevel top/inline edge).",
+              "$description": "color used by the button component for primary success active border (MarsUI top/inline edge; none in onmars v2).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -456,7 +456,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary danger rest border (MarsUI top/inline edge; none in onmars v2)."
             }
           },
           "hover": {
@@ -470,7 +470,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary danger hover border (MarsUI top/inline edge; none in onmars v2)."
             }
           },
           "active": {
@@ -500,7 +500,7 @@
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary danger active border (MarsUI bevel top/inline edge).",
+              "$description": "color used by the button component for primary danger active border (MarsUI top/inline edge; none in onmars v2).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -559,7 +559,7 @@
           "border-bottom": {
             "$value": "{ki.outline.primary-button-bottom}",
             "$type": "color",
-            "$description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
+            "$description": "color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2)."
           }
         },
         "hover": {
@@ -571,7 +571,7 @@
           "overlay": {
             "$value": "{ki.surface.hover-overlay}",
             "$type": "color",
-            "$description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
+            "$description": "color used by the button component for the primary hover overlay layer (MarsUI hover overlay, White/5)."
           }
         },
         "active": {
@@ -616,7 +616,7 @@
           "rest": {
             "bg": {
               "$value": "{ki.surface.special.secondary-alpha-base}",
-              "$description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
+              "$description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: neutral, not a brand tint; white in onmars v2)."
             },
             "fg": {
               "$value": "{ki.text.high-em}",
@@ -624,7 +624,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for secondary neutral rest border (MarsUI top/inline edge)."
             }
           },
           "hover": {
@@ -638,7 +638,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for secondary neutral hover border (MarsUI top/inline edge)."
             }
           },
           "active": {
@@ -668,7 +668,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge).",
+              "$description": "color used by the button component for secondary neutral active border (MarsUI top/inline edge).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -706,7 +706,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
+              "$description": "color used by the button component for secondary success rest border (MarsUI top/inline edge, variant trait)."
             }
           },
           "hover": {
@@ -720,7 +720,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
+              "$description": "color used by the button component for secondary success hover border (MarsUI top/inline edge, variant trait)."
             }
           },
           "active": {
@@ -750,7 +750,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait).",
+              "$description": "color used by the button component for secondary success active border (MarsUI top/inline edge, variant trait).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -812,7 +812,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
+              "$description": "color used by the button component for secondary danger rest border (MarsUI top/inline edge, variant trait)."
             }
           },
           "hover": {
@@ -826,7 +826,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
+              "$description": "color used by the button component for secondary danger hover border (MarsUI top/inline edge, variant trait)."
             }
           },
           "active": {
@@ -856,7 +856,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait).",
+              "$description": "color used by the button component for secondary danger active border (MarsUI top/inline edge, variant trait).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -915,7 +915,7 @@
           "border-bottom": {
             "$value": "{ki.outline.secondary-button-bottom}",
             "$type": "color",
-            "$description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
+            "$description": "color used by the button component for the secondary bottom edge (MarsUI Outline/secondary_button_bottom)."
           }
         },
         "hover": {
@@ -927,7 +927,7 @@
           "overlay": {
             "$value": "{ki.surface.hover-overlay-inverse}",
             "$type": "color",
-            "$description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
+            "$description": "color used by the button component for the secondary hover overlay layer (MarsUI hover overlay inverse, Black/3)."
           }
         },
         "active": {
@@ -980,7 +980,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary neutral rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "hover": {
@@ -994,7 +994,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary neutral hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "active": {
@@ -1024,7 +1024,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary neutral active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+              "$description": "color used by the button component for tertiary neutral active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -1062,7 +1062,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "hover": {
@@ -1076,7 +1076,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary success hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "active": {
@@ -1106,7 +1106,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary success active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+              "$description": "color used by the button component for tertiary success active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -1168,7 +1168,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary danger rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "hover": {
@@ -1182,7 +1182,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary danger hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "active": {
@@ -1212,7 +1212,7 @@
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+              "$description": "color used by the button component for tertiary danger active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -1271,7 +1271,7 @@
           "border-bottom": {
             "$value": "{ki.outline.secondary-button-bottom}",
             "$type": "color",
-            "$description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
+            "$description": "color used by the button component for the tertiary bottom edge (MarsUI Outline/secondary_button_bottom, as secondary)."
           }
         },
         "hover": {
@@ -1317,7 +1317,7 @@
             },
             "fg": {
               "$value": "{ki.text.supporting}",
-              "$description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "$description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             "border": {
               "$value": "{ki.outline.none}",
@@ -1327,11 +1327,11 @@
           "hover": {
             "bg": {
               "$value": "{ki.surface.hover-overlay-inverse}",
-              "$description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+              "$description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill)."
             },
             "fg": {
               "$value": "{ki.text.supporting}",
-              "$description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "$description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent)."
             },
             "border": {
               "$value": "{ki.outline.none}",
@@ -1353,7 +1353,7 @@
             },
             "fg": {
               "$value": "{ki.text.supporting}",
-              "$description": "color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
+              "$description": "color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; never the accent).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
                 "dev.kimen.deprecation": {
@@ -1986,7 +1986,7 @@
       },
       "border-width": {
         "$value": "{ki.size.border.hairline}",
-        "$description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
+        "$description": "dimension used by the button component for border width (MarsUI outline stroke: 1px)."
       },
       "outline": {
         "rest": {

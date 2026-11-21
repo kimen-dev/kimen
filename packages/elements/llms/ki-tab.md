@@ -110,13 +110,13 @@ None.
 - `--ki-tab-padding-inline`: dimension used by the tab component for padding inline (MarsUI items carry no inline padding: spacing comes from the bar gap and the underline spans the full item width).
 - `--ki-tab-radius`: dimension used by the tab component for radius.
 - `--ki-tab-selected-active-bg`: color used by the tab component for selected active background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).
-- `--ki-tab-selected-active-fg`: color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).
+- `--ki-tab-selected-active-fg`: color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240).
 - `--ki-tab-selected-disabled-bg`: color used by the tab component for selected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill).
 - `--ki-tab-selected-disabled-fg`: color used by the tab component for selected disabled foreground (MarsUI disabled ladder: Gray/500 light / White-32 dark, the value ki-status and ki-switch already use for disabled glyphs).
 - `--ki-tab-selected-hover-bg`: color used by the tab component for selected hover background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).
-- `--ki-tab-selected-hover-fg`: color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).
+- `--ki-tab-selected-hover-fg`: color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240).
 - `--ki-tab-selected-rest-bg`: color used by the tab component for selected rest background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).
-- `--ki-tab-selected-rest-fg`: color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).
+- `--ki-tab-selected-rest-fg`: color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240).
 - `--ki-tab-unselected-active-bg`: color used by the tab component for unselected active background (MarsUI Tab_nav is transparent_inverse in every state).
 - `--ki-tab-unselected-active-fg`: color used by the tab component for unselected active foreground (mirrors hover; MarsUI defines no pressed variant).
 - `--ki-tab-unselected-disabled-bg`: color used by the tab component for unselected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill).

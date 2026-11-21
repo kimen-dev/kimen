@@ -20,7 +20,7 @@
       "rest": {
         "bg": {
           "$value": "{ki.transparent-inverse}",
-          "$description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the glass panel; only hover/selected paint)."
+          "$description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the panel; only hover/selected paint)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -30,7 +30,7 @@
       "hover": {
         "bg": {
           "$value": "{ki.surface.hover-overlay-inverse}",
-          "$description": "color used by the option component for hover background (MarsUI hover_overlay_inverse Black/3 wash over the glass panel — not a solid surface step)."
+          "$description": "color used by the option component for hover background (MarsUI hover-overlay-inverse Black/3 wash over the panel — not a solid surface step)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -40,7 +40,7 @@
       "highlight": {
         "bg": {
           "$value": "{ki.surface.hover-overlay-inverse}",
-          "$description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; purple is reserved for the selected tint)."
+          "$description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; the accent is reserved for the selected tint)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",

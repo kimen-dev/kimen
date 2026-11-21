@@ -29,7 +29,7 @@ An optional `heading` adds emphasized text inside the live region; it is a `stro
 </ki-alert>
 ```
 
-The `icon` slot takes a decorative glyph, drawn in the tone's colors in a round frame at the top of the card; give every non-neutral alert one, since that is where the tone shows. The `actions` slot takes the responses to the message as `size="sm"` buttons, in a row after the message and outside the live region. An action never dismisses the alert by itself: set `dismissed` when it should go, and focus moves on to the next control:
+The `icon` slot takes a decorative glyph, drawn in the tone's colors in a round frame at the top of the card. Without one, every non-neutral tone draws its own Lucide glyph there (`info`, `circle-check`, `triangle-alert`, `octagon-alert`); slot an icon to replace it, or to give a neutral alert one. The `actions` slot takes the responses to the message as `size="sm"` buttons, in a row after the message and outside the live region. An action never dismisses the alert by itself: set `dismissed` when it should go, and focus moves on to the next control:
 
 ```html
 <ki-alert tone="warning" heading="Session ending" dismissible>

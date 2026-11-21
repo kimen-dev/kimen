@@ -1,6 +1,12 @@
+/* The host is the size container that switches the layout below 480px.
+ * Size containment drops the intrinsic width a flex or grid parent sizes a
+ * child by, wherever the container sits, so the host fills its row instead of
+ * collapsing to zero there; in block flow that is the width it had. */
 :host {
   display: block;
+  box-sizing: border-box;
   container-type: inline-size;
+  inline-size: 100%;
   min-inline-size: 0;
   font-family: var(--ki-typography-family-body);
   font-size: var(--ki-typography-size-body-1);

@@ -67,8 +67,9 @@
 
 /* MarsUI Alert master (12074:6202): a washed, blurred shell around an
  * elevated card. A theme flattens the two into one box through tokens alone
- * (no shell padding, fill or blur; no card elevation). Stencil does not
- * autoprefix: the -webkit- alias ships explicitly for Safari. */
+ * (no shell padding, fill or blur; no card elevation), as onmars v2 and
+ * material3 do (Amendment A2). Stencil does not autoprefix: the -webkit-
+ * alias ships explicitly for Safari. */
 [part="alert"] {
   display: block;
   box-sizing: border-box;
@@ -104,9 +105,10 @@
   line-height: var(--_ki-alert-line-height);
 }
 
-/* The tone is drawn here (FR-022): a round frame in the tone's base-em alpha
- * fill, the glyph in its high-em ink. Presentational: aria-hidden in the
- * template. With nothing slotted it takes no space, gap included. */
+/* The icon carries the tone (FR-022, A2): a round frame in the tone's tint,
+ * the glyph in its high-em ink. Presentational: aria-hidden in the template.
+ * A non-neutral tone draws its default glyph when nothing is slotted; with no
+ * glyph at all it takes no space, gap included. */
 [part="icon"] {
   display: none;
   place-items: center;
@@ -126,6 +128,12 @@
 [part="icon"] ::slotted(*) {
   inline-size: var(--ki-alert-icon-glyph-size);
   block-size: var(--ki-alert-icon-glyph-size);
+}
+
+/* The tone's default glyph (Amendment A2) takes the slotted glyph's size;
+ * ki-icon draws at 1em, in the frame's ink. */
+[part="icon"] ki-icon {
+  font-size: var(--ki-alert-icon-glyph-size);
 }
 
 /* Responses to the message, in source order from the inline start; long

@@ -10,9 +10,14 @@
     "members": ["ki-timeline", "ki-timeline-item"]
   },
   "sizeBudget": {
+    "mcpApps": {
+      "raw": 516,
+      "gzip": 184,
+      "brotli": 176
+    },
     "mcpServer": {
-      "raw": 22110,
-      "gzip": 5025,
+      "raw": 22823,
+      "gzip": 5232,
       "brotli": 3030
     }
   }

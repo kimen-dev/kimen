@@ -194,6 +194,49 @@ The founder adopted the recommendation on each question.
 - A long heading without an icon wraps before the dismiss control, never
   under it (A1-D9).
 
+## Amendment A2: the tone on the card, and a glyph per tone *(decided 2026-11-20)*
+
+**Status**: Decided by the founder in the design-system review of
+2026-11-20 (item 1, P1): in onmars v2 the five tones rendered as the same
+white card, because A1-D6 drew the tone on the icon alone and the icon frame
+does not render unless the consumer slots an icon, so the docs examples of
+the five tones looked identical. The A1 shadow also broke the onmars v2 rule
+"flat, opaque surfaces with a hairline border; shadows only for things that
+float".
+
+**Path**: in place, through the Art. II amendment path, as in A1. S20, S26
+and S34 are amended in place because they described the A1 onmars values
+(S1 was amended the same way by A1); S36 and S37 are appended. None is
+retired.
+
+### Decisions
+
+- **A2-D1 The card carries the tone.** In onmars v2 the card of a
+  non-neutral alert takes the tone's opaque tint (`surface.<tone>-tint`)
+  and a hairline in the tone's low-emphasis outline; the neutral card keeps
+  the light-s0 / dark-s2 card with the `outline.low-em` hairline of any flat
+  card. The card has no elevation, and the shell paints nothing and holds no
+  padding, so the alert is one flat box (as S31 and material3 already allow).
+  Heading and message keep the neutral high-emphasis ink, at 4.5:1 or more on
+  every tint (FR-023). The icon frame keeps the tone's tint and the glyph its
+  high-emphasis ink. Supersedes the onmars part of A1-D6.
+- **A2-D2 A glyph per tone.** With nothing in the `icon` slot, a non-neutral
+  alert draws its tone's Lucide glyph in the icon frame: `info` for info,
+  `circle-check` for success, `triangle-alert` for warning and
+  `octagon-alert` for danger. The glyph is presentational like any slotted
+  icon (A1-D2). A slotted icon replaces it; removing the slotted icon brings
+  it back. The neutral tone, and an unrecognized tone (FR-007), draw no glyph,
+  so S22 still holds for them. The tone no longer depends on the consumer
+  adding an icon (supersedes the guidance part of FR-021).
+- **A2-D3 Reduced transparency.** The mode keeps whatever elevation the
+  theme gives the card; onmars v2 gives it none (S34 amended).
+
+### Edge cases
+
+- A whitespace-only `icon` slot counts as empty: the default glyph shows.
+- The glyphs ship with the component, through the per-icon registry modules
+  of spec 069; a consumer imports nothing to see them.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Understand a persistent status message (Priority: P1)
@@ -495,11 +538,11 @@ Feature: Alert
   # Amendment A1 (decided 2026-11-19): the Alert master anatomy, icon and actions
   # Family: core behavior
   # S20
-  Scenario: The alert holds its content in an elevated card inside a padded shell
+  Scenario: The alert paints its content as one flat card
     Given an onmars page with an info alert "Backup completed"
     When the page renders
-    Then the alert's shell has 12px of padding and 28px corners around its card
-    And the card has 12px of padding, 12px corners and the level-5 elevation
+    Then no frame shows around the card
+    And the card has 12px of padding, 12px corners, a hairline edge and no elevation
 
   # S21
   Scenario: A slotted icon heads the card in a round 32px frame
@@ -535,11 +578,11 @@ Feature: Alert
     And the page observes no ki-dismiss event
 
   # S26
-  Scenario Outline: Every tone keeps the same anatomy
+  Scenario Outline: Every tone keeps the same anatomy and wears its own colors
     Given an onmars page with a <tone> alert holding an icon, the heading "Heads up", a message and the action "Review"
     When the page renders
-    Then the shell, the card, the heading, the message and the dismiss control look as they do under the neutral tone
-    And the icon frame and its glyph take the <tone> tone's colors
+    Then the alert is laid out, and its heading, message and dismiss control look, as they do under the neutral tone
+    And the card, its edge, the icon frame and its glyph take the <tone> tone's colors
 
     Examples:
       | tone    |
@@ -607,20 +650,42 @@ Feature: Alert
     And the icon is painted in the forced text color
 
   # S34
-  Scenario: Reduced transparency makes the shell opaque and keeps the card raised
-    Given an onmars dark page with an info alert holding an icon
+  Scenario: Reduced transparency makes the shell opaque and keeps the card's elevation
+    Given an onmars dark page with an info alert holding an icon, under a theme that raises the card
     When the page renders under a "reduce" transparency system preference
     Then the shell and the card paint opaque surfaces without blurring what is behind them
-    And the card keeps its elevation
+    And the card keeps the elevation its theme gives it
+
+  # Amendment A2 (decided 2026-11-20): the tone on the card, and a glyph per tone
+  # Family: core behavior
+  # S36
+  Scenario Outline: A non-neutral alert without an icon draws its tone's glyph
+    Given a <tone> alert holding the heading "Heads up" and no icon
+    When the page renders
+    Then the icon frame shows the "<glyph>" glyph in the <tone> tone's colors
+    And the glyph is hidden from assistive technology
+
+    Examples:
+      | tone    | glyph          |
+      | info    | info           |
+      | success | circle-check   |
+      | warning | triangle-alert |
+      | danger  | octagon-alert  |
+
+  # S37
+  Scenario: A slotted icon replaces the tone's glyph
+    Given a danger alert holding its own icon and the heading "Payment failed"
+    When the page renders
+    Then the icon frame shows the slotted icon and no other glyph
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S19, S20, S21, S22, S23, S24, S25, S26, S35 | |
+| Core behavior | S1, S2, S3, S4, S5, S19, S20, S21, S22, S23, S24, S25, S26, S35, S36, S37 | |
 | Keyboard path | S6, S7, S8, S16, S27, S28 | |
-| Assistive-tech outcome | S9, S10, S11, S12, S17, S18, S29, S30 | |
+| Assistive-tech outcome | S9, S10, S11, S12, S17, S18, S29, S30, S36 | |
 | Form participation | | N/A — ki-alert is a feedback message, not a form control: it holds no user-entered value, submits nothing and is not form-associated (the charter's form-associated set for this batch is input, textarea, select, checkbox, radio-group, switch). |
 | Theming | S13, S14, S15, S31, S32, S33, S34 | |
 
@@ -741,6 +806,20 @@ Amendment A1 (decided 2026-11-19):
   in every tone, theme and scheme. Without an icon, the heading MUST leave
   room at its inline end for the dismiss control and never sit under it.
 
+Amendment A2 (decided 2026-11-20):
+
+- **FR-024** *(amends FR-015, FR-020, FR-022)*: In the onmars theme the card
+  MUST carry the tone: a non-neutral card takes the tone's opaque tint and a
+  hairline in the tone's low-emphasis outline, the neutral card a neutral
+  hairline. The card MUST have no elevation and the shell MUST paint nothing
+  and hold no padding. Under reduced transparency the card keeps the
+  elevation its theme gives it.
+- **FR-025** *(amends FR-016, FR-021)*: With nothing slotted in `icon`, a
+  non-neutral alert MUST draw its tone's glyph in the icon frame (`info`,
+  `circle-check`, `triangle-alert`, `octagon-alert`), presentational like a
+  slotted icon. A slotted icon MUST replace it. The neutral tone and
+  unrecognized tones MUST draw no glyph. The glyphs ship with the component.
+
 ## Constitutional Surface *(mandatory)*
 
 - **Public API delta** (Art. IX): new element `ki-alert` (attributes:
@@ -814,6 +893,20 @@ Amendment A1 (decided 2026-11-19):
 - **Guardrail/security boundary** (Art. VIII): none; slotted children pass
   the renderer's existing slot checks.
 
+Amendment A2 (decided 2026-11-20):
+
+- **Public API delta** (Art. IX): no attribute, slot, part, event or token
+  is added, removed or renamed. Values change in the onmars v2 theme layer
+  (`--ki-alert-<tone>-bg`, `--ki-alert-<tone>-border`,
+  `--ki-alert-border-width`, `--ki-alert-shell-{padding,radius,bg}`,
+  `--ki-alert-card-shadow`); material3 is unchanged. The `icon` slot and part
+  descriptions and the class guidance change. Declared in `changes/api/`.
+- **Bundle budget** (Art. IV): four glyph modules and `ki-icon` join the
+  alert's marginal cost, measured and recorded in its `component.json`.
+- **Accessibility** (Art. V): the glyph is hidden from assistive technology
+  like any slotted icon; every tint keeps the heading and message at 4.5:1 or
+  more (gate: `packages/tokens/scripts/check-contrast.mjs`).
+
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
@@ -845,6 +938,9 @@ Amendment A1 (decided 2026-11-19):
   an icon and actions contains only its heading and message.
 - **SC-010** *(A1)*: zero accessibility violations across tone × {icon,
   actions, both, neither} × theme × scheme in automated auditing.
+- **SC-011** *(A2)*: in onmars light and dark, the five tones are told apart
+  at a glance without a slotted icon, with no card shadow, and every text
+  pair stays at 4.5:1 or more on its card.
 
 ## Assumptions
 

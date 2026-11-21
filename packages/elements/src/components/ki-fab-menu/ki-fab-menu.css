@@ -56,6 +56,13 @@
   line-height: 1;
 }
 
+/* The default secondary trigger has a pair of its own, so a theme can give
+ * the menu's FAB the primary ink without restyling the secondary ki-fab. */
+[part="trigger"][data-variant="secondary"] {
+  --ki-fab-bg: var(--ki-fab-menu-trigger-bg);
+  --ki-fab-fg: var(--ki-fab-menu-trigger-fg);
+}
+
 [part="trigger"][data-variant="primary"] {
   --ki-fab-bg: var(--ki-fab-primary-bg);
   --ki-fab-fg: var(--ki-fab-primary-fg);

@@ -11,11 +11,11 @@
       },
       "bg": {
         "$value": "{ki.surface.primary-low-em}",
-        "$description": "Tinted surface of a floating action."
+        "$description": "Surface of a floating action: a tonal fill, or in onmars v2 the raised surface with a hairline, so the accent stays on selection."
       },
       "fg": {
         "$value": "{ki.text.primary-on-primary-light}",
-        "$description": "Label and icon ink on the tinted action surface."
+        "$description": "Label and icon ink on the action surface."
       },
       "bg-image": {
         "$value": "{ki.surface-image.none}",
@@ -24,6 +24,14 @@
       "backdrop-filter": {
         "$value": "{ki.effect.component.no-backdrop-filter}",
         "$description": "Complete optional filter behind the action."
+      },
+      "border-width": {
+        "$value": "{ki.space.zero}",
+        "$description": "Width of the action edge. A tonal action draws none; onmars v2 edges its surface actions with a hairline."
+      },
+      "border-color": {
+        "$value": "{ki.outline.none}",
+        "$description": "Color of the action edge, drawn at border-width."
       },
       "shadow": {
         "$value": "{ki.elevation.e2}",

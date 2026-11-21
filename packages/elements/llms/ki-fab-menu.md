@@ -87,6 +87,8 @@ None.
 - `--ki-fab-menu-scrim-backdrop-filter`: Complete optional filter behind the scrim.
 - `--ki-fab-menu-scrim-bg`: Dimming fill behind the open menu and its trigger.
 - `--ki-fab-menu-scrim-bg-image`: Optional image painted above the scrim fill.
+- `--ki-fab-menu-trigger-bg`: Fill of the closed trigger in the default secondary variant: the secondary FAB's tonal fill, or in onmars v2 the primary FAB ink, so the accent stays on selection, links and focus.
+- `--ki-fab-menu-trigger-fg`: Glyph ink on the closed secondary trigger.
 - `--ki-fab-menu-trigger-gap`: Gap between the last action and the FAB.
 - `--ki-fab-mobile-nav-block-size`: Height to reserve for mobile navigation, excluding the safe-area inset.
 - `--ki-fab-offset`: Fixed FAB gap to the viewport edge or mobile navigation.

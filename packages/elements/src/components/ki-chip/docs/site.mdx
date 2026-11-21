@@ -3,6 +3,8 @@ title: ki-chip
 description: An independent filter, removable picked value, or contextual action.
 ---
 
+import Demo from '../../../../../../site/docs/src/components/Demo.astro';
+
 Use `ki-chip` for independent filters, picked values such as tags or
 recipients, and contextual actions alongside content. Use `ki-badge` for
 status, `ki-button` for a primary action, and `ki-radio-group` for an
@@ -13,12 +15,13 @@ exclusive choice.
 The default filter is a toggle button. Its check and fill show selection.
 Listen for `ki-change` to read `detail.selected`.
 
-```html
-<ki-chip-group label="Team" type="filter">
+<Demo
+  layout="block"
+  code={`<ki-chip-group label="Team" type="filter">
   <ki-chip value="design" selected>Design</ki-chip>
   <ki-chip value="eng">Engineering</ki-chip>
-</ki-chip-group>
-```
+</ki-chip-group>`}
+/>
 
 ## Input
 

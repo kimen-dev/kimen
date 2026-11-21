@@ -84,8 +84,8 @@ Feature: ki-icon displays an imported Lucide glyph
   # S13
   Scenario: Keep the stock MCP surface and server in agreement
     Given the stock MCP surface has selected circle-check
-    When a spec names circle-check or the unselected triangle-alert
-    Then the server and packaged surface accept circle-check and diagnose triangle-alert
+    When a spec names circle-check or the unselected house
+    Then the server and packaged surface accept circle-check and diagnose house
 ```
 
 | Family | Scenarios |
@@ -119,3 +119,4 @@ Additive public API includes the element, its three props, the theme tokens and 
 - **Agent's choice, pending founder confirmation.** Keep the adapter's existing accessibility metadata policy and report A2UI SVG path objects as an unsupported variant. Standard A2UI names resolve to corresponding Lucide names.
 - **Agent's choice, pending founder confirmation.** Record the additive feature in a major API declaration because the protected release comparator still classifies the generated Components and JSX namespace changes from #316 as major.
 - **Agent's choice, pending founder confirmation.** Select `circle-check` for the stock self-contained MCP Apps surface. Build the document and the bundled server's preflight from the same selection. Other hosts choose their own imports.
+- **Amended 2026-11-21 (spec 011 A2).** The glyphs a component draws itself register in the realm that defines it, so the packaged surface also accepts the names its components import. `ki-alert` now draws `info`, `circle-check`, `triangle-alert` and `octagon-alert`, so S13's unselected example is `house`, which no stock component draws. The bundled server defines no components and still refuses those component-owned names: aligning the two inventories is open.

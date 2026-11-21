@@ -80,3 +80,16 @@ Feature: Timeline presents a chronological activity history
     Given Activity is in a touch-density region on a coarse pointer
     When an event with details appears
     Then its details control is at least 44 by 44 CSS pixels
+
+  # S13
+  Scenario Outline: Mark a toned event that has no icon
+    Given Activity contains a <tone> event "Preview deploy failed" with no marker icon
+    When the timeline appears
+    Then its marker shows a solid dot in the <tone> ink at 3:1 or more against the page
+
+    Examples:
+      | tone    |
+      | primary |
+      | success |
+      | warning |
+      | danger  |

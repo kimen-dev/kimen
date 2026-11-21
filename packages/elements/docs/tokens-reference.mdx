@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 550 semantic
-and 2412 component tokens. Values are the resolved **onmars light**
+and 2416 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -126,9 +126,9 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
-| `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
-| `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
+| `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component backdrop; none in onmars v2. Legacy blur radius for the shared backdrop filter. |
+| `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for translucent components. Use none to turn the effect off. |
+| `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars v1 blur; flat themes can turn it off. |
 | `--ki-effect-component-menu-backdrop-filter` | `none` | Optional complete backdrop filter for a raised action menu. |
 | `--ki-effect-component-no-backdrop-filter` | `none` | An unadorned surface applies no backdrop filter. |
 | `--ki-effect-component-primary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow. |
@@ -378,7 +378,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-outline-base-em` | `rgba(24, 22, 19, 0.1)` | semantic color for outline base em. |
 | `--ki-outline-black` | `#000000` | semantic color for outline black. |
-| `--ki-outline-control` | `#86827b` | The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation. |
+| `--ki-outline-control` | `#86827b` | The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as an edge over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation. |
 | `--ki-outline-control-hover` | `rgba(0, 0, 0, 0.56)` | Hover of outline-control. One step stronger, so hover stays a measurable delta on fields whose fill does not change on hover. |
 | `--ki-outline-danger-base-em` | `#ffebec` | semantic color for outline danger base em. |
 | `--ki-outline-danger-base-em-alpha` | `rgba(239, 78, 105, 0.2)` | semantic color for outline danger base em alpha. |
@@ -510,10 +510,10 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-state-layer-dragged` | `rgba(255, 255, 255, 0.12)` | Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: MarsUI overlay two steps above hover_overlay (White/12 light, Black/12 dark). |
-| `--ki-state-layer-focus` | `rgba(255, 255, 255, 0.08)` | Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark). |
-| `--ki-state-layer-hover` | `rgba(255, 255, 255, 0.05)` | Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark). |
-| `--ki-state-layer-pressed` | `rgba(255, 255, 255, 0.08)` | Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark). |
+| `--ki-state-layer-dragged` | `rgba(255, 255, 255, 0.12)` | Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: two steps above the hover overlay (White/12 light, Black/12 dark). |
+| `--ki-state-layer-focus` | `rgba(255, 255, 255, 0.08)` | Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: one step above the hover overlay (White/8 light, Black/8 dark). |
+| `--ki-state-layer-hover` | `rgba(255, 255, 255, 0.05)` | Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the hover overlay (White/5 light, Black/5 dark). |
+| `--ki-state-layer-pressed` | `rgba(255, 255, 255, 0.08)` | Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: one step above the hover overlay (White/8 light, Black/8 dark). |
 
 ### `ki.surface`
 
@@ -631,12 +631,12 @@ every component at once.
 | `--ki-text-danger-base-em` | `#ffebec` | semantic color for text danger base em. |
 | `--ki-text-danger-high-em` | `#c21a45` | semantic color for text danger high em. |
 | `--ki-text-danger-low-em` | `#b84455` | semantic color for text danger low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
-| `--ki-text-danger-med-em` | `#ce264c` | semantic color for text danger med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-danger-med-em` | `#ce264c` | semantic color for text danger med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only. |
 | `--ki-text-high-em` | `#181613` | semantic color for text high em. |
 | `--ki-text-info-base-em` | `#dff3ff` | semantic color for text info base em. |
 | `--ki-text-info-high-em` | `#085268` | Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. |
 | `--ki-text-info-low-em` | `#25768f` | semantic color for text info low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
-| `--ki-text-info-med-em` | `#13b9ec` | semantic color for text info med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-info-med-em` | `#0c7697` | semantic color for text info med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only. |
 | `--ki-text-inverse-black` | `#ffffff` | semantic color for text inverse black. |
 | `--ki-text-inverse-primary` | `#e59279` | Primary accent legible on the inverse surface. M3 md.sys.color.inverse-primary (primary tone 80 light / 40 dark). onmars: the opposite-scheme primary text tone (brand 300 light, brand 600 dark). |
 | `--ki-text-inverse-white` | `#000000` | semantic color for text inverse white. |
@@ -658,18 +658,18 @@ every component at once.
 | `--ki-text-primary-on-tertiary-light` | `#9a3715` | Primary-emphasis text on the tertiary container surface. M3 md.sys.color.on-tertiary-container (tertiary tone 10 light / 90 dark). onmars single-accent: resolves to text primary on primary light. |
 | `--ki-text-secondary-on-primary` | `rgba(255, 255, 255, 0.8)` | semantic color for text secondary on primary. |
 | `--ki-text-secondary-on-primary-light` | `#ae4929` | semantic color for text secondary on primary light. |
-| `--ki-text-secondary-on-success` | `rgba(255, 255, 255, 0.72)` | semantic color for text secondary on success. |
+| `--ki-text-secondary-on-success` | `rgba(255, 255, 255, 0.8)` | Secondary text on the success fill (surface.success-high-em, the success button fill): 4.5:1 or more on it in every theme and scheme. |
 | `--ki-text-success-base-em` | `#e3f6e2` | semantic color for text success base em. |
 | `--ki-text-success-high-em` | `#2c6a2b` | semantic color for text success high em. |
 | `--ki-text-success-low-em` | `#257b52` | semantic color for text success low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
-| `--ki-text-success-med-em` | `#409b3f` | semantic color for text success med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-success-med-em` | `#0b7d4e` | semantic color for text success med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only. |
 | `--ki-text-supporting` | `#5e5953` | Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). |
 | `--ki-text-text-on-neutral` | `#ffffff` | semantic color for text text on neutral. |
 | `--ki-text-tooltip-inverse` | `#f9f7f4` | Content ink on the inverse tooltip surface. |
 | `--ki-text-warning-base-em` | `#fdeace` | semantic color for text warning base em. |
 | `--ki-text-warning-high-em` | `#945b05` | Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. |
 | `--ki-text-warning-low-em` | `#99610c` | semantic color for text warning low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
-| `--ki-text-warning-med-em` | `#f8ac3a` | semantic color for text warning med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-warning-med-em` | `#9b6009` | semantic color for text warning med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only. |
 | `--ki-text-white` | `#ffffff` | semantic color for text white. |
 
 ### `ki.transparent-inverse`
@@ -712,22 +712,22 @@ every component at once.
 | `--ki-typography-line-height-caption-1` | `1rem` | semantic dimension for typography line height caption 1. |
 | `--ki-typography-line-height-caption-2` | `1rem` | semantic dimension for typography line height caption 2. |
 | `--ki-typography-line-height-display-1` | `5rem` | semantic dimension for typography line height display 1. |
-| `--ki-typography-line-height-display-2` | `5rem` | semantic dimension for typography line height display 2. |
-| `--ki-typography-line-height-display-3` | `6rem` | semantic dimension for typography line height display 3. |
+| `--ki-typography-line-height-display-2` | `6rem` | semantic dimension for typography line height display 2. |
+| `--ki-typography-line-height-display-3` | `6.5rem` | semantic dimension for typography line height display 3. |
 | `--ki-typography-line-height-heading-1` | `1.75rem` | semantic dimension for typography line height heading 1. |
 | `--ki-typography-line-height-heading-2` | `2.25rem` | semantic dimension for typography line height heading 2. |
 | `--ki-typography-line-height-heading-3` | `2.5rem` | semantic dimension for typography line height heading 3. |
 | `--ki-typography-line-height-heading-4` | `3rem` | semantic dimension for typography line height heading 4. |
 | `--ki-typography-line-height-heading-5` | `3.5rem` | semantic dimension for typography line height heading 5. |
 | `--ki-typography-line-height-heading-6` | `4.25rem` | semantic dimension for typography line height heading 6. |
-| `--ki-typography-line-height-overline` | `0.75rem` | semantic dimension for typography line height overline. |
+| `--ki-typography-line-height-overline` | `1rem` | semantic dimension for typography line height overline. |
 | `--ki-typography-line-height-para` | `1.25rem` | semantic dimension for typography line height para. |
 | `--ki-typography-line-height-title-1` | `1.5rem` | semantic dimension for typography line height title 1. |
 | `--ki-typography-line-height-title-2` | `1.5rem` | semantic dimension for typography line height title 2. |
 | `--ki-typography-size-body` | `0.8125rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.typography.size.body-1. |
 | `--ki-typography-size-body-1` | `0.8125rem` | semantic dimension for typography size body 1. |
 | `--ki-typography-size-body-2` | `0.9375rem` | semantic dimension for typography size body 2. |
-| `--ki-typography-size-caption-1` | `0.625rem` | semantic dimension for typography size caption 1. |
+| `--ki-typography-size-caption-1` | `0.6875rem` | semantic dimension for typography size caption 1. |
 | `--ki-typography-size-caption-2` | `0.75rem` | semantic dimension for typography size caption 2. |
 | `--ki-typography-size-display-1` | `4.75rem` | semantic dimension for typography size display 1. |
 | `--ki-typography-size-display-2` | `5.5rem` | semantic dimension for typography size display 2. |
@@ -798,17 +798,17 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-alert-actions-gap` | `0.75rem` | dimension used by the alert component for the gap between slotted actions (MarsUI Alert master CTAs gap Space/xl 12px). |
-| `--ki-alert-border-width` | `0rem` | dimension used by the alert component for the card border width (MarsUI never strokes alert surfaces: the Alert master card stroke is fully transparent. material3 keeps its 2px border via its override). |
-| `--ki-alert-card-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03), 0 32px 32px -16px rgba(0, 0, 0, 0.03), 0 56px 56px -28px rgba(0, 0, 0, 0.03)` | shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5). |
-| `--ki-alert-danger-bg` | `#ffffff` | color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
-| `--ki-alert-danger-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for danger border (MarsUI draws no tone border on any alert/note/toast surface). |
+| `--ki-alert-border-width` | `1px` | dimension used by the alert component for the card border width (the MarsUI Alert master card stroke is fully transparent). onmars v2 draws a hairline (spec 011 A2); material3 keeps its 2px border via its override. |
+| `--ki-alert-card-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5). An inline alert does not float, so onmars v2 and material3 lay the card flat. |
+| `--ki-alert-danger-bg` | `#ffebeb` | color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.danger-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too. |
+| `--ki-alert-danger-border` | `#ffcccf` | color used by the alert component for the danger card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.danger-low-em hairline around the tinted card (spec 011 A2). |
 | `--ki-alert-danger-fg` | `#181613` | color used by the alert component for the danger card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
 | `--ki-alert-danger-icon-bg` | `#ffebeb` | color used by the alert component for the danger icon frame (MarsUI Alert master Feature-icon Surface/danger-base-em-alpha at 12%). |
 | `--ki-alert-danger-icon-fg` | `#c21a45` | color used by the alert component for the danger icon glyph (MarsUI Alert master Feature-icon glyph Text/danger-high-em). |
 | `--ki-alert-dismiss-active-fg` | `#181613` | color used by the alert component for dismiss active foreground. |
 | `--ki-alert-dismiss-backdrop-filter` | `none` | Complete backdrop filter behind the alert dismiss button. |
-| `--ki-alert-dismiss-border-width` | `1px` | dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline). |
-| `--ki-alert-dismiss-hover-bg` | `rgba(0, 0, 0, 0.03)` | color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change). |
+| `--ki-alert-dismiss-border-width` | `1px` | dimension used by the alert component for the dismiss chip outline (MarsUI 24px circle: 1px Outline/secondary_button_top hairline). |
+| `--ki-alert-dismiss-hover-bg` | `rgba(0, 0, 0, 0.03)` | color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash). |
 | `--ki-alert-dismiss-hover-fg` | `#181613` | color used by the alert component for dismiss hover foreground. |
 | `--ki-alert-dismiss-icon-size` | `1rem` | dimension used by the alert component for dismiss icon size (Figma close glyph box 16px inside the 24px raised circle; repointed from 18px per the fidelity audit). |
 | `--ki-alert-dismiss-radius` | `1000px` | dimension used by the alert component for the dismiss chip shape (MarsUI Radius/radius_round full circle). |
@@ -826,15 +826,15 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-alert-icon-glyph-size` | `1.25rem` | dimension used by the alert component for the icon glyph inside the frame (MarsUI Alert master Feature-icon glyph 20px). |
 | `--ki-alert-icon-radius` | `1000px` | dimension used by the alert component for the icon frame radius (MarsUI Alert master Feature-icon: a circle). |
 | `--ki-alert-icon-size` | `2rem` | dimension used by the alert component for the icon frame (MarsUI Alert master Feature-icon size xs: 32px). |
-| `--ki-alert-info-bg` | `#ffffff` | color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
-| `--ki-alert-info-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for info border (MarsUI draws no tone border on any alert/note/toast surface). |
+| `--ki-alert-info-bg` | `#e6f1fb` | color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.info-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too. |
+| `--ki-alert-info-border` | `#a1e3f7` | color used by the alert component for the info card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.info-low-em hairline around the tinted card (spec 011 A2). |
 | `--ki-alert-info-fg` | `#181613` | color used by the alert component for the info card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
 | `--ki-alert-info-icon-bg` | `#e6f1fb` | color used by the alert component for the info icon frame (MarsUI Alert master Feature-icon Surface/info-base-em-alpha at 12%). |
 | `--ki-alert-info-icon-fg` | `#085268` | color used by the alert component for the info icon glyph (MarsUI Alert master Feature-icon glyph Text/info-high-em). |
 | `--ki-alert-line-height` | `1.5rem` | dimension used by the alert component for line height. |
 | `--ki-alert-message-line-height` | `1.25rem` | dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24). |
-| `--ki-alert-neutral-bg` | `#ffffff` | color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
-| `--ki-alert-neutral-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for neutral border. |
+| `--ki-alert-neutral-bg` | `#ffffff` | color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 keeps that card for the neutral tone and edges it with a hairline (spec 011 A2). |
+| `--ki-alert-neutral-border` | `rgba(24, 22, 19, 0.1)` | color used by the alert component for the neutral card edge. onmars v2 draws it as the outline.low-em hairline of any flat card (spec 011 A2). |
 | `--ki-alert-neutral-fg` | `#181613` | color used by the alert component for the neutral card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
 | `--ki-alert-neutral-icon-bg` | `rgba(188, 76, 38, 0.12)` | color used by the alert component for the neutral icon frame (MarsUI Alert master Feature-icon Surface/primary-base-em-alpha at 12%: the master variable itself, not the heavier primary-tint content fill, so the primary glyph clears 4.5:1 in dark). |
 | `--ki-alert-neutral-icon-fg` | `#ad411c` | color used by the alert component for the neutral icon glyph (MarsUI Alert master Feature-icon glyph Text/primary-high-em). |
@@ -843,17 +843,17 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-alert-radius` | `12px` | dimension used by the alert component for the card radius (MarsUI Alert master List_wrap big_component/radius_xs 16px; the shell around it has its own radius). |
 | `--ki-alert-shell-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-alert-shell-backdrop-filter. backdrop blur used by the alert component behind the shell (MarsUI Alert master BACKGROUND_BLUR Blur/24 = CSS 12px; reduced transparency and material3 resolve to blur none through the semantic token). |
 | `--ki-alert-shell-backdrop-filter` | `none` | Complete backdrop filter behind the alert shell. |
-| `--ki-alert-shell-bg` | `rgba(0, 0, 0, 0.03)` | color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark). |
-| `--ki-alert-shell-padding` | `0.75rem` | dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides). |
-| `--ki-alert-shell-radius` | `28px` | dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px). |
-| `--ki-alert-success-bg` | `#ffffff` | color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
-| `--ki-alert-success-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for success border (MarsUI draws no tone border on any alert/note/toast surface). |
+| `--ki-alert-shell-bg` | `rgba(0, 0, 0, 0)` | color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark). onmars v2 and material3 paint no shell: it is transparent. |
+| `--ki-alert-shell-padding` | `0rem` | dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides). onmars v2 and material3 set it to zero, so the alert paints as one flat card (spec 011 A2, S31). |
+| `--ki-alert-shell-radius` | `12px` | dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px). A flat theme gives the shell the card radius. |
+| `--ki-alert-success-bg` | `#e4f4ea` | color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.success-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too. |
+| `--ki-alert-success-border` | `#c8ebc7` | color used by the alert component for the success card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.success-low-em hairline around the tinted card (spec 011 A2). |
 | `--ki-alert-success-fg` | `#181613` | color used by the alert component for the success card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
 | `--ki-alert-success-icon-bg` | `#e4f4ea` | color used by the alert component for the success icon frame (MarsUI Alert master Feature-icon Surface/success-base-em-alpha at 12%). |
 | `--ki-alert-success-icon-fg` | `#2c6a2b` | color used by the alert component for the success icon glyph (MarsUI Alert master Feature-icon glyph Text/success-high-em). |
 | `--ki-alert-text-gap` | `0.25rem` | dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap). |
-| `--ki-alert-warning-bg` | `#ffffff` | color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
-| `--ki-alert-warning-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface). |
+| `--ki-alert-warning-bg` | `#fcf0dc` | color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.warning-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too. |
+| `--ki-alert-warning-border` | `#fbd59d` | color used by the alert component for the warning card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.warning-low-em hairline around the tinted card (spec 011 A2). |
 | `--ki-alert-warning-fg` | `#181613` | color used by the alert component for the warning card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
 | `--ki-alert-warning-icon-bg` | `#fcf0dc` | color used by the alert component for the warning icon frame (MarsUI Alert master Feature-icon Surface/warning-base-em-alpha at 12%). |
 | `--ki-alert-warning-icon-fg` | `#945b05` | color used by the alert component for the warning icon glyph (MarsUI Alert master Feature-icon glyph Text/warning-high-em). |
@@ -877,11 +877,11 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-avatar-bg` | `#ffebe5` | color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification). |
+| `--ki-avatar-bg` | `#ebe7e1` | color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification). onmars v2 fills it with the neutral surface.s3, since a list of people is not a list of selected items. |
 | `--ki-avatar-border-color` | `rgba(24, 22, 19, 0.1)` | color used by the avatar component for the surface border: Outline/base_em (Black/3 light, White/3 dark), the exact variable on Type=text variants. |
 | `--ki-avatar-border-width` | `1px` | dimension used by the avatar component for the surface border (MarsUI 1px hairline on Type=text; applied to the token surface behind initials and figure, dropped under a loaded portrait — design-extraction decision 4). |
-| `--ki-avatar-fg` | `#9a3715` | color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant. |
-| `--ki-avatar-font-family` | `'Instrument Sans', system-ui, sans-serif` | font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter). |
+| `--ki-avatar-fg` | `#5e5953` | color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant. onmars v2 sets the initials in the text.supporting ink (med-em, stronger under more contrast) on its neutral fill. |
+| `--ki-avatar-font-family` | `'Instrument Sans', system-ui, sans-serif` | font family used by the avatar component for initials: the body family (Instrument Sans in onmars v2). |
 | `--ki-avatar-font-weight` | `600` | font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600). |
 | `--ki-avatar-lg-font-size` | `0.9375rem` | dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px). |
 | `--ki-avatar-lg-icon-size` | `1.5rem` | dimension used by the avatar component for the lg generic-figure glyph (MarsUI Icon/User 24px, Space/7xl). |
@@ -896,10 +896,10 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-avatar-xl-font-size` | `1.125rem` | dimension used by the avatar component for xl initials (MarsUI UI/Title 2: 18px). |
 | `--ki-avatar-xl-icon-size` | `1.75rem` | dimension used by the avatar component for the xl generic-figure glyph (MarsUI Icon/User 28px, Space/9xl). |
 | `--ki-avatar-xl-size` | `3.5rem` | dimension used by the avatar component for the xl box (56px circle, Figma Space/16xl). |
-| `--ki-avatar-xs-font-size` | `0.625rem` | dimension used by the avatar component for xs initials (MarsUI UI/Caption 1: 10px, same step as xxs — verified on Type=text Size=xs 10108:6226). |
+| `--ki-avatar-xs-font-size` | `0.6875rem` | dimension used by the avatar component for xs initials (MarsUI UI/Caption 1: 10px, same step as xxs — verified on Type=text Size=xs 10108:6226). |
 | `--ki-avatar-xs-icon-size` | `0.875rem` | dimension used by the avatar component for the xs generic-figure glyph (MarsUI Icon/User 14px, same step as xxs — NOT the icon-button 16px ramp; verified on 10108:6230). |
 | `--ki-avatar-xs-size` | `1.5rem` | dimension used by the avatar component for the xs box (24px circle, Figma Space/7xl). |
-| `--ki-avatar-xxs-font-size` | `0.625rem` | dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px). |
+| `--ki-avatar-xxs-font-size` | `0.6875rem` | dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px). |
 | `--ki-avatar-xxs-icon-size` | `0.875rem` | dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl). |
 | `--ki-avatar-xxs-size` | `1.25rem` | dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md). |
 
@@ -908,11 +908,11 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-avatar-group-counter-bg` | `#ffffff` | color used by the avatar group component for the +N counter surface: Surface/special/secondary_alpha_base, the exact variable on the secondary-button-styled counter of every capped Avatar_group frame. |
-| `--ki-avatar-group-counter-border-color` | `rgba(24, 22, 19, 0.14)` | color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (the secondary-button bevel top edge). |
+| `--ki-avatar-group-counter-border-color` | `rgba(24, 22, 19, 0.14)` | color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (a hairline in onmars v2). |
 | `--ki-avatar-group-counter-border-width` | `1px` | dimension used by the avatar group component for the counter border (MarsUI 1px hairline on the counter pill). |
 | `--ki-avatar-group-counter-fg` | `#181613` | color used by the avatar group component for the +N counter text: Text/high_em, the exact variable on the counter label. |
 | `--ki-avatar-group-counter-radius` | `1000px` | dimension used by the avatar group component for the counter shape: Radius/component/radius_* resolves to 1000 in the MarsUI Round mode — the pill is a radius token, never an attribute. |
-| `--ki-avatar-group-counter-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3) without its backdrop blur (glass restraint, 021 decision 3). |
+| `--ki-avatar-group-counter-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3), flat in onmars v2; no backdrop blur (021 decision 3). |
 | `--ki-avatar-group-lg-counter-font-size` | `0.9375rem` | dimension used by the avatar group component for the lg counter text (body_2 15px on the 48px frame). |
 | `--ki-avatar-group-lg-counter-padding-inline` | `0.75rem` | dimension used by the avatar group component for the lg counter inline padding (Space/xl 12px on the 48px frame). |
 | `--ki-avatar-group-lg-overlap` | `0.75rem` | dimension used by the avatar group component for the lg member overlap (the exact -12px on the 48px Avatar_group frame 10090:2873). |
@@ -927,10 +927,10 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-avatar-group-xl-counter-font-size` | `1.125rem` | dimension used by the avatar group component for the xl counter text (title_2 18px on the 56px frame). |
 | `--ki-avatar-group-xl-counter-padding-inline` | `0.875rem` | dimension used by the avatar group component for the xl counter inline padding (Space/2xl 14px on the 56px frame). |
 | `--ki-avatar-group-xl-overlap` | `0.75rem` | dimension used by the avatar group component for the xl member overlap (the exact -12px on the 56px Avatar_group frame 10090:2973). |
-| `--ki-avatar-group-xs-counter-font-size` | `0.625rem` | dimension used by the avatar group component for the xs counter text (synthesized 24px step following the avatar xs initials size, declared for founder review). |
+| `--ki-avatar-group-xs-counter-font-size` | `0.6875rem` | dimension used by the avatar group component for the xs counter text (synthesized 24px step following the avatar xs initials size, declared for founder review). |
 | `--ki-avatar-group-xs-counter-padding-inline` | `0.375rem` | dimension used by the avatar group component for the xs counter inline padding (synthesized 24px step extending the verified 8/10/12/14 ramp, declared for founder review). |
 | `--ki-avatar-group-xs-overlap` | `0.5rem` | dimension used by the avatar group component for the xs member overlap: the 24px group step exists in no Figma frame (five-step set), so it inherits the -8px overlap of the neighboring 20/32px frames (synthesized step, spec 019 Assumptions). |
-| `--ki-avatar-group-xxs-counter-font-size` | `0.625rem` | dimension used by the avatar group component for the xxs counter text: no counter exists on the 20px frame, so the value follows the avatar xxs initials step (synthesized, declared for founder review). |
+| `--ki-avatar-group-xxs-counter-font-size` | `0.6875rem` | dimension used by the avatar group component for the xxs counter text: no counter exists on the 20px frame, so the value follows the avatar xxs initials step (synthesized, declared for founder review). |
 | `--ki-avatar-group-xxs-counter-padding-inline` | `0.5rem` | dimension used by the avatar group component for xxs counter padding inline (raised to clear the 8px member tuck so the + glyph is never occluded; the 20px Figma frame ships no counter — synthesized step, founder review pending). |
 | `--ki-avatar-group-xxs-overlap` | `0.5rem` | dimension used by the avatar group component for the xxs member overlap (the -8px stack step on the 20px Avatar_group frame — named xs in Figma, the vocabulary skew recorded in spec 019 Assumptions). |
 
@@ -939,7 +939,7 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-badge-backdrop-filter` | `none` | Complete backdrop filter for the neutral badge surface. |
-| `--ki-badge-border-width` | `0rem` | dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral glass type draws its 1px bevel via ki.badge.neutral.border-width. material3 keeps its border via its override). |
+| `--ki-badge-border-width` | `0rem` | dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral type draws its 1px edge via ki.badge.neutral.border-width. material3 keeps its border via its override). |
 | `--ki-badge-danger-bg` | `#ffebeb` | color used by the badge component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically). |
 | `--ki-badge-danger-border` | `rgba(255, 255, 255, 0)` | color used by the badge component for danger border. |
 | `--ki-badge-danger-fg` | `#c21a45` | color used by the badge component for danger foreground. |
@@ -953,9 +953,9 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-badge-md-line-height` | `1rem` | dimension used by the badge component for md line height (MarsUI caption_2 16px). |
 | `--ki-badge-md-padding-inline` | `0.625rem` | dimension used by the badge component for md padding inline (MarsUI total text inset 10px; paired with the border-width 0 + border-box change so the badge does not shrink). |
 | `--ki-badge-md-radius` | `8px` | dimension used by the badge component for md radius (MarsUI Tag: Radius/component/radius_sm 8px at both sm and md). |
-| `--ki-badge-neutral-bg` | `#ebe7e1` | color used by the badge component for neutral background (MarsUI secondary glass Tag: Surface/special/secondary_alpha_base Gray-100 alpha light / Dark-700 blur base dark — the same fill as ki-button secondary; completes the glass bevel/blur/shadow the component already draws. material3 keeps the opaque s2 chip via its override). |
-| `--ki-badge-neutral-border` | `rgba(24, 22, 19, 0.14)` | color used by the badge component for neutral border (MarsUI secondary Tag bevel: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width). |
-| `--ki-badge-neutral-border-width` | `1px` | dimension used by the badge component for the neutral (secondary glass) border width: MarsUI draws the 1px bevel only on this type. |
+| `--ki-badge-neutral-bg` | `#ebe7e1` | color used by the badge component for neutral background (MarsUI secondary Tag: Surface/special/secondary_alpha_base, the same fill as ki-button secondary; opaque white in onmars v2, translucent only where a theme turns that back on. material3 keeps the opaque s2 chip via its override). |
+| `--ki-badge-neutral-border` | `rgba(24, 22, 19, 0.14)` | color used by the badge component for neutral border (MarsUI secondary Tag edge: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width). |
+| `--ki-badge-neutral-border-width` | `1px` | dimension used by the badge component for the neutral border width: MarsUI draws the 1px edge only on this type. |
 | `--ki-badge-neutral-fg` | `#181613` | color used by the badge component for neutral foreground. |
 | `--ki-badge-sm-font-size` | `0.75rem` | dimension used by the badge component for sm font size. |
 | `--ki-badge-sm-height` | `1.5rem` | dimension used by the badge component for sm height. |
@@ -1005,9 +1005,9 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-button-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-backdrop-filter. backdrop blur used by the button component glass variants (primary/secondary). material3 resolves to blur none via the semantic override. |
-| `--ki-button-backdrop-filter` | `none` | Complete backdrop filter for glass button and icon-button variants. |
-| `--ki-button-border-width` | `1px` | dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px). |
+| `--ki-button-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-backdrop-filter. backdrop blur used by the button component primary and secondary variants; none in onmars v2 and material3. |
+| `--ki-button-backdrop-filter` | `none` | Complete backdrop filter for button and icon-button variants; none in onmars v2. |
+| `--ki-button-border-width` | `1px` | dimension used by the button component for border width (MarsUI outline stroke: 1px). |
 | `--ki-button-focus-ring-color` | `#bb4e2a` | color used by the button component for focus ring color. |
 | `--ki-button-focus-ring-offset` | `0.125rem` | dimension used by the button component for focus ring offset. |
 | `--ki-button-focus-ring-shadow` | `0 0 0 3px rgba(188, 76, 38, 0.2)` | shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring). |
@@ -1084,47 +1084,47 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-primary-active-overlay` | `rgba(255, 255, 255, 0.08)` | Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
 | `--ki-button-primary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-rest-shadow. shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest). |
 | `--ki-button-primary-danger-active-bg` | `#cc1b48` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-danger-rest-bg. color used by the button component for primary danger active background. |
-| `--ki-button-primary-danger-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-danger-rest-border. color used by the button component for primary danger active border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-danger-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-danger-rest-border. color used by the button component for primary danger active border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-danger-active-fg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-danger-rest-fg. color used by the button component for primary danger active foreground. |
 | `--ki-button-primary-danger-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-bg. color used by the button component for primary danger disabled background. |
 | `--ki-button-primary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-border. color used by the button component for primary danger disabled border. |
 | `--ki-button-primary-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-fg. color used by the button component for primary danger disabled foreground. |
 | `--ki-button-primary-danger-hover-bg` | `#cc1b48` | color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay). |
-| `--ki-button-primary-danger-hover-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary danger hover border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-danger-hover-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary danger hover border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-danger-hover-fg` | `#ffffff` | color used by the button component for primary danger hover foreground. |
 | `--ki-button-primary-danger-rest-bg` | `#cc1b48` | color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 &lt; AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification). |
-| `--ki-button-primary-danger-rest-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary danger rest border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-danger-rest-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary danger rest border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-danger-rest-fg` | `#ffffff` | color used by the button component for primary danger rest foreground. |
 | `--ki-button-primary-disabled-shadow` | `none` | value used by the button component for primary disabled shadow. |
-| `--ki-button-primary-hover-overlay` | `rgba(255, 255, 255, 0.05)` | color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5). |
+| `--ki-button-primary-hover-overlay` | `rgba(255, 255, 255, 0.05)` | color used by the button component for the primary hover overlay layer (MarsUI hover overlay, White/5). |
 | `--ki-button-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover). |
 | `--ki-button-primary-neutral-active-bg` | `#1d1a16` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-rest-bg. color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-button-primary-neutral-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-rest-border. color used by the button component for primary neutral active border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-neutral-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-rest-border. color used by the button component for primary neutral active border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-neutral-active-fg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-rest-fg. color used by the button component for primary neutral active foreground. |
 | `--ki-button-primary-neutral-disabled-bg` | `#ebe7e1` | color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification). |
 | `--ki-button-primary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for primary neutral disabled border. |
 | `--ki-button-primary-neutral-disabled-fg` | `#5e5953` | color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification). |
 | `--ki-button-primary-neutral-hover-bg` | `#35322e` | color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay). |
-| `--ki-button-primary-neutral-hover-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-neutral-hover-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-neutral-hover-fg` | `#ffffff` | color used by the button component for primary neutral hover foreground. |
 | `--ki-button-primary-neutral-rest-bg` | `#1d1a16` | color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500). |
-| `--ki-button-primary-neutral-rest-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-neutral-rest-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-neutral-rest-fg` | `#ffffff` | color used by the button component for primary neutral rest foreground. |
-| `--ki-button-primary-rest-border-bottom` | `rgba(0, 0, 0, 0)` | color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom). |
+| `--ki-button-primary-rest-border-bottom` | `rgba(0, 0, 0, 0)` | color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2). |
 | `--ki-button-primary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
 | `--ki-button-primary-selected-bg` | `#1d1a16` | Background of the selected primary button toggle. |
 | `--ki-button-primary-selected-fg` | `#ffffff` | Foreground of the selected primary button toggle. |
 | `--ki-button-primary-success-active-bg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-bg. color used by the button component for primary success active background. |
-| `--ki-button-primary-success-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-border. color used by the button component for primary success active border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-success-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-border. color used by the button component for primary success active border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-success-active-fg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-fg. color used by the button component for primary success active foreground. |
 | `--ki-button-primary-success-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-bg. color used by the button component for primary success disabled background. |
 | `--ki-button-primary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-border. color used by the button component for primary success disabled border. |
 | `--ki-button-primary-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-fg. color used by the button component for primary success disabled foreground. |
 | `--ki-button-primary-success-hover-bg` | `#2c6a2b` | color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay). |
-| `--ki-button-primary-success-hover-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary success hover border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-success-hover-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary success hover border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-success-hover-fg` | `#ffffff` | color used by the button component for primary success hover foreground. |
 | `--ki-button-primary-success-rest-bg` | `#2c6a2b` | color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 &lt; AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification). |
-| `--ki-button-primary-success-rest-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary success rest border (MarsUI bevel top/inline edge). |
+| `--ki-button-primary-success-rest-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary success rest border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-success-rest-fg` | `#ffffff` | color used by the button component for primary success rest foreground. |
 | `--ki-button-quaternary-active-shadow` | `none` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-rest-shadow. value used by the button component for quaternary active shadow. |
 | `--ki-button-quaternary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-danger-rest-bg. color used by the button component for quaternary danger active background. |
@@ -1143,16 +1143,16 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-quaternary-hover-shadow` | `none` | value used by the button component for quaternary hover shadow. |
 | `--ki-button-quaternary-neutral-active-bg` | `rgba(0, 0, 0, 0.05)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-rest-bg. color used by the button component for quaternary neutral active background (pressed wash one rung beyond hover: Black/5 light, White/5 dark). |
 | `--ki-button-quaternary-neutral-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-rest-border. color used by the button component for quaternary neutral active border (MarsUI quaternary is borderless in every state). |
-| `--ki-button-quaternary-neutral-active-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-rest-fg. color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis). |
+| `--ki-button-quaternary-neutral-active-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-rest-fg. color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; never the accent). |
 | `--ki-button-quaternary-neutral-disabled-bg` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral disabled background. |
 | `--ki-button-quaternary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-neutral-disabled-fg` | `#cbc7bf` | color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars. |
-| `--ki-button-quaternary-neutral-hover-bg` | `rgba(0, 0, 0, 0.03)` | color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill). |
+| `--ki-button-quaternary-neutral-hover-bg` | `rgba(0, 0, 0, 0.03)` | color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill). |
 | `--ki-button-quaternary-neutral-hover-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state). |
-| `--ki-button-quaternary-neutral-hover-fg` | `#5e5953` | color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis). |
+| `--ki-button-quaternary-neutral-hover-fg` | `#5e5953` | color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent). |
 | `--ki-button-quaternary-neutral-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral rest background. |
 | `--ki-button-quaternary-neutral-rest-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state). |
-| `--ki-button-quaternary-neutral-rest-fg` | `#5e5953` | color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis). |
+| `--ki-button-quaternary-neutral-rest-fg` | `#5e5953` | color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent). |
 | `--ki-button-quaternary-rest-shadow` | `none` | value used by the button component for quaternary rest shadow. |
 | `--ki-button-quaternary-selected-bg` | `#0f0d0a` | Background of the selected quaternary button toggle. |
 | `--ki-button-quaternary-selected-fg` | `#ffffff` | Foreground of the selected quaternary button toggle. |
@@ -1171,47 +1171,47 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-secondary-active-overlay` | `rgba(0, 0, 0, 0.05)` | Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
 | `--ki-button-secondary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-rest-shadow. shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest). |
 | `--ki-button-secondary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-danger-rest-bg. color used by the button component for secondary danger active background. |
-| `--ki-button-secondary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-danger-rest-border. color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait). |
+| `--ki-button-secondary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-danger-rest-border. color used by the button component for secondary danger active border (MarsUI top/inline edge, variant trait). |
 | `--ki-button-secondary-danger-active-fg` | `#c21a45` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-danger-rest-fg. color used by the button component for secondary danger active foreground. |
 | `--ki-button-secondary-danger-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-bg. color used by the button component for secondary danger disabled background. |
 | `--ki-button-secondary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-border. color used by the button component for secondary danger disabled border. |
 | `--ki-button-secondary-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-fg. color used by the button component for secondary danger disabled foreground. |
 | `--ki-button-secondary-danger-hover-bg` | `#ffebec` | color used by the button component for secondary danger hover background. |
-| `--ki-button-secondary-danger-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait). |
+| `--ki-button-secondary-danger-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary danger hover border (MarsUI top/inline edge, variant trait). |
 | `--ki-button-secondary-danger-hover-fg` | `#c21a45` | color used by the button component for secondary danger hover foreground. |
 | `--ki-button-secondary-danger-rest-bg` | `#fff3f3` | color used by the button component for secondary danger rest background. |
-| `--ki-button-secondary-danger-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait). |
+| `--ki-button-secondary-danger-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary danger rest border (MarsUI top/inline edge, variant trait). |
 | `--ki-button-secondary-danger-rest-fg` | `#c21a45` | color used by the button component for secondary danger rest foreground. |
 | `--ki-button-secondary-disabled-shadow` | `none` | value used by the button component for secondary disabled shadow. |
-| `--ki-button-secondary-hover-overlay` | `rgba(0, 0, 0, 0.03)` | color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3). |
+| `--ki-button-secondary-hover-overlay` | `rgba(0, 0, 0, 0.03)` | color used by the button component for the secondary hover overlay layer (MarsUI hover overlay inverse, Black/3). |
 | `--ki-button-secondary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover). |
 | `--ki-button-secondary-neutral-active-bg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-rest-bg. color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-button-secondary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-rest-border. color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge). |
+| `--ki-button-secondary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-rest-border. color used by the button component for secondary neutral active border (MarsUI top/inline edge). |
 | `--ki-button-secondary-neutral-active-fg` | `#181613` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-rest-fg. color used by the button component for secondary neutral active foreground (MarsUI text/high_em). |
 | `--ki-button-secondary-neutral-disabled-bg` | `#ebe7e1` | color used by the button component for secondary neutral disabled background. |
 | `--ki-button-secondary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for secondary neutral disabled border. |
 | `--ki-button-secondary-neutral-disabled-fg` | `#5e5953` | color used by the button component for secondary neutral disabled foreground. |
 | `--ki-button-secondary-neutral-hover-bg` | `#f3f0eb` | color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay). |
-| `--ki-button-secondary-neutral-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge). |
+| `--ki-button-secondary-neutral-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary neutral hover border (MarsUI top/inline edge). |
 | `--ki-button-secondary-neutral-hover-fg` | `#181613` | color used by the button component for secondary neutral hover foreground (MarsUI text/high_em). |
-| `--ki-button-secondary-neutral-rest-bg` | `#ffffff` | color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint). |
-| `--ki-button-secondary-neutral-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge). |
+| `--ki-button-secondary-neutral-rest-bg` | `#ffffff` | color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: neutral, not a brand tint; white in onmars v2). |
+| `--ki-button-secondary-neutral-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary neutral rest border (MarsUI top/inline edge). |
 | `--ki-button-secondary-neutral-rest-fg` | `#181613` | color used by the button component for secondary neutral rest foreground (MarsUI text/high_em). |
-| `--ki-button-secondary-rest-border-bottom` | `rgba(24, 22, 19, 0.14)` | color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom). |
+| `--ki-button-secondary-rest-border-bottom` | `rgba(24, 22, 19, 0.14)` | color used by the button component for the secondary bottom edge (MarsUI Outline/secondary_button_bottom). |
 | `--ki-button-secondary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default). |
 | `--ki-button-secondary-selected-bg` | `#1d1a16` | Background of the selected secondary button toggle. |
 | `--ki-button-secondary-selected-fg` | `#ffffff` | Foreground of the selected secondary button toggle. |
 | `--ki-button-secondary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-bg. color used by the button component for secondary success active background. |
-| `--ki-button-secondary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-border. color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait). |
+| `--ki-button-secondary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-border. color used by the button component for secondary success active border (MarsUI top/inline edge, variant trait). |
 | `--ki-button-secondary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-fg. color used by the button component for secondary success active foreground. |
 | `--ki-button-secondary-success-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-bg. color used by the button component for secondary success disabled background. |
 | `--ki-button-secondary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-border. color used by the button component for secondary success disabled border. |
 | `--ki-button-secondary-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-fg. color used by the button component for secondary success disabled foreground. |
 | `--ki-button-secondary-success-hover-bg` | `#e3f6e2` | color used by the button component for secondary success hover background. |
-| `--ki-button-secondary-success-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait). |
+| `--ki-button-secondary-success-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary success hover border (MarsUI top/inline edge, variant trait). |
 | `--ki-button-secondary-success-hover-fg` | `#2c6a2b` | color used by the button component for secondary success hover foreground. |
 | `--ki-button-secondary-success-rest-bg` | `#f4faf3` | color used by the button component for secondary success rest background. |
-| `--ki-button-secondary-success-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait). |
+| `--ki-button-secondary-success-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary success rest border (MarsUI top/inline edge, variant trait). |
 | `--ki-button-secondary-success-rest-fg` | `#2c6a2b` | color used by the button component for secondary success rest foreground. |
 | `--ki-button-sm-font-size` | `0.8125rem` | dimension used by the button component for sm font size. |
 | `--ki-button-sm-gap` | `0.375rem` | dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text). |
@@ -1226,45 +1226,45 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-spinner-stroke-width` | `0.125rem` | dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width). |
 | `--ki-button-tertiary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-rest-shadow. shadow used by the button component for tertiary active shadow (MarsUI defines no pressed state; mirrors rest). |
 | `--ki-button-tertiary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-bg. Tertiary alias of the secondary danger active background. |
-| `--ki-button-tertiary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-border. color used by the button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-border. color used by the button component for tertiary danger active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-danger-active-fg` | `#c21a45` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-fg. color used by the button component for tertiary danger active foreground. |
 | `--ki-button-tertiary-danger-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-bg. color used by the button component for tertiary danger disabled background. |
 | `--ki-button-tertiary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-border. color used by the button component for tertiary danger disabled border. |
 | `--ki-button-tertiary-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-fg. color used by the button component for tertiary danger disabled foreground. |
 | `--ki-button-tertiary-danger-hover-bg` | `#ffebec` | Tertiary alias of the secondary danger hover background. |
-| `--ki-button-tertiary-danger-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-danger-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary danger hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-danger-hover-fg` | `#c21a45` | color used by the button component for tertiary danger hover foreground. |
 | `--ki-button-tertiary-danger-rest-bg` | `#fff3f3` | Tertiary alias of the secondary danger rest background. |
-| `--ki-button-tertiary-danger-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-danger-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary danger rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-danger-rest-fg` | `#c21a45` | color used by the button component for tertiary danger rest foreground. |
 | `--ki-button-tertiary-disabled-shadow` | `none` | value used by the button component for tertiary disabled shadow. |
 | `--ki-button-tertiary-hover-overlay` | `rgba(0, 0, 0, 0.03)` | Hover overlay for neutral tertiary buttons, shared with secondary by default. |
 | `--ki-button-tertiary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover). |
 | `--ki-button-tertiary-neutral-active-bg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-bg. Tertiary alias of the secondary neutral active background. |
-| `--ki-button-tertiary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-border. color used by the button component for tertiary neutral active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-border. color used by the button component for tertiary neutral active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-neutral-active-fg` | `#181613` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-fg. Tertiary alias of the secondary neutral active foreground. |
 | `--ki-button-tertiary-neutral-disabled-bg` | `#ebe7e1` | color used by the button component for tertiary neutral disabled background. |
 | `--ki-button-tertiary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for tertiary neutral disabled border. |
 | `--ki-button-tertiary-neutral-disabled-fg` | `#5e5953` | color used by the button component for tertiary neutral disabled foreground. |
 | `--ki-button-tertiary-neutral-hover-bg` | `#f3f0eb` | Tertiary alias of the secondary neutral hover background. |
-| `--ki-button-tertiary-neutral-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-neutral-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary neutral hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-neutral-hover-fg` | `#181613` | Tertiary alias of the secondary neutral hover foreground. |
 | `--ki-button-tertiary-neutral-rest-bg` | `#ffffff` | Tertiary alias of the secondary neutral rest background. |
-| `--ki-button-tertiary-neutral-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-neutral-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary neutral rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-neutral-rest-fg` | `#181613` | Tertiary alias of the secondary neutral rest foreground. |
-| `--ki-button-tertiary-rest-border-bottom` | `rgba(24, 22, 19, 0.14)` | color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary). |
+| `--ki-button-tertiary-rest-border-bottom` | `rgba(24, 22, 19, 0.14)` | color used by the button component for the tertiary bottom edge (MarsUI Outline/secondary_button_bottom, as secondary). |
 | `--ki-button-tertiary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override). |
 | `--ki-button-tertiary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-bg. Tertiary alias of the secondary success active background. |
-| `--ki-button-tertiary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-border. color used by the button component for tertiary success active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-border. color used by the button component for tertiary success active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-fg. color used by the button component for tertiary success active foreground. |
 | `--ki-button-tertiary-success-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-bg. color used by the button component for tertiary success disabled background. |
 | `--ki-button-tertiary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-border. color used by the button component for tertiary success disabled border. |
 | `--ki-button-tertiary-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-fg. color used by the button component for tertiary success disabled foreground. |
 | `--ki-button-tertiary-success-hover-bg` | `#e3f6e2` | Tertiary alias of the secondary success hover background. |
-| `--ki-button-tertiary-success-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-success-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-hover-fg` | `#2c6a2b` | color used by the button component for tertiary success hover foreground. |
 | `--ki-button-tertiary-success-rest-bg` | `#f4faf3` | Tertiary alias of the secondary success rest background. |
-| `--ki-button-tertiary-success-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
+| `--ki-button-tertiary-success-rest-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-rest-fg` | `#2c6a2b` | color used by the button component for tertiary success rest foreground. |
 | `--ki-button-toggle-quiet-bg` | `rgba(0, 0, 0, 0)` | Background of unselected ghost and quaternary toggle buttons. |
 | `--ki-button-toggle-quiet-fg` | `#181613` | Foreground of unselected ghost toggle buttons. |
@@ -1329,7 +1329,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-card-filled-bg` | `#f3f0eb` | Tinted card background. |
 | `--ki-card-filled-fg` | `#181613` | Text on the filled card background. |
 | `--ki-card-footer-padding` | `1rem` | dimension used by the card component for footer padding. |
-| `--ki-card-gap` | `0.75rem` | dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override). |
+| `--ki-card-gap` | `0.75rem` | dimension used by the card component for gap (MarsUI Dashboard_info/Chart rhythm between regions 12px; material3 keeps zero via its override). |
 | `--ki-card-header-padding` | `1rem` | dimension used by the card component for header padding. |
 | `--ki-card-hover-overlay` | `rgba(255, 255, 255, 0.05)` | Pointer hover state layer on a primary-action card. |
 | `--ki-card-hover-shadow` | `0 1px 2px 0 rgba(24, 22, 19, 0.05), 0 4px 10px 0 rgba(24, 22, 19, 0.06), 0 3px 8px 0 transparent` | Hover shadow of a primary-action card. |
@@ -1689,12 +1689,12 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-dialog-backdrop-bg` | `rgba(24, 22, 19, 0.38)` | color used by the dialog component for backdrop background. |
-| `--ki-dialog-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-dialog-backdrop-filter. backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5). |
+| `--ki-dialog-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-dialog-backdrop-filter. backdrop blur used by the dialog component surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; none in onmars v2 and material3; perf-measure before enabling per DNA section 5). |
 | `--ki-dialog-backdrop-filter` | `none` | Complete backdrop filter behind the dialog surface. |
-| `--ki-dialog-bg` | `#ffffff` | Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image. |
-| `--ki-dialog-bg-end` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-dialog-bg-image. Legacy end color of the onmars v1 dialog glass image. |
+| `--ki-dialog-bg` | `#ffffff` | Base background color of the dialog. Onmars v1 used a transparent backing beneath its translucent image. |
+| `--ki-dialog-bg-end` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-dialog-bg-image. Legacy end color of the onmars v1 translucent dialog image. |
 | `--ki-dialog-bg-image` | `none` | Optional CSS background image layered over the dialog fill. Use none for a solid fill. |
-| `--ki-dialog-bg-start` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-dialog-bg-image. Legacy start color of the onmars v1 dialog glass image. |
+| `--ki-dialog-bg-start` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-dialog-bg-image. Legacy start color of the onmars v1 translucent dialog image. |
 | `--ki-dialog-body-padding-block-end` | `1.25rem` | dimension used by the dialog component for body section padding block end (Modal compact Body: Space/5xl 20px.) |
 | `--ki-dialog-body-padding-block-start` | `1.25rem` | dimension used by the dialog component for body section padding block start (Modal compact Body 16414:19668: Space/5xl 20px.) |
 | `--ki-dialog-body-padding-inline` | `1.25rem` | dimension used by the dialog component for body section padding inline (Modal compact Body: Space/5xl 20px.) |
@@ -1841,6 +1841,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-fab-menu-scrim-backdrop-filter` | `none` | Complete optional filter behind the scrim. |
 | `--ki-fab-menu-scrim-bg` | `rgba(24, 22, 19, 0.38)` | Dimming fill behind the open menu and its trigger. |
 | `--ki-fab-menu-scrim-bg-image` | `none` | Optional image painted above the scrim fill. |
+| `--ki-fab-menu-trigger-bg` | `#1d1a16` | Fill of the closed trigger in the default secondary variant: the secondary FAB's tonal fill, or in onmars v2 the primary FAB ink, so the accent stays on selection, links and focus. |
+| `--ki-fab-menu-trigger-fg` | `#ffffff` | Glyph ink on the closed secondary trigger. |
 | `--ki-fab-menu-trigger-gap` | `0.5rem` | Gap between the last action and the FAB. |
 
 ### `ki-fab-menu-item`
@@ -1848,10 +1850,12 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-fab-menu-item-backdrop-filter` | `none` | Complete optional filter behind the action. |
-| `--ki-fab-menu-item-bg` | `#ffebe5` | Tinted surface of a floating action. |
+| `--ki-fab-menu-item-bg` | `#ffffff` | Surface of a floating action: a tonal fill, or in onmars v2 the raised surface with a hairline, so the accent stays on selection. |
 | `--ki-fab-menu-item-bg-image` | `none` | Optional image painted above the action fill. |
+| `--ki-fab-menu-item-border-color` | `rgba(24, 22, 19, 0.1)` | Color of the action edge, drawn at border-width. |
+| `--ki-fab-menu-item-border-width` | `1px` | Width of the action edge. A tonal action draws none; onmars v2 edges its surface actions with a hairline. |
 | `--ki-fab-menu-item-content-gap` | `0.5rem` | Space between the action glyph and label. |
-| `--ki-fab-menu-item-fg` | `#9a3715` | Label and icon ink on the tinted action surface. |
+| `--ki-fab-menu-item-fg` | `#181613` | Label and icon ink on the action surface. |
 | `--ki-fab-menu-item-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface for action labels. |
 | `--ki-fab-menu-item-font-size` | `0.9375rem` | Text size for action labels. |
 | `--ki-fab-menu-item-font-weight` | `600` | Text weight of an action label. |
@@ -2313,7 +2317,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-mobile-nav-item-current-fg` | `#ad411c` | Label ink of the current destination on the fixed or floating bar. |
 | `--ki-mobile-nav-item-fg` | `#5e5953` | Foreground ink of an inactive destination on the fixed or floating bar. |
 | `--ki-mobile-nav-item-focus-radius` | `8px` | Corner radius of the keyboard focus indication. |
-| `--ki-mobile-nav-item-font-size` | `0.625rem` | Destination label font size. |
+| `--ki-mobile-nav-item-font-size` | `0.6875rem` | Destination label font size. |
 | `--ki-mobile-nav-item-font-weight` | `600` | Destination label font weight. |
 | `--ki-mobile-nav-item-gap` | `0.125rem` | Gap between the glyph and its label. |
 | `--ki-mobile-nav-item-icon-size` | `1.25rem` | Destination glyph size. |
@@ -2404,14 +2408,14 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-option-disabled-bg` | `#f3f0eb` | color used by the option component for disabled background. |
 | `--ki-option-disabled-fg` | `#6b665f` | color used by the option component for disabled foreground. |
 | `--ki-option-font-size` | `0.8125rem` | dimension used by the option component for font size. |
-| `--ki-option-highlight-bg` | `rgba(0, 0, 0, 0.03)` | color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; purple is reserved for the selected tint). |
+| `--ki-option-highlight-bg` | `rgba(0, 0, 0, 0.03)` | color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; the accent is reserved for the selected tint). |
 | `--ki-option-highlight-fg` | `#181613` | color used by the option component for highlight foreground. |
-| `--ki-option-hover-bg` | `rgba(0, 0, 0, 0.03)` | color used by the option component for hover background (MarsUI hover_overlay_inverse Black/3 wash over the glass panel — not a solid surface step). |
+| `--ki-option-hover-bg` | `rgba(0, 0, 0, 0.03)` | color used by the option component for hover background (MarsUI hover-overlay-inverse Black/3 wash over the panel — not a solid surface step). |
 | `--ki-option-hover-fg` | `#181613` | color used by the option component for hover foreground. |
 | `--ki-option-min-target` | `2.25rem` | dimension used by the option component for min target (MarsUI Dropmenu row height Space/11xl 36px; comfortably above the 24px a11y floor). |
 | `--ki-option-padding-inline` | `0.5rem` | dimension used by the option component for padding inline. |
 | `--ki-option-radius` | `12px` | dimension used by the option component for radius (MarsUI Radius/component/radius_lg 12px bound on Dropmenu rows). |
-| `--ki-option-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the glass panel; only hover/selected paint). |
+| `--ki-option-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the panel; only hover/selected paint). |
 | `--ki-option-rest-fg` | `#181613` | color used by the option component for rest foreground. |
 | `--ki-option-selected-bg` | `#ffebe5` | color used by the option component for selected background. |
 | `--ki-option-selected-fg` | `#181613` | color used by the option component for selected foreground. |
@@ -2539,7 +2543,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-radio-unselected-disabled-bg` | `#e0dcd4` | color used by the radio component for unselected disabled background (MarsUI Surface/disabled_med_em Gray/300). |
 | `--ki-radio-unselected-disabled-border` | `#e0dcd4` | color used by the radio component for unselected disabled border (same as the fill: borderless look in the master). |
 | `--ki-radio-unselected-disabled-fg` | `#cbc7bf` | color used by the radio component for unselected disabled dot color (dot is hidden unselected; kept coherent with the disabled ladder, retiring the deprecated ki.text.muted alias). |
-| `--ki-radio-unselected-hover-bg` | `#f9f7f4` | color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3. |
+| `--ki-radio-unselected-hover-bg` | `#f9f7f4` | color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3. |
 | `--ki-radio-unselected-hover-border` | `#bc4c26` | color used by the radio component for unselected hover border. |
 | `--ki-radio-unselected-hover-fg` | `#ad411c` | color used by the radio component for unselected hover foreground. |
 | `--ki-radio-unselected-rest-bg` | `#ffffff` | color used by the radio component for unselected rest background. |
@@ -2709,7 +2713,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-font-weight` | `600` | font weight used by the select component for the trigger value (MarsUI UI/Body 1/medium: weight 600). |
 | `--ki-select-gap` | `0.25rem` | dimension used by the select component for gap. |
 | `--ki-select-height` | `2.5rem` | dimension used by the select component for height. |
-| `--ki-select-hover-bg` | `#f3f0eb` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-surface-hover-overlay-inverse. color used by the select component for hover background (MarsUI hover = rest fill + hover_overlay_inverse; nearest cross-scheme step that keeps the ramp monotonic in dark). |
+| `--ki-select-hover-bg` | `#f3f0eb` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-surface-hover-overlay-inverse. color used by the select component for hover background (MarsUI hover = rest fill + hover overlay inverse; nearest cross-scheme step that keeps the ramp monotonic in dark). |
 | `--ki-select-hover-border` | `rgba(0, 0, 0, 0.56)` | color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover. |
 | `--ki-select-hover-fg` | `#181613` | color used by the select component for hover foreground. |
 | `--ki-select-hover-label-fg` | `#181613` | color used by the select component for hover label foreground. |
@@ -2731,9 +2735,9 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-lg-padding-inline` | `0.75rem` | dimension used by the select component for lg padding inline (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Space/xl, 12px). |
 | `--ki-select-lg-radius` | `12px` | dimension used by the select component for lg radius (Input-cell 8016:286 lg, composed by Dropdown 12041:1595: Radius/small-component/lg). |
 | `--ki-select-line-height` | `1.5rem` | dimension used by the select component for the trigger value line height (MarsUI body_1 24px). |
-| `--ki-select-listbox-backdrop-blur` | `24px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-select-listbox-backdrop-filter. backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override). |
+| `--ki-select-listbox-backdrop-blur` | `24px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-select-listbox-backdrop-filter. backdrop blur used by the select component listbox panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; none in onmars v2 and material3). |
 | `--ki-select-listbox-backdrop-filter` | `none` | Complete backdrop filter behind the select listbox. |
-| `--ki-select-listbox-bg` | `rgba(255, 255, 255, 0.8)` | color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with --ki-select-listbox-backdrop-filter). |
+| `--ki-select-listbox-bg` | `rgba(255, 255, 255, 0.8)` | color used by the select component for listbox background (MarsUI Dropmenu panel Surface/Special/blur_base_light, opaque in onmars v2; pair with --ki-select-listbox-backdrop-filter). |
 | `--ki-select-listbox-bg-image` | `none` | Optional CSS background image layered over the listbox fill. Use none for a solid fill. |
 | `--ki-select-listbox-elevation` | `rgba(0, 0, 0, 0.05)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-select-listbox-shadow. color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal. |
 | `--ki-select-listbox-max-block-size` | `20rem` | dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale). |
@@ -2979,7 +2983,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-status-radius` | `1000px` | dimension used by the status component for the dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent). |
 | `--ki-status-ring-color` | `#ffffff` | color used by the status component for the separating ring: Outline/inverse_black, the exact variable bound to Outline=True variants — white over light surfaces, black over dark ones, so the ring reads as a cutout from the underlying media (FR-002). |
 | `--ki-status-ring-width` | `0.125rem` | dimension used by the status component for the separating ring: the 2px stroke on every Outline=True Status variant (FR-002). |
-| `--ki-status-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers. The effect's backdrop blur is deliberately NOT applied: a 4px dot has no glass surface to blur (brief §5 perf note, glass restraint). |
+| `--ki-status-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers, flat in onmars v2. Its backdrop blur is not applied: a 4px dot has nothing to blur (brief §5 perf note). |
 | `--ki-status-size` | `0.5rem` | dimension used by the status component for the dot: the MarsUI 4px dot, Space/xs bound to every Status variant (specs/021-ki-status/design-extraction.md). One size per theme, never an attribute (FR-006). |
 | `--ki-status-success-color` | `#409b3f` | color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500). |
 | `--ki-status-warning-color` | `#945b05` | color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008). |
@@ -3178,13 +3182,13 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-tab-radius` | `6px` | dimension used by the tab component for radius. |
 | `--ki-tab-secondary-indicator-height` | `2px` | Height of the full-width indicator on a secondary tab. |
 | `--ki-tab-selected-active-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for selected active background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language). |
-| `--ki-tab-selected-active-fg` | `#181613` | color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240). |
+| `--ki-tab-selected-active-fg` | `#181613` | color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240). |
 | `--ki-tab-selected-disabled-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for selected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill). |
 | `--ki-tab-selected-disabled-fg` | `#b5b0a9` | color used by the tab component for selected disabled foreground (MarsUI disabled ladder: Gray/500 light / White-32 dark, the value ki-status and ki-switch already use for disabled glyphs). |
 | `--ki-tab-selected-hover-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for selected hover background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language). |
-| `--ki-tab-selected-hover-fg` | `#181613` | color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240). |
+| `--ki-tab-selected-hover-fg` | `#181613` | color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240). |
 | `--ki-tab-selected-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the tab component for selected rest background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language). |
-| `--ki-tab-selected-rest-fg` | `#181613` | color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240). |
+| `--ki-tab-selected-rest-fg` | `#181613` | color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240). |
 | `--ki-tab-sm-font-size` | `0.8125rem` | dimension used by the tab component for sm font size (Tab-nav-item 10048:1068 sm: UI/para). |
 | `--ki-tab-sm-line-height` | `1.25rem` | dimension used by the tab component for sm line height (Tab-nav-item 10048:1068 sm: UI/para). |
 | `--ki-tab-sm-min-block-size` | `2rem` | dimension used by the tab component for sm min block size (Tab-nav-item 10048:1068 sm: 32px). |
@@ -3490,15 +3494,15 @@ theme-wide change or on any subtree for a scoped one.
 | --- | --- | --- |
 | `--ki-tooltip-arrow-radius` | `2px` | dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step). |
 | `--ki-tooltip-arrow-size` | `0.5rem` | dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger. |
-| `--ki-tooltip-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-tooltip-backdrop-filter. backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override). |
+| `--ki-tooltip-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-tooltip-backdrop-filter. backdrop blur used by the tooltip component card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; none in onmars v2 and material3). |
 | `--ki-tooltip-backdrop-filter` | `none` | Complete backdrop filter behind the tooltip bubble. |
-| `--ki-tooltip-bg` | `#2e2b26` | Base background color of the tooltip. Onmars v1 uses a transparent backing beneath its glass image. |
-| `--ki-tooltip-bg-end` | `#2e2b26` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-tooltip-bg-image. Legacy end color of the onmars v1 tooltip glass image. |
+| `--ki-tooltip-bg` | `#2e2b26` | Base background color of the tooltip. Onmars v1 used a transparent backing beneath its translucent image. |
+| `--ki-tooltip-bg-end` | `#2e2b26` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-tooltip-bg-image. Legacy end color of the onmars v1 translucent tooltip image. |
 | `--ki-tooltip-bg-image` | `none` | Optional CSS background image layered over the tooltip fill. Use none for a solid fill. |
-| `--ki-tooltip-bg-start` | `#2e2b26` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-tooltip-bg-image. Legacy start color of the onmars v1 tooltip glass image. |
-| `--ki-tooltip-border-color` | `rgba(255, 255, 255, 0)` | color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it. |
-| `--ki-tooltip-border-width` | `1px` | dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending). |
-| `--ki-tooltip-fg` | `#f9f7f4` | color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast). |
+| `--ki-tooltip-bg-start` | `#2e2b26` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-tooltip-bg-image. Legacy start color of the onmars v1 translucent tooltip image. |
+| `--ki-tooltip-border-color` | `rgba(255, 255, 255, 0)` | color used by the tooltip component for its edge (MarsUI hairline, Outline/secondary_button_top); one token so a mode or a theme can strengthen it. |
+| `--ki-tooltip-border-width` | `1px` | dimension used by the tooltip component for the outline width (MarsUI card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending). |
+| `--ki-tooltip-fg` | `#f9f7f4` | color used by the tooltip component for foreground (MarsUI title row Text/high_em; onmars v2 sets the inverse tooltip ink). |
 | `--ki-tooltip-font-size` | `0.75rem` | dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px). |
 | `--ki-tooltip-font-weight` | `600` | font weight used by the tooltip component for font weight. |
 | `--ki-tooltip-hide-delay` | `100ms` | duration used by the tooltip component for tooltip hide delay. |
@@ -3602,16 +3606,16 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-video-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-video-backdrop-filter. dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override. |
-| `--ki-video-backdrop-filter` | `none` | Complete backdrop filter behind the video play scrim and glass control. |
+| `--ki-video-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-video-backdrop-filter. dimension used by the video component for the backdrop of the scrim and the play container (MarsUI Blur/24, as buttons; none in onmars v2 and material3). |
+| `--ki-video-backdrop-filter` | `none` | Complete backdrop filter behind the video play scrim and control. |
 | `--ki-video-focus-ring-color` | `#bb4e2a` | color used by the video component for the play control focus ring: the keyboard-reachable facade control (FR-004, S6) adopts the ki-dialog/ki-icon-button focus-ring pair verbatim. |
 | `--ki-video-focus-ring-offset` | `0.125rem` | dimension used by the video component for the play control focus ring offset (ki-dialog precedent). |
 | `--ki-video-focus-ring-width` | `0.125rem` | dimension used by the video component for the play control focus ring width (ki-dialog precedent). |
 | `--ki-video-frame-radius` | `16px` | dimension used by the video component for the frame corners: Radius/big_component/radius_xs, the exact variable bound to the Size=md Video frame (node 12089:6570, specs/025-ki-video/design-extraction.md) — the sm frame's radius_md is the scale demo, not a second API value. |
 | `--ki-video-motion-duration` | `150ms` | duration used by the video component for the facade dismissal fade: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-013; disabled under reduced motion by construction, 024 precedent). |
 | `--ki-video-play-bg` | `#000000` | color used by the video component for the play container surface: Surface/inverse_white, the exact variable bound to the Icon_button fill (black over light, white over dark) — the control carries its own surface so glyph contrast never depends on the poster imagery (FR-008). |
-| `--ki-video-play-border-color` | `rgba(0, 0, 0, 0)` | color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel. |
-| `--ki-video-play-border-width` | `1px` | dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent). |
+| `--ki-video-play-border-color` | `rgba(0, 0, 0, 0)` | color used by the video component for the play container edge: Outline/primary_button_top, the exact variable bound to the Icon_button stroke (as ki-button; none in onmars v2). |
+| `--ki-video-play-border-width` | `1px` | dimension used by the video component for the play container edge width (MarsUI hairline stroke, ki-icon-button precedent). |
 | `--ki-video-play-fg` | `#ffffff` | color used by the video component for the play glyph: Text/inverse_black, the counterpart of the inverse container surface (white over light, black over dark) — the glyph inherits it via currentColor; the -bg/-fg pair is swept by the contrast gate (FR-008). |
 | `--ki-video-play-icon-size` | `1.75rem` | dimension used by the video component for the play glyph: the 28px Icon/Placeholder_xl slot measured inside the Size=md play container (the ki-icon-button xl icon size). |
 | `--ki-video-play-radius` | `14px` | dimension used by the video component for the play container shape: Radius/component/radius_xl, the exact variable bound to the Size=md Icon_button instance (14px, the ki-icon-button xl radius). |

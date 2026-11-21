@@ -126,6 +126,9 @@
       "brand": {
         "primary-text-on-primary-light": {
           "$value": "{ki.foundation.onmars-v2.palette.brand-primary-text-on-primary-light}"
+        },
+        "secondary-text-on-success": {
+          "$value": "{ki.color.white.80}"
         }
       }
     },
@@ -270,6 +273,15 @@
       },
       "primary-low-em": {
         "$value": "{ki.foundation.onmars-v2.palette.text-primary-low-em-light}"
+      },
+      "info-med-em": {
+        "$value": "{ki.foundation.onmars-v2.palette.text-info-med-em-light}"
+      },
+      "success-med-em": {
+        "$value": "{ki.foundation.onmars-v2.palette.text-success-med-em-light}"
+      },
+      "warning-med-em": {
+        "$value": "{ki.foundation.onmars-v2.palette.text-warning-med-em-light}"
       },
       "info-low-em": {
         "$value": "{ki.foundation.onmars-v2.palette.text-info-low-em-light}"
@@ -421,6 +433,22 @@
         "display": {
           "$value": "{ki.foundation.migrated.themes-onmars.font.family.serif}"
         }
+      },
+      "size": {
+        "caption-1": {
+          "$value": "{ki.foundation.onmars-v2.type-scale.caption-1-size}"
+        }
+      },
+      "line-height": {
+        "overline": {
+          "$value": "{ki.space.3xl}"
+        },
+        "display-2": {
+          "$value": "{ki.space.22xl}"
+        },
+        "display-3": {
+          "$value": "{ki.space.23xl}"
+        }
       }
     },
     "duration": {
@@ -442,14 +470,70 @@
     "alert": {
       "radius": {
         "$value": "{ki.radius.component.lg}"
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}"
+      },
+      "neutral": {
+        "border": {
+          "$value": "{ki.outline.low-em}"
+        }
+      },
+      "info": {
+        "bg": {
+          "$value": "{ki.surface.info-tint}"
+        },
+        "border": {
+          "$value": "{ki.outline.info-low-em}"
+        }
+      },
+      "success": {
+        "bg": {
+          "$value": "{ki.surface.success-tint}"
+        },
+        "border": {
+          "$value": "{ki.outline.success-low-em}"
+        }
+      },
+      "warning": {
+        "bg": {
+          "$value": "{ki.surface.warning-tint}"
+        },
+        "border": {
+          "$value": "{ki.outline.warning-low-em}"
+        }
+      },
+      "danger": {
+        "bg": {
+          "$value": "{ki.surface.danger-tint}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-low-em}"
+        }
+      },
+      "shell": {
+        "padding": {
+          "$value": "{ki.space.zero}"
+        },
+        "radius": {
+          "$value": "{ki.radius.component.lg}"
+        },
+        "bg": {
+          "$value": "{ki.color.transparent.black}"
+        }
+      },
+      "card": {
+        "shadow": {
+          "$value": "{ki.foundation.onmars-v2.elevation.flat-effect}"
+        }
       }
     },
     "avatar": {
       "bg": {
-        "$value": "{ki.surface.primary-low-em}"
+        "$value": "{ki.surface.s3}"
       },
       "fg": {
-        "$value": "{ki.text.primary-on-primary-light}"
+        "$value": "{ki.text.supporting}"
       }
     },
     "badge": {
@@ -527,6 +611,30 @@
         "font-weight": {
           "$value": "{ki.typography.weight.display.semibold}"
         }
+      }
+    },
+    "fab-menu": {
+      "trigger": {
+        "bg": {
+          "$value": "{ki.fab.primary.bg}"
+        },
+        "fg": {
+          "$value": "{ki.fab.primary.fg}"
+        }
+      }
+    },
+    "fab-menu-item": {
+      "bg": {
+        "$value": "{ki.surface.special.light-s0-dark-s2}"
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}"
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}"
+      },
+      "border-color": {
+        "$value": "{ki.outline.low-em}"
       }
     },
     "input": {

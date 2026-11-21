@@ -31,15 +31,15 @@
       },
       "bg": {
         "$value": "{ki.surface.transparent}",
-        "$description": "Base background color of the tooltip. Onmars v1 uses a transparent backing beneath its glass image."
+        "$description": "Base background color of the tooltip. Onmars v1 used a transparent backing beneath its translucent image."
       },
       "border-width": {
         "$value": "{ki.size.border.hairline}",
-        "$description": "dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending)."
+        "$description": "dimension used by the tooltip component for the outline width (MarsUI card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending)."
       },
       "border-color": {
         "$value": "{ki.outline.secondary-button-top}",
-        "$description": "color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.",
+        "$description": "color used by the tooltip component for its edge (MarsUI hairline, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.",
         "$type": "color"
       },
       "bg-image": {
@@ -48,7 +48,7 @@
       },
       "bg-start": {
         "$value": "{ki.surface.special.blur-base-light}",
-        "$description": "Legacy start color of the onmars v1 tooltip glass image.",
+        "$description": "Legacy start color of the onmars v1 translucent tooltip image.",
         "$deprecated": "Set the complete background image through the image token.",
         "$extensions": {
           "dev.kimen.deprecation": {
@@ -60,7 +60,7 @@
       },
       "bg-end": {
         "$value": "{ki.surface.special.light-s0-dark-s2}",
-        "$description": "Legacy end color of the onmars v1 tooltip glass image.",
+        "$description": "Legacy end color of the onmars v1 translucent tooltip image.",
         "$deprecated": "Set the complete background image through the image token.",
         "$extensions": {
           "dev.kimen.deprecation": {
@@ -73,7 +73,7 @@
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
         "$type": "dimension",
-        "$description": "backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override).",
+        "$description": "backdrop blur used by the tooltip component card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; none in onmars v2 and material3).",
         "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
         "$extensions": {
           "dev.kimen.deprecation": {
@@ -90,7 +90,7 @@
       },
       "fg": {
         "$value": "{ki.text.high-em}",
-        "$description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast)."
+        "$description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; onmars v2 sets the inverse tooltip ink)."
       },
       "font-size": {
         "$value": "{ki.font.size.body-1}",

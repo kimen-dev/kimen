@@ -90,6 +90,50 @@ it('S3 swaps to compact below 480 pixels with the secondary direction controls',
   expect(root instanceof ShadowRoot && root.host.getAttribute('variant')).toBe('secondary');
 });
 
+// Regression (design-system review 2026-11-20, item 2): size containment gave
+// the host no intrinsic width, so a flex row shrank it to zero and every
+// variant collapsed, the numbered one into its compact form.
+it('S3 keeps its available inline size inside a flex row instead of collapsing', async () => {
+  fixture.style.inlineSize = '1280px';
+  fixture.insertAdjacentHTML(
+    'beforeend',
+    `<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+      <ki-pagination page="5" pages="12" label="Search results pages"></ki-pagination>
+      <ki-pagination page="5" pages="12" variant="compact" label="Table pages"></ki-pagination>
+      <ki-pagination variant="load-more" shown="20" total="240" label="More search results"></ki-pagination>
+    </div>`,
+  );
+  const [numberedHost, compactHost, loadMoreHost] = Array.from(
+    fixture.querySelectorAll('ki-pagination'),
+  );
+  if (!numberedHost || !compactHost || !loadMoreHost) throw new Error('Pagination did not mount');
+
+  // The numbered window, not its compact fallback, at the row's full width.
+  await expect.element(numbered(5)).toBeVisible();
+  expect(numberedHost.getBoundingClientRect().width).toBeGreaterThan(480);
+
+  // Each control sits on one line: the compact steppers side by side, and the
+  // status and the Load more label unwrapped.
+  const inShadow = (host: Element, selector: string): Element => {
+    const node = host.shadowRoot?.querySelector(selector);
+    if (!node) throw new Error(`Missing ${selector}`);
+    return node;
+  };
+  const lines = (node: Element): number => {
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    return new Set(Array.from(range.getClientRects(), (rect) => Math.round(rect.top))).size;
+  };
+  const previous = inShadow(compactHost, '[part="previous"]').getBoundingClientRect();
+  const next = inShadow(compactHost, '[part="next"]').getBoundingClientRect();
+  expect(compactHost.getBoundingClientRect().width).toBeGreaterThan(0);
+  expect(Math.abs(previous.top - next.top)).toBeLessThan(1);
+  expect(next.left).toBeGreaterThan(previous.right);
+  expect(loadMoreHost.getBoundingClientRect().width).toBeGreaterThan(0);
+  expect(lines(inShadow(loadMoreHost, '[part="status"]'))).toBe(1);
+  expect(lines(inShadow(loadMoreHost, '[part="load-more"]'))).toBe(1);
+});
+
 it.each([
   ['pages', 1, 'Previous page'],
   ['pages', 12, 'Next page'],

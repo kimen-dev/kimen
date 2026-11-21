@@ -28,7 +28,7 @@
       },
       "gap": {
         "$value": "{ki.space.xl}",
-        "$description": "dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override)."
+        "$description": "dimension used by the card component for gap (MarsUI Dashboard_info/Chart rhythm between regions 12px; material3 keeps zero via its override)."
       },
       "media-padding": {
         "$value": "{ki.space.md}",

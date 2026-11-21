@@ -89,13 +89,26 @@ Feature: Timeline presents a chronological activity history
     Given Activity is in a touch-density region on a coarse pointer
     When an event with details appears
     Then its details control is at least 44 by 44 CSS pixels
+
+  # S13
+  Scenario Outline: Mark a toned event that has no icon
+    Given Activity contains a <tone> event "Preview deploy failed" with no marker icon
+    When the timeline appears
+    Then its marker shows a solid dot in the <tone> ink at 3:1 or more against the page
+
+    Examples:
+      | tone    |
+      | primary |
+      | success |
+      | warning |
+      | danger  |
 ```
 
 ## Scenario family coverage
 
 | Family | Scenarios | N/A justification |
 | --- | --- | --- |
-| Core behavior | S1, S2, S3, S4 | |
+| Core behavior | S1, S2, S3, S4, S13 | |
 | Keyboard path | S5 | |
 | Assistive-tech outcome | S6, S7 | |
 | Form participation | N/A | Timeline reports activity and its disclosure holds no form value. |
@@ -110,3 +123,7 @@ Feature: Timeline presents a chronological activity history
 - Agent's choice, pending founder confirmation. Catalog entries expose both tags. Disclosure is local UI and emits no surface action.
 
 - Agent's choice, pending founder confirmation. Use shipped badge roles for success and warning, including opaque Material 3 tonal containers for success, warning and danger. Strengthen the neutral icon, timestamp and connector under contrast-more.
+
+## Amendment (design-system review, 2026-11-20)
+
+- Decided by the founder in the design-system review of 2026-11-20 (item 5). A toned marker without `icon-name` drew only the pale tone tint, about 1.1:1 against the page, so the marker carried no visible status. When `tone` is not neutral and neither `icon-name` nor the `start` slot supplies a marker, the marker draws a solid dot in the tone's high-emphasis ink, which reaches 3:1 or more against the page in every theme (S13). The dot is decorative like the rest of the marker; the event text still carries the status. Under forced colors the dot is drawn in the forced text color.

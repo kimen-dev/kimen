@@ -46,8 +46,8 @@
         "$description": "Resting ink of an unselected segment, strengthened in contrast-more."
       },
       "item-disabled-fg": {
-        "$value": "{ki.text.low-em}",
-        "$description": "Ink of an unavailable segment."
+        "$value": "{ki.outline.strong}",
+        "$description": "Ink of an unavailable segment. Kept on the M3 outline role (outline.strong) when the low-em text ink darkened."
       },
       "selected-bg": {
         "$value": "{ki.surface.special.light-s0-dark-s4}",

@@ -326,7 +326,7 @@
       "--ki-radio-unselected-hover-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3.",
+        "description": "color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3.",
         "replacement": null,
         "required": false,
         "type": null

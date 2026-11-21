@@ -420,7 +420,7 @@
       },
       "secondary-on-success": {
         "$value": "{ki.color.brand.secondary-text-on-success}",
-        "$description": "semantic color for text secondary on success."
+        "$description": "Secondary text on the success fill (surface.success-high-em, the success button fill): 4.5:1 or more on it in every theme and scheme."
       },
       "text-on-neutral": {
         "$value": "{ki.color.white.100}",
@@ -468,7 +468,7 @@
       },
       "info-med-em": {
         "$value": "{ki.color.info.500}",
-        "$description": "semantic color for text info med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
+        "$description": "semantic color for text info med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only."
       },
       "info-low-em": {
         "$value": "{ki.color.info.300}",
@@ -484,7 +484,7 @@
       },
       "success-med-em": {
         "$value": "{ki.color.success.500}",
-        "$description": "semantic color for text success med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
+        "$description": "semantic color for text success med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only."
       },
       "success-low-em": {
         "$value": "{ki.color.success.300}",
@@ -500,7 +500,7 @@
       },
       "warning-med-em": {
         "$value": "{ki.color.warning.500}",
-        "$description": "semantic color for text warning med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
+        "$description": "semantic color for text warning med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only."
       },
       "warning-low-em": {
         "$value": "{ki.color.warning.300}",
@@ -516,7 +516,7 @@
       },
       "danger-med-em": {
         "$value": "{ki.color.danger.500}",
-        "$description": "semantic color for text danger med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
+        "$description": "semantic color for text danger med em. The shared ramp step reads under 4.5:1 on the light surfaces (s0-s2), so onmars v2 and Material 3 light set a darker ink of the same hue that reaches 4.5:1 or more on s0-s2 in both schemes (gate: check-contrast). A theme that keeps the ramp step uses it for large text (24px, or 18.66px bold), icons and decoration only."
       },
       "danger-low-em": {
         "$value": "{ki.color.danger.300}",
@@ -572,7 +572,7 @@
       },
       "control": {
         "$value": "{ki.color.black.48}",
-        "$description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
+        "$description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as an edge over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
       },
       "control-hover": {
         "$value": "{ki.color.black.56}",
@@ -896,19 +896,19 @@
       "$type": "color",
       "hover": {
         "$value": "{ki.surface.hover-overlay}",
-        "$description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark)."
+        "$description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the hover overlay (White/5 light, Black/5 dark)."
       },
       "focus": {
         "$value": "{ki.color.white.8}",
-        "$description": "Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark)."
+        "$description": "Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: one step above the hover overlay (White/8 light, Black/8 dark)."
       },
       "pressed": {
         "$value": "{ki.color.white.8}",
-        "$description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark)."
+        "$description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: one step above the hover overlay (White/8 light, Black/8 dark)."
       },
       "dragged": {
         "$value": "{ki.color.white.12}",
-        "$description": "Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: MarsUI overlay two steps above hover_overlay (White/12 light, Black/12 dark)."
+        "$description": "Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: two steps above the hover overlay (White/12 light, Black/12 dark)."
       }
     },
     "elevation": {
@@ -1122,7 +1122,7 @@
         "backdrop-blur": {
           "$type": "dimension",
           "$value": "{ki.blur.24}",
-          "$description": "MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter.",
+          "$description": "MarsUI Blur/24 as the component backdrop; none in onmars v2. Legacy blur radius for the shared backdrop filter.",
           "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
           "$extensions": {
             "dev.kimen.deprecation": {
@@ -1135,7 +1135,7 @@
         "backdrop-filter": {
           "$type": "other",
           "$value": "blur({ki.effect.component.backdrop-blur})",
-          "$description": "Complete backdrop filter for glass components. Use none to turn the effect off."
+          "$description": "Complete backdrop filter for translucent components. Use none to turn the effect off."
         },
         "no-backdrop-filter": {
           "$type": "other",
@@ -1145,7 +1145,7 @@
         "listbox-backdrop-filter": {
           "$type": "other",
           "$value": "blur({ki.blur.48})",
-          "$description": "Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off."
+          "$description": "Complete listbox backdrop filter. The stronger onmars v1 blur; flat themes can turn it off."
         },
         "primary": {
           "default": {

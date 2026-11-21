@@ -138,11 +138,11 @@ Feature: Alert
   # Amendment A1 (decided 2026-11-19): the Alert master anatomy, icon and actions
   # Family: core behavior
   # S20
-  Scenario: The alert holds its content in an elevated card inside a padded shell
+  Scenario: The alert paints its content as one flat card
     Given an onmars page with an info alert "Backup completed"
     When the page renders
-    Then the alert's shell has 12px of padding and 28px corners around its card
-    And the card has 12px of padding, 12px corners and the level-5 elevation
+    Then no frame shows around the card
+    And the card has 12px of padding, 12px corners, a hairline edge and no elevation
 
   # S21
   Scenario: A slotted icon heads the card in a round 32px frame
@@ -178,11 +178,11 @@ Feature: Alert
     And the page observes no ki-dismiss event
 
   # S26
-  Scenario Outline: Every tone keeps the same anatomy
+  Scenario Outline: Every tone keeps the same anatomy and wears its own colors
     Given an onmars page with a <tone> alert holding an icon, the heading "Heads up", a message and the action "Review"
     When the page renders
-    Then the shell, the card, the heading, the message and the dismiss control look as they do under the neutral tone
-    And the icon frame and its glyph take the <tone> tone's colors
+    Then the alert is laid out, and its heading, message and dismiss control look, as they do under the neutral tone
+    And the card, its edge, the icon frame and its glyph take the <tone> tone's colors
 
     Examples:
       | tone    |
@@ -250,8 +250,30 @@ Feature: Alert
     And the icon is painted in the forced text color
 
   # S34
-  Scenario: Reduced transparency makes the shell opaque and keeps the card raised
-    Given an onmars dark page with an info alert holding an icon
+  Scenario: Reduced transparency makes the shell opaque and keeps the card's elevation
+    Given an onmars dark page with an info alert holding an icon, under a theme that raises the card
     When the page renders under a "reduce" transparency system preference
     Then the shell and the card paint opaque surfaces without blurring what is behind them
-    And the card keeps its elevation
+    And the card keeps the elevation its theme gives it
+
+  # Amendment A2 (decided 2026-11-20): the tone on the card, and a glyph per tone
+  # Family: core behavior
+  # S36
+  Scenario Outline: A non-neutral alert without an icon draws its tone's glyph
+    Given a <tone> alert holding the heading "Heads up" and no icon
+    When the page renders
+    Then the icon frame shows the "<glyph>" glyph in the <tone> tone's colors
+    And the glyph is hidden from assistive technology
+
+    Examples:
+      | tone    | glyph          |
+      | info    | info           |
+      | success | circle-check   |
+      | warning | triangle-alert |
+      | danger  | octagon-alert  |
+
+  # S37
+  Scenario: A slotted icon replaces the tone's glyph
+    Given a danger alert holding its own icon and the heading "Payment failed"
+    When the page renders
+    Then the icon frame shows the slotted icon and no other glyph

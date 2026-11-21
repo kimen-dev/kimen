@@ -130,6 +130,9 @@
   margin-inline-start: auto;
 }
 
+/* The secondary controls are quaternary (neutral) buttons beside the primary
+ * play button: the accent stays on selection, links and focus. They keep the
+ * ghost button's borderless edge, which a theme may outline for quaternary. */
 [part="play"],
 [part="speed"],
 [part="mute"] {
@@ -139,8 +142,8 @@
   padding-inline: var(--ki-spacing-action-inset);
   border: var(--ki-control-border-width) solid var(--ki-button-ghost-neutral-rest-border);
   border-radius: var(--ki-audio-speed-radius);
-  background-color: var(--ki-button-ghost-neutral-rest-bg);
-  color: var(--ki-button-ghost-neutral-rest-fg);
+  background-color: var(--ki-button-quaternary-neutral-rest-bg);
+  color: var(--ki-button-quaternary-neutral-rest-fg);
   font-family: inherit;
   font-size: var(--ki-typography-size-body-1);
   font-weight: var(--ki-typography-weight-body-medium);
@@ -180,8 +183,8 @@
 [part="speed"]:disabled,
 [part="mute"]:disabled {
   border-color: var(--ki-button-ghost-neutral-disabled-border);
-  background-color: var(--ki-button-ghost-neutral-disabled-bg);
-  color: var(--ki-button-ghost-neutral-disabled-fg);
+  background-color: var(--ki-button-quaternary-neutral-disabled-bg);
+  color: var(--ki-button-quaternary-neutral-disabled-fg);
   cursor: default;
 }
 
@@ -195,8 +198,8 @@
   [part="speed"]:hover:enabled,
   [part="mute"]:hover:enabled {
     border-color: var(--ki-button-ghost-neutral-hover-border);
-    background-color: var(--ki-button-ghost-neutral-hover-bg);
-    color: var(--ki-button-ghost-neutral-hover-fg);
+    background-color: var(--ki-button-quaternary-neutral-hover-bg);
+    color: var(--ki-button-quaternary-neutral-hover-fg);
   }
 }
 

@@ -112,6 +112,24 @@ function boxOf(el: KiAvatarElement): HTMLElement {
 }
 
 describe('ki-avatar', () => {
+  // Design-system review 2026-11-20, item 4: a list of people must not read as
+  // a list of selected items, so onmars fills the avatar with a neutral surface.
+  it('fills the onmars avatar with the neutral s3 surface, not the selection tint', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Ana García', initials: 'AG' });
+    const probe = document.createElement('span');
+    landmark().append(probe);
+    const fill = (token: string): string => {
+      probe.style.backgroundColor = `var(${token})`;
+      return getComputedStyle(probe).backgroundColor;
+    };
+
+    expect(getComputedStyle(boxOf(el)).backgroundColor).toBe(fill('--ki-surface-s3'));
+    expect(getComputedStyle(boxOf(el)).backgroundColor).not.toBe(
+      fill('--ki-surface-primary-low-em'),
+    );
+  });
+
   it('S1 shows the loaded portrait covering the themed avatar box', async () => {
     cleanup();
     const el = await mount(landmark(), {

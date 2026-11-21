@@ -363,7 +363,13 @@ describe('the delivered document is a complete Kimen surface', () => {
     host.send(toolResult(iconSpec('circle-check', 'Confirmed')));
     await expect.element(surfaceFrame().getByRole('img', { name: 'Confirmed' })).toBeVisible();
 
-    host.send(toolResult(iconSpec('triangle-alert', 'Unselected')));
+    // The unselected name must be one no stock component draws: a component's
+    // own glyphs register in this realm and are then accepted (spec 069 S13).
+    const registry = (
+      host.view as unknown as Record<symbol, ReadonlyMap<string, string> | undefined>
+    )[Symbol.for('kimen.icon-registry.v1')];
+    expect(registry?.has('house'), 'a stock component now draws "house"').toBe(false);
+    host.send(toolResult(iconSpec('house', 'Unselected')));
     // The same host sends this marker after the tool result, so observing
     // the scheme change proves the frame processed both messages.
     host.send(hostContextChanged({ theme: 'dark' }));

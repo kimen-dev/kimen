@@ -134,7 +134,7 @@
       "--ki-tooltip-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Base background color of the tooltip. Onmars v1 uses a transparent backing beneath its glass image.",
+        "description": "Base background color of the tooltip. Onmars v1 used a transparent backing beneath its translucent image.",
         "replacement": null,
         "required": false,
         "type": null
@@ -150,7 +150,7 @@
       "--ki-tooltip-border-color": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.",
+        "description": "color used by the tooltip component for its edge (MarsUI hairline, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.",
         "replacement": null,
         "required": false,
         "type": null
@@ -158,7 +158,7 @@
       "--ki-tooltip-border-width": {
         "default": null,
         "deprecatedSince": null,
-        "description": "dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending).",
+        "description": "dimension used by the tooltip component for the outline width (MarsUI card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending).",
         "replacement": null,
         "required": false,
         "type": null
@@ -166,7 +166,7 @@
       "--ki-tooltip-fg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast).",
+        "description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; onmars v2 sets the inverse tooltip ink).",
         "replacement": null,
         "required": false,
         "type": null

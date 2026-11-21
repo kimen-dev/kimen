@@ -222,7 +222,7 @@
       "--ki-button-primary-neutral-rest-border": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).",
+        "description": "color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2).",
         "replacement": null,
         "required": false,
         "type": null
@@ -238,7 +238,7 @@
       "--ki-button-secondary-neutral-rest-bg": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint).",
+        "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: neutral, not a brand tint; white in onmars v2).",
         "replacement": null,
         "required": false,
         "type": null
@@ -246,7 +246,7 @@
       "--ki-button-secondary-neutral-rest-border": {
         "default": null,
         "deprecatedSince": null,
-        "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge).",
+        "description": "color used by the button component for secondary neutral rest border (MarsUI top/inline edge).",
         "replacement": null,
         "required": false,
         "type": null

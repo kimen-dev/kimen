@@ -100,7 +100,7 @@ confirmation button with the same label and event.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
 - `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background.
 - `--ki-dialog-backdrop-filter`: Complete backdrop filter behind the dialog surface.
-- `--ki-dialog-bg`: Base background color of the dialog. Onmars v1 uses a transparent backing beneath its glass image.
+- `--ki-dialog-bg`: Base background color of the dialog. Onmars v1 used a transparent backing beneath its translucent image.
 - `--ki-dialog-bg-image`: Optional CSS background image layered over the dialog fill. Use none for a solid fill.
 - `--ki-dialog-body-padding-block-end`: dimension used by the dialog component for body section padding block end (Modal compact Body: Space/5xl 20px.)
 - `--ki-dialog-body-padding-block-start`: dimension used by the dialog component for body section padding block start (Modal compact Body 16414:19668: Space/5xl 20px.)
@@ -146,8 +146,8 @@ confirmation button with the same label and event.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard-accelerate`: Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).
 - `--ki-spacing-action-hairline`: Width of the frame and divider in an action surface.
-- `--ki-state-layer-hover`: Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark).
-- `--ki-state-layer-pressed`: Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark).
+- `--ki-state-layer-hover`: Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the hover overlay (White/5 light, Black/5 dark).
+- `--ki-state-layer-pressed`: Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: one step above the hover overlay (White/8 light, Black/8 dark).
 - `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 - `--ki-typography-family-heading`: Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy.

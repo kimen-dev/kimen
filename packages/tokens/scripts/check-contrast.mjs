@@ -43,6 +43,26 @@ const CONTRAST_PAIRS = [
   { text: '--ki-text-danger', surface: '--ki-surface-s0' },
   { text: '--ki-text-danger', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
+  // Secondary text on the success fill (the success button's own fill) read
+  // 4.27:1 at white 72% and 1.43:1 on the light Material 3 dark fill
+  // (design-system review 2026-11-20).
+  { text: '--ki-text-secondary-on-success', surface: '--ki-surface-success-high-em' },
+  // The neutral low-em ink sets supporting text and meta. Material 3 light
+  // read 4.0-4.3:1 with the M3 outline tone (design-system review 2026-11-20).
+  ...['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].map((surface) => ({
+    text: '--ki-text-low-em',
+    surface,
+  })),
+  // The tonal med-em inks are published text tokens. Straight from the 500
+  // ramp steps they read 1.7-3.5:1 on the light pages, with no component
+  // painting them to trip a sweep (design-system review 2026-11-20); every
+  // theme now sets them as readable inks on s0-s2.
+  ...['info', 'success', 'warning', 'danger'].flatMap((tone) =>
+    ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].map((surface) => ({
+      text: `--ki-text-${tone}-med-em`,
+      surface,
+    })),
+  ),
 ];
 
 // Both variants share the destination inks. Check each ink against both

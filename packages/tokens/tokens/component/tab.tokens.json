@@ -37,7 +37,7 @@
         "rest": {
           "fg": {
             "$value": "{ki.text.high-em}",
-            "$description": "color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
+            "$description": "color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240)."
           },
           "bg": {
             "$value": "{ki.transparent-inverse}",
@@ -47,7 +47,7 @@
         "hover": {
           "fg": {
             "$value": "{ki.text.high-em}",
-            "$description": "color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
+            "$description": "color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240)."
           },
           "bg": {
             "$value": "{ki.transparent-inverse}",
@@ -57,7 +57,7 @@
         "active": {
           "fg": {
             "$value": "{ki.text.high-em}",
-            "$description": "color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
+            "$description": "color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never the accent; master 10048:1240)."
           },
           "bg": {
             "$value": "{ki.transparent-inverse}",

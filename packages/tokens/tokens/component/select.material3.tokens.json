@@ -81,16 +81,16 @@
           "$description": "Material 3 color used by the select component for disabled background."
         },
         "fg": {
-          "$value": "{ki.text.low-em}",
-          "$description": "Material 3 color used by the select component for disabled foreground."
+          "$value": "{ki.outline.strong}",
+          "$description": "Material 3 color used by the select component for disabled foreground. Kept on the M3 outline role (outline.strong) when the low-em text ink darkened."
         },
         "border": {
           "$value": "{ki.outline.low-em}",
           "$description": "Material 3 color used by the select component for disabled border."
         },
         "label-fg": {
-          "$value": "{ki.text.low-em}",
-          "$description": "Material 3 color used by the select component for disabled label foreground."
+          "$value": "{ki.outline.strong}",
+          "$description": "Material 3 color used by the select component for disabled label foreground. Kept on the M3 outline role (outline.strong) when the low-em text ink darkened."
         }
       },
       "placeholder-fg": {

@@ -8,6 +8,10 @@
       "hover-bg": {
         "$value": "{ki.surface.s3}",
         "$description": "Material 3 state backing for the overflow trigger and highlighted menu entries."
+      },
+      "separator": {
+        "$value": "{ki.outline.strong}",
+        "$description": "Material 3 keeps this mark on the M3 outline role (outline.strong), apart from the darker low-em text ink."
       }
     }
   }

@@ -125,7 +125,7 @@ None.
 - `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
 - `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-outline-control`: The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation.
+- `--ki-outline-control`: The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as an edge over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation.
 - `--ki-outline-danger-high-em`: semantic color for outline danger high em.
 - `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.

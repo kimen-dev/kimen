@@ -195,6 +195,24 @@ function box(element: Element): DOMRect {
   return element.getBoundingClientRect();
 }
 
+/** The box inside an element's border: where its padding starts. */
+function inner(element: Element): DOMRect {
+  const outer = box(element);
+  const style = getComputedStyle(element);
+  const [top, right, bottom, left] = [
+    style.borderTopWidth,
+    style.borderRightWidth,
+    style.borderBottomWidth,
+    style.borderLeftWidth,
+  ].map(Number.parseFloat) as [number, number, number, number];
+  return new DOMRect(
+    outer.left + left,
+    outer.top + top,
+    outer.width - left - right,
+    outer.height - top - bottom,
+  );
+}
+
 /** What a part paints: fill and ink, for telling tones apart. */
 function paint(element: Element): string {
   const style = getComputedStyle(element);
@@ -685,8 +703,9 @@ describe('ki-alert in a real browser', () => {
       tone: 'danger',
     });
 
+    // A2: the card carries the surface; the shell paints nothing in onmars.
     expect(await repaintedUnderForcedDark(el)).toEqual(
-      expect.arrayContaining(['alert', 'heading', 'message']),
+      expect.arrayContaining(['card', 'heading', 'message']),
     );
   });
 
@@ -716,13 +735,14 @@ describe('ki-alert in a real browser', () => {
     }
   });
 
-  it('S1 draws the borderless MarsUI card with the 12px stack gap and 4px text-stack gap', async () => {
+  it('S1 draws the hairline card with the 12px stack gap and 4px text-stack gap', async () => {
     cleanup();
     const el = await mount('Restart soon', { heading: 'Update available', tone: 'info' });
     const computed = getComputedStyle(part(el, 'card'));
 
-    // MarsUI never strokes alert surfaces.
-    expect(computed.borderTopWidth).toBe('0px');
+    // A2: onmars v2 edges the card with a hairline in the tone's outline.
+    expect(computed.borderTopWidth).toBe('1px');
+    expect(computed.borderTopStyle).toBe('solid');
     expect(computed.rowGap).toBe('12px');
 
     // Text_wrap: heading→description stack gap is Space/xs (4px), not the
@@ -786,26 +806,33 @@ describe('ki-alert in a real browser', () => {
 
 // Amendment A1: the Alert master anatomy (12074:6202, all five variants).
 describe('ki-alert Alert master anatomy, icon and actions', () => {
-  it('S20 holds its content in an elevated card inside a padded shell', async () => {
+  it('S20 paints its content as one flat card with a hairline edge', async () => {
     cleanup();
     const el = await mountComposed({ heading: 'Backup completed', tone: 'info' });
-    const shell = getComputedStyle(part(el, 'alert'));
-    const card = getComputedStyle(part(el, 'card'));
+    const shellPart = part(el, 'alert');
+    const cardPart = part(el, 'card');
+    const shell = getComputedStyle(shellPart);
+    const card = getComputedStyle(cardPart);
 
-    expect(shell.paddingBlockStart).toBe('12px');
-    expect(shell.paddingInlineStart).toBe('12px');
-    expect(shell.borderTopLeftRadius).toBe('28px');
+    // A2: no frame around the card — the shell paints nothing and holds no padding.
+    expect(shell.paddingBlockStart).toBe('0px');
+    expect(shell.paddingInlineStart).toBe('0px');
+    expect(shell.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect([box(cardPart).width, box(cardPart).height]).toEqual([
+      box(shellPart).width,
+      box(shellPart).height,
+    ]);
     expect(card.paddingBlockStart).toBe('12px');
     expect(card.paddingInlineStart).toBe('12px');
     expect(card.borderTopLeftRadius).toBe('12px');
-    // e5, read off its deepest layer.
-    expect(card.boxShadow).toContain('0px 56px 56px -28px');
+    expect(card.borderTopWidth).toBe('1px');
+    expect(hasVisibleShadow(card.boxShadow)).toBe(false);
   });
 
   it('S21 a slotted icon heads the card in a round 32px frame, above the heading', async () => {
     cleanup();
     const el = await mountComposed({ heading: 'Backup completed', icon: ICON });
-    const card = box(part(el, 'card'));
+    const card = inner(part(el, 'card'));
     const icon = part(el, 'icon');
     const heading = box(part(el, 'heading'));
 
@@ -819,7 +846,7 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
   it('S22 an alert without an icon reserves no space for one', async () => {
     cleanup();
     const el = await mountComposed({ heading: 'Backup completed' });
-    const card = box(part(el, 'card'));
+    const card = inner(part(el, 'card'));
 
     expect(box(part(el, 'heading')).top - card.top).toBeCloseTo(12, 0);
     expect(box(part(el, 'icon')).height).toBe(0);
@@ -833,7 +860,7 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
     });
     const [signOut, stay] = [...el.querySelectorAll('button[slot="actions"]')].map(box);
     const message = box(part(el, 'message'));
-    const card = box(part(el, 'card'));
+    const card = inner(part(el, 'card'));
     if (!signOut || !stay) {
       throw new Error('missing actions');
     }
@@ -848,7 +875,7 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
     cleanup();
     const el = await mountComposed({ message: 'Profile saved' });
 
-    expect(box(part(el, 'card')).bottom - box(part(el, 'message')).bottom).toBeCloseTo(12, 0);
+    expect(inner(part(el, 'card')).bottom - box(part(el, 'message')).bottom).toBeCloseTo(12, 0);
     expect(box(part(el, 'actions')).height).toBe(0);
   });
 
@@ -868,20 +895,25 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
   });
 
   it.each(['info', 'success', 'warning', 'danger'] as const)(
-    'S26 a %s alert keeps the neutral anatomy and colours everything but its icon',
+    'S26 a %s alert keeps the neutral anatomy and wears its tone on the card and the icon',
     async (tone) => {
       cleanup();
       const compose = { heading: 'Heads up', icon: ICON, actions: ['Review'], dismissible: true };
       const neutral = await mountComposed({ ...compose, tone: 'neutral' });
       const toned = await mountComposed({ ...compose, tone });
 
-      for (const name of ['alert', 'card', 'heading', 'message', 'dismiss']) {
+      for (const name of ['alert', 'heading', 'message', 'dismiss']) {
         expect(paint(part(toned, name)), name).toBe(paint(part(neutral, name)));
       }
       for (const name of ['alert', 'card', 'icon', 'actions']) {
         const [a, b] = [box(part(toned, name)), box(part(neutral, name))];
         expect([a.width, a.height], name).toEqual([b.width, b.height]);
       }
+      const [card, neutralCard] = [part(toned, 'card'), part(neutral, 'card')].map((node) =>
+        getComputedStyle(node),
+      ) as [CSSStyleDeclaration, CSSStyleDeclaration];
+      expect(card.backgroundColor).not.toBe(neutralCard.backgroundColor);
+      expect(card.borderTopColor).not.toBe(neutralCard.borderTopColor);
       expect(paint(part(toned, 'icon'))).not.toBe(paint(part(neutral, 'icon')));
     },
   );
@@ -1003,7 +1035,7 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
       icon: ICON,
       actions: ['Sign out', 'Stay signed in'],
     });
-    const card = box(part(el, 'card'));
+    const card = inner(part(el, 'card'));
     const dismiss = dismissButton(el);
     const [signOut, stay] = [...el.querySelectorAll('button[slot="actions"]')].map(box);
     if (!dismiss || !signOut || !stay) {
@@ -1041,10 +1073,13 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
     }
   });
 
-  it('S34 reduced transparency makes the shell opaque, drops its blur and keeps the card raised', async (test) => {
+  it('S34 reduced transparency makes the shell opaque, drops its blur and keeps the card elevation', async (test) => {
     cleanup();
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    // A theme that raises the card (the A1 master values); onmars v2 lays it flat.
+    document.documentElement.style.setProperty('--ki-alert-card-shadow', 'var(--ki-elevation-e5)');
     if (!(await browserCommands.emulateReducedTransparency('reduce'))) {
+      document.documentElement.style.removeProperty('--ki-alert-card-shadow');
       test.skip('this engine cannot emulate prefers-reduced-transparency');
     }
     try {
@@ -1055,8 +1090,9 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
       expect(['none', 'blur(0px)']).toContain(shell.backdropFilter);
       expect(shell.backgroundColor).toMatch(/^rgb\(/u);
       expect(card.backgroundColor).toMatch(/^rgb\(/u);
-      expect(card.boxShadow).not.toBe('none');
+      expect(hasVisibleShadow(card.boxShadow)).toBe(true);
     } finally {
+      document.documentElement.style.removeProperty('--ki-alert-card-shadow');
       await browserCommands.emulateReducedTransparency(null);
     }
   });
@@ -1077,5 +1113,89 @@ describe('ki-alert Alert master anatomy, icon and actions', () => {
     expect(heading.height).toBeGreaterThan(30);
     // ... and stops short of the dismiss control.
     expect(heading.right).toBeLessThanOrEqual(box(dismiss).left);
+  });
+});
+
+// Amendment A2 (2026-11-20): the tone on the card, and a default glyph per tone.
+describe('ki-alert default tone glyph', () => {
+  type KiIconElement = HTMLElement & { name: string };
+
+  /** The glyph drawn in the icon frame when nothing is slotted, if any. */
+  function defaultGlyph(el: KiAlertElement): KiIconElement | null {
+    return el.shadowRoot?.querySelector<KiIconElement>('[part="icon"] ki-icon') ?? null;
+  }
+
+  it.each([
+    ['info', 'info'],
+    ['success', 'circle-check'],
+    ['warning', 'triangle-alert'],
+    ['danger', 'octagon-alert'],
+  ] as const)(
+    'S36 a %s alert without an icon draws the %s glyph in its tone colors',
+    async (tone, name) => {
+      cleanup();
+      const neutral = await mountComposed({ heading: 'Heads up', tone: 'neutral' });
+      const el = await mountComposed({ heading: 'Heads up', tone });
+      const glyph = defaultGlyph(el);
+      const frame = part(el, 'icon');
+
+      expect(defaultGlyph(neutral)).toBeNull();
+      expect(box(part(neutral, 'icon')).height).toBe(0);
+      expect(glyph?.name).toBe(name);
+      await expect
+        .poll(() => glyph?.shadowRoot?.querySelector('svg')?.childElementCount ?? 0)
+        .toBeGreaterThan(0);
+      if (!glyph) {
+        throw new Error('missing default glyph');
+      }
+      // The frame shows, sized like a slotted icon, with the heading 12px below it.
+      expect(box(frame).width).toBeCloseTo(32, 0);
+      expect(box(part(el, 'heading')).top - box(frame).bottom).toBeCloseTo(12, 0);
+      expect(box(glyph).width).toBeCloseTo(Number.parseFloat(getComputedStyle(glyph).fontSize), 0);
+      // The glyph is drawn in the frame's tone ink, and stays out of the announcement.
+      expect(getComputedStyle(glyph).color).toBe(getComputedStyle(frame).color);
+      expect(frame.getAttribute('aria-hidden')).toBe('true');
+      expect(liveText(el)).toBe('Heads up Something you might like to know.');
+    },
+  );
+
+  it('S36 every tone draws a glyph of its own, in its own ink', async () => {
+    cleanup();
+    const inks = new Set<string>();
+    const names = new Set<string>();
+    for (const tone of ['info', 'success', 'warning', 'danger']) {
+      const el = await mountComposed({ tone });
+      names.add(defaultGlyph(el)?.name ?? '');
+      inks.add(paint(part(el, 'icon')));
+    }
+
+    expect(names.size).toBe(4);
+    expect(inks.size).toBe(4);
+  });
+
+  it('S36 default glyphs keep zero axe violations across the four tones', async () => {
+    cleanup();
+    const main = document.createElement('main');
+    document.body.append(main);
+    for (const tone of ['info', 'success', 'warning', 'danger']) {
+      await mountComposed({ heading: `${tone} heading`, tone }, main);
+    }
+    await motionSettled(main);
+    await expectAccessible(main);
+  });
+
+  it('S37 a slotted icon replaces the default glyph, which returns once it is removed', async () => {
+    cleanup();
+    const el = await mountComposed({ heading: 'Payment failed', tone: 'danger', icon: ICON });
+
+    expect(defaultGlyph(el)).toBeNull();
+    const slot = el.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="icon"]');
+    expect(slot?.assignedElements().map((node) => node.localName)).toEqual(['svg']);
+    expect(box(part(el, 'icon')).width).toBeCloseTo(32, 0);
+
+    el.querySelector('[slot="icon"]')?.remove();
+
+    await expect.poll(() => defaultGlyph(el)?.name).toBe('octagon-alert');
+    expect(box(part(el, 'icon')).width).toBeCloseTo(32, 0);
   });
 });
