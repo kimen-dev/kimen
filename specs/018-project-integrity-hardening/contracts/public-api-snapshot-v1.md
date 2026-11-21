@@ -60,7 +60,10 @@ records the normalized effective value of every public semantic/component
 token in light and dark contexts. Resolution follows `var()` aliases across
 the full stylesheet and takes the scheme's branch of every `light-dark()`
 value; a theme stylesheet carries overrides only and is resolved over the
-default stylesheet it is loaded with. The emitted grammar is closed (the
+default stylesheet it is loaded with. An sRGB `color-mix()` of a resolved
+colour with `transparent` is recorded as the `rgba()` it computes to (the
+colour's channels at the scaled alpha), so a translucent ramp variant
+derived from its step publishes the same value as the literal it replaced. The emitted grammar is closed (the
 colour-scheme rules, one token rule per stylesheet, no conditional rules):
 anything else fails the gate. Internal DTCG type/default representation
 changes — and changes in how the stylesheets carry the same effective values —

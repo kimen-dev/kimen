@@ -79,10 +79,21 @@ const MOBILE_NAV_STATE_PAIRS = MOBILE_NAV_SURFACES.map((surface) => ({
   minRatio: NON_TEXT_MIN_RATIO,
 }));
 
+// A translucent ramp variant (spec 001 S15) is an sRGB mix of its step with
+// `transparent`. The mix is premultiplied, so the step's channels survive and
+// only its alpha scales: exactly the rgba() a literal variant spelled. No other
+// mix is a token shape, so no other mix is accepted.
+const COLOR_MIX = /^color-mix\(\s*in srgb\s*,\s*(.+?)\s+(\d+(?:\.\d+)?)%\s*,\s*transparent\s*\)$/u;
+
 export function parseColor(value) {
   const color = value.trim().toLowerCase();
   if (color === 'transparent') {
     return { r: 0, g: 0, b: 0, a: 0 };
+  }
+  const mix = COLOR_MIX.exec(color);
+  if (mix) {
+    const step = parseColor(mix[1]);
+    return { ...step, a: Number(((step.a * Number(mix[2])) / 100).toFixed(4)) };
   }
   const hex = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/u);
 
@@ -287,10 +298,21 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
   const reference = raw.match(/^var\((--ki-[\w-]+)\)$/u);
 
   if (!reference) {
-    return raw;
+    // A colour mix reads its ramp step where it is declared: substitute it,
+    // as the browser does, so a theme's own step is the one measured.
+    return raw.startsWith('color-mix(')
+      ? raw.replaceAll(/var\((--ki-[\w-]+)\)/gu, (_, inner) =>
+          resolveCustomProperty(inner, declarations, new Set([...seen, name])),
+        )
+      : raw;
   }
 
   return resolveCustomProperty(reference[1], declarations, new Set([...seen, name]));
+}
+
+/** The colour a token resolves to in one context's declarations. */
+export function resolveColour(name, declarations) {
+  return parseColor(resolveCustomProperty(name, declarations));
 }
 
 // Component-layer sweep: every interactive fg/bg cell of a component matrix

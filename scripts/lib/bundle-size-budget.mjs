@@ -22,8 +22,12 @@ const BASE_BUDGETS = {
   // The glyphs components draw themselves had been dropped from both by an undeclared
   // side effect; restoring them (2026-11-20) measured +859 B raw for the document and
   // +879 B raw for kimen-mcp, which the raw bases absorb. The compressed growth fits.
+  // Deriving the 500-step alphas from their ramp with color-mix() (0.1.1 integrator
+  // feedback, item 1; approved 2026-11-21) measured +1,066 B raw for kimen-mcp, which
+  // embeds the token stylesheets; the raw base absorbs it. The compressed growth fits,
+  // and the MCP Apps document stays within its base.
   mcpApps: { raw: 782_242, gzip: 177_349, brotli: 140_306 },
-  mcpServer: { raw: 2_574_055, gzip: 484_697, brotli: 380_341 },
+  mcpServer: { raw: 2_575_155, gzip: 484_697, brotli: 380_341 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.

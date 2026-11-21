@@ -19,6 +19,7 @@ import {
   placeholderCells,
   ratioReadoutPairs,
   relativeLuminance,
+  resolveColour,
   resolveContrastPairs,
   splitToneFamilies,
   toneFamilies,
@@ -41,6 +42,44 @@ test('alpha colors composite over an opaque surface before contrast', () => {
     g: 128,
     b: 128,
     a: 1,
+  });
+});
+
+// Spec 001 S15: translucent ramp variants are sRGB mixes of their step with
+// `transparent`. The premultiplied mix keeps the step's channels and scales
+// its alpha, which is exactly the rgba() a literal variant spelled.
+test('a colour mix of a step with transparent measures as the step at that alpha', () => {
+  assert.deepEqual(parseColor('color-mix(in srgb,#bc4c26 12%,transparent)'), {
+    r: 188,
+    g: 76,
+    b: 38,
+    a: 0.12,
+  });
+  assert.deepEqual(parseColor('color-mix(in srgb, rgba(188, 76, 38, 0.5) 50%, transparent)'), {
+    r: 188,
+    g: 76,
+    b: 38,
+    a: 0.25,
+  });
+  assert.throws(() => parseColor('color-mix(in oklch,#bc4c26 12%,transparent)'), /Unsupported/u);
+  assert.throws(() => parseColor('color-mix(in srgb,#bc4c26 12%,#ffffff)'), /Unsupported/u);
+});
+
+test('a colour mix resolves through the ramp step a theme reassigns', () => {
+  // A theme that redefines the step without touching its variant still gets
+  // the variant measured with its own step, as the browser computes it.
+  const { light } = collectSchemeDeclarations(
+    `${built('tokens.css')}\n:root { --ki-color-brand-500: #000000; }`,
+  );
+  assert.equal(
+    light.get('--ki-color-brand-500-alpha-1'),
+    'color-mix(in srgb,var(--ki-color-brand-500) 12%,transparent)',
+  );
+  assert.deepEqual(resolveColour('--ki-surface-primary-base-em-alpha', light), {
+    r: 0,
+    g: 0,
+    b: 0,
+    a: 0.12,
   });
 });
 

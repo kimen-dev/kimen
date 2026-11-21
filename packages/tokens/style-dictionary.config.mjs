@@ -24,6 +24,7 @@ import { transformGroups, transforms } from 'style-dictionary/enums';
 // Both are pinned by scripts/style-dictionary-config.test.mjs.
 const KIMEN_CSS_GROUP = 'kimen/css';
 const KIMEN_COLOR_CSS = 'kimen/color/css';
+const KIMEN_COLOR_MIX = 'kimen/color/mix';
 const KIMEN_TIME_SECONDS = 'kimen/time/seconds';
 const KIMEN_SHADOW_CSS = 'kimen/shadow/css';
 const predefined = StyleDictionary.hooks.transforms;
@@ -38,11 +39,47 @@ const shadowCss = predefined[transforms.shadowCssShorthand];
 const normalizeShadowLayer = (layer) =>
   typeof layer === 'string' && layer.trim().toLowerCase() === 'none' ? '0 0 #0000' : layer;
 
+// A translucent variant of a ramp step (`500-alpha-1` …, spec 001 S15) is
+// authored as `color-mix(in srgb, {ramp.step} N%, transparent)`. With
+// outputReferences the stylesheet keeps that expression, so the variant is
+// recomputed on whatever element reassigns the step: a theme that redefines a
+// ramp gets matching alphas for free. Its resolved value — what aliases and
+// the token reference read — is the rgba() the browser computes for it: the
+// step's channels at N% opacity (an sRGB mix with `transparent` is
+// premultiplied, so the channels survive unchanged). Only this exact shape is
+// resolved; any other mix keeps its unresolved value, which
+// compositionDeclarations() (./scripts/theme-stylesheet.mjs) rejects, so it
+// fails the build rather than resolve to a guess.
+const COLOR_MIX = /^color-mix\(in srgb, (#[0-9a-f]{6}) ([1-9][0-9]?)%, transparent\)$/u;
+const isColorMix = (value) => typeof value === 'string' && value.startsWith('color-mix(');
+
+/** The rgba() value of a supported colour mix; any other value unchanged. */
+export function resolvedColorMix(value) {
+  const match = COLOR_MIX.exec(value);
+  if (match === null) return value;
+  const [, hex, percent] = match;
+  const channels = [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
+  return `rgba(${channels.join(', ')}, ${Number(percent) / 100})`;
+}
+
+const resolveColorMix = (token, _platform, options) =>
+  resolvedColorMix(options.usesDtcg ? token.$value : token.value);
+
 const kimenCssHooks = {
   transforms: {
+    [KIMEN_COLOR_MIX]: {
+      type: 'value',
+      transitive: true,
+      filter: (token, options) =>
+        (options.usesDtcg ? token.$type : token.type) === 'color' &&
+        isColorMix(options.usesDtcg ? token.$value : token.value),
+      transform: resolveColorMix,
+    },
     [KIMEN_COLOR_CSS]: {
       type: colorCss.type,
-      filter: colorCss.filter,
+      filter: (token, options) =>
+        colorCss.filter(token, options) &&
+        !isColorMix(options.usesDtcg ? token.$value : token.value),
       // color/rgb is rgba() with a two-decimal alpha unless the colour is
       // fully opaque, which is exactly when color/hex yields #rrggbb.
       transform: (token, platform, options) => {
@@ -67,12 +104,14 @@ const kimenCssHooks = {
     },
   },
   transformGroups: {
-    [KIMEN_CSS_GROUP]: StyleDictionary.hooks.transformGroups[transformGroups.css].map((name) => {
-      if (name === transforms.colorCss) return KIMEN_COLOR_CSS;
-      if (name === transforms.timeSeconds) return KIMEN_TIME_SECONDS;
-      if (name === transforms.shadowCssShorthand) return KIMEN_SHADOW_CSS;
-      return name;
-    }),
+    [KIMEN_CSS_GROUP]: StyleDictionary.hooks.transformGroups[transformGroups.css].flatMap(
+      (name) => {
+        if (name === transforms.colorCss) return [KIMEN_COLOR_CSS, KIMEN_COLOR_MIX];
+        if (name === transforms.timeSeconds) return [KIMEN_TIME_SECONDS];
+        if (name === transforms.shadowCssShorthand) return [KIMEN_SHADOW_CSS];
+        return [name];
+      },
+    ),
   },
 };
 

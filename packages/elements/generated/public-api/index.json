@@ -62301,7 +62301,7 @@
           "--ki-alert-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -63825,7 +63825,7 @@
           "--ki-button-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -63917,7 +63917,7 @@
             "type": null
           },
           "--ki-button-ghost-danger-hover-bg": {
-            "default": "rgba(239, 78, 105, 0.12)",
+            "default": "color-mix(in srgb, #ef4e69 12%, transparent)",
             "deprecatedSince": null,
             "description": "color used by the button component for ghost danger hover background.",
             "replacement": null,
@@ -64029,7 +64029,7 @@
             "type": null
           },
           "--ki-button-ghost-neutral-hover-bg": {
-            "default": "rgba(188, 76, 38, 0.12)",
+            "default": "color-mix(in srgb, #bc4c26 12%, transparent)",
             "deprecatedSince": null,
             "description": "color used by the button component for ghost neutral hover background.",
             "replacement": null,
@@ -64149,7 +64149,7 @@
             "type": null
           },
           "--ki-button-ghost-success-hover-bg": {
-            "default": "#409b3f1f",
+            "default": "color-mix(in srgb, #409b3f 12%, transparent)",
             "deprecatedSince": null,
             "description": "color used by the button component for ghost success hover background.",
             "replacement": null,
@@ -64933,7 +64933,7 @@
             "type": null
           },
           "--ki-button-quaternary-danger-hover-bg": {
-            "default": "rgba(239, 78, 105, 0.12)",
+            "default": "color-mix(in srgb, #ef4e69 12%, transparent)",
             "deprecatedSince": null,
             "description": "color used by the button component for quaternary danger hover background.",
             "replacement": null,
@@ -65165,7 +65165,7 @@
             "type": null
           },
           "--ki-button-quaternary-success-hover-bg": {
-            "default": "#409b3f1f",
+            "default": "color-mix(in srgb, #409b3f 12%, transparent)",
             "deprecatedSince": null,
             "description": "color used by the button component for quaternary success hover background.",
             "replacement": null,
@@ -66745,7 +66745,7 @@
           "--ki-checkbox-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -71249,7 +71249,7 @@
           "--ki-focus-danger": {
             "default": {
               "blur": 0,
-              "color": "rgba(239, 78, 105, 0.2)",
+              "color": "color-mix(in srgb, #ef4e69 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -71277,7 +71277,7 @@
           "--ki-focus-primary": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -72112,7 +72112,7 @@
           "--ki-input-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -72262,7 +72262,7 @@
           "--ki-input-invalid-ring": {
             "default": {
               "blur": 0,
-              "color": "rgba(239, 78, 105, 0.2)",
+              "color": "color-mix(in srgb, #ef4e69 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -76045,7 +76045,7 @@
             "type": "color"
           },
           "--ki-outline-danger-base-em-alpha": {
-            "default": "rgba(239, 78, 105, 0.2)",
+            "default": "color-mix(in srgb, #ef4e69 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline danger base em alpha.",
             "replacement": null,
@@ -76069,7 +76069,7 @@
             "type": "color"
           },
           "--ki-outline-danger-low-em-alpha": {
-            "default": "rgba(239, 78, 105, 0.4)",
+            "default": "color-mix(in srgb, #ef4e69 40%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline danger low em alpha.",
             "replacement": null,
@@ -76109,7 +76109,7 @@
             "type": "color"
           },
           "--ki-outline-info-base-em-alpha": {
-            "default": "#13b9ec33",
+            "default": "color-mix(in srgb, #13b9ec 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline info base em alpha.",
             "replacement": null,
@@ -76133,7 +76133,7 @@
             "type": "color"
           },
           "--ki-outline-info-low-em-alpha": {
-            "default": "#13b9ec66",
+            "default": "color-mix(in srgb, #13b9ec 40%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline info low em alpha.",
             "replacement": null,
@@ -76197,7 +76197,7 @@
             "type": "color"
           },
           "--ki-outline-primary-base-em-alpha": {
-            "default": "rgba(188, 76, 38, 0.2)",
+            "default": "color-mix(in srgb, #bc4c26 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline primary base em alpha.",
             "replacement": null,
@@ -76237,7 +76237,7 @@
             "type": "color"
           },
           "--ki-outline-primary-low-em-alpha": {
-            "default": "rgba(188, 76, 38, 0.4)",
+            "default": "color-mix(in srgb, #bc4c26 40%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline primary low em alpha.",
             "replacement": null,
@@ -76285,7 +76285,7 @@
             "type": "color"
           },
           "--ki-outline-success-base-em-alpha": {
-            "default": "#409b3f33",
+            "default": "color-mix(in srgb, #409b3f 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline success base em alpha.",
             "replacement": null,
@@ -76309,7 +76309,7 @@
             "type": "color"
           },
           "--ki-outline-success-low-em-alpha": {
-            "default": "#409b3f66",
+            "default": "color-mix(in srgb, #409b3f 40%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline success low em alpha.",
             "replacement": null,
@@ -76333,7 +76333,7 @@
             "type": "color"
           },
           "--ki-outline-warning-base-em-alpha": {
-            "default": "#f8ac3a33",
+            "default": "color-mix(in srgb, #f8ac3a 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline warning base em alpha.",
             "replacement": null,
@@ -76357,7 +76357,7 @@
             "type": "color"
           },
           "--ki-outline-warning-low-em-alpha": {
-            "default": "#f8ac3a66",
+            "default": "color-mix(in srgb, #f8ac3a 40%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for outline warning low em alpha.",
             "replacement": null,
@@ -77003,7 +77003,7 @@
           "--ki-radio-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -77678,7 +77678,7 @@
           "--ki-scroller-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -78344,7 +78344,7 @@
           "--ki-select-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -81023,7 +81023,7 @@
             "type": "color"
           },
           "--ki-surface-danger-base-em-alpha": {
-            "default": "rgba(239, 78, 105, 0.12)",
+            "default": "color-mix(in srgb, #ef4e69 12%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface danger base em alpha.",
             "replacement": null,
@@ -81055,7 +81055,7 @@
             "type": "color"
           },
           "--ki-surface-danger-low-em-alpha": {
-            "default": "rgba(239, 78, 105, 0.2)",
+            "default": "color-mix(in srgb, #ef4e69 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface danger low em alpha.",
             "replacement": null,
@@ -81191,7 +81191,7 @@
             "type": "color"
           },
           "--ki-surface-info-base-em-alpha": {
-            "default": "#13b9ec1f",
+            "default": "color-mix(in srgb, #13b9ec 12%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface info base em alpha.",
             "replacement": null,
@@ -81215,7 +81215,7 @@
             "type": "color"
           },
           "--ki-surface-info-low-em-alpha": {
-            "default": "#13b9ec33",
+            "default": "color-mix(in srgb, #13b9ec 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface info low em alpha.",
             "replacement": null,
@@ -81271,7 +81271,7 @@
             "type": "color"
           },
           "--ki-surface-primary-base-em-alpha": {
-            "default": "rgba(188, 76, 38, 0.12)",
+            "default": "color-mix(in srgb, #bc4c26 12%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface primary base em alpha.",
             "replacement": null,
@@ -81303,7 +81303,7 @@
             "type": "color"
           },
           "--ki-surface-primary-low-em-alpha": {
-            "default": "rgba(188, 76, 38, 0.2)",
+            "default": "color-mix(in srgb, #bc4c26 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface primary low em alpha.",
             "replacement": null,
@@ -81559,7 +81559,7 @@
             "type": "color"
           },
           "--ki-surface-success-base-em-alpha": {
-            "default": "#409b3f1f",
+            "default": "color-mix(in srgb, #409b3f 12%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface success base em alpha.",
             "replacement": null,
@@ -81591,7 +81591,7 @@
             "type": "color"
           },
           "--ki-surface-success-low-em-alpha": {
-            "default": "#409b3f33",
+            "default": "color-mix(in srgb, #409b3f 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface success low em alpha.",
             "replacement": null,
@@ -81663,7 +81663,7 @@
             "type": "color"
           },
           "--ki-surface-warning-base-em-alpha": {
-            "default": "#f8ac3a1f",
+            "default": "color-mix(in srgb, #f8ac3a 12%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface warning base em alpha.",
             "replacement": null,
@@ -81687,7 +81687,7 @@
             "type": "color"
           },
           "--ki-surface-warning-low-em-alpha": {
-            "default": "#f8ac3a33",
+            "default": "color-mix(in srgb, #f8ac3a 20%, transparent)",
             "deprecatedSince": null,
             "description": "semantic color for surface warning low em alpha.",
             "replacement": null,
@@ -81857,7 +81857,7 @@
           "--ki-switch-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -82439,7 +82439,7 @@
           "--ki-tab-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -83725,7 +83725,7 @@
           "--ki-textarea-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "rgba(188, 76, 38, 0.2)",
+              "color": "color-mix(in srgb, #bc4c26 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -83851,7 +83851,7 @@
           "--ki-textarea-invalid-ring": {
             "default": {
               "blur": 0,
-              "color": "rgba(239, 78, 105, 0.2)",
+              "color": "color-mix(in srgb, #ef4e69 20%, transparent)",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -86580,5 +86580,5 @@
       }
     }
   },
-  "surfaceSha256": "7562aee00d5cb45434cca258352b89b2419327aa810639b76e747b19139600be"
+  "surfaceSha256": "2723f0f40ee2fb5892acf684c8e929d9ac7d7d35747278be9f2a8bf146a12cc0"
 }

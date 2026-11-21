@@ -8,7 +8,7 @@ The interface this feature exposes to consumers (pre-1.0; additive; Art. IX).
 |---|---|---|
 | `@kimen/tokens/css` | `dist/css/tokens.css` | The colour-scheme contract (a zero-specificity `color-scheme` default on the root, pinned by `data-ki-color-scheme`) and every onmars token, declared once on `:root` and on any themed subtree |
 | `@kimen/tokens/css/material3` | `dist/css/tokens.material3.css` | The tokens material3 changes over onmars, scoped to `data-ki-theme='material3'` on the root or on any element |
-| `@kimen/tokens/css/base` | `dist/css/base.css` | The opt-in page contract: page background, text colour and body typeface painted from tokens. Declares no `color-scheme` |
+| `@kimen/tokens/css/base` | `dist/css/base.css` | The opt-in page contract: page background, text colour and body typeface painted from tokens, and the items of Kimen groups laid out as blocks until their tags register (S17). Declares no `color-scheme` |
 
 Loading `@kimen/tokens/css` is the only requirement. Theme stylesheets are
 opt-in additions loaded **alongside** it: a theme stylesheet carries only its
@@ -37,6 +37,35 @@ Both are read on the document root (`<html>`) **and on any element**
   reassigns tokens for a subtree (`[data-ki-theme='acme'] { … }`).
 - A declaration restyles what consumes tokens. It paints nothing on the
   element that carries it.
+- A themed element recomputes every alias from the tokens declared on it,
+  palette tokens included: `[data-ki-theme='acme'] { --ki-color-gray-50: … }`
+  restyles every semantic surface inside the region (S16). The same rule on
+  an element without `data-ki-theme` changes the palette token there and no
+  alias of it, so semantic and component tokens keep the values computed on
+  the nearest theme root. Page aliases of Kimen tokens follow the same rule:
+  declare them on `:root, [data-ki-theme]` to have them recomputed in every
+  themed region.
+
+## 2a. Who reassigns which layer
+
+- A **theme** — a complete restyle, such as material3 or a brand's own — may
+  redefine palette tokens (`--ki-color-*` ramps) and semantic tokens, on the
+  root or on a theme root. Translucent variants
+  (`--ki-color-<ramp>-500-alpha-<n>`) are mixes of their ramp step, so a
+  theme that redefines the step gets matching variants (S15).
+- An **application** that uses a theme reassigns semantic tokens, and
+  component tokens for one component, never palette steps. Every semantic
+  pair is contrast-checked against the theme's palette; a palette step
+  changed by an application is checked by nobody.
+- A theme that sets a token a preference mode reassigns (the generated token
+  reference lists them per mode) replaces the mode's value too, because the
+  theme's rule and the mode's rule declare the same property on the same
+  element. It restates those tokens under the mode's media query and
+  declaration, as the theming guide shows.
+- A theme does not declare `color-scheme` in a selector of attribute
+  specificity or more. `[data-ki-color-scheme]` is the scheme switch; a theme
+  that needs a default scheme declares it at zero specificity
+  (`:where([data-ki-theme='acme']) { color-scheme: dark }`).
 
 ## 3. Colour-scheme contract
 
@@ -72,7 +101,7 @@ every theme and scheme — the invariant S6 enforces):
 
 | Family | Examples | Layer |
 |---|---|---|
-| `--ki-color-{ramp}-{step}` | `--ki-color-gray-500`, `--ki-color-danger-500-alpha-2` | primitive |
+| `--ki-color-{ramp}-{step}` | `--ki-color-gray-500`, `--ki-color-danger-500-alpha-2` (a mix of `--ki-color-danger-500`, S15) | primitive |
 | `--ki-space-*` | `--ki-space-md`, `--ki-space-26xl` | primitive |
 | `--ki-radius-*` | `--ki-radius-md`, `--ki-radius-component-sm`, `--ki-radius-round` | primitive |
 | `--ki-color-brand-*` | `--ki-color-brand-500`, `--ki-color-brand-high-em` | theme |
@@ -108,6 +137,11 @@ Deprecated compat aliases (kept until a formal deprecation cycle):
    nested declarations compose (S8-S12).
 7. The tokens stylesheet alone keeps the page coherent: the browser paints
    the scheme the tokens resolve to (S13).
+8. A translucent ramp variant follows its ramp step wherever the step is
+   redefined on a theme root (S15), and a themed region recomputes its
+   semantic tokens from the palette declared on it (S16).
+9. With the page contract loaded, unregistered group items lay out as blocks,
+   and registered components are untouched (S17).
 
 ## 6. Changes from the first publication of this contract
 
@@ -122,3 +156,5 @@ are unchanged. What changed is how the stylesheets carry them:
 | `@kimen/tokens/css/material3` declared the full contract | It declares its overrides only | A page loading the material3 stylesheet without the default one (never supported, but it worked). A consumer `:root` reassignment under material3 used to lose for every token (the theme block redeclared all of them at higher specificity); it now loses only for the tokens material3 overrides |
 | Per-scheme files `tokens.light.css`, `tokens.dark.css`, `tokens.material3.light.css`, `tokens.material3.dark.css` in `dist/css` | Not emitted | Nobody through the package exports: they were never exported |
 | Token descriptions emitted as CSS comments | No comments in `dist` | Nobody: the token reference is generated from the sources |
+| Translucent ramp variants (`--ki-color-*-500-alpha-*`) emitted as rgba() literals | `color-mix(in srgb, var(--ki-color-<ramp>-500) N%, transparent)` | A theme that redefines a ramp step: its variants now follow it (S15). Script reading a variant with `getPropertyValue()` gets the mix, and a computed colour that uses one serializes as `color(srgb …)`. The effective colours are unchanged, except `--ki-color-dark-500-alpha-*` in onmars, which no component paints: it now mixes the onmars `dark-500` it is named after (`#494642`) instead of the earlier `#3a3a3a` |
+| The page contract painted the page only | It also lays out unregistered group items as blocks (S17) | A page whose component scripts are late or fail: segments, radios and other items read as a list instead of one run of text |

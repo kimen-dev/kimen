@@ -95,6 +95,7 @@ document themed that way at the root.
 1. **Given** an onmars document, **When** a subtree declares theme "material3", **Then** components inside it render as in a material3 document and components outside keep the onmars appearance.
 2. **Given** a light document, **When** a subtree declares scheme "dark", **Then** components inside it render as in a dark document and components outside keep the light appearance.
 3. **Given** nested subtrees, **When** each declares a theme and/or a scheme, **Then** every component follows its nearest declaration.
+4. **Given** a region that declares its own theme name, **When** the page redefines palette tokens on it, **Then** the semantic tokens and the translucent variants inside the region follow the region's palette (S15, S16).
 
 ---
 
@@ -127,6 +128,14 @@ actually behind it, down to the browser canvas.
   fallback as at the root).
 - A subtree declares only a scheme inside a themed ancestor subtree: it keeps
   that ancestor's theme and flips its scheme alone.
+- A page redefines a palette token on an element that declares no theme
+  name: the token changes there, but every alias of it keeps the value
+  computed on the nearest theme root, so semantic tokens do not follow. The
+  theming guides name the theme root as the place to redefine tokens (S16).
+- The component scripts load late or fail: with the page contract loaded,
+  the items of groups lay out as one block each instead of one run of text
+  (S17). Without the page contract, unregistered tags keep the browser's
+  inline default.
 - A page pins its own `color-scheme`: the tokens follow the page's
   declaration, not the system preference, wherever the page declares it
   relative to the tokens stylesheet (S14).
@@ -240,17 +249,40 @@ Feature: Tokens and theming with onmars as the default theme
     And the host page's own stylesheet declares the color scheme "light" for the page
     When the document renders under a dark system color scheme
     Then a button and a text field render as they do in a light document
+
+  # S15
+  Scenario: a theme that redefines a colour ramp gets matching translucent variants
+    Given an onmars document with a themed region whose theme redefines the brand ramp step "500"
+    When a quiet button inside the region and a quiet button outside it are hovered
+    Then the hover fill inside the region is the region's brand step at the onmars alpha
+    And the hover fill outside the region keeps the onmars terracotta
+
+  # S16
+  Scenario: a themed region that redefines the palette recomputes its semantic tokens
+    Given an onmars document with a region that declares its own theme name
+    And the page's stylesheet redefines the neutral ramp on that region
+    When the document renders
+    Then the semantic surfaces inside the region resolve from the region's ramp
+    And the semantic surfaces outside the region keep the onmars values
+
+  # S17
+  Scenario: the page contract lays out components that have not registered yet
+    Given a document that loads the Kimen tokens stylesheet and the page contract
+    And no script has registered the segmented control or the radio group
+    When the document renders their markup
+    Then each segment and each radio sits on its own line
+    And the same markup lays out as the components style it once they register
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S13 | |
+| Core behavior | S1, S2, S13, S17 | |
 | Keyboard path | — | Token-only feature: no interactive surface ships in this feature |
 | Assistive-tech outcome | — | No markup or announced state ships; contrast obligations are covered by FR-009/SC-005 |
 | Form participation | — | No form component ships in this feature |
-| Theming | S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S14 | |
+| Theming | S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S14, S15, S16 | |
 
 ## Requirements *(mandatory)*
 
@@ -296,6 +328,22 @@ Feature: Tokens and theming with onmars as the default theme
   document MUST be a default that any `color-scheme` the host page declares
   for its own document overrides, in either stylesheet order; an explicit
   `data-ki-color-scheme` declaration keeps forcing the scheme (FR-003).
+- **FR-017**: Every translucent variant of a colour ramp step
+  (`--ki-color-<ramp>-500-alpha-<n>`) MUST be derived from that step in the
+  stylesheet, so a theme or a themed region that redefines the step gets
+  matching variants without redeclaring them (S15). The effective value of
+  every variant in the shipped themes, Material 3 included, stays the value
+  it had as a literal.
+- **FR-018**: An element that declares a theme name MUST recompute every
+  semantic and component token from the tokens declared on it, so a page
+  that redefines palette tokens on that element restyles the region (S16).
+  A plain element without a theme name does not recompute aliases; the
+  theming guides MUST say so and show the theme-root pattern.
+- **FR-019**: The page contract MUST lay out the items of Kimen groups
+  (segments, radios, checkboxes, options, menu, list, tab, tree, step,
+  timeline, sidebar and mobile-nav items) as blocks while their tags are not
+  registered, with no paint and zero specificity, and MUST stop affecting a
+  tag once it registers (S17).
 
 ### Key Entities
 

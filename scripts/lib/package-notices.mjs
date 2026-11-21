@@ -19,15 +19,22 @@ const SECTION_START = new RegExp(`^${RULE}\\nThird-party notices: (.+)\\n${RULE}
 // - @kimen/tokens ships Kimen's stylesheets and the optional onmars fonts.
 // - The MCP Apps adapter and server embed the element runtime, QR encoder
 //   and the stock Lucide icon in the packaged MCP Apps document.
+// - @kimen/catalog, @kimen/emitter and @kimen/adapter-a2ui ship only Kimen's
+//   compiled sources. Their dependencies are installed, not bundled, so
+//   they carry the header alone.
 const ELEMENT_BUNDLE_NOTICES = Object.freeze([
   'QR Code generator library (MIT)',
   '@stencil/core (MIT)',
   'Lucide 1.63.0 and Feather icons (ISC and MIT)',
 ]);
+const NO_THIRD_PARTY_NOTICES = Object.freeze([]);
 
 export const PACKAGE_NOTICE_SECTIONS = Object.freeze({
   '@kimen/elements': ELEMENT_BUNDLE_NOTICES,
   '@kimen/tokens': Object.freeze(['onmars theme fonts (SIL OFL 1.1)']),
+  '@kimen/catalog': NO_THIRD_PARTY_NOTICES,
+  '@kimen/emitter': NO_THIRD_PARTY_NOTICES,
+  '@kimen/adapter-a2ui': NO_THIRD_PARTY_NOTICES,
   '@kimen/adapter-mcp-apps': ELEMENT_BUNDLE_NOTICES,
   '@kimen/mcp-server': Object.freeze([
     ...ELEMENT_BUNDLE_NOTICES,
