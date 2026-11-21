@@ -4,6 +4,7 @@ import {
   Element,
   Event,
   type EventEmitter,
+  forceUpdate,
   h,
   Listen,
   Prop,
@@ -37,6 +38,9 @@ export interface KiCheckboxGroupChangeDetail {
 
 type CheckboxOption = HTMLElement & { checked: boolean; disabled: boolean; value?: string };
 
+// Scoped to this group's shadow root, so a static id is unambiguous.
+const LEGEND_ID = 'group-label';
+
 /**
  * A form-associated group of independently selectable checkboxes.
  *
@@ -62,8 +66,35 @@ export class KiCheckboxGroup {
   @Element() private readonly host!: HTMLElement;
   @AttachInternals() private readonly internals!: ElementInternals;
 
-  /** Visible legend and accessible name for these choices. */
+  /**
+   * Visible legend and accessible name for these choices.
+   * When NOT to use: do not omit it unless the host's `aria-labelledby` names
+   * the group from the page.
+   *
+   * Naming from the page: set `aria-labelledby` on the host to the ids of
+   * elements in the same document or shadow root, such as the heading that
+   * already asks the question. The group then takes its name from them,
+   * followed by its own `label` when set. The ids are read when the group
+   * renders and whenever the attribute changes.
+   * When to use: the question is written on the page above the options; omit
+   * `label` so the question is not shown, or read, twice.
+   * When NOT to use: do not reference elements inside another component's
+   * shadow root, which an id reference cannot reach.
+   */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * Hides the legend from view and from reading order while it stays the
+   * group's accessible name, so a screen reader announces it once, as the
+   * group's name.
+   * When to use: the layout already makes the question obvious to sighted
+   * people but the group still needs a name of its own.
+   * When NOT to use: do not hide a legend that repeats a question already on
+   * the page; point `aria-labelledby` at that question instead.
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) labelHidden = false;
 
   /** Form-data key repeated for each selected option. */
   @Prop({ reflect: true }) name?: string;
@@ -113,6 +144,8 @@ export class KiCheckboxGroup {
   private readonly initialOptions = new WeakSet<Element>();
   private readonly initialChecked = new WeakSet<CheckboxOption>();
   private presenceObserver?: MutationObserver;
+  private fieldset: HTMLElement | undefined;
+  private legend: HTMLElement | undefined;
   private customValidity = '';
   private readonly group: CheckboxGroupContext = {
     disabled: false,
@@ -164,15 +197,71 @@ export class KiCheckboxGroup {
 
   connectedCallback(): void {
     checkboxGroups.set(this.host, this.group);
-    this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
-      this.disabled = true;
-    });
+    this.presenceObserver = observeAttributePresence(
+      this.host,
+      ['disabled', 'label-hidden'],
+      (attribute) => {
+        if (attribute === 'label-hidden') this.labelHidden = true;
+        else this.disabled = true;
+      },
+    );
     if (this.ready) this.syncOptions();
   }
 
   componentWillLoad(): void {
     this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
+    this.labelHidden = booleanFromAttributePresence(
+      this.labelHidden,
+      this.host.hasAttribute('label-hidden'),
+    );
     this.syncDisabled();
+  }
+
+  componentDidRender(): void {
+    this.syncName();
+  }
+
+  // The name may come from the page: re-resolve when the ids change.
+  @Watch('aria-labelledby')
+  private labelledByChanged(): void {
+    forceUpdate(this.host);
+  }
+
+  /** Elements the host's `aria-labelledby` names, in its own tree. */
+  private pageLabels(): Element[] {
+    const root = this.host.getRootNode();
+    if (!(root instanceof Document || root instanceof ShadowRoot)) {
+      return [];
+    }
+    const ids = (this.host.getAttribute('aria-labelledby') ?? '').split(/\s+/u);
+    return ids.flatMap((id) => {
+      const element = id ? root.getElementById(id) : null;
+      return element ? [element] : [];
+    });
+  }
+
+  // The visible legend names the fieldset natively. A hidden legend names it
+  // through an id reference, which counts a hidden node it names directly.
+  // Labels from the page arrive as element references, which may point into
+  // the trees that contain this shadow root; the legend follows them.
+  private syncName(): void {
+    const fieldset = this.fieldset;
+    if (!fieldset) {
+      return;
+    }
+    const page = this.pageLabels();
+    const own = this.legend ? [this.legend] : [];
+    if (page.length > 0) {
+      // ARIA element reflection (Baseline 2025), which Stencil's DOM
+      // declarations predate: assigned through its setter.
+      Object.assign(fieldset, { ariaLabelledByElements: [...page, ...own] });
+    } else if (own.length > 0 && this.labelHidden) {
+      if (fieldset.getAttribute('aria-labelledby') !== LEGEND_ID) {
+        fieldset.setAttribute('aria-labelledby', LEGEND_ID);
+      }
+    } else {
+      fieldset.removeAttribute('aria-labelledby');
+    }
   }
 
   componentDidLoad(): void {
@@ -388,8 +477,22 @@ export class KiCheckboxGroup {
         disabled={this.effectiveDisabled}
         aria-describedby={fieldDescribedBy(messages)}
         aria-invalid={fieldInvalid(messages)}
+        ref={(element) => {
+          this.fieldset = element;
+        }}
       >
-        <legend part="label">{this.label}</legend>
+        {fieldText(this.label) && (
+          <legend
+            part="label"
+            id={LEGEND_ID}
+            class={{ hidden: this.labelHidden }}
+            ref={(element) => {
+              this.legend = element;
+            }}
+          >
+            {this.label}
+          </legend>
+        )}
         <div class="options">
           <slot onSlotchange={this.syncOptions} />
         </div>

@@ -1230,6 +1230,17 @@ describe('ki-select active and selected options can be told apart', () => {
   type Rgba = [red: number, green: number, blue: number, alpha: number];
 
   function parseColor(color: string): Rgba {
+    // A colour computed from color-mix(), such as a translucent ramp variant
+    // (spec 001 S15), serializes as color(srgb …) with channels from 0 to 1.
+    const srgb = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)/u.exec(color);
+    if (srgb !== null) {
+      return [
+        Number(srgb[1]) * 255,
+        Number(srgb[2]) * 255,
+        Number(srgb[3]) * 255,
+        srgb[4] === undefined ? 1 : Number(srgb[4]),
+      ];
+    }
     const channels =
       /rgba?\(([^)]+)\)/
         .exec(color)?.[1]

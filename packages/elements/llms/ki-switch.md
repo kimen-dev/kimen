@@ -59,7 +59,7 @@ User toggles dispatch composed `input` and `change` events — apply the setting
 
 ## Events
 
-- `change` (Event): Fired once after a user toggle commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: apply the on/off effect. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
+- `change` (Event): Fired once after a user toggle commits, composed across the shadow boundary; `checked` is already current when listeners run. `click()` from a script, or a page `<label>` for the switch, toggles it like a native checkbox: one `input`, then one `change`. When to use: apply the on/off effect. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 ## Methods
 

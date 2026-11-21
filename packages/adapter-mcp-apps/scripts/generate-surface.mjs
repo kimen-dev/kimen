@@ -187,14 +187,13 @@ async function bundleScript() {
     bundle: true,
     format: 'iife',
     legalComments: 'none',
-    // Stencil's runtime carries the lazy loader's `import()` of per-component
-    // chunks. This build registers the standalone definitions, so there are no
-    // chunks and the call is unreachable; esbuild says so on every build.
-    //
     // A side-effect import that the elements package does not declare in
     // `sideEffects` is one esbuild removes: a component's own glyph went
-    // missing from the document that way. Fail the build instead.
-    logOverride: { 'empty-glob': 'silent', 'ignored-bare-import': 'error' },
+    // missing from the document that way. Fail the build instead. (The
+    // per-component modules ship a Stencil runtime whose unreachable lazy
+    // import esbuild no longer reads as an empty glob, so no warning needs
+    // silencing: packages/elements/scripts/vendor-stencil-client.mjs.)
+    logOverride: { 'ignored-bare-import': 'error' },
     metafile: true,
     minify: true,
     platform: 'browser',

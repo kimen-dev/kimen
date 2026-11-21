@@ -12,6 +12,9 @@ import { derivePackageNotice, PACKAGE_NOTICE_SECTIONS } from '../lib/package-not
 export const PACKAGE_DIRECTORIES = Object.freeze({
   '@kimen/elements': 'packages/elements',
   '@kimen/tokens': 'packages/tokens',
+  '@kimen/catalog': 'packages/catalog',
+  '@kimen/emitter': 'packages/emitter',
+  '@kimen/adapter-a2ui': 'packages/adapter-a2ui',
   '@kimen/adapter-mcp-apps': 'packages/adapter-mcp-apps',
   '@kimen/mcp-server': 'packages/mcp-server',
 });

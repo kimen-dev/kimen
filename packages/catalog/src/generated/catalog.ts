@@ -813,7 +813,7 @@ export const catalogData = {
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
-        "change": "Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
+        "change": "Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. `click()` from a script, or a page `<label>` for the\ncheckbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
       },
       "props": {
         "checked": {
@@ -895,8 +895,13 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Visible legend and accessible name for these choices.",
+          "description": "Visible legend and accessible name for these choices.\nWhen NOT to use: do not omit it unless the host's `aria-labelledby` names\nthe group from the page.\n\nNaming from the page: set `aria-labelledby` on the host to the ids of\nelements in the same document or shadow root, such as the heading that\nalready asks the question. The group then takes its name from them,\nfollowed by its own `label` when set. The ids are read when the group\nrenders and whenever the attribute changes.\nWhen to use: the question is written on the page above the options; omit\n`label` so the question is not shown, or read, twice.\nWhen NOT to use: do not reference elements inside another component's\nshadow root, which an id reference cannot reach.",
           "required": true
+        },
+        "label-hidden": {
+          "type": "boolean",
+          "description": "Hides the legend from view and from reading order while it stays the\ngroup's accessible name, so a screen reader announces it once, as the\ngroup's name.\nWhen to use: the layout already makes the question obvious to sighted\npeople but the group still needs a name of its own.\nWhen NOT to use: do not hide a legend that repeats a question already on\nthe page; point `aria-labelledby` at that question instead.",
+          "default": false
         },
         "max": {
           "type": "number",
@@ -3638,7 +3643,7 @@ export const catalogData = {
     "ki-radio-group": {
       "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
-        "change": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
+        "change": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\n`click()` on a `ki-radio` from a script selects it like a native radio: one\n`input`, then one `change`.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
       },
       "props": {
         "disabled": {
@@ -3656,8 +3661,13 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
+          "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it unless the host's `aria-labelledby` names\nthe group from the page; a group with neither fails accessibility gates.\n\nNaming from the page: set `aria-labelledby` on the host to the ids of\nelements in the same document or shadow root, such as the heading that\nalready asks the question. The group then takes its name from them,\nfollowed by its own `label` and `label-hint` when set. The ids are read\nwhen the group renders and whenever the attribute changes.\nWhen to use: the question is written on the page above the options; omit\n`label` so the question is not shown, or read, twice.\nWhen NOT to use: do not reference elements inside another component's\nshadow root, which an id reference cannot reach.",
           "required": true
+        },
+        "label-hidden": {
+          "type": "boolean",
+          "description": "Hides the `label` (and its hint) from view and from reading order while it\nstays the radiogroup's accessible name, so a screen reader announces it\nonce, as the group's name.\nWhen to use: the layout already makes the question obvious to sighted\npeople (a heading in a card, an icon row) but the group still needs a\nname of its own.\nWhen NOT to use: do not hide a label that repeats a question already on\nthe page; point `aria-labelledby` at that question instead. Do not hide\nthe only description of what a choice decides; that is `help-text`.",
+          "default": false
         },
         "label-hint": {
           "type": "string",
@@ -4039,7 +4049,7 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Noninteractive visible option label.",
+        "": "Noninteractive visible option label. A label wider than its share of\nthe row wraps onto a second line and every option of the row keeps one\nheight; text that would need a third line ends with an ellipsis, and the\nfull text stays the option's accessible name. Keep it to a few words.",
         "start": "Decorative leading icon. Supply aria-label for an icon-only option."
       },
       "tag": "ki-segment",
@@ -4054,7 +4064,7 @@ export const catalogData = {
       "props": {
         "full-width": {
           "type": "boolean",
-          "description": "Distribute the available inline space evenly among all segments.",
+          "description": "Distribute the available inline space evenly among all segments. A label\nwider than its equal share wraps onto a second line.",
           "default": false
         },
         "label": {
@@ -4802,7 +4812,7 @@ export const catalogData = {
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
-        "change": "Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
+        "change": "Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. `click()` from a\nscript, or a page `<label>` for the switch, toggles it like a native\ncheckbox: one `input`, then one `change`. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
       },
       "props": {
         "checked": {
@@ -5610,9 +5620,9 @@ export const catalogData = {
         }
       },
       "slots": {
-        "": "Header mode: up to five direct native anchors; mark the current one with aria-current=\"page\".",
+        "": "Header mode: up to five direct native anchors; mark the current one with\naria-current=\"page\". They stay the page's own anchors, so the page's link\nrules reach them and outrank the bar's link styles (CSS Scoping gives the\npage's styles precedence over a component's `::slotted()` rules, whatever\ntheir specificity). `a { color: inherit }` is safe: the links then take the\nbar's item ink. A rule that sets `color`, `text-decoration`, `font-*` or\n`padding` on every `a` restyles them too: scope it away from the bar, for\nexample `:where(main, footer) a` or `a:not(ki-top-nav > a)`, and restyle the\nbar's links with the `--ki-top-nav-item-*` tokens.",
         "actions": "Header: global actions. App bar: up to three inline; additional direct named buttons or links go into overflow.",
-        "brand": "Header mode: the brand link or wordmark.",
+        "brand": "Header mode: the brand link or wordmark. Page link rules reach it\nas they reach the primary links.",
         "leading": "App bar: a named Back or Open navigation control.",
         "search": "App bar: an accessible search control that can shrink inside its row."
       },

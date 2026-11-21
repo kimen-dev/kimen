@@ -757,7 +757,9 @@ every component at once.
 ## Component tokens
 
 The public styling contract of each element. Reassign them on `:root` for a
-theme-wide change or on any subtree for a scoped one.
+theme-wide change, on a theme root (an element with `data-ki-theme`) for a
+region, or on one element for that instance. A token that another token
+aliases is recomputed only on the root and on theme roots.
 
 ### `ki-accordion`
 
@@ -3624,6 +3626,64 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-video-scrim-color` | `rgba(0, 0, 0, 0.05)` | color used by the video component for the overlay scrim behind the play control: Inverse_white/alpha_6, the exact variable bound to the Play halo on both Video variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer. |
 | `--ki-video-scrim-padding` | `1rem` | dimension used by the video component for the scrim clearance around the play container: Space/3xl, the exact variable bound as the Size=md Play halo padding (16px on every side). |
 | `--ki-video-scrim-radius` | `28px` | dimension used by the video component for the overlay scrim shape: Radius/component/radius_6xl, the exact variable bound to the Size=md Play halo (28px pill-cornered square). |
+
+## Preference modes
+
+The tokens each mode reassigns, on top of the active theme. A theme that
+sets one of them in its own rule replaces the mode value too, because both
+rules declare the same property on the same element: restate it under the
+mode's media query and declaration (see *Docs → Tokens & theming*). More
+contrast also applies reduced transparency.
+
+### reduced-transparency
+
+Active under `@media (prefers-reduced-transparency: reduce), (prefers-contrast: more)` and on a token root carrying, or inside one
+carrying, `[data-ki-transparency='reduce']` or `[data-ki-contrast='more']`.
+
+| Token | Value under the mode (onmars) |
+| --- | --- |
+| `--ki-alert-shell-bg` | `var(--ki-surface-s1)` |
+| `--ki-select-listbox-backdrop-blur` | `var(--ki-blur-none)` |
+| `--ki-surface-danger-tint` | `var(--ki-surface-danger-base-em)` |
+| `--ki-surface-info-tint` | `var(--ki-surface-info-base-em)` |
+| `--ki-surface-primary-tint` | `var(--ki-surface-primary-low-em)` |
+| `--ki-surface-special-blur-base-dark` | `var(--ki-surface-special-light-s0-dark-s3)` |
+| `--ki-surface-special-blur-base-light` | `var(--ki-surface-special-light-s0-dark-s3)` |
+| `--ki-surface-special-secondary-alpha-base` | `var(--ki-surface-special-light-s2-dark-s3)` |
+| `--ki-surface-success-tint` | `var(--ki-surface-success-base-em)` |
+| `--ki-surface-warning-tint` | `var(--ki-surface-warning-base-em)` |
+
+### contrast-more
+
+Active under `@media (prefers-contrast: more)` and on a token root carrying, or inside one
+carrying, `[data-ki-contrast='more']`.
+
+| Token | Value under the mode (onmars) |
+| --- | --- |
+| `--ki-alert-border-width` | `var(--ki-space-xxs)` |
+| `--ki-alert-danger-border` | `var(--ki-outline-strong)` |
+| `--ki-alert-info-border` | `var(--ki-outline-strong)` |
+| `--ki-alert-neutral-border` | `var(--ki-outline-strong)` |
+| `--ki-alert-success-border` | `var(--ki-outline-strong)` |
+| `--ki-alert-warning-border` | `var(--ki-outline-strong)` |
+| `--ki-card-border-color` | `var(--ki-outline-strong)` |
+| `--ki-details-border` | `var(--ki-outline-strong)` |
+| `--ki-dialog-border` | `var(--ki-size-border-hairline) solid var(--ki-outline-strong)` |
+| `--ki-dialog-divider-color` | `var(--ki-outline-strong)` |
+| `--ki-divider-color` | `var(--ki-outline-strong)` |
+| `--ki-focus-ring-width` | `var(--ki-shadow-ring)` |
+| `--ki-image-fallback-fg` | `var(--ki-text-supporting)` |
+| `--ki-indicator-dot-color` | `var(--ki-outline-strong)` |
+| `--ki-list-item-divider-color` | `var(--ki-outline-strong)` |
+| `--ki-outline-control` | `var(--ki-inverse-white-alpha-64)` |
+| `--ki-outline-control-hover` | `var(--ki-inverse-white-alpha-72)` |
+| `--ki-select-placeholder-fg` | `light-dark(var(--ki-text-supporting), var(--ki-inverse-white-alpha-80))` |
+| `--ki-tabs-divider-color` | `var(--ki-outline-strong)` |
+| `--ki-text-supporting` | `var(--ki-inverse-white-alpha-72)` |
+| `--ki-timeline-dot-fg` | `var(--ki-text-supporting)` |
+| `--ki-timeline-line` | `var(--ki-outline-strong)` |
+| `--ki-timeline-time-fg` | `var(--ki-text-supporting)` |
+| `--ki-tooltip-border-color` | `var(--ki-outline-strong)` |
 
 ## Deprecated tokens
 

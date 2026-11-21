@@ -109,6 +109,10 @@ test('the package notices include the third-party works shipped in each tarball'
     'zod (MIT)',
   ]);
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], ['onmars theme fonts (SIL OFL 1.1)']);
+  // Compiled Kimen sources only: their dependencies are installed, not bundled.
+  for (const name of ['@kimen/catalog', '@kimen/emitter', '@kimen/adapter-a2ui']) {
+    assert.deepEqual(PACKAGE_NOTICE_SECTIONS[name], []);
+  }
 });
 
 test('the Stencil notice reproduces the licence the installed runtime ships with', async () => {
@@ -132,6 +136,9 @@ test('the Stencil notice reproduces the licence the installed runtime ships with
 for (const [name, directory] of [
   ['@kimen/elements', 'packages/elements'],
   ['@kimen/tokens', 'packages/tokens'],
+  ['@kimen/catalog', 'packages/catalog'],
+  ['@kimen/emitter', 'packages/emitter'],
+  ['@kimen/adapter-a2ui', 'packages/adapter-a2ui'],
   ['@kimen/adapter-mcp-apps', 'packages/adapter-mcp-apps'],
   ['@kimen/mcp-server', 'packages/mcp-server'],
 ]) {

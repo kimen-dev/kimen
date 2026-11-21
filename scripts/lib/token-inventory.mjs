@@ -14,6 +14,10 @@ const PUBLIC_LAYERS = new Set(['semantic', 'component']);
 const REFERENCE_PATTERN = /\{([^{}]+)\}/gu;
 const EXACT_REFERENCE_PATTERN = /^\{([^{}]+)\}$/u;
 const BLUR_REFERENCE_PATTERN = /^blur\(\{[^{}]+\}\)$/u;
+// Spec 001 S15: a theme's translucent ramp variant is its ramp step at a whole
+// percentage, so a theme that reassigns the step gets matching variants. The
+// build resolves exactly this shape (packages/tokens/style-dictionary.config.mjs).
+const ALPHA_VARIANT_PATTERN = /^color-mix\(in srgb, \{[^{}]+\} [1-9][0-9]?%, transparent\)$/u;
 
 // Spec 061 keeps legacy length overrides readable until their scheduled
 // removal. Only the original consumer (including the shared button sheet)
@@ -481,10 +485,10 @@ export const parseTokenComposition = ({ id, theme, scheme, sources }) => {
     }
 
     if (record.layer !== 'primitive') {
+      const expression = typeof record.value === 'string' ? record.value : null;
       const literalPaths =
-        record.layer === 'semantic' &&
-        typeof record.value === 'string' &&
-        BLUR_REFERENCE_PATTERN.test(record.value)
+        (record.layer === 'semantic' && BLUR_REFERENCE_PATTERN.test(expression)) ||
+        (record.layer === 'theme' && ALPHA_VARIANT_PATTERN.test(expression))
           ? []
           : disallowedLiteralPaths(record.value);
       if (literalPaths.length > 0) {

@@ -39,7 +39,7 @@ framework wrappers, register it separately for icon-only options.
 
 ## Slots
 
-- (default): Noninteractive visible option label.
+- (default): Noninteractive visible option label. A label wider than its share of the row wraps onto a second line and every option of the row keeps one height; text that would need a third line ends with an ellipsis, and the full text stays the option's accessible name. Keep it to a few words.
 - `start`: Decorative leading icon. Supply aria-label for an icon-only option.
 
 ## Parts

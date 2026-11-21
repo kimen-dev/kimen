@@ -123,6 +123,28 @@ it('S1: shows five primary links and a current-page indicator on a wide bar', as
   );
 });
 
+// Integrator feedback 0.1.1, item 4: a page rule on every `a` outranks the
+// bar's ::slotted() link styles (CSS Scoping). The common reset
+// `a { color: inherit }` must leave the links in the bar's item ink.
+it('S1: keeps the item ink on its links under a page `a { color: inherit }` rule', async () => {
+  const host = wideHeader();
+  const overview = required(host.querySelector<HTMLElement>('a[href="#overview"]'));
+  await expect.element(page.getByRole('link', { name: 'Overview' })).toBeVisible();
+  const ink = getComputedStyle(overview).color;
+  const reset = document.createElement('style');
+  reset.textContent = 'a { color: inherit; text-decoration: underline; }';
+  document.head.append(reset);
+  try {
+    expect(getComputedStyle(overview).color).toBe(ink);
+    host.setAttribute('collapse-at', '60rem');
+    await navigation().click();
+    await expect.element(page.getByRole('menu')).toBeVisible();
+    expect(getComputedStyle(overview).color).toBe(ink);
+  } finally {
+    reset.remove();
+  }
+});
+
 it('S2: responds to the authored CSS breakpoint and preserves the actual links', async () => {
   const host = mountHeader('collapse-at="30em" style="inline-size: 40rem"');
   await expect.element(page.getByRole('link', { name: 'Overview' })).toBeVisible();
@@ -155,6 +177,49 @@ it('S2: responds to the authored CSS breakpoint and preserves the actual links',
   await expect.element(page.getByRole('menu')).not.toBeInTheDocument();
   host.removeAttribute('collapse-at');
   await expect.element(navigation()).toBeVisible();
+});
+
+// Integrator feedback 0.1.1, item 2: a header with no collapse-at attribute
+// must fold at the 48rem default on a phone-width page.
+it('S2: folds at the default 48rem breakpoint on a 375px page with no collapse-at', async () => {
+  await page.viewport(375, 700);
+  const host = mountHeader();
+
+  await expect.element(navigation()).toBeVisible();
+  expect(host.hasAttribute('collapse-at')).toBe(false);
+  await expect.element(page.getByRole('link', { name: 'Overview' })).not.toBeInTheDocument();
+});
+
+// The breakpoint is the width the bar lays out in. A page-wide
+// `* { box-sizing: border-box }` and a container class with padding on the
+// host gave a 50rem box with a 46rem row that still never folded.
+it('S2: measures the breakpoint against the row, whatever box-sizing the page gives the host', async () => {
+  const host = mountHeader(
+    'style="box-sizing: border-box; inline-size: 50rem; padding-inline: 2rem"',
+  );
+
+  await expect.element(navigation()).toBeVisible();
+  host.style.boxSizing = 'content-box';
+  await expect.element(page.getByRole('link', { name: 'Overview' })).toBeVisible();
+});
+
+// Integrator feedback 0.1.1, item 3: laid edge to edge, the bar widened its
+// scroll container by the 1px status region a trailing icon button keeps
+// just past its inline end.
+it('S2: a bar flush with its container never widens it', async () => {
+  fixture.innerHTML = `<div style="inline-size: 21rem; overflow-x: auto">
+    <ki-top-nav style="--ki-top-nav-padding-inline: 0">${brand}${links}${notifications}</ki-top-nav>
+  </div>`;
+  const scroller = required(fixture.firstElementChild as HTMLElement | null);
+  await expect.element(navigation()).toBeVisible();
+  await expect.element(page.getByRole('button', { name: 'Notifications, 3 unread' })).toBeVisible();
+
+  expect(scroller.scrollWidth).toBe(scroller.clientWidth);
+  await navigation().click();
+  await expect.element(page.getByRole('menu')).toBeVisible();
+  await userEvent.keyboard('{Escape}');
+  await expect.element(page.getByRole('menu')).not.toBeInTheDocument();
+  expect(scroller.scrollWidth).toBe(scroller.clientWidth);
 });
 
 it('S3: keeps three direct actions and exposes the remaining two in order', async () => {

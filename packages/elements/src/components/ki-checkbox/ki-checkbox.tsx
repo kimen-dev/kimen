@@ -21,6 +21,7 @@ import {
   fieldText,
   fieldValidationMessage,
 } from '../../utils/field-message';
+import { forwardHostClick } from '../../utils/host-click';
 import { LabelHint } from '../../utils/label-hint';
 import { checkboxFormValue } from './ki-checkbox.form';
 
@@ -54,7 +55,8 @@ export type KiCheckboxSize = 'sm' | 'md' | 'lg';
  * wrapper and part of the accessible name; rendered only while a hint is set.
  * @event change - Fired once after a user toggle (pointer, slotted label or Space)
  * commits, composed across the shadow boundary; `checked` is already current
- * when listeners run. When to use: react to the committed selection. When NOT
+ * when listeners run. `click()` from a script, or a page `<label>` for the
+ * checkbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT
  * to use: do not expect it for programmatic `checked` writes, which are silent.
  */
 @Component({
@@ -181,6 +183,7 @@ export class KiCheckbox {
   private input: HTMLInputElement | undefined;
   private resetBaseline = false;
   private presenceObserver: MutationObserver | undefined;
+  private releaseHostClick: (() => void) | undefined;
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled || Boolean(checkboxGroupFor(this.host)?.disabled);
@@ -272,6 +275,10 @@ export class KiCheckbox {
       ['checked', 'indeterminate', 'disabled', 'required'],
       this.handlePresentAttribute,
     );
+    // `host.click()` and a page <label> for the checkbox toggle it, as on a
+    // native checkbox (S23).
+    this.releaseHostClick?.();
+    this.releaseHostClick = forwardHostClick(this.host, () => this.input);
     if (this.input) this.syncGroupState();
   }
 
@@ -302,6 +309,8 @@ export class KiCheckbox {
   disconnectedCallback(): void {
     this.presenceObserver?.disconnect();
     this.presenceObserver = undefined;
+    this.releaseHostClick?.();
+    this.releaseHostClick = undefined;
   }
 
   // Correct ONLY the case Stencil gets wrong: a present-but-falsy attribute the
