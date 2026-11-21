@@ -53,15 +53,17 @@ const CONTRAST_PAIRS = [
     text: '--ki-text-low-em',
     surface,
   })),
-  // The tonal med-em inks are published text tokens. Straight from the 500
-  // ramp steps they read 1.7-3.5:1 on the light pages, with no component
-  // painting them to trip a sweep (design-system review 2026-11-20); every
-  // theme now sets them as readable inks on s0-s2.
-  ...['info', 'success', 'warning', 'danger'].flatMap((tone) =>
-    ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].map((surface) => ({
-      text: `--ki-text-${tone}-med-em`,
-      surface,
-    })),
+  // The tonal med-em and low-em inks are published text tokens. Straight
+  // from the ramp steps they read 1.3-3.5:1 on the light pages, with no
+  // component painting them to trip a sweep (design-system review
+  // 2026-11-20); every theme now sets them as readable inks on s0-s2.
+  ...['primary', 'info', 'success', 'warning', 'danger'].flatMap((tone) =>
+    ['med-em', 'low-em'].flatMap((emphasis) =>
+      ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].map((surface) => ({
+        text: `--ki-text-${tone}-${emphasis}`,
+        surface,
+      })),
+    ),
   ),
 ];
 

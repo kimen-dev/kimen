@@ -63,11 +63,13 @@ test('contrast pair table covers the declared data-model pairs', () => {
         '--ki-text-low-em',
         surface,
       ]),
-      ...['info', 'success', 'warning', 'danger'].flatMap((tone) =>
-        ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].map((surface) => [
-          `--ki-text-${tone}-med-em`,
-          surface,
-        ]),
+      ...['primary', 'info', 'success', 'warning', 'danger'].flatMap((tone) =>
+        ['med-em', 'low-em'].flatMap((emphasis) =>
+          ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].map((surface) => [
+            `--ki-text-${tone}-${emphasis}`,
+            surface,
+          ]),
+        ),
       ),
     ],
   );

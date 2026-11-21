@@ -1838,6 +1838,21 @@
           },
           "low-em-light": {
             "$value": "#6e6973"
+          },
+          "primary-low-em-light": {
+            "$value": "#7157b7"
+          },
+          "info-low-em-light": {
+            "$value": "#24728b"
+          },
+          "success-low-em-light": {
+            "$value": "#247750"
+          },
+          "warning-low-em-light": {
+            "$value": "#945e0c"
+          },
+          "danger-low-em-light": {
+            "$value": "#b24252"
           }
         },
         "state-layer": {

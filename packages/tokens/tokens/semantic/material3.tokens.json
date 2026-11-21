@@ -222,8 +222,8 @@
         "$description": "Material 3 semantic color for text primary med em."
       },
       "primary-low-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.text.primary-low-em}",
-        "$description": "Material 3 semantic color for text primary low em."
+        "$value": "{ki.foundation.material3.text-ink.primary-low-em-light}",
+        "$description": "Low-emphasis primary text in Material 3 light: 3.98:1 on s2 with the shared #7f67be step, so it takes a readable ink of the same hue, 4.5:1 or more on s0-s2. Dark keeps its own step."
       },
       "primary-base-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}",
@@ -250,12 +250,24 @@
         "$description": "M3 md.sys.color.error (error tone 40) as danger text."
       },
       "danger-low-em": {
-        "$value": "{ki.foundation.material3.palette.error.70}",
-        "$description": "M3 error tone 70: low-emphasis danger text (ramp-position parity with onmars danger.300)."
+        "$value": "{ki.foundation.material3.text-ink.danger-low-em-light}",
+        "$description": "Low-emphasis danger text in Material 3 light: 2.01:1 on s2 with the shared error tone 70 step, so it takes a readable ink of the same hue, 4.5:1 or more on s0-s2. Dark keeps its own step."
       },
       "danger-base-em": {
         "$value": "{ki.foundation.material3.palette.error.90}",
         "$description": "M3 error tone 90: faintest danger text."
+      },
+      "info-low-em": {
+        "$value": "{ki.foundation.material3.text-ink.info-low-em-light}",
+        "$description": "Low-emphasis info text in Material 3 light: 1.46:1 on s2 with the shared info-300 step, so it takes a readable ink of the same hue, 4.5:1 or more on s0-s2. Dark keeps its own step."
+      },
+      "success-low-em": {
+        "$value": "{ki.foundation.material3.text-ink.success-low-em-light}",
+        "$description": "Low-emphasis success text in Material 3 light: 1.41:1 on s2 with the shared success-300 step, so it takes a readable ink of the same hue, 4.5:1 or more on s0-s2. Dark keeps its own step."
+      },
+      "warning-low-em": {
+        "$value": "{ki.foundation.material3.text-ink.warning-low-em-light}",
+        "$description": "Low-emphasis warning text in Material 3 light: 1.31:1 on s2 with the shared warning-300 step, so it takes a readable ink of the same hue, 4.5:1 or more on s0-s2. Dark keeps its own step."
       }
     },
     "outline": {
