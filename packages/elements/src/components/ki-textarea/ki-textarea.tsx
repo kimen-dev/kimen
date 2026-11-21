@@ -224,11 +224,29 @@ export class KiTextarea {
    * Message shown in place of the help text once the person's answer fails a
    * constraint (`required` or a length limit), and the field's `validationMessage`. Say how to
    * fix the answer. Without it the browser's own message shows, in the
-   * browser's language. An error set with `setCustomValidity` outranks it.
-   * When NOT to use: do not use it for server-side or cross-field errors; call
-   * `setCustomValidity` for those.
+   * browser's language. An error set with `custom-error` or
+   * `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; set
+   * `custom-error` or call `setCustomValidity` for those.
    */
   @Prop({ reflect: true }) errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted text ("This title is taken"). While it holds text the field is
+   * invalid, blocks its form, shows the text in place of the help text at
+   * once and is announced as invalid. It stops counting at the person's next
+   * change of the text, or when the form is reset, so it never blocks the
+   * corrected answer. It outranks `error-text` and an error set with
+   * `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for `required` or a length limit the field
+   * enforces itself; `error-text` words those. Setting the same text again
+   * while the prop still holds it shows nothing: remove it first, then set it
+   * again.
+   */
+  @Prop({ reflect: true }) customError?: string;
 
   @State() private formDisabled = false;
   // Mirrors the `user-invalid` custom state, which a render cannot observe.
@@ -277,10 +295,19 @@ export class KiTextarea {
     this.syncValidity();
   }
 
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncValidity();
+  }
+
   // The application's own error (setCustomValidity); '' when none. It is
   // reapplied on every validity sync, so the control's own revalidation never
   // drops it.
   private customValidity = '';
+
+  // Whether the person's change or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
 
   /**
    * Validity of the control, as on a native form control: which constraint
@@ -362,6 +389,7 @@ export class KiTextarea {
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.value = this.host.getAttribute('value') ?? '';
     this.deleteUserInvalidState();
     this.syncTextareaValue();
@@ -388,6 +416,7 @@ export class KiTextarea {
 
     const value = this.textarea.value;
     const announcement = this.announcementFor(this.value, value);
+    this.customErrorWithdrawn = true;
     this.value = value;
     if (announcement !== undefined) {
       this.countAnnouncement = announcement;
@@ -432,7 +461,9 @@ export class KiTextarea {
       return;
     }
 
-    this.textarea.setCustomValidity(this.customValidity);
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const applicationError = customError || this.customValidity;
+    this.textarea.setCustomValidity(applicationError);
     const validity = this.textarea.validity;
     const tooLong = this.isOverLimit(this.textarea.value.length);
     const flags = tooLong
@@ -444,13 +475,16 @@ export class KiTextarea {
 
     this.internals.setValidity(
       flags,
-      fieldValidationMessage(this.customValidity, this.errorText, message),
+      fieldValidationMessage(applicationError, this.errorText, message),
       this.textarea,
     );
     this.message = this.internals.validationMessage;
 
     if (this.internals.validity.valid) {
       this.deleteUserInvalidState();
+    } else if (customError !== '' && !this.effectiveDisabled) {
+      // A custom error shows at once, without a commit or a submission (D2).
+      this.addUserInvalidState();
     }
   }
 

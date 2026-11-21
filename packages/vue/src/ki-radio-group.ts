@@ -19,7 +19,8 @@ export const KiRadioGroup: StencilVueComponent<JSX.KiRadioGroup, JSX.KiRadioGrou
   'required',
   'disabled',
   'helpText',
-  'errorText'
+  'errorText',
+  'customError'
 ], [],
 'value', 'change', undefined);
 

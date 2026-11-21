@@ -16,6 +16,7 @@ type Args = Pick<
   | 'disabled'
   | 'helpText'
   | 'errorText'
+  | 'customError'
 >;
 
 const timeInput = (args: Partial<Args>, lang = 'en-GB') => h('ki-time-input', { lang, ...args });

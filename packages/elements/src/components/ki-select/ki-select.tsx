@@ -169,11 +169,27 @@ export class KiSelect {
    * Message shown in place of the help text once a `required` select is left
    * without a choice, and its `validationMessage` ("Choose a country").
    * Without it the browser's own message shows, in the browser's language. An
-   * error set with `setCustomValidity` outranks it.
-   * When NOT to use: do not use it for server-side or cross-field errors; call
-   * `setCustomValidity` for those.
+   * error set with `custom-error` or `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; set
+   * `custom-error` or call `setCustomValidity` for those.
    */
   @Prop({ reflect: true }) errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted choice ("We do not ship there"). While it holds text the select
+   * is invalid, blocks its form, shows the text in place of the help text at
+   * once and is announced as invalid. It stops counting when the person
+   * chooses another option, or when the form is reset, so it never blocks the
+   * corrected answer. It outranks `error-text` and an error set with
+   * `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for a `required` select left without a
+   * choice; `error-text` words that. Setting the same text again while the
+   * prop still holds it shows nothing: remove it first, then set it again.
+   */
+  @Prop({ reflect: true }) customError?: string;
 
   @State() private roster: RosterOption[] = [];
   @State() private open = false;
@@ -227,6 +243,9 @@ export class KiSelect {
   // reapplied on every validity sync, so the control's own revalidation never
   // drops it.
   private customValidity = '';
+
+  // Whether the person's choice or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
 
   /**
    * Validity of the control, as on a native form control: which constraint
@@ -357,6 +376,12 @@ export class KiSelect {
     this.syncValidity();
   }
 
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncValidity();
+  }
+
   @Watch('disabled')
   @Watch('required')
   protected stateAttributeChanged(): void {
@@ -372,6 +397,7 @@ export class KiSelect {
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.userInvalid = false;
     this.selectByValue(this.host.getAttribute('value') ?? '');
   }
@@ -590,6 +616,7 @@ export class KiSelect {
     this.selectedIndex = index;
     // The user's choice settles any request that was still waiting.
     this.pendingValue = '';
+    this.customErrorWithdrawn = true;
     this.value = option.value;
     this.userInvalid = false;
     this.syncValidity();
@@ -668,14 +695,20 @@ export class KiSelect {
     // Presence semantics already reached the property (componentWillLoad and
     // the attribute observer).
     const valueMissing = selectValueMissing(this.required, submittedValue);
-    if (this.customValidity !== '') {
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const applicationError = customError || this.customValidity;
+    if (applicationError !== '') {
       // The application's error outranks the platform message, as on a
       // native select; a missing value still shows in the flags.
       this.internals.setValidity(
         { customError: true, valueMissing },
-        this.customValidity,
+        applicationError,
         this.triggerElement,
       );
+      // A custom error shows at once, without a submission (D2).
+      if (customError !== '') {
+        this.userInvalid = true;
+      }
     } else if (valueMissing) {
       this.donorElement?.setAttribute('required', '');
       this.internals.setValidity(

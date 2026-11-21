@@ -19,7 +19,8 @@ export const KiSelect: StencilVueComponent<JSX.KiSelect, JSX.KiSelect["value"]> 
   'disabled',
   'required',
   'helpText',
-  'errorText'
+  'errorText',
+  'customError'
 ], [],
 'value', 'change', undefined);
 

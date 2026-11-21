@@ -12,14 +12,17 @@
   "formBinding": "select",
   "sizeBudget": {
     "mcpApps": {
-      "raw": 21430,
-      "gzip": 5466,
-      "brotli": 3918
+      "raw": 22708,
+      "gzip": 5695,
+      "brotli": 4039
     },
     "mcpServer": {
-      "raw": 34628,
-      "gzip": 7336,
-      "brotli": 4733
+      "raw": 36866,
+      "gzip": 7722,
+      "brotli": 4880
+    },
+    "worstCase": {
+      "brotli": 25200
     },
     "tokenStylesheets": {
       "onmars": 101,

@@ -15,7 +15,8 @@ export const KiSwitch: StencilVueComponent<JSX.KiSwitch, JSX.KiSwitch["checked"]
   'disabled',
   'name',
   'value',
-  'helpText'
+  'helpText',
+  'customError'
 ], [],
 'checked', 'change', undefined);
 

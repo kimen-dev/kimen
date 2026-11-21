@@ -14,6 +14,7 @@ type Args = Pick<
   | 'format'
   | 'helpText'
   | 'errorText'
+  | 'customError'
   | 'required'
   | 'disabled'
 >;
@@ -38,6 +39,11 @@ export const WithUnit: StoryObj<Args> = {
     steppers: false,
     helpText: 'Time before stopping',
   },
+  render: (args) => h('ki-number-input', args),
+};
+
+export const CustomError: StoryObj<Args> = {
+  args: { label: 'Seats', value: 42, customError: 'Only 40 seats left.' },
   render: (args) => h('ki-number-input', args),
 };
 

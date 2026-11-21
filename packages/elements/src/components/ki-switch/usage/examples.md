@@ -18,3 +18,15 @@ User toggles dispatch composed `input` and `change` events — apply the setting
 ```html
 <ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>
 ```
+
+## An error from the application
+
+Set `custom-error` to show the application's verdict on a setting it could
+not apply. The switch is invalid, blocks its form and is announced as
+invalid at once. Toggling it withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-switch name="two-step" checked custom-error="Add a phone number before turning on two-step sign-in.">Two-step sign-in</ki-switch>
+```
