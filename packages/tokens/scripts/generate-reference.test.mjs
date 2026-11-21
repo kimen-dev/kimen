@@ -63,3 +63,39 @@ test('S3 the token reference lists every deprecated token with its replacement a
 test('a reference without deprecated tokens has no deprecated-tokens section', () => {
   assert.doesNotMatch(renderReference([tokens[0], tokens[2]]), /Deprecated tokens/u);
 });
+
+// The list a theme restates under each mode (spec 043): generated from the
+// mode the stylesheet emits, so it cannot drift from it.
+test('the token reference lists every token each preference mode reassigns, with its mode value', () => {
+  const mdx = renderReference(tokens, {
+    modes: [
+      {
+        mode: {
+          name: 'contrast-more',
+          media: '(prefers-contrast: more)',
+          activations: ["[data-ki-contrast='more']"],
+        },
+        declarations: new Map([
+          ['--ki-outline-control', 'var(--ki-inverse-white-alpha-64)'],
+          ['--ki-focus-ring-width', 'var(--ki-shadow-ring)'],
+        ]),
+      },
+    ],
+  });
+  const section = mdx.slice(
+    mdx.indexOf('## Preference modes'),
+    mdx.indexOf('## Deprecated tokens'),
+  );
+
+  assert.match(section, /^### contrast-more$/mu);
+  assert.match(section, /`@media \(prefers-contrast: more\)`/u);
+  assert.match(section, /^\| `--ki-outline-control` \| `var\(--ki-inverse-white-alpha-64\)` \|$/mu);
+  assert.ok(
+    section.indexOf('--ki-focus-ring-width') < section.indexOf('--ki-outline-control'),
+    'tokens are sorted by name',
+  );
+});
+
+test('a reference rendered without modes has no preference-modes section', () => {
+  assert.doesNotMatch(renderReference(tokens), /Preference modes/u);
+});

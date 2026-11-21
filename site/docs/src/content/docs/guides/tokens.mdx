@@ -11,14 +11,16 @@ gate hold every token pair to WCAG numbers in CI.
 
 ## The layers
 
-1. **Primitive** — raw ramps with no opinion about use:
+1. **Palette** — the primitive and theme ramps, with no opinion about use:
    `--ki-color-brand-500`, `--ki-color-gray-900`, `--ki-space-md`,
    `--ki-font-size-heading-3`. Components never consume these directly.
+   A theme may redefine them; translucent variants such as
+   `--ki-color-brand-500-alpha-2` are mixes of their ramp step and follow it.
 2. **Semantic** — meaning, not appearance: `--ki-surface-s0…s5` (the surface
    elevation scale), `--ki-text-high-em` / `--ki-text-med-em` (text
    emphasis), `--ki-outline-low-em`. Reassign this layer and an entire
-   product restyles — this is the layer the material3 reference theme
-   overrides.
+   product restyles. The material3 reference theme redefines both this layer
+   and the palette.
 3. **Component** — the public styling contract of each element:
    `--ki-button-primary-neutral-rest-bg`, `--ki-dialog-backdrop-filter`,
    `--ki-alert-*`. Every component page lists its own tokens in its
@@ -63,9 +65,8 @@ snippet in the [tokens package README](https://github.com/kimen-dev/kimen/blob/m
 
 ## Customizing
 
-Reassign tokens at `:root` for theme-wide changes, or on any subtree for a
-scoped change — custom properties cascade, so the override reaches every
-component inside:
+Reassign tokens at `:root` for theme-wide changes. For a scoped change, where
+you reassign depends on the token:
 
 ```css
 /* Brand-wide: rounder medium buttons */
@@ -73,16 +74,30 @@ component inside:
   --ki-button-md-radius: 999px;
 }
 
-/* Scoped: a denser sidebar */
+/* Scoped component token: a denser sidebar. Components read their own
+   tokens where they are used, so any element works. */
 .sidebar {
   --ki-list-item-padding-block: 0.25rem;
 }
+
+/* Scoped semantic or palette token: name the region's theme and reassign
+   there. Only the root and theme roots recompute the tokens that alias it. */
+[data-ki-theme='sidebar'] {
+  --ki-surface-s1: var(--ki-surface-s2);
+}
 ```
+
+A semantic or palette token reassigned on a plain element changes only that
+custom property: every token that aliases it keeps the value computed on the
+root. The [theming guide](/docs/guides/theming/#theming-a-region) explains
+regions in full.
 
 Three rules keep customization safe:
 
 1. **Prefer semantic over component tokens** — one semantic reassignment
-   restyles consistently; fifty component overrides drift.
+   restyles consistently; fifty component overrides drift. Leave the palette
+   to themes: an application that changes a ramp step changes every semantic
+   token built on it, with no contrast check behind it.
 2. **Re-check contrast when you re-theme.** Kimen's own token pairs hold
    4.5:1 for text and 3:1 for non-text UI in both schemes, verified by a
    blocking CI gate over the built stylesheets. Your overrides inherit the
