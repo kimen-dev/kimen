@@ -14,7 +14,7 @@ import {
   SURFACE_ACTION_RELAY_PREFIX,
   surfaceToolResult,
 } from '@kimen/adapter-mcp-apps';
-import { VALIDATION_MAX_BYTES } from '@kimen/catalog';
+import { NODE_ID_GRAMMAR, VALIDATION_MAX_BYTES } from '@kimen/catalog';
 import { McpServer } from '@modelcontextprotocol/server';
 import { z } from 'zod';
 
@@ -193,6 +193,11 @@ export function createKimenServer(): McpServer {
           // budget bounds it. The declared-action memory is the authority.
           action: z.string().min(1).max(VALIDATION_MAX_BYTES),
           data: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])).optional(),
+          // Spec 157: the bound node's id and the page revision. Accepted and
+          // ignored: this server answers with full specs only, and the relay
+          // carries the action and its data alone.
+          id: z.string().regex(NODE_ID_GRAMMAR).optional(),
+          revision: z.number().int().nonnegative().optional(),
         })
         .strict(),
       title: 'Kimen surface action',

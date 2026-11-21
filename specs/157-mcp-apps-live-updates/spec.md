@@ -8,7 +8,10 @@
 
 **Created**: 2026-11-21
 
-**Status**: Draft, awaiting the founder's approval of the Gherkin section.
+**Status**: Approved. The founder approved S1 to S7 verbatim on 2026-11-21
+("Aprobado S1 a S7; sigue tus dos recomendaciones"), including the Art. VIII
+guardrail confirmation, and accepted both recommendations: the relay keeps
+only the action and its data, and the unused render seam is removed.
 
 **Input**: Founder decision of 2026-11-21 to land the improvements to the
 generative layer before publishing it (design
@@ -283,9 +286,10 @@ the interaction families belong to the catalog components it paints.
   server's results keep carrying only a full spec; it never sends an update.
 - **FR-011 (budgets)**: the full spec keeps today's render budgets. An update
   batch is bounded by the live surface's per-batch op budget (64 ops) and by
-  a byte budget no larger than the full spec's (262,144 bytes by default), so
-  a result never demands more work than two full specs. A full spec the
-  guarded renderer accepts is never refused by a batch budget.
+  the full spec's byte budget (262,144 bytes by default) plus the few bytes of
+  the one insert that paints a full spec, so a result never demands much more
+  than two full specs. A full spec the guarded renderer accepts is never
+  refused by a batch budget.
 - **FR-012 (boundaries)**: `@kimen/catalog` and `@kimen/elements` do not
   change (Art. VIII). The adapter types the batch as `unknown` until
   `@kimen/catalog` exports the live batch type (spec 155).
@@ -355,9 +359,9 @@ What changes is prose and tests:
    "`{ action, data?, id?, revision? }` (`id` and `revision` accepted and
    ignored, spec 157)".
 7. Tests that pin the exact call (`expectedActionCall` in
-   `tests/spec-messages.ts`, used by 030 and 040 tests, and the S17 browser
-   test) gain the `revision` argument; the schema test of 030 S6
-   (`tests/resource.spec.ts`) gains the two optional properties.
+   `tests/spec-messages.ts`, used by 030 and 040 tests, and the 040 S15
+   reference-host test) gain the `revision` argument; the declared schema is
+   pinned by this spec's S6 test.
 
 ## Constitutional Surface *(mandatory)*
 
@@ -365,17 +369,19 @@ What changes is prose and tests:
   `0.0.0`): `surfaceToolResult` gains an optional `update` argument;
   `SurfacePayload` gains `update?`; `ActionCallRequest.arguments` gains
   `revision` and `id?`; `KimenActionTool` gains the two schema properties.
-  `SurfaceBridgeOptions.render` and the `GuardedRender` type lose their only
-  use (no caller in the repository injects them); the implementation removes
-  them, subject to the founder's answer to open question 2.
+  `SurfaceBridgeOptions.render` and the `GuardedRender` type are removed: no
+  caller in the repository injected them, and they could not keep their
+  meaning (founder decision 2, below).
   `@kimen/mcp-server` (published): its action tool accepts two more optional
   arguments and its surface document changes; additive. `@kimen/catalog` and
   `@kimen/elements`: no change.
 - **Bundle budget** (Art. IV): the document starts using the live surface,
-  which the bundler drops today because nothing imports it. Its size effect is
-  measured by `pnpm regen` and enforced by `tests/resource.spec.ts`; a re-base
-  of the MCP Apps budget, if needed, goes to the founder. No new runtime
-  dependency.
+  which the bundler dropped before because nothing imported it. Measured
+  against main `618df310` on macOS: +16,944 B raw, +5,311 B gzip and +4,586 B
+  brotli for the document, and +17,462 / +5,452 / +4,701 B for `kimen-mcp`,
+  which embeds it. The founder approved re-basing both budgets
+  (`scripts/lib/bundle-size-budget.mjs`) by exactly the measured growth on
+  2026-11-21, so the headroom stays what it was. No new runtime dependency.
 - **Accessibility** (Art. V): no new interaction pattern. The keyboard focus
   survives an applied update (S1), which today's full repaint loses.
 - **Tokens** (Art. VI): none.
@@ -424,14 +430,18 @@ What changes is prose and tests:
   no semantics and no style.
 - **The live batch type** is exported by spec 155's change. Until then the
   adapter types it as `unknown` (FR-012).
-- **Open question 1 — the relay and the `id`.** The relay to the model keeps
-  only the action and its data (FR-009), because the consumer of the `id` is
-  an integrating server, and spec 040 D4 pins the relayed text. A model
-  behind `@kimen/mcp-server` therefore still cannot tell which row's button
-  was pressed. Recommendation: keep the relay as it is now; adding the `id`
-  later is an additive change to 040.
-- **Open question 2 — the render seam.** `SurfaceBridgeOptions.render`
-  (`GuardedRender`) is a test seam no test uses, and it cannot keep its
-  meaning once painting goes through the live surface. Recommendation:
-  remove it (the package is private and unpublished) rather than keep a dead
-  option.
+- **Founder decision 1 — the relay and the `id`.** The relay to the model
+  keeps only the action and its data (FR-009), because the consumer of the
+  `id` is an integrating server, and spec 040 D4 pins the relayed text. A
+  model behind `@kimen/mcp-server` therefore still cannot tell which row's
+  button was pressed. Adding the `id` later is an additive change to 040.
+- **Founder decision 2 — the render seam.** `SurfaceBridgeOptions.render`
+  (`GuardedRender`) was a test seam no test used, and it could not keep its
+  meaning once painting goes through the live surface. It is removed (the
+  package is private and unpublished).
+- **Founder decision 3 — removable chips (2026-11-21).** On a live surface a
+  `ki-chip`'s removal request is prevented (spec 035): its bound action still
+  leaves, and the chip stays until a result removes it. The static renderer
+  let the chip remove itself. Accepted and documented in `COMPAT.md`, the
+  guide and the server's `COMPAT.md`; with `@kimen/mcp-server`, the model
+  receives the relayed action and renders again.

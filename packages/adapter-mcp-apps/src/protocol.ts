@@ -103,10 +103,27 @@ export interface Implementation {
 /** A JSON-RPC request id: MCP forbids `null`. */
 export type RequestId = number | string;
 
+/**
+ * A change the server computed against one page revision (spec 157 FR-001):
+ * one live batch of spec 035, untrusted data validated only by the live
+ * surface, and the revision the person acted on.
+ */
+export interface SurfaceUpdate {
+  /** The page revision the batch was computed on (sent with every action call). */
+  readonly baseRevision: number;
+  readonly batch: unknown;
+}
+
 /** The catalog-schema payload derived from a tool result — the only render input. */
 export interface SurfacePayload {
-  /** The neutral UI spec (validated and rendered by the guarded renderer). */
+  /**
+   * The complete neutral UI spec the result describes (validated by the
+   * guarded renderer): the authority, and what the page paints whenever it
+   * cannot apply `update`.
+   */
   readonly spec: unknown;
+  /** Applied instead of a full paint only on its revision and when the live surface accepts it. */
+  readonly update?: SurfaceUpdate;
 }
 
 /** `McpUiInitializeRequest` (ext-apps `src/spec.types.ts:554-564`). */
@@ -139,6 +156,10 @@ export interface ActionCallRequest {
     readonly arguments: {
       readonly action: string;
       readonly data: Readonly<Record<string, boolean | number | string>>;
+      /** The bound node's stable id, when the spec gave it one (spec 157). */
+      readonly id?: string;
+      /** The page revision at the gesture (spec 157). */
+      readonly revision: number;
     };
   };
 }

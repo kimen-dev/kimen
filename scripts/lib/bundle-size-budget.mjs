@@ -22,8 +22,13 @@ const BASE_BUDGETS = {
   // The glyphs components draw themselves had been dropped from both by an undeclared
   // side effect; restoring them (2026-11-20) measured +859 B raw for the document and
   // +879 B raw for kimen-mcp, which the raw bases absorb. The compressed growth fits.
-  mcpApps: { raw: 782_242, gzip: 177_349, brotli: 140_306 },
-  mcpServer: { raw: 2_574_055, gzip: 484_697, brotli: 380_341 },
+  // Spec 157 (MCP Apps live updates, approved 2026-11-21) paints the document through
+  // the live surface, which the bundler dropped before because nothing imported it.
+  // Measured against main 618df310 on macOS: +16,944 / 5,311 / 4,586 B for the
+  // document and +17,462 / 5,452 / 4,701 B for kimen-mcp, added here exactly so the
+  // headroom stays what it was. The founder approved this re-base on 2026-11-21.
+  mcpApps: { raw: 799_186, gzip: 182_660, brotli: 144_892 },
+  mcpServer: { raw: 2_591_517, gzip: 490_149, brotli: 385_042 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
