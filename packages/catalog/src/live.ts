@@ -224,13 +224,6 @@ export interface LiveSurface {
  */
 const USER_STATE_PROPS: ReadonlySet<string> = new Set(['checked', 'open', 'selected', 'value']);
 
-/**
- * The user-state props a `set` agreeing with the user leaves theirs until a
- * forced override (spec 159). Not `open`: agreeing that the user closed a
- * dialog hands it back, which is how it is reopened (155 S6).
- */
-const HELD_WHEN_AGREED: ReadonlySet<string> = new Set(['checked', 'selected', 'value']);
-
 // The interaction events that mark an element's user state as changed, on
 // top of the events its catalog entry declares.
 const USER_EVENTS = ['input', 'change'] as const;
@@ -257,8 +250,8 @@ interface MNode {
   dom?: Element;
   /** The user interacted with this element's own value channel. */
   touched: boolean;
-  /** User-state props a `set` agreed with, still the user's (spec 159). */
-  readonly held: Set<string>;
+  /** User-state props a `set` agreed with, still the user's (spec 159); absent when none. */
+  held?: Set<string>;
 }
 
 type MEntry = MNode | MText;
@@ -338,7 +331,6 @@ function fromPlain(node: UiSpecNode, parent: MNode | null, slot: string): MNode 
     action: node.action,
     collect: node.collect,
     component: node.component,
-    held: new Set(),
     id: node.id,
     kind: 'node',
     parent,
@@ -365,7 +357,6 @@ function cloneNode(node: MNode, parent: MNode | null, ids: Map<string, MNode>): 
     action: node.action,
     collect: node.collect,
     component: node.component,
-    held: new Set(),
     id: node.id,
     kind: 'node',
     origin: node,
@@ -554,7 +545,7 @@ function usersValue(
     return undefined;
   }
   const live = readLiveScalar(node.dom, name, constraint);
-  if (live === undefined || node.held.has(name)) {
+  if (live === undefined || node.held?.has(name)) {
     return live;
   }
   const written = authoredLiveScalar(
@@ -830,18 +821,22 @@ function applySet(
   }
   for (const [name, value] of Object.entries(op.props)) {
     const previous = ownEntry(node.props, name);
-    const overriding = force && ctx.allowUserStateOverride && USER_STATE_PROPS.has(name);
+    const userState = USER_STATE_PROPS.has(name);
+    const overriding = force && ctx.allowUserStateOverride && userState;
     const constraint = ownEntry(entry?.props, name);
     // A set the check let through on a value that is still the user's agreed
-    // with it: the value stays theirs (spec 159). Only the commit's live
-    // nodes are ever touched.
+    // with it: the value stays theirs until a forced override (spec 159).
+    // Not `open`: agreeing that the user closed a dialog hands it back, which
+    // is how it is reopened (155 S6). Only the commit's live nodes are ever
+    // touched.
     if (
+      userState &&
       !overriding &&
-      HELD_WHEN_AGREED.has(name) &&
+      name !== 'open' &&
       constraint !== undefined &&
       usersValue(node, name, constraint) !== undefined
     ) {
-      node.held.add(name);
+      (node.held ??= new Set()).add(name);
     }
     if (value === null) {
       node.props = Object.fromEntries(Object.entries(node.props).filter(([key]) => key !== name));
@@ -862,9 +857,9 @@ function applySet(
       // The component's own setter, with a validated scalar of the declared
       // type, or `undefined` for a removed prop with no default: a number
       // field has no empty value to fall back to (155 FR-004).
-      Reflect.set(element, name, current ?? ownEntry(entry?.props, name)?.default);
+      Reflect.set(element, name, current ?? constraint?.default);
       node.touched = false;
-      node.held.clear();
+      node.held?.clear();
     }
   }
   // Unsetting `type` re-pins the declarative no-submit default on every
@@ -1109,7 +1104,6 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       collect: node.collect,
       component: node.component,
       dom: element,
-      held: new Set(),
       id: node.id,
       kind: 'node',
       parent,
