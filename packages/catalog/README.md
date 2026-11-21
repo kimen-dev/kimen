@@ -262,7 +262,23 @@ activation cancels nothing and reports the
 control's live `checked`/`value`; the innermost bound node claims an
 interaction, so exactly one action fires even for nested action-bound nodes
 or a button inside a form; a binding on a component declaring several events
-is rejected; no other callback exists).
+is rejected; no other callback exists). Every action event names its node's
+`id` when it has one.
+
+A bound node may `collect` other fields by id (spec 153, catalog schema
+`1.7.0`): `"collect": { "title": "f-title", "quantity": "f-qty" }` on a
+button bound to `add`. At the gesture every named field is asked for
+validity — `reportValidity()` when the element has it, otherwise its
+`:invalid` state — and an invalid one stops the action and takes the focus,
+the first in document order. Otherwise the action data carries, under each
+key, the field's live `checked`, `selected` or `value` (the first its entry
+declares, only when it has the declared type), next to the node's props.
+Validation rejects `collect-without-action`, `collect-unknown-node`,
+`collect-no-value` (the named node declares no such prop),
+`collect-key-conflict` (a key shadows one of the node's own props) and
+`collect-budget` (more than `COLLECT_MAX_ENTRIES`, 32). A stream resolves a
+`collect` within the pushed node, and a live batch that leaves one naming no
+node is rejected whole.
 
 `createStreamingRenderer` renders a streamed spec progressively: a node
 attaches only after it fully validates; an invalid node halts the stream

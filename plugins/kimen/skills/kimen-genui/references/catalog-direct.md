@@ -70,8 +70,9 @@ defineCustomElements(); // agent output can name any catalog tag
 
 const result = renderUiSpec(spec, {
   surface: document.querySelector('#genui')!,
-  onAction: ({ action, data, path }) => {
-    // action: a declared name; data: the control's props and live value.
+  onAction: ({ action, data, id, path }) => {
+    // action: a declared name; id: the node's id, when it has one;
+    // data: the control's props and live value, plus the collected fields.
     // Untrusted input: validate before acting.
   },
 });
