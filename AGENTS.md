@@ -59,6 +59,9 @@ and a single founder merges.
 - `packages/`: `tokens`, `elements`, `catalog`, `emitter`, `adapter-a2ui`,
   `adapter-mcp-apps`, `mcp-server` (the `kimen-mcp` stdio binary), `kimen`
   (placeholder)
+- `/DESIGN.md`: the visual rules of the default onmars v2 theme (accent roles,
+  surfaces and hairlines, type scale, contrast floors); the tokens are the
+  source of truth
 - `/docs/`: public documentation — `roadmap.md`, `releasing.md`, `guides/`
   (end-to-end GenUI guides), `migrations/`, `capabilities.json` (the
   capability-claims source that drives the generated status blocks)
