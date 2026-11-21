@@ -6,7 +6,7 @@
 // surface accepts the batch; otherwise it paints the full spec. Each action
 // call names the page revision and the bound node's id. The real engine
 // (focus, a real field) is pinned in browser-tests/live-updates.browser.spec.ts.
-import { DEFAULT_RENDER_BUDGETS } from '@kimen/catalog';
+import { CATALOG_SCHEMA_VERSION, DEFAULT_RENDER_BUDGETS } from '@kimen/catalog';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import type { BridgeRefusal, SurfaceOutboundMessage } from '../src/index.js';
@@ -37,13 +37,14 @@ beforeEach(() => {
 });
 
 /** A bridge whose handshake completed, recording what it sends and refuses. */
-const connected = (into: Element = surface) => {
+const connected = (into: Element = surface, catalogSchemaVersion?: string) => {
   const sent: SurfaceOutboundMessage[] = [];
   const refusals: BridgeRefusal[] = [];
   const bridge = createSurfaceBridge({
     onRefusal: (refusal) => refusals.push(refusal),
     send: (message) => sent.push(message),
     surface: into,
+    ...(catalogSchemaVersion === undefined ? {} : { catalogSchemaVersion }),
   });
   bridge.start();
   bridge.receive(initializeResult(1, undefined, {}, TEXT_MESSAGE_CAPABILITIES));
@@ -312,6 +313,22 @@ describe('an update changes only what it names, or the full spec wins', () => {
     expect(titleField().getAttribute('value')).toBe('');
     expect(typedValue(titleField())).toBeUndefined();
     expect(h.refusals).toEqual([]);
+  });
+
+  it('S4 lets the spec own catalog schema version override the bridge fallback, as before', () => {
+    // The guarded renderer treats the spec's declaration as authoritative and
+    // the bridge option as the host fallback; the full paint keeps that order.
+    const h = connected(surface, '99.0.0');
+    const declared = { ...tasksSpec(['Call Ana']), catalogSchemaVersion: CATALOG_SCHEMA_VERSION };
+
+    const result = h.bridge.receive(toolResult(declared));
+
+    expect(result.ok).toBe(true);
+    expect(itemTexts()).toEqual(['Call Ana']);
+    // Without a declaration the fallback still decides, and it is refused.
+    expect(h.bridge.receive(toolResult(tasksSpec([]))).refusals.map((r) => r.reason)).toEqual([
+      'unsupported-version',
+    ]);
   });
 
   it('S4 paints a full spec at the default byte budget, as the guarded renderer accepts it', () => {

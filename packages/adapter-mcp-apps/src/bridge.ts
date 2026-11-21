@@ -265,8 +265,12 @@ export function negotiateProtocolVersion(
 export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridge {
   const supported = options.supportedVersions ?? MCP_APPS_PROTOCOL_VERSIONS;
   const appInfo = options.appInfo ?? KIMEN_APP_INFO;
+  const budgets = options.budgets !== undefined ? { budgets: options.budgets } : {};
+  // The catalog-schema-version gate is preflight's alone: it runs on every
+  // result before anything paints or applies, with the spec's own declaration
+  // first and this option as the fallback, exactly as the guarded renderer.
   const preflightOptions: PreflightOptions = {
-    ...(options.budgets !== undefined ? { budgets: options.budgets } : {}),
+    ...budgets,
     ...(options.catalogSchemaVersion !== undefined
       ? { catalogSchemaVersion: options.catalogSchemaVersion }
       : {}),
@@ -400,7 +404,7 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
       batchBudgets: { maxBytes: specBytes + INSERT_ENVELOPE_BYTES },
       onAction,
       surface: mount,
-      ...preflightOptions,
+      ...budgets,
     });
     const root = isRecord(spec) ? spec['root'] : undefined;
     const painted = next.apply({ ops: [{ node: root, op: 'insert' }] });
