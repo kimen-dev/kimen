@@ -454,8 +454,8 @@ live.snapshot(); // { revision, actions, nodes } — deep-frozen plain data
 ```
 
 The batch and op shapes are exported as types (`LiveBatch`, `LiveOp` and
-`LiveInsertOp`, `LiveSetOp`, `LiveTextOp`, `LiveRemoveOp`, `LiveReplaceOp`)
-for code that writes batches. `apply` still takes `unknown`, and also JSON
+`LiveInsertOp`, `LiveSetOp`, `LiveTextOp`, `LiveRemoveOp`, `LiveReplaceOp`,
+`LiveResetOp`) for code that writes batches. `apply` still takes `unknown`, and also JSON
 text: a batch is untrusted data whatever its type says.
 
 - **Atomic and fail-closed per batch.** The batch crosses the purity wall,
@@ -497,6 +497,19 @@ text: a batch is untrusted data whatever its type says.
   accepted, but their `checked`, `selected` and `value` stay theirs: a
   later `set` to another value is still rejected. No rejection repeats the
   user's value.
+- **Emptying a form after it was sent.** `{ op: 'reset', id: 'title' }`
+  returns a control's `checked`, `open`, `selected` and `value` to what the
+  spec gave it, else the catalog default, else nothing (a number field
+  empties too), and makes them the agent's again. It needs neither `force`
+  nor `allowUserStateOverride`, because it clears only what already left in
+  an action, the node's own or one that collects it. Input no action carried
+  is kept and the batch is rejected (`unsent-user-input`, naming the node and
+  the prop, never the input): text typed after pressing Add, or a value a
+  `set` only agreed with. After a create, answer the action with a batch that
+  resets the add form's fields; if it is rejected, the person is typing again,
+  so leave the form alone. A node that declares none of the four props is
+  `unknown-prop`. Like every op, a reset is checked against the state before
+  its batch: set a new value in a later batch.
 - **Reopening a dialog the person closed.** After Escape or Cancel, a `set`
   of `open: true` is a conflict: the surface still records the dialog as
   open and reads the closed one as the person's choice. Send `open: false`
