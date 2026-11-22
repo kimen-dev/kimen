@@ -96,6 +96,16 @@ elements (spec 037), listed in `NATIVE_PRIMITIVE_TAGS`:
   as `var(--ki-space-<step>)`), `align`, `justify` and `wrap`. The layout
   is written through the CSSOM, never as a `style` attribute, so a page
   whose Content-Security-Policy forbids inline styles keeps working.
+- **Tables** (spec 158): `table`, `caption`, `thead`, `tbody`, `tr`, `th`
+  and `td`, for reading only. The one attribute is a `th`'s `scope`
+  (`col` | `row`, optional). A `table` holds, in order, at most one
+  `caption`, at most one `thead`, then any number of `tbody`; `thead` and
+  `tbody` hold only `tr`, and `tr` only `th` and `td`, none of them text. A
+  `caption` holds text, `strong` and `em`, and a cell holds what a `div`
+  holds, except a table. A table part sits only in its own parent: never in
+  a `div`, a cell, a component's slot or at a root. Put the table in a
+  `ki-table` for Kimen styling, and leave `selectable` off: a spec cannot
+  key a row or sort a column.
 
 ```json
 {
@@ -118,8 +128,9 @@ elements (spec 037), listed in `NATIVE_PRIMITIVE_TAGS`:
 Every other element (`script`, `iframe`, `a`, `span`, `SCRIPT`, …) is
 `unknown-component`, and every other attribute (`style`, `class`, `on*`,
 `srcset`, …) is `unknown-prop`. Headings, paragraphs and emphasis accept
-only text, `strong` and `em` (`invalid-child` otherwise), and no native
-element binds an action (`action-not-allowed`). The primitives come with
+only text, `strong` and `em`, a table keeps the content model above
+(`invalid-child` otherwise), and no native element binds an action
+(`action-not-allowed`). The primitives come with
 the built-in catalog and with catalogs that `extend` it; a consumer
 definition can never declare one, and the renderer renders a native tag
 only when the catalog in use carries exactly Kimen's definition of it.

@@ -6,7 +6,7 @@
 // deterministic and version-stamped.
 
 import type { Catalog } from '@kimen/catalog';
-import { catalogData, createCatalog, validateUiSpec } from '@kimen/catalog';
+import { catalogData, createCatalog, NATIVE_PRIMITIVE_TAGS, validateUiSpec } from '@kimen/catalog';
 import { describe, expect, it } from 'vitest';
 import { catalogPrompt } from '../src/index.js';
 
@@ -67,6 +67,34 @@ describe('catalogPrompt', () => {
     const report = validateUiSpec(example, { catalog });
     expect(report.issues).toEqual([]);
     expect(report.ok).toBe(true);
+  });
+
+  it('S8 the built-in prompt and each native element prompt embed only an example that validates', () => {
+    // A table element's example node never validates alone (spec 158: a part
+    // is never a root and a table holds no text), so its own prompt has no
+    // example rather than an invalid one; every other prompt has a valid one.
+    const tableParts = new Set(['caption', 'table', 'tbody', 'td', 'th', 'thead', 'tr']);
+    const subsets: readonly (readonly string[] | undefined)[] = [
+      undefined,
+      ...NATIVE_PRIMITIVE_TAGS.map((tag) => [tag]),
+    ];
+    for (const components of subsets) {
+      const derivation = catalogPrompt(
+        catalogData,
+        components === undefined ? {} : { components: [...components] },
+      );
+      if (!derivation.ok) {
+        throw new Error(JSON.stringify(derivation.issues));
+      }
+      const fence = /```json\n([\s\S]*?)\n```/u.exec(derivation.artifact);
+      const standsAlone = !(components?.length === 1 && tableParts.has(components[0] ?? ''));
+      expect(fence !== null, String(components)).toBe(standsAlone);
+      expect(derivation.artifact.includes('## Example (valid)')).toBe(standsAlone);
+      if (fence !== null) {
+        const report = validateUiSpec(JSON.parse(fence[1] ?? 'null'), { catalog: catalogData });
+        expect(report.issues, String(components)).toEqual([]);
+      }
+    }
   });
 
   it('S16 marks required props as required in the prompt', () => {

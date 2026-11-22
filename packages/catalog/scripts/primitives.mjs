@@ -14,6 +14,14 @@
 const PHRASING_SLOT =
   'Text, with optional `strong` and `em` children. No other element: headings, paragraphs, layout, images and components are rejected as invalid-child.';
 
+// The read-only table elements (spec 158 D3). A table part sits only in its
+// own parent; validation enforces that in src/primitives.ts.
+const ROWS_SLOT =
+  'Only `tr` rows. No text and no other element: anything else is rejected as invalid-child.';
+
+const CELL_SLOT =
+  'Text, native elements and catalog components, as in a layout `div`. Never a table or a table part: they are rejected as invalid-child.';
+
 const heading = (level, use) => ({
   description: `A native level-${String(level)} heading (\`<h${String(level)}>\`) that takes the host page's typography.`,
   events: {},
@@ -27,6 +35,17 @@ const heading = (level, use) => ({
 
 /** @type {Readonly<Record<string, unknown>>} */
 export const NATIVE_PRIMITIVES = {
+  caption: {
+    description:
+      'The native caption of a table (`<caption>`): its title, which names the table for assistive technology.',
+    events: {},
+    props: {},
+    slots: { '': PHRASING_SLOT },
+    tag: 'caption',
+    whenNotToUse:
+      'Do not use it outside a table, after its thead or tbody, or twice in one table. Never bind an action.',
+    whenToUse: 'Title every table, as its first child, so the table has an accessible name.',
+  },
   div: {
     description:
       'A native layout container (`<div>`) that lays its children out as a flex column or row, separated by a spacing token. It has no visual identity of its own: no background, border or padding.',
@@ -153,5 +172,82 @@ export const NATIVE_PRIMITIVES = {
     whenNotToUse:
       'Do not use it for whole paragraphs, as a heading or for a status (use ki-badge). Never bind an action.',
     whenToUse: 'Mark the figure or phrase of a sentence that matters most, such as a total.',
+  },
+  table: {
+    description:
+      'A native data table (`<table>`) for reading records that share the same fields. It is never sorted or selected from a spec.',
+    events: {},
+    props: {},
+    slots: {
+      '': 'In this order: at most one `caption`, at most one `thead`, then any number of `tbody`. No text and no other element: anything else is rejected as invalid-child.',
+    },
+    tag: 'table',
+    whenNotToUse:
+      'Do not use it for layout (use a div), for a list of single items (use ki-list) or inside a cell: tables never nest. Never bind an action.',
+    whenToUse:
+      'Show records with the same fields side by side, such as orders and their status. Put it in the default slot of a ki-table, and leave its `selectable` off: a table from a spec is never sorted or selected.',
+  },
+  tbody: {
+    description: 'A native body row group of a table (`<tbody>`) that holds its records as rows.',
+    events: {},
+    props: {},
+    slots: { '': ROWS_SLOT },
+    tag: 'tbody',
+    whenNotToUse:
+      'Do not use it outside a table or before its caption or thead. A totals row is one more body row. Never bind an action.',
+    whenToUse:
+      'Hold the body rows of a table, after its thead. A table may hold several to group its rows.',
+  },
+  td: {
+    description: 'A native data cell (`<td>`) of a table row.',
+    events: {},
+    props: {},
+    slots: { '': CELL_SLOT },
+    tag: 'td',
+    whenNotToUse:
+      'Do not use it outside a tr, and never put a table in it. A cell spans exactly one row and one column. Never bind an action on the cell itself.',
+    whenToUse:
+      'Hold one field of a record: text, a ki-badge for a status, or a ki-button that acts on the record.',
+  },
+  th: {
+    description: 'A native header cell (`<th>`) that heads a column or a row of a table.',
+    events: {},
+    props: {
+      scope: {
+        description:
+          'What the cell heads: `col` for the column below it, `row` for the rest of its row. Optional: without it the browser infers it.',
+        type: 'enum',
+        values: ['col', 'row'],
+      },
+    },
+    slots: { '': CELL_SLOT },
+    tag: 'th',
+    whenNotToUse:
+      'Do not use it outside a tr or only to make text bold. A spec cannot sort a column. Never bind an action.',
+    whenToUse:
+      'Head each column in the header row (scope `col`) and, when one field identifies the record, head each body row with it (scope `row`).',
+  },
+  thead: {
+    description:
+      'The native header row group of a table (`<thead>`) that holds the row of column headers.',
+    events: {},
+    props: {},
+    slots: { '': ROWS_SLOT },
+    tag: 'thead',
+    whenNotToUse:
+      'Do not use it outside a table, after a tbody, or twice in one table. Never bind an action.',
+    whenToUse: 'Hold the header row of a table, after its caption and before its body.',
+  },
+  tr: {
+    description: 'A native table row (`<tr>`) of header and data cells.',
+    events: {},
+    props: {},
+    slots: {
+      '': 'Only `th` and `td` cells. No text and no other element: anything else is rejected as invalid-child.',
+    },
+    tag: 'tr',
+    whenNotToUse:
+      'Do not use it outside a thead or a tbody, or to lay content out in a row (use a div with direction row). A row is never selected or clicked: never bind an action.',
+    whenToUse: 'Hold one record, or the header row, inside a thead or a tbody.',
   },
 };

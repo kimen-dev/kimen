@@ -55,7 +55,7 @@
         },
         {
           "name": "NATIVE_PRIMITIVE_TAGS",
-          "summary": "The closed set of native HTML elements a spec may carry next to catalog components: h2, h3, h4, p, strong and em for text, img for images and div for layout. They take the host page's typography, carry only their declared attributes (img: src under the URL policy, alt that is a description or exactly empty for decoration, width, height; div: direction, gap on the --ki-space-* steps, align, justify, wrap), never bind an action, and lay out through the CSSOM so a CSP without unsafe-inline styles holds. They come with the built-in catalog and with catalogs that extend it; a consumer definition can never declare one."
+          "summary": "The closed set of native HTML elements a spec may carry next to catalog components: h2, h3, h4, p, strong and em for text, img for images, div for layout, and table, caption, thead, tbody, tr, th and td for read-only tables. They take the host page's typography, carry only their declared attributes (img: src under the URL policy, alt that is a description or exactly empty for decoration, width, height; div: direction, gap on the --ki-space-* steps, align, justify, wrap; th: scope col or row), keep a content model (a table part sits only in its own parent), never bind an action, and lay out through the CSSOM so a CSP without unsafe-inline styles holds. They come with the built-in catalog and with catalogs that extend it; a consumer definition can never declare one."
         }
       ]
     },

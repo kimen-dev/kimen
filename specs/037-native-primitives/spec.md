@@ -39,8 +39,10 @@ flattened, a `ki-card` as forced root container).
 Proposed by the agent and pending founder confirmation (D1–D10). The
 founder already decided native HTML over `ki-text`/`ki-stack`/`ki-image`.
 
-- **D1 Closed element set**: `h2`, `h3`, `h4`, `p`, `strong`, `em`, `img`
-  and one layout container `div`. Nothing else. Out on purpose:
+- **D1 Closed element set**: `h2`, `h3`, `h4`, `p`, `strong`, `em`, `img`,
+  one layout container `div`, and the read-only table elements `table`,
+  `caption`, `thead`, `tbody`, `tr`, `th` and `td` (`158-native-tables`).
+  Nothing else. Out on purpose:
   - `h1`: the page outline belongs to the host.
   - `h5`/`h6`: three heading levels cover a generated panel; more is
     speculative (Art. VII).
@@ -94,7 +96,9 @@ founder already decided native HTML over `ki-text`/`ki-stack`/`ki-image`.
 - **D7 Content model**: the phrasing elements (`h2`–`h4`, `p`, `strong`,
   `em`) accept text, `strong` and `em` only; `img` declares no slot;
   the `div` accepts text, every native element and every catalog
-  component; catalog component slots accept native elements. A violation
+  component; catalog component slots accept native elements. A table
+  part (`caption`, `thead`, `tbody`, `tr`, `th`, `td`) sits only in its
+  own parent, under the content model of `158-native-tables`. A violation
   is `invalid-child` (S8). No native element binds an action
   (`action-not-allowed`, S9): a clickable `div` or `img` is not keyboard
   operable (Art. V).
@@ -491,7 +495,8 @@ host's page. Their families are covered as follows.
 ### Functional Requirements
 
 - **FR-001** (D1, D8): the built-in catalog gains exactly the entries `h2`,
-  `h3`, `h4`, `p`, `strong`, `em`, `img` and `div`, each with description,
+  `h3`, `h4`, `p`, `strong`, `em`, `img` and `div` (and, with
+  `158-native-tables`, the seven table elements), each with description,
   `whenToUse` and `whenNotToUse` guidance, defined once in
   `packages/catalog/scripts/primitives.mjs` and merged by the generator
   into `src/generated/catalog.ts`. No other non-custom element is ever a

@@ -85,9 +85,9 @@ describe('035 — nodes may carry stable ids', () => {
 });
 
 describe('035 — compatible catalog schema versions are accepted', () => {
-  it('S3 the catalog schema version stays on major 1 with bindings per event in 1.8.0', () => {
-    expect(CATALOG_SCHEMA_VERSION).toBe('1.8.0');
-    expect(catalogData.catalogSchemaVersion).toBe('1.8.0');
+  it('S3 the catalog schema version stays on major 1 with read-only tables in 1.9.0', () => {
+    expect(CATALOG_SCHEMA_VERSION).toBe('1.9.0');
+    expect(catalogData.catalogSchemaVersion).toBe('1.9.0');
   });
 
   const catalog: Catalog = { ...catalogData, catalogSchemaVersion: '1.1.0' };

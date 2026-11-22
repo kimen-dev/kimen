@@ -1306,7 +1306,10 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     return model;
   };
 
-  /** Validates one op's node as a spec root (catalog, ids, guards). */
+  /**
+   * Validates one op's node as a fragment (catalog, ids, guards): where it
+   * lands is checked on the resulting state (spec 158 D4).
+   */
   const validateNode = (
     raw: unknown,
     at: string,
@@ -1316,6 +1319,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       { actions, root: raw, version: 1 },
       context,
       createValidationScope(),
+      { fragment: true },
     );
     if (!report.ok || report.spec === undefined) {
       return { diagnostics: report.issues.map((issue) => rebase(issue, `${at}.node`)) };
@@ -1338,7 +1342,9 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     const diagnostics: RenderDiagnostic[] = [];
     plain.forEach((root, index) => {
       const at = `surface[${String(index)}]`;
-      const report = validatePlainData({ actions, root, version: 1 }, context, scope, at);
+      const report = validatePlainData({ actions, root, version: 1 }, context, scope, {
+        rootPath: at,
+      });
       if (!report.ok || report.spec === undefined) {
         diagnostics.push(...report.issues.map((issue) => rebase(issue, at)));
         return;
@@ -1484,7 +1490,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       }
       return result([]);
     }
-    // 5. Every new node validated as a spec root.
+    // 5. Every new node validated as a fragment; step 6 checks where it lands.
     const nodes = new Map<number, UiSpecNode>();
     for (const [index, op] of batch.ops.entries()) {
       if (op.op === 'insert' || op.op === 'replace') {

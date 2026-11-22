@@ -7,7 +7,8 @@
  *
  * - the canonical-definition check: a native tag renders only when the
  *   entry of the catalog in use is exactly Kimen's generated one;
- * - the content model (D7): which children a primitive accepts;
+ * - the content model (D7, and spec 158 D3 for tables): which children a
+ *   primitive accepts, where a table part sits, and which may be a root;
  * - the writers (D4, D6): layout through the CSSOM only, the image's pinned
  *   referrer policy and container-fit sizing. No path here writes a `style`
  *   or `class` attribute, so a CSP without `'unsafe-inline'` for styles
@@ -19,8 +20,9 @@ import { catalogData } from './generated/catalog.js';
 
 type Scalar = boolean | number | string;
 
-/** The closed set of native elements (D1), in sorted order. */
+/** The closed set of native elements (037 D1, 158 D1), in sorted order. */
 export const NATIVE_PRIMITIVE_TAGS: readonly string[] = Object.freeze([
+  'caption',
   'div',
   'em',
   'h2',
@@ -29,6 +31,12 @@ export const NATIVE_PRIMITIVE_TAGS: readonly string[] = Object.freeze([
   'img',
   'p',
   'strong',
+  'table',
+  'tbody',
+  'td',
+  'th',
+  'thead',
+  'tr',
 ]);
 
 const NATIVE_SET: ReadonlySet<string> = new Set(NATIVE_PRIMITIVE_TAGS);
@@ -38,22 +46,127 @@ export function isNativePrimitive(tag: string): boolean {
   return NATIVE_SET.has(tag);
 }
 
-/** The primitives whose content is phrasing only (D7). */
-const PHRASING_PARENTS: ReadonlySet<string> = new Set(['em', 'h2', 'h3', 'h4', 'p', 'strong']);
+/** The primitives whose content is phrasing only (037 D7; a caption, 158 D3). */
+const PHRASING_PARENTS: ReadonlySet<string> = new Set([
+  'caption',
+  'em',
+  'h2',
+  'h3',
+  'h4',
+  'p',
+  'strong',
+]);
 
 /** The only elements a phrasing parent accepts as children (D7). */
 const PHRASING_CHILDREN: ReadonlySet<string> = new Set(['em', 'strong']);
 
 /**
- * Why `child` may not sit inside `parent`, or null when the content model
- * allows it. Text is always allowed where a slot exists; an `img` declares
- * no slot at all, so the existing unknown-slot check covers it.
+ * The table parts and the only parents each sits in (158 D3): never in a
+ * `div`, a cell, a catalog component's slot, or at a root.
  */
-export function contentModelViolation(parent: string, child: string): string | null {
+const TABLE_PART_PARENTS: ReadonlyMap<string, readonly string[]> = new Map([
+  ['caption', ['table']],
+  ['tbody', ['table']],
+  ['td', ['tr']],
+  ['th', ['tr']],
+  ['thead', ['table']],
+  ['tr', ['thead', 'tbody']],
+]);
+
+/** The table elements that hold only their own parts and no text (158 D3). */
+const TABLE_STRUCTURE: ReadonlyMap<string, readonly string[]> = new Map([
+  ['table', ['caption', 'thead', 'tbody']],
+  ['tbody', ['tr']],
+  ['thead', ['tr']],
+  ['tr', ['th', 'td']],
+]);
+
+/** A table's parts in order: caption?, thead?, tbody* (158 D3). */
+const TABLE_ORDER: ReadonlyMap<string, number> = new Map([
+  ['caption', 0],
+  ['thead', 1],
+  ['tbody', 2],
+]);
+
+const TABLE_CELLS: ReadonlySet<string> = new Set(['td', 'th']);
+
+/** "a", "a or b", "a, b and c" (`last` joins the final pair). */
+function listOf(tags: readonly string[], last: 'and' | 'or'): string {
+  return tags.length < 2
+    ? tags.join('')
+    : `${tags.slice(0, -1).join(', ')} ${last} ${tags.at(-1) ?? ''}`;
+}
+
+/** Whether `child` may not follow `previous` among a table's parts. */
+function outOfTableOrder(previous: string | undefined, child: string): boolean {
+  const before = previous === undefined ? undefined : TABLE_ORDER.get(previous);
+  const rank = TABLE_ORDER.get(child);
+  if (before === undefined || rank === undefined) {
+    return false;
+  }
+  return rank < before || (rank === before && child !== 'tbody');
+}
+
+/**
+ * Why `child` may not sit inside `parent` after its previous element sibling
+ * `previous`, or null when the content model allows it. A table part sits
+ * only in its own parent; text is covered by `textViolation`, and an `img`
+ * declares no slot at all, so the existing unknown-slot check covers it.
+ */
+export function contentModelViolation(
+  parent: string,
+  child: string,
+  previous?: string,
+): string | null {
+  const homes = TABLE_PART_PARENTS.get(child);
+  if (homes !== undefined && !homes.includes(parent)) {
+    return `${child} belongs only in ${listOf(homes, 'or')}; it cannot be a child of ${parent}`;
+  }
   if (PHRASING_PARENTS.has(parent) && !PHRASING_CHILDREN.has(child)) {
     return `${parent} accepts only text, strong and em; "${child}" cannot be its child`;
   }
+  const parts = TABLE_STRUCTURE.get(parent);
+  if (parts !== undefined && !parts.includes(child)) {
+    return `${parent} accepts only ${listOf(parts, 'and')}; "${child}" cannot be its child`;
+  }
+  if (parent === 'table' && outOfTableOrder(previous, child)) {
+    return `a table holds at most one caption, then at most one thead, then tbody elements; "${child}" cannot follow "${previous ?? ''}"`;
+  }
   return null;
+}
+
+/** Whether `tag` is a table cell, below which no table sits (158 D3). */
+export function isTableCell(tag: string): boolean {
+  return TABLE_CELLS.has(tag);
+}
+
+/**
+ * Why `child` may not sit below a table cell, at any depth (through a
+ * `div` or a component's slot as well), or null when it may (158 D3).
+ */
+export function belowCellViolation(child: string): string | null {
+  return child === 'table'
+    ? 'a table cannot sit inside a td or th, at any depth: tables never nest'
+    : null;
+}
+
+/** Why `parent` may not hold text, or null when it may (158 D3). */
+export function textViolation(parent: string): string | null {
+  const parts = TABLE_STRUCTURE.get(parent);
+  return parts === undefined
+    ? null
+    : `${parent} accepts only ${listOf(parts, 'and')}; text cannot be its child`;
+}
+
+/**
+ * Why `tag` may not be a root — of a spec, of a streamed chunk or among a
+ * live surface's top-level nodes — or null when it may (158 D3).
+ */
+export function rootViolation(tag: string): string | null {
+  const homes = TABLE_PART_PARENTS.get(tag);
+  return homes === undefined
+    ? null
+    : `${tag} belongs only in ${listOf(homes, 'or')}; it cannot be a root`;
 }
 
 /** Plain-data equality, key order ignored (both sides are catalog data). */

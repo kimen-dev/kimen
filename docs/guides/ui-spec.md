@@ -188,6 +188,83 @@ The person activates **Keep files**, and the host receives `tool.denied`.
   reference, which bind no action in either form). A `ki-pagination` with
   `href-template` navigates natively and binds nothing.
 
+### A table
+
+Records that share fields are a native table, for reading only, inside a
+`ki-table` for Kimen styling (catalog schema `1.9.0`):
+
+```json
+{
+  "version": 1,
+  "root": {
+    "component": "ki-table",
+    "slots": {
+      "": [
+        {
+          "component": "table",
+          "slots": {
+            "": [
+              { "component": "caption", "slots": { "": ["Pedidos"] } },
+              {
+                "component": "thead",
+                "slots": {
+                  "": [
+                    {
+                      "component": "tr",
+                      "slots": {
+                        "": [
+                          { "component": "th", "props": { "scope": "col" }, "slots": { "": ["Pedido"] } },
+                          { "component": "th", "props": { "scope": "col" }, "slots": { "": ["Estado"] } }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "component": "tbody",
+                "slots": {
+                  "": [
+                    {
+                      "component": "tr",
+                      "slots": {
+                        "": [
+                          { "component": "th", "props": { "scope": "row" }, "slots": { "": ["A-17"] } },
+                          { "component": "td", "slots": { "": [{ "component": "ki-badge", "slots": { "": ["Pendiente"] } }] } }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+- **Elements:** `table`, `caption`, `thead`, `tbody`, `tr`, `th` and `td`
+  are native primitives (`NATIVE_PRIMITIVE_TAGS`). The one attribute is a
+  `th`'s `scope`, `col` or `row`, optional. Every other one (`colspan`,
+  `style`, `data-sort`, …) is `unknown-prop`, and none binds an action
+  (`action-not-allowed`); a cell may hold a `ki-button` that does.
+- **Content model:** a `table` holds, in order, at most one `caption`, at
+  most one `thead`, then any number of `tbody`. `thead` and `tbody` hold
+  only `tr`, and `tr` holds only `th` and `td`; none of them holds text. A
+  `caption` holds text, `strong` and `em`, and a cell holds what a layout
+  `div` holds, except a table. A table part sits only in its own parent:
+  never in a `div`, a cell, a component's slot or at a root. Anything else
+  is `invalid-child`.
+- **Live surface:** a batch is checked where its nodes land. A `tr`
+  inserted into a `tbody` is accepted; the same `tr` as a top-level node is
+  rejected.
+- **`ki-table`:** a spec cannot key a row (`data-key`) or sort a column
+  (`data-sort`), so a table from a spec is never sorted or selected. Leave
+  `selectable` off.
+
 ## What may a spec contain?
 
 The allowed components, props, prop types, enum values, slots and events are
