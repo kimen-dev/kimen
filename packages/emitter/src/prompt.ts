@@ -5,7 +5,7 @@
  * (research D3). Deterministic text (S11), version-stamped (S10).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
-import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
+import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS, validateUiSpec } from '@kimen/catalog';
 import type { Derivation, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
@@ -105,23 +105,10 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
 }
 
 /**
- * The deterministic example spec: the first entry (sorted order) rendered
- * with every required prop, its first enum prop at its first value and,
- * when it declares a default slot, one text child. Tests assert it validates
- * against the same catalog (S8) — the example can never drift from the
- * boundary.
+ * One entry as an example node: every required prop, its first enum prop at
+ * its first value and, when it declares a default slot, one text child.
  */
-function exampleSpec(entries: readonly ResolvedEntry[]): {
-  readonly root: UiSpecNode;
-  readonly version: 1;
-} {
-  const first = entries[0];
-  if (first === undefined) {
-    // Unreachable through the public API: resolveEntries never yields an
-    // ok result with zero entries. Kept total for safety.
-    return { root: { component: 'ki-badge' }, version: 1 };
-  }
-  const [tag, entry] = first;
+function exampleNode([tag, entry]: ResolvedEntry): UiSpecNode {
   const node: {
     component: string;
     props?: Record<string, boolean | number | string>;
@@ -143,7 +130,27 @@ function exampleSpec(entries: readonly ResolvedEntry[]): {
   if (Object.hasOwn(entry.slots, '')) {
     node.slots = { '': ['Example content'] };
   }
-  return { root: node, version: 1 };
+  return node;
+}
+
+/**
+ * The deterministic example spec: the first entry, in sorted order, whose
+ * example node validates on its own against the catalog in use (S8), so the
+ * example can never drift from the boundary. A table part never stands
+ * alone (spec 158): a subset of table parts only gets no example rather
+ * than an invalid one.
+ */
+function exampleSpec(
+  catalog: Catalog,
+  entries: readonly ResolvedEntry[],
+): { readonly root: UiSpecNode; readonly version: 1 } | undefined {
+  for (const resolved of entries) {
+    const spec = { root: exampleNode(resolved), version: 1 } as const;
+    if (validateUiSpec(spec, { catalog }).ok) {
+      return spec;
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -182,10 +189,13 @@ export function catalogPrompt(
   for (const [tag, entry] of resolved.entries) {
     lines.push(...componentBlock(tag, entry), '');
   }
-  lines.push('## Example (valid)');
-  lines.push('```json');
-  lines.push(JSON.stringify(exampleSpec(resolved.entries), null, 2));
-  lines.push('```');
-  lines.push('The example validates against this catalog; imitate its structure.');
+  const example = exampleSpec(catalog, resolved.entries);
+  if (example !== undefined) {
+    lines.push('## Example (valid)');
+    lines.push('```json');
+    lines.push(JSON.stringify(example, null, 2));
+    lines.push('```');
+    lines.push('The example validates against this catalog; imitate its structure.');
+  }
   return { artifact: lines.join('\n'), issues: [], ok: true };
 }
