@@ -76,7 +76,9 @@ here:
   user's `checked`, `selected` or `value` leaves it the user's, so a later
   batch cannot take it over without the same `force` and permission; only
   `open` is handed back by agreement. No rejection carries the user's
-  value.*
+  value.* *Amended by `160-live-surface-override-scope` (approved by the
+  founder on 2026-11-21): a forced `set` hands back only the props it
+  names; whatever else the user changed on that element stays theirs.*
 - **D6** A monotonic `revision` per surface; an optional `ifRevision` on
   the batch for optimistic concurrency (a mismatch rejects with a
   diagnostic); `snapshot()` returns the current content as frozen plain
@@ -531,7 +533,9 @@ guarantees is that it does not destroy them (S4–S6, S13).
   what the agent last wrote (S21). A `set` that agrees with a user-owned
   `checked`, `selected` or `value` is accepted but does not count as the
   agent's write: the value stays user-owned until a forced override the
-  host allows (spec 159 FR-001). Neither diagnostic carries the user's live
+  host allows (spec 159 FR-001). A forced `set` the host allows hands back
+  only the props it names; every other user-owned prop of the element stays
+  user-owned (spec 160 FR-001). Neither diagnostic carries the user's live
   value (spec 159 FR-004).
 - **FR-007** (D6): `revision` starts at 0 and advances by exactly one per
   applied non-empty batch. `ifRevision` different from the current revision
