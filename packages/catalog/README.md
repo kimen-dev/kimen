@@ -345,7 +345,7 @@ if (!verdict.ok) console.warn(verdict.diagnostics); // same diagnostics renderUi
 ## Live surface
 
 `createLiveSurface` keeps a long-lived surface current through atomic
-batches of `insert`, `set`, `text`, `remove` and `replace` operations
+batches of `insert`, `set`, `text`, `remove`, `replace` and `reset` operations
 addressed by the optional node `id` (spec 035). Each batch is validated
 against the state it would produce — purity wall, per-batch budgets,
 optional `ifRevision`, then the same catalog, guard and budget checks as a
@@ -362,7 +362,10 @@ it nowhere, and it never takes focus from where the person is. No `set`,
 `replace`/`remove`, anywhere in its subtree) unless the op says
 `force: true` and the host allowed it (`allowUserStateOverride`), even
 after a `set` that agreed with the user; a dialog the person closed is
-reopened with `open: false` and then `open: true` in two batches. No
+reopened with `open: false` and then `open: true` in two batches. A
+`reset` returns a control to its spec value, or empties it, without `force`
+or permission, but only once what it holds left in an action; input no
+action carried is kept and the batch is rejected as `unsent-user-input`. No
 rejection repeats the user's value. A batch applied while another is being
 applied (from `onAction`) is rejected as `reentrant-batch`. Action events
 carry the node `id`, its current `path`, the `revision` and live `data`;

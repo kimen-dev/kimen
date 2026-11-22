@@ -24,6 +24,7 @@ export {
   type LiveOp,
   type LiveRemoveOp,
   type LiveReplaceOp,
+  type LiveResetOp,
   type LiveSetOp,
   type LiveSnapshot,
   type LiveSurface,
