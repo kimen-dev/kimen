@@ -361,7 +361,8 @@ it nowhere, and it never takes focus from where the person is. No `set`,
 `selected` or `value` the user changed (in the node or, for
 `replace`/`remove`, anywhere in its subtree) unless the op says
 `force: true` and the host allowed it (`allowUserStateOverride`), even
-after a `set` that agreed with the user; a dialog the person closed is
+after a `set` that agreed with the user or a forced `set` of another prop
+of the same control; a dialog the person closed is
 reopened with `open: false` and then `open: true` in two batches. No
 rejection repeats the user's value. A batch applied while another is being
 applied (from `onAction`) is rejected as `reentrant-batch`. Action events
