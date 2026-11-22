@@ -40,8 +40,13 @@ const BASE_BUDGETS = {
   // fb7f11c0: the per-event wiring and checks, now in the live surface the document
   // ships too, and the agent texts add 1,156 / 331 / 300 B to the MCP Apps document
   // and 4,166 / 1,109 / 974 B to kimen-mcp.
-  mcpApps: { raw: 803_966, gzip: 184_280, brotli: 146_272 },
-  mcpServer: { raw: 2_603_827, gzip: 493_521, brotli: 387_625 },
+  // Spec 158 (read-only native tables, approved 2026-11-22) measured against main
+  // b1db976b: the seven catalog entries, the table content model and, in kimen-mcp
+  // only, the guide's table section add 5,376 / 1,440 / 976 B to the MCP Apps
+  // document and 12,689 / 3,037 / 1,711 B to kimen-mcp, which carries the document
+  // and its own catalog. The founder approved re-basing by that cost (2026-11-22).
+  mcpApps: { raw: 809_342, gzip: 185_720, brotli: 147_248 },
+  mcpServer: { raw: 2_616_516, gzip: 496_558, brotli: 389_336 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
