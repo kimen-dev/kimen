@@ -40,8 +40,12 @@ const BASE_BUDGETS = {
   // fb7f11c0: the per-event wiring and checks, now in the live surface the document
   // ships too, and the agent texts add 1,156 / 331 / 300 B to the MCP Apps document
   // and 4,166 / 1,109 / 974 B to kimen-mcp.
-  mcpApps: { raw: 803_966, gzip: 184_280, brotli: 146_272 },
-  mcpServer: { raw: 2_603_827, gzip: 493_521, brotli: 387_625 },
+  // Spec 155 Task 4 (the live surface's reset op) measured against main
+  // 0b5c847c on macOS: +1,197 / 337 / 298 B for the document and +1,197 / 342 /
+  // 299 B for kimen-mcp, added here exactly so the headroom stays what it was.
+  // The founder approved re-basing all three metrics by that cost (2026-11-22).
+  mcpApps: { raw: 805_163, gzip: 184_617, brotli: 146_570 },
+  mcpServer: { raw: 2_605_024, gzip: 493_863, brotli: 387_924 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
