@@ -211,6 +211,29 @@ describe('155 — what counts as delivered', () => {
     expect(reset(live, 'title').ok).toBe(true);
   });
 
+  it('after a forced override of one prop, a reset still keeps the person’s other input (spec 160)', () => {
+    const live = createLiveSurface({ allowUserStateOverride: true, surface });
+    const node = { component: 'ki-search', id: 'find', props: { label: 'Find' } };
+    expect(live.apply({ ops: [{ node, op: 'insert' }] }).ok).toBe(true);
+    const find = one('ki-search');
+    find['value'] = 'secret';
+    find['open'] = true;
+    find.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(
+      live.apply({ ops: [{ force: true, id: 'find', op: 'set', props: { open: false } }] }).ok,
+    ).toBe(true);
+
+    const result = reset(live, 'find');
+
+    expect(result).toMatchObject({
+      diagnostics: [{ path: 'ops[0].id', rule: 'unsent-user-input' }],
+      ok: false,
+    });
+    expect(result.diagnostics[0]?.message).toContain('"value"');
+    expect(JSON.stringify(result)).not.toContain('secret');
+    expect(find['value']).toBe('secret');
+  });
+
   it('after a reset the field is the agent’s again, until the person types', () => {
     const { live, title } = delivered();
     expect(reset(live, 'title').ok).toBe(true);
