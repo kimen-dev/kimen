@@ -4,14 +4,15 @@
      Constitutional basis: .specify/memory/constitution.md Art. VIII (Neutral
      Catalog, Disposable Adapters), with Arts. II, V, VII and IX. -->
 
-**Feature Branch**: `claude/live-surface-focus-f62b98` (spec `155-live-surface-reset-focus`)
+**Feature Branch**: `claude/live-surface-focus-f62b98` (Task 3), `claude/live-surface-reset`
+(Task 4) (spec `155-live-surface-reset-focus`)
 
 **Created**: 2026-11-21
 
 **Status**: Approved. The founder approved S1 to S14 verbatim on 2026-11-21
 ("Aprobados los 14; arranca la tarea 3"), including the Art. VIII guardrail
-confirmation of S2, S3 and S5 to S14. S1 to S8 land with Task 3; S9 to S14
-are kept verbatim under "Scenarios that land with Task 4" until then.
+confirmation of S2, S3 and S5 to S14. S1 to S8 landed with Task 3 (#566);
+S9 to S14 land, verbatim, with Task 4.
 
 **Input**: Founder decision of 2026-11-21 to land the improvements to the
 generative layer before `@kimen/catalog` is published, design package B1
@@ -137,10 +138,17 @@ whole page in one batch raises the budgets at creation.
 - Raising `batchBudgets.maxBytes` beyond 8 MiB, or the nesting of a batch
   beyond 256 JSON levels, has no effect: the purity wall's fixed ceilings
   apply first.
-- Until Task 4 lands, a batch with a `reset` op is `malformed-batch`.
 - A reset needs neither `force` nor `allowUserStateOverride`.
 - A reset is also accepted when the field already shows what the reset
-  would write: nothing is lost.
+  would write: nothing is lost. Not when a `set` agreed with what the person
+  entered (spec 159): that value stays the person's, so the reset is rejected
+  until an action delivers it.
+- Like every op, a reset is checked against the state before its batch: a
+  `set` or `remove` of the same node in the same batch still meets the
+  person's input. A new value goes in a later batch.
+- What an action carries counts as delivered only when the action leaves: a
+  collected field that blocks it, or a surface without `onAction`, delivers
+  nothing.
 - A reset of a node that declares none of `checked`, `open`, `selected` and
   `value` is rejected as `unknown-prop`.
 - No action reports a dialog's `open`, so a reset of a dialog the person
@@ -244,15 +252,7 @@ Feature: Live surface keeps focus and empties fields safely
       When the agent applies a batch that removes "t1" and sets a prop of the unknown node "t9"
       Then the call returns a result that is not ok and names "unknown-id", without throwing
       And "t1" still reads "Buy milk" and the revision stays 4
-```
 
-### Scenarios that land with Task 4
-
-Approved with S1 to S8 and kept here verbatim. The Task 4 pull request moves
-this rule to the end of the Gherkin block above, where the traceability gate
-then requires a test for each of them.
-
-```text
   Rule: A reset clears only what an action already delivered
 
     # S9
@@ -308,7 +308,7 @@ which is the keyboard path.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S3, S5–S8 | S9–S14 join this row with Task 4 |
+| Core behavior | S3, S5–S14 | |
 | Keyboard path | S1, S2, S4 | |
 | Assistive-tech outcome | | N/A — names, roles and states come from the rendered catalog components under their own contracts; focus landing (S1, S4) is what a screen reader then announces |
 | Form participation | | N/A — a spec has no native form (spec 152); emptying a control is core behavior of the surface (S5, S9–S13), and form association stays the components' own |
@@ -359,7 +359,7 @@ Task 3 (first pull request):
   a return value; that several batches are not one change; that the
   protected props are four (`checked`, `open`, `selected`, `value`); that
   `apply` also accepts a JSON string; how to reopen a dialog; and `focus`.
-- **FR-009**: Task 3 accepts no `reset` op.
+- **FR-009**: Task 3 accepted no `reset` op; Task 4 adds it (FR-010).
 
 Task 4 (second pull request, after `153-action-collect` and the
 `ki-date-picker` fix are merged):
@@ -372,9 +372,10 @@ Task 4 (second pull request, after `153-action-collect` and the
   delivered.
 - **FR-012**: a reset is accepted when the node is untouched, or when each
   user-state prop it declares shows what was last delivered or what the
-  reset would write. Otherwise the batch is rejected as `unsent-user-input`
-  at `ops[i].id`; the diagnostic names the node and the prop and never
-  carries the person's live value.
+  reset would write, the latter only while no `set` agreed with the person
+  since they entered it (spec 159). Otherwise the batch is rejected as
+  `unsent-user-input` at `ops[i].id`; the diagnostic names the node and the
+  prop and never carries the person's live value.
 - **FR-013**: an accepted reset writes to each user-state prop the node
   declares the model's value, else the catalog default, else `undefined`,
   to the attribute and to the component's property, and clears the touched
@@ -438,11 +439,12 @@ Task 4 (second pull request, after `153-action-collect` and the
   batch and then hands it to the page body, as `ki-dialog` does when the
   control that opened it is gone; with a one-frame watch that test fails.
 - The catalog browser suite does not load `@kimen/elements` (module
-  boundaries), so its focus tests use test-local elements. The real number
-  and date fields of S12 need a suite that loads the components; Task 4
-  settles where it lives.
+  boundaries), so its focus and reset tests use test-local elements. The
+  real number and date fields of S12 run in the MCP Apps adapter's browser
+  suite, where the packaged surface document registers every component in a
+  frame and the live surface renders into that frame's document, as spec 152
+  does for its containment tests.
 - The traceability gate requires every scenario of a committed feature to
-  be traced. The Task 3 pull request therefore commits S1 to S8 in the
-  Gherkin block and `feature.feature`, keeps S9 to S14 verbatim in a
-  section of their own, and the Task 4 pull request moves them into the
-  block as approved here.
+  be traced. The Task 3 pull request therefore committed S1 to S8 and kept S9
+  to S14 verbatim in a section of their own; the Task 4 pull request moved
+  them, unchanged, to the end of the Gherkin block.

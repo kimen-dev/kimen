@@ -92,3 +92,49 @@ Feature: Live surface keeps focus and empties fields safely
       When the agent applies a batch that removes "t1" and sets a prop of the unknown node "t9"
       Then the call returns a result that is not ok and names "unknown-id", without throwing
       And "t1" still reads "Buy milk" and the revision stays 4
+
+  Rule: A reset clears only what an action already delivered
+
+    # S9
+    Scenario: After an action delivered a field's text, a reset empties the field without host permission
+      Given a live surface whose host does not allow user-state overrides
+      And the field "title" whose typed "Buy milk" the button "add" delivered with its action
+      When the agent applies a batch resetting "title"
+      Then the field "title" is empty
+
+    # S10
+    Scenario: A reset after the person typed again is rejected and keeps the new text
+      Given the field "title" whose "Buy milk" the button "add" delivered, and the person then typed "Buy bread"
+      When the agent applies a batch resetting "title"
+      Then the field keeps "Buy bread" and the batch is rejected as "unsent-user-input"
+      And the diagnostic does not repeat "Buy bread"
+
+    # S11
+    Scenario: A reset of a field the person never touched succeeds and changes nothing
+      Given a live surface showing the empty field "title" the person never touched
+      When the agent applies a batch resetting "title"
+      Then the batch applies and the field "title" is still empty
+
+    # S12
+    Scenario Outline: A reset empties a delivered number field and a delivered date field
+      Given the <kind> field "<id>" whose <entry> the button "add" delivered with its action
+      When the agent applies a batch resetting "<id>"
+      Then the field "<id>" is empty and holds no value
+
+      Examples:
+        | kind   | id       | entry      |
+        | number | quantity | 42         |
+        | date   | due      | 2026-12-24 |
+
+    # S13
+    Scenario: A reset restores the value the spec gave the field
+      Given the field "status" the spec filled with "Draft", whose "Ready" the button "save" delivered
+      When the agent applies a batch resetting "status"
+      Then the field "status" shows "Draft"
+
+    # S14
+    Scenario: A reset of an id no node of the surface carries is rejected whole
+      Given a live surface showing the field "title" whose "Buy milk" the button "add" delivered
+      When the agent applies a batch resetting "title" and the unknown "t9"
+      Then the batch is rejected as "unknown-id" naming "t9"
+      And the field "title" keeps "Buy milk"

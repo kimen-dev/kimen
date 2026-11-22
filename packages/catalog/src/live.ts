@@ -65,6 +65,7 @@ import type {
 } from './validate.js';
 import {
   checkCommandTargets,
+  collectedValueProp,
   createValidationScope,
   FORBIDDEN_KEYS,
   ownEntry,
@@ -147,7 +148,22 @@ export interface LiveReplaceOp {
   readonly force?: boolean | undefined;
 }
 
-export type LiveOp = LiveInsertOp | LiveSetOp | LiveTextOp | LiveRemoveOp | LiveReplaceOp;
+/**
+ * Returns a control to its spec value once what the user entered has left in
+ * an action (155 D2). Needs no force and no host permission.
+ */
+export interface LiveResetOp {
+  readonly op: 'reset';
+  readonly id: string;
+}
+
+export type LiveOp =
+  | LiveInsertOp
+  | LiveSetOp
+  | LiveTextOp
+  | LiveRemoveOp
+  | LiveReplaceOp
+  | LiveResetOp;
 
 /**
  * One atomic change of a live surface (035 D3). `apply` still takes it as
@@ -254,6 +270,8 @@ interface MNode {
   touched: boolean;
   /** User-state props a `set` agreed with, still the user's (spec 159); absent when none. */
   held?: Set<string>;
+  /** The user-state values an action last carried from it (155 FR-011); absent when none. */
+  delivered?: Map<string, Scalar>;
 }
 
 type MEntry = MNode | MText;
@@ -305,6 +323,7 @@ const opSchema: z.ZodType<ParsedOp> = z.discriminatedUnion('op', [
     node: z.unknown(),
     force: z.boolean().optional(),
   }),
+  z.strictObject({ op: z.literal('reset'), id: idRef }),
 ]);
 const batchSchema: z.ZodType<ParsedBatch> = z.strictObject({
   focus: idRef.optional(),
@@ -558,6 +577,30 @@ function usersValue(
     ownEntry(node.props, name) ?? constraint.default,
   );
   return live === written ? undefined : live;
+}
+
+/**
+ * Notes that an action carried `value` as user-state prop `name` of a live
+ * `node`, when that is what the control shows (155 FR-011).
+ */
+function noteDelivered(
+  node: MNode | undefined,
+  name: string,
+  value: Scalar | undefined,
+  components: Readonly<Record<string, CatalogEntry>>,
+): void {
+  const constraint =
+    node?.dom === undefined
+      ? undefined
+      : ownEntry(ownEntry(components, node.component)?.props, name);
+  if (
+    node?.dom !== undefined &&
+    constraint !== undefined &&
+    value !== undefined &&
+    value === readLiveScalar(node.dom, name, constraint)
+  ) {
+    (node.delivered ??= new Map()).set(name, value);
+  }
 }
 
 /**
@@ -986,6 +1029,55 @@ function applyReplace(
   return null;
 }
 
+/**
+ * A reset (155 FR-012, FR-013): rejected while a user-state prop of the node
+ * holds input of the user's other than what an action last delivered, so it
+ * needs no force and no host permission. It writes the model's value, else
+ * the catalog default, else `undefined`, and forgets the user's input.
+ */
+function applyReset(
+  state: MState,
+  op: Extract<ParsedOp, { op: 'reset' }>,
+  at: string,
+  ctx: ApplyContext,
+): RenderDiagnostic | null {
+  const node = lookup(state, op.id, `${at}.id`);
+  if (!('kind' in node)) {
+    return node;
+  }
+  const entry = ownEntry(ctx.components, node.component);
+  const props = [...USER_STATE_PROPS].flatMap((name) => {
+    const constraint = ownEntry(entry?.props, name);
+    return constraint === undefined ? [] : [{ constraint, name }];
+  });
+  if (props.length === 0) {
+    return fail(`${at}.id`, 'unknown-prop', `${node.component} declares no user-state prop`, op.id);
+  }
+  const origin = node.origin;
+  for (const { constraint, name } of props) {
+    const users = origin === undefined ? undefined : usersValue(origin, name, constraint);
+    if (users !== undefined && users !== origin?.delivered?.get(name)) {
+      return fail(
+        `${at}.id`,
+        'unsent-user-input',
+        `"${name}" of node "${op.id}" holds input the user has not sent; reset it after an action delivers it`,
+      );
+    }
+  }
+  const element = node.dom;
+  if (ctx.dom !== null && element !== undefined) {
+    for (const { constraint, name } of props) {
+      const value = ownEntry(node.props, name);
+      writeProp(element, node.component, name, value, ctx.dom.dialogIdFor, entry);
+      Reflect.set(element, name, value ?? constraint.default);
+    }
+  }
+  node.touched = false;
+  node.held?.clear();
+  node.delivered?.clear();
+  return null;
+}
+
 function applyOps(
   state: MState,
   ops: readonly ParsedOp[],
@@ -1009,6 +1101,9 @@ function applyOps(
         break;
       case 'replace':
         failure = applyReplace(state, op, at, index, ctx);
+        break;
+      case 'reset':
+        failure = applyReset(state, op, at, ctx);
         break;
     }
     if (failure !== null) {
@@ -1164,6 +1259,20 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
                 const path = pathOf(model);
                 if (path === null) {
                   return;
+                }
+                // What leaves now is the user's no longer: a reset may clear
+                // it (155 FR-011). The bound node's own state, and each
+                // collected field's value.
+                for (const name of USER_STATE_PROPS) {
+                  noteDelivered(model, name, ownEntry(data, name), components);
+                }
+                for (const [key, id] of Object.entries(model.collect ?? {})) {
+                  const field = live.ids.get(id);
+                  const fieldEntry = field && ownEntry(components, field.component);
+                  const prop = fieldEntry && collectedValueProp(fieldEntry);
+                  if (prop !== undefined) {
+                    noteDelivered(field, prop.name, ownEntry(data, key), components);
+                  }
                 }
                 onAction({
                   action,

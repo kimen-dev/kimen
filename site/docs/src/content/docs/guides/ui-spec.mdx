@@ -274,8 +274,8 @@ const result = live.apply(batch);
 if (!result.ok) console.warn(result.diagnostics); // a rejection is returned, never thrown
 ```
 
-The ops are `insert`, `set` (`null` removes a prop), `text`, `remove` and
-`replace`; there is no move op.
+The ops are `insert`, `set` (`null` removes a prop), `text`, `remove`,
+`replace` and `reset`; there is no move op.
 
 - **Atomic per batch.** Every op is applied to a copy of the state and the
   resulting state is validated like a spec before any DOM write. A rejected
@@ -293,6 +293,12 @@ The ops are `insert`, `set` (`null` removes a prop), `text`, `remove` and
   `force: true` and the host created the surface with
   `allowUserStateOverride: true`. A forced `set` covers only the props it
   names: forcing a search closed leaves the query the person typed theirs.
+- **Emptying a form after it was sent.** `{ op: 'reset', id }` returns a
+  control to its spec value, or empties it, without `force` or host
+  permission, but only when what it holds already left in an action. Text
+  the person typed after pressing Add is kept, and the batch is rejected as
+  `unsent-user-input`. After a create, answer the action with a batch that
+  resets the form's fields; if it is rejected, leave the form alone.
 - **Reopening a dialog the person closed** takes two batches: `open: false`,
   then `open: true`. The rejection of a single `open: true` says so.
 - **Focus is repaired, never taken.** If, once the batch has settled, focus

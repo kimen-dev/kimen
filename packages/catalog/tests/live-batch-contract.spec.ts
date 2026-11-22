@@ -336,11 +336,4 @@ describe('155 — the exported batch types', () => {
     expect(live.apply(JSON.stringify(batch))).toEqual({ diagnostics: [], ok: true, revision: 2 });
     expect(listed()).toEqual(['Buy oat milk', 'Water the plants']);
   });
-
-  it('accept no reset op until it lands with Task 4', () => {
-    const live = mountTasks();
-    expect(live.apply({ ops: [{ id: 't1', op: 'reset' }] }).diagnostics[0]?.rule).toBe(
-      'malformed-batch',
-    );
-  });
 });
