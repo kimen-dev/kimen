@@ -135,7 +135,9 @@ Over the validation layer it enforces the safe-render semantics:
 - **No code path from spec data.** Text is attached as inert text nodes,
   never parsed as markup; the catalog exposes no event-handler props;
   URL-typed props accept only `http`, `https` and relative references —
-  every other scheme is rejected naming the prop and scheme.
+  every other scheme is rejected naming the prop and scheme. A prop the
+  catalog marks as text is never a URL, whatever its name:
+  `ki-confirmation`'s `action` is a tool identifier.
 - **Declared budgets.** Depth, node count and payload size — a spec exactly
   at a budget renders, one beyond it is rejected before any node attaches.
 - **Version skew.** A spec declaring an unsupported `catalogSchemaVersion`
@@ -144,6 +146,40 @@ Over the validation layer it enforces the safe-render semantics:
   action, as data, on the single `onAction` channel — exactly one action
   fires even for nested action-bound nodes; no other callback exists. The
   event names the node's `id` when it has one.
+
+## An action per event
+
+A node bound by name fires its action on the one event its catalog entry
+derives. A component that reports several answers maps each event it
+declares to its own action instead (catalog schema `1.8.0`):
+
+```json
+{
+  "version": 1,
+  "actions": ["tool.approved", "tool.denied"],
+  "root": {
+    "component": "ki-confirmation",
+    "props": {
+      "heading": "Delete these 12 files?",
+      "action": "delete_files",
+      "approve-label": "Delete",
+      "deny-label": "Keep files"
+    },
+    "action": { "ki-approve": "tool.approved", "ki-deny": "tool.denied" }
+  }
+}
+```
+
+Each listed event fires whenever the component reports it, with the same
+data a binding by name carries. A `ki-dialog` bound per event reports both
+its confirmation and every close, the host's own included. Collected fields
+apply to every bound event, so an invalid one also stops a dialog's close
+action: keep a form's fields behind a button that collects them. A key the
+component does not declare (`undeclared-event`), an action outside the
+`actions` list, an empty object or any binding on a native element is
+rejected before anything renders. Components that declare several events
+and no rule that picks one, such as `ki-confirmation`, `ki-table` or
+`ki-search`, bind only this way.
 
 ## A form
 

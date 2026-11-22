@@ -78,6 +78,21 @@ function normalizeTree(root: unknown): unknown {
       if ((key === 'action' || key === 'id') && value === null) {
         continue;
       }
+      if (key === 'action' && isRecord(value)) {
+        // A binding per event (spec 154): an event bound to null fires
+        // nothing, and a map of such placeholders alone binds nothing. A map
+        // the model left empty stays, so validation names it.
+        const bound: Record<string, unknown> = cloneRecord();
+        for (const [event, name] of Object.entries(value)) {
+          if (name !== null) {
+            bound[event] = name;
+          }
+        }
+        if (Object.keys(bound).length > 0 || Object.keys(value).length === 0) {
+          clean['action'] = bound;
+        }
+        continue;
+      }
       if (key === 'slots' && isRecord(value)) {
         const slots: Record<string, unknown> = cloneRecord();
         clean['slots'] = slots;
@@ -107,8 +122,9 @@ function normalizeTree(root: unknown): unknown {
 
 /**
  * Strips strict-mode placeholders from an emission (S13): null-valued
- * props, null action bindings and null node ids disappear, empty props
- * containers are dropped, and everything else — including values a model got WRONG — is
+ * props, null action bindings, null events of a binding per event and null
+ * node ids disappear, empty props containers are dropped, and a binding per
+ * event left with no event goes, and everything else — including values a model got WRONG — is
  * preserved untouched, so validation still sees the real mistake.
  * Pure data cleanup over a fresh clone; the input is never mutated and
  * the output is untrusted until `validateUiSpec` passes.

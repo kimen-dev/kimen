@@ -136,6 +136,7 @@ path (`renderUiSpec`, the streaming renderer, the live surface):
 | `required: true` | a prop declared with `!` (`@Prop() label!: string`) | `missing-required-prop` when the node omits the prop, or sets a string to nothing but white space |
 | `minimum`, `maximum` | `@minimum <n>` / `@maximum <n>` JSDoc tags on a number prop | `prop-out-of-range` when the number lies outside the inclusive bounds |
 | `format: 'url'` | a `@format url` JSDoc tag on a string prop | `url-scheme` for any scheme but `http`/`https` (relative references pass); `url-origin` under `allowedUrlOrigins` |
+| `format: 'text'` | a `@format text` JSDoc tag on a string prop | nothing: the value is never a URL, whatever the prop is called (`ki-confirmation`'s `action`, a tool identifier) |
 
 Bounds exist where a component spends work in proportion to a value:
 `ki-indicator` renders one dot per position, so its `count` is bounded to
@@ -201,7 +202,9 @@ backstop, a string prop named like a fetchable native attribute (`src`,
 `href`, `poster`, `srcset`, `action`, `formaction`, `data`, `cite`,
 `background`, `ping`, `xlink:href`) stays URL-typed when its entry declares
 no format; declare the format on your own components instead of relying on
-the name. `ki-qr`'s `value` is deliberately not URL-typed: the component
+the name. A declared `format: 'text'` or `format: 'idref'` is authoritative,
+so `ki-confirmation` renders under any origin policy whatever its tool
+identifier looks like (`github:create_issue`). `ki-qr`'s `value` is deliberately not URL-typed: the component
 encodes it and never loads it, and a QR payload is legitimately any text.
 What a code invites a person to scan is your content decision, like the text
 of an alert.
@@ -253,17 +256,32 @@ any node attaches), **version skew** (a spec declaring an incompatible
 the render option — is rejected naming both versions; compatible means plain
 SemVer with the catalog's major and a minor not newer than its own, so a
 `1.1.0` catalog accepts `1.0.0`; under major `0` only the same minor), and **declarative
-actions only** (a bound control dispatches its one declared action, as data,
-on the single `onAction` channel, on the one event its catalog entry declares
-— `change` on the form controls, `ki-change` on `ki-tabs` — or on `click`
-when it declares none; a click activation stops bubbling and suppresses the
+actions only** (a bound control dispatches a declared action, as data, on
+the single `onAction` channel; a binding by name fires on the event its
+catalog entry derives — its `activationEvent`, else its one declared event,
+`change` on the form controls, `ki-change` on `ki-tabs`, else `click` — and
+`ki-chip`, `ki-dialog` and `ki-prompt-input` pick that event from their kind,
+confirm label and status; a click activation stops bubbling and suppresses the
 native default unless it carries a local dialog command, a declared-event
 activation cancels nothing and reports the
 control's live `checked`/`value`; the innermost bound node claims an
 interaction, so exactly one action fires even for nested action-bound nodes
-or a button inside a form; a binding on a component declaring several events
-is rejected; no other callback exists). Every action event names its node's
-`id` when it has one.
+or a button inside a form; a binding by name on any other component declaring
+several events is rejected; no other callback exists). Every action event
+names its node's `id` when it has one.
+
+A binding may instead name an action per event (spec 154, catalog schema
+`1.8.0`): `"action": { "ki-approve": "tool.approved", "ki-deny":
+"tool.denied" }` on a `ki-confirmation`. Each key must be an event the entry
+declares (`undeclared-event`) and each value a declared action
+(`undeclared-action`, at `<node>.action.<event>`); an empty object is
+`malformed-spec`, and a native element binds in neither form
+(`action-not-allowed`). Each listed event dispatches its own action whenever
+the element reports it, with the data a binding by name carries and the
+fields the node collects; the rules that pick one event for a binding by
+name do not apply, so a `ki-dialog` bound per event reports both its
+confirmation and every close. The click on the element is claimed and never
+cancelled.
 
 A bound node may `collect` other fields by id (spec 153, catalog schema
 `1.7.0`): `"collect": { "title": "f-title", "quantity": "f-qty" }` on a

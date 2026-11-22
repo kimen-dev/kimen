@@ -324,8 +324,8 @@ Feature: Guarded renderer
 
     # S19
     Scenario: A binding whose activation event is ambiguous never wires
-      Given a catalog component that declares more than one event
-      And a spec binding the declared action "pick" to that component
+      Given a catalog component that declares more than one event and no rule that picks one
+      And a spec binding the declared action "pick" to that component by name alone
       When the renderer validates the spec
       Then no part of the spec renders
       And the diagnostic names the component and its declared events
@@ -416,12 +416,19 @@ governed by its own approved contract (specs `002`–`016`).
   single action channel. An interaction without a validated binding
   dispatches nothing; a binding to an event the catalog does not declare
   rejects the spec. No other callback mechanism from spec data exists.
-  The activation event of a bound node derives from its catalog entry: the
-  one event the entry declares (`change` on the form controls, `ki-change`
-  on `ki-tabs`, `ki-dismiss`/`ki-close` on `ki-alert`/`ki-dialog`), or the
-  platform `click` when the entry declares none (buttons, cards). A binding
-  on an entry declaring more than one event is ambiguous and rejects the
-  spec (S19). Only a `click` activation suppresses the native default (a
+  A binding names one declared action, or, per declared event, the action
+  that event fires (`154-action-per-event`). A binding by name alone fires
+  on the event its catalog entry derives: the entry's `activationEvent`
+  when it declares one (`change` on `ki-combobox`, `ki-page-change` on
+  `ki-pagination`), else the one event it declares (`change` on the form
+  controls, `ki-change` on `ki-tabs`, `ki-dismiss` on `ki-alert`), else the
+  platform `click`. Buttons and cards fire on `click` unless a toggle
+  button is toggled or a card is interactive. Three components pick the
+  event from their own state: `ki-chip` by its kind, `ki-dialog` by its
+  confirm label and `ki-prompt-input` by its status. A binding by name
+  alone on any other entry declaring more than one event is ambiguous and
+  rejects the spec (S19); a binding per event names its events and is
+  never ambiguous. Only a `click` activation suppresses the native default (a
   submit button's form submission); a declared-event activation never
   cancels the control's own state change (S17). A declared-event payload
   overlays the spec's props with the control's live `checked`/`value`, read

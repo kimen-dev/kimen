@@ -131,6 +131,21 @@ test('a string attribute declared with the idref format becomes a reference cons
   );
 });
 
+test('a string attribute declared with the text format is never a URL', () => {
+  // Spec 154 FR-007: a prop named like a URL attribute that holds text says
+  // so in the component source, and the catalog carries the declaration.
+  const props = propsOf([{ format: 'text', name: 'action', type: { text: 'string' } }]);
+  assert.equal(props.action.format, 'text');
+  assert.throws(
+    () =>
+      buildCatalog(
+        manifestWith([{ format: 'text', name: 'count', type: { text: 'number' } }]),
+        catalogOptions,
+      ),
+    /ki-probe\.count: .*format/u,
+  );
+});
+
 test('a form-action type offers agents the button value alone', () => {
   // Spec 152 FR-006: a spec owns no form, so submit and reset could only
   // act on the host page's form.

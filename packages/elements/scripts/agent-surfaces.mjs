@@ -909,8 +909,10 @@ function boundViolations(tag, prop) {
 // not because of what the prop happens to be called (spec 027 FR-018).
 // A string prop that names another element by id declares `@format idref`:
 // the catalog then resolves it only to a node of the same spec (spec 152).
-// `url` and `idref` are the only formats; anything else fails the build.
-const PROP_FORMATS = new Set(['url', 'idref']);
+// A string prop named like a URL attribute that is never a URL declares
+// `@format text`, which keeps it out of the URL policy (spec 154).
+// `url`, `idref` and `text` are the only formats; anything else fails the build.
+const PROP_FORMATS = new Set(['url', 'idref', 'text']);
 
 function formatTags(prop) {
   return (prop.docsTags ?? []).filter((docsTag) => docsTag.name === 'format');
@@ -934,7 +936,7 @@ function formatViolations(tag, prop) {
   const format = propFormat(prop);
   if (format === undefined) {
     return [
-      `${subject}: @format must be "url" or "idref", received ${JSON.stringify(tags[0].text ?? '')}`,
+      `${subject}: @format must be "url", "idref" or "text", received ${JSON.stringify(tags[0].text ?? '')}`,
     ];
   }
   return soleType(prop) === 'string'

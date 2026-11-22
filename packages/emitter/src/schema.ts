@@ -89,6 +89,37 @@ function actionName(strict: boolean): Record<string, unknown> {
   return strict ? { pattern: NON_BLANK, type: 'string' } : { minLength: 1, type: 'string' };
 }
 
+/** `schema` or null, the placeholder of an optional value under a strict target. */
+function nullable(schema: Record<string, unknown>, strict: boolean): Record<string, unknown> {
+  return strict ? { anyOf: [schema, { type: 'null' }] } : schema;
+}
+
+/**
+ * A node's binding (spec 154): an action name, or, on a component that
+ * declares events, a map from those events to action names. The default
+ * dialect asks the map for at least one event. OpenAI's strict subset closes
+ * every object over all its properties, so there each event is present and
+ * null when it fires nothing; `normalizeEmission` drops those placeholders.
+ */
+function actionBinding(events: readonly string[], strict: boolean): Record<string, unknown> {
+  if (events.length === 0) {
+    return nullable(actionName(strict), strict);
+  }
+  const perEvent: Record<string, unknown> = {
+    additionalProperties: false,
+    properties: Object.fromEntries(
+      events.map((event) => [event, nullable(actionName(strict), strict)]),
+    ),
+    type: 'object',
+  };
+  if (strict) {
+    perEvent['required'] = [...events];
+    return { anyOf: [actionName(strict), perEvent, { type: 'null' }] };
+  }
+  perEvent['minProperties'] = 1;
+  return { anyOf: [actionName(strict), perEvent] };
+}
+
 function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<string, unknown> {
   const base: Record<string, unknown> =
     constraint.type === 'enum'
@@ -168,8 +199,7 @@ function componentBranch(
   // A native primitive never binds an action (spec 037 D7): its branch
   // offers none, so a model is never invited to emit one.
   if (!NATIVE_PRIMITIVE_TAGS.includes(tag)) {
-    const action = actionName(strict);
-    properties['action'] = strict ? { anyOf: [action, { type: 'null' }] } : action;
+    properties['action'] = actionBinding(Object.keys(entry.events), strict);
     if (strict) {
       required.push('action');
     }

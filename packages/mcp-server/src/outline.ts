@@ -40,7 +40,12 @@ function nodeLines(root: UiSpecNode): string[] {
       lines.push(`${prefix}${JSON.stringify(node)}`);
       continue;
     }
-    const action = node.action === undefined ? '' : ` → action ${JSON.stringify(node.action)}`;
+    const action =
+      node.action === undefined
+        ? ''
+        : typeof node.action === 'string'
+          ? ` → action ${JSON.stringify(node.action)}`
+          : ` → action per event ${JSON.stringify(node.action)}`;
     const collect = node.collect === undefined ? '' : ` collecting ${JSON.stringify(node.collect)}`;
     lines.push(`${prefix}${node.component}${propsText(node.props)}${action}${collect}`);
     const children: (typeof stack)[number][] = [];

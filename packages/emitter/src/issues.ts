@@ -59,6 +59,9 @@ const CONSTRAINT_TYPES: ReadonlySet<string> = new Set([
   'string',
 ]);
 
+/** The declared string formats (specs 027, 152 and 154). */
+const FORMATS: ReadonlySet<unknown> = new Set(['idref', 'text', 'url']);
+
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
@@ -89,7 +92,7 @@ function isConstraintShaped(value: unknown): boolean {
     (value['values'] === undefined || isStringArray(value['values'])) &&
     (value['documentedValues'] === undefined || isStringArray(value['documentedValues'])) &&
     (value['required'] === undefined || typeof value['required'] === 'boolean') &&
-    (value['format'] === undefined || value['format'] === 'url' || value['format'] === 'idref') &&
+    (value['format'] === undefined || FORMATS.has(value['format'])) &&
     isOptionalFinite(value['minimum']) &&
     isOptionalFinite(value['maximum']) &&
     scalarDefault

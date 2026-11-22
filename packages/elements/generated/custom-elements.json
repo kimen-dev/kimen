@@ -8450,7 +8450,8 @@
                 "text": "string"
               },
               "description": "Tool identifier shown to the person and available for reporting by the host.",
-              "required": true
+              "required": true,
+              "format": "text"
             },
             {
               "name": "approve-label",
@@ -8578,7 +8579,8 @@
               "description": "Tool identifier shown to the person and available for reporting by the host.",
               "attribute": "action",
               "reflects": false,
-              "required": true
+              "required": true,
+              "format": "text"
             },
             {
               "kind": "field",

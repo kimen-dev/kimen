@@ -16,7 +16,7 @@ A single opt-in variant of `ki-dialog` supports longer modal tasks. In fullscree
 
 ## Interpretations
 
-Each item is an agent's choice, pending founder confirmation.
+Each item is an agent's choice, pending founder confirmation, unless it says the founder confirmed it.
 
 - The shipped component reports a noncancelable, post-close `ki-close`. Escape and the built-in close button emit one cancelable event before dismissal while fullscreen is active. Centered dialogs and other close paths keep the existing notification. The built-in button uses the existing `method` reason and Escape uses `escape`.
 - The default and unrecognized `fullscreen` values use the centered layout. An explicitly supplied, nonblank `confirm-label` provides a confirm button even in the centered layout. Slotted footer actions remain in the footer.
@@ -24,7 +24,7 @@ Each item is an agent's choice, pending founder confirmation.
 - Existing explicit autofocus takes precedence over first-field focus. If no body control is focusable, entry uses the existing footer focus policy, with the fullscreen close control as a fallback.
 - Fullscreen uses the raised `surface.s1` token with contrasting text and a solid default fill. The header can grow past its 3.5rem minimum to fit its controls and wrapping text.
 - The close control is a native button with a decorative `ki-icon`. The dialog reuses the ghost treatment and density tokens to fit the component bundle budget. Confirm uses the registered `ki-button`. A native fallback keeps it operable when a direct consumer only registers `ki-dialog`.
-- A catalog node with a declared action and a nonblank confirm label binds that action to `ki-confirm`. Without a label, the action keeps its existing `ki-close` binding.
+- **Confirmed by the founder on 2026-11-21 (`154-action-per-event`).** A catalog node bound by name with a nonblank confirm label fires its action on `ki-confirm`. Without a label, the action keeps its existing `ki-close` binding.
 - The API gate classifies the changed published TypeScript signatures as major. The API declaration records that classification.
 
 ## Gherkin

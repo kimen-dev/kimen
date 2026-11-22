@@ -69,10 +69,13 @@ export interface CatalogPropConstraint {
    * `allowedUrlOrigins`). `'idref'` marks a `string` prop that names another
    * element: its value must be the `id` of a node of the same spec or live
    * surface (`invalid-reference`), and renderers write it as the DOM id they
-   * allocated for that node, never as a host page id (spec 152). Absent
-   * means opaque text.
+   * allocated for that node, never as a host page id (spec 152). `'text'`
+   * marks a `string` prop that is never a URL, whatever its name (spec 154):
+   * `ki-confirmation`'s `action` is a tool identifier. Absent means opaque
+   * text, except under a URL attribute name (`href`, `src`, `action`, …),
+   * which the URL policy holds as a URL.
    */
-  readonly format?: 'idref' | 'url';
+  readonly format?: 'idref' | 'text' | 'url';
   readonly description: string;
 }
 
@@ -110,6 +113,12 @@ export interface Catalog {
 // generator regression fails the build here.
 const builtInCatalog: Catalog = catalogData;
 
+/**
+ * What a bound node fires (spec 154): one declared action name, or a map from
+ * declared event names to declared action names.
+ */
+export type ActionBinding = string | Readonly<Record<string, string>>;
+
 /** A node of the neutral UI-spec tree: one cataloged component instance. */
 export interface UiSpecNode {
   /**
@@ -121,8 +130,13 @@ export interface UiSpecNode {
   readonly id?: string | undefined;
   readonly component: string;
   readonly props?: Readonly<Record<string, boolean | number | string>> | undefined;
-  /** Binding to one of the spec's declared actions (dispatch is 028's job). */
-  readonly action?: string | undefined;
+  /**
+   * The node's binding (dispatch is 028's job): the name of one of the spec's
+   * declared actions, fired on the event the catalog entry derives, or a map
+   * from events the entry declares to the declared action each fires
+   * (spec 154).
+   */
+  readonly action?: ActionBinding | undefined;
   /**
    * The other fields a bound node's action carries (spec 153): each key
    * names an entry of the action data, each value is the id of a node of the
@@ -164,6 +178,7 @@ export interface ValidationIssue {
     | 'prop-out-of-range'
     | 'size-budget'
     | 'undeclared-action'
+    | 'undeclared-event'
     | 'unknown-component'
     | 'unknown-prop'
     | 'unknown-slot'
@@ -454,7 +469,7 @@ const uiSpecNodeSchema: z.ZodType<UiSpecNode> = z.lazy(() =>
     id: z.string().optional(),
     component: z.string(),
     props: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])).optional(),
-    action: z.string().optional(),
+    action: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
     collect: z.record(z.string(), z.string()).optional(),
     slots: z.record(z.string(), z.array(z.union([z.string(), uiSpecNodeSchema]))).optional(),
   }),
@@ -753,6 +768,84 @@ export function checkCommandTargets(scope: NodeValidationScope): ValidationIssue
   return issues;
 }
 
+/** One declared action name, or `undeclared-action` at `path`. */
+function checkDeclaredAction(action: string, path: string, context: CheckContext): void {
+  if (!context.declaredActions.has(action)) {
+    context.issues.push({
+      code: 'undeclared-action',
+      message: `action "${action}" is not declared in the spec's action list`,
+      path,
+      value: action,
+    });
+  }
+}
+
+/**
+ * A node's binding (FR-005; spec 154 FR-001, FR-002). Primitives and
+ * decorative glyphs never bind, in either form; markdown delegates native
+ * interaction to its links and copy buttons, and source links navigate
+ * natively. A binding by name names a declared action. A binding per event
+ * binds at least one event, each an own key of the entry's `events`, each to
+ * a declared action.
+ */
+function checkAction(
+  node: UiSpecNode,
+  entry: CatalogEntry | undefined,
+  path: string,
+  context: CheckContext,
+): void {
+  const { action } = node;
+  if (action === undefined) {
+    return;
+  }
+  const at = `${path}.action`;
+  const native = isNativePrimitive(node.component);
+  if (
+    native ||
+    node.component === 'ki-icon' ||
+    node.component === 'ki-feature-icon' ||
+    node.component === 'ki-markdown' ||
+    sourceTags.has(node.component)
+  ) {
+    context.issues.push({
+      code: 'action-not-allowed',
+      message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,
+      path: at,
+      value: typeof action === 'string' ? action : node.component,
+    });
+    return;
+  }
+  if (typeof action === 'string') {
+    checkDeclaredAction(action, at, context);
+    return;
+  }
+  const bindings = Object.entries(action);
+  if (bindings.length === 0) {
+    context.issues.push({
+      code: 'malformed-spec',
+      message: `${node.component} binds an action per event but names no event; name at least one, or bind an action by name`,
+      path: at,
+    });
+    return;
+  }
+  for (const [event, name] of bindings) {
+    if (entry !== undefined && ownEntry(entry.events, event) === undefined) {
+      const declared = Object.keys(entry.events);
+      context.issues.push({
+        code: 'undeclared-event',
+        message: `${node.component} declares no event "${event}"; ${
+          declared.length === 0
+            ? 'it declares no event, so bind an action by name'
+            : `its events are ${declared.join(', ')}`
+        }`,
+        path: `${at}.${event}`,
+        value: event,
+      });
+    }
+    checkDeclaredAction(name, `${at}.${event}`, context);
+  }
+}
+
 /**
  * The checks of one node's `collect` that need no other node (spec 153):
  * it requires an action, a bounded number of entries, and names that do not
@@ -872,7 +965,7 @@ export function ownEntry<T>(
 }
 
 function checkNode(node: UiSpecNode, path: string, context: CheckContext): void {
-  const { declaredActions, entries, issues, scope } = context;
+  const { entries, issues, scope } = context;
   checkId(node, path, scope.ids, issues);
   const entry = ownEntry(entries, node.component);
   if (node.id !== undefined && entry !== undefined && collectedValueProp(entry) !== undefined) {
@@ -924,33 +1017,7 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
       }
     }
   }
-  if (node.action !== undefined) {
-    const native = isNativePrimitive(node.component);
-    if (
-      native ||
-      node.component === 'ki-icon' ||
-      node.component === 'ki-feature-icon' ||
-      node.component === 'ki-markdown' ||
-      sourceTags.has(node.component)
-    ) {
-      // Primitives and decorative glyphs never bind their own actions.
-      // Markdown delegates native interaction to its links and copy buttons.
-      // Source links navigate natively.
-      issues.push({
-        code: 'action-not-allowed',
-        message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,
-        path: `${path}.action`,
-        value: node.action,
-      });
-    } else if (!declaredActions.has(node.action)) {
-      issues.push({
-        code: 'undeclared-action',
-        message: `action "${node.action}" is not declared in the spec's action list`,
-        path: `${path}.action`,
-        value: node.action,
-      });
-    }
-  }
+  checkAction(node, entry, path, context);
   checkCollect(node, entry, path, context);
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     if (entry !== undefined && !Object.hasOwn(entry.slots, slotName)) {

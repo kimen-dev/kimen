@@ -3,7 +3,7 @@
 // Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.7.0",
+  "catalogSchemaVersion": "1.8.0",
   "components": {
     "div": {
       "description": "A native layout container (`<div>`) that lays its children out as a flex column or row, separated by a spacing token. It has no visual identity of its own: no background, border or padding.",
@@ -1326,7 +1326,8 @@ export const catalogData = {
         "action": {
           "type": "string",
           "description": "Tool identifier shown to the person and available for reporting by the host.",
-          "required": true
+          "required": true,
+          "format": "text"
         },
         "approve-label": {
           "type": "string",
