@@ -65,10 +65,26 @@ When the layout makes the question obvious but the group still needs its own nam
 </ki-radio-group>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+choice. The group is invalid, blocks its form and is announced as invalid at
+once. Choosing another option withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-radio-group label="Plan" name="plan" value="team" custom-error="The Team plan is sold out this month.">
+  <ki-radio value="solo">Solo</ki-radio>
+  <ki-radio value="team">Team</ki-radio>
+</ki-radio-group>
+```
+
 ## Attributes
 
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted choice ("This plan is sold out"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` group left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
-- `error-text` (string | undefined): Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the options, read with the group as its description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page; a group with neither fails accessibility gates. Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` and `label-hint` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
 - `label-hidden` (boolean, default false): Hides the `label` (and its hint) from view and from reading order while it stays the radiogroup's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people (a heading in a card, an icon row) but the group still needs a name of its own. When NOT to use: do not hide a label that repeats a question already on the page; point `aria-labelledby` at that question instead. Do not hide the only description of what a choice decides; that is `help-text`.

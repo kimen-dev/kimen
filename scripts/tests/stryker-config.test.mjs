@@ -16,10 +16,11 @@ const assertCommonMutationPolicy = (config, configFile) => {
   assert.deepEqual(config.reporters, ['clear-text', 'json']);
   assert.deepEqual(config.plugins, ['@stryker-mutator/vitest-runner']);
   assert.deepEqual(config.ignorePatterns, [
-    // /.claude keeps the tracked .claude/skills directory symlink out of
-    // Stryker sandboxes: fs.copyFile follows the link into a directory and
-    // fails (ENOTSUP on macOS, EISDIR on Linux), which broke every elements
-    // mutation run. Agent tooling is classified out of mutation scope anyway.
+    // /.agents and /.claude keep the tracked directory symlinks of agent
+    // tooling out of Stryker sandboxes: fs.copyFile follows a link into a
+    // directory and fails (ENOTSUP on macOS, EISDIR on Linux), which broke
+    // mutation runs. Agent tooling is classified out of mutation scope anyway.
+    '/.agents',
     '/.claude',
     '/.nx',
     '/.stryker-tmp',
@@ -130,4 +131,37 @@ test('@spec:018 S3 each Stryker runner has an independently scoped Vitest config
   ]);
   assert.equal(browser.test.browser.enabled, true);
   assert.ok(browser.test.browser.instances.every((instance) => instance.browser === 'chromium'));
+});
+
+test('@spec:018 S3 every tracked directory symlink stays out of both Stryker sandboxes', async () => {
+  // Stryker copies tracked files into its sandbox with fs.copyFile, which
+  // follows a symlink and fails on a directory (EISDIR on Linux, ENOTSUP on
+  // macOS) before any mutant runs. The daily run broke this way once
+  // .agents/skills gained links into plugins/kimen/skills.
+  const { spawnSync } = await import('node:child_process');
+  const { statSync } = await import('node:fs');
+  const repositoryRoot = new URL('../../', import.meta.url);
+  const listing = spawnSync('git', ['ls-files', '-s', '-z'], {
+    cwd: repositoryRoot,
+    encoding: 'utf8',
+  });
+  assert.equal(listing.status, 0, listing.stderr);
+  const directoryLinks = listing.stdout
+    .split('\0')
+    .filter((entry) => entry.startsWith('120000 '))
+    .map((entry) => entry.slice(entry.indexOf('\t') + 1))
+    .filter((path) => statSync(new URL(path, repositoryRoot)).isDirectory());
+  assert.ok(directoryLinks.length > 0, 'the repository tracks directory symlinks');
+
+  for (const configFile of ['stryker.node.config.mjs', 'stryker.elements.config.mjs']) {
+    const { ignorePatterns } = await loadConfig(configFile);
+    const uncovered = directoryLinks.filter(
+      (path) =>
+        !ignorePatterns.some((pattern) => {
+          const prefix = pattern.replace(/^\//u, '');
+          return path === prefix || path.startsWith(`${prefix}/`);
+        }),
+    );
+    assert.deepEqual(uncovered, [], `${configFile} copies directory symlinks into its sandbox`);
+  }
 });

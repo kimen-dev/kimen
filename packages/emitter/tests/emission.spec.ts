@@ -1,4 +1,5 @@
 // @spec:033-emitter-kit
+// @spec:154-action-per-event
 // Tool derivation and emission ingest (S9, S13, S14) plus the
 // schema⇄boundary agreement property (SC-002): the reliability loop
 // closes in exactly one repair round, strict-mode placeholders normalize
@@ -85,6 +86,38 @@ describe('normalizeEmission', () => {
     expect(validateUiSpec(normalized).issues).toEqual([]);
     expect(normalized.root.id).toBe('order-card');
     expect(normalized.root.slots[''][0]).not.toHaveProperty('id');
+  });
+
+  it('S13 strips the null events of a binding per event and keeps the bound ones (spec 154)', () => {
+    const card = (action: unknown) => ({
+      actions: ['tool.denied'],
+      root: {
+        action,
+        component: 'ki-confirmation',
+        props: {
+          action: 'delete_files',
+          'approve-label': 'Delete',
+          'deny-label': 'Keep',
+          heading: 'Delete?',
+        },
+      },
+      version: 1,
+    });
+    const rootOf = (value: unknown) => (value as { root: { action?: unknown } }).root;
+
+    const bound = normalizeEmission(card({ 'ki-approve': null, 'ki-deny': 'tool.denied' }));
+    expect(rootOf(bound).action).toEqual({ 'ki-deny': 'tool.denied' });
+    expect(validateUiSpec(bound).issues).toEqual([]);
+
+    // Placeholders alone bind nothing.
+    const unbound = normalizeEmission(card({ 'ki-approve': null, 'ki-deny': null }));
+    expect(rootOf(unbound)).not.toHaveProperty('action');
+    expect(validateUiSpec(unbound).issues).toEqual([]);
+
+    // A map the model left empty is a real mistake, left for validation.
+    const empty = normalizeEmission(card({}));
+    expect(rootOf(empty).action).toEqual({});
+    expect(validateUiSpec(empty).issues[0]?.code).toBe('malformed-spec');
   });
 
   it('S13 normalizes hostile nesting depths without overflowing (review regression)', () => {

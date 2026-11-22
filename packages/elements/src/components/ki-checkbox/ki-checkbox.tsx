@@ -167,12 +167,29 @@ export class KiCheckbox {
    * Message shown in place of the help text once a `required` checkbox is
    * left unchecked, and its `validationMessage`. Say what checking it means
    * ("Accept the terms to continue"). Without it the browser's own message
-   * shows, in the browser's language. An error set with `setCustomValidity`
-   * outranks it.
-   * When NOT to use: do not use it for server-side or cross-field errors; call
-   * `setCustomValidity` for those.
+   * shows, in the browser's language. An error set with `custom-error` or
+   * `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; set
+   * `custom-error` or call `setCustomValidity` for those.
    */
   @Prop({ reflect: true }) errorText?: string;
+
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted answer ("This plan needs a signed contract"). While it holds
+   * text the checkbox is invalid, blocks its form, shows the text in place of
+   * the help text at once and is announced as invalid. It stops counting when
+   * the person toggles the checkbox, or when the form is reset, so it never
+   * blocks the corrected answer. It outranks `error-text` and an error set
+   * with `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for a `required` checkbox left unchecked;
+   * `error-text` words that. Inside a `ki-checkbox-group`, set it on the
+   * group. Setting the same text again while the prop still holds it shows
+   * nothing: remove it first, then set it again.
+   */
+  @Prop({ reflect: true }) customError?: string;
 
   @State() private formDisabled = false;
   // Mirrors the `user-invalid` custom state, which a render cannot observe.
@@ -193,6 +210,9 @@ export class KiCheckbox {
   // reapplied on every validity sync, so the control's own revalidation never
   // drops it.
   private customValidity = '';
+
+  // Whether the person's toggle or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
 
   /**
    * Validity of the control, as on a native form control: which constraint
@@ -369,6 +389,12 @@ export class KiCheckbox {
     this.syncValidity();
   }
 
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncValidity();
+  }
+
   formAssociatedCallback(): void {
     this.resetBaseline = this.checked;
     this.syncFormValue();
@@ -382,6 +408,7 @@ export class KiCheckbox {
 
   formResetCallback(): void {
     if (checkboxGroupFor(this.host)) return;
+    this.customErrorWithdrawn = true;
     this.checked = this.resetBaseline;
     this.syncInputState();
     this.syncFormValue();
@@ -409,6 +436,11 @@ export class KiCheckbox {
       return;
     }
 
+    // One toggle fires `input` and then `change`: withdraw on the first only,
+    // so an error the application sets while hearing `input` stands.
+    if (this.checked !== this.input.checked) {
+      this.customErrorWithdrawn = true;
+    }
     this.checked = this.input.checked;
     this.indeterminate = false;
     this.syncFormValue();
@@ -446,7 +478,9 @@ export class KiCheckbox {
   }
 
   private syncValidity(): void {
-    this.input?.setCustomValidity(this.customValidity);
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const applicationError = customError || this.customValidity;
+    this.input?.setCustomValidity(applicationError);
     if (!this.input || this.effectiveDisabled || checkboxGroupFor(this.host)) {
       this.internals.setValidity({});
       this.message = '';
@@ -456,10 +490,14 @@ export class KiCheckbox {
 
     this.internals.setValidity(
       this.input.validity,
-      fieldValidationMessage(this.customValidity, this.errorText, this.input.validationMessage),
+      fieldValidationMessage(applicationError, this.errorText, this.input.validationMessage),
       this.input,
     );
     this.message = this.internals.validationMessage;
+    // A custom error shows at once, without a toggle or a submission (D2).
+    if (customError !== '') {
+      this.setUserInvalid(true);
+    }
   }
 
   private syncUserInvalidState(fromUserToggle: boolean): void {

@@ -3,8 +3,19 @@
 // Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.6.0",
+  "catalogSchemaVersion": "1.9.0",
   "components": {
+    "caption": {
+      "description": "The native caption of a table (`<caption>`): its title, which names the table for assistive technology.",
+      "events": {},
+      "props": {},
+      "slots": {
+        "": "Text, with optional `strong` and `em` children. No other element: headings, paragraphs, layout, images and components are rejected as invalid-child."
+      },
+      "tag": "caption",
+      "whenNotToUse": "Do not use it outside a table, after its thead or tbody, or twice in one table. Never bind an action.",
+      "whenToUse": "Title every table, as its first child, so the table has an accessible name."
+    },
     "div": {
       "description": "A native layout container (`<div>`) that lays its children out as a flex column or row, separated by a spacing token. It has no visual identity of its own: no background, border or padding.",
       "events": {},
@@ -821,6 +832,10 @@ export const catalogData = {
           "description": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
           "default": false
         },
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted answer (\"This plan needs a signed contract\"). While it holds\ntext the checkbox is invalid, blocks its form, shows the text in place of\nthe help text at once and is announced as invalid. It stops counting when\nthe person toggles the checkbox, or when the form is reset, so it never\nblocks the corrected answer. It outranks `error-text` and an error set\nwith `setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for a `required` checkbox left unchecked;\n`error-text` words that. Inside a `ki-checkbox-group`, set it on the\ngroup. Setting the same text again while the prop still holds it shows\nnothing: remove it first, then set it again."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents activation, removes the checkbox from keyboard reach, exposes the\nunavailable state, and excludes it from form data.\nWhen NOT to use: do not use disabled for validation errors or pending\nstate.",
@@ -828,7 +843,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once a `required` checkbox is\nleft unchecked, and its `validationMessage`. Say what checking it means\n(\"Accept the terms to continue\"). Without it the browser's own message\nshows, in the browser's language. An error set with `setCustomValidity`\noutranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once a `required` checkbox is\nleft unchecked, and its `validationMessage`. Say what checking it means\n(\"Accept the terms to continue\"). Without it the browser's own message\nshows, in the browser's language. An error set with `custom-error` or\n`setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -880,6 +895,10 @@ export const catalogData = {
         "ki-change": "Fires once for a committed user toggle with a copy of the current selection."
       },
       "props": {
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted selection (\"Pick regions we deliver to\"). While it holds text\nthe group is invalid, blocks its form, shows the text in place of the\nhelp text at once and is announced as invalid. It stops counting when the\nperson toggles an option, or when the form is reset, so it never blocks\nthe corrected answer. It outranks `error-text` and an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for the `min` and `max` limits the group\nenforces itself; `error-text` words those. Setting the same text again\nwhile the prop still holds it shows nothing: remove it first, then set it\nagain."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Makes the group unavailable and excludes it from form submission.",
@@ -1129,6 +1148,10 @@ export const catalogData = {
         "ki-input": "Emitted when a user edit changes the code."
       },
       "props": {
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted code (\"This code has expired\"). While it holds text the field\nis invalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting at the person's next\nedit of the code, or when the form is reset, so it never blocks the\ncorrected answer. It outranks `error-text` and an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for an incomplete code, which the field\nreports itself; `error-text` words that. Setting the same text again\nwhile the prop still holds it shows nothing: remove it first, then set it\nagain."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Disable editing, sequential focus and form participation.",
@@ -1136,7 +1159,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message for a failing code constraint. Omit to use the browser's message."
+          "description": "Message for a failing code constraint. Omit to use the browser's message. A `custom-error` outranks it."
         },
         "help-text": {
           "type": "string",
@@ -1210,6 +1233,10 @@ export const catalogData = {
           "description": "Offers to add trimmed query text when no known or selected choice already matches it.",
           "default": false
         },
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted choice (\"Ana is on leave this week\"). While it holds text the\nfield is invalid, blocks its form, shows the text in place of the help\ntext at once and is announced as invalid. It stops counting when the\nperson commits another selection (choosing, removing or clearing a\nchoice; typing filter text is not a change), or when the form is reset,\nso it never blocks the corrected answer. It outranks `error-text`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for a `required` field left without a\nchoice; `error-text` words that. Setting the same text again while the\nprop still holds it shows nothing: remove it first, then set it again."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Disables editing, navigation and form submission.",
@@ -1222,7 +1249,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message used when a required selection is missing, in place of the browser's message."
+          "description": "Message used when a required selection is missing, in place of the browser's message. A `custom-error` outranks it."
         },
         "filter": {
           "type": "enum",
@@ -1310,7 +1337,8 @@ export const catalogData = {
         "action": {
           "type": "string",
           "description": "Tool identifier shown to the person and available for reporting by the host.",
-          "required": true
+          "required": true,
+          "format": "text"
         },
         "approve-label": {
           "type": "string",
@@ -1558,6 +1586,10 @@ export const catalogData = {
           "description": "Require Apply before saving picks made in the calendar.",
           "default": false
         },
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted date (\"No flights on that day\"). While it holds text the field\nis invalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting at the person's next\nedit of the text or pick of another date, or when the form is reset, so\nit never blocks the corrected answer. It outranks `error-text`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for a missing, unreadable or out-of-bounds\ndate, which the field reports itself; `error-text` words those. Setting\nthe same text again while the prop still holds it shows nothing: remove\nit first, then set it again."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Disables the text entry and calendar button and excludes the field from form data.",
@@ -1565,7 +1597,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Overrides the message shown when a date is missing, invalid or outside the bounds."
+          "description": "Overrides the message shown when a date is missing, invalid or outside the bounds. A `custom-error` outranks it."
         },
         "first-day-of-week": {
           "type": "number",
@@ -2588,6 +2620,10 @@ export const catalogData = {
           "type": "string",
           "description": "Native autocomplete detail token forwarded to the internal input.\nWhen NOT to use: omit when no autofill entry purpose is known."
         },
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side or cross-field\nverdict on the submitted answer (\"Already registered\"). While it holds\ntext the field is invalid, blocks its form, shows the text in place of\nthe help text at once and is announced as invalid. It stops counting at\nthe person's next change of the answer, or when the form is reset, so it\nnever blocks the corrected answer. It outranks `error-text` and an error\nset with `setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for `required` or other constraints the\nfield enforces itself; `error-text` words those. Setting the same text\nagain while the prop still holds it shows nothing: remove it first, then\nset it again."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents editing, removes the field from keyboard reach and exposes the\nunavailable state through the internal native input.\nWhen NOT to use: do not use disabled for readonly reference values.",
@@ -2595,7 +2631,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `custom-error` or `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -3160,6 +3196,10 @@ export const catalogData = {
         "change": "Composed event fired when the person commits an edited or stepped value. Read the host's numeric value. Listen to native input for live edits."
       },
       "props": {
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted number (\"Only 40 seats left\"). While it holds text the field is\ninvalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting at the person's next\nedit or step of the number, or when the form is reset, so it never blocks\nthe corrected answer. It outranks `error-text`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for `required`, the bounds or unreadable\ntext, which the field reports itself; `error-text` words those. Setting\nthe same text again while the prop still holds it shows nothing: remove\nit first, then set it again."
+        },
         "decrease-label": {
           "type": "string",
           "description": "Stepper's accessible name. The field label replaces {label}.",
@@ -3172,7 +3212,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Validation hint to show when the entry fails a constraint."
+          "description": "Validation hint to show when the entry fails a constraint. A `custom-error` outranks it."
         },
         "format": {
           "type": "string",
@@ -3646,6 +3686,10 @@ export const catalogData = {
         "change": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\n`click()` on a `ki-radio` from a script selects it like a native radio: one\n`input`, then one `change`.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
       },
       "props": {
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted choice (\"This plan is sold out\"). While it holds text the group\nis invalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting when the person\nchooses another option, or when the form is reset, so it never blocks the\ncorrected answer. It outranks `error-text` and an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for a `required` group left without a\nchoice; `error-text` words that. Setting the same text again while the\nprop still holds it shows nothing: remove it first, then set it again."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Makes the whole group unavailable, skips it in Tab order and removes its\nform entry.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
@@ -3653,7 +3697,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once a `required` group is left\nwithout a choice, and its `validationMessage` (\"Choose a plan\"). Without\nit the browser's own message shows, in the browser's language. An error\nset with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once a `required` group is left\nwithout a choice, and its `validationMessage` (\"Choose a plan\"). Without\nit the browser's own message shows, in the browser's language. An error\nset with `custom-error` or `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -4101,6 +4145,10 @@ export const catalogData = {
         "change": "Fired once after the user commits a different option, composed\nacross the shadow boundary and preceded by `input`; `value` is already\ncurrent when listeners run. When to use: react to the committed choice.\nWhen NOT to use: do not expect it for programmatic `value` writes, which\nare silent."
       },
       "props": {
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted choice (\"We do not ship there\"). While it holds text the select\nis invalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting when the person\nchooses another option, or when the form is reset, so it never blocks the\ncorrected answer. It outranks `error-text` and an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for a `required` select left without a\nchoice; `error-text` words that. Setting the same text again while the\nprop still holds it shows nothing: remove it first, then set it again."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
@@ -4108,7 +4156,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once a `required` select is left\nwithout a choice, and its `validationMessage` (\"Choose a country\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once a `required` select is left\nwithout a choice, and its `validationMessage` (\"Choose a country\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `custom-error` or `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -4820,6 +4868,10 @@ export const catalogData = {
           "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
           "default": false
         },
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted setting (\"Two-step sign-in needs a phone number\"). While it\nholds text the switch is invalid, blocks its form, shows the text in\nplace of the help text at once and is announced as invalid. It stops\ncounting when the person toggles the switch, or when the form is reset,\nso it never blocks the corrected answer. It outranks an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for help that is not an error; use\n`help-text`. Setting the same text again while the prop still holds it\nshows nothing: remove it first, then set it again."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen to use: make a setting temporarily unavailable while preserving its\ncurrent state.\nWhen NOT to use: do not use disabled for pending or loading states.",
@@ -4827,7 +4879,7 @@ export const catalogData = {
         },
         "help-text": {
           "type": "string",
-          "description": "One line of help under the switch, read with it as its description: what\nturning it on changes.\nWhen NOT to use: do not repeat the label. A switch has no constraint of\nits own, so it takes no error text; an error the application sets with\n`setCustomValidity` shows in this line's place."
+          "description": "One line of help under the switch, read with it as its description: what\nturning it on changes.\nWhen NOT to use: do not repeat the label. A switch has no constraint of\nits own, so it takes no error text; an error the application sets with\n`custom-error` or `setCustomValidity` shows in this line's place."
         },
         "name": {
           "type": "string",
@@ -5024,6 +5076,10 @@ export const catalogData = {
           "type": "string",
           "description": "Autofill detail token forwarded to the native textarea.\nWhen to use: expose entry purpose such as `street-address` when available.\nWhen NOT to use: omit when no valid autofill purpose applies."
         },
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted text (\"This title is taken\"). While it holds text the field is\ninvalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting at the person's next\nchange of the text, or when the form is reset, so it never blocks the\ncorrected answer. It outranks `error-text` and an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for `required` or a length limit the field\nenforces itself; `error-text` words those. Setting the same text again\nwhile the prop still holds it shows nothing: remove it first, then set it\nagain."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Disables editing, focus, validation and form-data contribution.\nWhen to use: make a field temporarily unavailable. When NOT to use: do not\nuse disabled for readonly review text that should submit.",
@@ -5031,7 +5087,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required` or a length limit), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `custom-error` or\n`setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those."
         },
         "help-text": {
           "type": "string",
@@ -5121,6 +5177,10 @@ export const catalogData = {
         "ki-change": "Emitted when a person commits a different canonical time or clears it."
       },
       "props": {
+        "custom-error": {
+          "type": "string",
+          "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted time (\"That slot was just booked\"). While it holds text the\nfield is invalid, blocks its form, shows the text in place of the help\ntext at once and is announced as invalid. It stops counting at the\nperson's next edit or pick of a time, or when the form is reset, so it\nnever blocks the corrected answer. It outranks `error-text` and an error\nset with `setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for `required`, the bounds or unreadable\ntext, which the field reports itself; `error-text` words those. Setting\nthe same text again while the prop still holds it shows nothing: remove\nit first, then set it again."
+        },
         "disabled": {
           "type": "boolean",
           "description": "Disables typing, suggestions and form participation.",
@@ -5128,7 +5188,7 @@ export const catalogData = {
         },
         "error-text": {
           "type": "string",
-          "description": "Validation message to show after blur or a blocked form submission."
+          "description": "Validation message to show after blur or a blocked form submission. A `custom-error` outranks it."
         },
         "help-text": {
           "type": "string",
@@ -5747,7 +5807,82 @@ export const catalogData = {
       "tag": "strong",
       "whenNotToUse": "Do not use it for whole paragraphs, as a heading or for a status (use ki-badge). Never bind an action.",
       "whenToUse": "Mark the figure or phrase of a sentence that matters most, such as a total."
+    },
+    "table": {
+      "description": "A native data table (`<table>`) for reading records that share the same fields. It is never sorted or selected from a spec.",
+      "events": {},
+      "props": {},
+      "slots": {
+        "": "In this order: at most one `caption`, at most one `thead`, then any number of `tbody`. No text and no other element: anything else is rejected as invalid-child."
+      },
+      "tag": "table",
+      "whenNotToUse": "Do not use it for layout (use a div), for a list of single items (use ki-list) or inside a cell: tables never nest. Never bind an action.",
+      "whenToUse": "Show records with the same fields side by side, such as orders and their status. Put it in the default slot of a ki-table, and leave its `selectable` off: a table from a spec is never sorted or selected."
+    },
+    "tbody": {
+      "description": "A native body row group of a table (`<tbody>`) that holds its records as rows.",
+      "events": {},
+      "props": {},
+      "slots": {
+        "": "Only `tr` rows. No text and no other element: anything else is rejected as invalid-child."
+      },
+      "tag": "tbody",
+      "whenNotToUse": "Do not use it outside a table or before its caption or thead. A totals row is one more body row. Never bind an action.",
+      "whenToUse": "Hold the body rows of a table, after its thead. A table may hold several to group its rows."
+    },
+    "td": {
+      "description": "A native data cell (`<td>`) of a table row.",
+      "events": {},
+      "props": {},
+      "slots": {
+        "": "Text, native elements and catalog components, as in a layout `div`. Never a table or a table part: they are rejected as invalid-child."
+      },
+      "tag": "td",
+      "whenNotToUse": "Do not use it outside a tr, and never put a table in it. A cell spans exactly one row and one column. Never bind an action on the cell itself.",
+      "whenToUse": "Hold one field of a record: text, a ki-badge for a status, or a ki-button that acts on the record."
+    },
+    "th": {
+      "description": "A native header cell (`<th>`) that heads a column or a row of a table.",
+      "events": {},
+      "props": {
+        "scope": {
+          "description": "What the cell heads: `col` for the column below it, `row` for the rest of its row. Optional: without it the browser infers it.",
+          "type": "enum",
+          "values": [
+            "col",
+            "row"
+          ]
+        }
+      },
+      "slots": {
+        "": "Text, native elements and catalog components, as in a layout `div`. Never a table or a table part: they are rejected as invalid-child."
+      },
+      "tag": "th",
+      "whenNotToUse": "Do not use it outside a tr or only to make text bold. A spec cannot sort a column. Never bind an action.",
+      "whenToUse": "Head each column in the header row (scope `col`) and, when one field identifies the record, head each body row with it (scope `row`)."
+    },
+    "thead": {
+      "description": "The native header row group of a table (`<thead>`) that holds the row of column headers.",
+      "events": {},
+      "props": {},
+      "slots": {
+        "": "Only `tr` rows. No text and no other element: anything else is rejected as invalid-child."
+      },
+      "tag": "thead",
+      "whenNotToUse": "Do not use it outside a table, after a tbody, or twice in one table. Never bind an action.",
+      "whenToUse": "Hold the header row of a table, after its caption and before its body."
+    },
+    "tr": {
+      "description": "A native table row (`<tr>`) of header and data cells.",
+      "events": {},
+      "props": {},
+      "slots": {
+        "": "Only `th` and `td` cells. No text and no other element: anything else is rejected as invalid-child."
+      },
+      "tag": "tr",
+      "whenNotToUse": "Do not use it outside a thead or a tbody, or to lay content out in a row (use a div with direction row). A row is never selected or clicked: never bind an action.",
+      "whenToUse": "Hold one record, or the header row, inside a thead or a tbody."
     }
   },
-  "elementsVersion": "0.1.2"
+  "elementsVersion": "0.1.3"
 } as const;

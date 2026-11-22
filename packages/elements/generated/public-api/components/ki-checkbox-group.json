@@ -1,6 +1,14 @@
 {
   "component": {
     "attributes": {
+      "custom-error": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted selection (\"Pick regions we deliver to\"). While it holds text\nthe group is invalid, blocks its form, shows the text in place of the\nhelp text at once and is announced as invalid. It stops counting when the\nperson toggles an option, or when the form is reset, so it never blocks\nthe corrected answer. It outranks `error-text` and an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for the `min` and `max` limits the group\nenforces itself; `error-text` words those. Setting the same text again\nwhile the prop still holds it shows nothing: remove it first, then set it\nagain.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
@@ -211,6 +219,14 @@
       }
     },
     "properties": {
+      "customError": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "An error of the application's own, such as a server-side verdict on the\nsubmitted selection (\"Pick regions we deliver to\"). While it holds text\nthe group is invalid, blocks its form, shows the text in place of the\nhelp text at once and is announced as invalid. It stops counting when the\nperson toggles an option, or when the form is reset, so it never blocks\nthe corrected answer. It outranks `error-text` and an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for the `min` and `max` limits the group\nenforces itself; `error-text` words those. Setting the same text again\nwhile the prop still holds it shows nothing: remove it first, then set it\nagain.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,

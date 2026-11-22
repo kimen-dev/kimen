@@ -26,7 +26,9 @@ blur. A percentage uses percentage points in the editor and a ratio in
 
 Set `name` to include the field in the form and `required` when it must have a
 number. Set `help-text` for instructions and `error-text` for a validation
-message. A form reset restores the `value` attribute. Listen for `input` for
+message. Set `custom-error` for an error of the application, such as a
+server-side check: it shows at once and the person's next edit withdraws it.
+A form reset restores the `value` attribute. Listen for `input` for
 live edits and `change` for a commit, then read the host's numeric `value`.
 
 ## Keyboard and assistive technology

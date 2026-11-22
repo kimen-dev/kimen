@@ -385,3 +385,18 @@ test('@spec:018 S3 CLI rejects an unknown or missing mutation scope before any m
   assert.notEqual(missingValue.status, 0);
   assert.match(missingValue.stderr, /--scope requires a value/i);
 });
+
+test('@spec:018 S3 every tracked file has a mutation classification', async () => {
+  // An unclassified executable path fails the daily mutation run the day it
+  // changes (packages/tokens/.size-limit.mjs did on 2026-11-20). Classifying
+  // the whole tree here moves that failure to the pull request that adds it.
+  const { classifyChangedFiles } = await loadMutationPolicy();
+  const listing = spawnSync('git', ['ls-files', '-z'], {
+    cwd: new URL('../../', import.meta.url),
+    encoding: 'utf8',
+  });
+  assert.equal(listing.status, 0, listing.stderr);
+  const paths = listing.stdout.split('\0').filter((path) => path !== '');
+
+  assert.doesNotThrow(() => classifyChangedFiles(paths));
+});

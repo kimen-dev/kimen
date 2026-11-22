@@ -7,6 +7,16 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [0.1.3] - 2026-11-21
+
+### Fixed
+
+- **deps:** update dependency @astrojs/starlight to v0.43.1 ([#551](https://github.com/kimen-dev/kimen/pull/551))
+- **elements:** component fixes from the 0.1.1 integrator feedback (items 2, 3, 4, 7, 8, 9, 10) ([#558](https://github.com/kimen-dev/kimen/pull/558))
+- **elements:** never clip ki-avatar initials, only the portrait ([#564](https://github.com/kimen-dev/kimen/pull/564))
+- **ki-date-picker:** show an outside value written before a commit renders ([#559](https://github.com/kimen-dev/kimen/pull/559))
+- **tokens:** theming fixes from the 0.1.1 integrator feedback (items 1, 5, 6, 11, 12, color-scheme) ([#557](https://github.com/kimen-dev/kimen/pull/557))
+
 ## [0.1.2] - 2026-11-21
 
 ### Added

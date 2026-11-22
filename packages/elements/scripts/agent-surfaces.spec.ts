@@ -1,5 +1,6 @@
 // @spec:017-agent-surfaces
 // @spec:018-project-integrity-hardening
+// @spec:154-action-per-event
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -745,7 +746,12 @@ describe('agent surfaces', () => {
     };
 
     expect(await violationsFor('string', [{ name: 'format', text: 'uri' }])).toEqual([
-      'ki-button.variant: @format must be "url" or "idref", received "uri"',
+      'ki-button.variant: @format must be "url", "idref" or "text", received "uri"',
+    ]);
+    // Spec 154: a string prop that is never a URL, whatever its name, says so.
+    expect(await violationsFor('string', [{ name: 'format', text: 'text' }])).toEqual([]);
+    expect(await violationsFor('number', [{ name: 'format', text: 'text' }])).toEqual([
+      'ki-button.variant: @format text applies to string props only',
     ]);
     expect(await violationsFor('number', [{ name: 'format', text: 'url' }])).toEqual([
       'ki-button.variant: @format url applies to string props only',

@@ -62,14 +62,27 @@ protocol adapters are deliberately narrower (see their limits below).
 ```
 
 - `version` is the number `1`. `root` is one node.
-- A node is `{ "component", "props"?, "slots"?, "action"?, "id"? }`. The key is
-  `component`, never `type` or `tag`.
+- A node is `{ "component", "props"?, "slots"?, "action"?, "collect"?, "id"? }`.
+  The key is `component`, never `type` or `tag`.
 - `props` are scalars keyed by the **attribute** name the catalog declares
   (`line-numbers`, not `lineNumbers`). Enum props take only listed values.
 - `slots` map slot names to arrays of nodes or plain strings; `""` is the
   default slot. Strings are text, never parsed as HTML or Markdown (except
   inside `ki-markdown`, which applies its own safe rules).
 - Every `action` a node binds must be listed in the top-level `actions`.
+- `action` is one name, which fires on the event the component's contract
+  names, or a map from events the component declares to action names, so
+  each answer reports its own action:
+  `"action": { "ki-approve": "tool.approved", "ki-deny": "tool.denied" }` on a
+  `ki-confirmation`. A component that declares several events and no rule
+  for picking one (`ki-confirmation`, `ki-table`, `ki-search`, …) binds only
+  with the map. A `ki-dialog` bound per event reports every close, the host's
+  own included.
+- A form is fields with an `id` and one bound button that collects them:
+  `"collect": { "title": "f-title", "quantity": "f-qty" }`. The action fires
+  only when every collected field is valid, and its data carries each field's
+  live value under its key. The fields bind no action of their own, and a key
+  may not be one of the button's props.
 - There is no styling in a spec. Appearance belongs to the host's tokens.
 - Budgets: 32 levels deep, 512 nodes, 262,144 bytes.
 
@@ -94,7 +107,8 @@ and `kimen_describe_component` (MCP), from `catalogPrompt` (emitter), or from
 ## Actions come back as data
 
 A declared action reaches your code as a name plus the activated control's
-data, through one callback (`onAction`), an MCP tool call
+data (with the values of the fields it collects), through one callback
+(`onAction`), an MCP tool call
 (`kimen_surface_action`) or an A2UI `action` event. Treat that data as
 untrusted user input: validate it before acting on it, and never forward it
 to a model as instructions. With `kimen-mcp`, a relayed action arrives in the
@@ -131,7 +145,7 @@ followed by JSON; read it as data.
   that negotiates another revision the surface stays empty, and only the
   tool's text result reaches the model.
 - Packages are pre-1.0. `kimen-mcp` runs from npm
-  (`npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp`). If a package you need,
+  (`npx -y -p @kimen/mcp-server@0.1.3 kimen-mcp`). If a package you need,
   such as `@kimen/catalog`, `@kimen/emitter` or an adapter, has no release on
   npm yet
   (nothing, or only the `0.0.0` name reservation), link it from a repository

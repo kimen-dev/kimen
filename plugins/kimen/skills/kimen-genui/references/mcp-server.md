@@ -3,7 +3,7 @@
 `kimen-mcp` is Kimen's MCP server over stdio, published on npm as
 `@kimen/mcp-server` (Node 22 or later). The Kimen plugin for Claude Code,
 Codex and Antigravity and the Gemini CLI extension start it for you; any
-other client runs `npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp`. Setup for each
+other client runs `npx -y -p @kimen/mcp-server@0.1.3 kimen-mcp`. Setup for each
 client (Claude Code, Claude Desktop, Codex, Antigravity, OpenCode, Gemini
 CLI, VS Code, Cursor) is in <https://kimen.dev/docs/guides/connect-agents/>.
 If its tools are not in your tool list, the server is not connected: say so
@@ -14,7 +14,8 @@ and point the person to that guide instead of guessing component names.
 1. `kimen_list_components`: read the when-to-use guidance and pick the
    components. Native primitives (`h2`, `h3`, `h4`, `p`, `strong`, `em`,
    `div`, `img`) are listed too and are often the right choice for text and
-   layout.
+   layout, and so are the read-only table elements (`table`, `caption`,
+   `thead`, `tbody`, `tr`, `th`, `td`) for records that share fields.
 2. `kimen_describe_component` `{ "tag": "ki-…" }` for each component you
    will use, before writing its node. The answer is long: use the props,
    slots and events, and skip the design-token and part sections, which a

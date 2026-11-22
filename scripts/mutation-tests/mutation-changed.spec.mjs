@@ -178,14 +178,13 @@ describe('mutation scope report', () => {
   });
 
   it.each([
-    ['--unknown', /unknown mutation option/i],
-    [
-      '--run',
-      /mutation discovery requires|KIMEN_MUTATION_CACHE_DIR|Git repository discovery|must run at the repository root/i,
-    ],
-  ])('@spec:018 S3 main rejects unsafe or incomplete option %s', async (option, expected) => {
+    [['--unknown'], /unknown mutation option/i],
+    // An explicit core path makes the run need its cache whatever the
+    // checkout's diff: discovery alone finds nothing to mutate on a clean main.
+    [['--run', 'scripts/lib/component-inventory.mjs'], /KIMEN_MUTATION_CACHE_DIR/],
+  ])('@spec:018 S3 main rejects unsafe or incomplete option %s', async (arguments_, expected) => {
     await expect(
-      main({ arguments_: [option], workspaceRoot: repositoryRoot, environment: {} }),
+      main({ arguments_, workspaceRoot: repositoryRoot, environment: {} }),
     ).rejects.toThrow(expected);
   });
 

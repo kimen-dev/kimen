@@ -105,6 +105,23 @@ export class KiCheckboxGroup {
   /** Localized message displayed for a failing selection limit. */
   @Prop({ reflect: true }) errorText?: string;
 
+  /**
+   * An error of the application's own, such as a server-side verdict on the
+   * submitted selection ("Pick regions we deliver to"). While it holds text
+   * the group is invalid, blocks its form, shows the text in place of the
+   * help text at once and is announced as invalid. It stops counting when the
+   * person toggles an option, or when the form is reset, so it never blocks
+   * the corrected answer. It outranks `error-text` and an error set with
+   * `setCustomValidity`.
+   * When to use: report a verdict from a declarative spec, a live update or a
+   * framework binding. Remove it when a new attempt starts.
+   * When NOT to use: do not use it for the `min` and `max` limits the group
+   * enforces itself; `error-text` words those. Setting the same text again
+   * while the prop still holds it shows nothing: remove it first, then set it
+   * again.
+   */
+  @Prop({ reflect: true }) customError?: string;
+
   /** Makes the group unavailable and excludes it from form submission. */
   @Prop({ reflect: true, mutable: true }) disabled = false;
 
@@ -147,6 +164,8 @@ export class KiCheckboxGroup {
   private fieldset: HTMLElement | undefined;
   private legend: HTMLElement | undefined;
   private customValidity = '';
+  // Whether the person's toggle or a form reset withdrew `custom-error`.
+  private customErrorWithdrawn = false;
   private readonly group: CheckboxGroupContext = {
     disabled: false,
     optionChanged: (option) => {
@@ -290,6 +309,7 @@ export class KiCheckboxGroup {
   }
 
   formResetCallback(): void {
+    this.customErrorWithdrawn = true;
     this.userInvalid = false;
     if (this.initialValue) {
       this.selectValues(this.initialValue);
@@ -326,13 +346,21 @@ export class KiCheckboxGroup {
     this.internals.setFormValue(data);
   }
 
+  @Watch('customError')
+  protected customErrorChanged(): void {
+    this.customErrorWithdrawn = false;
+    this.syncValidity();
+  }
+
   @Watch('min')
   @Watch('max')
   @Watch('errorText')
   protected syncValidity(): void {
     const count = Array.isArray(this.value) ? this.value.length : 0;
     const limit = checkboxGroupConstraint(count, this.min, this.max);
-    if (this.effectiveDisabled || (!limit && !this.customValidity)) {
+    const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
+    const applicationError = customError || this.customValidity;
+    if (this.effectiveDisabled || (!limit && !applicationError)) {
       this.internals.setValidity({});
       this.message = '';
       this.userInvalid = false;
@@ -341,9 +369,9 @@ export class KiCheckboxGroup {
 
     const flags: ValidityStateFlags = {
       ...(limit ? { [limit]: true } : {}),
-      customError: Boolean(this.customValidity),
+      customError: Boolean(applicationError),
     };
-    const authoredMessage = fieldValidationMessage(this.customValidity, this.errorText, '');
+    const authoredMessage = fieldValidationMessage(applicationError, this.errorText, '');
     const message = authoredMessage || this.nativeValidationMessage(count, limit);
     // The browser reports the error at the first option's own native
     // checkbox, as ki-radio-group does at a radio's. Never at the option
@@ -357,6 +385,10 @@ export class KiCheckboxGroup {
       ?.shadowRoot?.querySelector('input');
     this.internals.setValidity(flags, message, anchor ?? undefined);
     this.message = this.internals.validationMessage;
+    // A custom error shows at once, without a toggle or a submission (D2).
+    if (customError !== '') {
+      this.userInvalid = true;
+    }
   }
 
   @Listen('invalid')
@@ -378,6 +410,7 @@ export class KiCheckboxGroup {
   @Listen('change')
   protected handleChange(event: Event): void {
     if (event.target instanceof HTMLElement && this.owns(event.target) && !this.effectiveDisabled) {
+      this.customErrorWithdrawn = true;
       this.pendingValues.clear();
       this.syncSelection();
       this.kiChange.emit({ value: [...this.value] });

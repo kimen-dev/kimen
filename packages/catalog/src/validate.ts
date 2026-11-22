@@ -25,7 +25,14 @@ import { z } from 'zod';
 
 import { DIALOG_TAG, isDialogCommand, isDialogInvoker } from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
-import { contentModelViolation, isNativePrimitive } from './primitives.js';
+import {
+  belowCellViolation,
+  contentModelViolation,
+  isNativePrimitive,
+  isTableCell,
+  rootViolation,
+  textViolation,
+} from './primitives.js';
 import { sourceTags } from './source-reference.js';
 import { isUrlProp, urlViolation } from './url-policy.js';
 
@@ -69,10 +76,13 @@ export interface CatalogPropConstraint {
    * `allowedUrlOrigins`). `'idref'` marks a `string` prop that names another
    * element: its value must be the `id` of a node of the same spec or live
    * surface (`invalid-reference`), and renderers write it as the DOM id they
-   * allocated for that node, never as a host page id (spec 152). Absent
-   * means opaque text.
+   * allocated for that node, never as a host page id (spec 152). `'text'`
+   * marks a `string` prop that is never a URL, whatever its name (spec 154):
+   * `ki-confirmation`'s `action` is a tool identifier. Absent means opaque
+   * text, except under a URL attribute name (`href`, `src`, `action`, …),
+   * which the URL policy holds as a URL.
    */
-  readonly format?: 'idref' | 'url';
+  readonly format?: 'idref' | 'text' | 'url';
   readonly description: string;
 }
 
@@ -110,6 +120,12 @@ export interface Catalog {
 // generator regression fails the build here.
 const builtInCatalog: Catalog = catalogData;
 
+/**
+ * What a bound node fires (spec 154): one declared action name, or a map from
+ * declared event names to declared action names.
+ */
+export type ActionBinding = string | Readonly<Record<string, string>>;
+
 /** A node of the neutral UI-spec tree: one cataloged component instance. */
 export interface UiSpecNode {
   /**
@@ -121,8 +137,20 @@ export interface UiSpecNode {
   readonly id?: string | undefined;
   readonly component: string;
   readonly props?: Readonly<Record<string, boolean | number | string>> | undefined;
-  /** Binding to one of the spec's declared actions (dispatch is 028's job). */
-  readonly action?: string | undefined;
+  /**
+   * The node's binding (dispatch is 028's job): the name of one of the spec's
+   * declared actions, fired on the event the catalog entry derives, or a map
+   * from events the entry declares to the declared action each fires
+   * (spec 154).
+   */
+  readonly action?: ActionBinding | undefined;
+  /**
+   * The other fields a bound node's action carries (spec 153): each key
+   * names an entry of the action data, each value is the id of a node of the
+   * same spec whose live value fills it at the gesture. Every named field is
+   * asked for validity first; an invalid one stops the action.
+   */
+  readonly collect?: Readonly<Record<string, string>> | undefined;
   /** Children per slot name; `""` is the default slot. Strings are text. */
   readonly slots?: Readonly<Record<string, readonly (UiSpecNode | string)[]>> | undefined;
 }
@@ -138,6 +166,11 @@ export interface UiSpec {
 export interface ValidationIssue {
   readonly code:
     | 'action-not-allowed'
+    | 'collect-budget'
+    | 'collect-key-conflict'
+    | 'collect-no-value'
+    | 'collect-unknown-node'
+    | 'collect-without-action'
     | 'depth-budget'
     | 'duplicate-id'
     | 'forbidden-key'
@@ -152,6 +185,7 @@ export interface ValidationIssue {
     | 'prop-out-of-range'
     | 'size-budget'
     | 'undeclared-action'
+    | 'undeclared-event'
     | 'unknown-component'
     | 'unknown-prop'
     | 'unknown-slot'
@@ -177,6 +211,26 @@ export interface ValidationReport {
  * accumulated stream) are the guarded renderer's contract (028 FR-006).
  */
 export const VALIDATION_MAX_BYTES = 262_144;
+
+/** The most fields one node may collect (spec 153 FR-002, `collect-budget`). */
+export const COLLECT_MAX_ENTRIES = 32;
+
+/**
+ * The prop whose live value a collected field contributes (spec 153 FR-004):
+ * the first of `checked`, `selected` and `value` its catalog entry declares.
+ * A field whose entry declares none has nothing to collect.
+ */
+export function collectedValueProp(
+  entry: CatalogEntry,
+): { readonly name: string; readonly constraint: CatalogPropConstraint } | undefined {
+  for (const name of ['checked', 'selected', 'value']) {
+    const constraint = ownEntry(entry.props, name);
+    if (constraint !== undefined) {
+      return { constraint, name };
+    }
+  }
+  return undefined;
+}
 
 export const FORBIDDEN_KEYS: ReadonlySet<string> = new Set([
   '__proto__',
@@ -422,7 +476,8 @@ const uiSpecNodeSchema: z.ZodType<UiSpecNode> = z.lazy(() =>
     id: z.string().optional(),
     component: z.string(),
     props: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])).optional(),
-    action: z.string().optional(),
+    action: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
+    collect: z.record(z.string(), z.string()).optional(),
     slots: z.record(z.string(), z.array(z.union([z.string(), uiSpecNodeSchema]))).optional(),
   }),
 );
@@ -457,6 +512,8 @@ interface CheckContext {
   readonly issues: ValidationIssue[];
   readonly scope: NodeValidationScope;
   readonly allowedUrlOrigins: readonly string[] | undefined;
+  /** Whether the node sits below a table cell, at any depth (158 D3). */
+  readonly insideCell?: boolean;
 }
 
 /**
@@ -632,11 +689,21 @@ export interface NodeValidationScope {
   readonly commandTargets: { readonly id: string; readonly path: string }[];
   /** Every `idref` prop value of the scope, resolved after all nodes (spec 152). */
   readonly references: { readonly id: string; readonly path: string }[];
+  /** Every `collect` target of the scope, resolved after all nodes (spec 153). */
+  readonly collects: { readonly id: string; readonly path: string }[];
+  /** The ids of the scope's nodes whose entry declares a value to collect. */
+  readonly collectable: Set<string>;
 }
 
 /** A fresh scope for one tree or one live surface state. */
 export function createValidationScope(): NodeValidationScope {
-  return { commandTargets: [], ids: new Map<string, string>(), references: [] };
+  return {
+    collectable: new Set<string>(),
+    collects: [],
+    commandTargets: [],
+    ids: new Map<string, string>(),
+    references: [],
+  };
 }
 
 function checkDialogCommand(node: UiSpecNode, path: string, context: CheckContext): void {
@@ -687,7 +754,154 @@ export function checkCommandTargets(scope: NodeValidationScope): ValidationIssue
       });
     }
   }
+  // Spec 153: a collected field is a node of the same spec or surface whose
+  // entry declares a value; anything else would leave the action short.
+  for (const { id, path } of scope.collects) {
+    const component = scope.ids.get(id);
+    if (component === undefined) {
+      issues.push({
+        code: 'collect-unknown-node',
+        message: `collect names "${id}", which no node of the same surface carries as its id`,
+        path,
+        value: id,
+      });
+    } else if (!scope.collectable.has(id)) {
+      issues.push({
+        code: 'collect-no-value',
+        message: `collect names "${id}", a ${component} that declares no checked, selected or value to collect`,
+        path,
+        value: id,
+      });
+    }
+  }
   return issues;
+}
+
+/** One declared action name, or `undeclared-action` at `path`. */
+function checkDeclaredAction(action: string, path: string, context: CheckContext): void {
+  if (!context.declaredActions.has(action)) {
+    context.issues.push({
+      code: 'undeclared-action',
+      message: `action "${action}" is not declared in the spec's action list`,
+      path,
+      value: action,
+    });
+  }
+}
+
+/**
+ * A node's binding (FR-005; spec 154 FR-001, FR-002). Primitives and
+ * decorative glyphs never bind, in either form; markdown delegates native
+ * interaction to its links and copy buttons, and source links navigate
+ * natively. A binding by name names a declared action. A binding per event
+ * binds at least one event, each an own key of the entry's `events`, each to
+ * a declared action.
+ */
+function checkAction(
+  node: UiSpecNode,
+  entry: CatalogEntry | undefined,
+  path: string,
+  context: CheckContext,
+): void {
+  const { action } = node;
+  if (action === undefined) {
+    return;
+  }
+  const at = `${path}.action`;
+  const native = isNativePrimitive(node.component);
+  if (
+    native ||
+    node.component === 'ki-icon' ||
+    node.component === 'ki-feature-icon' ||
+    node.component === 'ki-markdown' ||
+    sourceTags.has(node.component)
+  ) {
+    context.issues.push({
+      code: 'action-not-allowed',
+      message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,
+      path: at,
+      value: typeof action === 'string' ? action : node.component,
+    });
+    return;
+  }
+  if (typeof action === 'string') {
+    checkDeclaredAction(action, at, context);
+    return;
+  }
+  const bindings = Object.entries(action);
+  if (bindings.length === 0) {
+    context.issues.push({
+      code: 'malformed-spec',
+      message: `${node.component} binds an action per event but names no event; name at least one, or bind an action by name`,
+      path: at,
+    });
+    return;
+  }
+  for (const [event, name] of bindings) {
+    if (entry !== undefined && ownEntry(entry.events, event) === undefined) {
+      const declared = Object.keys(entry.events);
+      context.issues.push({
+        code: 'undeclared-event',
+        message: `${node.component} declares no event "${event}"; ${
+          declared.length === 0
+            ? 'it declares no event, so bind an action by name'
+            : `its events are ${declared.join(', ')}`
+        }`,
+        path: `${at}.${event}`,
+        value: event,
+      });
+    }
+    checkDeclaredAction(name, `${at}.${event}`, context);
+  }
+}
+
+/**
+ * The checks of one node's `collect` that need no other node (spec 153):
+ * it requires an action, a bounded number of entries, and names that do not
+ * shadow the node's own props. Each target id is resolved later against the
+ * whole scope.
+ */
+function checkCollect(
+  node: UiSpecNode,
+  entry: CatalogEntry | undefined,
+  path: string,
+  context: CheckContext,
+): void {
+  const { collect } = node;
+  if (collect === undefined) {
+    return;
+  }
+  const at = `${path}.collect`;
+  if (node.action === undefined) {
+    context.issues.push({
+      code: 'collect-without-action',
+      message: `${node.component} collects fields but binds no action that could carry them`,
+      path: at,
+    });
+    return;
+  }
+  const entries = Object.entries(collect);
+  if (entries.length > COLLECT_MAX_ENTRIES) {
+    context.issues.push({
+      code: 'collect-budget',
+      message: `${node.component} collects ${String(entries.length)} fields; at most ${String(COLLECT_MAX_ENTRIES)} are allowed`,
+      path: at,
+      value: String(entries.length),
+    });
+    return;
+  }
+  for (const [name, id] of entries) {
+    if (entry !== undefined && ownEntry(entry.props, name) !== undefined) {
+      context.issues.push({
+        code: 'collect-key-conflict',
+        message: `${node.component} declares a prop "${name}"; a collected value may not take its name`,
+        path: `${at}.${name}`,
+        value: name,
+      });
+    } else {
+      context.scope.collects.push({ id, path: `${at}.${name}` });
+    }
+  }
 }
 
 /**
@@ -760,9 +974,12 @@ export function ownEntry<T>(
 }
 
 function checkNode(node: UiSpecNode, path: string, context: CheckContext): void {
-  const { declaredActions, entries, issues, scope } = context;
+  const { entries, issues, scope } = context;
   checkId(node, path, scope.ids, issues);
   const entry = ownEntry(entries, node.component);
+  if (node.id !== undefined && entry !== undefined && collectedValueProp(entry) !== undefined) {
+    scope.collectable.add(node.id);
+  }
   if (entry === undefined) {
     issues.push({
       code: 'unknown-component',
@@ -809,33 +1026,13 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
       }
     }
   }
-  if (node.action !== undefined) {
-    const native = isNativePrimitive(node.component);
-    if (
-      native ||
-      node.component === 'ki-icon' ||
-      node.component === 'ki-feature-icon' ||
-      node.component === 'ki-markdown' ||
-      sourceTags.has(node.component)
-    ) {
-      // Primitives and decorative glyphs never bind their own actions.
-      // Markdown delegates native interaction to its links and copy buttons.
-      // Source links navigate natively.
-      issues.push({
-        code: 'action-not-allowed',
-        message: `the ${native ? 'native ' : ''}element ${node.component} cannot bind an action`,
-        path: `${path}.action`,
-        value: node.action,
-      });
-    } else if (!declaredActions.has(node.action)) {
-      issues.push({
-        code: 'undeclared-action',
-        message: `action "${node.action}" is not declared in the spec's action list`,
-        path: `${path}.action`,
-        value: node.action,
-      });
-    }
-  }
+  checkAction(node, entry, path, context);
+  checkCollect(node, entry, path, context);
+  // Below a cell, at any depth, no table sits: tables never nest (158 D3).
+  const childContext: CheckContext =
+    context.insideCell !== true && isTableCell(node.component)
+      ? { ...context, insideCell: true }
+      : context;
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     if (entry !== undefined && !Object.hasOwn(entry.slots, slotName)) {
       issues.push({
@@ -845,20 +1042,31 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
         value: slotName,
       });
     }
+    // The last accepted element child, so a table's order is checked against it.
+    let previous: string | undefined;
     children.forEach((child, index) => {
-      if (typeof child !== 'string') {
-        const childPath = `${path}.slots.${slotName}[${String(index)}]`;
-        const misplaced = contentModelViolation(node.component, child.component);
-        if (misplaced !== null) {
-          issues.push({
-            code: 'invalid-child',
-            message: misplaced,
-            path: childPath,
-            value: child.component,
-          });
+      const childPath = `${path}.slots.${slotName}[${String(index)}]`;
+      if (typeof child === 'string') {
+        const textual = textViolation(node.component);
+        if (textual !== null) {
+          issues.push({ code: 'invalid-child', message: textual, path: childPath });
         }
-        checkNode(child, childPath, context);
+        return;
       }
+      const misplaced =
+        contentModelViolation(node.component, child.component, previous) ??
+        (childContext.insideCell === true ? belowCellViolation(child.component) : null);
+      if (misplaced === null) {
+        previous = child.component;
+      } else {
+        issues.push({
+          code: 'invalid-child',
+          message: misplaced,
+          path: childPath,
+          value: child.component,
+        });
+      }
+      checkNode(child, childPath, childContext);
     });
   }
 }
@@ -926,13 +1134,18 @@ export interface ValidationContext {
  * the typed spec alongside the report so a caller that will render (spec
  * 028) never re-parses. Never touches untrusted input directly. A caller
  * providing a scope resolves its command references after validating all
- * participating roots.
+ * participating roots. The report names the root by `rootPath`. A
+ * `fragment` is a live op's node: its placement is checked where it lands,
+ * on the batch's resulting state, never as a root of its own (spec 158 D4).
  */
 export function validatePlainData(
   data: unknown,
   context: ValidationContext = {},
   scope?: NodeValidationScope,
-  rootPath = 'root',
+  {
+    fragment = false,
+    rootPath = 'root',
+  }: { readonly fragment?: boolean; readonly rootPath?: string } = {},
 ): ValidationReport & { spec?: UiSpec } {
   const parsed = uiSpecSchema.safeParse(data);
   if (!parsed.success) {
@@ -947,8 +1160,18 @@ export function validatePlainData(
   }
 
   const issues: ValidationIssue[] = [];
+  const { root } = parsed.data;
+  const misplaced = fragment ? null : rootViolation(root.component);
+  if (misplaced !== null) {
+    issues.push({
+      code: 'invalid-child',
+      message: misplaced,
+      path: rootPath,
+      value: root.component,
+    });
+  }
   const nodeScope = scope ?? createValidationScope();
-  checkNode(parsed.data.root, rootPath, {
+  checkNode(root, rootPath, {
     allowedUrlOrigins: context.allowedUrlOrigins,
     declaredActions: new Set(parsed.data.actions ?? []),
     entries: (context.catalog ?? builtInCatalog).components,

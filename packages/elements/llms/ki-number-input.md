@@ -48,6 +48,32 @@ The form submits `timeout=30`.
 The editor displays `12,5` while focused and formats it as a percentage on
 blur. The form submits `discount=0.125`.
 
+## Text that is not a number
+
+The field keeps text it cannot read as a number so the person can correct
+it, shows its own message (`error-text`, else `invalid-number-message`) once
+the person leaves the field or presses Enter, and stays invalid, so its form
+cannot submit it. What it reports depends on what it held before:
+
+- If it held a number, leaving the field fires one `change` and `value` is
+  `undefined`, exactly as when the field is emptied.
+- If it never held a number, it fires no `change`.
+
+The event cannot tell an emptied field from an unreadable one; validity can:
+`checkValidity()` answers `false` for unreadable text.
+
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+number, such as a stock check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next edit or step withdraws the
+error. Remove the attribute when a new attempt starts: setting the same text
+again while it is still set shows nothing.
+
+```html
+<ki-number-input label="Seats" name="seats" value="42" min="1" custom-error="Only 40 seats left."></ki-number-input>
+```
+
 ## Custom-elements entry point
 
 ```ts
@@ -62,9 +88,10 @@ if (discount) {
 
 ## Attributes
 
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted number ("Only 40 seats left"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or step of the number, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `decrease-label` (string, default 'Decrease {label}'): Stepper's accessible name. The field label replaces {label}.
 - `disabled` (boolean, default false): Prevents editing and excludes the control from form submission.
-- `error-text` (string | undefined): Validation hint to show when the entry fails a constraint.
+- `error-text` (string | undefined): Validation hint to show when the entry fails a constraint. A `custom-error` outranks it.
 - `format` (string): Intl.NumberFormat options for display. In HTML or a catalog spec, supply these options as JSON text. The form value retains its original precision.
 - `help-text` (string | undefined): Context or instructions displayed beneath the field when it has no visible error.
 - `increase-label` (string, default 'Increase {label}'): Stepper's accessible name. The field label replaces {label}.

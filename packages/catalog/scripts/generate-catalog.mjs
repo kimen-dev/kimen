@@ -37,8 +37,22 @@ import { NATIVE_PRIMITIVES } from './primitives.mjs';
  * form-action `type` (an enum offering `button` with `submit` or `reset`)
  * offers agents `button` alone. A 1.5.0 boundary refuses a 1.6.0 spec
  * rather than resolving references it cannot contain.
+ * 1.7.0 (spec 153): a bound node may `collect` other fields by id, and its
+ * action carries their live values once every one of them is valid; every
+ * action event names the bound node's `id`. Additive: a 1.6.0 spec keeps its
+ * meaning, and a 1.6.0 boundary refuses a 1.7.0 spec rather than dispatching
+ * an action without the fields it was meant to carry.
+ * 1.8.0 (spec 154): a node's `action` may also map each event its component
+ * declares to the declared action that event fires, and a string prop may
+ * declare `format: "text"`, which is never a URL whatever its name. Additive:
+ * a 1.7.0 spec keeps its meaning, and a 1.7.0 boundary refuses a 1.8.0 spec
+ * rather than reading a binding it cannot wire.
+ * 1.9.0 (spec 158): the native primitives gain the read-only table elements
+ * (table, caption, thead, tbody, tr, th, td) under a strict content model.
+ * Additive: a 1.8.0 spec keeps its meaning, and a 1.8.0 boundary refuses a
+ * 1.9.0 spec rather than reading table tags it cannot guard.
  */
-export const CATALOG_SCHEMA_VERSION = '1.6.0';
+export const CATALOG_SCHEMA_VERSION = '1.9.0';
 
 /**
  * A spec owns no form, so a submit or reset button in it could only act on
@@ -261,10 +275,12 @@ export function buildCatalog(
         Object.assign(entry, bounds);
         // `@format url` on the component prop: the value is held to the URL
         // policy. `@format idref` (spec 152): the value names another node
-        // of the same spec. Any other shape is a derivation defect.
+        // of the same spec. `@format text` (spec 154): the value is never a
+        // URL, whatever the prop is called. Any other shape is a derivation
+        // defect.
         if (attribute.format !== undefined) {
           if (
-            (attribute.format !== 'url' && attribute.format !== 'idref') ||
+            !['idref', 'text', 'url'].includes(attribute.format) ||
             constraint.type !== 'string'
           ) {
             violations.push(

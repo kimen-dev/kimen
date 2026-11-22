@@ -13,6 +13,7 @@ type Args = Pick<
   | 'max'
   | 'helpText'
   | 'errorText'
+  | 'customError'
   | 'required'
   | 'disabled'
   | 'confirm'

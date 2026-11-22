@@ -11,7 +11,9 @@
  * budgets). Only a
  * batch that passes every layer touches the DOM, and it touches only what it
  * names: existing elements keep their identity, focus, typed values and
- * scroll. A rejected batch changes nothing and the surface stays live.
+ * scroll. A rejected batch changes nothing and the surface stays live. Focus
+ * a batch leaves nowhere is repaired once the change settles, never taken
+ * from where the person is (spec 155, `focus-repair.ts`).
  *
  * `renderUiSpec` and `createStreamingRenderer` keep their semantics (D1).
  * Nothing here names a protocol or a domain (Art. VIII).
@@ -25,6 +27,7 @@ import {
   isDialogInvoker,
   writeDialogId,
 } from './dialog-commands.js';
+import { createFocusRepair, holdsFocus } from './focus-repair.js';
 import { catalogData } from './generated/catalog.js';
 import { writeNativeLayout } from './primitives.js';
 import {
@@ -32,6 +35,7 @@ import {
   type ActionEvent,
   attachText,
   authoredLiveScalar,
+  collectingDispatch,
   createNodeElement,
   DEFAULT_RENDER_BUDGETS,
   declaredEvents,
@@ -45,13 +49,15 @@ import {
   type RenderResult,
   toDiagnostic,
   versionDiagnostic,
-  wireActivation,
+  wireAction,
   writeProp,
   writeProps,
 } from './render.js';
 import type {
+  ActionBinding,
   Catalog,
   CatalogEntry,
+  CatalogPropConstraint,
   NodeValidationScope,
   UiSpecNode,
   ValidationContext,
@@ -59,6 +65,7 @@ import type {
 } from './validate.js';
 import {
   checkCommandTargets,
+  collectedValueProp,
   createValidationScope,
   FORBIDDEN_KEYS,
   ownEntry,
@@ -70,8 +77,6 @@ type Scalar = boolean | number | string;
 
 /** The action event of a live surface (035 FR-008, D7). */
 export interface LiveActionEvent extends ActionEvent {
-  /** The bound node's stable id, when it has one. */
-  readonly id?: string | undefined;
   /** The surface revision at the moment of the gesture. */
   readonly revision: number;
 }
@@ -90,6 +95,90 @@ export const DEFAULT_LIVE_BATCH_BUDGETS: LiveBatchBudgets = {
   maxBytes: 65_536,
   maxOps: 64,
 };
+
+/**
+ * Inserts a node at the top level, or into a parent's slot before a sibling
+ * (035 D3).
+ */
+export interface LiveInsertOp {
+  readonly op: 'insert';
+  /** The parent's id; absent, the surface's top level. */
+  readonly parent?: string | undefined;
+  /** The parent's slot, default `''`; only with a parent. */
+  readonly slot?: string | undefined;
+  /** The sibling to insert before, in the same parent and slot; absent, last. */
+  readonly before?: string | undefined;
+  /** The new node, validated as the root of a spec. */
+  readonly node: UiSpecNode;
+}
+
+/** Sets props of a node; `null` removes one. */
+export interface LiveSetOp {
+  readonly op: 'set';
+  readonly id: string;
+  readonly props: Readonly<Record<string, boolean | number | string | null>>;
+  /** Overrides what the person changed, where the host allows it (035 D5). */
+  readonly force?: boolean | undefined;
+}
+
+/** Replaces the text of one slot that holds only text. */
+export interface LiveTextOp {
+  readonly op: 'text';
+  readonly id: string;
+  /** Default `''`. */
+  readonly slot?: string | undefined;
+  readonly text: string;
+}
+
+/** Removes a node and its subtree. */
+export interface LiveRemoveOp {
+  readonly op: 'remove';
+  readonly id: string;
+  /** Discards what the person changed inside it, where the host allows it. */
+  readonly force?: boolean | undefined;
+}
+
+/** Replaces a node and its subtree in place. */
+export interface LiveReplaceOp {
+  readonly op: 'replace';
+  readonly id: string;
+  /** The new node, validated as the root of a spec. */
+  readonly node: UiSpecNode;
+  /** Discards what the person changed inside it, where the host allows it. */
+  readonly force?: boolean | undefined;
+}
+
+/**
+ * Returns a control to its spec value once what the user entered has left in
+ * an action (155 D2). Needs no force and no host permission.
+ */
+export interface LiveResetOp {
+  readonly op: 'reset';
+  readonly id: string;
+}
+
+export type LiveOp =
+  | LiveInsertOp
+  | LiveSetOp
+  | LiveTextOp
+  | LiveRemoveOp
+  | LiveReplaceOp
+  | LiveResetOp;
+
+/**
+ * One atomic change of a live surface (035 D3). `apply` still takes it as
+ * untrusted data: these types help a producer write it, they prove nothing.
+ */
+export interface LiveBatch {
+  /** Rejects the batch unless the surface is at this revision (035 D6). */
+  readonly ifRevision?: number | undefined;
+  readonly ops: readonly LiveOp[];
+  /**
+   * The id of the node that receives keyboard focus if, once the batch has
+   * settled, focus is nowhere (155 D1). Focus that is somewhere never moves.
+   */
+  readonly focus?: string | undefined;
+}
 
 export interface LiveSurfaceOptions {
   /** The host-owned mount point; the surface only touches what it inserted. */
@@ -134,7 +223,11 @@ export interface LiveSnapshot {
 }
 
 export interface LiveSurface {
-  /** Validates and applies one untrusted batch atomically. */
+  /**
+   * Validates and applies one untrusted batch (a `LiveBatch`, or its JSON
+   * text) atomically. A rejection is the return value, never a throw, and
+   * leaves every earlier batch applied.
+   */
   apply(batch: unknown): LiveBatchResult;
   /** The current content as deep-frozen plain data. */
   snapshot(): LiveSnapshot;
@@ -163,7 +256,10 @@ interface MNode {
   readonly id: string | undefined;
   readonly component: string;
   props: Record<string, Scalar>;
-  readonly action: string | undefined;
+  /** Its binding, by name or per event (spec 154); only a replace changes it. */
+  readonly action: ActionBinding | undefined;
+  /** The fields its action collects (spec 153); like `action`, only a replace changes it. */
+  readonly collect: Readonly<Record<string, string>> | undefined;
   readonly slots: Map<string, MEntry[]>;
   parent: MNode | null;
   slot: string;
@@ -172,6 +268,10 @@ interface MNode {
   dom?: Element;
   /** The user interacted with this element's own value channel. */
   touched: boolean;
+  /** User-state props a `set` agreed with, still the user's (spec 159); absent when none. */
+  held?: Set<string>;
+  /** The user-state values an action last carried from it (155 FR-011); absent when none. */
+  delivered?: Map<string, Scalar>;
 }
 
 type MEntry = MNode | MText;
@@ -181,8 +281,22 @@ interface MState {
   readonly ids: Map<string, MNode>;
 }
 
+/**
+ * An op as the batch schema yields it: its node is still untrusted data until
+ * `validateNode` checks it as a spec root.
+ */
+type ParsedOp<Op extends LiveOp = LiveOp> = Op extends { readonly node: UiSpecNode }
+  ? Omit<Op, 'node'> & { readonly node: unknown }
+  : Op;
+
+interface ParsedBatch extends Omit<LiveBatch, 'ops'> {
+  readonly ops: readonly ParsedOp[];
+}
+
 const idRef = z.string();
-const opSchema = z.discriminatedUnion('op', [
+// Annotated against the public types: a public field the schema stops
+// yielding, or yields with another type, fails the build.
+const opSchema: z.ZodType<ParsedOp> = z.discriminatedUnion('op', [
   z.strictObject({
     op: z.literal('insert'),
     parent: idRef.optional(),
@@ -209,13 +323,13 @@ const opSchema = z.discriminatedUnion('op', [
     node: z.unknown(),
     force: z.boolean().optional(),
   }),
+  z.strictObject({ op: z.literal('reset'), id: idRef }),
 ]);
-const batchSchema = z.strictObject({
+const batchSchema: z.ZodType<ParsedBatch> = z.strictObject({
+  focus: idRef.optional(),
   ifRevision: z.number().int().nonnegative().optional(),
   ops: z.array(opSchema),
 });
-
-type LiveOp = z.infer<typeof opSchema>;
 
 const BATCH_LABELS = { root: 'batch', surface: 'a live batch' };
 
@@ -236,6 +350,7 @@ function rebaseGuard(diagnostic: RenderDiagnostic, prefix: string): RenderDiagno
 function fromPlain(node: UiSpecNode, parent: MNode | null, slot: string): MNode {
   const model: MNode = {
     action: node.action,
+    collect: node.collect,
     component: node.component,
     id: node.id,
     kind: 'node',
@@ -261,6 +376,7 @@ function fromPlain(node: UiSpecNode, parent: MNode | null, slot: string): MNode 
 function cloneNode(node: MNode, parent: MNode | null, ids: Map<string, MNode>): MNode {
   const copy: MNode = {
     action: node.action,
+    collect: node.collect,
     component: node.component,
     id: node.id,
     kind: 'node',
@@ -319,7 +435,10 @@ function toPlain(node: MNode): UiSpecNode {
     ...(node.id === undefined ? {} : { id: node.id }),
     component: node.component,
     ...(Object.keys(node.props).length > 0 ? { props: { ...node.props } } : {}),
-    ...(node.action === undefined ? {} : { action: node.action }),
+    ...(node.action === undefined
+      ? {}
+      : { action: typeof node.action === 'string' ? node.action : { ...node.action } }),
+    ...(node.collect === undefined ? {} : { collect: { ...node.collect } }),
     ...(Object.keys(slots).length > 0 ? { slots } : {}),
   };
 }
@@ -404,6 +523,8 @@ interface ApplyContext {
     readonly surface: Element;
     readonly doc: Document;
     readonly dialogIdFor: DialogIdFor;
+    /** Set when a `replace` swaps out the subtree that held focus (155 FR-003). */
+    readonly focus: { replacement?: MNode };
   } | null;
   readonly components: Readonly<Record<string, CatalogEntry>>;
   readonly allowUserStateOverride: boolean;
@@ -433,10 +554,59 @@ function undeclaredSlot(
 }
 
 /**
+ * The user's live value of user-state prop `name` of a live `node` (D5), or
+ * undefined when nothing there is the user's: the element is untouched, or
+ * it shows what the agent last wrote and no `set` agreed with the user
+ * since (spec 159). A diagnostic never repeats it (159 FR-004).
+ */
+function usersValue(
+  node: MNode,
+  name: string,
+  constraint: CatalogPropConstraint,
+): Scalar | undefined {
+  if (node.dom === undefined || !node.touched) {
+    return undefined;
+  }
+  const live = readLiveScalar(node.dom, name, constraint);
+  if (live === undefined || node.held?.has(name)) {
+    return live;
+  }
+  const written = authoredLiveScalar(
+    node.dom,
+    name,
+    ownEntry(node.props, name) ?? constraint.default,
+  );
+  return live === written ? undefined : live;
+}
+
+/**
+ * Notes that an action carried `value` as user-state prop `name` of a live
+ * `node`, when that is what the control shows (155 FR-011).
+ */
+function noteDelivered(
+  node: MNode | undefined,
+  name: string,
+  value: Scalar | undefined,
+  components: Readonly<Record<string, CatalogEntry>>,
+): void {
+  const constraint =
+    node?.dom === undefined
+      ? undefined
+      : ownEntry(ownEntry(components, node.component)?.props, name);
+  if (
+    node?.dom !== undefined &&
+    constraint !== undefined &&
+    value !== undefined &&
+    value === readLiveScalar(node.dom, name, constraint)
+  ) {
+    (node.delivered ??= new Map()).set(name, value);
+  }
+}
+
+/**
  * What the user changed inside `node`'s subtree (the node itself included)
- * that a `replace` or `remove` would discard (035 S21, D5): a touched
- * element whose live user-state value differs from what the agent last
- * wrote. Discarding it needs `force` AND the host's permission.
+ * that a `replace` or `remove` would discard (035 S21, D5). Discarding it
+ * needs `force` AND the host's permission.
  */
 function heldUserState(
   node: MNode,
@@ -446,22 +616,13 @@ function heldUserState(
 ): RenderDiagnostic | null {
   for (const member of subtree(node)) {
     const origin = member.origin;
-    if (origin?.dom === undefined || !origin.touched) {
+    if (origin === undefined) {
       continue;
     }
     const entry = ownEntry(ctx.components, member.component);
     for (const name of USER_STATE_PROPS) {
       const constraint = ownEntry(entry?.props, name);
-      if (constraint === undefined) {
-        continue;
-      }
-      const live = readLiveScalar(origin.dom, name, constraint);
-      const written = authoredLiveScalar(
-        origin.dom,
-        name,
-        ownEntry(origin.props, name) ?? constraint.default,
-      );
-      if (live === undefined || live === written) {
+      if (constraint === undefined || usersValue(origin, name, constraint) === undefined) {
         continue;
       }
       if (!force) {
@@ -469,7 +630,6 @@ function heldUserState(
           `${at}.id`,
           'user-state-conflict',
           `the user changed "${name}" of node "${String(member.id)}"; this op would discard it without force`,
-          String(live),
         );
       }
       if (!ctx.allowUserStateOverride) {
@@ -477,7 +637,6 @@ function heldUserState(
           `${at}.id`,
           'user-state-override-denied',
           `the host does not allow discarding the user's "${name}" of node "${String(member.id)}"`,
-          String(live),
         );
       }
     }
@@ -529,7 +688,7 @@ function placeDom(ctx: ApplyContext, state: MState, node: MNode, index: number):
 
 function applyInsert(
   state: MState,
-  op: Extract<LiveOp, { op: 'insert' }>,
+  op: Extract<ParsedOp, { op: 'insert' }>,
   at: string,
   index: number,
   ctx: ApplyContext,
@@ -584,10 +743,9 @@ function applyInsert(
 }
 
 /**
- * The user-state check of one `set` (D5, FR-006): on an element the user
- * interacted with, a user-state prop whose live value differs from what the
- * agent last wrote is the user's. Changing it away from the live value needs
- * `force` AND the host's permission.
+ * The user-state check of one `set` (D5, FR-006): changing a value that is
+ * the user's away from its live value needs `force` AND the host's
+ * permission.
  */
 function userStateConflict(
   node: MNode,
@@ -599,44 +757,43 @@ function userStateConflict(
 ): RenderDiagnostic | null {
   const origin = node.origin;
   const constraint = ownEntry(ownEntry(ctx.components, node.component)?.props, name);
+  if (!USER_STATE_PROPS.has(name) || origin?.dom === undefined || constraint === undefined) {
+    return null;
+  }
+  const live = usersValue(origin, name, constraint);
   if (
-    !USER_STATE_PROPS.has(name) ||
-    origin?.dom === undefined ||
-    !origin.touched ||
-    constraint === undefined
+    live === undefined ||
+    live === authoredLiveScalar(origin.dom, name, next ?? constraint.default)
   ) {
     return null;
   }
-  const live = readLiveScalar(origin.dom, name, constraint);
-  if (live === undefined) {
-    return null;
-  }
-  const written = authoredLiveScalar(
-    origin.dom,
-    name,
-    ownEntry(origin.props, name) ?? constraint.default,
-  );
-  const wanted = authoredLiveScalar(origin.dom, name, next ?? constraint.default);
-  if (live === written || live === wanted) {
-    return null;
-  }
   if (!force) {
-    return fail(
-      `${at}.props.${name}`,
-      'user-state-conflict',
-      `the user changed "${name}" of node "${String(node.id)}"; set it with force to override`,
-      String(live),
-    );
+    return fail(`${at}.props.${name}`, 'user-state-conflict', conflictMessage(name, node.id, live));
   }
   if (!ctx.allowUserStateOverride) {
     return fail(
       `${at}.props.${name}`,
       'user-state-override-denied',
       `the host does not allow overriding the user's "${name}"`,
-      String(live),
     );
   }
   return null;
+}
+
+/**
+ * What the agent can do about a conflict (155 FR-005). A disclosure the person
+ * opened or closed is first set to the person's state in a batch of its own;
+ * the agent's change is then an ordinary one in a later batch (a single batch
+ * is checked against the state before it). Any other value needs force.
+ */
+function conflictMessage(name: string, id: string | undefined, live: Scalar): string {
+  if (name === 'open' && typeof live === 'boolean') {
+    return (
+      `the user ${live ? 'opened' : 'closed'} "${String(id)}"; set open to ${String(live)} ` +
+      'in a batch of its own first, then change it in a later batch'
+    );
+  }
+  return `the user changed "${name}" of node "${String(id)}"; set it with force to override`;
 }
 
 /**
@@ -681,7 +838,7 @@ function collectTargets(
 
 function applySet(
   state: MState,
-  op: Extract<LiveOp, { op: 'set' }>,
+  op: Extract<ParsedOp, { op: 'set' }>,
   at: string,
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
@@ -711,6 +868,23 @@ function applySet(
   }
   for (const [name, value] of Object.entries(op.props)) {
     const previous = ownEntry(node.props, name);
+    const userState = USER_STATE_PROPS.has(name);
+    const overriding = force && ctx.allowUserStateOverride && userState;
+    const constraint = ownEntry(entry?.props, name);
+    // A set the check let through on a value that is still the user's agreed
+    // with it: the value stays theirs until a forced override (spec 159).
+    // Not `open`: agreeing that the user closed a dialog hands it back, which
+    // is how it is reopened (155 S6). Only the commit's live nodes are ever
+    // touched.
+    if (
+      userState &&
+      !overriding &&
+      name !== 'open' &&
+      constraint !== undefined &&
+      usersValue(node, name, constraint) !== undefined
+    ) {
+      (node.held ??= new Set()).add(name);
+    }
     if (value === null) {
       node.props = Object.fromEntries(Object.entries(node.props).filter(([key]) => key !== name));
     } else {
@@ -720,7 +894,6 @@ function applySet(
     if (ctx.dom === null || element === undefined) {
       continue;
     }
-    const overriding = force && ctx.allowUserStateOverride && USER_STATE_PROPS.has(name);
     const current = ownEntry(node.props, name);
     // A native layout element's props are CSSOM layout (spec 037 D4): the
     // whole layout is re-derived and only changed style properties written.
@@ -728,12 +901,13 @@ function applySet(
       writeProp(element, node.component, name, current, ctx.dom.dialogIdFor, entry);
     }
     if (overriding) {
-      const live = current ?? ownEntry(entry?.props, name)?.default;
-      if (live !== undefined) {
-        // The component's own setter, with a validated scalar of the declared type.
-        Reflect.set(element, name, live);
-      }
-      node.touched = false;
+      // The component's own setter, with a validated scalar of the declared
+      // type, or `undefined` for a removed prop with no default: a number
+      // field has no empty value to fall back to (155 FR-004).
+      Reflect.set(element, name, current ?? constraint?.default);
+      // Only this prop is handed back: it now shows what the agent wrote.
+      // Every other prop the user changed stays theirs (spec 160 FR-001).
+      node.held?.delete(name);
     }
   }
   // Unsetting `type` re-pins the declarative no-submit default on every
@@ -746,7 +920,7 @@ function applySet(
 
 function applyText(
   state: MState,
-  op: Extract<LiveOp, { op: 'text' }>,
+  op: Extract<ParsedOp, { op: 'text' }>,
   at: string,
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
@@ -796,7 +970,7 @@ function applyText(
 
 function applyRemove(
   state: MState,
-  op: Extract<LiveOp, { op: 'remove' }>,
+  op: Extract<ParsedOp, { op: 'remove' }>,
   at: string,
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
@@ -819,7 +993,7 @@ function applyRemove(
 
 function applyReplace(
   state: MState,
-  op: Extract<LiveOp, { op: 'replace' }>,
+  op: Extract<ParsedOp, { op: 'replace' }>,
   at: string,
   index: number,
   ctx: ApplyContext,
@@ -847,14 +1021,66 @@ function applyReplace(
     if (node.slot !== '') {
       node.dom.setAttribute('slot', node.slot);
     }
+    if (holdsFocus(old.dom)) {
+      ctx.dom.focus.replacement = node;
+    }
     old.dom.parentNode?.replaceChild(node.dom, old.dom);
   }
   return null;
 }
 
+/**
+ * A reset (155 FR-012, FR-013): rejected while a user-state prop of the node
+ * holds input of the user's other than what an action last delivered, so it
+ * needs no force and no host permission. It writes the model's value, else
+ * the catalog default, else `undefined`, and forgets the user's input.
+ */
+function applyReset(
+  state: MState,
+  op: Extract<ParsedOp, { op: 'reset' }>,
+  at: string,
+  ctx: ApplyContext,
+): RenderDiagnostic | null {
+  const node = lookup(state, op.id, `${at}.id`);
+  if (!('kind' in node)) {
+    return node;
+  }
+  const entry = ownEntry(ctx.components, node.component);
+  const props = [...USER_STATE_PROPS].flatMap((name) => {
+    const constraint = ownEntry(entry?.props, name);
+    return constraint === undefined ? [] : [{ constraint, name }];
+  });
+  if (props.length === 0) {
+    return fail(`${at}.id`, 'unknown-prop', `${node.component} declares no user-state prop`, op.id);
+  }
+  const origin = node.origin;
+  for (const { constraint, name } of props) {
+    const users = origin === undefined ? undefined : usersValue(origin, name, constraint);
+    if (users !== undefined && users !== origin?.delivered?.get(name)) {
+      return fail(
+        `${at}.id`,
+        'unsent-user-input',
+        `"${name}" of node "${op.id}" holds input the user has not sent; reset it after an action delivers it`,
+      );
+    }
+  }
+  const element = node.dom;
+  if (ctx.dom !== null && element !== undefined) {
+    for (const { constraint, name } of props) {
+      const value = ownEntry(node.props, name);
+      writeProp(element, node.component, name, value, ctx.dom.dialogIdFor, entry);
+      Reflect.set(element, name, value ?? constraint.default);
+    }
+  }
+  node.touched = false;
+  node.held?.clear();
+  node.delivered?.clear();
+  return null;
+}
+
 function applyOps(
   state: MState,
-  ops: readonly LiveOp[],
+  ops: readonly ParsedOp[],
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
   for (const [index, op] of ops.entries()) {
@@ -875,6 +1101,9 @@ function applyOps(
         break;
       case 'replace':
         failure = applyReplace(state, op, at, index, ctx);
+        break;
+      case 'reset':
+        failure = applyReset(state, op, at, ctx);
         break;
     }
     if (failure !== null) {
@@ -938,6 +1167,14 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     return top < 0 ? null : `surface[${String(top)}]${segments.join('')}`;
   };
 
+  const focusRepair = createFocusRepair(doc);
+  /** Focus goes to `node` if the batch left it nowhere, while `node` is on the surface. */
+  const repairFocusTo = (node: MNode): void => {
+    focusRepair.request(() => (pathOf(node) === null ? undefined : node.dom));
+  };
+  const unknownFocus = (id: string): RenderDiagnostic =>
+    fail('batch.focus', 'unknown-id', `no node of the resulting surface has the id "${id}"`, id);
+
   const trackUserState = (element: Element, entry: CatalogEntry | undefined, model: MNode) => {
     if (
       entry === undefined ||
@@ -964,6 +1201,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     const element = createNodeElement(doc, node.component, context.allowedUrlOrigins, sourceScope);
     const model: MNode = {
       action: node.action,
+      collect: node.collect,
       component: node.component,
       dom: element,
       id: node.id,
@@ -1004,26 +1242,47 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
         }
       });
     }
-    const action = node.action;
-    wireActivation(
+    wireAction(
       element,
       entry,
       () => model.props,
-      action !== undefined && onAction !== undefined
-        ? (data) => {
-            const path = pathOf(model);
-            if (path === null) {
-              return;
-            }
-            onAction({
-              action,
-              data,
-              ...(model.id === undefined ? {} : { id: model.id }),
-              path,
-              revision,
-            });
-          }
-        : undefined,
+      model.action,
+      onAction === undefined
+        ? undefined
+        : (action) =>
+            collectingDispatch(
+              model.collect,
+              // Resolved at the gesture: the field the surface holds now.
+              (id) => live.ids.get(id)?.dom,
+              components,
+              (data) => {
+                const path = pathOf(model);
+                if (path === null) {
+                  return;
+                }
+                // What leaves now is the user's no longer: a reset may clear
+                // it (155 FR-011). The bound node's own state, and each
+                // collected field's value.
+                for (const name of USER_STATE_PROPS) {
+                  noteDelivered(model, name, ownEntry(data, name), components);
+                }
+                for (const [key, id] of Object.entries(model.collect ?? {})) {
+                  const field = live.ids.get(id);
+                  const fieldEntry = field && ownEntry(components, field.component);
+                  const prop = fieldEntry && collectedValueProp(fieldEntry);
+                  if (prop !== undefined) {
+                    noteDelivered(field, prop.name, ownEntry(data, key), components);
+                  }
+                }
+                onAction({
+                  action,
+                  data,
+                  ...(model.id === undefined ? {} : { id: model.id }),
+                  path,
+                  revision,
+                });
+              },
+            ),
     );
     trackUserState(element, entry, model);
     for (const [slotName, children] of Object.entries(node.slots ?? {})) {
@@ -1047,7 +1306,10 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     return model;
   };
 
-  /** Validates one op's node as a spec root (catalog, ids, guards). */
+  /**
+   * Validates one op's node as a fragment (catalog, ids, guards): where it
+   * lands is checked on the resulting state (spec 158 D4).
+   */
   const validateNode = (
     raw: unknown,
     at: string,
@@ -1057,6 +1319,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       { actions, root: raw, version: 1 },
       context,
       createValidationScope(),
+      { fragment: true },
     );
     if (!report.ok || report.spec === undefined) {
       return { diagnostics: report.issues.map((issue) => rebase(issue, `${at}.node`)) };
@@ -1079,7 +1342,9 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     const diagnostics: RenderDiagnostic[] = [];
     plain.forEach((root, index) => {
       const at = `surface[${String(index)}]`;
-      const report = validatePlainData({ actions, root, version: 1 }, context, scope, at);
+      const report = validatePlainData({ actions, root, version: 1 }, context, scope, {
+        rootPath: at,
+      });
       if (!report.ok || report.spec === undefined) {
         diagnostics.push(...report.issues.map((issue) => rebase(issue, at)));
         return;
@@ -1216,9 +1481,16 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       ]);
     }
     if (batch.ops.length === 0) {
+      if (batch.focus !== undefined) {
+        const target = live.ids.get(batch.focus);
+        if (target === undefined) {
+          return result([unknownFocus(batch.focus)]);
+        }
+        repairFocusTo(target);
+      }
       return result([]);
     }
-    // 5. Every new node validated as a spec root.
+    // 5. Every new node validated as a fragment; step 6 checks where it lands.
     const nodes = new Map<number, UiSpecNode>();
     for (const [index, op] of batch.ops.entries()) {
       if (op.op === 'insert' || op.op === 'replace') {
@@ -1247,6 +1519,11 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     });
     if (shadowFailure !== null) {
       return result([shadowFailure]);
+    }
+    // The focus names a node of the RESULTING state: one the batch inserts
+    // may be named, one it removes may not (155 S3).
+    if (batch.focus !== undefined && !shadow.ids.has(batch.focus)) {
+      return result([unknownFocus(batch.focus)]);
     }
     const stateDiagnostics = validateState(shadow);
     if (stateDiagnostics.length > 0) {
@@ -1278,10 +1555,11 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     // 8. Commit: the same ops, now with minimal DOM writes. They replay
     // exactly what step 6 validated on an identical copy, so they cannot
     // fail; a divergence would be a defect, never a partial apply to hide.
+    const focus: { replacement?: MNode } = {};
     const diverged = applyOps(live, batch.ops, {
       allowUserStateOverride,
       components,
-      dom: { dialogIdFor, doc, surface },
+      dom: { dialogIdFor, doc, focus, surface },
       materialize: (index) => {
         const node = built.get(index);
         if (node === undefined) {
@@ -1306,6 +1584,12 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     dialogIds = nextDialogIds;
     revision += 1;
     cached = null;
+    // 9. Focus the batch left nowhere: to the node it names, else to the
+    // replacement of the node that held it (155 FR-003).
+    const focusTarget = batch.focus === undefined ? focus.replacement : live.ids.get(batch.focus);
+    if (focusTarget !== undefined) {
+      repairFocusTo(focusTarget);
+    }
     return result([]);
   };
 

@@ -120,7 +120,8 @@ kimen-surface-action {"action":"add-to-cart","data":{"sku":"A-12"}}
 the fixed prefix `kimen-surface-action ` followed by the JSON serialization
 of a fresh object with exactly two members, `action` (the dispatched action)
 and `data` (exactly the data the `tools/call` carried: string, finite number
-and boolean values only). After serialization, every line terminator and
+and boolean values only; the `id` and `revision` arguments that call also
+carries, spec 157, never enter the relay). After serialization, every line terminator and
 bidirectional formatting character still present — U+0085, U+2028, U+2029,
 U+061C, U+200E, U+200F, U+202A–U+202E and U+2066–U+2069 — is written as its
 `\uXXXX` escape, so the text has no line break and nothing in it can
@@ -487,8 +488,10 @@ change.
 - **FR-010**: Both `COMPAT.md` files and specs 030 and 038 MUST be amended
   as D8 states, in the same change that implements this spec.
 - **FR-011**: `@kimen/catalog` and `@kimen/elements` MUST NOT change
-  (Art. VIII), and the surface document MUST stay within its budget (600 kB
-  raw, 135 kB gzip, 112 kB brotli; `tests/resource.spec.ts`).
+  (Art. VIII), and the surface document MUST stay within its budget
+  (`tests/resource.spec.ts`, within the raw, gzip and brotli limits
+  `scripts/lib/bundle-size-budget.mjs` calculates; amended by spec 157,
+  2026-11-21).
 
 ### Key Entities
 

@@ -49,7 +49,7 @@ Three top-level fields:
   interaction contract of the surface.
 - **`root`** — the single root node of the component tree.
 
-Each **node** has up to five fields:
+Each **node** has up to six fields:
 
 - **`id`** — optional. A stable identity for the node: lowercase ASCII
   letters and digits, then up to 63 of those, `-` or `_`
@@ -70,13 +70,200 @@ Each **node** has up to five fields:
   keyed by the attribute name the catalog declares. Unknown names are rejected
   (`unknown-prop`), wrong-typed values are rejected (`invalid-prop-type`), and
   enum-constrained props accept only their declared values.
-- **`action`** — optional. One name from the document's `actions` list. When
-  the rendered node is activated, the host receives that name — as data, on a
-  single callback channel — never a code payload.
+- **`action`** — optional. One name from the document's `actions` list, or
+  an object that maps events the component's catalog entry declares to names
+  from that list (see [An action per event](#an-action-per-event), catalog
+  schema `1.8.0`). When the rendered node is activated, the host receives
+  that name — as data, on a single callback channel — never a code payload.
+- **`collect`** — optional, and only on a node with an `action`. The other
+  fields the action carries: each key names an entry of the action data, each
+  value is the `id` of a node of the same spec (see [A form](#a-form)).
+  Catalog schema `1.7.0`.
 - **`slots`** — optional. Children per slot name, where `""` is the default
   slot. Each child is either a nested node or a plain string; strings become
   inert text nodes, never parsed as markup. A slot name the component does not
   declare is rejected (`unknown-slot`).
+
+### A form
+
+A spec has no native form. A bound button names the fields its action takes,
+and the fields need no action of their own:
+
+```json
+{
+  "version": 1,
+  "actions": ["add"],
+  "root": {
+    "component": "div",
+    "slots": {
+      "": [
+        { "id": "f-title", "component": "ki-input", "props": { "label": "Title", "required": true } },
+        { "id": "f-qty", "component": "ki-number-input", "props": { "label": "Quantity" } },
+        {
+          "component": "ki-button",
+          "props": { "variant": "primary" },
+          "action": "add",
+          "collect": { "title": "f-title", "quantity": "f-qty" },
+          "slots": { "": ["Add"] }
+        }
+      ]
+    }
+  }
+}
+```
+
+The person types "Buy milk" and 2, then activates **Add**. The host receives
+`add` with the data `{ variant: 'primary', title: 'Buy milk', quantity: 2 }`.
+
+- **Every field is asked first.** A field that answers `reportValidity()`
+  decides and shows its own message; any other is invalid when it matches
+  `:invalid`. If one is invalid, nothing is dispatched, each invalid field
+  shows its message and the first in document order takes the focus. A
+  required field left empty, or text that is not a number in `ki-number-input`
+  or not a date in `ki-date-picker`, stops the action.
+- **Values keep their type.** Each key carries the field's live `checked`,
+  `selected` or `value`, the first of them its catalog entry declares, read as
+  a declared-event activation reads its own state: a number arrives as a
+  number, a checkbox as `true` or `false`, an empty text field as `""`. A field
+  with no value of the declared type, such as an empty number field, adds no
+  key.
+- **Enter does not submit.** The person goes to the button.
+- **Rejected:** `collect-without-action` (the node binds no action),
+  `collect-unknown-node` (no node of the spec carries the id),
+  `collect-no-value` (the named node's entry declares none of `checked`,
+  `selected` and `value`), `collect-key-conflict` (a key equals a prop the
+  node's own component declares) and `collect-budget` (more than
+  `COLLECT_MAX_ENTRIES`, 32, entries).
+
+### An action per event
+
+A node bound by name fires its action on one event, the one its catalog
+entry derives. A component that reports several answers binds each of them
+to its own action instead:
+
+```json
+{
+  "version": 1,
+  "actions": ["tool.approved", "tool.denied"],
+  "root": {
+    "component": "ki-confirmation",
+    "props": {
+      "heading": "Delete these 12 files?",
+      "action": "delete_files",
+      "approve-label": "Delete",
+      "deny-label": "Keep files"
+    },
+    "action": { "ki-approve": "tool.approved", "ki-deny": "tool.denied" }
+  }
+}
+```
+
+The person activates **Keep files**, and the host receives `tool.denied`.
+
+- **Each key is an event the component declares,** as its catalog entry
+  lists them (the emitter's prompt and schema list them per component). A
+  click is not one unless the component declares it.
+- **Each listed event fires whenever the component reports it.** The rules a
+  binding by name follows for its event do not apply: a `ki-dialog` bound
+  per event reports both `ki-confirm` and `ki-close`, with or without a
+  confirm label, and `ki-close` arrives on every close, the host's own
+  included, so read it as "it closed", not "it was refused".
+- **The data is the same** as for a binding by name: the node's props with
+  its live `checked`, `selected` or `value`, and the fields it collects. The
+  event's own detail is not carried: a `ki-table` sort does not say the
+  column.
+- **`collect` applies to every bound event,** its validity check included.
+  An invalid field stops a `ki-dialog`'s close action too, and the dialog has
+  already closed by then; put a form's fields behind a button that collects
+  them, and bind the dialog's `ki-close` on its own.
+- **Some components bind only per event.** `ki-code-input`,
+  `ki-confirmation`, `ki-file-upload`, `ki-message`, `ki-popover`,
+  `ki-search`, `ki-table`, `ki-time-input` and `ki-tree-item` declare several
+  events and no rule that picks one, so a binding by name is rejected
+  (`ambiguous-activation-event`).
+- **Rejected:** `undeclared-event` (a key the entry does not declare),
+  `undeclared-action` (a value outside the `actions` list, at
+  `<node>.action.<event>`), `malformed-spec` (an object with no event) and
+  `action-not-allowed` (a native element, a glyph, `ki-markdown` or a source
+  reference, which bind no action in either form). A `ki-pagination` with
+  `href-template` navigates natively and binds nothing.
+
+### A table
+
+Records that share fields are a native table, for reading only, inside a
+`ki-table` for Kimen styling (catalog schema `1.9.0`):
+
+```json
+{
+  "version": 1,
+  "root": {
+    "component": "ki-table",
+    "slots": {
+      "": [
+        {
+          "component": "table",
+          "slots": {
+            "": [
+              { "component": "caption", "slots": { "": ["Pedidos"] } },
+              {
+                "component": "thead",
+                "slots": {
+                  "": [
+                    {
+                      "component": "tr",
+                      "slots": {
+                        "": [
+                          { "component": "th", "props": { "scope": "col" }, "slots": { "": ["Pedido"] } },
+                          { "component": "th", "props": { "scope": "col" }, "slots": { "": ["Estado"] } }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "component": "tbody",
+                "slots": {
+                  "": [
+                    {
+                      "component": "tr",
+                      "slots": {
+                        "": [
+                          { "component": "th", "props": { "scope": "row" }, "slots": { "": ["A-17"] } },
+                          { "component": "td", "slots": { "": [{ "component": "ki-badge", "slots": { "": ["Pendiente"] } }] } }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+- **Elements:** `table`, `caption`, `thead`, `tbody`, `tr`, `th` and `td`
+  are native primitives (`NATIVE_PRIMITIVE_TAGS`). The one attribute is a
+  `th`'s `scope`, `col` or `row`, optional. Every other one (`colspan`,
+  `style`, `data-sort`, …) is `unknown-prop`, and none binds an action
+  (`action-not-allowed`); a cell may hold a `ki-button` that does.
+- **Content model:** a `table` holds, in order, at most one `caption`, at
+  most one `thead`, then any number of `tbody`. `thead` and `tbody` hold
+  only `tr`, and `tr` holds only `th` and `td`; none of them holds text. A
+  `caption` holds text, `strong` and `em`, and a cell holds what a layout
+  `div` holds, except a table. A table part sits only in its own parent:
+  never in a `div`, a cell, a component's slot or at a root. Anything else
+  is `invalid-child`.
+- **Live surface:** a batch is checked where its nodes land. A `tr`
+  inserted into a `tbody` is accepted; the same `tr` as a top-level node is
+  rejected.
+- **`ki-table`:** a spec cannot key a row (`data-key`) or sort a column
+  (`data-sort`), so a table from a spec is never sorted or selected. Leave
+  `selectable` off.
 
 ## What may a spec contain?
 
@@ -159,6 +346,12 @@ exists — the offending `value`. The codes:
 | `invalid-prop-type` | A declared prop with a wrong-typed or out-of-enum value |
 | `unknown-slot` | A slot name the component does not declare |
 | `undeclared-action` | A node binds an action absent from the document's `actions` list |
+| `undeclared-event` | A binding per event names an event the component's catalog entry does not declare |
+| `collect-without-action` | A node has `collect` but no `action` |
+| `collect-unknown-node` | A `collect` value is not the `id` of a node of the same spec or live surface |
+| `collect-no-value` | A `collect` value names a node whose entry declares none of `checked`, `selected` and `value` |
+| `collect-key-conflict` | A `collect` key equals a prop the node's own component declares |
+| `collect-budget` | A `collect` with more than 32 entries |
 | `forbidden-key` | `__proto__`, `constructor` or `prototype` anywhere in the document |
 | `size-budget` | Payload beyond the byte budget (`VALIDATION_MAX_BYTES`, 262,144 by default; overridable per call via `maxBytes`) |
 | `depth-budget` | Nesting beyond `VALIDATION_MAX_DEPTH` (256 levels) |
@@ -193,8 +386,9 @@ const result = renderUiSpec(spec, {
   surface: document.querySelector('#genui'),
   onAction: (event) => {
     event.action; // 'confirm-order' — a declared action name, as data
+    event.id;     // the node's id, when it has one
     event.path;   // 'root.slots.footer[0]' — which node dispatched it
-    event.data;   // the activated node's props, as scalars
+    event.data;   // the activated node's props and collected fields, as scalars
   },
 });
 if (!result.ok) console.warn(result.diagnostics);
@@ -210,13 +404,17 @@ On top of catalog validation the renderer enforces the safe-render semantics:
 
 - **No code path from spec data.** Text children attach as inert text nodes
   (never `innerHTML`); the catalog exposes no event-handler props; and any
-  string prop under a URL-bearing name (`href`, `src`, `action`, `formaction`,
-  `poster`, …) accepts only `http`, `https` and relative references — every
-  other scheme is rejected naming the prop and the scheme (rule
-  `url-scheme`), including control-character smuggling like `java\tscript:`.
+  string prop the catalog marks `format: "url"`, or that declares no format
+  under a URL-bearing name (`href`, `src`, `action`, `formaction`, `poster`,
+  …), accepts only `http`, `https` and relative references — every other
+  scheme is rejected naming the prop and the scheme (rule `url-scheme`),
+  including control-character smuggling like `java\tscript:`. A prop marked
+  `format: "text"` is never a URL, whatever its name: `ki-confirmation`'s
+  `action` is a tool identifier such as `github:create_issue`.
 - **Declared budgets.** Depth, node count and payload size, all overridable
-  per render and all falsifiable on both sides: a spec exactly at a budget
-  renders; one beyond it is rejected before any node attaches.
+  per render (`budgets`, lower or higher than the defaults) and all
+  falsifiable on both sides: a spec exactly at a budget renders; one beyond
+  it is rejected before any node attaches.
 
   ```ts
   import { DEFAULT_RENDER_BUDGETS } from '@kimen/catalog';
@@ -234,15 +432,22 @@ On top of catalog validation the renderer enforces the safe-render semantics:
   Note that the standalone `validateUiSpec` checks the three-field neutral
   document — the version gate is the renderer's.
 - **Declarative actions only.** Activating a bound control dispatches exactly
-  one declared action on the single `onAction` channel. The activation event
-  comes from the component's catalog entry: the one event it declares
-  (`change` on `ki-checkbox`, `ki-switch`, `ki-radio-group`, `ki-select`,
-  `ki-input` and `ki-textarea`; `ki-change` on `ki-tabs`), or `click` when it
-  declares none. A declared-event activation never cancels the control's own
-  change, and its `data` adds the control's live `checked`/`value` (only where
-  the catalog declares that prop) to the spec's props. A binding on a
-  component that declares more than one event is rejected
-  (`ambiguous-activation-event`). A click activation suppresses the native
+  one declared action on the single `onAction` channel. A binding by name
+  fires on the event the component's catalog entry derives: its declared
+  `activationEvent` (`change` on `ki-combobox`, `ki-page-change` on
+  `ki-pagination`), else the one event it declares (`change` on
+  `ki-checkbox`, `ki-switch`, `ki-radio-group`, `ki-select`, `ki-input` and
+  `ki-textarea`; `ki-change` on `ki-tabs`), else `click`. Three components
+  pick the event from their own state: `ki-chip` by its kind, `ki-dialog` by
+  its confirm label and `ki-prompt-input` by its status. A binding per event
+  fires each listed event (see [An action per
+  event](#an-action-per-event)). A declared-event activation never cancels
+  the control's own change, and its `data` adds the control's live
+  `checked`/`value` (only where the catalog declares that prop) to the spec's
+  props. A node with `collect` adds its fields' values on any activation,
+  once every field is valid (see [A form](#a-form)). A binding by name on a
+  component that declares more than one event and has no rule of its own is
+  rejected (`ambiguous-activation-event`). A click activation suppresses the native
   default and stops bubbling, so a button inside a form submits nothing; the
   innermost bound node claims each interaction, so nested action-bound nodes
   dispatch once. A spec owns no form, so it never submits or resets one of
@@ -290,6 +495,8 @@ The streaming contract:
   first pushed node reports `path: 'stream[0]'`, one from a button in the
   second node's footer slot `path: 'stream[1].slots.footer[0]'`, so the host
   always knows which streamed node dispatched it.
+- Each pushed node validates on its own, so its `collect` names fields of the
+  same pushed node.
 
 ## Live surface
 
@@ -310,6 +517,7 @@ const live = createLiveSurface({
 live.apply({ ops: [{ op: 'insert', node: { id: 'decisions', component: 'ki-list' } }] });
 const result = live.apply({
   ifRevision: live.revision, // optional optimistic concurrency
+  focus: 'dec-8', // optional: where focus goes if this batch leaves it nowhere
   ops: [
     { op: 'insert', parent: 'decisions', node: { id: 'dec-8', component: 'ki-list-item', slots: { '': ['Use Postgres'] } } },
     { op: 'set', id: 'note', props: { label: 'Why?' } },
@@ -317,29 +525,84 @@ const result = live.apply({
     { op: 'remove', id: 'q-2' },
     { op: 'replace', id: 'cmp-1', node: { id: 'cmp-1', component: 'ki-card' } },
   ],
-}); // { ok, revision, diagnostics }
+});
+if (!result.ok) console.warn(result.diagnostics); // { ok, revision, diagnostics }
 live.snapshot(); // { revision, actions, nodes } — deep-frozen plain data
 ```
 
+The batch and op shapes are exported as types (`LiveBatch`, `LiveOp` and
+`LiveInsertOp`, `LiveSetOp`, `LiveTextOp`, `LiveRemoveOp`, `LiveReplaceOp`,
+`LiveResetOp`) for code that writes batches. `apply` still takes `unknown`, and also JSON
+text: a batch is untrusted data whatever its type says.
+
 - **Atomic and fail-closed per batch.** The batch crosses the purity wall,
-  per-batch budgets (`batchBudgets: { maxOps, maxBytes }`, default 64 ops and
-  64 KiB) and the `ifRevision` check; every op is applied to a copy of the
-  state and the **resulting** state is validated exactly like a spec (catalog,
-  props, declared actions, slots, unique ids, tag grammar, URL allowlist,
-  `budgets` on depth, node count and payload). Any failure rejects the whole
-  batch with diagnostics naming the op (`ops[3].node.component`) or state
-  path, and nothing changes. Unlike a stream, the surface stays live: the
-  next valid batch applies. Removing content frees budget.
+  the per-batch budgets and the `ifRevision` check; every op is applied to a
+  copy of the state and the **resulting** state is validated exactly like a
+  spec (catalog, props, declared actions, slots, unique ids, tag grammar, URL
+  allowlist, the state budgets). Any failure rejects the whole batch with
+  diagnostics naming the op (`ops[3].node.component`) or state path, and
+  nothing changes. Unlike a stream, the surface stays live: the next valid
+  batch applies. Removing content frees budget.
+- **Five limits, all host options.** Per batch, `batchBudgets`: 64 ops
+  (`batch-op-budget`) and 65,536 bytes of serialized batch
+  (`batch-size-budget`). Per resulting state, `budgets`: 512 nodes
+  (`node-count-budget`), 32 levels (`depth-budget`) and 262,144 bytes of
+  serialized nodes (`size-budget`). The host sets each one at creation, lower
+  or higher than its default; a host that raises `batchBudgets` can send a
+  whole page as one batch, applied whole or not at all. Two fixed ceilings
+  apply first and no option moves them: 8 MiB and 256 levels of JSON nesting
+  at the purity wall.
+- **A rejection is a return value.** `apply` never throws for a rejected
+  batch and reports it through no callback or log: check `ok`. Atomicity
+  stops at the batch: several batches are not one change, and a batch
+  rejected after others leaves those applied.
 - **Minimal DOM change.** `set` writes only the attributes whose value changes
   (`null` unsets); `text` updates a slot's text node in place; `insert` places
   one new subtree before its `before` sibling (or last); `remove` and
   `replace` touch only the named subtree. Nothing else is recreated or
   reordered; there is no move op.
-- **The user's state wins.** Once the user changed a control's own `checked`,
-  `value` or `open`, a `set` that would change it, and a `replace` or
-  `remove` of that node or of any ancestor, is rejected
+- **The user's state wins.** Once the user changed a control's own
+  `checked`, `open`, `selected` or `value`, a `set` that would change it,
+  and a `replace` or `remove` of that node or of any ancestor, is rejected
   (`user-state-conflict`) unless the op says `force: true` **and** the host
-  created the surface with `allowUserStateOverride: true`.
+  created the surface with `allowUserStateOverride: true` (forced without
+  it: `user-state-override-denied`). A forced `set` hands back only the
+  props it names: forcing a search closed leaves the query the user typed
+  theirs. A forced `set` of `null` writes the
+  prop's catalog default to the component, or empties it when there is
+  none, as for a number field. A `set` that agrees with the user is
+  accepted, but their `checked`, `selected` and `value` stay theirs: a
+  later `set` to another value is still rejected. No rejection repeats the
+  user's value.
+- **Emptying a form after it was sent.** `{ op: 'reset', id: 'title' }`
+  returns a control's `checked`, `open`, `selected` and `value` to what the
+  spec gave it, else the catalog default, else nothing (a number field
+  empties too), and makes them the agent's again. It needs neither `force`
+  nor `allowUserStateOverride`, because it clears only what already left in
+  an action, the node's own or one that collects it. Input no action carried
+  is kept and the batch is rejected (`unsent-user-input`, naming the node and
+  the prop, never the input): text typed after pressing Add, or a value a
+  `set` only agreed with. After a create, answer the action with a batch that
+  resets the add form's fields; if it is rejected, the person is typing again,
+  so leave the form alone. A node that declares none of the four props is
+  `unknown-prop`. Like every op, a reset is checked against the state before
+  its batch: set a new value in a later batch.
+- **Reopening a dialog the person closed.** After Escape or Cancel, a `set`
+  of `open: true` is a conflict: the surface still records the dialog as
+  open and reads the closed one as the person's choice. Send `open: false`
+  in a batch of its own first, then `open: true` in a later batch; one batch
+  with both is checked against the state before it and is rejected too. The
+  rejection says so.
+- **Focus is repaired, never taken.** A batch may name a node in `focus`.
+  Once the batch has settled (its components have rendered, and a closing
+  dialog has handed focus back), focus that is then nowhere (the page body)
+  goes to that node; focus anywhere else, inside the surface or in the host
+  page, is never moved. Without `focus`, replacing the node that held focus
+  gives it to the replacement. The id must name a node of the resulting
+  surface (`unknown-id` at `batch.focus`), and the node must be able to take
+  focus: name the Delete button of the next row, not the row. To delete a row
+  after a confirmation, close the dialog and remove the row in one batch that
+  names the next row's control.
 - **Only declared names.** A slot or prop name must be one the node's
   catalog entry declares as its own: inherited names such as `toString` are
   `unknown-slot`/`unknown-prop`, and `__proto__`, `constructor` and
@@ -350,8 +613,14 @@ live.snapshot(); // { revision, actions, nodes } — deep-frozen plain data
 - **Actions name their node.** The event carries the node's `id`, its current
   `path` (`surface[0].slots.footer[1]`), the `revision` and the same live
   `data` as `renderUiSpec`, computed from the node's current props.
+- **Collected fields are the live ones.** A `collect` resolves when the person
+  activates the node, against the nodes the surface holds then, so a field a
+  batch replaced is read from its new element. A batch that leaves a `collect`
+  naming no node, such as one removing a collected field, is rejected whole
+  (`collect-unknown-node`). Like `action`, `collect` changes only by `replace`.
 
-The contract is [spec 035](../../specs/035-live-surface/spec.md).
+The contracts are [spec 035](../../specs/035-live-surface/spec.md) and
+[spec 155](../../specs/155-live-surface-reset-focus/spec.md).
 
 ## Registering your own components
 

@@ -38,6 +38,29 @@ Typing `20/11/2026` and pressing Enter emits
 Pick two endpoints and activate Apply to save the range. The form receives
 one `stay` entry with the date pair.
 
+## Text that is not a date
+
+The field keeps text it cannot read as a date within its bounds so the
+person can correct it, shows its own message (`error-text`, else
+`invalid-date-label`) once the person leaves the field or presses Enter, and
+stays invalid, so its form cannot submit it. It fires no `ki-change`, and
+`value` keeps the last date it saved. Clearing a saved date is a change: it
+fires `ki-change` with `{ "value": "" }`.
+
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted date,
+such as an availability check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next edit of the text or pick of
+another date withdraws the error. Remove the attribute when a new attempt
+starts: setting the same text again while it is still set shows nothing.
+
+```html
+<ki-date-picker label="Departure" name="departure" locale="en-GB" value="2026-12-24"
+  custom-error="No flights on that day.">
+</ki-date-picker>
+```
+
 ## Attributes
 
 - `apply-label` (string, default 'Apply'): Localized label of the confirmation button that saves a complete draft.
@@ -45,8 +68,9 @@ one `stay` entry with the date pair.
 - `change-label` (string, default 'Change date, {date}'): Localized name of the trigger when a date is saved. Use {date} for the current selection.
 - `choose-label` (string, default 'Choose date'): Localized name of the calendar dialog and of the trigger when no date is saved.
 - `confirm` (boolean, default false): Require Apply before saving picks made in the calendar.
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted date ("No flights on that day"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit of the text or pick of another date, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a missing, unreadable or out-of-bounds date, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Disables the text entry and calendar button and excludes the field from form data.
-- `error-text` (string | undefined): Overrides the message shown when a date is missing, invalid or outside the bounds.
+- `error-text` (string | undefined): Overrides the message shown when a date is missing, invalid or outside the bounds. A `custom-error` outranks it.
 - `first-day-of-week` (number | undefined, minimum 0, maximum 6): First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.
 - `help-text` (string | undefined): A format hint or explanation read with the field. It is replaced by a visible error.
 - `invalid-date-label` (string, default 'Enter a valid date within the allowed range.'): Localized fallback message for an impossible, incomplete or out-of-bounds date.

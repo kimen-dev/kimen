@@ -1763,10 +1763,23 @@ Boolean attributes use presence semantics — omit `checked` to express unchecke
 <ki-checkbox indeterminate>Select all rows</ki-checkbox>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+answer. The checkbox is invalid, blocks its form and is announced as invalid
+at once. Toggling it withdraws the error. Remove the attribute when a new
+attempt starts: setting the same text again while it is still set shows
+nothing. Inside a `ki-checkbox-group`, set it on the group.
+
+```html
+<ki-checkbox name="newsletter" checked custom-error="Confirm your email address before subscribing.">Send me the newsletter</ki-checkbox>
+```
+
 Attributes:
 - `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted answer ("This plan needs a signed contract"). While it holds text the checkbox is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the checkbox, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` checkbox left unchecked; `error-text` words that. Inside a `ki-checkbox-group`, set it on the group. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
-- `error-text` (string | undefined): Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the checkbox, read with it as its description: what checking it means or commits to. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `indeterminate` (boolean, default false): Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
 - `label-hint` (string | undefined): Short text shown after the slotted label and read with it as part of the checkbox name, so people know before submitting whether they must check it: "(required)" on a consent the form cannot do without, "(optional)" on one it can, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put what checking it commits to in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
@@ -1947,7 +1960,23 @@ reading order.
 </ki-checkbox-group>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+selection. The group is invalid, blocks its form and is announced as invalid
+at once. Toggling any option withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-checkbox-group label="Regions" name="regions" custom-error="We do not deliver to the Americas yet.">
+  <ki-checkbox value="eu" checked>Europe</ki-checkbox>
+  <ki-checkbox value="am" checked>Americas</ki-checkbox>
+</ki-checkbox-group>
+```
+
 Attributes:
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted selection ("Pick regions we deliver to"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles an option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for the `min` and `max` limits the group enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Makes the group unavailable and excludes it from form submission.
 - `error-text` (string | undefined): Localized message displayed for a failing selection limit.
 - `help-text` (string | undefined): One line of guidance displayed under the choices.
@@ -2385,9 +2414,22 @@ Both `ki-input` and `ki-complete` carry `{ value }`. Listen for
 `ki-complete` if filling the last box enables the next step. Leave submission
 to the form unless completing the code can safely advance the flow.
 
+## An error from the application
+
+Set `custom-error` to show the server's verdict on the submitted code. The
+field is invalid, blocks its form and is announced as invalid at once. The
+person's next edit of the code withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-code-input label="Verification code" name="code" value="042911" custom-error="This code has expired. Request a new one."></ki-code-input>
+```
+
 Attributes:
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted code ("This code has expired"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit of the code, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for an incomplete code, which the field reports itself; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Disable editing, sequential focus and form participation.
-- `error-text` (string | undefined): Message for a failing code constraint. Omit to use the browser's message.
+- `error-text` (string | undefined): Message for a failing code constraint. Omit to use the browser's message. A `custom-error` outranks it.
 - `help-text` (string | undefined): Instructions saying where the code was sent and how long it is valid.
 - `label` (string, required): Visible accessible name. Supply a label in the language of the form.
 - `length` (number, default 6, minimum 4, maximum 8): Number of cells and maximum code length. Unsupported lengths fall back to six.
@@ -2493,12 +2535,28 @@ Listen for `ki-input` and use `event.detail.value` as the query. Set `loading`
 while fetching, replace the field's `ki-option` children with the latest
 results, and clear `loading`. Use `change` to respond to a committed selection.
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the committed
+choice. The field is invalid, blocks its form and is announced as invalid at
+once. Choosing, removing or clearing a choice withdraws the error; typing
+filter text does not. Remove the attribute when a new attempt starts:
+setting the same text again while it is still set shows nothing.
+
+```html
+<ki-combobox label="Assignee" name="assignee" value="ana" custom-error="Ana is on leave this week.">
+  <ki-option value="ana">Ana Ruiz</ki-option>
+  <ki-option value="juan">Juan Antón</ki-option>
+</ki-combobox>
+```
+
 Attributes:
 - `add-label` (string, default 'Add “{text}”'): Localizable free-entry offer. {text} is replaced by the trimmed query.
 - `allow-custom` (boolean, default false): Offers to add trimmed query text when no known or selected choice already matches it.
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted choice ("Ana is on leave this week"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person commits another selection (choosing, removing or clearing a choice; typing filter text is not a change), or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` field left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Disables editing, navigation and form submission.
 - `empty-label` (string, default 'No results'): Localizable status when there are no choices to display.
-- `error-text` (string | undefined): Message used when a required selection is missing, in place of the browser's message.
+- `error-text` (string | undefined): Message used when a required selection is missing, in place of the browser's message. A `custom-error` outranks it.
 - `filter` ("contains" | "none" | "starts-with", default 'contains'): Filters by label. Set to none when the application provides results from a remote search.
 - `help-text` (string | undefined): Guidance shown below the field and read as its description.
 - `label` (string, required): Visible label and accessible name. Supply it even when placeholder text is also set.
@@ -2612,13 +2670,34 @@ Examples:
 </ki-confirmation>
 ```
 
-Map the two decisions in trusted host code. This MCP Apps example uses a
-ready `SurfaceBridge` whose rendered spec declares `approve-send-email` and
-`deny-send-email` in its top-level `actions`. Keep a guarded node's scalar
-`action` binding unset because the component declares two events. Its
-`props.action` carries the visible tool identifier. A trusted host that
-applies an origin allowlist can supply that identifier after rendering, since
-guarded spec data under that prop name passes through the URL policy.
+A guarded UI spec binds each decision to its own action, one per event. A
+binding by name alone is rejected, because the component declares two
+events. `props.action` carries the visible tool identifier as text, never as
+a URL, so the card renders under an origin allowlist too.
+
+```json
+{
+  "version": 1,
+  "actions": ["approve-send-email", "deny-send-email"],
+  "root": {
+    "component": "ki-confirmation",
+    "props": {
+      "heading": "Send this email?",
+      "action": "send_email",
+      "approve-label": "Send email",
+      "deny-label": "Keep draft",
+      "consequence": "Recipients will get the message immediately."
+    },
+    "action": { "ki-approve": "approve-send-email", "ki-deny": "deny-send-email" }
+  }
+}
+```
+
+The action data carries the card's props, not the event's detail. When the
+decision needs the conversation preference, map the two events in trusted
+host code instead. This MCP Apps example uses a ready `SurfaceBridge` whose
+rendered spec declares `approve-send-email` and `deny-send-email` in its
+top-level `actions` and leaves the card unbound.
 
 ```js
 const prompt = document.querySelector('#send-email-prompt');
@@ -3178,14 +3257,38 @@ Typing `20/11/2026` and pressing Enter emits
 Pick two endpoints and activate Apply to save the range. The form receives
 one `stay` entry with the date pair.
 
+## Text that is not a date
+
+The field keeps text it cannot read as a date within its bounds so the
+person can correct it, shows its own message (`error-text`, else
+`invalid-date-label`) once the person leaves the field or presses Enter, and
+stays invalid, so its form cannot submit it. It fires no `ki-change`, and
+`value` keeps the last date it saved. Clearing a saved date is a change: it
+fires `ki-change` with `{ "value": "" }`.
+
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted date,
+such as an availability check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next edit of the text or pick of
+another date withdraws the error. Remove the attribute when a new attempt
+starts: setting the same text again while it is still set shows nothing.
+
+```html
+<ki-date-picker label="Departure" name="departure" locale="en-GB" value="2026-12-24"
+  custom-error="No flights on that day.">
+</ki-date-picker>
+```
+
 Attributes:
 - `apply-label` (string, default 'Apply'): Localized label of the confirmation button that saves a complete draft.
 - `cancel-label` (string, default 'Cancel'): Localized label of the confirmation button that discards a draft.
 - `change-label` (string, default 'Change date, {date}'): Localized name of the trigger when a date is saved. Use {date} for the current selection.
 - `choose-label` (string, default 'Choose date'): Localized name of the calendar dialog and of the trigger when no date is saved.
 - `confirm` (boolean, default false): Require Apply before saving picks made in the calendar.
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted date ("No flights on that day"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit of the text or pick of another date, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a missing, unreadable or out-of-bounds date, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Disables the text entry and calendar button and excludes the field from form data.
-- `error-text` (string | undefined): Overrides the message shown when a date is missing, invalid or outside the bounds.
+- `error-text` (string | undefined): Overrides the message shown when a date is missing, invalid or outside the bounds. A `custom-error` outranks it.
 - `first-day-of-week` (number | undefined, minimum 0, maximum 6): First weekday, where Sunday is 0 and Saturday is 6. Defaults to the locale's week start.
 - `help-text` (string | undefined): A format hint or explanation read with the field. It is replaced by a visible error.
 - `invalid-date-label` (string, default 'Enter a valid date within the allowed range.'): Localized fallback message for an impossible, incomplete or out-of-bounds date.
@@ -5107,12 +5210,25 @@ and announces when the user reaches the limit.
 <ki-input label="Price" appearance="filled" value="49.00"><span slot="start">EUR</span><span slot="end">/ month</span></ki-input>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on a submitted answer,
+such as a server-side check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next keystroke withdraws the
+error. Remove the attribute when a new attempt starts: setting the same text
+again while it is still set shows nothing.
+
+```html
+<ki-input label="Work email" name="email" type="email" value="ana@example.com" custom-error="This email is already registered."></ki-input>
+```
+
 Attributes:
 - `ai-suggestion-text` (string, default 'Suggested by AI'): Localized provenance description read alongside help or an error when the end slot contains an AI label. Use this to translate the description.
 - `appearance` ("default" | "filled" | "outlined" | undefined, default 'default'): Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
 - `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side or cross-field verdict on the submitted answer ("Already registered"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next change of the answer, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required` or other constraints the field enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
-- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type` or a length limit), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the field, read with it as its description: the format expected, or why the answer is asked. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
 - `label-hint` (string | undefined): Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or formats in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
@@ -6366,6 +6482,32 @@ The form submits `timeout=30`.
 The editor displays `12,5` while focused and formats it as a percentage on
 blur. The form submits `discount=0.125`.
 
+## Text that is not a number
+
+The field keeps text it cannot read as a number so the person can correct
+it, shows its own message (`error-text`, else `invalid-number-message`) once
+the person leaves the field or presses Enter, and stays invalid, so its form
+cannot submit it. What it reports depends on what it held before:
+
+- If it held a number, leaving the field fires one `change` and `value` is
+  `undefined`, exactly as when the field is emptied.
+- If it never held a number, it fires no `change`.
+
+The event cannot tell an emptied field from an unreadable one; validity can:
+`checkValidity()` answers `false` for unreadable text.
+
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+number, such as a stock check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next edit or step withdraws the
+error. Remove the attribute when a new attempt starts: setting the same text
+again while it is still set shows nothing.
+
+```html
+<ki-number-input label="Seats" name="seats" value="42" min="1" custom-error="Only 40 seats left."></ki-number-input>
+```
+
 ## Custom-elements entry point
 
 ```ts
@@ -6379,9 +6521,10 @@ if (discount) {
 ```
 
 Attributes:
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted number ("Only 40 seats left"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or step of the number, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `decrease-label` (string, default 'Decrease {label}'): Stepper's accessible name. The field label replaces {label}.
 - `disabled` (boolean, default false): Prevents editing and excludes the control from form submission.
-- `error-text` (string | undefined): Validation hint to show when the entry fails a constraint.
+- `error-text` (string | undefined): Validation hint to show when the entry fails a constraint. A `custom-error` outranks it.
 - `format` (string): Intl.NumberFormat options for display. In HTML or a catalog spec, supply these options as JSON text. The form value retains its original precision.
 - `help-text` (string | undefined): Context or instructions displayed beneath the field when it has no visible error.
 - `increase-label` (string, default 'Increase {label}'): Stepper's accessible name. The field label replaces {label}.
@@ -7207,9 +7350,25 @@ When the layout makes the question obvious but the group still needs its own nam
 </ki-radio-group>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+choice. The group is invalid, blocks its form and is announced as invalid at
+once. Choosing another option withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-radio-group label="Plan" name="plan" value="team" custom-error="The Team plan is sold out this month.">
+  <ki-radio value="solo">Solo</ki-radio>
+  <ki-radio value="team">Team</ki-radio>
+</ki-radio-group>
+```
+
 Attributes:
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted choice ("This plan is sold out"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` group left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
-- `error-text` (string | undefined): Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the options, read with the group as its description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it unless the host's `aria-labelledby` names the group from the page; a group with neither fails accessibility gates. Naming from the page: set `aria-labelledby` on the host to the ids of elements in the same document or shadow root, such as the heading that already asks the question. The group then takes its name from them, followed by its own `label` and `label-hint` when set. The ids are read when the group renders and whenever the attribute changes. When to use: the question is written on the page above the options; omit `label` so the question is not shown, or read, twice. When NOT to use: do not reference elements inside another component's shadow root, which an id reference cannot reach.
 - `label-hidden` (boolean, default false): Hides the `label` (and its hint) from view and from reading order while it stays the radiogroup's accessible name, so a screen reader announces it once, as the group's name. When to use: the layout already makes the question obvious to sighted people (a heading in a card, an icon row) but the group still needs a name of its own. When NOT to use: do not hide a label that repeats a question already on the page; point `aria-labelledby` at that question instead. Do not hide the only description of what a choice decides; that is `help-text`.
@@ -7970,9 +8129,25 @@ An option without `value` submits its trimmed label text, and `required` blocks 
 </form>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted
+choice, such as a server-side check. The select is invalid, blocks its form
+and is announced as invalid at once. Choosing another option withdraws the
+error. Remove the attribute when a new attempt starts: setting the same text
+again while it is still set shows nothing.
+
+```html
+<ki-select label="Country" name="country" value="ch" custom-error="We do not ship to Switzerland yet.">
+  <ki-option value="es">Spain</ki-option>
+  <ki-option value="ch">Switzerland</ki-option>
+</ki-select>
+```
+
 Attributes:
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted choice ("We do not ship there"). While it holds text the select is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` select left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
-- `error-text` (string | undefined): Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the trigger, read with it as the combobox description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
 - `label-hint` (string | undefined): Short text shown after the label and read with it as part of the combobox name, so people know before submitting whether to choose: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
@@ -9400,10 +9575,23 @@ User toggles dispatch composed `input` and `change` events — apply the setting
 <ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on a setting it could
+not apply. The switch is invalid, blocks its form and is announced as
+invalid at once. Toggling it withdraws the error. Remove the attribute when
+a new attempt starts: setting the same text again while it is still set
+shows nothing.
+
+```html
+<ki-switch name="two-step" checked custom-error="Add a phone number before turning on two-step sign-in.">Two-step sign-in</ki-switch>
+```
+
 Attributes:
 - `checked` (boolean, default false): Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted setting ("Two-step sign-in needs a phone number"). While it holds text the switch is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the switch, or when the form is reset, so it never blocks the corrected answer. It outranks an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for help that is not an error; use `help-text`. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
-- `help-text` (string | undefined): One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `setCustomValidity` shows in this line's place.
+- `help-text` (string | undefined): One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `custom-error` or `setCustomValidity` shows in this line's place.
 - `name` (string | undefined): Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
 - `size` ("lg" | "md" | "sm" | "xl", default 'md'): Token-backed size: the track is 32 x 18, 40 x 22, 48 x 26 or 56 x 32px in onmars (`xl` is the design's mobile size), with its thumb. `sm` also takes the smaller label (13/20, 8px away). An unrecognized value matches no style rule and keeps the medium metrics. When to use: match the size of the text and controls around it. When NOT to use: do not pick a smaller size to fit a dense region or a larger one for touch; declare `data-ki-density` on the region instead, which composes with every size.
 - `value` (string | undefined): Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
@@ -10052,11 +10240,24 @@ localize the default length error.
 <ki-textarea label="Short bio" appearance="filled" maxlength="12" show-count help-text="Keep it short" value="Designs generative interfaces."></ki-textarea>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted text,
+such as a moderation check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next keystroke withdraws the
+error. Remove the attribute when a new attempt starts: setting the same text
+again while it is still set shows nothing.
+
+```html
+<ki-textarea label="Bio" name="bio" value="Call me at 555-0100" custom-error="Remove the phone number from your bio."></ki-textarea>
+```
+
 Attributes:
 - `appearance` ("default" | "filled" | "outlined" | undefined, default 'default'): Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
 - `autocomplete` (string | undefined): Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted text ("This title is taken"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next change of the text, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required` or a length limit the field enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
-- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required` or a length limit), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the field, read with it as its description: what to write, or how long. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
 - `label-hint` (string | undefined): Short text shown after the label and read with it as part of the field's name, so people know before submitting whether to answer: "(optional)" on the few optional fields of a mostly required form, or "(required)" the other way round, in the page's own language. It changes no validation; set `required` for that, and keep the two consistent. When NOT to use: do not put instructions or length limits in it (use `help-text`), errors (use `error-text`), or a repeat of the label.
@@ -10250,9 +10451,22 @@ field and suggestion hit areas.
 </div>
 ```
 
+## An error from the application
+
+Set `custom-error` to show the application's verdict on the submitted time,
+such as a booking check. The field is invalid, blocks its form and is
+announced as invalid at once. The person's next edit or pick of a time
+withdraws the error. Remove the attribute when a new attempt starts: setting
+the same text again while it is still set shows nothing.
+
+```html
+<ki-time-input label="Start time" name="start" lang="en-GB" value="09:30" custom-error="That slot was just booked."></ki-time-input>
+```
+
 Attributes:
+- `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted time ("That slot was just booked"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or pick of a time, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Disables typing, suggestions and form participation.
-- `error-text` (string | undefined): Validation message to show after blur or a blocked form submission.
+- `error-text` (string | undefined): Validation message to show after blur or a blocked form submission. A `custom-error` outranks it.
 - `help-text` (string | undefined): Guidance read with the field until a validation error replaces it.
 - `invalid-time-text` (string, default 'Enter a valid time within the allowed range.'): Fallback validation message for invalid time syntax or bounds.
 - `label` (string, required): Visible text naming the time field. Provide it for every use.
@@ -11501,15 +11715,15 @@ When to use: Any boundary where agent-emitted JSON must become Kimen UI: validat
 When NOT to use: Hand-authored pages that never render agent output — use @kimen/elements directly.
 
 Entry points:
-- `validateUiSpec(input, options?) => ValidationReport`: Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, invalid-child, action-not-allowed, url-scheme, url-origin, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value.
-- `renderUiSpec(input, options) => RenderResult`: Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies) plus the native primitives it carries, only actions declared in the spec dispatch (delivered as data to options.onAction), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure.
+- `validateUiSpec(input, options?) => ValidationReport`: Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, undeclared-event, invalid-child, action-not-allowed, collect-without-action, collect-unknown-node, collect-no-value, collect-key-conflict, collect-budget, url-scheme, url-origin, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value.
+- `renderUiSpec(input, options) => RenderResult`: Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies) plus the native primitives it carries, only actions declared in the spec dispatch, by name or one per declared event (delivered as data to options.onAction, with the live values of the fields a node collects once each of them is valid), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure.
 - `preflightUiSpec(input, options?) => RenderResult`: The guarded renderer's verdict without a DOM: runs exactly the preparation renderUiSpec runs before its first attach (purity wall, version gate, payload budget, catalog validation, then the depth, node-count, tag, activation and prop-name guards) and renders nothing. Use it at a DOM-less boundary — an MCP server, a service that checks specs before forwarding them — so that "valid" means "the renderer will paint it"; validateUiSpec alone accepts specs the renderer's tighter budgets refuse.
 - `createStreamingRenderer(options) => StreamingRenderer`: Progressive rendering over a streamed spec: each push(node) validates one top-level subtree and attaches it only when fully valid; an invalid node fails closed while previously attached content remains, and the render budgets bind the accumulated stream. The catalog in use is fixed at creation via options.catalog.
-- `createLiveSurface(options) => LiveSurface`: A long-lived surface changed through atomic batches of insert, set, text, remove and replace ops addressed by stable node ids: apply(batch) validates the whole batch and the state it would produce (purity wall, per-batch budgets, optional ifRevision, catalog, guards, state budgets) before any DOM write, rejects it whole with diagnostics while the surface stays live, and otherwise touches only the attributes, text and subtrees it names so focus, typed values and scroll survive. No set, replace or remove overwrites or discards checked/value/open the user changed unless forced and allowed by the host. Action events carry id, current path, revision and live data; snapshot() returns deep-frozen plain data.
+- `createLiveSurface(options) => LiveSurface`: A long-lived surface changed through atomic batches of insert, set, text, remove, replace and reset ops addressed by stable node ids: apply(batch) validates the whole batch and the state it would produce (purity wall, per-batch budgets, optional ifRevision, catalog, guards, state budgets) before any DOM write, rejects it whole with diagnostics while the surface stays live, and otherwise touches only the attributes, text and subtrees it names so focus, typed values and scroll survive. A rejection is the return value, never a throw, and leaves earlier batches applied: several batches are not one change. The five limits (64 ops and 65,536 bytes per batch; 512 nodes, 32 levels and 262,144 bytes of state) are host options at creation, lower or higher than the defaults. A batch may name a focus node: if the batch leaves keyboard focus nowhere, it goes there; focus that is somewhere never moves. No set, replace or remove overwrites or discards checked/open/selected/value the user changed unless forced and allowed by the host; a dialog the person closed is reopened with open: false, then open: true in a later batch. A reset op returns a control to its spec value, or empties it, without force or host permission, only once what it holds left in an action; input no action carried is kept and the batch is rejected as unsent-user-input. Action events carry id, current path, revision and live data; snapshot() returns deep-frozen plain data. The batch and op shapes are exported as the LiveBatch and LiveOp types.
 - `createCatalog(definition, options?) => CatalogCreationResult`: Registers your own components behind a data-only JSON facade — the exact entry shape of the generated catalog (tag, usage guidance, typed prop constraints, slots, events) — and returns a deeply frozen catalog that validateUiSpec and both renderers accept via options.catalog. The definition is untrusted input: it crosses the same purity wall as UI specs, tags must be conservative custom-element names, collisions with the extended catalog fail closed, usage guidance is mandatory, and every rejection is a RegistrationIssue naming code, path and offender. Pass { extend: catalogData } to compose with the built-in components, or omit it for a standalone catalog.
-- `DEFAULT_RENDER_BUDGETS`: The declared render budgets (maxDepth 32, maxNodes 512, maxBytes 262144). A spec exactly at a budget passes; one beyond it is rejected before any node attaches. Hosts may tighten them via options.budgets; the renderer never renders past them. Standalone validation has its own ceilings, VALIDATION_MAX_BYTES (262144 UTF-8 bytes, overridable per call with maxBytes) and VALIDATION_MAX_DEPTH (256).
+- `DEFAULT_RENDER_BUDGETS`: The declared render budgets (maxDepth 32, maxNodes 512, maxBytes 262144). A spec exactly at a budget passes; one beyond it is rejected before any node attaches. Hosts may lower or raise them via options.budgets; the renderer never renders past the ones in force. Standalone validation has its own ceilings, VALIDATION_MAX_BYTES (262144 UTF-8 bytes, overridable per call with maxBytes) and VALIDATION_MAX_DEPTH (256).
 - `catalogData`: The generated catalog document itself: one entry per opted-in ki-* element and per native primitive with typed props, events, slots and when-to-use guidance, plus the elements version it derives from. Its schema version is exported as CATALOG_SCHEMA_VERSION.
-- `NATIVE_PRIMITIVE_TAGS`: The closed set of native HTML elements a spec may carry next to catalog components: h2, h3, h4, p, strong and em for text, img for images and div for layout. They take the host page's typography, carry only their declared attributes (img: src under the URL policy, alt that is a description or exactly empty for decoration, width, height; div: direction, gap on the --ki-space-* steps, align, justify, wrap), never bind an action, and lay out through the CSSOM so a CSP without unsafe-inline styles holds. They come with the built-in catalog and with catalogs that extend it; a consumer definition can never declare one.
+- `NATIVE_PRIMITIVE_TAGS`: The closed set of native HTML elements a spec may carry next to catalog components: h2, h3, h4, p, strong and em for text, img for images, div for layout, and table, caption, thead, tbody, tr, th and td for read-only tables. They take the host page's typography, carry only their declared attributes (img: src under the URL policy, alt that is a description or exactly empty for decoration, width, height; div: direction, gap on the --ki-space-* steps, align, justify, wrap; th: scope col or row), keep a content model (a table part sits only in its own parent), never bind an action, and lay out through the CSSOM so a CSP without unsafe-inline styles holds. They come with the built-in catalog and with catalogs that extend it; a consumer definition can never declare one.
 
 ### @kimen/emitter
 
@@ -11548,8 +11762,8 @@ When NOT to use: The host is not an MCP Apps client, or you control the renderin
 Entry points:
 - `declareToolSurface(name?) => { ui: { resourceUri } }`: Declares in an MCP tool's _meta that its results render in a predeclared ui:// surface.
 - `createKimenSurfaceResource(name?) => KimenSurfaceResource`: The self-contained ui:// resource the server serves: one HTML document with every script and style inline, a no-network content policy, and the guarded renderer as its only render path.
-- `surfaceToolResult(spec, textFallback) => SurfaceToolResult`: Wraps a neutral UI spec plus a plain-text fallback as an MCP CallToolResult (spec in structuredContent.kimenSurface, text in content), so hosts without interactive surfaces still get text.
-- `declareActionTool(name?) => KimenActionTool`: The app-only MCP tool (kimen_surface_action, _meta.ui.visibility ["app"]) that receives the surface's declared actions as tools/call { action, data }; register it on the same server and validate the action.
+- `surfaceToolResult(spec, textFallback, update?) => SurfaceToolResult`: Wraps a neutral UI spec plus a plain-text fallback as an MCP CallToolResult (spec in structuredContent.kimenSurface, text in content), so hosts without interactive surfaces still get text. The optional update { baseRevision, batch } is a live batch computed on the revision an action call carried: the surface applies it, keeping what the person is typing, only on that revision and when the live surface accepts it, and otherwise paints the full spec.
+- `declareActionTool(name?) => KimenActionTool`: The app-only MCP tool (kimen_surface_action, _meta.ui.visibility ["app"]) that receives the surface's declared actions as tools/call { action, data, revision, id? } (the page revision the person acted on and the bound node's id; both optional in its schema); register it on the same server and validate the action.
 - `acknowledgeSurfaceAction(action, options?) => SurfaceActionAcknowledgment`: The action tool's answer for an action your server accepts. With { relay: true } the surface relays that exact action to the model as one ui/message, if the host advertises text messages: one line, kimen-surface-action followed by { action, data } as escaped JSON, at most 8192 bytes, built by the surface from what it sent, never from this result. Relay when the person's choice needs the model; leave it off for UI-only actions such as a refresh.
-- `createSurfaceBridge(options) => SurfaceBridge`: Runs inside the surface document and speaks the MCP Apps 2026-01-26 lifecycle: sends ui/initialize, refuses an undeclared negotiated version, renders ui/notifications/tool-result specs through the guarded renderer only after the handshake, answers ui/resource-teardown and ping, and dispatches only declared actions as tools/call; when the server acknowledges one for relay and the host advertises text messages, relays it once as ui/message. Non-protocol messages are ignored with no state change.
+- `createSurfaceBridge(options) => SurfaceBridge`: Runs inside the surface document and speaks the MCP Apps 2026-01-26 lifecycle: sends ui/initialize, refuses an undeclared negotiated version, renders ui/notifications/tool-result specs through the guarded renderer and its live surface only after the handshake (applying a result's update when it was computed on the current page revision), answers ui/resource-teardown and ping, and dispatches only declared actions as tools/call; when the server acknowledges one for relay and the host advertises text messages, relays it once as ui/message. Non-protocol messages are ignored with no state change.
 - `MCP_APPS_PROTOCOL_VERSIONS`: The exact MCP Apps protocol revisions this adapter supports, versioned with the adapter in COMPAT.md.

@@ -91,9 +91,11 @@ describe('037 — the closed set renders as native elements', () => {
     expect(img?.getAttribute('alt')).toBe('Gráfico de ventas');
   });
 
-  it('S1 the built-in catalog carries exactly the eight native primitives at catalog schema 1.6.0', () => {
-    expect(catalogData.catalogSchemaVersion).toBe('1.6.0');
+  it('S1 the built-in catalog carries exactly the native primitives at catalog schema 1.9.0', () => {
+    expect(catalogData.catalogSchemaVersion).toBe('1.9.0');
+    // The eight of 037 and the seven read-only table elements of 158.
     expect([...NATIVE_PRIMITIVE_TAGS].sort()).toEqual([
+      'caption',
       'div',
       'em',
       'h2',
@@ -102,6 +104,12 @@ describe('037 — the closed set renders as native elements', () => {
       'img',
       'p',
       'strong',
+      'table',
+      'tbody',
+      'td',
+      'th',
+      'thead',
+      'tr',
     ]);
     const nativeTags = Object.keys(catalogData.components).filter((tag) => !tag.includes('-'));
     expect(nativeTags.sort()).toEqual([...NATIVE_PRIMITIVE_TAGS].sort());

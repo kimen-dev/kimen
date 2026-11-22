@@ -17,11 +17,19 @@ export {
   createLiveSurface,
   DEFAULT_LIVE_BATCH_BUDGETS,
   type LiveActionEvent,
+  type LiveBatch,
   type LiveBatchBudgets,
   type LiveBatchResult,
+  type LiveInsertOp,
+  type LiveOp,
+  type LiveRemoveOp,
+  type LiveReplaceOp,
+  type LiveResetOp,
+  type LiveSetOp,
   type LiveSnapshot,
   type LiveSurface,
   type LiveSurfaceOptions,
+  type LiveTextOp,
 } from './live.js';
 export { NATIVE_PRIMITIVE_TAGS } from './primitives.js';
 export {
@@ -50,6 +58,7 @@ export {
   type Catalog,
   type CatalogEntry,
   type CatalogPropConstraint,
+  COLLECT_MAX_ENTRIES,
   NODE_ID_GRAMMAR,
   type UiSpec,
   type UiSpecNode,

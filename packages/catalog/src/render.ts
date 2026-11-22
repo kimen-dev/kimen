@@ -28,6 +28,7 @@ import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js'
 import { sourceTags } from './source-reference.js';
 import { renderableTagViolation } from './tag-grammar.js';
 import type {
+  ActionBinding,
   Catalog,
   CatalogEntry,
   CatalogPropConstraint,
@@ -38,6 +39,7 @@ import type {
 import {
   acceptsEnumValue,
   acceptsNumberOrString,
+  collectedValueProp,
   ownEntry,
   toPlainData,
   validatePlainData,
@@ -94,6 +96,8 @@ export interface RenderResult {
 /** The data-only payload delivered on the renderer's single action channel. */
 export interface ActionEvent {
   readonly action: string;
+  /** The bound node's stable id, when it has one (spec 153 FR-006). */
+  readonly id?: string | undefined;
   readonly path: string;
   readonly data: Readonly<Record<string, boolean | number | string>>;
 }
@@ -101,8 +105,8 @@ export interface ActionEvent {
 /**
  * Declared render budgets (FR-006): nesting depth, node count and payload
  * size. A spec exactly at a budget passes (S14); one beyond it is rejected
- * before any node attaches (S9). The defaults are safe; a host may tighten
- * them but the renderer never renders past them.
+ * before any node attaches (S9). The defaults are safe; a host may lower or
+ * raise them, and the renderer never renders past the ones in force.
  */
 export interface RenderBudgets {
   readonly maxDepth: number;
@@ -249,6 +253,57 @@ function dialogActivation(
 }
 
 /**
+ * Renderer-native activation guard of a binding by name (FR-003, S19): it
+ * needs one event in the node's current mode. Chip type, composer status and
+ * a dialog confirm label select that event; other multi-event entries must
+ * declare their activation event, or the spec binds them per event.
+ */
+function guardNamedActivation(
+  node: UiSpecNode,
+  action: string,
+  path: string,
+  state: GuardState,
+  parent: UiSpecNode | undefined,
+): void {
+  const entry = ownEntry(state.components, node.component);
+  const events = declaredEvents(entry);
+  const activation = entry?.activationEvent;
+  if (activation !== undefined) {
+    if (!events.includes(activation)) {
+      state.diagnostics.push({
+        message: `${node.component} activationEvent must name a declared event`,
+        path,
+        rule: 'invalid-activation-event',
+        value: action,
+      });
+    }
+  } else if (chipActivations(node.component, events)) {
+    const kind =
+      node.props?.['type'] ??
+      (parent?.component === 'ki-chip-group' ? parent.props?.['type'] : undefined);
+    if (kind === 'input' && node.props?.['removable'] !== true) {
+      state.diagnostics.push({
+        message: 'an input chip needs removable: true to bind a removal action',
+        path,
+        rule: 'ambiguous-activation-event',
+        value: action,
+      });
+    }
+  } else if (
+    events.length > 1 &&
+    !promptInputActivations(node.component, events) &&
+    !dialogActivations(node.component, events)
+  ) {
+    state.diagnostics.push({
+      message: `${node.component} declares more than one event (${events.join(', ')}); a binding by name needs exactly one activation event, so bind an action per event instead, such as {"${events[0] ?? ''}": "<action>"}`,
+      path,
+      rule: 'ambiguous-activation-event',
+      value: action,
+    });
+  }
+}
+
+/**
  * Renderer-native guards over the already-catalog-validated tree (plain,
  * safe data): node-count and depth budgets, the tag grammar, the activation
  * event, icon availability and the prop-name guards. Catalog membership,
@@ -317,55 +372,21 @@ export function guardNode(
       value: typeof glyph === 'string' ? glyph : undefined,
     });
   }
-  // Renderer-native activation guard (FR-003, S19): a bound action needs one
-  // event in its current mode. Chip type, composer status, and a dialog
-  // confirm label select that event. Other multi-event entries must identify
-  // their activation event.
-  if (node.action !== undefined) {
-    const entry = ownEntry(state.components, node.component);
-    const events = declaredEvents(entry);
-    const activation = entry?.activationEvent;
-    if (node.component === 'ki-pagination' && ownEntry(node.props, 'href-template') !== undefined) {
+  // A pagination that navigates natively binds nothing, in either form. A
+  // binding per event names its events, each checked by validation (spec 154).
+  const { action } = node;
+  if (node.component === 'ki-pagination' && ownEntry(node.props, 'href-template') !== undefined) {
+    if (action !== undefined) {
       state.diagnostics.push({
         message:
           'ki-pagination uses native navigation when href-template is supplied; omit the URL template to bind an action',
         path: `${path}.action`,
         rule: 'ambiguous-activation-event',
-        value: node.action,
-      });
-    } else if (activation !== undefined) {
-      if (!events.includes(activation)) {
-        state.diagnostics.push({
-          message: `${node.component} activationEvent must name a declared event`,
-          path: `${path}.action`,
-          rule: 'invalid-activation-event',
-          value: node.action,
-        });
-      }
-    } else if (chipActivations(node.component, events)) {
-      const kind =
-        node.props?.['type'] ??
-        (parent?.component === 'ki-chip-group' ? parent.props?.['type'] : undefined);
-      if (kind === 'input' && node.props?.['removable'] !== true) {
-        state.diagnostics.push({
-          message: 'an input chip needs removable: true to bind a removal action',
-          path: `${path}.action`,
-          rule: 'ambiguous-activation-event',
-          value: node.action,
-        });
-      }
-    } else if (
-      events.length > 1 &&
-      !promptInputActivations(node.component, events) &&
-      !dialogActivations(node.component, events)
-    ) {
-      state.diagnostics.push({
-        message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
-        path: `${path}.action`,
-        rule: 'ambiguous-activation-event',
-        value: node.action,
+        value: typeof action === 'string' ? action : undefined,
       });
     }
+  } else if (typeof action === 'string') {
+    guardNamedActivation(node, action, `${path}.action`, state, parent);
   }
   for (const name of Object.keys(node.props ?? {})) {
     // Renderer-native name guard (defence in depth for hand-built catalogs that
@@ -515,6 +536,86 @@ function liveData(
     }
   }
   return data;
+}
+
+type ActionData = Readonly<Record<string, Scalar>>;
+
+/**
+ * Whether one collected field lets the action leave (spec 153 FR-003). A
+ * field that answers `reportValidity()` decides, and shows its own message
+ * when invalid; otherwise the platform's `:invalid` state decides, so a
+ * control without that method still blocks. A field barred from constraint
+ * validation, such as a disabled one, is never invalid.
+ */
+function reportsValid(element: Element): boolean {
+  const report: unknown = Reflect.get(element, 'reportValidity');
+  const reported: unknown =
+    typeof report === 'function' ? Reflect.apply(report, element, []) : undefined;
+  return typeof reported === 'boolean' ? reported : !element.matches(':invalid');
+}
+
+/** The element that comes first in document order, if any. */
+function firstInDocument(elements: readonly Element[]): Element | undefined {
+  let first: Element | undefined;
+  for (const element of elements) {
+    if (
+      first === undefined ||
+      (element.compareDocumentPosition(first) & element.DOCUMENT_POSITION_FOLLOWING) !== 0
+    ) {
+      first = element;
+    }
+  }
+  return first;
+}
+
+/**
+ * A bound node's dispatch extended with the fields it collects (spec 153
+ * FR-003, FR-004). At the gesture every named field is resolved and asked
+ * for validity, all of them so each invalid one shows its message; if any is
+ * invalid nothing is dispatched and the first invalid field in document
+ * order takes the focus. Otherwise each name carries its field's live
+ * `checked`, `selected` or `value`, read as a declared-event activation reads
+ * its own state, so only a value of the declared type crosses the channel.
+ * Without `collect`, the dispatch is returned unchanged.
+ */
+export function collectingDispatch(
+  collect: Readonly<Record<string, string>> | undefined,
+  fieldOf: (id: string) => Element | undefined,
+  entries: Readonly<Record<string, CatalogEntry>>,
+  dispatch: (data: ActionData) => void,
+): (data: ActionData) => void {
+  if (collect === undefined) {
+    return dispatch;
+  }
+  const named = Object.entries(collect);
+  return (data) => {
+    const fields = named.flatMap(([name, id]) => {
+      const element = fieldOf(id);
+      return element === undefined ? [] : [{ element, name }];
+    });
+    const invalid = [...new Set(fields.map(({ element }) => element))].filter(
+      (element) => !reportsValid(element),
+    );
+    const first = firstInDocument(invalid);
+    if (first !== undefined) {
+      const focus: unknown = Reflect.get(first, 'focus');
+      if (typeof focus === 'function') {
+        Reflect.apply(focus, first, []);
+      }
+      return;
+    }
+    const collected: Record<string, Scalar> = { ...data };
+    for (const { element, name } of fields) {
+      const entry = ownEntry(entries, element.localName);
+      const prop = entry === undefined ? undefined : collectedValueProp(entry);
+      const value =
+        prop === undefined ? undefined : readLiveScalar(element, prop.name, prop.constraint);
+      if (value !== undefined) {
+        collected[name] = value;
+      }
+    }
+    dispatch(collected);
+  };
 }
 
 /**
@@ -706,14 +807,14 @@ export function pinButtonType(
 }
 
 /**
- * Routes the bound node's activation event (FR-003) to a dispatch callback.
- * `currentProps` is read at activation time, so a caller
+ * Routes the activation event of a node bound by name (FR-003) to a
+ * dispatch callback. `currentProps` is read at activation time, so a caller
  * whose props change after build (the live surface) reports the current
  * ones; `renderUiSpec` passes the props it built with. Without a dispatch
  * callback, a dialog invoker still claims its click so a validated local
  * command cannot activate an enclosing bound node.
  */
-export function wireActivation(
+function wireActivation(
   element: Element,
   entry: CatalogEntry | undefined,
   currentProps: () => Readonly<Record<string, Scalar>>,
@@ -810,51 +911,112 @@ export function wireActivation(
 }
 
 /**
+ * Routes each event of a binding per event (spec 154 FR-003) to the dispatch
+ * of its own action, with the data of a declared-event activation, whenever
+ * the element itself reports it. None of the per-component rules of a
+ * binding by name applies. A click on the element is claimed, so no
+ * enclosing bound node fires for it, and never cancelled.
+ */
+function wireEventActions(
+  element: Element,
+  entry: CatalogEntry | undefined,
+  currentProps: () => Readonly<Record<string, Scalar>>,
+  bindings: Readonly<Record<string, string>>,
+  dispatchOf: (action: string) => (data: ActionData) => void,
+): void {
+  for (const [name, action] of Object.entries(bindings)) {
+    const dispatch = dispatchOf(action);
+    element.addEventListener(name, (event: Event) => {
+      if (event.target !== element || !claim(event)) return;
+      dispatch(liveData(element, currentProps(), entry, event));
+    });
+  }
+  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+    claim(event);
+  });
+}
+
+/**
+ * Wires a node's binding (FR-003): by name, the activation `wireActivation`
+ * derives from the catalog entry; per event, each listed event (spec 154).
+ * `dispatchOf` gives the dispatch of one action, or is undefined when there
+ * is no action channel.
+ */
+export function wireAction(
+  element: Element,
+  entry: CatalogEntry | undefined,
+  currentProps: () => Readonly<Record<string, Scalar>>,
+  action: ActionBinding | undefined,
+  dispatchOf: ((action: string) => (data: ActionData) => void) | undefined,
+): void {
+  if (typeof action === 'object' && dispatchOf !== undefined) {
+    wireEventActions(element, entry, currentProps, action, dispatchOf);
+    return;
+  }
+  wireActivation(
+    element,
+    entry,
+    currentProps,
+    typeof action === 'string' && dispatchOf !== undefined ? dispatchOf(action) : undefined,
+  );
+}
+
+/** What every node of one built tree shares. */
+interface BuildScope {
+  readonly doc: Document;
+  readonly onAction: ((event: ActionEvent) => void) | undefined;
+  readonly entries: Readonly<Record<string, CatalogEntry>>;
+  readonly idFor: DialogIdFor;
+  readonly allowedUrlOrigins: readonly string[] | undefined;
+  readonly sourceScope: symbol;
+  /** The tree's elements by node id, where a collect finds its fields (spec 153). */
+  readonly nodes: Map<string, Element>;
+}
+
+/**
  * Builds one validated node into a detached element (FR-004). Props become
  * attributes, text children become inert text nodes, and a bound action
  * routes the node's selected activation (FR-003) to the renderer's single
  * channel. No spec string is ever evaluated.
  */
-function buildNode(
-  node: UiSpecNode,
-  path: string,
-  doc: Document,
-  onAction: ((event: ActionEvent) => void) | undefined,
-  entries: Readonly<Record<string, CatalogEntry>>,
-  idFor: DialogIdFor,
-  allowedUrlOrigins: readonly string[] | undefined,
-  sourceScope: symbol,
-): Element {
-  const element = createNodeElement(doc, node.component, allowedUrlOrigins, sourceScope);
+function buildNode(node: UiSpecNode, path: string, scope: BuildScope): Element {
+  const { doc, entries, idFor, onAction } = scope;
+  const element = createNodeElement(
+    doc,
+    node.component,
+    scope.allowedUrlOrigins,
+    scope.sourceScope,
+  );
+  if (node.id !== undefined) {
+    scope.nodes.set(node.id, element);
+  }
   const props = node.props ?? {};
   writeProps(element, node.component, props, idFor, ownEntry(entries, node.component));
   writeDialogId(element, node.id, idFor);
-  const action = node.action;
-  wireActivation(
+  const { id } = node;
+  wireAction(
     element,
     ownEntry(entries, node.component),
     () => props,
-    action !== undefined && onAction !== undefined
-      ? (data) => {
-          onAction({ action, data, path });
-        }
-      : undefined,
+    node.action,
+    onAction === undefined
+      ? undefined
+      : (action) =>
+          collectingDispatch(
+            node.collect,
+            (target) => scope.nodes.get(target),
+            entries,
+            (data) => {
+              onAction({ action, data, ...(id === undefined ? {} : { id }), path });
+            },
+          ),
   );
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
       if (typeof child === 'string') {
         attachText(element, child, slotName, doc);
       } else {
-        const childElement = buildNode(
-          child,
-          `${path}.slots.${slotName}[${String(index)}]`,
-          doc,
-          onAction,
-          entries,
-          idFor,
-          allowedUrlOrigins,
-          sourceScope,
-        );
+        const childElement = buildNode(child, `${path}.slots.${slotName}[${String(index)}]`, scope);
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
         }
@@ -1036,16 +1198,18 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
   }
   const doc = ownerDocument(options.surface);
   options.surface.replaceChildren(
-    buildNode(
-      prepared.spec.root,
-      'root',
+    buildNode(prepared.spec.root, 'root', {
+      allowedUrlOrigins: options.allowedUrlOrigins,
       doc,
-      options.onAction,
-      catalog.components,
-      scopedDialogIds(options.surface, referenceTargets(prepared.spec.root, catalog.components)),
-      options.allowedUrlOrigins,
-      Symbol(),
-    ),
+      entries: catalog.components,
+      idFor: scopedDialogIds(
+        options.surface,
+        referenceTargets(prepared.spec.root, catalog.components),
+      ),
+      nodes: new Map(),
+      onAction: options.onAction,
+      sourceScope: Symbol(),
+    }),
   );
   return { diagnostics: [], ok: true };
 }
@@ -1160,17 +1324,20 @@ export function createStreamingRenderer(
       // grammar below it), never a `root` shared by every pushed chunk.
       const chunkPath = `stream[${String(attachedChunks)}]`;
       attachedChunks += 1;
+      // A chunk validates on its own, so its collect resolves within it.
       options.surface.appendChild(
-        buildNode(
-          report.spec.root,
-          chunkPath,
+        buildNode(report.spec.root, chunkPath, {
+          allowedUrlOrigins: context.allowedUrlOrigins,
           doc,
-          options.onAction,
-          catalog.components,
-          scopedDialogIds(options.surface, referenceTargets(report.spec.root, catalog.components)),
-          context.allowedUrlOrigins,
+          entries: catalog.components,
+          idFor: scopedDialogIds(
+            options.surface,
+            referenceTargets(report.spec.root, catalog.components),
+          ),
+          nodes: new Map(),
+          onAction: options.onAction,
           sourceScope,
-        ),
+        }),
       );
       return { diagnostics: [], ok: true };
     },

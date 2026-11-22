@@ -27,7 +27,7 @@ Available from the first release, `v0.1.0`. With Node.js 22 or later, use
 this command to install and start the stdio server:
 
 ```bash
-npx -y -p @kimen/mcp-server@0.1.2 kimen-mcp
+npx -y -p @kimen/mcp-server@0.1.3 kimen-mcp
 ```
 
 ## Run from the repository
@@ -77,7 +77,7 @@ The binary takes no arguments.
 | `kimen_describe_component` | write a node for one component | `{ tag }` → its props (types, allowed values, defaults, required), slots, events, `--ki-*` tokens and parts; the text is the emitter's authoring block for it |
 | `kimen_validate_spec` | draft and correct a spec | `{ spec }` → `{ ok, issueCount, issues[] }`, each issue `{ code, path, message, value? }`; at most 50 issues listed, values cut to 256 characters |
 | `kimen_render_spec` | show the spec to the person | `{ spec }` → the MCP Apps surface result and a text outline; an invalid spec is never rendered, the issues come back instead |
-| `kimen_surface_action` | — (app-only) | the surface's declared actions; acknowledged only when a surface rendered on the same connection declared them; each acknowledgment asks the surface to relay the action to the model |
+| `kimen_surface_action` | — (app-only) | the surface's declared actions (with the node `id` and page `revision` the surface adds, accepted and ignored); acknowledged only when a surface rendered on the same connection declared them; each acknowledgment asks the surface to relay the action to the model |
 
 `spec` is a UI spec object, or the same JSON as text. The catalog, the
 spec-authoring guide and the spec JSON Schema are also resources:

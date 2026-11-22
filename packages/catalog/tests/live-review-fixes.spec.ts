@@ -230,8 +230,9 @@ describe('035 S21 — replace and remove keep what the user changed', () => {
       expect(result.diagnostics[0]).toMatchObject({
         path: 'ops[0].id',
         rule: 'user-state-conflict',
-        value: 'typed by the user',
       });
+      // Spec 159 FR-004: the rejection never repeats the typed text.
+      expect(JSON.stringify(result.diagnostics)).not.toContain('typed by the user');
       expect(result.revision).toBe(1);
       expect(surface.innerHTML).toBe(html);
       expect(surface.querySelector('ki-input')).toBe(input);

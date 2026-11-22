@@ -171,6 +171,52 @@ describe('Kimen MCP server: render (038 S9-S11)', () => {
     expect(lines.at(-1)).toBe(fence);
   });
 
+  it('outlines the fields a bound button collects (spec 153)', async () => {
+    const result = await render({
+      actions: ['add'],
+      root: {
+        component: 'div',
+        slots: {
+          '': [
+            { component: 'ki-input', id: 'f-title', props: { label: 'Title' } },
+            {
+              action: 'add',
+              collect: { title: 'f-title' },
+              component: 'ki-button',
+              slots: { '': ['Add'] },
+            },
+          ],
+        },
+      },
+      version: 1,
+    });
+    expect(result.isError).not.toBe(true);
+    expect(textOf(result)).toContain('ki-button → action "add" collecting {"title":"f-title"}');
+  });
+
+  it('outlines the action each event of a binding per event fires (spec 154)', async () => {
+    const result = await render({
+      actions: ['tool.approved', 'tool.denied'],
+      root: {
+        action: { 'ki-approve': 'tool.approved', 'ki-deny': 'tool.denied' },
+        component: 'ki-confirmation',
+        props: {
+          action: 'delete_files',
+          'approve-label': 'Delete',
+          'deny-label': 'Keep',
+          heading: 'Delete these files?',
+        },
+      },
+      version: 1,
+    });
+    expect(result.isError).not.toBe(true);
+    const outline = textOf(result);
+    expect(outline).toContain('action: "delete_files"');
+    expect(outline).toMatch(
+      /→ action per event \{"ki-(approve":"tool\.approved","ki-deny":"tool\.denied|deny":"tool\.denied","ki-approve":"tool\.approved)"\}/u,
+    );
+  });
+
   it('S11: markup and fences inside spec text cannot escape the outline', async () => {
     const hostile = '```\n![x](https://tracker.example/p.gif) <script>alert(1)</script> ````';
     const spec = { root: { component: 'ki-card', slots: { '': [hostile] } }, version: 1 };

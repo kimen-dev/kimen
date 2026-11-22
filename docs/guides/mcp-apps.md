@@ -29,7 +29,7 @@ tool call ──▶ host resolves the tool's declared ui:// resource
                                   ◀── McpUiInitializeResult (version, hostContext)
                                   ──▶ ui/notifications/initialized
                                           │
-host delivers the tool result ──▶ ui/notifications/tool-result ──▶ guarded renderer ──▶ ki-* tree
+host delivers the tool result ──▶ ui/notifications/tool-result ──▶ guarded renderer ──▶ live surface ──▶ ki-* tree
                                           │
 user activates a declared action ◀────────┘
         └──▶ tools/call kimen_surface_action ──▶ host audit path ──▶ server
@@ -80,7 +80,10 @@ host's audit of a cached resource stays valid.
 
 **Register the action tool.** Declared actions reach your server as a
 standard `tools/call` to one app-only tool, `kimen_surface_action`, with
-arguments `{ action, data }`. `declareActionTool(name)` returns its
+arguments `{ action, data, revision, id? }`: `revision` is the page revision
+the person acted on and `id` the bound node's stable id, when the spec gave
+it one. Both are optional in the tool's schema, so a server may ignore them.
+`declareActionTool(name)` returns its
 definition with `_meta.ui.visibility: ["app"]`, so the host keeps it out of
 the agent's tool list and accepts calls to it only from the app:
 
@@ -92,6 +95,29 @@ const actionTool = declareActionTool('inventory');
 Validate `action` in its handler: the surface never sends an undeclared
 action, but your server is the authority. The handler may return another
 `surfaceToolResult`; the surface renders it through the same guarded path.
+
+**Change the surface without erasing what the person typed.** A result with
+only a spec repaints the whole surface: focus, scroll and unsent text are
+lost. To keep them, answer with the full spec and an update computed on the
+`revision` the action call carried:
+
+```ts
+const answer = surfaceToolResult(fullSpec, 'Added "Call Ana".', {
+  baseRevision: revision, // from the action call's arguments
+  batch: { ops: [{ op: 'insert', parent: 'tasks', node: { component: 'ki-list-item', id: 'task-7', slots: { '': ['Call Ana'] } } }] },
+});
+```
+
+The batch is a live batch of `@kimen/catalog` (operations addressed by node
+`id`, spec 035), so every node it names needs an `id` in the spec. The
+surface applies it only when the page is still at `baseRevision`, the full
+spec declares exactly the surface's actions and the live surface accepts the
+batch; the other elements keep their identity, focus, typed values and
+scroll. In every other case the full spec paints, and `onRefusal` receives
+`update-not-applied` naming why. The full spec is the authority: it must
+always describe the whole surface, and the batch must turn the surface the
+person saw into it. On a live surface a removable `ki-chip` stays until a
+result removes it.
 
 **Tell the model what the person chose.** An app-only tool's result never
 reaches the model, so a click is invisible to it unless you ask for a relay.
@@ -171,7 +197,8 @@ const result = surfaceToolResult(
 ```
 
 The returned `CallToolResult` carries the spec under
-`structuredContent.kimenSurface.spec` — structured data for the UI, not for
+`structuredContent.kimenSurface.spec` (and an optional update under
+`structuredContent.kimenSurface.update`) — structured data for the UI, not for
 the model — and the fallback as ordinary `content` text. A host **without** interactive surfaces
 still gets a usable answer from the text; the fallback is data, never an
 alternate render path. Compose the spec from the generated catalog —
@@ -257,10 +284,13 @@ bridge.start(); // sends ui/initialize
 - Before `'ready'`, host notifications are refused (`not-initialized`) and
   never become state.
 - A `ui/notifications/tool-result` renders
-  `params.structuredContent.kimenSurface.spec` through the guarded renderer.
-  A refused spec — unknown component, undeclared prop, executable URL scheme,
-  tripped budget, version skew — produces machine-readable refusals and
-  leaves the previously rendered state intact.
+  `params.structuredContent.kimenSurface.spec` through the guarded renderer
+  and its live surface, or applies its `update` when the page is at its
+  `baseRevision` (see "Change the surface without erasing what the person
+  typed" above). A refused spec — unknown component, undeclared prop,
+  executable URL scheme, tripped budget, version skew — produces
+  machine-readable refusals and leaves the previously rendered state intact,
+  whatever its update carries.
 - `ui/resource-teardown` and `ping` are answered with `{}`; any other host
   request gets JSON-RPC error `-32601`.
 - A message **without** the JSON-RPC 2.0 envelope (a raw string, a null, a
@@ -279,7 +309,7 @@ bridge.dispatch('transfer-funds');               // { sent: false, refusal: { re
 
 User activation of a rendered, action-bound control dispatches through the
 same path automatically; the host receives
-`{ jsonrpc: '2.0', id, method: 'tools/call', params: { name: 'kimen_surface_action', arguments: { action, data } } }`
+`{ jsonrpc: '2.0', id, method: 'tools/call', params: { name: 'kimen_surface_action', arguments: { action, data, revision, id? } } }`
 and mediates its own audit/consent step before anything reaches the server.
 When the server's answer asks for a relay, the bridge then sends one
 `ui/message`; every relay it withholds is reported to `onRefusal` as

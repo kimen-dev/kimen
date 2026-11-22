@@ -54,9 +54,16 @@ const result = surfaceToolResult(
 `createSurfaceBridge` speaks the MCP Apps `2026-01-26` lifecycle: it opens
 with the `ui/initialize` request, confirms with `ui/notifications/initialized`,
 renders `ui/notifications/tool-result` (the spec in
-`structuredContent.kimenSurface`) through the guarded renderer, ignores
-non-protocol traffic, and lets only declared actions leave as a `tools/call`
-to the app-only `kimen_surface_action` tool (`declareActionTool`). A host
+`structuredContent.kimenSurface`) through the guarded renderer and its live
+surface, ignores non-protocol traffic, and lets only declared actions leave as
+a `tools/call` to the app-only `kimen_surface_action` tool
+(`declareActionTool`), naming the page revision and the bound node's id.
+
+A result can also carry an update next to its full spec: a live batch
+computed on the revision the person acted on
+(`surfaceToolResult(spec, text, { baseRevision, batch })`). The surface
+applies it only on that revision, keeping what the person is typing, the focus
+and the scroll; otherwise it paints the full spec. A host
 negotiating a protocol version outside `COMPAT.md` is refused at the
 handshake, and nothing renders before it completes.
 

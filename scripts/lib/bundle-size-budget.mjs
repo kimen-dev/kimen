@@ -26,8 +26,32 @@ const BASE_BUDGETS = {
   // feedback, item 1; approved 2026-11-21) measured +1,066 B raw for kimen-mcp, which
   // embeds the token stylesheets; the raw base absorbs it. The compressed growth fits,
   // and the MCP Apps document stays within its base.
-  mcpApps: { raw: 782_242, gzip: 177_349, brotli: 140_306 },
-  mcpServer: { raw: 2_575_155, gzip: 484_697, brotli: 380_341 },
+  // Spec 153 (action collect, approved 2026-11-21) measured against main
+  // 618df310: the collect checks, the dispatch-time validity gate and the agent
+  // texts add 2,350 / 744 / 685 B to the MCP Apps document and 5,770 / 1,764 /
+  // 1,285 B to kimen-mcp, which also carries the document.
+  // Spec 157 (MCP Apps live updates, approved 2026-11-21) paints the document through
+  // the live surface, which the bundler dropped before because nothing imported it,
+  // so the live-surface code of specs 035 and 155 now ships in both. Measured against
+  // main f79f91f1 on macOS: +18,218 / 5,856 / 4,981 B for the document and
+  // +18,736 / 5,951 / 5,025 B for kimen-mcp, added here exactly so the headroom stays
+  // what it was. The founder approved re-basing by the cost measured there (2026-11-21).
+  // Spec 154 (action per event, approved 2026-11-21) measured against main
+  // fb7f11c0: the per-event wiring and checks, now in the live surface the document
+  // ships too, and the agent texts add 1,156 / 331 / 300 B to the MCP Apps document
+  // and 4,166 / 1,109 / 974 B to kimen-mcp.
+  // Spec 155 Task 4 (the live surface's reset op) measured against main
+  // 0b5c847c on macOS: +1,197 / 337 / 298 B for the document and +1,197 / 342 /
+  // 299 B for kimen-mcp, added here exactly so the headroom stays what it was.
+  // The founder approved re-basing all three metrics by that cost (2026-11-22).
+  // Spec 158 (read-only native tables, approved 2026-11-22) measured against main
+  // 3556b3dd on macOS: the seven catalog entries, the table content model, the
+  // emitter's self-validating example and, in kimen-mcp only, the guide's table
+  // section add 5,553 / 1,495 / 1,190 B to the MCP Apps document and 13,334 /
+  // 3,250 / 2,121 B to kimen-mcp, which carries the document and its own catalog.
+  // The founder approved re-basing all three metrics by that cost (2026-11-22).
+  mcpApps: { raw: 810_716, gzip: 186_112, brotli: 147_760 },
+  mcpServer: { raw: 2_618_358, gzip: 497_113, brotli: 390_045 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.

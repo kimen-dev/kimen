@@ -13,6 +13,7 @@ export const KiNumberInput: StencilVueComponent<JSX.KiNumberInput, JSX.KiNumberI
   'label',
   'helpText',
   'errorText',
+  'customError',
   'required',
   'disabled',
   'name',

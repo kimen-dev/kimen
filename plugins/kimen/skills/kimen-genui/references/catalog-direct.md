@@ -70,8 +70,9 @@ defineCustomElements(); // agent output can name any catalog tag
 
 const result = renderUiSpec(spec, {
   surface: document.querySelector('#genui')!,
-  onAction: ({ action, data, path }) => {
-    // action: a declared name; data: the control's props and live value.
+  onAction: ({ action, data, id, path }) => {
+    // action: a declared name; id: the node's id, when it has one;
+    // data: the control's props and live value, plus the collected fields.
     // Untrusted input: validate before acting.
   },
 });
@@ -87,10 +88,15 @@ write, so a rejected spec leaves the surface untouched.
   `push(node)` per top-level child as the model streams: each subtree
   attaches only when it is fully valid. Declare `actions` up front.
 - `createLiveSurface({ surface, actions, onAction })` then `apply(batch)` with
-  id-addressed `insert`, `set`, `text`, `remove` and `replace` operations:
-  the whole batch is validated first, and only the named nodes change, so
-  focus, typed values and scroll survive. Give nodes stable `id`s in the
-  first spec.
+  id-addressed `insert`, `set`, `text`, `remove`, `replace` and `reset`
+  operations: the whole batch is validated first, and only the named nodes
+  change, so focus, typed values and scroll survive. Give nodes stable `id`s
+  in the first spec. Check `ok` on every result: a rejection is returned, not
+  thrown, and leaves earlier batches applied. When a batch removes the row
+  that had focus, name the next row's control in the batch's `focus`.
+- After a create, empty the add form with `{ op: 'reset', id }` per field.
+  It needs no `force`; it is rejected as `unsent-user-input` when the person
+  typed again after the action, and then the form is left alone.
 
 ## Your own components
 

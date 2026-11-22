@@ -13,6 +13,7 @@ export const KiDatePicker: StencilVueComponent<JSX.KiDatePicker> = /*@__PURE__*/
   'label',
   'helpText',
   'errorText',
+  'customError',
   'required',
   'disabled',
   'name',

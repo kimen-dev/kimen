@@ -84,6 +84,16 @@ elements (spec 037), listed in `NATIVE_PRIMITIVE_TAGS`:
   as `var(--ki-space-<step>)`), `align`, `justify` and `wrap`. The layout
   is written through the CSSOM, never as a `style` attribute, so a page
   whose Content-Security-Policy forbids inline styles keeps working.
+- **Tables** (spec 158): `table`, `caption`, `thead`, `tbody`, `tr`, `th`
+  and `td`, for reading only. The one attribute is a `th`'s `scope`
+  (`col` | `row`, optional). A `table` holds, in order, at most one
+  `caption`, at most one `thead`, then any number of `tbody`; `thead` and
+  `tbody` hold only `tr`, and `tr` only `th` and `td`, none of them text. A
+  `caption` holds text, `strong` and `em`, and a cell holds what a `div`
+  holds, except a table. A table part sits only in its own parent: never in
+  a `div`, a cell, a component's slot or at a root. Put the table in a
+  `ki-table` for Kimen styling, and leave `selectable` off: a spec cannot
+  key a row or sort a column.
 
 ```json
 {
@@ -106,8 +116,9 @@ elements (spec 037), listed in `NATIVE_PRIMITIVE_TAGS`:
 Every other element (`script`, `iframe`, `a`, `span`, `SCRIPT`, …) is
 `unknown-component`, and every other attribute (`style`, `class`, `on*`,
 `srcset`, …) is `unknown-prop`. Headings, paragraphs and emphasis accept
-only text, `strong` and `em` (`invalid-child` otherwise), and no native
-element binds an action (`action-not-allowed`). The primitives come with
+only text, `strong` and `em`, a table keeps the content model above
+(`invalid-child` otherwise), and no native element binds an action
+(`action-not-allowed`). The primitives come with
 the built-in catalog and with catalogs that `extend` it; a consumer
 definition can never declare one, and the renderer renders a native tag
 only when the catalog in use carries exactly Kimen's definition of it.
@@ -135,14 +146,90 @@ Over the validation layer it enforces the safe-render semantics:
 - **No code path from spec data.** Text is attached as inert text nodes,
   never parsed as markup; the catalog exposes no event-handler props;
   URL-typed props accept only `http`, `https` and relative references —
-  every other scheme is rejected naming the prop and scheme.
+  every other scheme is rejected naming the prop and scheme. A prop the
+  catalog marks as text is never a URL, whatever its name:
+  `ki-confirmation`'s `action` is a tool identifier.
 - **Declared budgets.** Depth, node count and payload size — a spec exactly
   at a budget renders, one beyond it is rejected before any node attaches.
 - **Version skew.** A spec declaring an unsupported `catalogSchemaVersion`
   is rejected naming both versions.
 - **Declarative actions only.** A bound control dispatches its one declared
   action, as data, on the single `onAction` channel — exactly one action
-  fires even for nested action-bound nodes; no other callback exists.
+  fires even for nested action-bound nodes; no other callback exists. The
+  event names the node's `id` when it has one.
+
+## An action per event
+
+A node bound by name fires its action on the one event its catalog entry
+derives. A component that reports several answers maps each event it
+declares to its own action instead (catalog schema `1.8.0`):
+
+```json
+{
+  "version": 1,
+  "actions": ["tool.approved", "tool.denied"],
+  "root": {
+    "component": "ki-confirmation",
+    "props": {
+      "heading": "Delete these 12 files?",
+      "action": "delete_files",
+      "approve-label": "Delete",
+      "deny-label": "Keep files"
+    },
+    "action": { "ki-approve": "tool.approved", "ki-deny": "tool.denied" }
+  }
+}
+```
+
+Each listed event fires whenever the component reports it, with the same
+data a binding by name carries. A `ki-dialog` bound per event reports both
+its confirmation and every close, the host's own included. Collected fields
+apply to every bound event, so an invalid one also stops a dialog's close
+action: keep a form's fields behind a button that collects them. A key the
+component does not declare (`undeclared-event`), an action outside the
+`actions` list, an empty object or any binding on a native element is
+rejected before anything renders. Components that declare several events
+and no rule that picks one, such as `ki-confirmation`, `ki-table` or
+`ki-search`, bind only this way.
+
+## A form
+
+A spec has no native form. A bound button names, by id, the fields its
+action takes (`collect`, catalog schema `1.7.0`); the fields need no action
+of their own:
+
+```json
+{
+  "version": 1,
+  "actions": ["add"],
+  "root": {
+    "component": "div",
+    "slots": {
+      "": [
+        { "id": "f-title", "component": "ki-input", "props": { "label": "Title", "required": true } },
+        { "id": "f-qty", "component": "ki-number-input", "props": { "label": "Quantity" } },
+        {
+          "component": "ki-button",
+          "props": { "variant": "primary" },
+          "action": "add",
+          "collect": { "title": "f-title", "quantity": "f-qty" },
+          "slots": { "": ["Add"] }
+        }
+      ]
+    }
+  }
+}
+```
+
+When the person activates **Add**, every collected field is asked for
+validity first: an invalid one stops the action, shows its own message and
+the first one takes the focus. Otherwise the host receives `add` with the
+fields' live values next to the button's props, typed as the controls hold
+them: `{ variant: 'primary', title: 'Buy milk', quantity: 2 }`. An empty
+number field adds no key, and Enter does not submit. A `collect` without an
+`action`, naming no node of the spec or a node with no value, taking the
+name of one of the button's own props, or with more than 32 entries is
+rejected before anything renders.
 
 A re-render on the same surface replaces the previous tree (and its action
 listeners) atomically once validation succeeds; a rejected re-render leaves
@@ -158,6 +245,70 @@ fail-closed while previously validated content remains; the budgets bind the
 accumulated stream, so a stream that never closes still trips its payload
 budget; and once halted — by an invalid node, a tripped budget, version skew
 or `close()` — every further push is rejected.
+
+## Live surface
+
+A surface that lives for hours — a board the agent keeps current while the
+person works in it — must change in place, because `renderUiSpec` replaces
+the whole tree and with it focus, typed text and scroll. `createLiveSurface`
+applies small **batches of operations addressed by node `id`**:
+
+```ts
+import { createLiveSurface, type LiveBatch } from '@kimen/catalog';
+
+const live = createLiveSurface({
+  surface: document.querySelector('#board'),
+  actions: ['remove-task'], // the declared action set, fixed at creation
+  onAction: (event) => handle(event), // { action, id, path, revision, data }
+});
+
+const batch: LiveBatch = {
+  ifRevision: live.revision, // optional optimistic concurrency
+  focus: 'delete-t3', // where focus goes if this batch leaves it nowhere
+  ops: [
+    { op: 'set', id: 'confirm', props: { open: false } },
+    { op: 'remove', id: 't2' },
+  ],
+};
+const result = live.apply(batch);
+if (!result.ok) console.warn(result.diagnostics); // a rejection is returned, never thrown
+```
+
+The ops are `insert`, `set` (`null` removes a prop), `text`, `remove`,
+`replace` and `reset`; there is no move op.
+
+- **Atomic per batch.** Every op is applied to a copy of the state and the
+  resulting state is validated like a spec before any DOM write. A rejected
+  batch changes nothing and the surface keeps accepting batches. Atomicity
+  stops at the batch: a batch rejected after others leaves those applied.
+- **Only what it names changes.** Other elements keep their identity, focus,
+  typed values and scroll.
+- **Five limits, all host options.** Per batch (`batchBudgets`): 64 ops and
+  65,536 bytes. Per resulting state (`budgets`): 512 nodes, 32 levels and
+  262,144 bytes. The host may lower or raise each one at creation; with a
+  raised batch budget a whole page fits in one batch.
+- **The person's state wins.** Once the person changed a control's own
+  `checked`, `open`, `selected` or `value`, a batch that would overwrite or
+  discard it is rejected (`user-state-conflict`), unless the op says
+  `force: true` and the host created the surface with
+  `allowUserStateOverride: true`. A forced `set` covers only the props it
+  names: forcing a search closed leaves the query the person typed theirs.
+- **Emptying a form after it was sent.** `{ op: 'reset', id }` returns a
+  control to its spec value, or empties it, without `force` or host
+  permission, but only when what it holds already left in an action. Text
+  the person typed after pressing Add is kept, and the batch is rejected as
+  `unsent-user-input`. After a create, answer the action with a batch that
+  resets the form's fields; if it is rejected, leave the form alone.
+- **Reopening a dialog the person closed** takes two batches: `open: false`,
+  then `open: true`. The rejection of a single `open: true` says so.
+- **Focus is repaired, never taken.** If, once the batch has settled, focus
+  is nowhere, it goes to the node named in `focus`, or, without one, to the
+  replacement of the node that held it. Focus the person has anywhere else
+  never moves. Name a control that can take focus, such as the next row's
+  Delete button.
+- **One batch at a time, and actions name their node.** A batch applied
+  while another is being applied is rejected as `reentrant-batch`; action
+  events carry the node's `id`, its current `path` and the `revision`.
 
 ## What validation does not protect against
 
