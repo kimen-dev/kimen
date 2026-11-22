@@ -225,6 +225,17 @@ describe('158 — a table keeps its content model', () => {
       'root.slots.[0]',
     ],
     ['the spec with a tr as its root', node('tr', [node('td', ['x'])]), 'root'],
+    // Tables never nest, at any depth below a cell (D3).
+    [
+      'a td holding a layout div that holds a table',
+      cell(node('div', [cell('x')])),
+      'root.slots.[0].slots.[0].slots.[0].slots.[0].slots.[0]',
+    ],
+    [
+      'a th holding a ki-card that holds a table',
+      tableOf(node('tr', [node('th', [node('ki-card', [cell('x')])])])),
+      'root.slots.[0].slots.[0].slots.[0].slots.[0].slots.[0]',
+    ],
   ];
 
   it.each(rejected)('S4 rejects %s as invalid-child', (_, root, path) => {
@@ -247,6 +258,24 @@ describe('158 — a table keeps its content model', () => {
     expect(messageOf(tableOf(node('tr', [node('div')])))).toMatch(/\bth\b.*\btd\b/u);
     expect(messageOf(node('table', [bodyRow(), node('caption')]))).toMatch(/\bcaption\b/u);
     expect(messageOf(cell(cell('x')))).toMatch(/\btable\b/u);
+  });
+
+  it('S4 a rejected part does not hide the order of the parts after it', () => {
+    const head = (): UiSpecNode => node('thead', [node('tr', [node('th', ['A'])])]);
+    const report = validateUiSpec(spec(node('table', [head(), node('div'), head()])));
+    expect(report.issues.map((issue) => [issue.code, issue.path])).toEqual([
+      ['invalid-child', 'root.slots.[1]'],
+      ['invalid-child', 'root.slots.[2]'],
+    ]);
+  });
+
+  it('S4 a table outside any cell may still sit in a div or a component slot', () => {
+    for (const root of [
+      node('div', [node('div', [cell('x')])]),
+      node('ki-card', [node('div', [cell('x')])]),
+    ]) {
+      expect(validateUiSpec(spec(root))).toEqual({ issues: [], ok: true });
+    }
   });
 
   it('S4 empty table elements are valid, as an empty paragraph is', () => {
@@ -405,6 +434,10 @@ describe('158 — live surfaces keep the table content model', () => {
     ['inserts into "cuerpo" a layout div', { node: node('div'), op: 'insert', parent: 'cuerpo' }],
     ['inserts a tr as a top-level node', { node: row('r9', 'x'), op: 'insert' }],
     ['replaces a row with a layout div', { id: 'r1', node: node('div'), op: 'replace' }],
+    [
+      'inserts into a row a cell whose div holds a table',
+      { node: node('td', [node('div', [cell('x')])]), op: 'insert', parent: 'r1' },
+    ],
   ])('S9 a live batch that %s changes nothing', (_, op) => {
     const live = mount();
     const html = surface.innerHTML;

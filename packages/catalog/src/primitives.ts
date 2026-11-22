@@ -132,10 +132,22 @@ export function contentModelViolation(
   if (parent === 'table' && outOfTableOrder(previous, child)) {
     return `a table holds at most one caption, then at most one thead, then tbody elements; "${child}" cannot follow "${previous ?? ''}"`;
   }
-  if (TABLE_CELLS.has(parent) && child === 'table') {
-    return `a ${parent} cannot hold a table: tables never nest`;
-  }
   return null;
+}
+
+/** Whether `tag` is a table cell, below which no table sits (158 D3). */
+export function isTableCell(tag: string): boolean {
+  return TABLE_CELLS.has(tag);
+}
+
+/**
+ * Why `child` may not sit below a table cell, at any depth (through a
+ * `div` or a component's slot as well), or null when it may (158 D3).
+ */
+export function belowCellViolation(child: string): string | null {
+  return child === 'table'
+    ? 'a table cannot sit inside a td or th, at any depth: tables never nest'
+    : null;
 }
 
 /** Why `parent` may not hold text, or null when it may (158 D3). */

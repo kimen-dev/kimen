@@ -26,8 +26,10 @@ import { z } from 'zod';
 import { DIALOG_TAG, isDialogCommand, isDialogInvoker } from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
 import {
+  belowCellViolation,
   contentModelViolation,
   isNativePrimitive,
+  isTableCell,
   rootViolation,
   textViolation,
 } from './primitives.js';
@@ -510,6 +512,8 @@ interface CheckContext {
   readonly issues: ValidationIssue[];
   readonly scope: NodeValidationScope;
   readonly allowedUrlOrigins: readonly string[] | undefined;
+  /** Whether the node sits below a table cell, at any depth (158 D3). */
+  readonly insideCell?: boolean;
 }
 
 /**
@@ -1024,6 +1028,11 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   }
   checkAction(node, entry, path, context);
   checkCollect(node, entry, path, context);
+  // Below a cell, at any depth, no table sits: tables never nest (158 D3).
+  const childContext: CheckContext =
+    context.insideCell !== true && isTableCell(node.component)
+      ? { ...context, insideCell: true }
+      : context;
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     if (entry !== undefined && !Object.hasOwn(entry.slots, slotName)) {
       issues.push({
@@ -1033,6 +1042,7 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
         value: slotName,
       });
     }
+    // The last accepted element child, so a table's order is checked against it.
     let previous: string | undefined;
     children.forEach((child, index) => {
       const childPath = `${path}.slots.${slotName}[${String(index)}]`;
@@ -1043,9 +1053,12 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
         }
         return;
       }
-      const misplaced = contentModelViolation(node.component, child.component, previous);
-      previous = child.component;
-      if (misplaced !== null) {
+      const misplaced =
+        contentModelViolation(node.component, child.component, previous) ??
+        (childContext.insideCell === true ? belowCellViolation(child.component) : null);
+      if (misplaced === null) {
+        previous = child.component;
+      } else {
         issues.push({
           code: 'invalid-child',
           message: misplaced,
@@ -1053,7 +1066,7 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
           value: child.component,
         });
       }
-      checkNode(child, childPath, context);
+      checkNode(child, childPath, childContext);
     });
   }
 }
