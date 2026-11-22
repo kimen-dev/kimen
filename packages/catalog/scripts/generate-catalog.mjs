@@ -47,8 +47,12 @@ import { NATIVE_PRIMITIVES } from './primitives.mjs';
  * declare `format: "text"`, which is never a URL whatever its name. Additive:
  * a 1.7.0 spec keeps its meaning, and a 1.7.0 boundary refuses a 1.8.0 spec
  * rather than reading a binding it cannot wire.
+ * 1.9.0 (spec 158): the native primitives gain the read-only table elements
+ * (table, caption, thead, tbody, tr, th, td) under a strict content model.
+ * Additive: a 1.8.0 spec keeps its meaning, and a 1.8.0 boundary refuses a
+ * 1.9.0 spec rather than reading table tags it cannot guard.
  */
-export const CATALOG_SCHEMA_VERSION = '1.8.0';
+export const CATALOG_SCHEMA_VERSION = '1.9.0';
 
 /**
  * A spec owns no form, so a submit or reset button in it could only act on

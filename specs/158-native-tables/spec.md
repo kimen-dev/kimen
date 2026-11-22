@@ -8,8 +8,8 @@
 
 **Created**: 2026-11-22
 
-**Status**: Draft. Awaiting the founder's approval of the scenarios and of
-the amendment to spec 037 below. Every scenario is a guardrail scenario
+**Status**: Approved. The founder approved the scenarios and the amendment
+to spec 037 verbatim on 2026-11-22. Every scenario is a guardrail scenario
 (Art. VIII).
 
 **Input**: Founder decision of 2026-11-21 on the improvements to land before
@@ -34,7 +34,7 @@ component changes.
 
 ## Decisions
 
-Proposed by the agent, for the founder's approval with the scenarios.
+Proposed by the agent and approved by the founder with the scenarios.
 
 - **D1 Seven elements**: `table`, `caption`, `thead`, `tbody`, `tr`, `th`
   and `td`. Out on purpose:
@@ -337,7 +337,7 @@ native primitives.
 - **FR-007**: spec 037 MUST be amended as below. Its scenarios do not
   change: S2 lists no table element, and S9 still holds for every native.
 
-### Amendment to spec 037 (to apply on approval)
+### Amendment to spec 037 (applied)
 
 `specs/037-native-primitives/spec.md`, three passages. `feature.feature`
 and the Gherkin block of `spec.md` do not change.

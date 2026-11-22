@@ -25,7 +25,12 @@ import { z } from 'zod';
 
 import { DIALOG_TAG, isDialogCommand, isDialogInvoker } from './dialog-commands.js';
 import { catalogData } from './generated/catalog.js';
-import { contentModelViolation, isNativePrimitive } from './primitives.js';
+import {
+  contentModelViolation,
+  isNativePrimitive,
+  rootViolation,
+  textViolation,
+} from './primitives.js';
 import { sourceTags } from './source-reference.js';
 import { isUrlProp, urlViolation } from './url-policy.js';
 
@@ -1028,20 +1033,27 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
         value: slotName,
       });
     }
+    let previous: string | undefined;
     children.forEach((child, index) => {
-      if (typeof child !== 'string') {
-        const childPath = `${path}.slots.${slotName}[${String(index)}]`;
-        const misplaced = contentModelViolation(node.component, child.component);
-        if (misplaced !== null) {
-          issues.push({
-            code: 'invalid-child',
-            message: misplaced,
-            path: childPath,
-            value: child.component,
-          });
+      const childPath = `${path}.slots.${slotName}[${String(index)}]`;
+      if (typeof child === 'string') {
+        const textual = textViolation(node.component);
+        if (textual !== null) {
+          issues.push({ code: 'invalid-child', message: textual, path: childPath });
         }
-        checkNode(child, childPath, context);
+        return;
       }
+      const misplaced = contentModelViolation(node.component, child.component, previous);
+      previous = child.component;
+      if (misplaced !== null) {
+        issues.push({
+          code: 'invalid-child',
+          message: misplaced,
+          path: childPath,
+          value: child.component,
+        });
+      }
+      checkNode(child, childPath, context);
     });
   }
 }
@@ -1109,13 +1121,18 @@ export interface ValidationContext {
  * the typed spec alongside the report so a caller that will render (spec
  * 028) never re-parses. Never touches untrusted input directly. A caller
  * providing a scope resolves its command references after validating all
- * participating roots.
+ * participating roots. The report names the root by `rootPath`. A
+ * `fragment` is a live op's node: its placement is checked where it lands,
+ * on the batch's resulting state, never as a root of its own (spec 158 D4).
  */
 export function validatePlainData(
   data: unknown,
   context: ValidationContext = {},
   scope?: NodeValidationScope,
-  rootPath = 'root',
+  {
+    fragment = false,
+    rootPath = 'root',
+  }: { readonly fragment?: boolean; readonly rootPath?: string } = {},
 ): ValidationReport & { spec?: UiSpec } {
   const parsed = uiSpecSchema.safeParse(data);
   if (!parsed.success) {
@@ -1130,8 +1147,18 @@ export function validatePlainData(
   }
 
   const issues: ValidationIssue[] = [];
+  const { root } = parsed.data;
+  const misplaced = fragment ? null : rootViolation(root.component);
+  if (misplaced !== null) {
+    issues.push({
+      code: 'invalid-child',
+      message: misplaced,
+      path: rootPath,
+      value: root.component,
+    });
+  }
   const nodeScope = scope ?? createValidationScope();
-  checkNode(parsed.data.root, rootPath, {
+  checkNode(root, rootPath, {
     allowedUrlOrigins: context.allowedUrlOrigins,
     declaredActions: new Set(parsed.data.actions ?? []),
     entries: (context.catalog ?? builtInCatalog).components,
