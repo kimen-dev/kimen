@@ -805,6 +805,13 @@
       "ring-color": {
         "$value": "{ki.foundation.onmars-v2.palette.focus-ring-color-dark}"
       }
+    },
+    "contrast-more": {
+      "select": {
+        "placeholder-fg": {
+          "$value": "{ki.inverse-white.alpha-80}"
+        }
+      }
     }
   }
 }

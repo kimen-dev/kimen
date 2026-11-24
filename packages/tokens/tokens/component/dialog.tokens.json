@@ -215,6 +215,26 @@
           "$type": "cubicBezier"
         }
       }
+    },
+    "contrast-more": {
+      "dialog": {
+        "border": {
+          "$type": "border",
+          "$value": {
+            "color": "{ki.outline.strong}",
+            "width": "{ki.size.border.hairline}",
+            "style": "{ki.border.style.solid}"
+          },
+          "$description": "--ki-dialog-border under more contrast: an edge at 3:1 or more against the page."
+        },
+        "divider": {
+          "color": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-dialog-divider-color under more contrast: the dividers at 3:1 or more."
+          }
+        }
+      }
     }
   }
 }

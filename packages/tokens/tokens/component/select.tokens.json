@@ -389,6 +389,15 @@
           "$description": "dimension used by the select component for the xl label line height (body-2, Input-label lg; spec 050 D4)."
         }
       }
+    },
+    "contrast-more": {
+      "select": {
+        "placeholder-fg": {
+          "$type": "color",
+          "$value": "{ki.text.supporting}",
+          "$description": "--ki-select-placeholder-fg under more contrast: the strengthened neutral ink."
+        }
+      }
     }
   }
 }

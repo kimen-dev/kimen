@@ -384,31 +384,42 @@ test('[S10] the pre-registration rule declares display: block on unregistered Ki
 
 // Modes (specs 043/044): each mode is a media-query block and a declaration
 // rule with the same declarations, after the token rule, in contract order.
-const modeBlocks = (activation, media, declarations, theme) => {
-  const preference = theme
-    ? `:root[data-ki-theme='${theme}'],\n  [data-ki-theme='${theme}']`
-    : ':root,\n  :where([data-ki-theme])';
-  const declared = theme
-    ? `:root[data-ki-theme='${theme}']:where(${activation}),\n[data-ki-theme='${theme}']:where(${activation}),\n[data-ki-theme='${theme}']:where(:is(:root, [data-ki-theme]):is(${activation}) *)`
-    : `:root:where(${activation}),\n:where([data-ki-theme]:is(${activation})),\n:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`;
-  return `
+// Every declaration is important and re-points a token to its mode value, a
+// token the token rule declares like any other.
+const modeTokenRule = `
+:root,
+:where([data-ki-theme]) {
+  --ki-zero: 0px;
+  --ki-color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+  --ki-shadow: 0px 1px 2px var(--ki-color);
+  --ki-easing: linear;
+  --ki-reduced-transparency-zero: 1px;
+  --ki-contrast-more-color: rgb(9, 9, 9);
+}
+`;
+const modeStylesheet = `${schemeContract}${modeTokenRule}`;
+const modeBlocks = (activation, media, declarations) => `
 @media ${media} {
-  ${preference} {
+  :root,
+  :where([data-ki-theme]) {
     ${declarations}
   }
 }
 
-${declared} {
+:root:where(${activation}),
+:where([data-ki-theme]:is(${activation})),
+:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme]) {
   ${declarations}
 }
 `;
-};
 const TRANSPARENCY = [
   "[data-ki-transparency='reduce'], [data-ki-contrast='more']",
   '(prefers-reduced-transparency: reduce), (prefers-contrast: more)',
 ];
 const CONTRAST = ["[data-ki-contrast='more']", '(prefers-contrast: more)'];
-const withModes = `${stylesheet}${modeBlocks(...TRANSPARENCY, '--ki-zero: 1px;')}${modeBlocks(...CONTRAST, '--ki-color: rgb(9, 9, 9);')}`;
+const TRANSPARENT_ZERO = '--ki-zero: var(--ki-reduced-transparency-zero) !important;';
+const CONTRASTED_COLOR = '--ki-color: var(--ki-contrast-more-color) !important;';
+const withModes = `${modeStylesheet}${modeBlocks(...TRANSPARENCY, TRANSPARENT_ZERO)}${modeBlocks(...CONTRAST, CONTRASTED_COLOR)}`;
 
 test('[S10] a stylesheet publishes each mode as its own context, more contrast over reduced transparency', () => {
   const { contexts } = build(withModes)['./css'];
@@ -428,29 +439,73 @@ test('[S10] a stylesheet publishes each mode as its own context, more contrast o
   assert.equal(contexts['contrast-more/dark']['--ki-shadow'], '0 1px 2px 0 rgb(9,9,9)');
 });
 
-test('[S10] a themed export re-asserts its mode values over its own overrides', () => {
-  const theme = `${material3}${modeBlocks(...CONTRAST, '--ki-color: rgb(7, 7, 7);', 'material3')}`;
-  const { contexts } = buildThemed({ base: withModes, theme })['./css/material3'];
+test('[S10] a mode applies over a themed export, which chooses its mode values through the mode tokens', () => {
+  const { contexts } = buildThemed({ base: withModes })['./css/material3'];
   assert.equal(contexts.light['--ki-color'], 'rgb(10,20,30)');
   assert.equal(contexts['reduced-transparency/light']['--ki-color'], 'rgb(10,20,30)');
   assert.equal(contexts['reduced-transparency/light']['--ki-zero'], '1px');
-  assert.equal(contexts['contrast-more/light']['--ki-color'], 'rgb(7,7,7)');
+  // The theme sets --ki-color, and the mode still re-points it.
+  assert.equal(contexts['contrast-more/light']['--ki-color'], 'rgb(9,9,9)');
+
+  const ownValue = material3.replace('}', '  --ki-contrast-more-color: rgb(7, 7, 7);\n}');
+  const themed = buildThemed({ base: withModes, theme: ownValue })['./css/material3'];
+  assert.equal(themed.contexts['contrast-more/light']['--ki-color'], 'rgb(7,7,7)');
+});
+
+test('[S10] a themed export is one rule: its mode values are overrides, never a mode block', () => {
+  assert.throws(
+    () =>
+      buildThemed({
+        base: withModes,
+        theme: `${material3}${modeBlocks(...CONTRAST, CONTRASTED_COLOR)}`,
+      }),
+    /must contain exactly the rule :root\[data-ki-theme='material3'\],\[data-ki-theme='material3'\]/u,
+  );
+});
+
+test('[S10] a mode re-points each token to its declared mode value with !important, and nothing else is important', () => {
+  assert.throws(
+    () =>
+      build(`${modeStylesheet}${modeBlocks(...CONTRAST, '--ki-color: rgb(9, 9, 9) !important;')}`),
+    /must re-point --ki-color to its declared mode value --ki-contrast-more-color/u,
+  );
+  assert.throws(
+    () =>
+      build(
+        `${modeStylesheet}${modeBlocks(...CONTRAST, '--ki-zero: var(--ki-contrast-more-zero) !important;')}`,
+      ),
+    /must re-point --ki-zero to its declared mode value --ki-contrast-more-zero/u,
+  );
+  assert.throws(
+    () =>
+      build(
+        `${modeStylesheet}${modeBlocks(...CONTRAST, '--ki-color: var(--ki-contrast-more-color);')}`,
+      ),
+    /declares --ki-color without !important/u,
+  );
+  assert.throws(
+    () => build(modeStylesheet.replace('--ki-zero: 0px;', '--ki-zero: 0px !important;')),
+    /declares --ki-zero with !important/u,
+  );
 });
 
 test('[S10] a mode must declare the same tokens under its preference and under its declaration', () => {
-  // The declaration rule is the last block: change its value, not the
-  // preference block's.
-  const at = withModes.lastIndexOf('--ki-color: rgb(9, 9, 9);');
-  const diverging = `${withModes.slice(0, at)}--ki-color: rgb(8, 8, 8);${withModes.slice(at + 25)}`;
-  assert.notEqual(diverging, withModes);
+  const tokens = modeStylesheet.replace(
+    '--ki-contrast-more-color: rgb(9, 9, 9);',
+    '--ki-contrast-more-color: rgb(9, 9, 9);\n  --ki-contrast-more-zero: 2px;',
+  );
+  // The declaration rule is the last block: change it, not the preference block.
+  const blocks = modeBlocks(...CONTRAST, CONTRASTED_COLOR);
+  const at = blocks.lastIndexOf(CONTRASTED_COLOR);
+  const diverging = `${blocks.slice(0, at)}--ki-zero: var(--ki-contrast-more-zero) !important;${blocks.slice(at + CONTRASTED_COLOR.length)}`;
   assert.throws(
-    () => build(diverging),
+    () => build(`${tokens}${diverging}`),
     /declares different tokens under its preference and its declaration/u,
   );
 });
 
 test('[S10] modes follow the token rule in contract order, each with its exact selectors', () => {
-  const reversed = `${stylesheet}${modeBlocks(...CONTRAST, '--ki-zero: 1px;')}${modeBlocks(...TRANSPARENCY, '--ki-zero: 1px;')}`;
+  const reversed = `${modeStylesheet}${modeBlocks(...CONTRAST, CONTRASTED_COLOR)}${modeBlocks(...TRANSPARENCY, TRANSPARENT_ZERO)}`;
   assert.throws(
     () => build(reversed),
     /contains an unsupported public rule|unsupported conditional rule/u,
@@ -461,7 +516,10 @@ test('[S10] modes follow the token rule in contract order, each with its exact s
   );
   assert.throws(() => build(compound), /contains an unsupported public rule/u);
   assert.throws(
-    () => build(`${stylesheet}${modeBlocks(...CONTRAST, '--ki-unknown: 1px;')}`),
+    () =>
+      build(
+        `${modeStylesheet}${modeBlocks(...CONTRAST, '--ki-unknown: var(--ki-contrast-more-unknown) !important;')}`,
+      ),
     /declares --ki-unknown, which the token rule does not/u,
   );
 });

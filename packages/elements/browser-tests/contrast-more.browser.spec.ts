@@ -4,8 +4,9 @@
 // under the emulated `prefers-contrast: more` preference or the page's own
 // `data-ki-contrast="more"` declaration, and measures what is painted: the
 // contrast of text against the surface behind it, of a control's edge and of a
-// separator against the page, and the thickness of the focus ring. Nothing
-// here names a token: the thresholds are the contract.
+// separator against the page, and the thickness of the focus ring. Outside
+// the theming scenarios (S12–S15), which set tokens the way a page's own theme
+// does, nothing here names a token: the thresholds are the contract.
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 
@@ -16,6 +17,7 @@ import {
   contrast,
   findDeep,
   installKimen,
+  loadOwnTheme,
   mount,
   over,
   pageSurface,
@@ -58,6 +60,24 @@ function field(fixture: HTMLElement, selector = 'ki-input'): HTMLElement {
   const host = fixture.querySelector(selector);
   if (host === null) throw new Error(`no ${selector} mounted`);
   return host as HTMLElement;
+}
+
+/** The colour a ki-input's field boundary is painted in. */
+function fieldBoundary(host: HTMLElement): string {
+  return getComputedStyle(findDeep(host, byPart('field'))).borderTopColor;
+}
+
+/**
+ * The control boundary the mode itself gives, read where `fixture` sits: the
+ * more-contrast value of the control boundary, painted.
+ */
+function modeBoundary(fixture: HTMLElement): string {
+  const probe = document.createElement('span');
+  probe.style.borderBlockStart = '1px solid var(--ki-contrast-more-outline-control)';
+  fixture.append(probe);
+  const colour = getComputedStyle(probe).borderTopColor;
+  probe.remove();
+  return colour;
 }
 
 /** Label and placeholder contrast of a ki-input, each against what is behind it. */
@@ -296,18 +316,82 @@ describe('043 more contrast declared by the page', () => {
   });
 
   it("S12: a page's own value for a strengthened token wins under more contrast", async (context) => {
-    const own = document.createElement('style');
-    own.textContent =
-      '@media (prefers-contrast: more) { :root { --ki-outline-control: #000000; } }';
-    document.head.append(own);
+    const removeOwn = loadOwnTheme(':root { --ki-contrast-more-outline-control: #000000; }');
     try {
       const fixture = await mount(EMAIL_FIELD);
       await underContrast('more', context);
 
-      const edge = findDeep(field(fixture), byPart('field'));
-      expect(getComputedStyle(edge).borderTopColor).toBe('rgb(0, 0, 0)');
+      expect(fieldBoundary(field(fixture))).toBe('rgb(0, 0, 0)');
     } finally {
-      own.remove();
+      removeOwn();
+    }
+  });
+});
+
+// Amendment A1: the mode applies over any theme, and a theme chooses its own
+// mode values through the mode tokens. The theme here is the page's own,
+// loaded after Kimen's stylesheets, as an integrator ships one.
+describe("043 more contrast over a theme of the page's own", () => {
+  const ACME_BOUNDARY = 'rgb(200, 200, 200)';
+  const ACME = "[data-ki-theme='acme'] { --ki-outline-control: #c8c8c8; }";
+
+  it("S13: more contrast applies over a theme of the page's own", async (context) => {
+    const removeAcme = loadOwnTheme(ACME);
+    try {
+      document.documentElement.setAttribute('data-ki-theme', 'acme');
+      await underContrast('no-preference', context);
+      const fixture = await mount(EMAIL_FIELD);
+      expect(fieldBoundary(field(fixture)), 'the theme paints the standard boundary').toBe(
+        ACME_BOUNDARY,
+      );
+
+      await underContrast('more', context);
+      expect(fieldBoundary(field(fixture))).toBe(modeBoundary(fixture));
+      expect(fieldBoundary(field(fixture))).not.toBe(ACME_BOUNDARY);
+      expect(boundaryRatio(field(fixture), pageSurface(fixture))).toBeGreaterThanOrEqual(
+        CONTROL_BOUNDARY,
+      );
+    } finally {
+      removeAcme();
+    }
+  });
+
+  it("S14: a declared contrast applies over a theme of the page's own", async (context) => {
+    const removeAcme = loadOwnTheme(ACME);
+    try {
+      document.documentElement.setAttribute('data-ki-theme', 'acme');
+      document.documentElement.setAttribute('data-ki-contrast', 'more');
+      await underContrast('no-preference', context);
+      const fixture = await mount(EMAIL_FIELD);
+
+      expect(fieldBoundary(field(fixture))).toBe(modeBoundary(fixture));
+      expect(fieldBoundary(field(fixture))).not.toBe(ACME_BOUNDARY);
+      expect(boundaryRatio(field(fixture), pageSurface(fixture))).toBeGreaterThanOrEqual(
+        CONTROL_BOUNDARY,
+      );
+    } finally {
+      removeAcme();
+    }
+  });
+
+  it("S15: a theme of the page's own chooses its more-contrast values", async (context) => {
+    const removeAcme = loadOwnTheme(
+      "[data-ki-theme='acme'] { --ki-outline-control: #c8c8c8; --ki-contrast-more-outline-control: #000000; }",
+    );
+    try {
+      await underContrast('no-preference', context);
+      const fixture = await mount(
+        `${EMAIL_FIELD}<section data-ki-theme="acme">${EMAIL_FIELD}</section>`,
+      );
+      const [outside, inside] = [...fixture.querySelectorAll('ki-input')] as HTMLElement[];
+      if (outside === undefined || inside === undefined) throw new Error('two fields expected');
+      expect(fieldBoundary(inside), 'the theme paints the standard boundary').toBe(ACME_BOUNDARY);
+
+      await underContrast('more', context);
+      expect(fieldBoundary(inside)).toBe('rgb(0, 0, 0)');
+      expect(fieldBoundary(outside)).toBe(modeBoundary(fixture));
+    } finally {
+      removeAcme();
     }
   });
 });

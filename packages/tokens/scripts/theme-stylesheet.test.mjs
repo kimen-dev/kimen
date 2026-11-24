@@ -12,7 +12,6 @@ import {
   resolvedColorMix,
   sharedConfig,
   withDensity,
-  withMode,
 } from '../style-dictionary.config.mjs';
 import { collectDeprecations } from './deprecation.mjs';
 import {
@@ -24,7 +23,9 @@ import {
   densityRules,
   isPrivateFoundation,
   layeredOverrides,
+  modeReassignments,
   MODES,
+  modeValueName,
   renderBaseStylesheet,
   renderModeRules,
   renderThemeStylesheet,
@@ -83,7 +84,7 @@ test('the shipped CSS compacts fixed foundations while keeping public and mode-d
   assert.match(css, /--ki-label-font:'Label, Detail',serif;/u);
   assert.match(css, /--ki-copy-font:var\(--ki-label-font\);/u);
   assert.match(css, /--ki-fg:var\(--ki-foundation-mode\);/u);
-  assert.match(css, /--ki-foundation-mode:#222222;/u);
+  assert.match(css, /--ki-foundation-mode:#222222 !important;/u);
 });
 
 test('a disabled shadow emits a transparent list layer and retains aliases', async () => {
@@ -630,11 +631,12 @@ test('the emitted stylesheets resolve to the Style Dictionary value of every tok
   }
 });
 
-// Modes (specs 043/044). A mode is a reassignment of part of the token set
-// that applies on top of a theme. The stylesheets emit, per mode, only what
-// the cascade below it does not already produce.
+// Modes (specs 043/044). A mode reassigns part of the token set on top of any
+// theme: every token that has a value for the mode (`--ki-<mode>-<token>`, a
+// token like any other) is re-pointed to it with `!important`. What a layer
+// adds over a cascade (`layeredOverrides`) serves the density levels.
 
-test('a mode emits only the tokens whose expression differs from what the lower layers produce', () => {
+test('a layer emits only the tokens whose expression differs from what the lower layers produce', () => {
   const base = new Map([
     ['--ki-a', '#000000'],
     ['--ki-b', 'var(--ki-a)'],
@@ -648,7 +650,7 @@ test('a mode emits only the tokens whose expression differs from what the lower 
   ]);
 
   assert.deepEqual([...layeredOverrides({ target, layers: [base] })], [['--ki-b', 'var(--ki-c)']]);
-  // The theme already moved --ki-b; the mode must say it again above the theme.
+  // The theme already moved --ki-b; the layer must say it again above the theme.
   assert.deepEqual(
     [...layeredOverrides({ target, layers: [base, theme] })],
     [['--ki-b', 'var(--ki-c)']],
@@ -665,7 +667,7 @@ test('a mode emits only the tokens whose expression differs from what the lower 
   );
 });
 
-test('a mode target must expose exactly the token names of the base layer', () => {
+test('a layer target must expose exactly the token names of the base layer', () => {
   const base = new Map([['--ki-a', '#000000']]);
   assert.throws(
     () => layeredOverrides({ target: new Map(), layers: [base] }),
@@ -691,11 +693,93 @@ test('the modes are reduced transparency, which more contrast also activates, th
   );
 });
 
-test('a default-theme mode applies under its media query and under its declaration, on the root and on every theme root', () => {
-  const contrast = MODES.find((mode) => mode.name === 'contrast-more');
+const [transparency, contrast] = MODES;
+
+test('a mode reassigns every token that has a value for it, to that value, in declaration order', () => {
+  const [transparent, contrasted] = modeReassignments(
+    new Map([
+      ['--ki-outline-control', '#86827b'],
+      ['--ki-text-supporting', '#5e5953'],
+      ['--ki-surface-primary-tint', 'rgba(132, 90, 190, 0.12)'],
+      ['--ki-contrast-more-text-supporting', 'var(--ki-color-black)'],
+      ['--ki-contrast-more-outline-control', 'var(--ki-color-black)'],
+      ['--ki-reduced-transparency-surface-primary-tint', 'var(--ki-color-white)'],
+      ['--ki-color-black', '#0a0a0a'],
+      ['--ki-color-white', '#ffffff'],
+    ]),
+  );
+
+  assert.equal(transparent.mode, transparency);
+  assert.deepEqual(
+    [...transparent.declarations],
+    [['--ki-surface-primary-tint', 'var(--ki-reduced-transparency-surface-primary-tint)']],
+  );
+  assert.equal(contrasted.mode, contrast);
+  assert.deepEqual(
+    [...contrasted.declarations],
+    [
+      ['--ki-outline-control', 'var(--ki-contrast-more-outline-control)'],
+      ['--ki-text-supporting', 'var(--ki-contrast-more-text-supporting)'],
+    ],
+  );
+  assert.equal(
+    modeValueName(contrast, '--ki-outline-control'),
+    '--ki-contrast-more-outline-control',
+  );
+});
+
+test('a mode value belongs to a live token and never leads back to it', () => {
+  const reassign = (entries, deprecations) => () =>
+    modeReassignments(new Map(entries), deprecations);
+
+  assert.throws(
+    reassign([['--ki-contrast-more-nothing', '#000000']]),
+    /--ki-contrast-more-nothing is the contrast-more value of --ki-nothing, which is not a token/u,
+  );
+  assert.throws(
+    reassign([
+      ['--ki-a', '#000000'],
+      ['--ki-reduced-transparency-a', '#ffffff'],
+      ['--ki-contrast-more-reduced-transparency-a', '#000000'],
+    ]),
+    /value of --ki-reduced-transparency-a, which is not a token/u,
+  );
+  // A deprecated token's replacement carries the mode instead.
+  assert.throws(
+    reassign(
+      [
+        ['--ki-a', '1px'],
+        ['--ki-contrast-more-a', '2px'],
+      ],
+      new Map([['--ki-a', { replacement: '--ki-b' }]]),
+    ),
+    /--ki-contrast-more-a is the contrast-more value of --ki-a, which is deprecated/u,
+  );
+  // Under the mode the token would alias itself and lose its value.
+  assert.throws(
+    reassign([
+      ['--ki-a', '#000000'],
+      ['--ki-b', 'var(--ki-a)'],
+      ['--ki-contrast-more-a', 'var(--ki-b)'],
+    ]),
+    /under contrast-more --ki-a -> --ki-contrast-more-a -> --ki-b -> --ki-a is a cycle/u,
+  );
+  // More contrast also applies reduced transparency: a loop across both modes.
+  assert.throws(
+    reassign([
+      ['--ki-a', '#000000'],
+      ['--ki-b', '#111111'],
+      ['--ki-reduced-transparency-a', 'var(--ki-b)'],
+      ['--ki-contrast-more-b', 'var(--ki-a)'],
+    ]),
+    /under contrast-more .* is a cycle/u,
+  );
+});
+
+test('a mode re-points its tokens with !important under its media query and under its declaration, on the root and on every theme root', () => {
   const css = renderModeRules(
     contrast,
-    new Map([['--ki-outline-control', 'var(--ki-outline-strong)']]),
+    new Map([['--ki-outline-control', 'var(--ki-contrast-more-outline-control)']]),
   );
 
   assert.equal(
@@ -704,141 +788,155 @@ test('a default-theme mode applies under its media query and under its declarati
       '@media (prefers-contrast: more) {',
       '  :root,',
       '  :where([data-ki-theme]) {',
-      '    --ki-outline-control: var(--ki-outline-strong);',
+      '    --ki-outline-control: var(--ki-contrast-more-outline-control) !important;',
       '  }',
       '}',
       '',
-      // Same specificity as the default rule it follows: `:where()` wraps
-      // the declaration, so a theme override still outranks the mode and a
-      // theme re-asserts its own mode values in its own stylesheet.
+      // An important declaration outranks every normal one on the element,
+      // whatever its specificity or order: a theme that sets the token loses
+      // it under the mode, and sets the mode token instead.
       ":root:where([data-ki-contrast='more']),",
       ":where([data-ki-theme]:is([data-ki-contrast='more'])),",
       ":where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {",
-      '  --ki-outline-control: var(--ki-outline-strong);',
+      '  --ki-outline-control: var(--ki-contrast-more-outline-control) !important;',
       '}',
       '',
     ].join('\n'),
   );
 });
 
-test('a theme re-asserts its mode values above its own overrides', () => {
-  const transparency = MODES.find((mode) => mode.name === 'reduced-transparency');
-  const css = renderModeRules(transparency, new Map([['--ki-blur', '0px']]), 'material3');
-
-  assert.equal(
-    css,
-    [
-      '@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {',
-      "  :root[data-ki-theme='material3'],",
-      "  [data-ki-theme='material3'] {",
-      '    --ki-blur: 0px;',
-      '  }',
-      '}',
-      '',
-      ":root[data-ki-theme='material3']:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),",
-      "[data-ki-theme='material3']:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),",
-      "[data-ki-theme='material3']:where(:is(:root, [data-ki-theme]):is([data-ki-transparency='reduce'], [data-ki-contrast='more']) *) {",
-      '  --ki-blur: 0px;',
-      '}',
-      '',
-    ].join('\n'),
-  );
-});
-
-test('a mode with nothing to say renders nothing, and the stylesheets append the modes after their own rule', () => {
-  const [transparency, contrast] = MODES;
+test('a mode with nothing to say renders nothing, and the base stylesheet appends the modes after its own rules', () => {
   assert.equal(renderModeRules(contrast, new Map()), '');
 
-  const base = renderBaseStylesheet(new Map([['--ki-a', '1px']]), {
-    modes: [
-      { mode: transparency, declarations: new Map([['--ki-a', '2px']]) },
-      { mode: contrast, declarations: new Map() },
-    ],
-  });
-  assert.ok(base.endsWith(renderModeRules(transparency, new Map([['--ki-a', '2px']]))));
+  const reassigned = new Map([['--ki-a', 'var(--ki-reduced-transparency-a)']]);
+  const base = renderBaseStylesheet(
+    new Map([
+      ['--ki-a', '1px'],
+      ['--ki-reduced-transparency-a', '2px'],
+    ]),
+    {
+      modes: [
+        { mode: transparency, declarations: reassigned },
+        { mode: contrast, declarations: new Map() },
+      ],
+    },
+  );
+  assert.ok(base.endsWith(renderModeRules(transparency, reassigned)));
   assert.doesNotMatch(base, /@media \(prefers-contrast: more\) \{/u);
-
-  const theme = renderThemeStylesheet('material3', new Map([['--ki-a', '3px']]), {
-    modes: [{ mode: contrast, declarations: new Map([['--ki-a', '4px']]) }],
-  });
-  assert.ok(theme.startsWith(":root[data-ki-theme='material3'],\n[data-ki-theme='material3'] {"));
-  assert.ok(theme.endsWith(renderModeRules(contrast, new Map([['--ki-a', '4px']]), 'material3')));
 });
 
-test('under every mode the emitted stylesheets resolve to the Style Dictionary value of every token in every theme and scheme', async () => {
-  const read = async (config) =>
-    compositionDeclarations(
-      await new StyleDictionary({ ...config, log: { verbosity: 'silent' } }).getPlatformTokens(
-        'css',
-      ),
-    );
+test('a theme carries its mode values among its overrides: its stylesheet is one rule', () => {
+  assert.equal(
+    renderThemeStylesheet(
+      'material3',
+      new Map([['--ki-contrast-more-select-placeholder-fg', '#1d1b20']]),
+    ),
+    [
+      ":root[data-ki-theme='material3'],",
+      "[data-ki-theme='material3'] {",
+      '  --ki-contrast-more-select-placeholder-fg: #1d1b20;',
+      '}',
+      '',
+    ].join('\n'),
+  );
+});
+
+// The oracle is independent of the emitter: a Style Dictionary composition in
+// which every token a mode reassigns aliases its mode token. The emitted
+// cascade — base, theme overrides, a foreign theme that sets every reassigned
+// token, then the important mode rules — must resolve to its value, for every
+// token, in every theme, scheme and mode.
+test('under every mode the emitted stylesheets resolve every token to its Style Dictionary mode value in every theme and scheme, whatever a theme sets', async () => {
+  const { mkdtemp, rm, writeFile } = await import('node:fs/promises');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const dictionary = async (config) =>
+    new StyleDictionary({ ...config, log: { verbosity: 'silent' } }).getPlatformTokens('css');
   const configs = {
     onmars: { light: lightConfig, dark: darkConfig },
     material3: { light: material3LightConfig, dark: material3DarkConfig },
   };
-  const combined = async (theme, mode) =>
-    combineSchemes({
-      light: await read(mode ? withMode(configs[theme].light, mode) : configs[theme].light),
-      dark: await read(mode ? withMode(configs[theme].dark, mode) : configs[theme].dark),
-    });
-
-  const base = await combined('onmars');
-  const material3 = themeOverrides({ base, theme: await combined('material3') });
-  const baseLayers = [base];
-  const themeLayers = [];
-  const emitted = new Map();
-  for (const mode of MODES) {
-    const baseMode = layeredOverrides({
-      target: await combined('onmars', mode.name),
-      layers: baseLayers,
-    });
-    baseLayers.push(baseMode);
-    const themeMode = layeredOverrides({
-      target: await combined('material3', mode.name),
-      layers: [...baseLayers, material3, ...themeLayers],
-    });
-    themeLayers.push(themeMode);
-    emitted.set(mode.name, {
-      onmars: new Map(baseLayers.flatMap((layer) => [...layer])),
-      material3: new Map([...baseLayers, material3, ...themeLayers].flatMap((layer) => [...layer])),
+  const standard = {};
+  for (const [theme, schemes] of Object.entries(configs)) {
+    standard[theme] = combineSchemes({
+      light: compositionDeclarations(await dictionary(schemes.light)),
+      dark: compositionDeclarations(await dictionary(schemes.dark)),
     });
   }
+  const base = standard.onmars;
+  const overrides = themeOverrides({ base, theme: standard.material3 });
+  const modes = modeReassignments(base);
+  const paths = new Map(
+    (await dictionary(lightConfig)).allTokens.map((token) => [`--${token.name}`, token.path]),
+  );
+  assert.ok(
+    modes.every(({ declarations }) => declarations.size > 10),
+    'the shipped modes reassign their tokens',
+  );
 
-  assert.ok(emitted.get('contrast-more').onmars.size === base.size);
-  for (const mode of MODES) {
-    for (const theme of ['onmars', 'material3']) {
-      for (const scheme of ['light', 'dark']) {
-        const composition = await read(withMode(configs[theme][scheme], mode.name));
-        const expected = resolveCompositionValues(composition, scheme);
-        const actual = resolveAll(emitted.get(mode.name)[theme], scheme);
-        const mismatches = [...expected]
-          .filter(([name, value]) => actual.get(name) !== value)
-          .map(([name, value]) => `${name}: ${actual.get(name)} != ${value}`);
-        assert.deepEqual(mismatches, [], `${mode.name} ${theme} ${scheme}`);
+  const directory = await mkdtemp(join(tmpdir(), 'kimen-modes-'));
+  try {
+    for (const { mode } of modes) {
+      const active = modes.filter(({ mode: candidate }) =>
+        candidate.activations.includes(mode.activations[0]),
+      );
+      const overlay = {};
+      for (const { mode: activeMode, declarations } of active) {
+        for (const name of declarations.keys()) {
+          let node = overlay;
+          for (const key of paths.get(name).slice(0, -1)) node = node[key] ??= {};
+          node[paths.get(name).at(-1)] = {
+            $value: `{${paths.get(modeValueName(activeMode, name)).join('.')}}`,
+          };
+        }
+      }
+      const overlayPath = join(directory, `${mode.name}.tokens.json`);
+      await writeFile(overlayPath, JSON.stringify(overlay));
+      const reassigned = active.flatMap(({ declarations }) => [...declarations]);
+      const foreign = reassigned.map(([name]) => [name, '#123456']);
+      for (const [theme, schemes] of Object.entries(configs)) {
+        const themed = theme === 'material3' ? [...base, ...overrides] : [...base];
+        const emitted = new Map([...themed, ...foreign, ...reassigned]);
+        for (const [scheme, config] of Object.entries(schemes)) {
+          const composition = compositionDeclarations(
+            await dictionary({
+              ...config,
+              include: [...(config.include ?? []), ...config.source],
+              source: [overlayPath],
+            }),
+          );
+          const expected = resolveCompositionValues(composition, scheme);
+          const actual = resolveAll(emitted, scheme);
+          const mismatches = [...expected]
+            .filter(([name, value]) => actual.get(name) !== value)
+            .map(([name, value]) => `${name}: ${actual.get(name)} != ${value}`);
+          assert.deepEqual(mismatches, [], `${mode.name} ${theme} ${scheme}`);
+        }
       }
     }
+  } finally {
+    await rm(directory, { recursive: true, force: true });
   }
 });
 
-test('the two mode files reassign disjoint token sets, so they compose in any combination', async () => {
-  const { readFile } = await import('node:fs/promises');
-  const paths = (tree, prefix = []) =>
-    Object.entries(tree).flatMap(([key, value]) => {
-      if (key.startsWith('$') || value === null || typeof value !== 'object') return [];
-      return '$value' in value ? [[...prefix, key].join('.')] : paths(value, [...prefix, key]);
-    });
-  const read = async (name) =>
-    paths(
-      JSON.parse(
-        await readFile(new URL(`../tokens/modes/${name}.tokens.json`, import.meta.url), 'utf8'),
+test('the two modes reassign disjoint token sets, so they compose in any combination', async () => {
+  const declarations = combineSchemes({
+    light: compositionDeclarations(
+      await new StyleDictionary({ ...lightConfig, log: { verbosity: 'silent' } }).getPlatformTokens(
+        'css',
       ),
-    );
-  const transparency = new Set(await read('reduced-transparency'));
-  const contrast = await read('contrast-more');
+    ),
+    dark: compositionDeclarations(
+      await new StyleDictionary({ ...darkConfig, log: { verbosity: 'silent' } }).getPlatformTokens(
+        'css',
+      ),
+    ),
+  });
+  const [transparent, contrasted] = modeReassignments(declarations);
 
-  assert.ok(transparency.size > 0 && contrast.length > 0);
+  assert.ok(transparent.declarations.size > 0 && contrasted.declarations.size > 0);
   assert.deepEqual(
-    contrast.filter((path) => transparency.has(path)),
+    [...contrasted.declarations.keys()].filter((name) => transparent.declarations.has(name)),
     [],
   );
 });

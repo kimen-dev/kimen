@@ -63,21 +63,30 @@ const BASE_BUDGETS = {
   // kimen-mcp, added here exactly so the headroom stays what it was. The founder
   // approved re-basing all three metrics by that cost, two review fixes included
   // (2026-11-24).
+  // Preference modes over themes (integrator feedback 0.1.3, item 1) measured
+  // against main 14909122 on macOS: the 37 mode tokens and the important mode
+  // rules grow the embedded onmars stylesheet, adding 5,131 / 434 / 539 B to the
+  // MCP Apps document and 5,131 / 407 / 420 B to kimen-mcp, on top of specs 161
+  // and 162. Approved by the founder (2026-11-24).
   // Spec 163 (MCP Apps waiting placeholder, approved 2026-11-24) measured against
   // main aa00748e on macOS: the text-free skeleton, its busy mark and the timer
   // that stills it add 358 / 127 / 93 B to the MCP Apps document and 358 / 123 /
   // 329 B to kimen-mcp. Only the document's raw bytes outgrew their headroom
-  // (154 B left on main); the founder approved re-basing that one metric by the
-  // 358 B the placeholder costs (2026-11-24, «Sí, sube 358 B»).
-  mcpApps: { raw: 813_064, gzip: 186_982, brotli: 148_326 },
-  mcpServer: { raw: 2_621_063, gzip: 498_155, brotli: 390_499 },
+  // (154 B left on that main); the founder approved re-basing that one metric by
+  // the 358 B the placeholder costs (2026-11-24, «Sí, sube 358 B»), added on top
+  // of the preference-modes base above.
+  mcpApps: { raw: 818_195, gzip: 187_416, brotli: 148_865 },
+  mcpServer: { raw: 2_626_194, gzip: 498_562, brotli: 390_919 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
   // Document 2's batch 2 (Sources, InteractiveList, InputVariants, FullscreenDialog)
   // measured 20,246 B together with Carousel, 80 B more than the sum of the marginals
   // each measured alone: minified and brotlied, the combined additions compress worse.
-  tokenStylesheets: { onmars: 12_930, material3: 5_600, base: 250 },
+  // Preference modes over themes measured +348 B for onmars (20,284 to 20,632 B
+  // minified and brotlied) and -223 B for material3, which no longer re-asserts
+  // its mode values. Pending founder approval.
+  tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
 };
 
 export function deriveBundleSizeBudgets(components) {

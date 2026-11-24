@@ -78,6 +78,19 @@ export async function uninstallKimen(): Promise<void> {
   for (const id of [...STYLE_IDS, PROBE_ID]) document.getElementById(id)?.remove();
 }
 
+/**
+ * A theme of the page's own, loaded after Kimen's stylesheets the way an
+ * integrator ships one. Returns what removes it again.
+ */
+export function loadOwnTheme(css: string): () => void {
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.append(style);
+  return () => {
+    style.remove();
+  };
+}
+
 /** Clear every declaration a test may have left on the document root. */
 export function resetRoot(): void {
   for (const name of [

@@ -306,6 +306,7 @@
   --ki-size-feature-tile-lg:var(--ki-space-14xl);
   --ki-size-feature-tile-xl:var(--ki-space-18xl);
   --ki-border-hairline-base-em:var(--ki-size-border-hairline) solid light-dark(var(--ki-color-black-3),var(--ki-color-white-3));
+  --ki-border-style-solid:solid;
   --ki-foundation-placeholder-line-size:0.75rem;
   --ki-foundation-placeholder-circle-size:2.5rem;
   --ki-foundation-placeholder-rect-size:6rem;
@@ -1181,6 +1182,43 @@
   --ki-tree-layout-surface-radius:var(--ki-radius-component-lg);
   --ki-tree-layout-row-radius:var(--ki-radius-component-sm);
   --ki-media-layout-inline-max:var(--ki-size-surface-md);
+  --ki-contrast-more-text-supporting:var(--ki-inverse-white-alpha-72);
+  --ki-contrast-more-outline-control:var(--ki-inverse-white-alpha-64);
+  --ki-contrast-more-outline-control-hover:var(--ki-inverse-white-alpha-72);
+  --ki-contrast-more-focus-ring-width:var(--ki-shadow-ring);
+  --ki-contrast-more-alert-border-width:var(--ki-space-xxs);
+  --ki-contrast-more-alert-neutral-border:var(--ki-outline-strong);
+  --ki-contrast-more-alert-success-border:var(--ki-outline-strong);
+  --ki-contrast-more-alert-danger-border:var(--ki-outline-strong);
+  --ki-contrast-more-alert-info-border:var(--ki-outline-strong);
+  --ki-contrast-more-alert-warning-border:var(--ki-outline-strong);
+  --ki-contrast-more-card-border-width:var(--ki-size-border-hairline);
+  --ki-contrast-more-card-border-color:var(--ki-outline-strong);
+  --ki-contrast-more-details-border:var(--ki-outline-strong);
+  --ki-contrast-more-dialog-border:var(--ki-size-border-hairline) var(--ki-border-style-solid) var(--ki-outline-strong);
+  --ki-contrast-more-dialog-divider-color:var(--ki-outline-strong);
+  --ki-contrast-more-divider-color:var(--ki-outline-strong);
+  --ki-contrast-more-image-fallback-fg:var(--ki-text-supporting);
+  --ki-contrast-more-indicator-dot-color:var(--ki-outline-strong);
+  --ki-contrast-more-list-item-divider-color:var(--ki-outline-strong);
+  --ki-contrast-more-select-placeholder-fg:light-dark(var(--ki-text-supporting),var(--ki-inverse-white-alpha-80));
+  --ki-contrast-more-tabs-divider-color:var(--ki-outline-strong);
+  --ki-contrast-more-timeline-dot-fg:var(--ki-text-supporting);
+  --ki-contrast-more-timeline-line:var(--ki-outline-strong);
+  --ki-contrast-more-timeline-time-fg:var(--ki-text-supporting);
+  --ki-contrast-more-tooltip-border-color:var(--ki-outline-strong);
+  --ki-reduced-transparency-surface-special-blur-base-light:var(--ki-surface-special-light-s0-dark-s3);
+  --ki-reduced-transparency-surface-special-blur-base-dark:var(--ki-surface-special-light-s0-dark-s3);
+  --ki-reduced-transparency-surface-special-secondary-alpha-base:var(--ki-surface-special-light-s2-dark-s3);
+  --ki-reduced-transparency-surface-primary-tint:var(--ki-surface-primary-low-em);
+  --ki-reduced-transparency-surface-info-tint:var(--ki-surface-info-base-em);
+  --ki-reduced-transparency-surface-success-tint:var(--ki-surface-success-base-em);
+  --ki-reduced-transparency-surface-warning-tint:var(--ki-surface-warning-base-em);
+  --ki-reduced-transparency-surface-danger-tint:var(--ki-surface-danger-base-em);
+  --ki-reduced-transparency-effect-component-backdrop-filter:none;
+  --ki-reduced-transparency-effect-component-listbox-backdrop-filter:none;
+  --ki-reduced-transparency-alert-shell-bg:var(--ki-surface-s1);
+  --ki-reduced-transparency-alert-neutral-icon-bg:var(--ki-alert-neutral-bg);
   --ki-accordion-divider-width:var(--ki-outline-hairline-width);
   --ki-ai-label-bg:var(--ki-surface-primary-low-em);
   --ki-ai-label-fg:var(--ki-text-primary-on-primary-light);
@@ -3631,89 +3669,95 @@
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
   :root,
   :where([data-ki-theme]) {
-    --ki-surface-special-blur-base-light:var(--ki-surface-special-light-s0-dark-s3);
-    --ki-surface-special-blur-base-dark:var(--ki-surface-special-light-s0-dark-s3);
-    --ki-surface-special-secondary-alpha-base:var(--ki-surface-special-light-s2-dark-s3);
-    --ki-surface-primary-tint:var(--ki-surface-primary-low-em);
-    --ki-surface-info-tint:var(--ki-surface-info-base-em);
-    --ki-surface-success-tint:var(--ki-surface-success-base-em);
-    --ki-surface-warning-tint:var(--ki-surface-warning-base-em);
-    --ki-surface-danger-tint:var(--ki-surface-danger-base-em);
-    --ki-alert-shell-bg:var(--ki-surface-s1);
-    --ki-select-listbox-backdrop-blur:var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
+    --ki-surface-special-blur-base-light:var(--ki-reduced-transparency-surface-special-blur-base-light) !important;
+    --ki-surface-special-blur-base-dark:var(--ki-reduced-transparency-surface-special-blur-base-dark) !important;
+    --ki-surface-special-secondary-alpha-base:var(--ki-reduced-transparency-surface-special-secondary-alpha-base) !important;
+    --ki-surface-primary-tint:var(--ki-reduced-transparency-surface-primary-tint) !important;
+    --ki-surface-info-tint:var(--ki-reduced-transparency-surface-info-tint) !important;
+    --ki-surface-success-tint:var(--ki-reduced-transparency-surface-success-tint) !important;
+    --ki-surface-warning-tint:var(--ki-reduced-transparency-surface-warning-tint) !important;
+    --ki-surface-danger-tint:var(--ki-reduced-transparency-surface-danger-tint) !important;
+    --ki-effect-component-backdrop-filter:var(--ki-reduced-transparency-effect-component-backdrop-filter) !important;
+    --ki-effect-component-listbox-backdrop-filter:var(--ki-reduced-transparency-effect-component-listbox-backdrop-filter) !important;
+    --ki-alert-neutral-icon-bg:var(--ki-reduced-transparency-alert-neutral-icon-bg) !important;
+    --ki-alert-shell-bg:var(--ki-reduced-transparency-alert-shell-bg) !important;
   }
 }
 
 :root:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),
 :where([data-ki-theme]:is([data-ki-transparency='reduce'], [data-ki-contrast='more'])),
 :where(:is(:root, [data-ki-theme]):is([data-ki-transparency='reduce'], [data-ki-contrast='more']) [data-ki-theme]) {
-  --ki-surface-special-blur-base-light:var(--ki-surface-special-light-s0-dark-s3);
-  --ki-surface-special-blur-base-dark:var(--ki-surface-special-light-s0-dark-s3);
-  --ki-surface-special-secondary-alpha-base:var(--ki-surface-special-light-s2-dark-s3);
-  --ki-surface-primary-tint:var(--ki-surface-primary-low-em);
-  --ki-surface-info-tint:var(--ki-surface-info-base-em);
-  --ki-surface-success-tint:var(--ki-surface-success-base-em);
-  --ki-surface-warning-tint:var(--ki-surface-warning-base-em);
-  --ki-surface-danger-tint:var(--ki-surface-danger-base-em);
-  --ki-alert-shell-bg:var(--ki-surface-s1);
-  --ki-select-listbox-backdrop-blur:var(--ki-blur-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
+  --ki-surface-special-blur-base-light:var(--ki-reduced-transparency-surface-special-blur-base-light) !important;
+  --ki-surface-special-blur-base-dark:var(--ki-reduced-transparency-surface-special-blur-base-dark) !important;
+  --ki-surface-special-secondary-alpha-base:var(--ki-reduced-transparency-surface-special-secondary-alpha-base) !important;
+  --ki-surface-primary-tint:var(--ki-reduced-transparency-surface-primary-tint) !important;
+  --ki-surface-info-tint:var(--ki-reduced-transparency-surface-info-tint) !important;
+  --ki-surface-success-tint:var(--ki-reduced-transparency-surface-success-tint) !important;
+  --ki-surface-warning-tint:var(--ki-reduced-transparency-surface-warning-tint) !important;
+  --ki-surface-danger-tint:var(--ki-reduced-transparency-surface-danger-tint) !important;
+  --ki-effect-component-backdrop-filter:var(--ki-reduced-transparency-effect-component-backdrop-filter) !important;
+  --ki-effect-component-listbox-backdrop-filter:var(--ki-reduced-transparency-effect-component-listbox-backdrop-filter) !important;
+  --ki-alert-neutral-icon-bg:var(--ki-reduced-transparency-alert-neutral-icon-bg) !important;
+  --ki-alert-shell-bg:var(--ki-reduced-transparency-alert-shell-bg) !important;
 }
 
 @media (prefers-contrast: more) {
   :root,
   :where([data-ki-theme]) {
-    --ki-text-supporting:var(--ki-inverse-white-alpha-72);
-    --ki-outline-control:var(--ki-inverse-white-alpha-64);
-    --ki-outline-control-hover:var(--ki-inverse-white-alpha-72);
-    --ki-focus-ring-width:var(--ki-shadow-ring);
-    --ki-alert-border-width:var(--ki-space-xxs);
-    --ki-alert-neutral-border:var(--ki-outline-strong);
-    --ki-alert-success-border:var(--ki-outline-strong);
-    --ki-alert-danger-border:var(--ki-outline-strong);
-    --ki-alert-info-border:var(--ki-outline-strong);
-    --ki-alert-warning-border:var(--ki-outline-strong);
-    --ki-card-border-color:var(--ki-outline-strong);
-    --ki-details-border:var(--ki-outline-strong);
-    --ki-dialog-border:var(--ki-size-border-hairline) solid var(--ki-outline-strong);
-    --ki-dialog-divider-color:var(--ki-outline-strong);
-    --ki-divider-color:var(--ki-outline-strong);
-    --ki-image-fallback-fg:var(--ki-text-supporting);
-    --ki-indicator-dot-color:var(--ki-outline-strong);
-    --ki-list-item-divider-color:var(--ki-outline-strong);
-    --ki-select-placeholder-fg:light-dark(var(--ki-text-supporting),var(--ki-inverse-white-alpha-80));
-    --ki-tabs-divider-color:var(--ki-outline-strong);
-    --ki-timeline-dot-fg:var(--ki-text-supporting);
-    --ki-timeline-line:var(--ki-outline-strong);
-    --ki-timeline-time-fg:var(--ki-text-supporting);
-    --ki-tooltip-border-color:var(--ki-outline-strong);
+    --ki-text-supporting:var(--ki-contrast-more-text-supporting) !important;
+    --ki-outline-control:var(--ki-contrast-more-outline-control) !important;
+    --ki-outline-control-hover:var(--ki-contrast-more-outline-control-hover) !important;
+    --ki-focus-ring-width:var(--ki-contrast-more-focus-ring-width) !important;
+    --ki-alert-border-width:var(--ki-contrast-more-alert-border-width) !important;
+    --ki-alert-neutral-border:var(--ki-contrast-more-alert-neutral-border) !important;
+    --ki-alert-success-border:var(--ki-contrast-more-alert-success-border) !important;
+    --ki-alert-danger-border:var(--ki-contrast-more-alert-danger-border) !important;
+    --ki-alert-info-border:var(--ki-contrast-more-alert-info-border) !important;
+    --ki-alert-warning-border:var(--ki-contrast-more-alert-warning-border) !important;
+    --ki-card-border-color:var(--ki-contrast-more-card-border-color) !important;
+    --ki-card-border-width:var(--ki-contrast-more-card-border-width) !important;
+    --ki-details-border:var(--ki-contrast-more-details-border) !important;
+    --ki-dialog-border:var(--ki-contrast-more-dialog-border) !important;
+    --ki-dialog-divider-color:var(--ki-contrast-more-dialog-divider-color) !important;
+    --ki-divider-color:var(--ki-contrast-more-divider-color) !important;
+    --ki-image-fallback-fg:var(--ki-contrast-more-image-fallback-fg) !important;
+    --ki-indicator-dot-color:var(--ki-contrast-more-indicator-dot-color) !important;
+    --ki-list-item-divider-color:var(--ki-contrast-more-list-item-divider-color) !important;
+    --ki-select-placeholder-fg:var(--ki-contrast-more-select-placeholder-fg) !important;
+    --ki-tabs-divider-color:var(--ki-contrast-more-tabs-divider-color) !important;
+    --ki-timeline-dot-fg:var(--ki-contrast-more-timeline-dot-fg) !important;
+    --ki-timeline-line:var(--ki-contrast-more-timeline-line) !important;
+    --ki-timeline-time-fg:var(--ki-contrast-more-timeline-time-fg) !important;
+    --ki-tooltip-border-color:var(--ki-contrast-more-tooltip-border-color) !important;
   }
 }
 
 :root:where([data-ki-contrast='more']),
 :where([data-ki-theme]:is([data-ki-contrast='more'])),
 :where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
-  --ki-text-supporting:var(--ki-inverse-white-alpha-72);
-  --ki-outline-control:var(--ki-inverse-white-alpha-64);
-  --ki-outline-control-hover:var(--ki-inverse-white-alpha-72);
-  --ki-focus-ring-width:var(--ki-shadow-ring);
-  --ki-alert-border-width:var(--ki-space-xxs);
-  --ki-alert-neutral-border:var(--ki-outline-strong);
-  --ki-alert-success-border:var(--ki-outline-strong);
-  --ki-alert-danger-border:var(--ki-outline-strong);
-  --ki-alert-info-border:var(--ki-outline-strong);
-  --ki-alert-warning-border:var(--ki-outline-strong);
-  --ki-card-border-color:var(--ki-outline-strong);
-  --ki-details-border:var(--ki-outline-strong);
-  --ki-dialog-border:var(--ki-size-border-hairline) solid var(--ki-outline-strong);
-  --ki-dialog-divider-color:var(--ki-outline-strong);
-  --ki-divider-color:var(--ki-outline-strong);
-  --ki-image-fallback-fg:var(--ki-text-supporting);
-  --ki-indicator-dot-color:var(--ki-outline-strong);
-  --ki-list-item-divider-color:var(--ki-outline-strong);
-  --ki-select-placeholder-fg:light-dark(var(--ki-text-supporting),var(--ki-inverse-white-alpha-80));
-  --ki-tabs-divider-color:var(--ki-outline-strong);
-  --ki-timeline-dot-fg:var(--ki-text-supporting);
-  --ki-timeline-line:var(--ki-outline-strong);
-  --ki-timeline-time-fg:var(--ki-text-supporting);
-  --ki-tooltip-border-color:var(--ki-outline-strong);
+  --ki-text-supporting:var(--ki-contrast-more-text-supporting) !important;
+  --ki-outline-control:var(--ki-contrast-more-outline-control) !important;
+  --ki-outline-control-hover:var(--ki-contrast-more-outline-control-hover) !important;
+  --ki-focus-ring-width:var(--ki-contrast-more-focus-ring-width) !important;
+  --ki-alert-border-width:var(--ki-contrast-more-alert-border-width) !important;
+  --ki-alert-neutral-border:var(--ki-contrast-more-alert-neutral-border) !important;
+  --ki-alert-success-border:var(--ki-contrast-more-alert-success-border) !important;
+  --ki-alert-danger-border:var(--ki-contrast-more-alert-danger-border) !important;
+  --ki-alert-info-border:var(--ki-contrast-more-alert-info-border) !important;
+  --ki-alert-warning-border:var(--ki-contrast-more-alert-warning-border) !important;
+  --ki-card-border-color:var(--ki-contrast-more-card-border-color) !important;
+  --ki-card-border-width:var(--ki-contrast-more-card-border-width) !important;
+  --ki-details-border:var(--ki-contrast-more-details-border) !important;
+  --ki-dialog-border:var(--ki-contrast-more-dialog-border) !important;
+  --ki-dialog-divider-color:var(--ki-contrast-more-dialog-divider-color) !important;
+  --ki-divider-color:var(--ki-contrast-more-divider-color) !important;
+  --ki-image-fallback-fg:var(--ki-contrast-more-image-fallback-fg) !important;
+  --ki-indicator-dot-color:var(--ki-contrast-more-indicator-dot-color) !important;
+  --ki-list-item-divider-color:var(--ki-contrast-more-list-item-divider-color) !important;
+  --ki-select-placeholder-fg:var(--ki-contrast-more-select-placeholder-fg) !important;
+  --ki-tabs-divider-color:var(--ki-contrast-more-tabs-divider-color) !important;
+  --ki-timeline-dot-fg:var(--ki-contrast-more-timeline-dot-fg) !important;
+  --ki-timeline-line:var(--ki-contrast-more-timeline-line) !important;
+  --ki-timeline-time-fg:var(--ki-contrast-more-timeline-time-fg) !important;
+  --ki-tooltip-border-color:var(--ki-contrast-more-tooltip-border-color) !important;
 }

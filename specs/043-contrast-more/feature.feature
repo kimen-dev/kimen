@@ -82,6 +82,26 @@ Feature: More contrast when the person asks for it
 
   # S12
   Scenario: A page's own value for a strengthened token wins under more contrast
-    Given an onmars page whose stylesheet sets the control boundary token to "#000000" under more contrast
+    Given an onmars page whose stylesheet sets the more-contrast value of the control boundary to "#000000"
     When the page renders under a "more" contrast system preference
     Then the text field boundary renders in "#000000"
+
+  # S13
+  Scenario: More contrast applies over a theme of the page's own
+    Given a page themed "acme" by its own stylesheet, which sets the control boundary to "#c8c8c8"
+    When the page renders under a "more" contrast system preference
+    Then the text field boundary renders in the more-contrast boundary colour, not "#c8c8c8"
+
+  # S14
+  Scenario: A declared contrast applies over a theme of the page's own
+    Given a page themed "acme" by its own stylesheet, which sets the control boundary to "#c8c8c8"
+    And the page root declares the contrast "more"
+    When the page renders under no contrast system preference
+    Then the text field boundary renders in the more-contrast boundary colour, not "#c8c8c8"
+
+  # S15
+  Scenario: A theme of the page's own chooses its more-contrast values
+    Given an onmars page with a region themed "acme" by its own stylesheet, which sets the more-contrast value of the control boundary to "#000000"
+    When the page renders under a "more" contrast system preference
+    Then the text field boundary inside the region renders in "#000000"
+    And the text field boundary outside the region keeps the more-contrast boundary colour

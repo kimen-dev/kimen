@@ -263,6 +263,17 @@
           "$description": "Corner radius of a single-selection indicator."
         }
       }
+    },
+    "contrast-more": {
+      "list": {
+        "item": {
+          "divider-color": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-list-item-divider-color under more contrast: row dividers at 3:1 or more."
+          }
+        }
+      }
     }
   }
 }

@@ -706,11 +706,12 @@ test('toggle button fills must distinguish both states on every page surface', (
 });
 
 test('more contrast holds neutral text to 7:1 and neutral boundaries to 4.5:1', () => {
+  // A theme chooses its mode values through the mode tokens; weak ones fail.
   const failures = evaluateCss(
     'onmars',
-    `${built('tokens.css')}\n:root:where([data-ki-contrast='more']) {
-      --ki-text-supporting: #6e6e6e;
-      --ki-outline-control: rgba(0, 0, 0, 0.48);
+    `${built('tokens.css')}\n:root {
+      --ki-contrast-more-text-supporting: #6e6e6e;
+      --ki-contrast-more-outline-control: rgba(0, 0, 0, 0.48);
     }`,
   );
   assert.ok(
@@ -729,6 +730,36 @@ test('more contrast holds neutral text to 7:1 and neutral boundaries to 4.5:1', 
   assert.ok(
     failures.every((failure) => failure.startsWith('onmars+contrast-more/')),
     failures.join('\n'),
+  );
+});
+
+// A mode re-points its tokens with !important (specs 043/044): a theme rule
+// that sets one of them, wherever it comes in the cascade, does not weaken it.
+test('a theme that sets a token a mode reassigns does not weaken the mode', () => {
+  const theme = `:root, [data-ki-theme] {
+    --ki-text-supporting: #6e6e6e;
+    --ki-outline-control: rgba(0, 0, 0, 0.48);
+    --ki-surface-special-blur-base-light: rgba(242, 242, 244, 0.8);
+  }`;
+  // The weak values fail where they apply, the standard appearance, and
+  // nowhere under more contrast, nor as glass under reduced transparency.
+  const failures = evaluateCss('onmars', `${built('tokens.css')}\n${theme}`);
+  assert.ok(failures.some((failure) => failure.startsWith('onmars/')));
+  assert.ok(
+    failures.every(
+      (failure) => !failure.startsWith('onmars+contrast-more/') && !/: alpha /u.test(failure),
+    ),
+    failures.join('\n'),
+  );
+  const { light } = collectSchemeDeclarations(
+    `${built('tokens.css')}\n${theme}`,
+    "[data-ki-contrast='more']",
+  );
+  assert.equal(light.get('--ki-outline-control'), 'var(--ki-inverse-white-alpha-64)');
+  assert.equal(light.get('--ki-text-supporting'), 'var(--ki-inverse-white-alpha-72)');
+  assert.ok(
+    [...light.keys()].every((name) => !/^--ki-(?:contrast-more|reduced-transparency)-/u.test(name)),
+    'mode tokens are folded into the tokens they feed',
   );
 });
 

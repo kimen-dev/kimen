@@ -202,39 +202,12 @@ export const material3DarkConfig = {
   platforms: { css: cssPlatform },
 };
 
-// Modes (specs 043/044): each is a file of references layered over a whole
-// composition, so one file serves every theme and scheme. A mode's
-// composition includes every file of the composition it modifies plus the
-// modes it implies (more contrast implies reduced transparency) and takes its
-// own file as the sole `source`, keeping collisions inside it audible.
-export const MODE_SOURCES = Object.freeze({
-  'reduced-transparency': Object.freeze(['tokens/modes/reduced-transparency.tokens.json']),
-  'contrast-more': Object.freeze([
-    'tokens/modes/reduced-transparency.tokens.json',
-    'tokens/modes/contrast-more.tokens.json',
-  ]),
-});
-
-// onmars re-asserts, under reduced transparency (and so under more contrast,
-// which implies it), the v2 values the shared mode file would turn back to
-// another theme's look. It follows the shared file and precedes contrast-more.
-const ONMARS_REDUCED_TRANSPARENCY = 'tokens/modes/onmars.reduced-transparency.tokens.json';
-
-export function withMode(config, mode) {
-  let sources = MODE_SOURCES[mode];
-  if (sources === undefined) throw new Error(`unknown mode ${JSON.stringify(mode)}`);
-  if (config === lightConfig || config === darkConfig) {
-    sources = [sources[0], ONMARS_REDUCED_TRANSPARENCY, ...sources.slice(1)];
-  }
-  if (config === darkConfig && mode === 'contrast-more') {
-    sources = [...sources, 'tokens/modes/onmars.contrast-more.dark.tokens.json'];
-  }
-  return {
-    ...config,
-    include: [...(config.include ?? []), ...config.source, ...sources.slice(0, -1)],
-    source: sources.slice(-1),
-  };
-}
+// Modes (specs 043/044) need no composition of their own: the value a token
+// takes under a mode is a token of every composition, `ki.<mode>.<path>`
+// (`--ki-contrast-more-outline-control`), defined next to the token it
+// replaces and reassigned per theme and scheme like any other token. The
+// stylesheet re-points each such token to its mode value under the mode
+// (./scripts/theme-stylesheet.mjs).
 
 // Densities (spec 045): a level reassigns the document-inherited density
 // tokens and nothing else. Its composition is the default one with the

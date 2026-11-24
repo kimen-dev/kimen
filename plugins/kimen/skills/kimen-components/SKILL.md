@@ -162,11 +162,12 @@ themes. Building a theme, a complete restyle the user asked for, may redefine
 it, on `:root` or on `[data-ki-theme='name']`; the translucent
 `--ki-color-*-500-alpha-*` variants follow their ramp step, and the theme is
 then responsible for contrast. Customising an app on an existing theme
-reassigns semantic tokens and leaves the palette alone. A theme that sets a
-token a preference mode reassigns (the *Preference modes* table of the
-Tokens reference in Kimen's Storybook lists them, such as
-`--ki-outline-control`) restates it under `@media (prefers-contrast: more)`
-and `[data-ki-contrast='more']`, or the mode loses it. A theme never
+reassigns semantic tokens and leaves the palette alone. Preference modes
+(more contrast, reduced transparency) apply over any theme on their own. A
+theme that wants its own value under a mode sets the mode token,
+`--ki-<mode>-<token>` such as `--ki-contrast-more-outline-control` (the
+*Preference modes* table of the Tokens reference in Kimen's Storybook lists
+them), never the token itself under the mode's media query. A theme never
 declares `color-scheme` with attribute specificity or more: that overrides
 `data-ki-color-scheme` and breaks a light/dark toggle.
 
