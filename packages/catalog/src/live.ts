@@ -20,6 +20,7 @@
  */
 import { z } from 'zod';
 
+import { createActionGate } from './action-budget.js';
 import {
   allocateDialogId,
   DIALOG_TAG,
@@ -202,6 +203,12 @@ export interface LiveSurfaceOptions {
   readonly catalogSchemaVersion?: string;
   /** The single action channel. */
   readonly onAction?: (event: LiveActionEvent) => void;
+  /**
+   * Receives what goes wrong between batches: once, the first action the
+   * action-rate budget holds (spec 162). A rejected batch is reported in its
+   * result, never here.
+   */
+  readonly onDiagnostic?: (diagnostic: RenderDiagnostic) => void;
   /**
    * Whether an op marked `force: true` may overwrite state the user changed
    * (D5). Default false: such an op is rejected.
@@ -1131,6 +1138,8 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   const doc = surface.ownerDocument;
   const sourceScope = Symbol();
   const onAction = options.onAction;
+  // One action-rate budget for the surface's whole life (spec 162).
+  const gate = createActionGate(budgets, options.onDiagnostic);
   const allowUserStateOverride = options.allowUserStateOverride === true;
   const skew = versionDiagnostic(options.catalogSchemaVersion, catalog.catalogSchemaVersion);
   // What every validation of this surface is checked against (FR-004): the
@@ -1260,26 +1269,42 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
                 if (path === null) {
                   return;
                 }
-                // What leaves now is the user's no longer: a reset may clear
-                // it (155 FR-011). The bound node's own state, and each
-                // collected field's value.
-                for (const name of USER_STATE_PROPS) {
-                  noteDelivered(model, name, ownEntry(data, name), components);
-                }
-                for (const [key, id] of Object.entries(model.collect ?? {})) {
-                  const field = live.ids.get(id);
-                  const fieldEntry = field && ownEntry(components, field.component);
-                  const prop = fieldEntry && collectedValueProp(fieldEntry);
-                  if (prop !== undefined) {
-                    noteDelivered(field, prop.name, ownEntry(data, key), components);
+                const deliver = (): void => {
+                  // Read when the action leaves (spec 162): a held report
+                  // names the node's path and the surface revision then.
+                  const current = pathOf(model);
+                  if (current === null) {
+                    return;
                   }
-                }
-                onAction({
+                  // What leaves now is the user's no longer: a reset may clear
+                  // it (155 FR-011). The bound node's own state, and each
+                  // collected field's value.
+                  for (const name of USER_STATE_PROPS) {
+                    noteDelivered(model, name, ownEntry(data, name), components);
+                  }
+                  for (const [key, id] of Object.entries(model.collect ?? {})) {
+                    const field = live.ids.get(id);
+                    const fieldEntry = field && ownEntry(components, field.component);
+                    const prop = fieldEntry && collectedValueProp(fieldEntry);
+                    if (prop !== undefined) {
+                      noteDelivered(field, prop.name, ownEntry(data, key), components);
+                    }
+                  }
+                  onAction({
+                    action,
+                    data,
+                    ...(model.id === undefined ? {} : { id: model.id }),
+                    path: current,
+                    revision,
+                  });
+                };
+                gate.offer({
                   action,
-                  data,
-                  ...(model.id === undefined ? {} : { id: model.id }),
+                  deliver,
+                  element,
                   path,
-                  revision,
+                  present: () =>
+                    pathOf(model) !== null && element.isConnected && surface.contains(element),
                 });
               },
             ),

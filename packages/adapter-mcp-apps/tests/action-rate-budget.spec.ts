@@ -1,0 +1,122 @@
+// @spec:162-action-rate-budget
+// The MCP Apps surface delivers its actions within the action-rate budget of
+// the guarded renderer (spec 162): beyond it no `tools/call` leaves, the first
+// held action is reported once as a refusal, a full repaint discards what the
+// replaced surface held, and the host's budgets reach the live surface.
+// happy-dom stands in for the DOM: "the carousel moves" is its declared
+// event dispatched on the rendered element, as the component dispatches it.
+import type { RenderBudgets } from '@kimen/catalog';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import type { BridgeRefusal, SurfaceOutboundMessage } from '../src/index.js';
+import { createSurfaceBridge, METHOD_TOOLS_CALL } from '../src/index.js';
+import { initializeResult, TEXT_MESSAGE_CAPABILITIES, toolResult } from './spec-messages.js';
+
+let surface: HTMLElement;
+
+beforeEach(() => {
+  vi.useFakeTimers({
+    toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'performance', 'Date'],
+  });
+  document.body.replaceChildren();
+  surface = document.createElement('div');
+  document.body.appendChild(surface);
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
+const carouselSpec = {
+  actions: ['slide'],
+  root: {
+    action: 'slide',
+    component: 'ki-carousel',
+    props: { autoplay: 1, label: 'Highlights', loop: true },
+    slots: { '': [{ component: 'ki-carousel-item', slots: { '': ['One'] } }] },
+  },
+  version: 1,
+};
+
+const harness = (budgets?: Partial<RenderBudgets>) => {
+  const sent: SurfaceOutboundMessage[] = [];
+  const refusals: BridgeRefusal[] = [];
+  const bridge = createSurfaceBridge({
+    ...(budgets === undefined ? {} : { budgets }),
+    onRefusal: (refusal) => refusals.push(refusal),
+    send: (message) => sent.push(message),
+    surface,
+  });
+  bridge.start();
+  bridge.receive(initializeResult(1, undefined, {}, TEXT_MESSAGE_CAPABILITIES));
+  expect(bridge.receive(toolResult(carouselSpec)).ok).toBe(true);
+  sent.length = 0;
+  return { bridge, refusals, sent };
+};
+
+const actionCalls = (sent: readonly SurfaceOutboundMessage[]) =>
+  sent.filter((message) => 'method' in message && message.method === METHOD_TOOLS_CALL);
+
+/** The carousel reports a move every millisecond, as autoplay 1 does. */
+const rotate = (): (() => void) => {
+  const carousel = surface.querySelector('ki-carousel');
+  if (carousel === null) {
+    throw new Error('no carousel rendered');
+  }
+  const timer = setInterval(() => {
+    carousel.dispatchEvent(new CustomEvent('ki-slide-change', { bubbles: true, composed: true }));
+  }, 1);
+  return () => {
+    clearInterval(timer);
+  };
+};
+
+describe('an MCP Apps surface within its action budget', () => {
+  it('S2 a carousel moving every millisecond sends at most 12 action calls in one second', () => {
+    const { sent } = harness();
+    const stop = rotate();
+    vi.advanceTimersByTime(1000);
+    stop();
+    // The burst, then a refill at 500 ms and, if the first move came at once, at 1000 ms.
+    expect(actionCalls(sent).length).toBeGreaterThanOrEqual(11);
+    expect(actionCalls(sent).length).toBeLessThanOrEqual(12);
+  });
+
+  it('S6 the first held action is reported once as a refusal', () => {
+    const { refusals, sent } = harness();
+    const stop = rotate();
+    vi.advanceTimersByTime(3000);
+    stop();
+    expect(actionCalls(sent).length).toBeGreaterThan(10);
+    expect(refusals).toEqual([
+      expect.objectContaining({ reason: 'action-rate-budget', value: 'slide' }),
+    ]);
+  });
+
+  it('S5 a full repaint discards what the replaced surface held', () => {
+    const { bridge, sent } = harness();
+    const stop = rotate();
+    vi.advanceTimersByTime(50);
+    stop();
+    expect(actionCalls(sent)).toHaveLength(10);
+    expect(
+      bridge.receive(
+        toolResult({
+          actions: ['done'],
+          root: { action: 'done', component: 'ki-button', slots: { '': ['Done'] } },
+          version: 1,
+        }),
+      ).ok,
+    ).toBe(true);
+    vi.advanceTimersByTime(2000);
+    expect(actionCalls(sent)).toHaveLength(10);
+  });
+
+  it('S7 the host budgets reach the surface', () => {
+    const { sent } = harness({ actionRefillMs: 2000, maxActionBurst: 1 });
+    const stop = rotate();
+    vi.advanceTimersByTime(1000);
+    stop();
+    expect(actionCalls(sent)).toHaveLength(1);
+  });
+});

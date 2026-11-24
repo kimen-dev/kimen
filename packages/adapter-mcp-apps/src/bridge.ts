@@ -403,6 +403,11 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
       actions: [...actions],
       batchBudgets: { maxBytes: specBytes + INSERT_ENVELOPE_BYTES },
       onAction,
+      // The first action the action-rate budget holds (spec 162), reported
+      // like every other refusal of this surface.
+      onDiagnostic: (diagnostic) => {
+        report({ detail: diagnostic.message, reason: diagnostic.rule, value: diagnostic.value });
+      },
       surface: mount,
       ...budgets,
     });

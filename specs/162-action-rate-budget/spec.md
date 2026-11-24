@@ -8,9 +8,12 @@
 
 **Created**: 2026-11-24
 
-**Status**: Draft. Pending founder approval. Every scenario is a guardrail
-scenario (Art. VIII) and needs explicit founder confirmation; the amendment to
-`028` below is proposed, not applied. No code changes before approval.
+**Status**: Approved. The founder approved the scenarios, which are guardrail
+scenarios (Art. VIII), and the defaults on 2026-11-24; the amendment to `028`
+below is applied. One change after approval, for the founder's review: S3
+uses a code field instead of a combobox, because a combobox's edit reports
+its committed selection, not the typed text, so the rule could not be
+observed with it.
 
 **Input**: The review of spec 154 on 2026-11-24 (draft spec
 `161-action-is-a-report`) found declared events that fire without a person's
@@ -121,13 +124,14 @@ count actions over one second (S2); render the boundary fixtures (S1, S7).
 
 ### User Story 2 - An honest binding keeps its meaning under the budget (Priority: P1)
 
-A person typing into a combobox bound per edit sees results for what they
-last typed, and a person's click is never starved by another binding's flood.
+A person typing into a field bound per edit (a verification code, a remote
+search) gets an answer for what they last typed, and a person's click is never
+starved by another binding's flood.
 
-**Why this priority**: a budget that drops the last report of a search box
-would break the honest use spec 154 enabled.
+**Why this priority**: a budget that drops the last report of a field bound
+per edit would break the honest use spec 154 enabled.
 
-**Independent Test**: spend the budget, type a query, read the last action
+**Independent Test**: spend the budget, type a code, read the last action
 (S3); flood one binding, click another (S4).
 
 **Acceptance Scenarios**: S3, S4.
@@ -207,11 +211,11 @@ Feature: A surface sends its actions within a rate budget
   Rule: The latest report of each binding arrives, and none starves another
 
     # S3
-    Scenario: A query typed faster than the budget refills arrives as last typed
+    Scenario: A code typed faster than the budget refills arrives as last typed
       Given a surface whose action budget is spent
-      And a combobox whose every edit reports the declared action "search"
-      When a person types "kimen" faster than the budget refills
-      Then the last "search" action the host receives carries the query "kimen"
+      And a code field whose every edit reports the declared action "code"
+      When a person types "482916" faster than the budget refills
+      Then the last "code" action the host receives carries the code "482916"
       And it arrives within 500 ms of the last keystroke
 
     # S4
@@ -297,7 +301,7 @@ This is guarded-renderer infrastructure, not a UI component.
   that a binding fired faster delivers its latest report.
 - **FR-007**: Spec 028 MUST be amended as below.
 
-### Amendment to spec 028 (proposed)
+### Amendment to spec 028 (applied)
 
 `specs/028-guarded-renderer/spec.md`, FR-006, replace the first sentence
 with:
@@ -314,8 +318,11 @@ and append:
 > is delivered when the budget allows, and the first held report is
 > diagnosed (`162`).
 
-User Story 3, first sentence, after "node floods": add "or a component made
-to fire its bound event hundreds of times a second".
+User Story 3, append to its first paragraph: "A spec that makes a component
+fire its bound event hundreds of times a second still renders, but its
+surface delivers no more actions than its action budget allows
+(`162-action-rate-budget`)." (A rendered spec is not rejected for a rate it
+has not yet shown, so the budget cannot act "before rendering starts".)
 
 Key Entities, **Budget**, append: "and the action rate: a burst and a refill
 interval per surface (`162`)."
@@ -370,10 +377,9 @@ interval per surface (`162`)."
 - The in-flight cap in the bridge is deferred: with this budget, a server
   that never answers accumulates at most two outstanding calls per second.
 
-## Open questions for the founder
+## Founder decisions (2026-11-24)
 
-1. The defaults: a burst of 10 and 500 ms, or other numbers.
-2. Whether the diagnostic (FR-004, S6) lands now, with its new optional
-   callback, or later; without it, held actions are silent.
-3. Whether to open the carousel floor (spec 123, WCAG 2.3.1) as its own
-   change.
+1. The defaults are a burst of 10 and 500 ms.
+2. The diagnostic (FR-004, S6) lands with this spec.
+3. The carousel floor (spec 123, WCAG 2.3.1) is its own change, in its own
+   session.

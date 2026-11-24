@@ -36,11 +36,11 @@ Feature: A surface sends its actions within a rate budget
   Rule: The latest report of each binding arrives, and none starves another
 
     # S3
-    Scenario: A query typed faster than the budget refills arrives as last typed
+    Scenario: A code typed faster than the budget refills arrives as last typed
       Given a surface whose action budget is spent
-      And a combobox whose every edit reports the declared action "search"
-      When a person types "kimen" faster than the budget refills
-      Then the last "search" action the host receives carries the query "kimen"
+      And a code field whose every edit reports the declared action "code"
+      When a person types "482916" faster than the budget refills
+      Then the last "code" action the host receives carries the code "482916"
       And it arrives within 500 ms of the last keystroke
 
     # S4

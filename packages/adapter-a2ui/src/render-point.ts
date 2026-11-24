@@ -10,6 +10,7 @@
 import type {
   ActionEvent,
   RenderBudgets,
+  RenderDiagnostic,
   RenderOptions,
   RenderResult,
   UiSpec,
@@ -22,6 +23,8 @@ export interface RenderRequest {
   readonly element: Element;
   readonly spec: UiSpec;
   readonly onAction: (event: ActionEvent) => void;
+  /** What goes wrong after the render: the first action the action-rate budget holds (spec 162). */
+  readonly onDiagnostic: (diagnostic: RenderDiagnostic) => void;
   readonly budgets?: Partial<RenderBudgets> | undefined;
   readonly catalogSchemaVersion?: string | undefined;
 }
@@ -30,6 +33,7 @@ export interface RenderRequest {
 export function renderSurface(render: GuardedRender, request: RenderRequest): RenderResult {
   const options: RenderOptions = {
     onAction: request.onAction,
+    onDiagnostic: request.onDiagnostic,
     surface: request.element,
     ...(request.budgets !== undefined ? { budgets: request.budgets } : {}),
     ...(request.catalogSchemaVersion !== undefined
