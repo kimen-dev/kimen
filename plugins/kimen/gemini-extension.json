@@ -1,11 +1,11 @@
 {
   "name": "kimen",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Kimen agent skills (kimen-components, kimen-genui) and the kimen-mcp server, which lists, describes, validates and renders Kimen UI.",
   "mcpServers": {
     "kimen": {
       "command": "npx",
-      "args": ["-y", "-p", "@kimen/mcp-server@0.1.3", "kimen-mcp"]
+      "args": ["-y", "-p", "@kimen/mcp-server@0.2.0", "kimen-mcp"]
     }
   },
   "contextFileName": "gemini-context.md"

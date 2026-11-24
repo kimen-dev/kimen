@@ -7,6 +7,38 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [0.2.0] - 2026-11-24
+
+### Added
+
+- **adapter-mcp-apps:** MCP Apps surfaces change without a full repaint (157) ([#567](https://github.com/kimen-dev/kimen/pull/567))
+- **adapter-mcp-apps:** show a waiting placeholder until a spec paints (spec 163) ([#598](https://github.com/kimen-dev/kimen/pull/598))
+- **catalog:** repair live-surface focus and clear forced numbers (spec 155) ([#566](https://github.com/kimen-dev/kimen/pull/566))
+- **catalog:** let an action collect other fields' values (spec 153) ([#570](https://github.com/kimen-dev/kimen/pull/570))
+- **catalog:** bind an action per event (spec 154) ([#575](https://github.com/kimen-dev/kimen/pull/575))
+- **catalog:** reset a live control once an action delivered it (spec 155 S9–S14) ([#578](https://github.com/kimen-dev/kimen/pull/578))
+- **catalog:** read-only native tables (spec 158) ([#579](https://github.com/kimen-dev/kimen/pull/579))
+- **catalog:** deliver a surface's actions within an action-rate budget (spec 162) ([#589](https://github.com/kimen-dev/kimen/pull/589))
+- **elements:** custom-error on twelve form controls (spec 156) ([#569](https://github.com/kimen-dev/kimen/pull/569))
+- **elements:** ki-carousel rotates at most once every 5000 ms (spec 123 A1) ([#588](https://github.com/kimen-dev/kimen/pull/588))
+- **elements:** ki-button link mode and content alignment tokens (integrator 0.1.3, items 2-3) ([#593](https://github.com/kimen-dev/kimen/pull/593))
+- **elements:** ki-top-nav collapse-at="none" wraps links instead of collapsing ([#590](https://github.com/kimen-dev/kimen/pull/590))
+- **elements:** color Gherkin in ki-code-block (integrator 0.1.3, item 4) ([#587](https://github.com/kimen-dev/kimen/pull/587))
+- **tokens:** give the switch thumb its own shadow token and name md in size descriptions ([#585](https://github.com/kimen-dev/kimen/pull/585))
+- **tokens:** preference modes win over any theme ([#592](https://github.com/kimen-dev/kimen/pull/592))
+
+### Fixed
+
+- **agents:** version the plugin with each release; clarify region theming and css/base ([#584](https://github.com/kimen-dev/kimen/pull/584))
+- **catalog:** keep the person's unsent input out of the agent's reach (spec 159) ([#574](https://github.com/kimen-dev/kimen/pull/574))
+- **catalog:** a forced override hands back only the props it names (spec 160) ([#577](https://github.com/kimen-dev/kimen/pull/577))
+- **catalog:** open the browser bubble on the field that takes the focus (spec 153 S13) ([#597](https://github.com/kimen-dev/kimen/pull/597))
+- **deps:** update sandbox toolchain ([#553](https://github.com/kimen-dev/kimen/pull/553))
+- **elements:** keep a custom error set during a checkbox toggle; disabled switch validity ([#573](https://github.com/kimen-dev/kimen/pull/573))
+- **elements:** keep a dialog opener's popup ARIA and cancel middle clicks on a loading link ([#596](https://github.com/kimen-dev/kimen/pull/596))
+- **mutation:** unblock the daily mutation run and its stale specs ([#571](https://github.com/kimen-dev/kimen/pull/571))
+- **scripts:** stop background git maintenance in generated-sync fixtures ([#576](https://github.com/kimen-dev/kimen/pull/576))
+
 ## [0.1.3] - 2026-11-21
 
 ### Fixed
