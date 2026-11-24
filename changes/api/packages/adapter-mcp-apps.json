@@ -13,7 +13,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface ActionCallRequest {\n    readonly jsonrpc: '2.0';\n    readonly id: RequestId;\n    readonly method: 'tools/call';\n    readonly params: {\n        readonly name: typeof KIMEN_ACTION_TOOL;\n        readonly arguments: {\n            readonly action: string;\n            readonly data: Readonly<Record<string, boolean | number | string>>;\n        };\n    };\n}"
+          "signature": "interface ActionCallRequest {\n    readonly jsonrpc: '2.0';\n    readonly id: RequestId;\n    readonly method: 'tools/call';\n    readonly params: {\n        readonly name: typeof KIMEN_ACTION_TOOL;\n        readonly arguments: {\n            readonly action: string;\n            readonly data: Readonly<Record<string, boolean | number | string>>;\n            readonly id?: string;\n            readonly revision: number;\n        };\n    };\n}"
         },
         "BridgeRefusal": {
           "kinds": [
@@ -26,12 +26,6 @@
             "type"
           ],
           "signature": "interface DispatchResult {\n    readonly sent: boolean;\n    readonly refusal?: BridgeRefusal | undefined;\n}"
-        },
-        "GuardedRender": {
-          "kinds": [
-            "type"
-          ],
-          "signature": "export type GuardedRender = (input: unknown, options: RenderOptions) => RenderResult;"
         },
         "Implementation": {
           "kinds": [
@@ -97,7 +91,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface KimenActionTool {\n    readonly name: typeof KIMEN_ACTION_TOOL;\n    readonly description: string;\n    readonly inputSchema: {\n        readonly type: 'object';\n        readonly properties: {\n            readonly action: {\n                readonly type: 'string';\n            };\n            readonly data: {\n                readonly type: 'object';\n                readonly additionalProperties: {\n                    readonly type: readonly string[];\n                };\n            };\n        };\n        readonly required: readonly [\n            'action'\n        ];\n        readonly additionalProperties: false;\n    };\n    readonly _meta: {\n        readonly ui: {\n            readonly resourceUri: string;\n            readonly visibility: readonly [\n                'app'\n            ];\n        };\n    };\n}"
+          "signature": "interface KimenActionTool {\n    readonly name: typeof KIMEN_ACTION_TOOL;\n    readonly description: string;\n    readonly inputSchema: {\n        readonly type: 'object';\n        readonly properties: {\n            readonly action: {\n                readonly type: 'string';\n            };\n            readonly data: {\n                readonly type: 'object';\n                readonly additionalProperties: {\n                    readonly type: readonly string[];\n                };\n            };\n            readonly id: {\n                readonly type: 'string';\n                readonly pattern: string;\n            };\n            readonly revision: {\n                readonly type: 'integer';\n                readonly minimum: 0;\n            };\n        };\n        readonly required: readonly [\n            'action'\n        ];\n        readonly additionalProperties: false;\n    };\n    readonly _meta: {\n        readonly ui: {\n            readonly resourceUri: string;\n            readonly visibility: readonly [\n                'app'\n            ];\n        };\n    };\n}"
         },
         "KimenSurfaceResource": {
           "kinds": [
@@ -247,7 +241,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface SurfaceBridgeOptions {\n    readonly surface: Element;\n    readonly send: (message: SurfaceOutboundMessage) => void;\n    readonly render?: GuardedRender;\n    readonly onRefusal?: (refusal: BridgeRefusal) => void;\n    readonly onColorScheme?: (scheme: SurfaceColorScheme) => void;\n    readonly supportedVersions?: readonly string[];\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly appInfo?: Implementation;\n}"
+          "signature": "interface SurfaceBridgeOptions {\n    readonly surface: Element;\n    readonly send: (message: SurfaceOutboundMessage) => void;\n    readonly onRefusal?: (refusal: BridgeRefusal) => void;\n    readonly onColorScheme?: (scheme: SurfaceColorScheme) => void;\n    readonly supportedVersions?: readonly string[];\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly appInfo?: Implementation;\n}"
         },
         "SurfaceColorScheme": {
           "kinds": [
@@ -271,7 +265,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface SurfacePayload {\n    readonly spec: unknown;\n}"
+          "signature": "interface SurfacePayload {\n    readonly spec: unknown;\n    readonly update?: SurfaceUpdate;\n}"
         },
         "SurfaceState": {
           "kinds": [
@@ -283,7 +277,13 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface SurfaceToolResult {\n    readonly content: readonly {\n        readonly type: 'text';\n        readonly text: string;\n    }[];\n    readonly structuredContent: {\n        readonly kimenSurface: {\n            readonly spec: unknown;\n        };\n    };\n}"
+          "signature": "interface SurfaceToolResult {\n    readonly content: readonly {\n        readonly type: 'text';\n        readonly text: string;\n    }[];\n    readonly structuredContent: {\n        readonly kimenSurface: {\n            readonly spec: unknown;\n            readonly update?: SurfaceUpdate;\n        };\n    };\n}"
+        },
+        "SurfaceUpdate": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SurfaceUpdate {\n    readonly baseRevision: number;\n    readonly batch: unknown;\n}"
         },
         "UI_SCHEME": {
           "kinds": [
@@ -355,7 +355,7 @@
           "kinds": [
             "value"
           ],
-          "signature": "export declare function surfaceToolResult(spec: unknown, textFallback: string): SurfaceToolResult;"
+          "signature": "export declare function surfaceToolResult(spec: unknown, textFallback: string, update?: SurfaceUpdate): SurfaceToolResult;"
         }
       },
       "target": "./dist/index.js"

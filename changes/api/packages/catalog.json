@@ -3,17 +3,29 @@
     ".": {
       "declaration": "./dist/index.d.ts",
       "symbols": {
+        "ActionBinding": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type ActionBinding = string | Readonly<Record<string, string>>;"
+        },
         "ActionEvent": {
           "kinds": [
             "type"
           ],
-          "signature": "interface ActionEvent {\n    readonly action: string;\n    readonly path: string;\n    readonly data: Readonly<Record<string, boolean | number | string>>;\n}"
+          "signature": "interface ActionEvent {\n    readonly action: string;\n    readonly id?: string | undefined;\n    readonly path: string;\n    readonly data: Readonly<Record<string, boolean | number | string>>;\n}"
         },
         "CATALOG_SCHEMA_VERSION": {
           "kinds": [
             "value"
           ],
           "signature": "export declare const CATALOG_SCHEMA_VERSION: string;"
+        },
+        "COLLECT_MAX_ENTRIES": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const COLLECT_MAX_ENTRIES = 32;"
         },
         "Catalog": {
           "kinds": [
@@ -49,7 +61,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface CatalogPropConstraint {\n    readonly type: 'boolean' | 'enum' | 'number' | 'number-or-string' | 'string';\n    readonly values?: readonly string[];\n    readonly deprecatedValues?: readonly string[];\n    readonly documentedValues?: readonly string[];\n    readonly default?: boolean | number | string;\n    readonly required?: boolean;\n    readonly allowEmpty?: boolean;\n    readonly minimum?: number;\n    readonly maximum?: number;\n    readonly format?: 'idref' | 'url';\n    readonly description: string;\n}"
+          "signature": "interface CatalogPropConstraint {\n    readonly type: 'boolean' | 'enum' | 'number' | 'number-or-string' | 'string';\n    readonly values?: readonly string[];\n    readonly deprecatedValues?: readonly string[];\n    readonly documentedValues?: readonly string[];\n    readonly default?: boolean | number | string;\n    readonly required?: boolean;\n    readonly allowEmpty?: boolean;\n    readonly minimum?: number;\n    readonly maximum?: number;\n    readonly format?: 'idref' | 'text' | 'url';\n    readonly description: string;\n}"
         },
         "DEFAULT_LIVE_BATCH_BUDGETS": {
           "kinds": [
@@ -67,7 +79,13 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface LiveActionEvent extends ActionEvent {\n    readonly id?: string | undefined;\n    readonly revision: number;\n}"
+          "signature": "interface LiveActionEvent extends ActionEvent {\n    readonly revision: number;\n}"
+        },
+        "LiveBatch": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveBatch {\n    readonly ifRevision?: number | undefined;\n    readonly ops: readonly LiveOp[];\n    readonly focus?: string | undefined;\n}"
         },
         "LiveBatchBudgets": {
           "kinds": [
@@ -80,6 +98,42 @@
             "type"
           ],
           "signature": "interface LiveBatchResult extends RenderResult {\n    readonly revision: number;\n}"
+        },
+        "LiveInsertOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveInsertOp {\n    readonly op: 'insert';\n    readonly parent?: string | undefined;\n    readonly slot?: string | undefined;\n    readonly before?: string | undefined;\n    readonly node: UiSpecNode;\n}"
+        },
+        "LiveOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type LiveOp = LiveInsertOp | LiveSetOp | LiveTextOp | LiveRemoveOp | LiveReplaceOp | LiveResetOp;"
+        },
+        "LiveRemoveOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveRemoveOp {\n    readonly op: 'remove';\n    readonly id: string;\n    readonly force?: boolean | undefined;\n}"
+        },
+        "LiveReplaceOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveReplaceOp {\n    readonly op: 'replace';\n    readonly id: string;\n    readonly node: UiSpecNode;\n    readonly force?: boolean | undefined;\n}"
+        },
+        "LiveResetOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveResetOp {\n    readonly op: 'reset';\n    readonly id: string;\n}"
+        },
+        "LiveSetOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveSetOp {\n    readonly op: 'set';\n    readonly id: string;\n    readonly props: Readonly<Record<string, boolean | number | string | null>>;\n    readonly force?: boolean | undefined;\n}"
         },
         "LiveSnapshot": {
           "kinds": [
@@ -98,6 +152,12 @@
             "type"
           ],
           "signature": "interface LiveSurfaceOptions {\n    readonly surface: Element;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n    readonly actions?: readonly string[];\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly batchBudgets?: Partial<LiveBatchBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly onAction?: (event: LiveActionEvent) => void;\n    readonly allowUserStateOverride?: boolean;\n}"
+        },
+        "LiveTextOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveTextOp {\n    readonly op: 'text';\n    readonly id: string;\n    readonly slot?: string | undefined;\n    readonly text: string;\n}"
         },
         "NATIVE_PRIMITIVE_TAGS": {
           "kinds": [
@@ -169,7 +229,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface UiSpecNode {\n    readonly id?: string | undefined;\n    readonly component: string;\n    readonly props?: Readonly<Record<string, boolean | number | string>> | undefined;\n    readonly action?: string | undefined;\n    readonly slots?: Readonly<Record<string, readonly (UiSpecNode | string)[]>> | undefined;\n}"
+          "signature": "interface UiSpecNode {\n    readonly id?: string | undefined;\n    readonly component: string;\n    readonly props?: Readonly<Record<string, boolean | number | string>> | undefined;\n    readonly action?: ActionBinding | undefined;\n    readonly collect?: Readonly<Record<string, string>> | undefined;\n    readonly slots?: Readonly<Record<string, readonly (UiSpecNode | string)[]>> | undefined;\n}"
         },
         "VALIDATION_MAX_BYTES": {
           "kinds": [
@@ -193,7 +253,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface ValidationIssue {\n    readonly code: 'action-not-allowed' | 'depth-budget' | 'duplicate-id' | 'forbidden-key' | 'invalid-child' | 'invalid-command' | 'invalid-command-target' | 'invalid-id' | 'invalid-prop-type' | 'invalid-reference' | 'malformed-spec' | 'missing-required-prop' | 'prop-out-of-range' | 'size-budget' | 'undeclared-action' | 'unknown-component' | 'unknown-prop' | 'unknown-slot' | 'url-origin' | 'url-scheme';\n    readonly path: string;\n    readonly message: string;\n    readonly value?: string | undefined;\n}"
+          "signature": "interface ValidationIssue {\n    readonly code: 'action-not-allowed' | 'collect-budget' | 'collect-key-conflict' | 'collect-no-value' | 'collect-unknown-node' | 'collect-without-action' | 'depth-budget' | 'duplicate-id' | 'forbidden-key' | 'invalid-child' | 'invalid-command' | 'invalid-command-target' | 'invalid-id' | 'invalid-prop-type' | 'invalid-reference' | 'malformed-spec' | 'missing-required-prop' | 'prop-out-of-range' | 'size-budget' | 'undeclared-action' | 'undeclared-event' | 'unknown-component' | 'unknown-prop' | 'unknown-slot' | 'url-origin' | 'url-scheme';\n    readonly path: string;\n    readonly message: string;\n    readonly value?: string | undefined;\n}"
         },
         "ValidationReport": {
           "kinds": [
