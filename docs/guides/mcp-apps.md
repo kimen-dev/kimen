@@ -83,6 +83,10 @@ standard `tools/call` to one app-only tool, `kimen_surface_action`, with
 arguments `{ action, data, revision, id? }`: `revision` is the page revision
 the person acted on and `id` the bound node's stable id, when the spec gave
 it one. Both are optional in the tool's schema, so a server may ignore them.
+A surface sends at most 10 action calls at once, then one every 500 ms (the
+guarded renderer's action-rate budget): beyond that, each bound control's
+latest action waits its turn, and its `revision` still names the page it
+fired on, which may be older than the page you have sent since.
 `declareActionTool(name)` returns its
 definition with `_meta.ui.visibility: ["app"]`, so the host keeps it out of
 the agent's tool list and accepts calls to it only from the app:

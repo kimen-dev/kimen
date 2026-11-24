@@ -120,3 +120,50 @@ describe('an MCP Apps surface within its action budget', () => {
     expect(actionCalls(sent)).toHaveLength(1);
   });
 });
+
+describe('a held action names the page it fired on', () => {
+  const payPage = (label: string) => ({
+    actions: ['spend', 'confirm'],
+    root: {
+      component: 'ki-stack',
+      slots: {
+        '': [
+          { action: 'spend', component: 'ki-button', id: 'spend', slots: { '': ['Spend'] } },
+          { action: 'confirm', component: 'ki-button', id: 'pay', slots: { '': [label] } },
+        ],
+      },
+    },
+    version: 1,
+  });
+
+  it('S8 a held action names the page revision it fired on after an update', () => {
+    const sent: SurfaceOutboundMessage[] = [];
+    const bridge = createSurfaceBridge({ send: (message) => sent.push(message), surface });
+    bridge.start();
+    bridge.receive(initializeResult(1, undefined, {}, TEXT_MESSAGE_CAPABILITIES));
+    expect(bridge.receive(toolResult(payPage('Pay order A'))).ok).toBe(true);
+    const buttons = surface.querySelectorAll<HTMLElement>('ki-button');
+    for (let index = 0; index < 10; index += 1) {
+      buttons[0]?.click();
+    }
+    buttons[1]?.click();
+    // The server updates the page (revision 1 → 2) before the held action leaves.
+    expect(
+      bridge.receive(
+        toolResult(payPage('Pay order A'), 'Order', {
+          baseRevision: 1,
+          batch: { ops: [{ id: 'pay', op: 'set', props: { variant: 'primary' } }] },
+        }),
+      ).ok,
+    ).toBe(true);
+    vi.advanceTimersByTime(500);
+    const confirm = actionCalls(sent).find(
+      (message) =>
+        'params' in message &&
+        (message.params as { arguments?: { action?: string } }).arguments?.action === 'confirm',
+    );
+    expect(confirm).toMatchObject({
+      params: { arguments: { action: 'confirm', id: 'pay', revision: 1 } },
+    });
+  });
+});

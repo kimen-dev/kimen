@@ -11,6 +11,11 @@
  */
 import type { RenderBudgets, RenderDiagnostic } from './render.js';
 
+/** The package default burst: a person's quickest bursts fit in it. */
+export const DEFAULT_ACTION_BURST = 10;
+/** The package default refill interval, in milliseconds. */
+export const DEFAULT_ACTION_REFILL_MS = 500;
+
 /** One report a bound node offers to the host. */
 export interface ActionReport {
   /** The bound element; with `action`, the binding a held report belongs to. */
@@ -39,8 +44,8 @@ export function createActionGate(
   budgets: Pick<RenderBudgets, 'actionRefillMs' | 'maxActionBurst'>,
   onDiagnostic: ((diagnostic: RenderDiagnostic) => void) | undefined,
 ): ActionGate {
-  const burst = budgets.maxActionBurst;
-  const refill = budgets.actionRefillMs;
+  const burst = budgets.maxActionBurst ?? DEFAULT_ACTION_BURST;
+  const refill = budgets.actionRefillMs ?? DEFAULT_ACTION_REFILL_MS;
   const held = new Map<string, ActionReport>();
   const bindingIds = new WeakMap<Element, number>();
   let nextBindingId = 0;

@@ -84,7 +84,10 @@ element alone — see
 
 `createA2uiAdapter` also accepts `actions` (the declared action set),
 `locale` (for `formatNumber`, `formatCurrency`, `pluralize`), `now` (the clock
-for action timestamps), `budgets` (tighter render budgets),
+for action timestamps), `budgets` (tighter render budgets, among them the
+action-rate budget: at most 10 actions at once, then one every 500 ms, each
+control delivering only its latest action beyond that, and the first held
+action reported once to `onError`),
 `catalogSchemaVersion` (version-skew gate, forwarded to the renderer) and
 `render` — an injection seam for the guarded renderer itself, which is how the
 test suite proves every render call arrives at the guardrail and nothing

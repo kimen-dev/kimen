@@ -330,7 +330,17 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     });
   };
 
-  const dispatch = (action: string, data: ActionData = {}, node?: string): DispatchResult => {
+  /**
+   * `firedOn` is the page revision the action fired on: the current one for
+   * a host's own dispatch, and for a rendered node's action the one it fired
+   * on, which an action the action budget held keeps (spec 162 S8).
+   */
+  const dispatch = (
+    action: string,
+    data: ActionData = {},
+    node?: string,
+    firedOn: number = revision,
+  ): DispatchResult => {
     if (state !== 'ready') {
       const refusal: BridgeRefusal = {
         detail: `action "${action}" cannot leave a surface in state "${state}"`,
@@ -364,16 +374,29 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
       jsonrpc: JSONRPC_VERSION,
       method: METHOD_TOOLS_CALL,
       params: {
-        arguments: { action, data, ...(node === undefined ? {} : { id: node }), revision },
+        arguments: {
+          action,
+          data,
+          ...(node === undefined ? {} : { id: node }),
+          revision: firedOn,
+        },
         name: KIMEN_ACTION_TOOL,
       },
     });
     return { sent: true };
   };
 
-  const onAction = (event: LiveActionEvent): void => {
-    dispatch(event.action, event.data, event.id);
-  };
+  /**
+   * The action channel of a live surface painted as page revision
+   * `paintedAt`. The live surface counts its batches from 1 in step with the
+   * page (one per paint, one per applied update), so its revision maps to the
+   * page revision the action fired on.
+   */
+  const actionsOf =
+    (paintedAt: number) =>
+    (event: LiveActionEvent): void => {
+      dispatch(event.action, event.data, event.id, paintedAt + event.revision - 1);
+    };
 
   /**
    * The guardrail refused hostile content (unknown component, undeclared
@@ -402,7 +425,7 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     const next = createLiveSurface({
       actions: [...actions],
       batchBudgets: { maxBytes: specBytes + INSERT_ENVELOPE_BYTES },
-      onAction,
+      onAction: actionsOf(revision + 1),
       // The first action the action-rate budget holds (spec 162), reported
       // like every other refusal of this surface.
       onDiagnostic: (diagnostic) => {

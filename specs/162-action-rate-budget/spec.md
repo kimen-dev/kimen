@@ -10,10 +10,15 @@
 
 **Status**: Approved. The founder approved the scenarios, which are guardrail
 scenarios (Art. VIII), and the defaults on 2026-11-24; the amendment to `028`
-below is applied. One change after approval, for the founder's review: S3
+below is applied. Two changes after approval, for the founder's review: S3
 uses a code field instead of a combobox, because a combobox's edit reports
 its committed selection, not the typed text, so the rule could not be
-observed with it.
+observed with it; and S8 is new and needs explicit founder confirmation. A
+security review of the implementation found that a held report left with
+the surface revision current when it was delivered, so a host that had
+updated the surface in between would read a person's action against a page
+they never saw. S8 pins the fix: a held report names the revision, and the
+path, of the moment its event fired.
 
 **Input**: The review of spec 154 on 2026-11-24 (draft spec
 `161-action-is-a-report`) found declared events that fire without a person's
@@ -150,7 +155,7 @@ without it, missing actions look like a host bug.
 **Independent Test**: hold a report, re-render, assert it never arrives (S5);
 assert one diagnostic for a flooding spec (S6).
 
-**Acceptance Scenarios**: S5, S6.
+**Acceptance Scenarios**: S5, S6, S8.
 
 ### Edge Cases
 
@@ -233,6 +238,12 @@ Feature: A surface sends its actions within a rate budget
       When the host renders a new spec without the carousel on the same surface
       Then the host never receives that "slide" report
 
+    # S8
+    Scenario: A held report names the surface revision its event fired on
+      Given a surface at revision 1 whose action budget holds a "confirm" report
+      When the host applies an update that takes the surface to revision 2
+      Then the "confirm" action the host receives names revision 1
+
   Rule: Exceeding the budget is diagnosable
 
     # S6
@@ -258,7 +269,7 @@ This is guarded-renderer infrastructure, not a UI component.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S7 | |
+| Core behavior | S1–S8 | |
 | Keyboard path | | N/A — no interaction changes; S3's typing is the person's keyboard path to a held report |
 | Assistive-tech outcome | | N/A — names, roles and states are each component's own contract |
 | Form participation | | N/A — a spec owns no form (`152`) |
@@ -282,10 +293,13 @@ This is guarded-renderer infrastructure, not a UI component.
   carrying the data of its latest event; a newer report of that binding
   replaces it. When the budget allows, held reports are delivered in the
   order their bindings were first held, and a binding held again after its
-  delivery goes to the back.
-- **FR-003**: A held report whose node is no longer in the surface when its
-  turn comes MUST be discarded, never delivered. A surface MUST keep no timer
-  while nothing is held.
+  delivery goes to the back. A held report MUST name the path and the
+  surface revision of the moment its event fired, never those of the moment
+  it leaves (S8); the MCP Apps bridge sends the page revision the action
+  fired on.
+- **FR-003**: A held report whose node is no longer in the surface, or whose
+  surface has left the document, when its turn comes MUST be discarded, never
+  delivered. A surface MUST keep no timer while nothing is held.
 - **FR-004**: The first time a surface's budget holds a report, the renderer
   MUST report one diagnostic with the rule `action-rate-budget`, the node's
   path and the action's name as its value, through a new optional
@@ -353,7 +367,7 @@ interval per surface (`162`)."
 - **Catalog/agent legibility** (Art. I): FR-006 tells agents the budget
   exists and how a fast binding behaves.
 - **Guardrail/security boundary** (Art. VIII): adds a fourth budget to the
-  guardrail. S1–S7 need explicit founder confirmation.
+  guardrail. S1–S8 need explicit founder confirmation; S1–S7 have it.
 
 ## Success Criteria *(mandatory)*
 
@@ -362,7 +376,7 @@ interval per surface (`162`)."
 - **SC-001**: The spec measured above (hidden carousel, `autoplay: 1`,
   `loop`) delivers at most 12 actions in its first second through each render
   path and at most 12 `tools/call` through MCP Apps, down from about 200.
-- **SC-002**: S1–S7 pass in the Chromium browser suite.
+- **SC-002**: S1–S8 pass: S2 in the Chromium browser suite with the real carousel, the others in the unit suites of the catalog and both adapters.
 - **SC-003**: An idle surface schedules no timer (FR-003).
 
 ## Assumptions

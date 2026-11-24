@@ -1269,11 +1269,12 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
                 if (path === null) {
                   return;
                 }
+                // The surface the person acted on (spec 162 S8): a report the
+                // action budget holds names this revision and path even when a
+                // later batch has changed the surface by the time it leaves.
+                const firedAt = revision;
                 const deliver = (): void => {
-                  // Read when the action leaves (spec 162): a held report
-                  // names the node's path and the surface revision then.
-                  const current = pathOf(model);
-                  if (current === null) {
+                  if (pathOf(model) === null) {
                     return;
                   }
                   // What leaves now is the user's no longer: a reset may clear
@@ -1294,8 +1295,8 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
                     action,
                     data,
                     ...(model.id === undefined ? {} : { id: model.id }),
-                    path: current,
-                    revision,
+                    path,
+                    revision: firedAt,
                   });
                 };
                 gate.offer({

@@ -50,8 +50,13 @@ const BASE_BUDGETS = {
   // section add 5,553 / 1,495 / 1,190 B to the MCP Apps document and 13,334 /
   // 3,250 / 2,121 B to kimen-mcp, which carries the document and its own catalog.
   // The founder approved re-basing all three metrics by that cost (2026-11-22).
-  mcpApps: { raw: 810_716, gzip: 186_112, brotli: 147_760 },
-  mcpServer: { raw: 2_618_358, gzip: 497_113, brotli: 390_045 },
+  // Spec 162 (action-rate budget, approved 2026-11-24) measured against main
+  // 3329aea1 on macOS: the per-surface token bucket in the shared catalog code,
+  // its diagnostic and the bridge's fired-on revision add 1,299 / 598 / 771 B to
+  // the MCP Apps document and 1,488 / 605 / 656 B to kimen-mcp, added here
+  // exactly so the headroom stays what it was. Re-basing awaits the founder.
+  mcpApps: { raw: 812_015, gzip: 186_710, brotli: 148_531 },
+  mcpServer: { raw: 2_619_846, gzip: 497_718, brotli: 390_701 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.

@@ -348,3 +348,37 @@ describe('the host sets the budget', () => {
     expect(events).toHaveLength(1);
   });
 });
+
+describe('a held report names the surface it fired on', () => {
+  it('S8 a held report names the revision its event fired on, not the one it leaves on', () => {
+    const events: LiveActionEvent[] = [];
+    const live = createLiveSurface({
+      actions: ['spend', 'confirm'],
+      onAction: (event) => events.push(event),
+      surface,
+    });
+    const page = {
+      component: 'ki-stack',
+      slots: {
+        '': [
+          { action: 'spend', component: 'ki-button', id: 'spend', slots: { '': ['Spend'] } },
+          { action: 'confirm', component: 'ki-button', id: 'pay', slots: { '': ['Pay order A'] } },
+        ],
+      },
+    };
+    expect(live.apply({ ops: [{ node: page, op: 'insert' }] }).revision).toBe(1);
+    for (let index = 0; index < 10; index += 1) {
+      click(rendered('ki-button', 0));
+    }
+    click(rendered('ki-button', 1));
+    expect(named(events, 'confirm')).toHaveLength(0);
+    // The host changes the surface before the held report leaves.
+    expect(
+      live.apply({ ops: [{ id: 'pay', op: 'set', props: { variant: 'primary' } }] }).revision,
+    ).toBe(2);
+    vi.advanceTimersByTime(500);
+    expect(named(events, 'confirm')).toEqual([
+      expect.objectContaining({ id: 'pay', path: 'surface[0].slots.[1]', revision: 1 }),
+    ]);
+  });
+});

@@ -58,6 +58,12 @@ Feature: A surface sends its actions within a rate budget
       When the host renders a new spec without the carousel on the same surface
       Then the host never receives that "slide" report
 
+    # S8
+    Scenario: A held report names the surface revision its event fired on
+      Given a surface at revision 1 whose action budget holds a "confirm" report
+      When the host applies an update that takes the surface to revision 2
+      Then the "confirm" action the host receives names revision 1
+
   Rule: Exceeding the budget is diagnosable
 
     # S6

@@ -12,7 +12,12 @@
  * layer (Art. I, one source of truth). It is client-side (touches `document`);
  * SSR/DSD is a deferred bet.
  */
-import { type ActionGate, createActionGate } from './action-budget.js';
+import {
+  type ActionGate,
+  createActionGate,
+  DEFAULT_ACTION_BURST,
+  DEFAULT_ACTION_REFILL_MS,
+} from './action-budget.js';
 import {
   allocateDialogId,
   DIALOG_TAG,
@@ -118,15 +123,15 @@ export interface RenderBudgets {
   readonly maxDepth: number;
   readonly maxNodes: number;
   readonly maxBytes: number;
-  /** Actions a surface delivers at once before the refill interval applies (spec 162). */
-  readonly maxActionBurst: number;
-  /** Milliseconds per further action once the burst is spent (spec 162). */
-  readonly actionRefillMs: number;
+  /** Actions a surface delivers at once before the refill interval applies (spec 162); default 10. */
+  readonly maxActionBurst?: number;
+  /** Milliseconds per further action once the burst is spent (spec 162); default 500. */
+  readonly actionRefillMs?: number;
 }
 
 export const DEFAULT_RENDER_BUDGETS: RenderBudgets = {
-  actionRefillMs: 500,
-  maxActionBurst: 10,
+  actionRefillMs: DEFAULT_ACTION_REFILL_MS,
+  maxActionBurst: DEFAULT_ACTION_BURST,
   maxBytes: 262_144,
   maxDepth: 32,
   maxNodes: 512,
