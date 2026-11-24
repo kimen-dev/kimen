@@ -55,6 +55,7 @@ export {
   type StreamingRenderer,
 } from './render.js';
 export {
+  type ActionBinding,
   type Catalog,
   type CatalogEntry,
   type CatalogPropConstraint,

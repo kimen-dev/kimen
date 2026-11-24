@@ -9,14 +9,18 @@ import {
   mcpServerMetadataPath,
   mcpServerPinPaths,
   pinMcpServer,
+  pinPluginManifest,
   pinServerMetadata,
+  pluginManifestPaths,
   prepareManifest,
   prepareMcpServerVersion,
+  prepareVersionedFiles,
   releaseNotes,
   releasePackages,
   releaseProposal,
   selectReleaseVersion,
   verifyMcpServerVersion,
+  verifyVersionedFiles,
 } from '../release/release-plan.mjs';
 import {
   ensureGitHubRelease,
@@ -377,4 +381,112 @@ test('S9 the pin list covers every kimen-mcp pin in the repository, all at one v
   }
   assert.deepEqual([...versions], [version], 'every pin agrees with server.json');
   await verifyMcpServerVersion(readRepositoryFile, version, manifest.mcpName);
+});
+
+const pluginManifest = (version, pin) =>
+  `{
+  "name": "kimen",
+  "version": "${version}",
+  "author": { "name": "Kimen", "url": "https://kimen.dev" },${
+    pin
+      ? `
+  "mcpServers": {
+    "kimen": { "command": "npx", "args": ["-y", "-p", "@kimen/mcp-server@${pin}", "kimen-mcp"] }
+  },`
+      : ''
+  }
+  "keywords": ["kimen"]
+}
+`;
+
+test('S10 a plugin manifest takes the release version in its top-level version only', () => {
+  assert.equal(
+    pinPluginManifest(pluginManifest('0.1.0'), '0.2.0', 'plugin.json'),
+    pluginManifest('0.2.0'),
+  );
+  assert.equal(
+    pinPluginManifest(pluginManifest('0.1.0', '0.1.0'), '0.2.0', 'gemini-extension.json'),
+    pluginManifest('0.2.0', '0.1.0'),
+    'the kimen-mcp pin is left to the pin list',
+  );
+  assert.equal(
+    pinPluginManifest(pluginManifest('0.2.0'), '0.2.0', 'plugin.json'),
+    pluginManifest('0.2.0'),
+  );
+  assert.throws(
+    () => pinPluginManifest(pluginManifest('0.1.0'), 'v0.2.0', 'plugin.json'),
+    /Invalid release version/u,
+  );
+  for (const manifest of [
+    '{\n  "name": "kimen"\n}\n',
+    pluginManifest('0.1.0').replace('"name": "kimen",', '"version": "0.1.0",'),
+    '{\n  "name": "kimen",\n  "author": {\n    "version": "0.1.0"\n  }\n}\n',
+  ]) {
+    assert.throws(
+      () => pinPluginManifest(manifest, '0.2.0', 'plugin.json'),
+      /plugin\.json must declare one top-level version/u,
+    );
+  }
+});
+
+test('S10 the release pull request versions the plugin manifests along with the kimen-mcp pins', async () => {
+  const before = new Map([
+    ...mcpServerPinPaths.map((path) => [
+      path,
+      path.endsWith('.json') ? '"@kimen/mcp-server@0.1.0"\n' : guide('0.1.0'),
+    ]),
+    ...pluginManifestPaths.map((path) => [path, pluginManifest('0.1.0')]),
+    ['plugins/kimen/gemini-extension.json', pluginManifest('0.1.0', '0.1.0')],
+    [mcpServerMetadataPath, serverJson('0.1.0')],
+  ]);
+  const read = async (path) => {
+    if (!before.has(path)) assert.fail(`release preparation read an unlisted file: ${path}`);
+    return before.get(path);
+  };
+  assert.deepEqual(pluginManifestPaths, [
+    'plugins/kimen/.claude-plugin/plugin.json',
+    'plugins/kimen/.antigravity-plugin/plugin.json',
+    'plugins/kimen/gemini-extension.json',
+  ]);
+  const prepared = await prepareVersionedFiles(read, '0.2.0', mcpName);
+  assert.deepEqual([...prepared.keys()].toSorted(), [...before.keys()].toSorted());
+  assert.equal(
+    prepared.get('plugins/kimen/gemini-extension.json'),
+    pluginManifest('0.2.0', '0.2.0'),
+  );
+  assert.equal(prepared.get(pluginManifestPaths[0]), pluginManifest('0.2.0'));
+  await verifyVersionedFiles(async (path) => prepared.get(path), '0.2.0', mcpName);
+  const lagging = new Map(prepared).set(pluginManifestPaths[1], pluginManifest('0.1.0'));
+  await assert.rejects(
+    verifyVersionedFiles(async (path) => lagging.get(path), '0.2.0', mcpName),
+    /\.antigravity-plugin\/plugin\.json must declare the release version 0\.2\.0/u,
+  );
+  for (const path of pluginManifestPaths) {
+    assert.ok(releaseCommitFiles.includes(path), `${path} is committed with the release`);
+  }
+  assert.equal(
+    new Set(releaseCommitFiles).size,
+    releaseCommitFiles.length,
+    'each file is listed once',
+  );
+});
+
+test('S10 the plugin manifests declare the version of the release packages', async () => {
+  const versions = new Set();
+  for (const path of releasePackages.values()) {
+    versions.add(JSON.parse(await readRepositoryFile(path)).version);
+  }
+  assert.equal(versions.size, 1, 'the release packages share one version');
+  const [version] = versions;
+  for (const path of pluginManifestPaths) {
+    assert.equal(
+      JSON.parse(await readRepositoryFile(path)).version,
+      version,
+      `${path} declares the package release version`,
+    );
+  }
+  const { mcpName: name } = JSON.parse(
+    await readRepositoryFile(releasePackages.get('@kimen/mcp-server')),
+  );
+  await verifyVersionedFiles(readRepositoryFile, version, name);
 });

@@ -6999,7 +6999,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish)."
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON."
             },
             {
               "name": "line-numbers",
@@ -7122,7 +7122,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
               "attribute": "language",
               "reflects": false
             },
@@ -30965,10 +30965,6 @@
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
-              "name": "--ki-effect-small-dark-shadow",
-              "description": "MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters."
-            },
-            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
             },
@@ -31034,11 +31030,11 @@
             },
             {
               "name": "--ki-switch-control-height",
-              "description": "dimension used by the switch component for the control footprint height (Toggle md: Space/9xl 28px). The well pads the track by half of (control-height - track-height) on every side."
+              "description": "dimension used by the switch component for the control footprint height at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. The well pads the track by half of (control-height - track-height) on every side."
             },
             {
               "name": "--ki-switch-control-width",
-              "description": "dimension used by the switch component for the control footprint width (Toggle md 10023:1368: Space/14xl 48px). The well is centred in it; set it to the track width, with control-height, to drop the well."
+              "description": "dimension used by the switch component for the control footprint width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. The well is centred in it; set it to the track width, with control-height, to drop the well."
             },
             {
               "name": "--ki-switch-focus-ring-color",
@@ -31058,7 +31054,7 @@
             },
             {
               "name": "--ki-switch-gap",
-              "description": "dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio)."
+              "description": "dimension used by the switch component for the gap between the control and its label at sizes md, lg and xl; sm-gap sets sm."
             },
             {
               "name": "--ki-switch-glyph-checked",
@@ -31086,135 +31082,139 @@
             },
             {
               "name": "--ki-switch-lg-control-height",
-              "description": "dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px)."
+              "description": "dimension used by the switch component for the control footprint height at size lg."
             },
             {
               "name": "--ki-switch-lg-control-width",
-              "description": "dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px)."
+              "description": "dimension used by the switch component for the control footprint width at size lg."
             },
             {
               "name": "--ki-switch-lg-min-target",
-              "description": "dimension used by the switch component for lg min target (Toggle 10023:1125 lg cell height: 32px)."
+              "description": "dimension used by the switch component for min target at size lg."
             },
             {
               "name": "--ki-switch-lg-thumb-inset",
-              "description": "dimension used by the switch component for lg thumb inset (Toggle 10023:1125 lg binds Space/xxs, 2px)."
+              "description": "dimension used by the switch component for thumb inset at size lg."
             },
             {
               "name": "--ki-switch-lg-thumb-radius",
-              "description": "dimension used by the switch component for lg thumb radius (Toggle 10023:1125 lg pointer binds Radius/small-component/xs)."
+              "description": "dimension used by the switch component for thumb radius at size lg."
             },
             {
               "name": "--ki-switch-lg-thumb-size",
-              "description": "dimension used by the switch component for lg thumb height (Toggle 10023:1125 lg pointer: 20px)."
+              "description": "dimension used by the switch component for thumb block size at size lg."
             },
             {
               "name": "--ki-switch-lg-thumb-width",
-              "description": "dimension used by the switch component for lg thumb width (Toggle 10023:1125 lg pointer: 26px)."
+              "description": "dimension used by the switch component for thumb inline size at size lg."
             },
             {
               "name": "--ki-switch-lg-track-height",
-              "description": "dimension used by the switch component for lg track height (Toggle 10023:1125 lg: 26px)."
+              "description": "dimension used by the switch component for track height at size lg."
             },
             {
               "name": "--ki-switch-lg-track-radius",
-              "description": "dimension used by the switch component for lg track radius (Toggle 10023:1125 lg binds Radius/small-component/sm)."
+              "description": "dimension used by the switch component for track radius at size lg."
             },
             {
               "name": "--ki-switch-lg-track-width",
-              "description": "dimension used by the switch component for lg track width (Toggle 10023:1125 lg: 48px)."
+              "description": "dimension used by the switch component for track width at size lg."
             },
             {
               "name": "--ki-switch-lg-well-radius",
-              "description": "dimension used by the switch component for lg well radius (Toggle 10023:1125 lg Base binds Radius/small-component/md)."
+              "description": "dimension used by the switch component for the well radius at size lg."
             },
             {
               "name": "--ki-switch-min-target",
-              "description": "dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint)."
+              "description": "dimension used by the switch component for min target at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
             },
             {
               "name": "--ki-switch-sm-control-height",
-              "description": "dimension used by the switch component for sm control height (Toggle 10023:1125 sm cell: 28px)."
+              "description": "dimension used by the switch component for the control footprint height at size sm."
             },
             {
               "name": "--ki-switch-sm-control-width",
-              "description": "dimension used by the switch component for sm control width (Toggle 10023:1125 sm cell: 40px)."
+              "description": "dimension used by the switch component for the control footprint width at size sm."
             },
             {
               "name": "--ki-switch-sm-gap",
-              "description": "dimension used by the switch component for the sm gap between control and label (Toggle_label 10101:3995 sm binds Space/md, 8px; spec 050 D4)."
+              "description": "dimension used by the switch component for the gap between the control and its label at size sm."
             },
             {
               "name": "--ki-switch-sm-label-font-size",
-              "description": "dimension used by the switch component for the sm label font size (Toggle_label 10101:3995 sm: UI/para 13/20; spec 050 D4)."
+              "description": "dimension used by the switch component for the label font size at size sm."
             },
             {
               "name": "--ki-switch-sm-label-line-height",
-              "description": "dimension used by the switch component for the sm label line height (Toggle_label 10101:3995 sm: UI/para 13/20)."
+              "description": "dimension used by the switch component for the label line height at size sm."
             },
             {
               "name": "--ki-switch-sm-min-target",
-              "description": "dimension used by the switch component for sm min target (Toggle 10023:1125 sm cell height: 28px)."
+              "description": "dimension used by the switch component for min target at size sm."
             },
             {
               "name": "--ki-switch-sm-thumb-inset",
-              "description": "dimension used by the switch component for sm thumb inset (Toggle 10023:1125 sm binds Space/xxs, 2px)."
+              "description": "dimension used by the switch component for thumb inset at size sm."
             },
             {
               "name": "--ki-switch-sm-thumb-radius",
-              "description": "dimension used by the switch component for sm thumb radius (Toggle 10023:1125 sm pointer binds Radius/small-component/xxs)."
+              "description": "dimension used by the switch component for thumb radius at size sm."
             },
             {
               "name": "--ki-switch-sm-thumb-size",
-              "description": "dimension used by the switch component for sm thumb height (Toggle 10023:1125 sm pointer: 14px)."
+              "description": "dimension used by the switch component for thumb block size at size sm."
             },
             {
               "name": "--ki-switch-sm-thumb-width",
-              "description": "dimension used by the switch component for sm thumb width (Toggle 10023:1125 sm pointer: 18px)."
+              "description": "dimension used by the switch component for thumb inline size at size sm."
             },
             {
               "name": "--ki-switch-sm-track-height",
-              "description": "dimension used by the switch component for sm track height (Toggle 10023:1125 sm: 18px)."
+              "description": "dimension used by the switch component for track height at size sm."
             },
             {
               "name": "--ki-switch-sm-track-radius",
-              "description": "dimension used by the switch component for sm track radius (Toggle 10023:1125 sm binds Radius/small-component/xs)."
+              "description": "dimension used by the switch component for track radius at size sm."
             },
             {
               "name": "--ki-switch-sm-track-width",
-              "description": "dimension used by the switch component for sm track width (Toggle 10023:1125 sm: 32px)."
+              "description": "dimension used by the switch component for track width at size sm."
             },
             {
               "name": "--ki-switch-sm-well-radius",
-              "description": "dimension used by the switch component for sm well radius (Toggle 10023:1125 sm Base binds Radius/small-component/md)."
+              "description": "dimension used by the switch component for the well radius at size sm."
             },
             {
               "name": "--ki-switch-thumb-inset",
-              "description": "dimension used by the switch component for thumb inset."
+              "description": "dimension used by the switch component for thumb inset at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
             },
             {
               "name": "--ki-switch-thumb-radius",
-              "description": "dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs)."
+              "description": "dimension used by the switch component for thumb radius at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
+            },
+            {
+              "name": "--ki-switch-thumb-shadow",
+              "description": "shadow used by the switch component for the thumb in every state and size. Set it to none to drop the shadow."
             },
             {
               "name": "--ki-switch-thumb-size",
-              "description": "dimension used by the switch component for thumb size."
+              "description": "dimension used by the switch component for thumb block size at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
             },
             {
               "name": "--ki-switch-thumb-width",
-              "description": "dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size)."
+              "description": "dimension used by the switch component for thumb inline size at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
             },
             {
               "name": "--ki-switch-track-height",
-              "description": "dimension used by the switch component for track height."
+              "description": "dimension used by the switch component for track height at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
             },
             {
               "name": "--ki-switch-track-radius",
-              "description": "dimension used by the switch component for track radius."
+              "description": "dimension used by the switch component for track radius at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
             },
             {
               "name": "--ki-switch-track-width",
-              "description": "dimension used by the switch component for track width."
+              "description": "dimension used by the switch component for track width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
             },
             {
               "name": "--ki-switch-unchecked-active-border",
@@ -31266,59 +31266,59 @@
             },
             {
               "name": "--ki-switch-well-bg-end",
-              "description": "color used by the switch component for the bottom of the well gradient (Toggle md Base)."
+              "description": "color used by the switch component for the bottom of the well gradient, at every size."
             },
             {
               "name": "--ki-switch-well-bg-start",
-              "description": "color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well."
+              "description": "color used by the switch component for the top of the well gradient, at every size. Transparent drops the well."
             },
             {
               "name": "--ki-switch-well-radius",
-              "description": "dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md)."
+              "description": "dimension used by the switch component for the radius of the well that holds the track at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
             },
             {
               "name": "--ki-switch-xl-control-height",
-              "description": "dimension used by the switch component for xl control height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 40px)."
+              "description": "dimension used by the switch component for the control footprint height at size xl."
             },
             {
               "name": "--ki-switch-xl-control-width",
-              "description": "dimension used by the switch component for xl control width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 64px)."
+              "description": "dimension used by the switch component for the control footprint width at size xl."
             },
             {
               "name": "--ki-switch-xl-min-target",
-              "description": "dimension used by the switch component for xl min target (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell height: 40px)."
+              "description": "dimension used by the switch component for min target at size xl."
             },
             {
               "name": "--ki-switch-xl-thumb-inset",
-              "description": "dimension used by the switch component for xl thumb inset (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Space/xs, 4px)."
+              "description": "dimension used by the switch component for thumb inset at size xl."
             },
             {
               "name": "--ki-switch-xl-thumb-radius",
-              "description": "dimension used by the switch component for xl thumb radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer binds Radius/small-component/xs)."
+              "description": "dimension used by the switch component for thumb radius at size xl."
             },
             {
               "name": "--ki-switch-xl-thumb-size",
-              "description": "dimension used by the switch component for xl thumb height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 24px)."
+              "description": "dimension used by the switch component for thumb block size at size xl."
             },
             {
               "name": "--ki-switch-xl-thumb-width",
-              "description": "dimension used by the switch component for xl thumb width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 32px)."
+              "description": "dimension used by the switch component for thumb inline size at size xl."
             },
             {
               "name": "--ki-switch-xl-track-height",
-              "description": "dimension used by the switch component for xl track height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 32px)."
+              "description": "dimension used by the switch component for track height at size xl."
             },
             {
               "name": "--ki-switch-xl-track-radius",
-              "description": "dimension used by the switch component for xl track radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Radius/small-component/md)."
+              "description": "dimension used by the switch component for track radius at size xl."
             },
             {
               "name": "--ki-switch-xl-track-width",
-              "description": "dimension used by the switch component for xl track width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 56px)."
+              "description": "dimension used by the switch component for track width at size xl."
             },
             {
               "name": "--ki-switch-xl-well-radius",
-              "description": "dimension used by the switch component for xl well radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) Base binds Radius/small-component/lg)."
+              "description": "dimension used by the switch component for the well radius at size xl."
             },
             {
               "name": "--ki-text-danger-high-em",

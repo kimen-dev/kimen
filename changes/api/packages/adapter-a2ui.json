@@ -1,0 +1,443 @@
+{
+  "modules": {
+    ".": {
+      "declaration": "./dist/index.d.ts",
+      "symbols": {
+        "A2UI_BASIC_CATALOG_IDS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_BASIC_CATALOG_IDS: readonly string[];"
+        },
+        "A2UI_CLIENT_FUNCTION_ALLOWLIST": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_CLIENT_FUNCTION_ALLOWLIST: readonly string[];"
+        },
+        "A2UI_COMMON_PROPERTIES": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_COMMON_PROPERTIES: readonly string[];"
+        },
+        "A2UI_COVERAGE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>>;"
+        },
+        "A2UI_EVALUATED_FUNCTIONS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_EVALUATED_FUNCTIONS: readonly string[];"
+        },
+        "A2UI_PROTOCOLS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_PROTOCOLS: readonly A2uiProtocol[];"
+        },
+        "A2UI_RENDERER_CAPABILITIES": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_RENDERER_CAPABILITIES: readonly A2uiRendererCapabilities[];"
+        },
+        "A2UI_SPEC_COMMIT": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_SPEC_COMMIT = \"85120b91e2fe94cb20c8ddef0b545d3da2ae161f\";"
+        },
+        "A2UI_SPEC_VERSION": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_SPEC_VERSION = \"0.9.1\";"
+        },
+        "A2UI_V1_BASIC_CATALOG_IDS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_V1_BASIC_CATALOG_IDS: readonly string[];"
+        },
+        "A2UI_V1_COMMON_PROPERTIES": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_V1_COMMON_PROPERTIES: readonly string[];"
+        },
+        "A2UI_V1_COVERAGE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_V1_COVERAGE: A2uiCoverageMatrix;"
+        },
+        "A2UI_V1_EMITTED_VERSION": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_V1_EMITTED_VERSION: A2uiEmittedVersion;"
+        },
+        "A2UI_V1_EVALUATED_FUNCTIONS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_V1_EVALUATED_FUNCTIONS: readonly string[];"
+        },
+        "A2UI_V1_RESERVED_TYPE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_V1_RESERVED_TYPE = \"Surface\";"
+        },
+        "A2UI_V1_SPEC_COMMIT": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_V1_SPEC_COMMIT = \"57f961f143da23f4212313e432a64b5843d978f9\";"
+        },
+        "A2UI_V1_SPEC_VERSION": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const A2UI_V1_SPEC_VERSION = \"1.0\";"
+        },
+        "A2uiAction": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiAction = {\n    readonly event: {\n        readonly name: string;\n        readonly context?: Readonly<Record<string, A2uiDynamicValue>>;\n    };\n} | {\n    readonly functionCall: A2uiFunctionCall;\n};"
+        },
+        "A2uiActionMessage": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiActionMessage = A2uiV09ActionMessage | A2uiV1ActionMessage;"
+        },
+        "A2uiActionMetadata": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiActionMetadata = {\n    readonly a2uiClientDataModel: A2uiClientDataModel;\n} | {\n    readonly a2uiRendererDataModel: A2uiRendererDataModel;\n};"
+        },
+        "A2uiAdapter": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiAdapter {\n    apply(message: unknown): A2uiApplyResult;\n}"
+        },
+        "A2uiAdapterOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiAdapterOptions {\n    readonly surface: Element | ((surfaceId: string) => Element | null);\n    readonly onAction?: (event: A2uiActionMessage, metadata?: A2uiActionMetadata) => void;\n    readonly onError?: (error: A2uiErrorMessage) => void;\n    readonly onFunctionResponse?: (response: A2uiRendererFunctionResponse) => void;\n    readonly onDegradation?: (report: A2uiDegradationReport) => void;\n    readonly actions?: readonly string[];\n    readonly locale?: string;\n    readonly now?: () => Date;\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly render?: GuardedRender;\n}"
+        },
+        "A2uiApplyResult": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiApplyResult {\n    readonly ok: boolean;\n    readonly diagnostics: readonly A2uiDiagnostic[];\n    readonly degradations: readonly A2uiDegradationReport[];\n}"
+        },
+        "A2uiChildList": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiChildList = readonly string[] | {\n    readonly componentId: string;\n    readonly path: string;\n};"
+        },
+        "A2uiClientDataModel": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiClientDataModel {\n    readonly version: 'v0.9.1';\n    readonly surfaces: Readonly<Record<string, Readonly<Record<string, unknown>>>>;\n}"
+        },
+        "A2uiComponent": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiComponent {\n    readonly id: string;\n    readonly component: string;\n    readonly [property: string]: unknown;\n}"
+        },
+        "A2uiCoverageEntry": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiCoverageEntry = A2uiMappedEntry | A2uiInlineEntry | A2uiLayoutEntry | A2uiUnmappedEntry | A2uiForbiddenEntry;"
+        },
+        "A2uiCoverageMatrix": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiCoverageMatrix = Readonly<Record<string, A2uiCoverageEntry>>;"
+        },
+        "A2uiCreateSurface": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiCreateSurface {\n    readonly version: A2uiVersion;\n    readonly createSurface: {\n        readonly surfaceId: string;\n        readonly catalogId: string;\n        readonly theme?: Readonly<Record<string, unknown>>;\n        readonly sendDataModel?: boolean;\n    };\n}"
+        },
+        "A2uiDataBinding": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiDataBinding {\n    readonly path: string;\n}"
+        },
+        "A2uiDegradationReport": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiDegradationReport {\n    readonly surfaceId: string;\n    readonly componentId: string;\n    readonly componentType: string;\n    readonly reason: 'missing-image-alt' | 'unmapped-type' | 'unsupported-function' | 'unsupported-variant';\n    readonly detail?: string | undefined;\n}"
+        },
+        "A2uiDeleteSurface": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiDeleteSurface {\n    readonly version: A2uiVersion;\n    readonly deleteSurface: {\n        readonly surfaceId: string;\n    };\n}"
+        },
+        "A2uiDiagnostic": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiDiagnostic {\n    readonly path: string;\n    readonly rule: string;\n    readonly message: string;\n    readonly value?: string | undefined;\n}"
+        },
+        "A2uiDynamicValue": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiDynamicValue = string | number | boolean | readonly unknown[] | A2uiDataBinding | A2uiFunctionCall;"
+        },
+        "A2uiEmittedVersion": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiEmittedVersion = 'v0.9.1' | '1.0';"
+        },
+        "A2uiErrorMessage": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiErrorMessage {\n    readonly version: A2uiEmittedVersion;\n    readonly error: {\n        readonly code: 'VALIDATION_FAILED';\n        readonly surfaceId: string;\n        readonly path: string;\n        readonly message: string;\n    };\n}"
+        },
+        "A2uiForbiddenEntry": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiForbiddenEntry {\n    readonly kind: 'forbidden';\n    readonly reason: string;\n}"
+        },
+        "A2uiFunctionCall": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiFunctionCall {\n    readonly call: string;\n    readonly args?: Readonly<Record<string, unknown>>;\n    readonly returnType?: string;\n}"
+        },
+        "A2uiInlineEntry": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiInlineEntry {\n    readonly kind: 'inline';\n    readonly properties: readonly string[];\n}"
+        },
+        "A2uiLayoutEntry": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiLayoutEntry {\n    readonly kind: 'layout';\n    readonly properties: readonly string[];\n}"
+        },
+        "A2uiMappedEntry": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiMappedEntry {\n    readonly kind: 'mapped';\n    readonly catalog: readonly string[];\n    readonly properties: readonly string[];\n}"
+        },
+        "A2uiProtocol": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiProtocol {\n    readonly family: A2uiProtocolFamily;\n    readonly specVersion: string;\n    readonly commit: string;\n    readonly envelopeVersions: readonly string[];\n    readonly emittedVersion: A2uiEmittedVersion;\n    readonly basicCatalogIds: readonly string[];\n    readonly coverage: A2uiCoverageMatrix;\n    readonly commonProperties: readonly string[];\n    readonly evaluatedFunctions: readonly string[];\n}"
+        },
+        "A2uiProtocolFamily": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiProtocolFamily = '1.0' | '0.9.1';"
+        },
+        "A2uiRendererCapabilities": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiRendererCapabilities {\n    readonly metadataKey: 'a2uiRendererCapabilities' | 'a2uiClientCapabilities';\n    readonly value: Readonly<Record<string, {\n        readonly supportedCatalogIds: readonly string[];\n    }>>;\n}"
+        },
+        "A2uiRendererDataModel": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiRendererDataModel {\n    readonly version: '1.0';\n    readonly surfaces: Readonly<Record<string, Readonly<Record<string, unknown>>>>;\n}"
+        },
+        "A2uiRendererFunctionResponse": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiRendererFunctionResponse {\n    readonly version: A2uiV1Version;\n    readonly rendererFunctionResponse: {\n        readonly functionCallId: string;\n        readonly error: {\n            readonly code: 'INVALID_FUNCTION_CALL';\n            readonly message: string;\n        };\n    };\n}"
+        },
+        "A2uiServerMessage": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiServerMessage = A2uiCreateSurface | A2uiUpdateComponents | A2uiUpdateDataModel | A2uiDeleteSurface;"
+        },
+        "A2uiUnmappedEntry": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiUnmappedEntry {\n    readonly kind: 'unmapped';\n    readonly reason: string;\n}"
+        },
+        "A2uiUpdateComponents": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiUpdateComponents {\n    readonly version: A2uiVersion;\n    readonly updateComponents: {\n        readonly surfaceId: string;\n        readonly components: readonly A2uiComponent[];\n    };\n}"
+        },
+        "A2uiUpdateDataModel": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiUpdateDataModel {\n    readonly version: A2uiVersion;\n    readonly updateDataModel: {\n        readonly surfaceId: string;\n        readonly path?: string;\n        readonly value?: unknown;\n    };\n}"
+        },
+        "A2uiV09ActionMessage": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV09ActionMessage {\n    readonly version: 'v0.9.1';\n    readonly action: {\n        readonly name: string;\n        readonly surfaceId: string;\n        readonly sourceComponentId: string;\n        readonly timestamp: string;\n        readonly context: Readonly<Record<string, unknown>>;\n    };\n}"
+        },
+        "A2uiV1ActionMessage": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1ActionMessage {\n    readonly version: '1.0';\n    readonly action: {\n        readonly name: string;\n        readonly userMessage?: string;\n        readonly surfaceId: string;\n        readonly sourceComponentId: string;\n        readonly timestamp: string;\n        readonly context: Readonly<Record<string, unknown>>;\n    };\n}"
+        },
+        "A2uiV1CallRendererFunction": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1CallRendererFunction {\n    readonly version: A2uiV1Version;\n    readonly callRendererFunction: {\n        readonly surfaceId?: string;\n        readonly functionCallId: string;\n        readonly callFunction: A2uiV1FunctionCall & {\n            readonly catalogId: string;\n        };\n    };\n}"
+        },
+        "A2uiV1Component": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1Component {\n    readonly id: string;\n    readonly component: string;\n    readonly '@catalogId'?: string;\n    readonly [property: string]: unknown;\n}"
+        },
+        "A2uiV1CreateSurface": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1CreateSurface {\n    readonly version: A2uiV1Version;\n    readonly createSurface: {\n        readonly surfaceId: string;\n        readonly catalogId?: string;\n        readonly sendDataModel?: boolean;\n        readonly components?: readonly A2uiV1Component[];\n        readonly dataModel?: Readonly<Record<string, unknown>>;\n        readonly metadata?: {\n            readonly extensions?: Readonly<Record<string, unknown>>;\n        };\n    };\n}"
+        },
+        "A2uiV1DataBinding": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1DataBinding {\n    readonly '@path': string;\n}"
+        },
+        "A2uiV1DeleteSurface": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1DeleteSurface {\n    readonly version: A2uiV1Version;\n    readonly deleteSurface: {\n        readonly surfaceId: string;\n    };\n}"
+        },
+        "A2uiV1FunctionCall": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1FunctionCall {\n    readonly '@call': string;\n    readonly args?: Readonly<Record<string, unknown>>;\n    readonly catalogId?: string;\n}"
+        },
+        "A2uiV1ServerMessage": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiV1ServerMessage = A2uiV1CreateSurface | A2uiV1UpdateComponents | A2uiV1UpdateDataModel | A2uiV1DeleteSurface | A2uiV1CallRendererFunction;"
+        },
+        "A2uiV1UpdateComponents": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1UpdateComponents {\n    readonly version: A2uiV1Version;\n    readonly updateComponents: {\n        readonly surfaceId: string;\n        readonly components: readonly A2uiV1Component[];\n    };\n}"
+        },
+        "A2uiV1UpdateDataModel": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface A2uiV1UpdateDataModel {\n    readonly version: A2uiV1Version;\n    readonly updateDataModel: {\n        readonly surfaceId: string;\n        readonly path?: string;\n        readonly value: unknown;\n    };\n}"
+        },
+        "A2uiV1Version": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiV1Version = '1.0';"
+        },
+        "A2uiVersion": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type A2uiVersion = 'v0.9' | 'v0.9.1';"
+        },
+        "EMITTED_A2UI_VERSION": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const EMITTED_A2UI_VERSION: A2uiEmittedVersion;"
+        },
+        "FALLBACK_CATALOG_TAG": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const FALLBACK_CATALOG_TAG = \"ki-badge\";"
+        },
+        "FALLBACK_LABEL": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const FALLBACK_LABEL = \"Unsupported component\";"
+        },
+        "FALLBACK_TONE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const FALLBACK_TONE = \"warning\";"
+        },
+        "GuardedRender": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type GuardedRender = (input: unknown, options: RenderOptions) => RenderResult;"
+        },
+        "PREFERRED_A2UI_VERSION": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const PREFERRED_A2UI_VERSION = \"1.0\";"
+        },
+        "ROOT_CONTAINER_TAG": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const ROOT_CONTAINER_TAG = \"ki-card\";"
+        },
+        "SUPPORTED_A2UI_VERSIONS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const SUPPORTED_A2UI_VERSIONS: readonly string[];"
+        },
+        "createA2uiAdapter": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter;"
+        }
+      },
+      "target": "./dist/index.js"
+    }
+  },
+  "package": "@kimen/adapter-a2ui"
+}
