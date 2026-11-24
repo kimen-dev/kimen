@@ -4,7 +4,7 @@
       "collapse-at": {
         "default": "'48rem'",
         "deprecatedSince": null,
-        "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
+        "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
         "replacement": null,
         "required": false,
         "type": "string"
@@ -653,7 +653,7 @@
       "collapseAt": {
         "default": "'48rem'",
         "deprecatedSince": null,
-        "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
+        "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
         "replacement": null,
         "required": false,
         "type": "string"

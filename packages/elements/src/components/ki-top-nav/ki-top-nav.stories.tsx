@@ -55,6 +55,24 @@ export const CompactHeader: Story = {
   ),
 };
 
+export const WrappingHeader: Story = {
+  render: () => (
+    <div style={{ maxInlineSize: '22rem' }}>
+      <ki-top-nav label="Documentation" collapseAt="none">
+        <a slot="brand" href="#home">
+          Kimen
+        </a>
+        <a href="#guide" aria-current="page">
+          Guide
+        </a>
+        <a href="#components">Components</a>
+        <a href="#tokens">Tokens</a>
+        <a href="#changelog">Changelog</a>
+      </ki-top-nav>
+    </div>
+  ),
+};
+
 export const CollapsingAppBar: Story = {
   args: {
     variant: 'app-bar',
