@@ -137,3 +137,39 @@ Feature: ki-carousel presents a sequence of slides
     Given a carousel item with a link titled "Learn more"
     When that item is the visible slide
     Then the link is available to the reader
+
+  # Amendment A1 (draft, pending founder approval): a floor for automatic rotation
+
+  # S21
+  Scenario Outline: An interval below the floor waits the full five seconds
+    Given a looping carousel of three highlights set to rotate every <interval> milliseconds
+    When 4999 milliseconds pass without interaction
+    Then no slide change has been reported
+    And the first highlight is still current
+
+    Examples:
+      | interval |
+      | 1        |
+      | 334      |
+      | 4999     |
+
+  # S22
+  Scenario: Rotation below the floor moves once per five seconds
+    Given a looping carousel of three highlights set to rotate every 1 millisecond
+    When 6 seconds pass without interaction
+    Then the second highlight is current
+    And exactly one slide change has been reported
+
+  # S23
+  Scenario: An interval above the floor is kept as set
+    Given a looping carousel of three highlights set to rotate every 8000 milliseconds
+    When 12 seconds pass without interaction
+    Then the second highlight is current
+    And exactly one slide change has been reported
+
+  # S24
+  Scenario: An agent spec with a one-millisecond interval stays valid
+    Given an agent spec with a looping three-slide carousel whose autoplay is 1
+    When a surface renders the spec
+    Then the carousel appears with no validation issue
+    And its Pause control is available
