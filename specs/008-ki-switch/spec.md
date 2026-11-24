@@ -373,6 +373,17 @@ Feature: Switch
       | on       | --ki-switch-glyph-checked   |
       | off      | --ki-switch-glyph-unchecked |
       | disabled | --ki-switch-glyph-disabled  |
+
+  # S26
+  Scenario Outline: A theme restyles the thumb shadow without redefining a shared effect
+    Given a switch that is <state> under a theme that leaves every effect token as shipped
+    When the theme sets --ki-switch-thumb-shadow to <shadow>
+    Then the thumb casts <shadow> in place of the default shadow
+
+    Examples:
+      | state | shadow                          |
+      | off   | none                            |
+      | on    | a 2px ring in the theme's color |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -383,7 +394,7 @@ Feature: Switch
 | Keyboard path | S5, S6, S20 | |
 | Assistive-tech outcome | S7, S8, S9 | |
 | Form participation | S10, S11, S12, S13, S18, S21 | |
-| Theming | S14, S15, S16, S19, S23, S24 | |
+| Theming | S14, S15, S16, S19, S23, S24, S26 | |
 
 ## Requirements *(mandatory)*
 

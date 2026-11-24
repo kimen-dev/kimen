@@ -57,7 +57,9 @@ links for Cursor and VS Code:
   (see [Evals](#evals)).
 
 Keep the server command the same in `mcp_config.json` and
-`gemini-extension.json`, and `version` the same in the three manifests.
+`gemini-extension.json`. The three manifests declare the package release
+`version`; the release pull request sets it, so an installed plugin picks up
+each release's skills.
 
 ## Evals
 

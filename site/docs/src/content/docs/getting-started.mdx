@@ -27,11 +27,11 @@ npm install @kimen/elements @kimen/tokens
 ## Load a theme
 
 One stylesheet is required: a theme (`css` is the default **onmars** theme).
-The **page contract** (`css/base`) is an optional addition:
+Load the **page contract** (`css/base`) with it:
 
 ```ts
 import '@kimen/tokens/css'; /* onmars theme + color-scheme, light + dark */
-import '@kimen/tokens/css/base'; /* optional page contract: page background, text color, body font */
+import '@kimen/tokens/css/base'; /* page contract: page background, text color, body font, layout before registration */
 ```
 
 The theme stylesheet declares every `--ki-*` token and the `color-scheme`
@@ -42,7 +42,11 @@ else stays legible for a visitor who prefers dark — measured across the compon
 
 The page contract paints the page itself from the tokens — background from
 `--ki-surface-s0`, text from `--ki-text-high-em`, and the body font family.
-It declares no color scheme. See
+It declares no color scheme. Until the elements register, it also lays out
+the items of Kimen groups one per line — segments, radios, checkboxes,
+options, and menu, list, tab, tree, step, timeline, sidebar and mobile-nav
+items — so their labels do not run together while the registration code
+loads; it stops applying to each tag once it is defined. See
 [Themes &amp; color schemes](/docs/guides/theming/) for the full
 contract.
 

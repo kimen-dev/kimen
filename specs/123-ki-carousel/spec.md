@@ -19,6 +19,8 @@ position. Rotation requires an explicit interval.
 - Follow the APG carousel pattern. Keep offscreen slide content inert, announce
   manual changes politely and silence announcements during rotation. Allow a
   person to pause rotation with a visible control and respect motion preferences.
+- *(Amendment A1.)* Never rotate automatically more than once per
+  5,000 ms, whatever `autoplay` value the carousel receives.
 - Keep direction, colors, density and motion theme-controlled. Ship the two tags
   in the neutral catalog and framework wrappers.
 
@@ -55,11 +57,172 @@ position. Rotation requires an explicit interval.
 
 | Family | Scenarios | Justification when N/A |
 | --- | --- | --- |
-| Core behavior | S1–S4, S9–S12, S18, S20 | |
+| Core behavior | S1–S4, S9–S12, S18, S20, S21–S24 | |
 | Keyboard path | S5, S19 | |
 | Assistive-tech outcome | S6–S8, S12 | |
 | Form participation | | N/A. The carousel presents content and has no form value. |
 | Theming | S13–S17 | |
+
+## Amendment A1: a floor for automatic rotation *(decided 2026-11-24)*
+
+**Status**: Decided by the founder on 2026-11-24, who adopted the
+recommendations below: a fixed 5,000 ms floor, clamped in the component,
+with the development warning (see *Decisions on the open questions*).
+
+**Path**: in place, through the Art. II amendment path. One component, so
+S21–S24 are appended and none is retired or renumbered. S8–S10 and S15 keep
+their wording; the S8–S10 tests change only the interval they mount with
+(see *Implementation notes*).
+
+**Merge sequencing**: as in spec 011 A1, the amendment reaches `main`
+together with the implementation that traces S21–S24.
+
+### Why
+
+`autoplay` accepts any interval from 1 ms: `@minimum 1` on the prop and
+`"minimum": 1` in the generated catalog. The `interval` getter honors that
+value, capped only at the timer maximum. On 2026-11-24 a catalog spec with
+`autoplay: 1` and `loop: true` rotated about 200 times a second, held back
+only by the browser's clamp on chained timers (draft spec 162, commit
+`ccf58548`). Any short interval, not only 1 ms, raises two accessibility
+problems.
+
+- **Flashing.** WCAG 2.2 SC 2.3.1, Three Flashes or Below Threshold (Level
+  A), forbids anything that flashes more than three times in any one-second
+  period unless it stays below the general and red flash thresholds. A
+  general flash is a pair of opposing changes in relative luminance of 10%
+  or more of the maximum, where the darker state is below 0.80. It counts
+  once the flashing area exceeds 25% of a 10° visual field. WCAG estimates
+  that field as a 341 × 256 px rectangle at 1024 × 768, so a quarter of it
+  is far smaller than most slides. A change between a dark and a light
+  slide is one such change. Counted
+  strictly, a flash is two opposing changes, so alternating slides need
+  about six changes a second, an interval near 167 ms, to fail. The
+  component cannot measure its slides' luminance or their order, so it must
+  hold to the conservative count, where every change may be a flash. Only
+  an interval of 334 ms or more keeps every one-second window to three
+  changes.
+- **Reading.** The APG carousel pattern asks for a rotation control,
+  rotation that stops on keyboard focus and on hover, and a live region that
+  is `off` while rotating. `ki-carousel` does all of this (S8–S10). The
+  pattern names no interval. Its auto-rotating example rotates every
+  5,000 ms. WCAG sets no reading time either: the Pause control meets SC
+  2.2.2, Pause, Stop, Hide, at any interval. Yet a control helps only a
+  person with time to find it, and a slide shown for a few hundred
+  milliseconds cannot be read at all.
+
+### Where the floor lives
+
+| Option | Who it protects | Specs valid today | Art. IX |
+| --- | --- | --- | --- |
+| **Clamp in the component** (recommended). The catalog range stays 1 to 2,147,483,647 and the component rotates no faster than the floor | Every path: HTML authors, framework wrappers, catalog surfaces and A2UI | All stay valid. `autoplay: 1` renders and rotates at the floor | Narrows no API. A timing fix with a patch-level description change |
+| **Raise the catalog `minimum`** to the floor | Catalog emitters only. HTML and wrapper consumers still rotate at 1 ms unless the component also clamps | Rejected with `prop-out-of-range` (spec 027 FR-017). Every spec below the floor stops validating | Breaking for emitters. Lands only on a MAJOR, after a deprecating MINOR |
+
+Design by Contract favors the second option: "be strict in what you will
+accept" (*The Pragmatic Programmer*, 20th anniversary edition, Tip 37). Two
+facts outweigh it here. First, an HTML attribute has no error channel. Only
+a clamp lets the component keep the guarantee on its own, so the clamp is
+needed even if the catalog narrows later. Second, the catalog already rules
+on bounds. Spec 027 FR-017 declares a catalog bound "only where the
+component spends work in proportion to the value", and a prop the
+component "already clamps at constant cost ... needs none". A rotation
+interval costs constant work. `ki-progress` and `ki-indicator` already
+clamp out-of-range values instead of rejecting them.
+
+### Choosing the floor
+
+| Floor | SC 2.3.1, conservative count | Time to read one slide | Intervals it changes |
+| --- | --- | --- | --- |
+| 334 ms | Met, with no margin | None | Below 334 ms |
+| 1,000 ms | Met, with a 3× margin | A glance at an image, not a sentence | Below 1 s |
+| **5,000 ms** (recommended) | Met, with a 15× margin | A heading and one sentence, about 17 words, at 238 words a minute, plus a moment to notice the change | Below 5 s, including 3 s rotations some authors choose |
+
+The reading rate is the average adult silent rate for non-fiction in a
+meta-analysis of 190 studies (Brysbaert, *Journal of Memory and Language*,
+2019). Seventeen words at that rate take about 4.3 s.
+
+5,000 ms is recommended for four reasons. It is the interval of the APG
+example, the one implementation the pattern ships. It is the first value
+at which an average reader can read a short highlight once. Slower readers,
+people using magnification and screen-reader users still rely on Pause,
+focus and hover, which do not change. An emitter that sends `autoplay: 1`
+probably means "on", reading the number as a boolean. The floor gives it
+the rotation it probably meant instead of one nobody can read. Slower rotation
+harms no one's access, while a 334 ms floor solves only the flashing half.
+It costs authors who chose 1 to 4.999 s, who now get 5 s. Spec 002 A1 set
+a similar readability floor of 12 px where WCAG sets none.
+
+### Decisions
+
+- **A1-D1 Clamp, keep the catalog range.** The component moves
+  automatically no more than once per 5,000 ms. `autoplay` keeps the value
+  its author set, neither reflected nor mutated. Only rotation timing uses
+  the floor. The catalog `minimum` (1), `maximum` and schema version stay
+  as they are (S21, S22, S24).
+- **A1-D2 A fixed floor of 5,000 ms.** No token, prop or attribute lowers
+  it: an escape hatch would reopen the SC 2.3.1 failure (Art. VII).
+  Intervals of 5,000 ms or more are honored unchanged (S23).
+- **A1-D3 The description tells emitters.** The `autoplay` JSDoc says
+  "Values below 5000 rotate every 5000 ms", and so do the generated
+  catalog, `llms` files and API reference. `scripts/lib/public-api.mjs`
+  classifies a description change as a documentation patch.
+- **A1-D4 A development-only warning.** When `autoplay` is set below the
+  floor, the component logs `[Kimen] ki-carousel autoplay=<n> is below the
+  5000 ms floor and rotates every 5000 ms.` It uses the `NODE_ENV ===
+  'development'` guard of the `ki-button` deprecation warning, so
+  production bundles carry no warning.
+
+- **FR-A1-001**: Automatic rotation MUST NOT move the carousel more than
+  once per 5,000 ms, whatever `autoplay` value it receives (S21, S22).
+- **FR-A1-002**: An `autoplay` of 5,000 ms or more MUST be honored as set
+  (S23).
+- **FR-A1-003**: The catalog MUST keep accepting every `autoplay` from 1 to
+  2,147,483,647, so a spec valid before this amendment stays valid (S24,
+  Art. IX).
+
+### Relation to spec 162
+
+Draft spec 162 (`specs/162-action-rate-budget/`, branch
+`claude/unruffled-hawking-2a5537`) budgets actions on every render path.
+The floor does not replace it. It takes the measured hidden carousel from
+about 200 moves a second to one every five seconds, but it covers only this
+one event source. Either change can land first.
+
+### Out of scope
+
+- Flashing content inside a slide, such as video or animated images. SC
+  2.3.1 for that content stays with its author.
+- Manual navigation. A held arrow key moves once per key repeat, and each
+  move is instant under reduced motion. The reader controls it, and this
+  amendment leaves it unchanged.
+- Rotation while the carousel is hidden or offscreen. The floor bounds its
+  cost. Whether it should rotate when nobody sees it is a separate question.
+- Raising the catalog `minimum` at a future MAJOR.
+
+### Implementation notes
+
+These notes are not part of the contract.
+
+- `ki-carousel.tsx`: the `interval` getter clamps to 5,000 ms and
+  `MAX_INTERVAL`, plus the JSDoc and the warning.
+- Tests: S8–S10 mount with `autoplay: '1000'` and fast-forward 1,000 to
+  1,200 ms. They move to 5,000 ms. S15 (100 ms under reduced motion) is
+  unaffected. S21–S23 go in `ki-carousel.browser.spec.ts` with the
+  Playwright clock. S24 goes where catalog tests render real components,
+  `packages/adapter-mcp-apps/browser-tests`, in a file of its own marked
+  `// @spec:123-ki-carousel` so the traceability gate finds it.
+- Regenerate the catalog, manifests, public API, `llms` files and wrappers.
+  Add a `changes/api` declaration. Name the floor in `docs/site.mdx` and
+  `docs/components/carousel.mdx`.
+
+### Decisions on the open questions
+
+Decided by the founder on 2026-11-24, adopting both recommendations.
+
+1. The floor is 5,000 ms, not the SC 2.3.1 minimum of 334 ms or 1,000 ms
+   (A1-D2).
+2. The development warning stays (A1-D4); the component does not clamp
+   silently as `ki-progress` does.
 
 ## Gherkin scenarios
 
@@ -203,4 +366,40 @@ Feature: ki-carousel presents a sequence of slides
     Given a carousel item with a link titled "Learn more"
     When that item is the visible slide
     Then the link is available to the reader
+
+  # Amendment A1 (decided 2026-11-24): a floor for automatic rotation
+
+  # S21
+  Scenario Outline: An interval below the floor waits the full five seconds
+    Given a looping carousel of three highlights set to rotate every <interval> milliseconds
+    When 4999 milliseconds pass without interaction
+    Then no slide change has been reported
+    And the first highlight is still current
+
+    Examples:
+      | interval |
+      | 1        |
+      | 334      |
+      | 4999     |
+
+  # S22
+  Scenario: Rotation below the floor moves once per five seconds
+    Given a looping carousel of three highlights set to rotate every 1 millisecond
+    When 6 seconds pass without interaction
+    Then the second highlight is current
+    And exactly one slide change has been reported
+
+  # S23
+  Scenario: An interval above the floor is kept as set
+    Given a looping carousel of three highlights set to rotate every 8000 milliseconds
+    When 12 seconds pass without interaction
+    Then the second highlight is current
+    And exactly one slide change has been reported
+
+  # S24
+  Scenario: An agent spec with a one-millisecond interval stays valid
+    Given an agent spec with a looping three-slide carousel whose autoplay is 1
+    When a surface renders the spec
+    Then the carousel appears with no validation issue
+    And its Pause control is available
 ```

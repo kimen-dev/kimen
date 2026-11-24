@@ -52,11 +52,17 @@ apply the effect right away; a switch never waits for a submit:
 
 ## Customization
 
+The unprefixed size tokens set the default `md` size; there is no
+`--ki-switch-md-*`. `--ki-switch-sm-*`, `--ki-switch-lg-*` and
+`--ki-switch-xl-*` set the other sizes.
+
 | Token                           | Controls                        |
 | ------------------------------- | ------------------------------- |
-| `--ki-switch-track-width`       | Track inline size               |
-| `--ki-switch-track-height`      | Track block size                |
-| `--ki-switch-thumb-size`        | Handle dimensions               |
+| `--ki-switch-track-width`       | Track inline size (md)          |
+| `--ki-switch-track-height`      | Track block size (md)           |
+| `--ki-switch-thumb-size`        | Handle block size (md)          |
+| `--ki-switch-thumb-width`       | Handle inline size (md)         |
+| `--ki-switch-thumb-shadow`      | Handle shadow; `none` drops it  |
 | `--ki-switch-checked-rest-track`| On-state resting track color    |
 | `--ki-switch-gap`               | Gap between track and label     |
 

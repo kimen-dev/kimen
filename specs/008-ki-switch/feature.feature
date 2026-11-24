@@ -183,3 +183,14 @@ Feature: Switch
       | on       | --ki-switch-glyph-checked   |
       | off      | --ki-switch-glyph-unchecked |
       | disabled | --ki-switch-glyph-disabled  |
+
+  # S26
+  Scenario Outline: A theme restyles the thumb shadow without redefining a shared effect
+    Given a switch that is <state> under a theme that leaves every effect token as shipped
+    When the theme sets --ki-switch-thumb-shadow to <shadow>
+    Then the thumb casts <shadow> in place of the default shadow
+
+    Examples:
+      | state | shadow                          |
+      | off   | none                            |
+      | on    | a 2px ring in the theme's color |

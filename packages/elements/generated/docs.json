@@ -3380,7 +3380,7 @@
           "mutable": false,
           "attr": "autoplay",
           "reflectToAttr": false,
-          "docs": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+          "docs": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
           "docsTags": [
             {
               "name": "minimum",
