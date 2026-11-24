@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 
-import { playwright } from '@vitest/browser-playwright';
+import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
 const cacheRoot = process.env['KIMEN_WORKTREE_CACHE_ROOT'] ?? process.env['KIMEN_CACHE_ROOT'];
@@ -30,6 +30,15 @@ export default defineConfig({
       provider: playwright({ launchOptions: { channel: 'chromium' } }),
       screenshotFailures: false,
       instances: [{ browser: 'chromium', fileParallelism: false }],
+      commands: {
+        // `null` restores the suite baseline (no-preference), never the
+        // machine's own Reduce Motion setting: the elements harness rule.
+        emulateReducedMotion: defineBrowserCommand(
+          async ({ page }, reducedMotion: 'reduce' | 'no-preference' | null) => {
+            await page.emulateMedia({ reducedMotion: reducedMotion ?? 'no-preference' });
+          },
+        ),
+      },
     },
   },
 });

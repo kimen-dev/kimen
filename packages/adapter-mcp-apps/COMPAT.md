@@ -127,6 +127,12 @@ figures.
   `stale-revision`, `declared-actions`, `malformed-update` or the live
   surface's rule) and the full spec paints instead. An update batch may use the
   full spec's byte budget and the live surface's 64-op budget.
+- **Waiting, not empty (spec 163).** Until a spec paints, the mount point shows
+  a text-free `ki-skeleton` and carries `aria-busy="true"`; the first accepted
+  full paint replaces it and clears `aria-busy`, a refused result leaves it.
+  After 10 seconds without a result the skeleton stops shimmering (it never
+  does under reduced motion). A host that re-creates the View and does not
+  send its result again shows this placeholder instead of an empty page.
 
 Host↔surface traffic follows the wire vocabulary above, mediated by the
 host's audit path. The real-browser suite (`browser-tests/`, Chromium) loads

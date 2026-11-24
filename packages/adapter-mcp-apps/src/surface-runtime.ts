@@ -22,9 +22,37 @@ import { wireSurface } from './surface-wiring.js';
  */
 const COLOR_SCHEME_ATTRIBUTE = 'data-ki-color-scheme';
 
+/** How long the waiting placeholder may shimmer without a result (spec 163 FR-003). */
+const WAITING_SHIMMER_MS = 10_000;
+
+/**
+ * The waiting placeholder (spec 163): a text-free `ki-skeleton` as the mount
+ * point's only child, with the mount point marked busy, until the first full
+ * paint replaces the mount point's children (spec 157 FR-002). It stops
+ * shimmering after `WAITING_SHIMMER_MS` without a result, so a card whose
+ * host never sends one does not promise progress forever.
+ */
+function showWaiting(surface: Element): void {
+  const waiting = document.createElement('ki-skeleton');
+  waiting.setAttribute('lines', '3');
+  surface.setAttribute('aria-busy', 'true');
+  surface.replaceChildren(waiting);
+  const still = setTimeout((): void => {
+    waiting.setAttribute('animated', 'false');
+  }, WAITING_SHIMMER_MS);
+  new MutationObserver((_records, observer): void => {
+    if (!surface.contains(waiting)) {
+      clearTimeout(still);
+      surface.removeAttribute('aria-busy');
+      observer.disconnect();
+    }
+  }).observe(surface, { childList: true });
+}
+
 /** Wires the document to its host and opens the MCP Apps handshake. */
 export function startSurface(): void {
   const surface = document.getElementById('kimen-surface') ?? document.body;
+  showWaiting(surface);
   const win: SurfaceWindow = {
     addEventListener: (type, listener): void => {
       window.addEventListener(type, (event: MessageEvent): void => {

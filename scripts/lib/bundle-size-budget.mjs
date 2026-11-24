@@ -68,7 +68,14 @@ const BASE_BUDGETS = {
   // rules grow the embedded onmars stylesheet, adding 5,131 / 434 / 539 B to the
   // MCP Apps document and 5,131 / 407 / 420 B to kimen-mcp, on top of specs 161
   // and 162. Approved by the founder (2026-11-24).
-  mcpApps: { raw: 817_837, gzip: 187_416, brotli: 148_865 },
+  // Spec 163 (MCP Apps waiting placeholder, approved 2026-11-24) measured against
+  // main aa00748e on macOS: the text-free skeleton, its busy mark and the timer
+  // that stills it add 358 / 127 / 93 B to the MCP Apps document and 358 / 123 /
+  // 329 B to kimen-mcp. Only the document's raw bytes outgrew their headroom
+  // (154 B left on that main); the founder approved re-basing that one metric by
+  // the 358 B the placeholder costs (2026-11-24, «Sí, sube 358 B»), added on top
+  // of the preference-modes base above.
+  mcpApps: { raw: 818_195, gzip: 187_416, brotli: 148_865 },
   mcpServer: { raw: 2_626_194, gzip: 498_562, brotli: 390_919 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
