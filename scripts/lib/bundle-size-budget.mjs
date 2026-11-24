@@ -63,7 +63,13 @@ const BASE_BUDGETS = {
   // kimen-mcp, added here exactly so the headroom stays what it was. The founder
   // approved re-basing all three metrics by that cost, two review fixes included
   // (2026-11-24).
-  mcpApps: { raw: 812_706, gzip: 186_982, brotli: 148_326 },
+  // Spec 163 (MCP Apps waiting placeholder, approved 2026-11-24) measured against
+  // main aa00748e on macOS: the text-free skeleton, its busy mark and the timer
+  // that stills it add 358 / 127 / 93 B to the MCP Apps document and 358 / 123 /
+  // 329 B to kimen-mcp. Only the document's raw bytes outgrew their headroom
+  // (154 B left on main); the founder approved re-basing that one metric by the
+  // 358 B the placeholder costs (2026-11-24, «Sí, sube 358 B»).
+  mcpApps: { raw: 813_064, gzip: 186_982, brotli: 148_326 },
   mcpServer: { raw: 2_621_063, gzip: 498_155, brotli: 390_499 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added

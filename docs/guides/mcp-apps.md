@@ -254,9 +254,14 @@ properties:
   ignored. Replies are addressed to the origin the host spoke from, once it
   has one.
 - **Opens the handshake.** On load it sends the `ui/initialize` request and
-  renders nothing until the host's result negotiates a supported version;
+  renders no spec until the host's result negotiates a supported version;
   then it sends `ui/notifications/initialized` and reports its size with
   `ui/notifications/size-changed`.
+- **Shows that it is waiting.** Until the first spec paints, it shows a
+  text-free skeleton and marks itself busy for assistive technology; after
+  10 seconds without a result the skeleton stops moving. A host that
+  re-creates the View without sending its result again shows this
+  placeholder rather than an empty page (spec 163).
 
 Three declared v1 boundaries matter to integrators: only the host's
 light/dark theme is applied (host style variables and fonts are not mapped

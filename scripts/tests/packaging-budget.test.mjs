@@ -97,7 +97,7 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 812_706, gzip: 186_982, brotli: 148_326 },
+    mcpApps: { raw: 813_064, gzip: 186_982, brotli: 148_326 },
     mcpServer: { raw: 2_621_063, gzip: 498_155, brotli: 390_499 },
     tokenStylesheets: { onmars: 12_930, material3: 5_600, base: 250 },
   });
@@ -120,7 +120,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 814_906, gzip: 187_162, brotli: 148_491 },
+    mcpApps: { raw: 815_264, gzip: 187_162, brotli: 148_491 },
     mcpServer: { raw: 2_622_363, gzip: 498_345, brotli: 390_674 },
     tokenStylesheets: { onmars: 13_100, material3: 5_650, base: 250 },
   });
