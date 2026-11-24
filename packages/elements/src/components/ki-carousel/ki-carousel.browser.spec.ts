@@ -25,6 +25,14 @@ const browser = commands as unknown as {
   fastForwardClock(ms: number): Promise<void>;
 };
 
+// The rotation tests fast-forward the shared Playwright clock by up to about
+// sixteen seconds, and a test's own timeout can run on that clock once
+// another spec has installed it.
+vi.setConfig({ testTimeout: 120_000 });
+
+const development =
+  (import.meta as ImportMeta & { env: { VITE_KIMEN_DEV_BUILD?: string } }).env
+    .VITE_KIMEN_DEV_BUILD === '1';
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
 const names = ['Discover', 'Explore', 'Keep learning together', 'Customize', 'Finish'];
@@ -256,7 +264,7 @@ it('S8 stops on focus, keeps the manual announcement and restarts with Play', as
   await browser.emulateReducedMotion('no-preference');
   try {
     await startClock();
-    const host = await mount({ autoplay: '1000', loop: '' });
+    const host = await mount({ autoplay: '5000', loop: '' });
     const rotation = part(host, 'rotation');
     const viewport = part(host, 'viewport');
     const scrollSettled =
@@ -272,7 +280,7 @@ it('S8 stops on focus, keeps the manual announcement and restarts with Play', as
           })
         : undefined;
     expect(part(host, 'announcement').getAttribute('aria-live')).toBe('off');
-    await browser.fastForwardClock(1100);
+    await browser.fastForwardClock(5100);
     expect(host.current).toBe(2);
 
     rotation.focus();
@@ -281,7 +289,7 @@ it('S8 stops on focus, keeps the manual announcement and restarts with Play', as
     if (scrollSettled) await scrollSettled;
     else await expect.poll(() => aligned(host, 2)).toBe(true);
     await frames();
-    await browser.fastForwardClock(1200);
+    await browser.fastForwardClock(5200);
 
     expect(host.current).toBe(2);
     expect(part(host, 'announcement').getAttribute('aria-live')).toBe('polite');
@@ -290,7 +298,7 @@ it('S8 stops on focus, keeps the manual announcement and restarts with Play', as
     await frames();
     expect(rotation.textContent).toBe('Pause');
     expect(part(host, 'announcement').getAttribute('aria-live')).toBe('off');
-    await browser.fastForwardClock(1000);
+    await browser.fastForwardClock(5000);
     expect(host.current).toBe(3);
   } finally {
     await browser.emulateReducedMotion(null);
@@ -301,11 +309,11 @@ it('S9 keeps the position after Pause is clicked', async () => {
   await browser.emulateReducedMotion('no-preference');
   try {
     await startClock();
-    const host = await mount({ autoplay: '1000', loop: '' });
+    const host = await mount({ autoplay: '5000', loop: '' });
 
     await page.getByRole('button', { name: 'Pause' }).click();
     await frames();
-    await browser.fastForwardClock(1200);
+    await browser.fastForwardClock(5200);
 
     expect(host.current).toBe(1);
     expect(part(host, 'rotation').textContent).toBe('Play');
@@ -318,14 +326,14 @@ it('S10 pauses over content and resumes after the pointer leaves', async () => {
   await browser.emulateReducedMotion('no-preference');
   try {
     await startClock();
-    const host = await mount({ autoplay: '1000', loop: '' });
+    const host = await mount({ autoplay: '5000', loop: '' });
 
     await page.getByRole('link', { name: 'Discover' }).hover();
-    await browser.fastForwardClock(1200);
+    await browser.fastForwardClock(5200);
     expect(host.current).toBe(1);
 
     await parkPointer();
-    await browser.fastForwardClock(1100);
+    await browser.fastForwardClock(5100);
     expect(host.current).toBe(2);
   } finally {
     await browser.emulateReducedMotion(null);
@@ -461,4 +469,77 @@ it('S11 lets the reader continue through an oversized full-screen slide', async 
   await frames();
   expect(host.current).toBe(1);
   expect(slide(host, 1).inert).toBe(false);
+});
+
+/**
+ * A looping three-slide carousel on a paused clock, with rotation armed only
+ * after it has mounted, so the time spent mounting never counts toward the
+ * interval. Returns the indexes its slide changes report.
+ */
+async function rotatingCarousel(interval: number): Promise<{ host: Carousel; changes: number[] }> {
+  await startClock();
+  const host = await mount({ loop: '' });
+  const changes: number[] = [];
+  host.addEventListener('ki-slide-change', (event) => {
+    changes.push((event as CustomEvent<{ index: number }>).detail.index);
+  });
+  host.setAttribute('autoplay', String(interval));
+  return { host, changes };
+}
+
+function floorWarnings(warn: { mock: { calls: unknown[][] } }): unknown[][] {
+  return warn.mock.calls.filter(
+    ([message]) => typeof message === 'string' && message.includes('5000 ms floor'),
+  );
+}
+
+it.each([1, 334, 4999])(
+  'S21 waits the full five seconds when autoplay is %i milliseconds',
+  async (interval) => {
+    await browser.emulateReducedMotion('no-preference');
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      const { host, changes } = await rotatingCarousel(interval);
+
+      await browser.fastForwardClock(4999);
+
+      expect(changes).toEqual([]);
+      expect(host.current).toBe(1);
+      expect(floorWarnings(warn)).toHaveLength(development ? 1 : 0);
+    } finally {
+      warn.mockRestore();
+      await browser.emulateReducedMotion(null);
+    }
+  },
+);
+
+it('S22 moves once in six seconds when autoplay is 1 millisecond', async () => {
+  await browser.emulateReducedMotion('no-preference');
+  try {
+    const { host, changes } = await rotatingCarousel(1);
+
+    await browser.fastForwardClock(6000);
+
+    expect(changes).toEqual([2]);
+    expect(host.current).toBe(2);
+  } finally {
+    await browser.emulateReducedMotion(null);
+  }
+});
+
+it('S23 keeps an 8000 millisecond interval as set', async () => {
+  await browser.emulateReducedMotion('no-preference');
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  try {
+    const { host, changes } = await rotatingCarousel(8000);
+
+    await browser.fastForwardClock(12_000);
+
+    expect(changes).toEqual([2]);
+    expect(host.current).toBe(2);
+    expect(floorWarnings(warn)).toEqual([]);
+  } finally {
+    warn.mockRestore();
+    await browser.emulateReducedMotion(null);
+  }
 });

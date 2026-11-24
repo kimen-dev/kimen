@@ -1,0 +1,16 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-carousel/attributes/autoplay": "c15b4498aa4cd02aa9c6c063a4aafa9dc214030a8ec2e1ecc41c720e3dc125d6",
+    "/packages/@kimen~1elements/components/ki-carousel/properties/autoplay": "c15b4498aa4cd02aa9c6c063a4aafa9dc214030a8ec2e1ecc41c720e3dc125d6"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "Describe the ki-carousel autoplay floor: values below 5000 rotate every 5000 ms (spec 123 Amendment A1). Only the description changes; the catalog range and every prop, event and default keep their type.",
+  "release": "minor",
+  "schemaVersion": 2
+}
