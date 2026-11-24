@@ -33,6 +33,15 @@ Link and action destinations belong to the consuming app.
   ordinary links and subtitles. Its standard value is medium emphasis and
   the contrast-more mode strengthens it. Draw the current indicator as a
   logical border so forced colors can preserve the mark.
+- Agent's choice, pending founder confirmation (0.1.3 integrator feedback,
+  item 5). `collapse-at="none"` never collapses: the header shows no
+  navigation button, and its links wrap onto further lines between the brand
+  and the actions, which keep their places, so visual order stays DOM order.
+  The bar grows from its token height to hold the lines. With a length,
+  the row stays one fixed-height line above the breakpoint and clips what
+  does not fit: wrapping there would change the height of every existing
+  header, which sticky layouts rely on. An app bar with `none` never
+  centers its title, since it has no collapse point.
 
 - Agent's choice, pending founder confirmation. Record the measured MCP
   Apps and MCP server byte increases in the component budget metadata.
@@ -49,9 +58,9 @@ Link and action destinations belong to the consuming app.
 
 | Family                 | Scenario IDs                            | N/A justification                                                        |
 | ---------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
-| Core behavior          | S1, S2, S3, S4, S5, S6, S7              |                                                                          |
-| Keyboard path          | S8, S9, S10, S11                        |                                                                          |
-| Assistive-tech outcome | S12, S13, S14                           |                                                                          |
+| Core behavior          | S1, S2, S3, S4, S5, S6, S7, S20         |                                                                          |
+| Keyboard path          | S8, S9, S10, S11, S21                   |                                                                          |
+| Assistive-tech outcome | S12, S13, S14, S22                      |                                                                          |
 | Form participation     | N/A                                     | TopNav owns no value. Slotted controls participate on their own terms.    |
 | Theming                | S15, S16, S17, S18, S19                 |                                                                          |
 
@@ -110,6 +119,13 @@ Feature: TopNav
     Then the search control is usable in the main row
     And the screen heading remains available to assistive technology
 
+  # S20
+  Scenario: A header that never collapses wraps its links onto more lines
+    Given a phone-width page with a header set never to collapse and more links than fit on one line
+    When the header appears
+    Then every link stays in the bar, wrapping onto further lines, with no navigation button
+    And the page does not scroll horizontally
+
   # Family: keyboard path
   # S8
   Scenario: Escape returns focus from collapsed navigation
@@ -136,6 +152,12 @@ Feature: TopNav
     When the user activates the skip link
     Then focus lands at the start of the main content
 
+  # S21
+  Scenario: Tab follows wrapped links in their authored order
+    Given a header set never to collapse whose links wrap onto more than one line
+    When the user tabs from the brand to the global actions
+    Then focus visits each primary link once, in authored order
+
   # Family: assistive-tech outcome
   # S12
   Scenario: Navigation exposes its landmark and current page
@@ -157,6 +179,13 @@ Feature: TopNav
     When its scroll container scrolls down
     Then the title is exposed once as a level three heading
     And the leading button is named Back
+
+  # S22
+  Scenario: A header that never collapses exposes no disclosure
+    Given a phone-width header set never to collapse where Projects is current
+    When the accessibility tree is queried
+    Then no navigation button or menu is exposed
+    And the named navigation landmark exposes Projects as the current page
 
   # Family: form participation — N/A, TopNav contains navigation and actions and owns no field value
 

@@ -2317,18 +2317,6 @@ brackets so they remain part of the source.
 <ki-code-block language="html" filename="example.html" wrap copyable="false">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>
 ```
 
-Color a Gherkin contract in English or Spanish with `language="gherkin"`.
-Keywords count only where they open a line.
-
-```html
-<ki-code-block language="gherkin" filename="pagos.feature"># language: es
-Característica: Pagar el carrito
-  Escenario: Pagar con tarjeta
-    Dado un carrito con 3 productos y un cupón
-    Cuando el cliente paga
-    Entonces el recibo muestra el total</ki-code-block>
-```
-
 The guarded catalog accepts source strings in the default slot.
 
 ```json
@@ -2353,7 +2341,7 @@ Attributes:
 - `highlight` (string | undefined): Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
 - `highlight-label` (string, default 'Highlighted lines'): Localizable prefix for the accessible description of highlighted lines.
 - `label` (string | undefined, default 'Code'): Figure and scroll area label when there is no language or filename.
-- `language` (string | undefined): Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
+- `language` (string | undefined): Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
 - `line-numbers` (boolean, default false): Show decorative one-based line numbers.
 - `wrap` (boolean, default false): Soft-wrap long lines within the available width.
 
@@ -11336,6 +11324,22 @@ the header. Import `@kimen/elements/icons/bell` for the notification glyph.
 <main id="content" tabindex="-1">Workspace</main>
 ```
 
+## Links that wrap instead of collapsing
+
+Use `collapse-at="none"` to keep every link in the bar at every width. Links
+that do not fit wrap onto further lines between the brand and the actions,
+and the bar grows to hold them. No navigation button or menu is rendered.
+
+```html
+<ki-top-nav label="Documentation" collapse-at="none">
+  <a slot="brand" href="/">Kimen</a>
+  <a href="/guide" aria-current="page">Guide</a>
+  <a href="/components">Components</a>
+  <a href="/tokens">Tokens</a>
+  <a href="/changelog">Changelog</a>
+</ki-top-nav>
+```
+
 ## Per-screen bar with search
 
 Use the native `title` attribute in HTML and `screenTitle` for the framework
@@ -11356,7 +11360,7 @@ handlers in the overflow menu. Keep application-specific account menus and
 navigation destinations in the consuming app.
 
 Attributes:
-- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title.
+- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
 - `heading-level` (number, default 1): Native heading level for the screen title. Use 1 through 6 to fit the page outline.
 - `label` (string, default 'Main'): Accessible name of the header's primary navigation landmark. Override for localization.
 - `navigation-label` (string, default 'Open navigation'): Accessible name for the compact navigation button and menu. Override for localization.

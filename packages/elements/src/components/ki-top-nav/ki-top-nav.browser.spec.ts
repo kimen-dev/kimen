@@ -489,3 +489,75 @@ it('S18: changes to the compact height with no transition under reduced motion',
     await media.emulateReducedMotion(null);
   }
 });
+
+// Integrator feedback 0.1.3, item 5: a header can keep its links in the bar.
+// Five links beside a brand and an action cannot share one line at 375px.
+function wrappingHeader(): HTMLElement {
+  return mountHeader('collapse-at="none"');
+}
+
+const primaryLinks = () =>
+  page.getByRole('link', { name: /^(Overview|Projects|Reports|Teams|Settings)$/ });
+
+it('S20: with collapse-at none, wraps the links inside the bar at 375px with no menu button', async () => {
+  await page.viewport(375, 700);
+  const host = wrappingHeader();
+  await expect.element(page.getByRole('link', { name: 'Settings' })).toBeVisible();
+  await expect.element(primaryLinks()).toHaveLength(5);
+  await expect.element(navigation()).not.toBeInTheDocument();
+
+  const bar = part(host, 'bar').getBoundingClientRect();
+  const boxes = primaryLinks()
+    .elements()
+    .map((link) => link.getBoundingClientRect());
+  expect(new Set(boxes.map((box) => Math.round(box.top))).size).toBeGreaterThan(1);
+  for (const box of boxes) {
+    expect(box.width).toBeGreaterThan(0);
+    expect(box.left).toBeGreaterThanOrEqual(bar.left);
+    expect(box.right).toBeLessThanOrEqual(bar.right);
+    expect(box.bottom).toBeLessThanOrEqual(bar.bottom);
+  }
+  const root = required(document.scrollingElement);
+  expect(root.scrollWidth).toBe(root.clientWidth);
+
+  host.removeAttribute('collapse-at');
+  await expect.element(navigation()).toBeVisible();
+  host.setAttribute('collapse-at', 'None');
+  await expect.element(navigation()).not.toBeInTheDocument();
+  await expect.element(primaryLinks()).toHaveLength(5);
+});
+
+it('S21: Tab moves from the brand through the wrapped links in DOM order to the actions', async () => {
+  await page.viewport(375, 700);
+  const host = wrappingHeader();
+  await expect.element(page.getByRole('link', { name: 'Settings' })).toBeVisible();
+  const tops = primaryLinks()
+    .elements()
+    .map((link) => Math.round(link.getBoundingClientRect().top));
+  expect(new Set(tops).size).toBeGreaterThan(1);
+
+  required(host.querySelector<HTMLAnchorElement>('a[slot="brand"]')).focus();
+  const visited: (string | undefined)[] = [];
+  for (let step = 0; step < 6; step += 1) {
+    await userEvent.tab();
+    visited.push(document.activeElement?.textContent.trim());
+  }
+  expect(visited.slice(0, 5)).toEqual(['Overview', 'Projects', 'Reports', 'Teams', 'Settings']);
+  expect(document.activeElement?.getAttribute('label')).toBe('Notifications, 3 unread');
+});
+
+it('S22: exposes no disclosure, the named landmark and the current page with collapse-at none', async () => {
+  await page.viewport(375, 700);
+  const host = wrappingHeader();
+  const nav = page.getByRole('navigation', { name: 'Main' });
+  await expect.element(nav).toHaveLength(1);
+  await expect.element(navigation()).not.toBeInTheDocument();
+  expect(host.shadowRoot?.querySelector('button, [role="menu"], [aria-expanded]')).toBeNull();
+  await expect.element(page.getByRole('menuitem')).not.toBeInTheDocument();
+  const current = page.getByRole('link', { name: 'Projects' });
+  await expect.element(current).toHaveAttribute('aria-current', 'page');
+  for (const link of primaryLinks().elements()) {
+    expect(link.assignedSlot?.closest('nav')).toBe(nav.element());
+  }
+  await expectAccessible(fixture);
+});

@@ -17,6 +17,21 @@ The navigation collapses into a menu when the header becomes narrower than
   <a href="#projects">Projects</a>
 </ki-top-nav>`} />
 
+Set `collapse-at="none"` when the links must stay in the bar at every width.
+The header then never shows a navigation button. Links that do not fit
+between the brand and the actions wrap onto further lines, and the bar grows
+to hold them, so the page never scrolls sideways. With a length instead, the
+bar keeps a single row of fixed height above the breakpoint. An app bar with
+`none` never centers its title.
+
+<Demo layout="block" code={`<ki-top-nav label="Documentation" collapse-at="none">
+  <a slot="brand" href="#docs">Kimen</a>
+  <a href="#guide" aria-current="page">Guide</a>
+  <a href="#components">Components</a>
+  <a href="#tokens">Tokens</a>
+  <a href="#changelog">Changelog</a>
+</ki-top-nav>`} />
+
 Keep a page-owned skip link first in the Tab order. Mark the current section
 with `aria-current="page"`. Name each icon button and include unread counts
 in the notification button name, such as “Notifications, 3 unread”. Place the
