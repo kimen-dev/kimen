@@ -12,7 +12,7 @@ import { defineCustomElement } from '../dist/components/ki-button.js';
 import { expectAccessible, parkPointer } from './axe';
 
 type KiButtonElement = HTMLElement & {
-  href?: string;
+  href?: string | undefined;
   loading: boolean;
   selected: boolean;
 };
@@ -425,9 +425,9 @@ describe('ki-button content alignment tokens', () => {
       el.classList.add('wide');
       await frames();
       const part = control(el);
-      const centred = lineStarts(el);
+      const [longer = 0, shorter = 0] = lineStarts(el);
       // The default centres each line, so the shorter one starts further in.
-      expect(Math.abs(centred[0] - centred[1])).toBeGreaterThan(1);
+      expect(Math.abs(longer - shorter)).toBeGreaterThan(1);
 
       el.style.setProperty('--ki-button-justify-content', 'start');
       el.style.setProperty('--ki-button-text-align', 'start');
