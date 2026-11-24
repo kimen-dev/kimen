@@ -150,36 +150,32 @@ are active (specs 043 and 044):
 | more contrast | `prefers-contrast: more`, `data-ki-contrast="more"` | neutral text ≥ 7:1, neutral control boundaries ≥ 4.5:1, separators and container edges ≥ 3:1, a 3px focus ring; implies reduced transparency |
 | reduced transparency | `prefers-reduced-transparency: reduce`, `data-ki-transparency="reduce"`, more contrast | every content surface opaque (`surface-special-*` glass, `surface-*-tint`), no backdrop blur; state washes and the modal scrim keep their alpha |
 
-Each mode is one file of references in `tokens/modes/` (`contrast-more`,
-`reduced-transparency`), so it serves every theme and scheme. The build
-composes it with each theme and emits only the differences, twice: under the
-media query and under the declaration, on the root and on every theme root.
-A theme re-asserts, after its own rule, the mode values its overrides
-displaced, so precedence never depends on the order the stylesheets load.
-The declarations only switch a mode on; they take effect on the root and on
+The value a token takes under a mode is a token of its own,
+`--ki-<mode>-<token>`: `--ki-contrast-more-outline-control`,
+`--ki-reduced-transparency-surface-primary-tint`. These mode tokens are
+declared with every other token, next to the token they replace in the DTCG
+sources (`ki.contrast-more.*`, `ki.reduced-transparency.*`), and a theme
+overrides them like any other (material3 sets two). A deprecated token has
+no mode token: its replacement carries the mode. Under the mode, on the
+root and on every theme root, the stylesheet re-points each reassigned token
+to its mode token with `!important`, under the media query and under the
+declaration. An important declaration outranks every normal one, so the mode
+applies over any theme, whatever its specificity or load order. The
+declarations only switch a mode on; they take effect on the root and on
 theme roots, because those are the elements that redeclare every alias.
 
-A theme of your own that sets a token a mode reassigns replaces the mode's
-value too: both rules declare the same property on the same element, and the
-theme's wins. The token reference lists every token each mode reassigns
-(*Preference modes*), with Kimen's value. Restate the ones your theme sets,
-after its own rule, under the media query and under the declaration:
+A theme of your own needs nothing to follow the modes. To choose its own
+mode values it sets the mode tokens, at normal priority; setting the token
+itself under the mode has no effect any more. The token reference lists
+every token each mode reassigns, its mode token and Kimen's value
+(*Preference modes*):
 
 ```css
-[data-ki-theme='acme'] { --ki-outline-control: #8c857c; }
-
-@media (prefers-contrast: more) {
-  [data-ki-theme='acme'] { --ki-outline-control: var(--ki-inverse-white-alpha-64); }
-}
-
-[data-ki-theme='acme']:is([data-ki-contrast='more'], [data-ki-contrast='more'] *) {
-  --ki-outline-control: var(--ki-inverse-white-alpha-64);
+[data-ki-theme='acme'] {
+  --ki-outline-control: #8c857c;
+  --ki-contrast-more-outline-control: light-dark(#4a4540, #c4bdb4); /* only under more contrast */
 }
 ```
-
-Kimen does not rank its modes above a theme's rule: only `!important`
-could, and then no theme could choose its own mode values without
-`!important` either.
 
 `pnpm --filter @kimen/tokens contrast` sweeps every theme × scheme in the
 standard appearance and in each mode, with the stronger thresholds under more
@@ -355,8 +351,10 @@ anything else fails the build.
 A theme declares on `:root` or on `[data-ki-theme='name']`, in a stylesheet
 loaded after `@kimen/tokens/css`. Two declarations need care:
 
-- **Mode tokens.** Restate each token it sets that a preference mode also
-  reassigns, under the mode (see *Preference modes* above).
+- **Mode values.** A preference mode applies over the theme on its own. To
+  choose its own value under a mode, a theme sets the mode token
+  (`--ki-contrast-more-*`, `--ki-reduced-transparency-*`), not the token
+  under the mode (see *Preference modes* above).
 - **`color-scheme`.** `data-ki-color-scheme` pins the scheme with the
   specificity of one attribute. A theme rule that declares `color-scheme`
   with that specificity or more (`[data-ki-theme='acme']`,

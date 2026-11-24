@@ -152,24 +152,23 @@ declared on `:root` alone keeps the root's colour inside every region.
 
 ### Modes and your own theme
 
-A preference mode (more contrast, reduced transparency) reassigns a fixed
-set of tokens, listed in *Docs → Tokens reference → Preference modes*. A
-theme rule that sets one of them declares the same property on the same
-element as the mode, and wins: the mode loses that token. Restate each such
-token under the mode's media query and its declaration, after the theme's
-own rule:
+A preference mode (more contrast, reduced transparency) applies over any
+theme on its own: under the mode, Kimen re-points each token it reassigns to
+that token's mode token with `!important`, on the root and on theme roots.
+A theme chooses its own mode values by setting the mode tokens,
+`--ki-<mode>-<token>`, at normal priority. *Docs → Tokens reference →
+Preference modes* lists every reassigned token and its mode token:
 
 ```css
-[data-ki-theme='acme'] { --ki-outline-control: #8c857c; }
-
-@media (prefers-contrast: more) {
-  [data-ki-theme='acme'] { --ki-outline-control: var(--ki-inverse-white-alpha-64); }
-}
-
-[data-ki-theme='acme']:is([data-ki-contrast='more'], [data-ki-contrast='more'] *) {
-  --ki-outline-control: var(--ki-inverse-white-alpha-64);
+[data-ki-theme='acme'] {
+  --ki-outline-control: #8c857c;
+  /* Only under more contrast */
+  --ki-contrast-more-outline-control: light-dark(#4a4540, #c4bdb4);
 }
 ```
+
+Restating the token itself under the mode's media query no longer has any
+effect: the mode wins. Move such values to the mode tokens.
 
 ### `color-scheme` in a theme
 

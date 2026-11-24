@@ -215,43 +215,34 @@ data-ki-contrast="more">`.
 
 ### Modes and your own theme
 
-A mode reassigns a fixed set of tokens, listed per mode in the generated
-[token reference](/docs/tokens/reference/) (*Preference modes*). If your
-theme sets one of them, such as `--ki-outline-control` or
-`--ki-text-supporting`, your rule and the mode's rule declare the same
-property on the same element, and yours wins: the mode loses that token.
-Kimen cannot rank its mode above an arbitrary theme rule without
-`!important`, which would stop you from choosing your own mode values.
+A mode applies over your theme without your theme doing anything. Each
+token a mode reassigns, such as `--ki-outline-control` or
+`--ki-text-supporting`, has a mode token that holds its value under the
+mode: `--ki-contrast-more-outline-control`,
+`--ki-reduced-transparency-surface-primary-tint`. Under the mode, Kimen
+re-points the token to its mode token with `!important`, on the root and
+on every theme root, so the mode wins whatever your theme sets.
 
-So restate every listed token your theme sets, under the media query and
-under the declaration, after your theme's own rule:
+To choose your own mode values, set the mode tokens in your theme, at normal
+priority. The generated [token reference](/docs/tokens/reference/)
+(*Preference modes*) lists every reassigned token, its mode token and
+Kimen's value:
 
 ```css
 /* Your theme, loaded after the token stylesheet */
 [data-ki-theme='acme'] {
   --ki-outline-control: #8c857c;
-}
-
-/* More contrast: the person's preference… */
-@media (prefers-contrast: more) {
-  [data-ki-theme='acme'] {
-    --ki-outline-control: var(--ki-inverse-white-alpha-64);
-  }
-}
-
-/* …and the page's own declaration, on the theme root or an ancestor */
-[data-ki-theme='acme']:is([data-ki-contrast='more'], [data-ki-contrast='more'] *) {
-  --ki-outline-control: var(--ki-inverse-white-alpha-64);
+  /* Used only under more contrast */
+  --ki-contrast-more-outline-control: light-dark(#4a4540, #c4bdb4);
 }
 ```
 
-Use Kimen's mode value (the reference lists it) or your own that meets the
-mode's floor: 4.5:1 for control boundaries and 7:1 for neutral text. More
-contrast also applies reduced transparency, so restate the
-reduced-transparency tokens your theme sets under
-`(prefers-reduced-transparency: reduce), (prefers-contrast: more)` and both
-declarations. A theme on `:root` restates them the same way, with `:root`
-in place of the theme root.
+Your own value must meet the mode's floor: 4.5:1 for control boundaries and
+7:1 for neutral text under more contrast; an opaque fill under reduced
+transparency. A theme that restated the token itself under the mode's media
+query, as earlier versions of this guide advised, now loses to the mode:
+move those values to the mode tokens. A theme on `:root` sets them on
+`:root`.
 
 ## Density
 
