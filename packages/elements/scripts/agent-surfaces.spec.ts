@@ -517,15 +517,19 @@ describe('agent surfaces', () => {
     const guidance = shippedPreamble.replace(/\s+/gu, ' ');
 
     // The facts the guidance must describe: the token stylesheet owns the
-    // scheme; the page contract only paints the page from tokens.
+    // scheme; the page contract paints the page from tokens and lays out
+    // unregistered group items.
     expect(themeCss).toContain('color-scheme: light dark;');
     expect(pageContractCss).not.toContain('color-scheme');
+    expect(pageContractCss).toMatch(/:where\(:not\(:defined\)\) \{\s+display: block;/u);
     expect(guidance).not.toMatch(/page contract declares `color-scheme`/u);
     expect(guidance).toContain(
       '`@kimen/tokens/css` once per page: it is the onmars default theme and the only stylesheet the components require',
     );
     expect(guidance).toContain('together with the `color-scheme` they resolve from');
-    expect(guidance).toContain('`@kimen/tokens/css/base` — the page contract — is optional');
+    expect(guidance).toContain('Load `@kimen/tokens/css/base` — the page contract — with it');
+    expect(guidance).toContain('one per line until their tags register');
+    expect(guidance).not.toMatch(/page contract — is optional/u);
   });
 
   it('S1 S2 render a documented public method in the manifest and llms.txt', async () => {
