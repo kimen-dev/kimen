@@ -54,7 +54,8 @@ const BASE_BUDGETS = {
   // 3329aea1 on macOS: the per-surface token bucket in the shared catalog code,
   // its diagnostic and the bridge's fired-on revision add 1,299 / 598 / 771 B to
   // the MCP Apps document and 1,488 / 605 / 656 B to kimen-mcp, added here
-  // exactly so the headroom stays what it was. Re-basing awaits the founder.
+  // exactly so the headroom stays what it was. The founder approved re-basing all
+  // three metrics by that cost (2026-11-24).
   mcpApps: { raw: 812_015, gzip: 186_710, brotli: 148_531 },
   mcpServer: { raw: 2_619_846, gzip: 497_718, brotli: 390_701 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.

@@ -10,15 +10,15 @@
 
 **Status**: Approved. The founder approved the scenarios, which are guardrail
 scenarios (Art. VIII), and the defaults on 2026-11-24; the amendment to `028`
-below is applied. Two changes after approval, for the founder's review: S3
-uses a code field instead of a combobox, because a combobox's edit reports
-its committed selection, not the typed text, so the rule could not be
-observed with it; and S8 is new and needs explicit founder confirmation. A
-security review of the implementation found that a held report left with
-the surface revision current when it was delivered, so a host that had
-updated the surface in between would read a person's action against a page
-they never saw. S8 pins the fix: a held report names the revision, and the
-path, of the moment its event fired.
+below is applied. Two changes came after that approval, and the founder
+approved both on the same day. S3 uses a code field instead of a combobox,
+because a combobox's edit reports its committed selection, not the typed
+text, so the rule could not be observed with it. S8 is new: a security
+review of the implementation found that a held report left with the surface
+revision current when it was delivered, so a host that had updated the
+surface in between would read a person's action against a page they never
+saw. S8 pins the fix: a held report names the revision, and the path, of the
+moment its event fired.
 
 **Input**: The review of spec 154 on 2026-11-24 (draft spec
 `161-action-is-a-report`) found declared events that fire without a person's
@@ -367,7 +367,7 @@ interval per surface (`162`)."
 - **Catalog/agent legibility** (Art. I): FR-006 tells agents the budget
   exists and how a fast binding behaves.
 - **Guardrail/security boundary** (Art. VIII): adds a fourth budget to the
-  guardrail. S1–S8 need explicit founder confirmation; S1–S7 have it.
+  guardrail. The founder confirmed S1–S8 explicitly.
 
 ## Success Criteria *(mandatory)*
 
@@ -396,4 +396,8 @@ interval per surface (`162`)."
 1. The defaults are a burst of 10 and 500 ms.
 2. The diagnostic (FR-004, S6) lands with this spec.
 3. The carousel floor (spec 123, WCAG 2.3.1) is its own change, in its own
-   session.
+   session (PR #588).
+4. S8 and the S3 wording, both written after approval, are approved.
+5. The size bases are re-based by the cost measured against main 3329aea1:
+   +1,299 / 598 / 771 B for the MCP Apps document and +1,488 / 605 / 656 B
+   for kimen-mcp.
