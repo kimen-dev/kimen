@@ -5901,5 +5901,5 @@ export const catalogData = {
       "whenToUse": "Hold one record, or the header row, inside a thead or a tbody."
     }
   },
-  "elementsVersion": "0.1.3"
+  "elementsVersion": "0.2.0"
 } as const;
