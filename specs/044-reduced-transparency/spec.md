@@ -88,6 +88,43 @@ without the tints (material3's indeterminate checkbox is already opaque) is
 untouched. The token sweep treats a state cell as a wash while it stays a
 light tint (alpha ≤ 0.5): glass is glass in every state.
 
+## Amendment A1: the mode wins over any theme *(decided 2026-11-24)*
+
+**Status**: Decided by the founder on 2026-11-24, after an integrator theme
+lost more contrast (integrator feedback on 0.1.3, item 1). A preference mode
+applies over any theme without the theme doing anything, and a theme still
+chooses its own mode values through tokens.
+
+**Path**: in place, through the Art. II amendment path: the page's own value
+(S11) now goes through the mode token, and S12–S14 are appended. None
+is retired or renumbered.
+
+**A1-D1 — Mode values are tokens.** The value a token takes under a mode is a
+token of its own, `--ki-<mode>-<token>` (`--ki-reduced-transparency-surface-primary-tint`), declared at normal
+priority with the rest of the token set, next to the token it replaces in the
+DTCG sources (`ki.<mode>.<path>`). The shared mode file and the per-theme
+mode files are gone: a theme's mode values are ordinary overrides of those
+tokens (material3 overrides two; onmars sets its own in its theme and dark
+files).
+
+**A1-D2 — The mode re-points with `!important`.** Under the media query and
+under the declaration, on the root and on theme roots, the mode declares
+`--ki-<token>: var(--ki-<mode>-<token>) !important`. An important
+declaration outranks every normal one on the element, so a theme rule that
+sets the token loses under the mode, wherever it loads and whatever its
+specificity. Only the re-pointing is important: a theme that wants other mode
+values sets the mode tokens at normal priority and never needs `!important`
+(Art. VI). Components keep reading the same tokens.
+
+**A1-D3 — Behaviour change.** A theme that followed the earlier guidance and
+restated a reassigned token under the mode's media query or declaration now
+loses to the mode; it moves those values to the mode tokens. A token set on
+an element that is neither the root nor a theme root still wins inside it, as
+any per-element value does. A deprecated token gets no mode token (its
+replacement carries the mode), so `--ki-select-listbox-backdrop-blur` keeps
+its length under reduced transparency; the listbox filter that replaced it
+still turns off.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Glass becomes solid for people who find it hard to read (Priority: P1)
@@ -153,8 +190,9 @@ accessibility problem for another.
   regardless; no conflict.
 - A component state that animates the blur in (dialog entrance, video
   control) has nothing to animate under the mode: the blur radius token is 0.
-- A consumer token reassignment of a remapped glass token keeps its value
-  under the mode (S11).
+- A consumer token reassignment of a remapped glass token gets the mode's
+  value under the mode (S12, S13); to choose its own value it sets the
+  token's reduced-transparency token (S11, S14; Amendment A1).
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
@@ -238,9 +276,28 @@ Feature: Opaque surfaces when the person asks for less transparency
 
   # S11
   Scenario: A page's own opaque value for a glass surface wins
-    Given an onmars light page whose stylesheet sets the floating glass surface token to "#fafafa" under reduced transparency
+    Given an onmars light page whose stylesheet sets the reduced-transparency value of the floating glass surface to "#fafafa"
     When the page renders under a "reduce" transparency system preference
     Then the open "Country" listbox paints "#fafafa"
+
+  # S12
+  Scenario: Reduced transparency applies over a theme of the page's own
+    Given a light page themed "acme" by its own stylesheet, which makes the floating glass surface translucent
+    When the page renders under a "reduce" transparency system preference
+    Then the open "Country" listbox paints an opaque surface without blur
+
+  # S13
+  Scenario: A declared transparency applies over a theme of the page's own
+    Given a light page themed "acme" by its own stylesheet, which makes the floating glass surface translucent
+    And the page root declares the transparency "reduce"
+    When the page renders under no transparency system preference
+    Then the open "Country" listbox paints an opaque surface without blur
+
+  # S14
+  Scenario: A theme of the page's own chooses its reduced-transparency values
+    Given an onmars light page with a region themed "acme" by its own stylesheet, which sets the reduced-transparency value of the floating glass surface to "#fafafa"
+    When the page renders under a "reduce" transparency system preference
+    Then the open "Country" listbox inside the region paints "#fafafa"
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -251,7 +308,7 @@ Feature: Opaque surfaces when the person asks for less transparency
 | Keyboard path | — | No interaction changes: surfaces change paint only; focus indicators are untouched by this mode |
 | Assistive-tech outcome | — | Token-only feature: no role, name, state or announcement changes |
 | Form participation | — | No form behavior changes |
-| Theming | S10, S11 | |
+| Theming | S10, S11, S12, S13, S14 | |
 
 ## Requirements *(mandatory)*
 
@@ -270,8 +327,9 @@ Feature: Opaque surfaces when the person asks for less transparency
   mode; nothing MAY switch it off against the preference.
 - **FR-005**: Without any activation, every public token MUST resolve to
   exactly the value it has today.
-- **FR-006**: The mode MUST be one override file of references, emitted as
-  differences per theme, with a token set disjoint from 043's.
+- **FR-006**: The mode MUST be expressed as tokens, one per remapped token
+  (`--ki-reduced-transparency-*`, Amendment A1), re-pointed with
+  `!important` under the mode, with a token set disjoint from 043's.
 
 ### Key Entities
 
