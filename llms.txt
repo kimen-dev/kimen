@@ -19,11 +19,11 @@ Load `@kimen/tokens/css` once per page: it is the onmars default theme and
 the only stylesheet the components require. It declares every `--ki-*` token
 for both schemes together with the `color-scheme` they resolve from, so a
 page follows its visitor's light or dark preference with no further setup.
-`@kimen/tokens/css/base` — the page contract — is optional: it paints the
-page background, text color and body font from those tokens and declares no
-color scheme of its own. Without it the page keeps the browser's own canvas
-and text color for the active scheme, and every component stays legible on
-it.
+Load `@kimen/tokens/css/base` — the page contract — with it: it paints the
+page background, text color and body font from those tokens, declares no
+color scheme, and lays out the items of Kimen groups (segments, radios,
+options, menu and list items…) one per line until their tags register, so
+their labels do not run together.
 
 Human-readable documentation: https://kimen.dev/docs/
 
@@ -51,7 +51,7 @@ methods, CSS custom properties and examples.
 - [ki-badge](https://kimen.dev/llms/ki-badge.md): annotate an entity with short status text (a state, a category) whose meaning is carried by the label itself; the tone color only reinforces the text, it never replaces it.
 - [ki-breadcrumb](https://kimen.dev/llms/ki-breadcrumb.md): show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current.
 - [ki-breadcrumb-item](https://kimen.dev/llms/ki-breadcrumb-item.md): declare a direct child of ki-breadcrumb in hierarchy order.
-- [ki-button](https://kimen.dev/llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, or persistent actions such as Bold with `toggle`.
+- [ki-button](https://kimen.dev/llms/ki-button.md): trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, persistent actions such as Bold with `toggle`, or with `href` a call to action that navigates.
 - [ki-button-group](https://kimen.dev/llms/ki-button-group.md): place two to five related actions together, present a primary action with a menu of alternatives, or give formatting tools one Tab stop.
 - [ki-card](https://kimen.dev/llms/ki-card.md): group related media, a title, supporting text and actions into one scannable surface.
 - [ki-carousel](https://kimen.dev/llms/ki-carousel.md): show a short set of related highlights, onboarding steps or media panels.

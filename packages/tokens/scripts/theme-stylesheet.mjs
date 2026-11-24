@@ -71,10 +71,15 @@ const REFERENCE = /^var\((--[a-z0-9-]+)\)$/u;
 
 /**
  * A private foundation literal is inlined where it is referenced and never
- * declared: `ki.foundation.onmars-v2.*` and `ki.foundation.material3.text-ink.*`.
+ * declared: `ki.foundation.onmars-v2.*`, `ki.foundation.keyword.*` and
+ * `ki.foundation.material3.text-ink.*`.
  */
 export function isPrivateFoundation([group, subgroup]) {
-  return group === 'onmars-v2' || (group === 'material3' && subgroup === 'text-ink');
+  return (
+    group === 'onmars-v2' ||
+    group === 'keyword' ||
+    (group === 'material3' && subgroup === 'text-ink')
+  );
 }
 
 /**

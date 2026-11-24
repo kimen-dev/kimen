@@ -63,6 +63,43 @@ Programmatic updates to `selected` are silent. Keep the visible label the
 same in both states so assistive technology announces the state under the
 same name.
 
+### Link mode
+
+Set `href` for a call to action that navigates. The button renders a native
+link with the same `button` part, so variants, sizes and tokens style it
+like the button. Enter follows it and Space does not, as on any link.
+`target`, `rel` and `download` pass to the link; `target="_blank"` without
+`rel` gets `rel="noreferrer noopener"`.
+
+<Demo code={`<ki-button variant="primary" href="#link-mode">Get started</ki-button>`} />
+
+A link never submits or resets a form: `type`, `name`, `value`, `toggle`
+and dialog commands do nothing while `href` is set. A disabled link drops
+its destination and leaves the Tab order, like a disabled button.
+
+### Content alignment
+
+`--ki-button-justify-content` places the content along the button and
+`--ki-button-text-align` aligns the lines of a multi-line label. Both are
+`center` by default; `start` turns a wide button into a start-aligned
+choice.
+
+```html
+<style>
+  .choice {
+    --ki-button-justify-content: start;
+    --ki-button-text-align: start;
+    display: block;
+  }
+  .choice::part(button) {
+    inline-size: 100%;
+  }
+</style>
+<ki-button class="choice" variant="outline" toggle>
+  <strong>Starter</strong><br />One agent, one repository
+</ki-button>
+```
+
 ### Sizes
 
 <Demo
@@ -127,7 +164,9 @@ The slotted text is the accessible name — icon-only usage is unsupported
 (that is [ki-icon-button](/docs/components/icon-button/)'s job, with
 its mandatory `label`). `disabled` removes the button from keyboard reach
 and exposes the unavailable state through the internal native button; do not
-use it for pending or loading semantics.
+use it for pending or loading semantics. With `href` the internal control is
+a native link named by the label, and a disabled link is exposed as an
+unavailable link.
 
 ## Workshop
 
