@@ -21,9 +21,9 @@ Feature: A surface sends its actions within a rate budget
         | 11    | 10  | 1     |
 
     # S2
-    Scenario Outline: A carousel that rotates every millisecond cannot flood the host
-      Given a spec that binds the declared action "slide" to a looping carousel that rotates every millisecond
-      And the carousel sits in a closed disclosure, where no one can see or pause it
+    Scenario Outline: A bound event that fires every millisecond cannot flood the host
+      Given a spec that binds the declared action "slide" to a carousel in a closed disclosure, where no one can see it
+      And the carousel reports a slide change every millisecond
       When one second passes after <host> renders the spec
       Then <host> receives at most 12 "slide" actions
 

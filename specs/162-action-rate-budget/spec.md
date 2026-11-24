@@ -18,7 +18,11 @@ review of the implementation found that a held report left with the surface
 revision current when it was delivered, so a host that had updated the
 surface in between would read a person's action against a page they never
 saw. S8 pins the fix: a held report names the revision, and the path, of the
-moment its event fired.
+moment its event fired. Once spec 123 A1 (#588) gave `ki-carousel` a 5000 ms
+rotation floor, no catalog component fires its bound event hundreds of times
+a second on its own; the founder approved rewording S2 so the real carousel
+reports a change every millisecond instead of rotating that fast, which keeps
+the budget covered for any future source.
 
 **Input**: The review of spec 154 on 2026-11-24 (draft spec
 `161-action-is-a-report`) found declared events that fire without a person's
@@ -201,9 +205,9 @@ Feature: A surface sends its actions within a rate budget
         | 11    | 10  | 1     |
 
     # S2
-    Scenario Outline: A carousel that rotates every millisecond cannot flood the host
-      Given a spec that binds the declared action "slide" to a looping carousel that rotates every millisecond
-      And the carousel sits in a closed disclosure, where no one can see or pause it
+    Scenario Outline: A bound event that fires every millisecond cannot flood the host
+      Given a spec that binds the declared action "slide" to a carousel in a closed disclosure, where no one can see it
+      And the carousel reports a slide change every millisecond
       When one second passes after <host> renders the spec
       Then <host> receives at most 12 "slide" actions
 

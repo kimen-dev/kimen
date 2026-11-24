@@ -1,12 +1,14 @@
 // @spec:162-action-rate-budget
-// S2 with the real ki-carousel: a looping carousel that rotates every
-// millisecond inside a closed ki-details, where no one can see or pause it,
-// bound by name to a declared action. Measured on main at 14909122 before
-// the budget: about 215 actions per second through renderUiSpec and about
-// 195 action tool calls per second through MCP Apps. The budget (a burst of
-// 10, then one every 500 ms) allows at most 12 in the first second. Real
-// time on purpose: rotation and smooth scrolling run on the engine's own
-// clock, and an upper bound cannot be broken by a slow machine.
+// S2 with the real ki-carousel inside a closed ki-details, where no one can
+// see it, bound by name to a declared action, reporting a slide change every
+// millisecond. Measured on main at 14909122, before the budget and before the
+// 5000 ms rotation floor of spec 123 A1, autoplay 1 did exactly that: about
+// 215 actions per second through renderUiSpec and about 195 action tool calls
+// per second through MCP Apps. The floor took that source away; the event is
+// now fired from the carousel itself, so the budget stays covered for any
+// source. A burst of 10, then one every 500 ms, allows at most 12 in the first
+// second. Real time on purpose: an upper bound cannot be broken by a slow
+// machine.
 import type { McpUiMessageRequest } from '@modelcontextprotocol/ext-apps/app-bridge';
 import { AppBridge, PostMessageTransport } from '@modelcontextprotocol/ext-apps/app-bridge';
 import { createLiveSurface, renderUiSpec } from '@kimen/catalog';
@@ -36,7 +38,7 @@ afterEach(async () => {
   }
 });
 
-/** A looping carousel rotating every millisecond, inside a closed disclosure. */
+/** A carousel bound to "slide", inside a closed disclosure. */
 const hiddenCarousel = {
   component: 'ki-details',
   props: { summary: 'More' },
@@ -45,7 +47,7 @@ const hiddenCarousel = {
       {
         action: 'slide',
         component: 'ki-carousel',
-        props: { autoplay: 1, label: 'Highlights', loop: true },
+        props: { label: 'Highlights' },
         slots: {
           '': ['One', 'Two', 'Three'].map((text) => ({
             component: 'ki-carousel-item',
@@ -81,13 +83,39 @@ async function hostPage(): Promise<ViewWindow> {
   return view;
 }
 
+/** The rendered carousel reports a slide change every millisecond, as its own emitter would. */
+async function flood(doc: Document): Promise<() => void> {
+  await expect.poll(() => doc.querySelector('ki-carousel') !== null).toBe(true);
+  const carousel = doc.querySelector('ki-carousel');
+  const view = doc.defaultView;
+  if (carousel === null || view === null) {
+    throw new Error('no carousel rendered');
+  }
+  const timer = view.setInterval(() => {
+    carousel.dispatchEvent(
+      new CustomEvent('ki-slide-change', { bubbles: true, composed: true, detail: { index: 2 } }),
+    );
+  }, 1);
+  return () => {
+    view.clearInterval(timer);
+  };
+}
+
+/** Counts what arrives while the carousel floods for one window. */
+async function during(doc: Document, count: () => number): Promise<number> {
+  const stop = await flood(doc);
+  await wait(WINDOW_MS);
+  stop();
+  return count();
+}
+
 function mainIn(view: ViewWindow): HTMLElement {
   const surface = view.document.createElement('main');
   view.document.body.append(surface);
   return surface;
 }
 
-describe('S2 a carousel that rotates every millisecond cannot flood the host', () => {
+describe('S2 a bound event that fires every millisecond cannot flood the host', () => {
   it('S2 a page that renders the spec once receives at most 12 "slide" actions', async () => {
     const surface = mainIn(await hostPage());
     let count = 0;
@@ -101,9 +129,8 @@ describe('S2 a carousel that rotates every millisecond cannot flood the host', (
       },
     );
     expect(result.diagnostics).toEqual([]);
-    await wait(WINDOW_MS);
-    const seen = count;
-    expect(seen).toBeGreaterThan(0);
+    const seen = await during(surface.ownerDocument, () => count);
+    expect(seen).toBeGreaterThanOrEqual(10);
     expect(seen).toBeLessThanOrEqual(MOST);
   });
 
@@ -118,9 +145,8 @@ describe('S2 a carousel that rotates every millisecond cannot flood the host', (
       surface,
     });
     expect(live.apply({ ops: [{ node: hiddenCarousel, op: 'insert' }] }).diagnostics).toEqual([]);
-    await wait(WINDOW_MS);
-    const seen = count;
-    expect(seen).toBeGreaterThan(0);
+    const seen = await during(surface.ownerDocument, () => count);
+    expect(seen).toBeGreaterThanOrEqual(10);
     expect(seen).toBeLessThanOrEqual(MOST);
   });
 
@@ -170,9 +196,8 @@ describe('S2 a carousel that rotates every millisecond cannot flood the host', (
     await bridge.sendToolResult(
       surfaceToolResult({ actions: ['slide'], root: hiddenCarousel, version: 1 }, 'Highlights'),
     );
-    await wait(WINDOW_MS);
-    const seen = calls;
-    expect(seen).toBeGreaterThan(0);
+    const seen = await during(view.document, () => calls);
+    expect(seen).toBeGreaterThanOrEqual(10);
     expect(seen).toBeLessThanOrEqual(MOST);
     expect(messages.length).toBeLessThanOrEqual(MOST);
   });
