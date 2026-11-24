@@ -277,6 +277,23 @@ describe('dialog invoker commands', () => {
     expect(seen).toEqual([true]);
   });
 
+  it('keeps the dialog popup on an opener that renders again', async () => {
+    const fixture = await mount(trigger + dialog);
+    const button = buttonPart(fixture);
+    await expect.poll(() => button.getAttribute('aria-haspopup')).toBe('dialog');
+
+    // A prop change re-renders the opener without touching what the dialog
+    // invoker observes.
+    fixture.querySelector('#opener')?.setAttribute('variant', 'outline');
+    for (let frame = 0; frame < 3; frame += 1) {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+
+    expect(buttonPart(fixture)).toBe(button);
+    expect(button.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+  });
+
   it('tracks an opener added after the dialog and clears a removed target', async () => {
     const fixture = await mount(dialog);
     fixture.insertAdjacentHTML('afterbegin', trigger);
