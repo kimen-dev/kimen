@@ -48,7 +48,7 @@
     "@eslint/js": "10.0.1",
     "@kimen/nx-plugin": "workspace:*",
     "@nx/eslint-plugin": "24.0.6",
-    "@stencil/core": "4.45.3",
+    "@stencil/core": "4.45.4",
     "@stencil/vitest": "1.16.2",
     "@stryker-mutator/api": "10.1.1",
     "@stryker-mutator/core": "10.1.1",
