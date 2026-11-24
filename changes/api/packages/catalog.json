@@ -151,7 +151,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface LiveSurfaceOptions {\n    readonly surface: Element;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n    readonly actions?: readonly string[];\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly batchBudgets?: Partial<LiveBatchBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly onAction?: (event: LiveActionEvent) => void;\n    readonly allowUserStateOverride?: boolean;\n}"
+          "signature": "interface LiveSurfaceOptions {\n    readonly surface: Element;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n    readonly actions?: readonly string[];\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly batchBudgets?: Partial<LiveBatchBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly onAction?: (event: LiveActionEvent) => void;\n    readonly onDiagnostic?: (diagnostic: RenderDiagnostic) => void;\n    readonly allowUserStateOverride?: boolean;\n}"
         },
         "LiveTextOp": {
           "kinds": [
@@ -175,7 +175,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "export type PreflightOptions = Omit<RenderOptions, 'onAction' | 'surface'>;"
+          "signature": "export type PreflightOptions = Omit<RenderOptions, 'isLocalAction' | 'onAction' | 'onDiagnostic' | 'surface'>;"
         },
         "RegistrationIssue": {
           "kinds": [
@@ -193,7 +193,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface RenderBudgets {\n    readonly maxDepth: number;\n    readonly maxNodes: number;\n    readonly maxBytes: number;\n}"
+          "signature": "interface RenderBudgets {\n    readonly maxDepth: number;\n    readonly maxNodes: number;\n    readonly maxBytes: number;\n    readonly maxActionBurst?: number;\n    readonly actionRefillMs?: number;\n}"
         },
         "RenderDiagnostic": {
           "kinds": [
@@ -205,7 +205,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface RenderOptions {\n    readonly surface: Element;\n    readonly onAction?: (event: ActionEvent) => void;\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n}"
+          "signature": "interface RenderOptions {\n    readonly surface: Element;\n    readonly onAction?: (event: ActionEvent) => void;\n    readonly onDiagnostic?: (diagnostic: RenderDiagnostic) => void;\n    readonly isLocalAction?: (event: ActionEvent) => boolean;\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n}"
         },
         "RenderResult": {
           "kinds": [

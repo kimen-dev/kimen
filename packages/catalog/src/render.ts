@@ -13,6 +13,12 @@
  * SSR/DSD is a deferred bet.
  */
 import {
+  type ActionGate,
+  createActionGate,
+  DEFAULT_ACTION_BURST,
+  DEFAULT_ACTION_REFILL_MS,
+} from './action-budget.js';
+import {
   allocateDialogId,
   DIALOG_TAG,
   type DialogIdFor,
@@ -107,14 +113,25 @@ export interface ActionEvent {
  * size. A spec exactly at a budget passes (S14); one beyond it is rejected
  * before any node attaches (S9). The defaults are safe; a host may lower or
  * raise them, and the renderer never renders past the ones in force.
+ *
+ * The action-rate budget (spec 162) bounds what a rendered surface sends:
+ * at most `maxActionBurst` actions at once, then one more every
+ * `actionRefillMs`. Beyond it an action is held, and each binding delivers
+ * only its latest report.
  */
 export interface RenderBudgets {
   readonly maxDepth: number;
   readonly maxNodes: number;
   readonly maxBytes: number;
+  /** Actions a surface delivers at once before the refill interval applies (spec 162); default 10. */
+  readonly maxActionBurst?: number;
+  /** Milliseconds per further action once the burst is spent (spec 162); default 500. */
+  readonly actionRefillMs?: number;
 }
 
 export const DEFAULT_RENDER_BUDGETS: RenderBudgets = {
+  actionRefillMs: DEFAULT_ACTION_REFILL_MS,
+  maxActionBurst: DEFAULT_ACTION_BURST,
   maxBytes: 262_144,
   maxDepth: 32,
   maxNodes: 512,
@@ -129,6 +146,20 @@ export const ABSOLUTE_MAX_BYTES = 8 * 1_024 * 1_024;
 export interface RenderOptions {
   readonly surface: Element;
   readonly onAction?: (event: ActionEvent) => void;
+  /**
+   * Receives what goes wrong after the render: once, the first action the
+   * action-rate budget holds (spec 162). A rejected render is reported in
+   * its result, never here.
+   */
+  readonly onDiagnostic?: (diagnostic: RenderDiagnostic) => void;
+  /**
+   * Names the actions the host consumes itself and never sends on, such as
+   * the A2UI adapter's write-backs to its own data model (spec 162 S9). Such
+   * an action reaches `onAction` at once and spends nothing of the
+   * action-rate budget. Decide by what the host bound, never by spec data
+   * alone: a spec can choose any action name.
+   */
+  readonly isLocalAction?: (event: ActionEvent) => boolean;
   readonly budgets?: Partial<RenderBudgets>;
   /**
    * The catalog schema version the spec was authored against. When present
@@ -965,6 +996,12 @@ export function wireAction(
 interface BuildScope {
   readonly doc: Document;
   readonly onAction: ((event: ActionEvent) => void) | undefined;
+  /** The host-owned mount point: a held action is delivered only while its node is in it. */
+  readonly surface: Element;
+  /** The surface's action-rate budget (spec 162). */
+  readonly gate: ActionGate;
+  /** The actions the host consumes itself, which the budget never counts (spec 162 S9). */
+  readonly isLocalAction: ((event: ActionEvent) => boolean) | undefined;
   readonly entries: Readonly<Record<string, CatalogEntry>>;
   readonly idFor: DialogIdFor;
   readonly allowedUrlOrigins: readonly string[] | undefined;
@@ -1007,7 +1044,20 @@ function buildNode(node: UiSpecNode, path: string, scope: BuildScope): Element {
             (target) => scope.nodes.get(target),
             entries,
             (data) => {
-              onAction({ action, data, ...(id === undefined ? {} : { id }), path });
+              const event = { action, data, ...(id === undefined ? {} : { id }), path };
+              if (scope.isLocalAction?.(event) === true) {
+                onAction(event);
+                return;
+              }
+              scope.gate.offer({
+                action,
+                deliver: () => {
+                  onAction(event);
+                },
+                element,
+                path,
+                present: () => element.isConnected && scope.surface.contains(element),
+              });
             },
           ),
   );
@@ -1152,8 +1202,11 @@ export function toDiagnostic(issue: {
   return { message: issue.message, path: issue.path, rule: issue.code, value: issue.value };
 }
 
-/** The render options that decide a verdict: everything but the surface and the action channel. */
-export type PreflightOptions = Omit<RenderOptions, 'onAction' | 'surface'>;
+/** The render options that decide a verdict: everything but the surface and the action and diagnostic channels. */
+export type PreflightOptions = Omit<
+  RenderOptions,
+  'isLocalAction' | 'onAction' | 'onDiagnostic' | 'surface'
+>;
 
 /**
  * The guarded renderer's verdict on an untrusted UI spec, without a DOM
@@ -1206,9 +1259,12 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
         options.surface,
         referenceTargets(prepared.spec.root, catalog.components),
       ),
+      gate: createActionGate(budgets, options.onDiagnostic),
+      isLocalAction: options.isLocalAction,
       nodes: new Map(),
       onAction: options.onAction,
       sourceScope: Symbol(),
+      surface: options.surface,
     }),
   );
   return { diagnostics: [], ok: true };
@@ -1246,6 +1302,8 @@ export function createStreamingRenderer(
   const doc = ownerDocument(options.surface);
   const declaredActions = options.actions ?? [];
   const sourceScope = Symbol();
+  // One action-rate budget for the whole stream: every chunk is one surface (spec 162).
+  const gate = createActionGate(budgets, options.onDiagnostic);
   let accumulatedBytes = 0;
   let accumulatedNodes = 0;
   // Attach order of the next chunk: each top-level chunk is addressed as
@@ -1334,9 +1392,12 @@ export function createStreamingRenderer(
             options.surface,
             referenceTargets(report.spec.root, catalog.components),
           ),
+          gate,
+          isLocalAction: options.isLocalAction,
           nodes: new Map(),
           onAction: options.onAction,
           sourceScope,
+          surface: options.surface,
         }),
       );
       return { diagnostics: [], ok: true };
