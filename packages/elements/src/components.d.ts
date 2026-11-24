@@ -607,7 +607,7 @@ export namespace Components {
      */
     interface KiCarousel {
         /**
-          * Rotation interval in milliseconds. Omitting it leaves rotation off.
+          * Rotation interval in milliseconds. Omitting it leaves rotation off. Values below 5000 rotate every 5000 ms.
           * @minimum 1
           * @maximum 2147483647
          */
@@ -7795,7 +7795,7 @@ declare namespace LocalJSX {
      */
     interface KiCarousel {
         /**
-          * Rotation interval in milliseconds. Omitting it leaves rotation off.
+          * Rotation interval in milliseconds. Omitting it leaves rotation off. Values below 5000 rotate every 5000 ms.
           * @minimum 1
           * @maximum 2147483647
          */

@@ -28,3 +28,10 @@ records the measured additions.
 
 The carousel group measured 5.95 kB marginal and 24.98 kB with the
 Stencil runtime against the 9 kB and 25 kB element limits.
+
+Amendment A1 (rotation floor) was measured on macOS against main 3329aea1
+by rebuilding with and without the change. It adds 148 / 77 / 142 B to the
+MCP Apps document and 190 / 84 / −32 B to kimen-mcp (raw / gzip / brotli):
+the clamp, the development warning and the longer `autoplay` description,
+which kimen-mcp embeds. The positive marginals are added to the carousel's
+`sizeBudget`.

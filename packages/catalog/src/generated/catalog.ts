@@ -707,7 +707,7 @@ export const catalogData = {
       "props": {
         "autoplay": {
           "type": "number",
-          "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+          "description": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
           "minimum": 1,
           "maximum": 2147483647
         },

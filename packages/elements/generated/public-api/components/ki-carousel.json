@@ -4,7 +4,7 @@
       "autoplay": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+        "description": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
         "replacement": null,
         "required": false,
         "type": "number | undefined"
@@ -421,7 +421,7 @@
       "autoplay": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+        "description": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
         "replacement": null,
         "required": false,
         "type": "number | undefined"
