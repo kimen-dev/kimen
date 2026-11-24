@@ -13,6 +13,12 @@ In momentary mode `type` defaults to `submit`. Use `type="button"` for an indepe
 </form>
 ```
 
+A call to action that navigates takes `href`: the button renders a native link with the same look. Enter follows it, it never submits its form, and `target="_blank"` without `rel` gets `rel="noreferrer noopener"`.
+
+```html
+<ki-button variant="primary" href="/start">Get started</ki-button>
+```
+
 Use `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.
 
 ```html
@@ -71,4 +77,22 @@ While the action a button started is in progress, set `loading` on it instead of
     }
   });
 </script>
+```
+
+A wide button that reads like a card, such as a two-line choice, start-aligns its content and its lines through two tokens (both `center` by default):
+
+```html
+<style>
+  .choice {
+    --ki-button-justify-content: start;
+    --ki-button-text-align: start;
+    display: block;
+  }
+  .choice::part(button) {
+    inline-size: 100%;
+  }
+</style>
+<ki-button class="choice" variant="outline" toggle>
+  <strong>Starter</strong><br />One agent, one repository
+</ki-button>
 ```

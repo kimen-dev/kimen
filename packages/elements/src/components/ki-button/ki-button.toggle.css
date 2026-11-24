@@ -29,7 +29,7 @@
 }
 
 /* Outline is also available to momentary buttons. */
-:host([variant="outline"]) button:enabled,
+:host([variant="outline"]) :is(button:enabled, a[href]),
 :host([toggle]) button:enabled {
   --_ki-button-bg: var(--_ki-button-unselected-bg);
   --_ki-button-fg: var(--_ki-button-unselected-fg);

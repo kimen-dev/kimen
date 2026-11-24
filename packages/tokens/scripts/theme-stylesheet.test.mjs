@@ -31,9 +31,10 @@ import {
   themeOverrides,
 } from './theme-stylesheet.mjs';
 
-test('private foundations: onmars v2 literals and the Material 3 text inks, nothing else', () => {
+test('private foundations: onmars v2 literals, CSS keywords and the Material 3 text inks, nothing else', () => {
   assert.equal(isPrivateFoundation(['onmars-v2', 'palette']), true);
   assert.equal(isPrivateFoundation(['material3', 'text-ink']), true);
+  assert.equal(isPrivateFoundation(['keyword', 'center']), true);
   assert.equal(isPrivateFoundation(['material3', 'palette']), false);
   assert.equal(isPrivateFoundation(['migrated', 'themes-onmars']), false);
 });

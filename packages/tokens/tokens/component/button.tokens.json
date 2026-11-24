@@ -207,6 +207,16 @@
         "$value": "{ki.space.xs}",
         "$description": "dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance)."
       },
+      "justify-content": {
+        "$type": "other",
+        "$value": "{ki.foundation.keyword.center}",
+        "$description": "Placement of the button content; start for a card."
+      },
+      "text-align": {
+        "$type": "other",
+        "$value": "{ki.foundation.keyword.center}",
+        "$description": "Alignment of the label lines."
+      },
       "backdrop-blur": {
         "$value": "{ki.effect.component.backdrop-blur}",
         "$type": "dimension",

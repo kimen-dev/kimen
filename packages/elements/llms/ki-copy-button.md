@@ -106,6 +106,7 @@ None.
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-justify-content`: Placement of the button content; start for a card.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
 - `--ki-button-lg-gap`: dimension used by the button component for lg gap.
@@ -252,6 +253,7 @@ None.
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-text-align`: Alignment of the label lines.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.

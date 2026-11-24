@@ -287,7 +287,7 @@ describe('language-model index and documents', () => {
       expect(whenToUse.slice(note.length)).toMatch(/^$|^\s+[A-Z]/u);
     }
     expect(components.find((link) => link.name === 'ki-button')?.note).toBe(
-      'trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, or persistent actions such as Bold with `toggle`.',
+      'trigger the single main action of a view, supporting actions in descending hierarchy, confirming/destructive actions through tone, persistent actions such as Bold with `toggle`, or with `href` a call to action that navigates.',
     );
   });
 
@@ -385,8 +385,11 @@ describe('language-model index and documents', () => {
     expect(documentNamed(documents, 'ki-avatar.md')).toContain(
       '- `src` (string | undefined, URL): ',
     );
+    expect(documentNamed(documents, 'ki-button.md')).toContain(
+      '- `href` (string | undefined, URL): ',
+    );
     // Nothing is marked that the contract does not declare.
-    expect(documentNamed(documents, 'ki-button.md')).not.toMatch(
+    expect(documentNamed(documents, 'ki-switch.md')).not.toMatch(
       /^- `[^`]+` \([^)]*(?:required|minimum|maximum|URL)[^)]*\): /mu,
     );
     // The complete summary renders attributes through the same lines.
