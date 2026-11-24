@@ -171,7 +171,7 @@ describe('155 — what counts as delivered', () => {
   it('an action its collected fields block delivers nothing', () => {
     const { add, live, onAction, title } = form();
     type(title, 'Buy milk');
-    title['reportValidity'] = () => false;
+    title['checkValidity'] = () => false;
     press(add);
     expect(onAction).not.toHaveBeenCalled();
 
