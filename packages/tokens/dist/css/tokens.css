@@ -3126,6 +3126,7 @@
   --ki-switch-well-bg-start:var(--ki-surface-s3);
   --ki-switch-well-bg-end:var(--ki-surface-s1);
   --ki-switch-thumb-radius:var(--ki-radius-component-xs);
+  --ki-switch-thumb-shadow:var(--ki-effect-small-dark-shadow);
   --ki-switch-border-width:var(--ki-size-border-hairline);
   --ki-switch-min-target:var(--ki-space-9xl);
   --ki-switch-glyph-width:var(--ki-space-md);

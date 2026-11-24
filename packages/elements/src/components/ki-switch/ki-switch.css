@@ -252,12 +252,13 @@ input {
 /* MarsUI pointer (master 10023:1125, md): 22x18 — wider than tall — and it
    ALWAYS carries Small_dark_shadow (drop 0/2/3/-1.5 Elevation/shadow_dark:
    Black/32 light, Black/48 dark). The shadow is what separates the dark-scheme
-   thumb from the dark track. */
+   thumb from the dark track. It is the switch's own token, so a theme can
+   restyle or drop it without redefining the shared effect. */
 [part="thumb"] {
   background-color: var(--_ki-switch-thumb);
   block-size: var(--_ki-switch-thumb-size);
   border-radius: var(--_ki-switch-thumb-radius);
-  box-shadow: var(--ki-effect-small-dark-shadow);
+  box-shadow: var(--ki-switch-thumb-shadow);
   display: inline-grid;
   inline-size: var(--_ki-switch-thumb-width);
   inset-block-start: calc((100% - var(--_ki-switch-thumb-size)) / 2);
