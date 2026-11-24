@@ -132,12 +132,16 @@ used). A themed subtree redeclares every token on its own root so that every
 alias is recomputed there; that is also the element to reassign tokens on,
 palette included — `[data-ki-theme='acme'] { --ki-color-brand-500: … }`
 restyles every semantic token, tint and translucent variant built on that
-step inside the region. The name can be any name: one without a theme
-stylesheet starts from onmars. A reassignment on a plain element (`.acme`)
-changes that custom property and none of the tokens that alias it, so the
-region keeps the page's semantic values. Page aliases of Kimen tokens follow
-the same rule: declare them on `:root, [data-ki-theme]`. Neither attribute
-paints the element that carries it: give a region its surface with
+step inside the region. A name without a theme stylesheet starts from
+onmars, so on a page with its own theme a region that adjusts a few tokens
+repeats that theme's name (`<section data-ki-theme="acme" class="sheet">`,
+the `.sheet` rule after the theme rule); another name drops the page theme.
+A reassignment on a plain element (`.acme`) changes that custom property and
+none of the tokens that alias it, so the region keeps the page's semantic
+values and component tokens such as `--ki-button-*`. Page aliases of Kimen
+tokens follow the same rule: declare them on `:root, [data-ki-theme]`.
+Neither attribute paints the element that carries it: give a region its
+surface with
 `background-color: var(--ki-surface-s0); color: var(--ki-text-high-em)`.
 
 ### Preference modes
