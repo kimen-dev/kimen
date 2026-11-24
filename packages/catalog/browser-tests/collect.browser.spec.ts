@@ -301,6 +301,41 @@ describe('a collecting node asks every field for validity before its action leav
     expect(document.activeElement).toBe(byLabel('Title'));
   });
 
+  it('S13 only the field that takes the focus opens the browser bubble; every invalid field shows its message', async () => {
+    // An engine shows one validation bubble at a time, and with several
+    // `reportValidity()` calls in a row Chromium leaves it on a field other
+    // than the focused one (found in the Claude desktop app, 2026-11-24).
+    const actions = mount(
+      [
+        { component: 'acme-text', id: 'title', label: 'Title', required: true },
+        { component: 'acme-text', id: 'owner', label: 'Owner', required: true },
+        { component: 'acme-text', id: 'notes', label: 'Notes', required: true },
+      ],
+      ['owner', 'title', 'notes'],
+    );
+    const reported: string[] = [];
+    for (const label of ['Title', 'Owner', 'Notes']) {
+      const field = byLabel(label);
+      if (!(field instanceof AcmeText)) {
+        throw new Error(`${label} is not a text field`);
+      }
+      const report = field.reportValidity.bind(field);
+      field.reportValidity = (): boolean => {
+        reported.push(label);
+        return report();
+      };
+    }
+
+    await activateAdd();
+
+    expect(actions).toEqual([]);
+    expect(reported).toEqual(['Title']);
+    expect(document.activeElement).toBe(byLabel('Title'));
+    for (const label of ['Title', 'Owner', 'Notes']) {
+      expect(byLabel(label).shownMessage).not.toBe('');
+    }
+  });
+
   it('S4 a live surface asks its collected fields too', async () => {
     const actions: ActionEvent[] = [];
     const live = createLiveSurface({

@@ -70,6 +70,14 @@ Feature: An action collects the values of other fields
       Then the host receives no action
       And the focus is on "Assignee"
 
+    # S13
+    Scenario: The browser's own message for a blocked action opens on the field that takes the focus
+      Given a spec whose "Add" button collects the required text field "Title" and the number field "Quantity", shown in that order
+      And the person left "Title" empty and typed "two" in "Quantity"
+      When the person activates "Add"
+      Then the host receives no action
+      And the focus and the browser's own validation message are on "Title", and "Quantity" shows its own message
+
   Rule: A collect that cannot work is rejected whole
 
     # S7
