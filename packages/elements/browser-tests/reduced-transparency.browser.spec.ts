@@ -19,6 +19,7 @@ import {
   hueOf,
   installKimen,
   isOpaque,
+  loadOwnTheme,
   mount,
   parseColor,
   resetPreferences,
@@ -280,11 +281,9 @@ describe('044 reduced transparency from other activations', () => {
   });
 
   it("S11: a page's own opaque value for a glass surface wins", async (context) => {
-    const own = document.createElement('style');
-    own.textContent =
-      '@media (prefers-reduced-transparency: reduce) {' +
-      ' :root { --ki-surface-special-blur-base-light: #fafafa; } }';
-    document.head.append(own);
+    const removeOwn = loadOwnTheme(
+      ':root { --ki-reduced-transparency-surface-special-blur-base-light: #fafafa; }',
+    );
     try {
       const fixture = await mount(SELECT);
       await underTransparency('reduce', context);
@@ -294,7 +293,69 @@ describe('044 reduced transparency from other activations', () => {
       expect([painted.r, painted.g, painted.b].map(Math.round)).toEqual([250, 250, 250]);
       expect(isOpaque(listbox)).toBe(true);
     } finally {
-      own.remove();
+      removeOwn();
+    }
+  });
+});
+
+// Amendment A1: the mode applies over any theme, and a theme chooses its own
+// mode values through the mode tokens. The theme here is the page's own,
+// loaded after Kimen's stylesheets, as an integrator ships one.
+describe("044 reduced transparency over a theme of the page's own", () => {
+  const ACME =
+    "[data-ki-theme='acme'] { --ki-surface-special-blur-base-light: rgba(250, 250, 250, 0.5); }";
+
+  function themeAcme(): void {
+    document.documentElement.setAttribute('data-ki-theme', 'acme');
+    document.documentElement.setAttribute('data-ki-color-scheme', 'light');
+  }
+
+  it("S12: reduced transparency applies over a theme of the page's own", async (context) => {
+    const removeAcme = loadOwnTheme(ACME);
+    try {
+      themeAcme();
+      await underTransparency('no-preference', context);
+      const fixture = await mount(SELECT);
+      const listbox = await openSelect(fixture);
+      expect(isOpaque(listbox), 'the theme paints translucent glass').toBe(false);
+
+      await underTransparency('reduce', context);
+      expectSolid(listbox, 'listbox');
+    } finally {
+      removeAcme();
+    }
+  });
+
+  it("S13: a declared transparency applies over a theme of the page's own", async (context) => {
+    const removeAcme = loadOwnTheme(ACME);
+    try {
+      themeAcme();
+      document.documentElement.setAttribute('data-ki-transparency', 'reduce');
+      await underTransparency('no-preference', context);
+      const fixture = await mount(SELECT);
+
+      expectSolid(await openSelect(fixture), 'listbox');
+    } finally {
+      removeAcme();
+    }
+  });
+
+  it("S14: a theme of the page's own chooses its reduced-transparency values", async (context) => {
+    const removeAcme = loadOwnTheme(
+      "[data-ki-theme='acme'] { --ki-surface-special-blur-base-light: rgba(250, 250, 250, 0.5);" +
+        ' --ki-reduced-transparency-surface-special-blur-base-light: #fafafa; }',
+    );
+    try {
+      document.documentElement.setAttribute('data-ki-color-scheme', 'light');
+      const fixture = await mount(`<section data-ki-theme="acme">${SELECT}</section>`);
+      await underTransparency('reduce', context);
+      const listbox = await openSelect(fixture);
+
+      const painted = surfaceOf(listbox);
+      expect([painted.r, painted.g, painted.b].map(Math.round)).toEqual([250, 250, 250]);
+      expect(isOpaque(listbox)).toBe(true);
+    } finally {
+      removeAcme();
     }
   });
 });

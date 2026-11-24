@@ -677,6 +677,15 @@
       "shadow": {
         "$value": "{ki.elevation.e3}"
       }
+    },
+    "reduced-transparency": {
+      "alert": {
+        "neutral": {
+          "icon-bg": {
+            "$value": "{ki.alert.neutral.bg}"
+          }
+        }
+      }
     }
   }
 }

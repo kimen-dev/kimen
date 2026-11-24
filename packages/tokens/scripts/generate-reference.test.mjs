@@ -64,9 +64,10 @@ test('a reference without deprecated tokens has no deprecated-tokens section', (
   assert.doesNotMatch(renderReference([tokens[0], tokens[2]]), /Deprecated tokens/u);
 });
 
-// The list a theme restates under each mode (spec 043): generated from the
-// mode the stylesheet emits, so it cannot drift from it.
-test('the token reference lists every token each preference mode reassigns, with its mode value', () => {
+// What each mode reassigns and the token a theme sets to choose its value
+// (specs 043/044): generated from the modes the stylesheet emits, so it
+// cannot drift from them.
+test('the token reference lists every token each preference mode reassigns, with its mode token and value', () => {
   const mdx = renderReference(tokens, {
     modes: [
       {
@@ -76,11 +77,15 @@ test('the token reference lists every token each preference mode reassigns, with
           activations: ["[data-ki-contrast='more']"],
         },
         declarations: new Map([
-          ['--ki-outline-control', 'var(--ki-inverse-white-alpha-64)'],
-          ['--ki-focus-ring-width', 'var(--ki-shadow-ring)'],
+          ['--ki-outline-control', 'var(--ki-contrast-more-outline-control)'],
+          ['--ki-focus-ring-width', 'var(--ki-contrast-more-focus-ring-width)'],
         ]),
       },
     ],
+    modeValues: new Map([
+      ['--ki-contrast-more-outline-control', 'var(--ki-inverse-white-alpha-64)'],
+      ['--ki-contrast-more-focus-ring-width', 'var(--ki-shadow-ring)'],
+    ]),
   });
   const section = mdx.slice(
     mdx.indexOf('## Preference modes'),
@@ -89,7 +94,10 @@ test('the token reference lists every token each preference mode reassigns, with
 
   assert.match(section, /^### contrast-more$/mu);
   assert.match(section, /`@media \(prefers-contrast: more\)`/u);
-  assert.match(section, /^\| `--ki-outline-control` \| `var\(--ki-inverse-white-alpha-64\)` \|$/mu);
+  assert.match(
+    section,
+    /^\| `--ki-outline-control` \| `--ki-contrast-more-outline-control` \| `var\(--ki-inverse-white-alpha-64\)` \|$/mu,
+  );
   assert.ok(
     section.indexOf('--ki-focus-ring-width') < section.indexOf('--ki-outline-control'),
     'tokens are sorted by name',

@@ -168,9 +168,14 @@ function stripComments(css) {
   return css.replace(/\/\*[\s\S]*?\*\//gu, '');
 }
 
+const IMPORTANT = /\s*!\s*important$/iu;
+
+// An important declaration (a mode re-pointing a token, specs 043/044)
+// outranks every normal one, whatever comes later: it is merged apart and
+// applied last, as the cascade does.
 function mergeDeclarations(target, declarations) {
-  for (const [name, value] of declarations) {
-    target.set(name, value);
+  for (const [name, { value, important }] of declarations) {
+    (important ? target.important : target.normal).set(name, value);
   }
 }
 
@@ -179,10 +184,34 @@ function declarationsFromBlock(block) {
   const declarationPattern = /(--ki-[\w-]+)\s*:\s*([^;]+);/gu;
 
   for (const match of block.matchAll(declarationPattern)) {
-    declarations.set(match[1], match[2].trim());
+    const value = match[2].trim();
+    declarations.set(match[1], {
+      value: value.replace(IMPORTANT, ''),
+      important: IMPORTANT.test(value),
+    });
   }
 
   return declarations;
+}
+
+// The value a token takes under a mode is a token of its own
+// (`--ki-contrast-more-outline-control`), read only by the mode rule that
+// re-points the token to it. It is an input, not a painted cell: fold it into
+// the token it feeds, so every sweep below measures painted tokens alone, in
+// the context where each value applies.
+const MODE_VALUE = /^--ki-(?:contrast-more|reduced-transparency)-/u;
+
+function foldModeValues(declarations) {
+  const folded = new Map();
+  for (const [name, value] of declarations) {
+    if (MODE_VALUE.test(name)) continue;
+    const reference = /^var\((--ki-[\w-]+)\)$/u.exec(value)?.[1];
+    folded.set(
+      name,
+      reference !== undefined && MODE_VALUE.test(reference) ? declarations.get(reference) : value,
+    );
+  }
+  return folded;
 }
 
 // Replace every `light-dark(a, b)` in a value with the branch of one scheme
@@ -265,15 +294,16 @@ function topLevelRules(css) {
 }
 
 export function collectSchemeDeclarations(css, activation = null) {
-  const declarations = new Map();
+  const merged = { normal: new Map(), important: new Map() };
 
   for (const { prelude, body } of topLevelRules(stripComments(css))) {
     if (prelude.startsWith('@')) continue;
     if (MODE_DECLARATION.test(prelude) && (activation === null || !prelude.includes(activation))) {
       continue;
     }
-    mergeDeclarations(declarations, declarationsFromBlock(body));
+    mergeDeclarations(merged, declarationsFromBlock(body));
   }
+  const declarations = foldModeValues(new Map([...merged.normal, ...merged.important]));
 
   const forScheme = (branch) =>
     new Map([...declarations].map(([name, value]) => [name, selectScheme(value, branch)]));

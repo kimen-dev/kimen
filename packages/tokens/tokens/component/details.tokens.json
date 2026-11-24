@@ -73,6 +73,15 @@
         "$value": "{ki.motion.easing.standard}",
         "$description": "Easing of the chevron rotation."
       }
+    },
+    "contrast-more": {
+      "details": {
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "--ki-details-border under more contrast: an edge at 3:1 or more against the page."
+        }
+      }
     }
   }
 }

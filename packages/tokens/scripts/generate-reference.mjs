@@ -16,13 +16,13 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import StyleDictionary from 'style-dictionary';
 
-import { darkConfig, lightConfig, sharedConfig, withMode } from '../style-dictionary.config.mjs';
+import { darkConfig, lightConfig, sharedConfig } from '../style-dictionary.config.mjs';
 import { deprecationNote, readDeprecation } from './deprecation.mjs';
 import {
   combineSchemes,
   compositionDeclarations,
-  layeredOverrides,
-  MODES,
+  modeReassignments,
+  modeValueName,
 } from './theme-stylesheet.mjs';
 
 const OUTPUT_URL = new URL('../../elements/docs/tokens-reference.mdx', import.meta.url);
@@ -119,12 +119,12 @@ function renderDeprecatedSection(tokens) {
 }
 
 /**
- * What each preference mode reassigns in the default theme (specs 043/044),
- * with the expression it gives each token. A theme that sets one of these
- * tokens sets it for the mode too, so the list is the exact set a theme
- * restates under the mode.
+ * What each preference mode reassigns (specs 043/044): every token with a
+ * mode value, the token that holds it, and that value in onmars. The mode
+ * re-points the token over any theme; a theme sets the mode token to choose
+ * its own value.
  */
-function renderModesSection(modes) {
+function renderModesSection(modes, values) {
   if (modes.length === 0) return [];
   const section = modes.flatMap(({ mode, declarations }) => [
     `### ${mode.name}`,
@@ -132,28 +132,29 @@ function renderModesSection(modes) {
     `Active under \`@media ${escapeCode(mode.media)}\` and on a token root carrying, or inside one`,
     `carrying, ${mode.activations.map((activation) => `\`${activation}\``).join(' or ')}.`,
     '',
-    '| Token | Value under the mode (onmars) |',
-    '| --- | --- |',
-    ...[...declarations]
-      .toSorted(([left], [right]) => compareText(left, right))
-      .map(([name, expression]) => `| \`${name}\` | \`${escapeCode(expression)}\` |`),
+    '| Token | Mode token | Value (onmars) |',
+    '| --- | --- | --- |',
+    ...[...declarations.keys()].toSorted(compareText).map((name) => {
+      const modeValue = modeValueName(mode, name);
+      return `| \`${name}\` | \`${modeValue}\` | \`${escapeCode(values.get(modeValue))}\` |`;
+    }),
     '',
   ]);
   return [
     '## Preference modes',
     '',
-    'The tokens each mode reassigns, on top of the active theme. A theme that',
-    'sets one of them in its own rule replaces the mode value too, because both',
-    'rules declare the same property on the same element: restate it under the',
-    "mode's media query and declaration (see *Docs → Tokens & theming*). More",
-    'contrast also applies reduced transparency.',
+    'The tokens each mode reassigns, on top of the active theme. Under the mode',
+    "each one takes its mode token's value, declared `!important` on the root and",
+    'on theme roots, so the mode applies over any theme. A theme chooses its own',
+    'mode value by setting the mode token, never the token itself (see *Docs →',
+    'Tokens & theming*). More contrast also applies reduced transparency.',
     '',
     ...section,
   ];
 }
 
 /** The reference MDX for Style Dictionary platform tokens of the onmars light composition. */
-export function renderReference(allTokens, { modes = [] } = {}) {
+export function renderReference(allTokens, { modes = [], modeValues = new Map() } = {}) {
   const semanticTokens = allTokens.filter((token) => token.filePath === SEMANTIC_FILE);
   const componentTokens = allTokens.filter((token) => token.filePath.startsWith(COMPONENT_DIR));
   const semanticGroups = groupBy(semanticTokens, (token) => token.path[1]);
@@ -202,7 +203,7 @@ export function renderReference(allTokens, { modes = [] } = {}) {
     'aliases is recomputed only on the root and on theme roots.',
     '',
     ...renderSections(componentGroups, (key) => `\`ki-${key}\``),
-    ...renderModesSection(modes),
+    ...renderModesSection(modes, modeValues),
     ...renderDeprecatedSection(allTokens),
   ];
 
@@ -217,22 +218,13 @@ async function composition(config) {
   return compositionDeclarations(dictionary);
 }
 
-// The same layering ../build.mjs emits: each mode as what the default rule and
-// the modes before it do not already produce.
+// The modes ../build.mjs emits, with the onmars expression of each mode token.
 async function defaultThemeModes() {
-  const onmars = async (mode) =>
-    combineSchemes({
-      light: await composition(mode ? withMode(lightConfig, mode) : lightConfig),
-      dark: await composition(mode ? withMode(darkConfig, mode) : darkConfig),
-    });
-  const layers = [await onmars()];
-  const modes = [];
-  for (const mode of MODES) {
-    const declarations = layeredOverrides({ target: await onmars(mode.name), layers });
-    layers.push(declarations);
-    modes.push({ mode, declarations });
-  }
-  return modes;
+  const onmars = combineSchemes({
+    light: await composition(lightConfig),
+    dark: await composition(darkConfig),
+  });
+  return { modes: modeReassignments(onmars), modeValues: onmars };
 }
 
 async function main() {
@@ -248,7 +240,7 @@ async function main() {
     ...token,
     $value: values.get(token.name),
   }));
-  await writeFile(OUTPUT_URL, renderReference(allTokens, { modes: await defaultThemeModes() }));
+  await writeFile(OUTPUT_URL, renderReference(allTokens, await defaultThemeModes()));
   const published = allTokens.filter(
     (token) => token.filePath === SEMANTIC_FILE || token.filePath.startsWith(COMPONENT_DIR),
   );

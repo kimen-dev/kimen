@@ -118,6 +118,27 @@
           "$description": "Text color of the event summary and details."
         }
       }
+    },
+    "contrast-more": {
+      "timeline": {
+        "dot": {
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.supporting}",
+            "$description": "--ki-timeline-dot-fg under more contrast: the strengthened neutral ink."
+          }
+        },
+        "line": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "--ki-timeline-line under more contrast: the connector at 3:1 or more."
+        },
+        "time-fg": {
+          "$type": "color",
+          "$value": "{ki.text.supporting}",
+          "$description": "--ki-timeline-time-fg under more contrast: the strengthened neutral ink."
+        }
+      }
     }
   }
 }

@@ -2682,6 +2682,96 @@
         "$value": "{ki.size.surface.md}",
         "$description": "Maximum inline size of a self-contained media control panel."
       }
+    },
+    "contrast-more": {
+      "$description": "More contrast (spec 043): the value each token takes under `prefers-contrast: more` or `data-ki-contrast=\"more\"`. The mode re-points each token to its value here with !important, so it applies over any theme; a theme chooses its own mode values by setting these. Neutral text reaches 7:1, neutral control boundaries 4.5:1, separators and container edges 3:1, the focus ring 3px. Text on brand and tone fills, brand and tone boundaries and disabled controls are unchanged (spec 043 D1, D2). Component tokens of the mode live in their component files.",
+      "text": {
+        "supporting": {
+          "$type": "color",
+          "$value": "{ki.inverse-white.alpha-72}",
+          "$description": "--ki-text-supporting under more contrast: enabled supporting text at 7:1 or more; the med-em step stays, as disabled ink draws from it."
+        }
+      },
+      "outline": {
+        "control": {
+          "$type": "color",
+          "$value": "{ki.inverse-white.alpha-64}",
+          "$description": "--ki-outline-control under more contrast: control boundaries at 4.5:1 or more against s0-s2."
+        },
+        "control-hover": {
+          "$type": "color",
+          "$value": "{ki.inverse-white.alpha-72}",
+          "$description": "--ki-outline-control-hover under more contrast: the hovered control boundary, a step beyond the rest one."
+        }
+      },
+      "focus": {
+        "ring-width": {
+          "$type": "dimension",
+          "$value": "{ki.shadow.ring}",
+          "$description": "--ki-focus-ring-width under more contrast: a 3px keyboard focus ring."
+        }
+      }
+    },
+    "reduced-transparency": {
+      "$description": "Reduced transparency (spec 044): the value each token takes under `prefers-reduced-transparency: reduce`, `data-ki-transparency=\"reduce\"` or more contrast. The mode re-points each token to its value here with !important, so it applies over any theme; a theme chooses its own mode values by setting these. Every surface that holds content becomes the opaque surface it reads as over the page, and nothing blurs what is behind it; state washes, disabled fills and the modal scrim keep their alpha (spec 044 D1).",
+      "surface": {
+        "special": {
+          "blur-base-light": {
+            "$type": "color",
+            "$value": "{ki.surface.special.light-s0-dark-s3}",
+            "$description": "--ki-surface-special-blur-base-light under reduced transparency: the opaque surface it reads as over the page."
+          },
+          "blur-base-dark": {
+            "$type": "color",
+            "$value": "{ki.surface.special.light-s0-dark-s3}",
+            "$description": "--ki-surface-special-blur-base-dark under reduced transparency: the opaque surface it reads as over the page."
+          },
+          "secondary-alpha-base": {
+            "$type": "color",
+            "$value": "{ki.surface.special.light-s2-dark-s3}",
+            "$description": "--ki-surface-special-secondary-alpha-base under reduced transparency: the opaque surface it reads as over the page."
+          }
+        },
+        "primary-tint": {
+          "$type": "color",
+          "$value": "{ki.surface.primary-low-em}",
+          "$description": "--ki-surface-primary-tint under reduced transparency: the opaque surface it reads as over the page."
+        },
+        "info-tint": {
+          "$type": "color",
+          "$value": "{ki.surface.info-base-em}",
+          "$description": "--ki-surface-info-tint under reduced transparency: the opaque surface it reads as over the page."
+        },
+        "success-tint": {
+          "$type": "color",
+          "$value": "{ki.surface.success-base-em}",
+          "$description": "--ki-surface-success-tint under reduced transparency: the opaque surface it reads as over the page."
+        },
+        "warning-tint": {
+          "$type": "color",
+          "$value": "{ki.surface.warning-base-em}",
+          "$description": "--ki-surface-warning-tint under reduced transparency: the opaque surface it reads as over the page."
+        },
+        "danger-tint": {
+          "$type": "color",
+          "$value": "{ki.surface.danger-base-em}",
+          "$description": "--ki-surface-danger-tint under reduced transparency: the opaque surface it reads as over the page."
+        }
+      },
+      "effect": {
+        "component": {
+          "backdrop-filter": {
+            "$type": "other",
+            "$value": "none",
+            "$description": "--ki-effect-component-backdrop-filter under reduced transparency: no backdrop effect."
+          },
+          "listbox-backdrop-filter": {
+            "$type": "other",
+            "$value": "none",
+            "$description": "--ki-effect-component-listbox-backdrop-filter under reduced transparency: no backdrop effect."
+          }
+        }
+      }
     }
   }
 }

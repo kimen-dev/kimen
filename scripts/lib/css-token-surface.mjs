@@ -26,7 +26,10 @@ const DEFAULT_THEME_SELECTOR = ':root,:where([data-ki-theme])';
  * The modes (specs 043/044), in the order a stylesheet must declare them.
  * Each is published, when the default stylesheet declares it, as one context
  * per scheme. A mode is a media-query block and a declaration rule carrying
- * the same declarations; `activations` lists the declarations that switch it
+ * the same declarations, every one `!important` and re-pointing a token to
+ * the token that holds its value under the mode (`--ki-<mode>-<token>`), so
+ * the mode applies over any theme and a theme chooses its mode values by
+ * setting those tokens. `activations` lists the declarations that switch it
  * on, the first being its own, so more contrast also applies the reduced
  * transparency block. Selectors are compared with their whitespace collapsed,
  * not removed: a descendant combinator is part of the contract.
@@ -51,24 +54,14 @@ const MODE_CONTRACT = [
  */
 const DENSITY_CONTRACT = ['compact', 'touch'];
 
-function modeSelectors(mode, theme) {
+function modeSelectors(mode) {
   const activation = mode.activations.join(', ');
-  if (theme === undefined) {
-    return {
-      preference: ':root, :where([data-ki-theme])',
-      declared: [
-        `:root:where(${activation})`,
-        `:where([data-ki-theme]:is(${activation}))`,
-        `:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`,
-      ].join(', '),
-    };
-  }
   return {
-    preference: `:root[data-ki-theme='${theme}'], [data-ki-theme='${theme}']`,
+    preference: ':root, :where([data-ki-theme])',
     declared: [
-      `:root[data-ki-theme='${theme}']:where(${activation})`,
-      `[data-ki-theme='${theme}']:where(${activation})`,
-      `[data-ki-theme='${theme}']:where(:is(:root, [data-ki-theme]):is(${activation}) *)`,
+      `:root:where(${activation})`,
+      `:where([data-ki-theme]:is(${activation}))`,
+      `:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`,
     ].join(', '),
   };
 }
@@ -228,9 +221,19 @@ function plainDeclarations(body, label) {
   return result;
 }
 
-function declarations(body, label, privateNames = new Set()) {
+const IMPORTANT = /\s*!\s*important$/iu;
+
+/**
+ * The custom properties a rule declares. Only a mode's rules are `!important`,
+ * and every declaration in them is: `important` says which kind `body` is.
+ */
+function declarations(body, label, privateNames = new Set(), { important = false } = {}) {
   const result = new Map();
-  for (const [name, value] of plainDeclarations(body, label)) {
+  for (const [name, declared] of plainDeclarations(body, label)) {
+    if (IMPORTANT.test(declared) !== important) {
+      throw new Error(`${label} declares ${name}${important ? ' without' : ' with'} !important`);
+    }
+    const value = declared.replace(IMPORTANT, '');
     if ((!CUSTOM_PROPERTY.test(name) && !privateNames.has(name)) || value === '') {
       throw new Error(`${label} contains unsupported declaration ${name || '<empty>'}`);
     }
@@ -481,18 +484,18 @@ function sameDeclarations(left, right) {
 }
 
 /**
- * The mode blocks that follow a stylesheet's own rule: for each mode of the
- * contract, in order, either nothing or its preference block (one rule) and
- * its declaration rule, with exactly the same declarations, each a token the
- * stylesheet's contract already declares.
+ * The mode blocks that follow the default stylesheet's own rules: for each
+ * mode of the contract, in order, either nothing or its preference block (one
+ * rule) and its declaration rule, with exactly the same declarations, each
+ * re-pointing a token the stylesheet declares to its declared mode value.
  */
-function modeDeclarations(rules, { label, theme, known }) {
+function modeDeclarations(rules, { label, known }) {
   const modes = new Map();
   let index = 0;
   for (const mode of MODE_CONTRACT) {
     const preference = rules[index];
     if (preference?.media !== mode.media) continue;
-    const selectors = modeSelectors(mode, theme);
+    const selectors = modeSelectors(mode);
     const [inner, ...extra] = preference.nested;
     const declared = rules[index + 1];
     if (
@@ -506,30 +509,41 @@ function modeDeclarations(rules, { label, theme, known }) {
     ) {
       throw new Error(`${label} contains an unsupported public rule for mode ${mode.name}`);
     }
-    const underPreference = declarations(inner.body, `${label} ${mode.media}`);
-    const underDeclaration = declarations(declared.body, `${label} rule ${declared.prelude}`);
+    const important = { important: true };
+    const underPreference = declarations(
+      inner.body,
+      `${label} ${mode.media}`,
+      new Set(),
+      important,
+    );
+    const underDeclaration = declarations(
+      declared.body,
+      `${label} rule ${declared.prelude}`,
+      new Set(),
+      important,
+    );
     if (!sameDeclarations(underPreference, underDeclaration)) {
       throw new Error(
         `${label} mode ${mode.name} declares different tokens under its preference and its declaration`,
       );
     }
-    for (const name of underDeclaration.keys()) {
+    for (const [name, value] of underDeclaration) {
       if (!known.has(name)) {
         throw new Error(
           `${label} mode ${mode.name} declares ${name}, which the token rule does not`,
+        );
+      }
+      const modeValue = `--ki-${mode.name}-${name.slice('--ki-'.length)}`;
+      if (value !== `var(${modeValue})` || !known.has(modeValue)) {
+        throw new Error(
+          `${label} mode ${mode.name} must re-point ${name} to its declared mode value ${modeValue}`,
         );
       }
     }
     modes.set(mode.name, underDeclaration);
     index += 2;
   }
-  if (index !== rules.length) {
-    throw new Error(
-      theme === undefined
-        ? `${label} contains an unsupported public rule`
-        : `${label} must contain exactly the rule :root[data-ki-theme='${theme}'],[data-ki-theme='${theme}'], followed only by its mode re-assertions`,
-    );
-  }
+  if (index !== rules.length) throw new Error(`${label} contains an unsupported public rule`);
   return modes;
 }
 
@@ -621,12 +635,13 @@ function defaultThemeDeclarations(css, label) {
  * An opt-in theme stylesheet: one rule of overrides, scoped to a themed
  * document and to a themed subtree. It declares only what it changes, so its
  * effective contract is the default stylesheet's with those overrides applied —
- * and it may reassign that contract, never extend it.
+ * and it may reassign that contract, never extend it. Its mode values are
+ * overrides like any other: the default stylesheet's modes re-point to them.
  */
 function themeDeclarations({ css, theme, label, base }) {
   const selector = `:root[data-ki-theme='${theme}'],[data-ki-theme='${theme}']`;
   const rules = parseRules(stripComments(css, label), label);
-  if (rules[0]?.selector !== selector || rules[0].media !== undefined) {
+  if (rules.length !== 1 || rules[0].selector !== selector || rules[0].media !== undefined) {
     throw new Error(`${label} must contain exactly the rule ${selector}`);
   }
   const overrides = declarations(rules[0].body, `${label} rule ${rules[0].prelude}`);
@@ -637,30 +652,16 @@ function themeDeclarations({ css, theme, label, base }) {
       );
     }
   }
-  const modes = modeDeclarations(rules.slice(1), { label, theme, known: base.base });
-  for (const name of modes.keys()) {
-    if (!base.modes.has(name)) {
-      throw new Error(
-        `${label} re-asserts mode ${name}, which the ${DEFAULT_THEME_EXPORT} stylesheet does not declare`,
-      );
-    }
-  }
-  return { base: base.base, baseModes: base.modes, densities: base.densities, overrides, modes };
+  return { base: base.base, baseModes: base.modes, densities: base.densities, overrides };
 }
 
 /**
  * The declaration map in effect in each published context: the standard
  * appearance, and each mode the default stylesheet declares, layered in the
- * cascade order the stylesheets are built for (default rule, default modes,
- * theme overrides, theme mode re-assertions).
+ * cascade order the stylesheets are built for (default rule, theme overrides,
+ * then the modes, whose important declarations outrank both).
  */
-function contextDeclarations({
-  base,
-  baseModes,
-  densities = new Map(),
-  overrides = new Map(),
-  modes = new Map(),
-}) {
+function contextDeclarations({ base, baseModes, densities = new Map(), overrides = new Map() }) {
   const layer = (maps) => maps.reduce((merged, map) => mergeDeclarations(merged, map), new Map());
   const result = new Map([['', layer([base, overrides])]]);
   for (const [level, levelDeclarations] of densities) {
@@ -673,9 +674,8 @@ function contextDeclarations({
       mode.name,
       layer([
         base,
-        ...active.filter((name) => baseModes.has(name)).map((name) => baseModes.get(name)),
         overrides,
-        ...active.filter((name) => modes.has(name)).map((name) => modes.get(name)),
+        ...active.filter((name) => baseModes.has(name)).map((name) => baseModes.get(name)),
       ]),
     );
   }

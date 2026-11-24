@@ -53,6 +53,14 @@
         "$value": "{ki.typography.line-height.caption-2}",
         "$description": "Line height of the visible caption."
       }
+    },
+    "contrast-more": {
+      "image": {
+        "fallback-fg": {
+          "$value": "{ki.text.supporting}",
+          "$description": "--ki-image-fallback-fg under more contrast: the strengthened neutral ink."
+        }
+      }
     }
   }
 }
