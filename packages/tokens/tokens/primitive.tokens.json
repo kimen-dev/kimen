@@ -2459,6 +2459,13 @@
           }
         }
       },
+      "keyword": {
+        "$description": "CSS keywords for component tokens, emitted where read.",
+        "center": {
+          "$type": "other",
+          "$value": "center"
+        }
+      },
       "onmars-v2": {
         "$description": "Onmars v2 (Calma) values selected by the onmars-only theme overlay.",
         "tooltip-arrow-fallback": {

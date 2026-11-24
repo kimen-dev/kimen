@@ -90,6 +90,39 @@ export const Toggle: Story = {
   parameters: { slots: { default: 'Pin' } },
 };
 
+/** A call to action that navigates: `href` renders a native link with the button look. */
+export const Link: Story = {
+  args: { variant: 'primary', href: '#get-started' },
+  parameters: { slots: { default: 'Get started' } },
+};
+
+/**
+ * The alignment tokens start-align a wide two-line choice; `::part(button)`
+ * lets it fill its container.
+ */
+export const StartAligned: Story = {
+  render: (args) => (
+    <div style={{ inlineSize: '20rem' }}>
+      <style>{'.choice::part(button) { inline-size: 100%; }'}</style>
+      <ki-button
+        {...args}
+        class="choice"
+        variant="outline"
+        toggle
+        style={{
+          display: 'block',
+          '--ki-button-justify-content': 'start',
+          '--ki-button-text-align': 'start',
+        }}
+      >
+        <strong>Starter</strong>
+        <br />
+        One agent, one repository
+      </ki-button>
+    </div>
+  ),
+};
+
 /** The invoker and footer action control a modal by ID. */
 export const DialogTrigger: Story = {
   render: (args, { id }) => {

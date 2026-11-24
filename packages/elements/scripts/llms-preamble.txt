@@ -15,11 +15,11 @@ Load `@kimen/tokens/css` once per page: it is the onmars default theme and
 the only stylesheet the components require. It declares every `--ki-*` token
 for both schemes together with the `color-scheme` they resolve from, so a
 page follows its visitor's light or dark preference with no further setup.
-`@kimen/tokens/css/base` — the page contract — is optional: it paints the
-page background, text color and body font from those tokens and declares no
-color scheme of its own. Without it the page keeps the browser's own canvas
-and text color for the active scheme, and every component stays legible on
-it.
+Load `@kimen/tokens/css/base` — the page contract — with it: it paints the
+page background, text color and body font from those tokens, declares no
+color scheme, and lays out the items of Kimen groups (segments, radios,
+options, menu and list items…) one per line until their tags register, so
+their labels do not run together.
 
 Human-readable documentation: https://kimen.dev/docs/
 

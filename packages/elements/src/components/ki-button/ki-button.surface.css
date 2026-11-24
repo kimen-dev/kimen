@@ -244,7 +244,10 @@
   }
 }
 
-button {
+/* The control is the native button or, in ki-button with an href, a native
+   link with the same part: every rule names both, at the specificity of the
+   bare type. A link without its href is the disabled link. */
+:is(button, a) {
   align-items: center;
   appearance: none;
 
@@ -292,7 +295,7 @@ button {
    xs button under touch's 44px minimum). Behind the content (z-index -1 in
    the button's stacking context), so a pointer over the label or a slotted
    icon still lands on them. */
-button::before {
+:is(button, a)::before {
   content: "";
   inset-block: calc((100% - var(--ki-density-target-min)) / 2);
   inset-inline: calc((100% - var(--ki-density-target-min)) / 2);
@@ -311,7 +314,7 @@ button::before {
    neither source order nor a :not() on every hover selector has to keep the
    two apart. The hover overlay image is withdrawn here for the same reason;
    the bevel goes off (Figma: borderless) by following the disabled border. */
-button:disabled {
+:is(button:disabled, a:not([href])) {
   --_ki-button-bg: var(--ki-button-secondary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-secondary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-disabled-border);
@@ -322,12 +325,12 @@ button:disabled {
   cursor: default;
 }
 
-button:focus {
+:is(button, a):focus {
   outline: var(--ki-button-focus-ring-width) solid transparent;
   outline-offset: var(--ki-button-focus-ring-offset);
 }
 
-button:focus-visible {
+:is(button, a):focus-visible {
   /* MarsUI Focus/primary: 3px alpha spread ring, and the Figma focus column
      removes ALL drop shadows while focused — the ring is the whole stack
      (figma_notes 8003:300: focus = rest fill, border kept, shadows removed).
@@ -340,14 +343,14 @@ button:focus-visible {
 
 /* The non-glass bottom edge follows the current border, including while
    the inner button restores the resting border during a press. */
-:host([variant="quaternary"]) button,
-:host([variant="ghost"]) button {
+:host([variant="quaternary"]) :is(button, a),
+:host([variant="ghost"]) :is(button, a) {
   border-block-end-color: var(--_ki-button-border);
 }
 
 /* A group sizes neighboring hit areas up to the density minimum so small
    buttons can sit side by side without overlapping invisible touch targets. */
-:host([data-ki-button-group-member]) button {
+:host([data-ki-button-group-member]) :is(button, a) {
   min-block-size: max(
     calc(var(--_ki-button-height, 0px) + var(--ki-density-control-offset)),
     var(--ki-density-target-min)
@@ -357,12 +360,12 @@ button:focus-visible {
 
 /* ::slotted() cannot chain ::part(). The group passes the logical seams to
    the two button components here, in the stylesheet that paints the part. */
-:host([data-ki-button-group-join~="start"]) button {
+:host([data-ki-button-group-join~="start"]) :is(button, a) {
   border-end-start-radius: var(--_ki-button-group-attached-radius);
   border-start-start-radius: var(--_ki-button-group-attached-radius);
 }
 
-:host([data-ki-button-group-join~="end"]) button {
+:host([data-ki-button-group-join~="end"]) :is(button, a) {
   border-end-end-radius: var(--_ki-button-group-attached-radius);
   border-start-end-radius: var(--_ki-button-group-attached-radius);
 }
@@ -402,7 +405,7 @@ button:focus-visible {
  * Placed after the structural rules it now shares a target with, so
  * specificity still descends down the file (stylelint no-descending-
  * specificity). */
-button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
+:is(button, a):is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
   --_ki-button-bg: var(--_ki-button-rest-bg);
   --_ki-button-fg: var(--_ki-button-rest-fg);
   --_ki-button-border: var(--_ki-button-rest-border);
@@ -415,28 +418,28 @@ button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
    carries the secondary ones, which are also the default). They sit here,
    after the plain button rules, only so specificity keeps ascending down
    the file. */
-:host([variant="primary"]) button:disabled {
+:host([variant="primary"]) :is(button:disabled, a:not([href])) {
   --_ki-button-bg: var(--ki-button-primary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-primary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-primary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-primary-disabled-shadow);
 }
 
-:host([variant="tertiary"]) button:disabled {
+:host([variant="tertiary"]) :is(button:disabled, a:not([href])) {
   --_ki-button-bg: var(--ki-button-tertiary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-tertiary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-tertiary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-tertiary-disabled-shadow);
 }
 
-:host([variant="quaternary"]) button:disabled {
+:host([variant="quaternary"]) :is(button:disabled, a:not([href])) {
   --_ki-button-bg: var(--ki-button-quaternary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-quaternary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-quaternary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-quaternary-disabled-shadow);
 }
 
-:host([variant="ghost"]) button:disabled {
+:host([variant="ghost"]) :is(button:disabled, a:not([href])) {
   --_ki-button-bg: var(--ki-button-ghost-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-ghost-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-ghost-neutral-disabled-border);
@@ -449,7 +452,7 @@ button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
    would LIGHTEN the primary button on press and read as less pressed, not
    more. */
 :host([variant="primary"])
-  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
+  :is(button, a):is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
   --_ki-button-overlay: var(--ki-button-primary-active-overlay);
 }
 
@@ -459,7 +462,7 @@ button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
    motion) stays deterministic; transform/box-shadow/background-color only —
    no layout property ever transitions. Each component scales its own dip. */
 @media (prefers-reduced-motion: no-preference) {
-  button {
+  :is(button, a) {
     transition-duration: var(--ki-motion-duration-fast);
     transition-property: background-color, box-shadow, transform;
     transition-timing-function: var(--ki-motion-easing-out);
@@ -473,7 +476,7 @@ button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
    rules above exclude it, because pressing it does nothing (D3), and the
    pointer says so. Each component hides its own content and sizes the
    spinner through --_ki-button-spinner-size in its size ramp. */
-button[aria-disabled="true"] {
+:is(button, a[href])[aria-disabled="true"] {
   cursor: progress;
 }
 

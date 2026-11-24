@@ -186,9 +186,10 @@ default at zero specificity, loaded after the tokens:
 
 ## The page contract
 
-Tokens are custom properties: loading them paints nothing. The opt-in page
-contract paints the page from them — background from `--ki-surface-base`, text
-from `--ki-text-high-em`, and the body typeface:
+Tokens are custom properties: loading them paints nothing. The page
+contract, which pages load with them, paints the page from them — background
+from `--ki-surface-base`, text from `--ki-text-high-em`, and the body
+typeface:
 
 ```html
 <link rel="stylesheet" href="@kimen/tokens/css" />

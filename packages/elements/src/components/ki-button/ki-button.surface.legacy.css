@@ -1,6 +1,6 @@
 /* Preserve the deprecated length override on the two shipped button elements. */
 @container style(--_ki-button-backdrop-filter: var(--_ki-backdrop-filter-default)) {
-  button {
+  :is(button, a) {
     --_ki-button-backdrop-filter: blur(var(--ki-button-backdrop-blur));
   }
 }

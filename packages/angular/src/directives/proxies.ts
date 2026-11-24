@@ -328,14 +328,14 @@ export declare interface KiBreadcrumbItem extends Components.KiBreadcrumbItem {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiButton,
-  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'selected', 'size', 'toggle', 'tone', 'type', 'value', 'variant']
+  inputs: ['command', 'commandfor', 'disabled', 'download', 'href', 'loading', 'loadingLabel', 'name', 'rel', 'selected', 'size', 'target', 'toggle', 'tone', 'type', 'value', 'variant']
 })
 @Component({
   selector: 'ki-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'selected', 'size', 'toggle', 'tone', 'type', 'value', 'variant'],
+  inputs: ['command', 'commandfor', 'disabled', 'download', 'href', 'loading', 'loadingLabel', 'name', 'rel', 'selected', 'size', 'target', 'toggle', 'tone', 'type', 'value', 'variant'],
 })
 export class KiButton {
   protected el: HTMLKiButtonElement;
