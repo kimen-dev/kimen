@@ -26,7 +26,7 @@ const DEFAULT_LABEL = 'Code';
 export class KiCodeBlock {
   @Element() private readonly host!: HTMLElement;
 
-  /** Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON. */
+  /** Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish). */
   @Prop() language?: string;
 
   /** File name shown in the header beside the language. */

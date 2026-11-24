@@ -14,6 +14,18 @@ brackets so they remain part of the source.
 <ki-code-block language="html" filename="example.html" wrap copyable="false">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>
 ```
 
+Color a Gherkin contract in English or Spanish with `language="gherkin"`.
+Keywords count only where they open a line.
+
+```html
+<ki-code-block language="gherkin" filename="pagos.feature"># language: es
+Característica: Pagar el carrito
+  Escenario: Pagar con tarjeta
+    Dado un carrito con 3 productos y un cupón
+    Cuando el cliente paga
+    Entonces el recibo muestra el total</ki-code-block>
+```
+
 The guarded catalog accepts source strings in the default slot.
 
 ```json

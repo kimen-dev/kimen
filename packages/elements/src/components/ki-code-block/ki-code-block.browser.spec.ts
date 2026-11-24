@@ -300,3 +300,149 @@ it('S10 keeps the RTL header and left-to-right code with a left-side gutter', as
   numberText.selectNodeContents(number);
   expect(numberText.getBoundingClientRect().right).toBeLessThan(line.getBoundingClientRect().left);
 });
+
+const englishGherkin = [
+  '@checkout @smoke',
+  'Feature: Pay the cart',
+  '  Shoppers pay When And Then they leave.',
+  '  # Totals include tax',
+  '  Background:',
+  '    Given a signed-in shopper',
+  '  Rule: Totals are exact',
+  '    Scenario Outline: Pay <count> items',
+  '      Given a cart with <count> items named "deluxe"',
+  '      When the shopper pays',
+  '      Then the receipt reads',
+  '        """',
+  '        Given and When stay text here',
+  '        """',
+  '      And the order is placed',
+  '      But no email is sent',
+  '      * the cart is empty',
+  '      Examples:',
+  '        | count |',
+  '        | 3     |',
+].join('\n');
+
+const spanishGherkin = [
+  '# language: es',
+  'Característica: Pagar el carrito',
+  '  Antecedentes:',
+  '    Dado un cliente con sesión',
+  '  Esquema del escenario: Pagar <n> productos',
+  '    Dados <n> productos y un cupón',
+  '    Cuando el cliente paga e imprime Y sale',
+  '    Entonces el recibo muestra el total',
+  '    Y el pedido queda registrado',
+  '    E incluye IVA',
+  '    Pero no se envía correo',
+  '    Ejemplos:',
+  '      | n |',
+  '      | 2 |',
+].join('\n');
+
+function syntax(host: HTMLElement, kind: string): string[] {
+  const code = part(host, 'code');
+  return [...code.querySelectorAll(`.syntax-${kind}`)].map((token) => token.textContent);
+}
+
+function lineSyntax(host: HTMLElement, index: number, kind: string): string[] {
+  const line = part(host, 'code').querySelectorAll('.line-text')[index];
+  if (!line) throw new Error(`Missing line ${String(index + 1)}`);
+  return [...line.querySelectorAll(`.syntax-${kind}`)].map((token) => token.textContent);
+}
+
+it('S13 colors English Gherkin keywords that open a line and the other Gherkin syntax', async () => {
+  const host = await mount('language="gherkin" filename="checkout.feature"', englishGherkin);
+  expect(syntax(host, 'keyword').filter((text) => text !== '|')).toEqual([
+    'Feature:',
+    'Background:',
+    'Given',
+    'Rule:',
+    'Scenario Outline:',
+    'Given',
+    'When',
+    'Then',
+    'And',
+    'But',
+    '*',
+    'Examples:',
+  ]);
+  expect(lineSyntax(host, 2, 'keyword')).toEqual([]);
+  expect(syntax(host, 'function')).toEqual(['@checkout @smoke']);
+  expect(syntax(host, 'comment')).toEqual(['# Totals include tax']);
+  expect(syntax(host, 'number')).toEqual(['<count>', '<count>']);
+  expect(syntax(host, 'string')).toEqual([
+    '"deluxe"',
+    '"""',
+    '        Given and When stay text here',
+    '        """',
+    ' count ',
+    ' 3     ',
+  ]);
+  expect(lineSyntax(host, 18, 'keyword')).toEqual(['|', '|']);
+
+  const code = part(host, 'code');
+  const plain = getComputedStyle(code).color;
+  for (const kind of ['keyword', 'function', 'comment', 'number', 'string']) {
+    const ink = code.querySelector<HTMLElement>(`.syntax-${kind}`);
+    if (!ink) throw new Error(`Missing ${kind} syntax`);
+    const swatch = document.createElement('span');
+    swatch.style.color = `var(--ki-code-${kind})`;
+    ink.after(swatch);
+    expect(getComputedStyle(ink).color).toBe(getComputedStyle(swatch).color);
+    expect(getComputedStyle(ink).color).not.toBe(plain);
+    swatch.remove();
+  }
+});
+
+it('S14 colors Spanish Gherkin keywords and keeps the same words plain inside a sentence', async () => {
+  const host = await mount('language="feature"', spanishGherkin);
+  expect(syntax(host, 'comment')).toEqual(['# language: es']);
+  expect(syntax(host, 'keyword').filter((text) => text !== '|')).toEqual([
+    'Característica:',
+    'Antecedentes:',
+    'Dado',
+    'Esquema del escenario:',
+    'Dados',
+    'Cuando',
+    'Entonces',
+    'Y',
+    'E',
+    'Pero',
+    'Ejemplos:',
+  ]);
+  expect(lineSyntax(host, 5, 'keyword')).toEqual(['Dados']);
+  expect(lineSyntax(host, 6, 'keyword')).toEqual(['Cuando']);
+  const sentence = part(host, 'code').querySelectorAll('.line-text')[6];
+  expect(sentence?.textContent).toBe('    Cuando el cliente paga e imprime Y sale');
+  expect(syntax(host, 'number')).toEqual(['<n>', '<n>']);
+});
+
+it('S15 exposes the unchanged Gherkin source to assistive technology', async () => {
+  // Wrapping keeps every line in view, so axe can measure the contrast of each ink.
+  const host = await mount('language="gherkin" filename="checkout.feature" wrap', englishGherkin);
+  expect(part(host, 'code').textContent).toBe(englishGherkin);
+  expect(host.textContent).toBe(englishGherkin);
+  const tree = await browser.ariaSnapshot('main');
+  expect(tree).toContain('region "gherkin · checkout.feature"');
+  for (const line of ['@checkout @smoke', 'Scenario Outline: Pay <count> items', '| count |']) {
+    expect(tree).toContain(line);
+  }
+  await expectAccessible(fixture);
+});
+
+it('S16 restyles Gherkin keywords through the keyword ink token', async () => {
+  const host = await mount(
+    'language="gherkin"',
+    `${englishGherkin}\n  Escenario: Pagar\n    Dado un carrito`,
+  );
+  host.style.setProperty('--ki-code-keyword', 'rgb(8, 89, 95)');
+  const keywords = [...part(host, 'code').querySelectorAll('.syntax-keyword')];
+  expect(keywords.map((keyword) => keyword.textContent)).toEqual(
+    expect.arrayContaining(['Feature:', 'Given', 'Escenario:', 'Dado', '|']),
+  );
+  for (const keyword of keywords) {
+    expect(getComputedStyle(keyword).color).toBe('rgb(8, 89, 95)');
+  }
+});
