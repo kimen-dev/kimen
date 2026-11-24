@@ -188,6 +188,19 @@ on the native control. Activation emits `ki-change` with the new state.
 The `outline` variant is available to both momentary and toggle buttons.
 A toggle activation leaves its form untouched. See the [toggle contract](../094-toggle-icon-button/spec.md) for both states.
 
+## Amendment: link mode and content alignment (integrator feedback 0.1.3)
+
+A nonblank `href` renders the internal control as a native link with the
+same `button` part, so variants, sizes, tokens and `::part(button)` style it
+like the button. `target`, `rel` and `download` pass to it, and
+`target="_blank"` without `rel` gets `rel="noreferrer noopener"`. Enter
+follows it and Space does not. It never submits or resets a form; `type`,
+`name`, `value`, `toggle` and dialog commands do nothing while `href` is
+set. Disabled, it renders no `href`, takes `role="link"` and
+`aria-disabled="true"` and, like the disabled native button, leaves the Tab
+order. `--ki-button-justify-content` and `--ki-button-text-align`, `center`
+in every theme, replace the literal centring of the content.
+
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
 ```gherkin
@@ -323,17 +336,65 @@ Feature: Button
     When the person activates it
     Then the button becomes selected and reports the new pressed state
     And the button emits a change carrying the new state
+
+  # Family: core behavior (appended)
+  # S20
+  Scenario: A button with a destination is a link to it
+    Given a primary button labeled "Get started" with the destination "/start"
+    When the page renders
+    Then the button is a link whose destination is "/start"
+
+  # S21
+  Scenario: A disabled button link goes nowhere
+    Given a disabled button labeled "Get started" with a destination
+    When the user attempts to activate it
+    Then no navigation and no activation are observed
+
+  # Family: keyboard path (appended)
+  # S22
+  Scenario: Enter follows a focused button link
+    Given a focused button link labeled "Get started" to "#start"
+    When the user presses Enter
+    Then the browser follows the link to "#start"
+
+  # Family: assistive-tech outcome (appended)
+  # S23
+  Scenario: A button link is exposed as a named link
+    Given a button labeled "Get started" with a destination
+    When the accessibility tree is queried
+    Then it exposes a link whose accessible name is "Get started"
+
+  # Family: form participation (appended)
+  # S24
+  Scenario: A button link never submits its form
+    Given a form containing a submit button labeled "Get started" with a destination
+    When the user activates the button
+    Then the form does not submit
+
+  # Family: theming (appended)
+  # S25
+  Scenario: The button tokens restyle a button link
+    Given a primary button and a primary button link under the same reassigned tokens
+    When the page renders
+    Then the link has the same appearance as the button
+
+  # S26
+  Scenario: The alignment tokens alone left-align a button's content
+    Given a wide button with a two-line label
+    And the button content and text alignment tokens set to "start"
+    When the page renders
+    Then both label lines start at the button's inline-start padding
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S11, S17, S18, S19 | |
-| Keyboard path | S3, S4 | |
-| Assistive-tech outcome | S5, S6, S14 | |
-| Form participation | S7, S8, S12 | |
-| Theming | S9, S10, S13, S15, S16 | |
+| Core behavior | S1, S2, S11, S17, S18, S19, S20, S21 | |
+| Keyboard path | S3, S4, S22 | |
+| Assistive-tech outcome | S5, S6, S14, S23 | |
+| Form participation | S7, S8, S12, S24 | |
+| Theming | S9, S10, S13, S15, S16, S25, S26 | |
 
 ## Requirements *(mandatory)*
 
