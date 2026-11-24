@@ -19,7 +19,7 @@ position. Rotation requires an explicit interval.
 - Follow the APG carousel pattern. Keep offscreen slide content inert, announce
   manual changes politely and silence announcements during rotation. Allow a
   person to pause rotation with a visible control and respect motion preferences.
-- *(Amendment A1, draft.)* Never rotate automatically more than once per
+- *(Amendment A1.)* Never rotate automatically more than once per
   5,000 ms, whatever `autoplay` value the carousel receives.
 - Keep direction, colors, density and motion theme-controlled. Ship the two tags
   in the neutral catalog and framework wrappers.
@@ -63,20 +63,19 @@ position. Rotation requires an explicit interval.
 | Form participation | | N/A. The carousel presents content and has no form value. |
 | Theming | S13–S17 | |
 
-## Amendment A1: a floor for automatic rotation *(draft, pending founder approval)*
+## Amendment A1: a floor for automatic rotation *(decided 2026-11-24)*
 
-**Status**: Draft, written 2026-11-24 for founder approval. Spec only: no
-component, catalog, test or documentation change ships with this draft.
+**Status**: Decided by the founder on 2026-11-24, who adopted the
+recommendations below: a fixed 5,000 ms floor, clamped in the component,
+with the development warning (see *Decisions on the open questions*).
 
 **Path**: in place, through the Art. II amendment path. One component, so
 S21–S24 are appended and none is retired or renumbered. S8–S10 and S15 keep
 their wording; the S8–S10 tests change only the interval they mount with
-(see *After approval*).
+(see *Implementation notes*).
 
-**Merge sequencing**: S21–S24 have no traced test yet, so
-`check-traceability.sh` is red for this spec on this branch. As in spec 011
-A1, the amendment reaches `main` only together with the implementation that
-traces it.
+**Merge sequencing**: as in spec 011 A1, the amendment reaches `main`
+together with the implementation that traces S21–S24.
 
 ### Why
 
@@ -153,7 +152,7 @@ harms no one's access, while a 334 ms floor solves only the flashing half.
 It costs authors who chose 1 to 4.999 s, who now get 5 s. Spec 002 A1 set
 a similar readability floor of 12 px where WCAG sets none.
 
-### Proposed decisions
+### Decisions
 
 - **A1-D1 Clamp, keep the catalog range.** The component moves
   automatically no more than once per 5,000 ms. `autoplay` keeps the value
@@ -200,9 +199,9 @@ one event source. Either change can land first.
   cost. Whether it should rotate when nobody sees it is a separate question.
 - Raising the catalog `minimum` at a future MAJOR.
 
-### After approval
+### Implementation notes
 
-These implementation notes are not part of the contract.
+These notes are not part of the contract.
 
 - `ki-carousel.tsx`: the `interval` getter clamps to 5,000 ms and
   `MAX_INTERVAL`, plus the JSDoc and the warning.
@@ -216,12 +215,14 @@ These implementation notes are not part of the contract.
   Add a `changes/api` declaration. Name the floor in `docs/site.mdx` and
   `docs/components/carousel.mdx`.
 
-### Open questions for the founder
+### Decisions on the open questions
 
-1. Is 5,000 ms the floor (recommended), or the SC 2.3.1 minimum of 334 ms
-   or 1,000 ms?
-2. Keep the A1-D4 development warning, or clamp silently as `ki-progress`
-   does?
+Decided by the founder on 2026-11-24, adopting both recommendations.
+
+1. The floor is 5,000 ms, not the SC 2.3.1 minimum of 334 ms or 1,000 ms
+   (A1-D2).
+2. The development warning stays (A1-D4); the component does not clamp
+   silently as `ki-progress` does.
 
 ## Gherkin scenarios
 
@@ -366,7 +367,7 @@ Feature: ki-carousel presents a sequence of slides
     When that item is the visible slide
     Then the link is available to the reader
 
-  # Amendment A1 (draft, pending founder approval): a floor for automatic rotation
+  # Amendment A1 (decided 2026-11-24): a floor for automatic rotation
 
   # S21
   Scenario Outline: An interval below the floor waits the full five seconds

@@ -138,7 +138,7 @@ Feature: ki-carousel presents a sequence of slides
     When that item is the visible slide
     Then the link is available to the reader
 
-  # Amendment A1 (draft, pending founder approval): a floor for automatic rotation
+  # Amendment A1 (decided 2026-11-24): a floor for automatic rotation
 
   # S21
   Scenario Outline: An interval below the floor waits the full five seconds
