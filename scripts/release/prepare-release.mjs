@@ -4,7 +4,7 @@ import { releaseChangelog, releaseVersion } from 'nx/release';
 import {
   buildChangelog,
   prepareManifest,
-  prepareMcpServerVersion,
+  prepareVersionedFiles,
   releaseNotes,
   releasePackages,
   releaseVersionPattern,
@@ -75,10 +75,10 @@ async function prepareRelease() {
     console.log('No release-worthy changes in the publication scope');
     return;
   }
-  // Rewrite the kimen-mcp pins in memory first: a missing pin fails the run
-  // before Nx writes any manifest.
+  // Rewrite the kimen-mcp pins and plugin manifest versions in memory first:
+  // a missing pin or version fails the run before Nx writes any manifest.
   const { mcpName } = manifests.get('@kimen/mcp-server');
-  const pinnedFiles = await prepareMcpServerVersion(readText, version, mcpName);
+  const pinnedFiles = await prepareVersionedFiles(readText, version, mcpName);
 
   const result = await releaseVersion({
     ...options,

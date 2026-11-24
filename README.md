@@ -32,12 +32,12 @@ pnpm add @kimen/elements @kimen/tokens
 ```
 
 Register each component from its direct subpath, then load the token
-stylesheet once — and, optionally, the page contract:
+stylesheet once, with the page contract:
 
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
 import '@kimen/tokens/css'; // design tokens + color-scheme: onmars theme, light + dark
-import '@kimen/tokens/css/base'; // optional page contract: page background, text color, body font
+import '@kimen/tokens/css/base'; // page contract: page background, text color, body font, layout before registration
 
 defineKiButton();
 ```
@@ -54,9 +54,11 @@ over all 29 components under a dark system preference). That declaration is
 a zero-specificity default — a `color-scheme` your own CSS sets on the page
 wins, and the tokens follow it.
 
-`@kimen/tokens/css/base` is the opt-in **page contract**: it paints the page
-itself from the semantic tokens — background, text color and body font — and
-declares no color scheme.
+`@kimen/tokens/css/base` is the **page contract**, which pages load with the
+tokens: it paints the page itself from the semantic tokens — background, text
+color and body font — and declares no color scheme. Until the elements
+register, it also lays out the items of Kimen groups one per line, so their
+labels do not run together.
 
 ## Themes and color schemes
 

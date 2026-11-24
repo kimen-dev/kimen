@@ -67,8 +67,7 @@ stacks start with Newsreader. Each stack includes system fallbacks.
 `data-ki-theme` works on any element, not only on `<html>`. An element that
 carries it redeclares every token, which recomputes every alias from the
 values on that element. That makes it the place to restyle a region, palette
-included. Any name works; a name without a theme stylesheet starts from the
-default theme:
+included. A name without a theme stylesheet starts from the default theme:
 
 ```html
 <section data-ki-theme="cyanotype">…</section>
@@ -85,11 +84,20 @@ default theme:
 Inside the section every semantic surface, text, tint and hover wash
 resolves from that palette.
 
+On a page with its own theme, a region that adjusts a few tokens repeats the
+page theme's name: `<section data-ki-theme="acme" class="sheet">`, with the
+`.sheet` rule after the `[data-ki-theme='acme']` rule. A different name makes
+the region a different theme, which starts from Kimen's defaults and drops
+the page theme.
+
 Without the attribute, the same rule does much less. A custom property that
 aliases another, such as `--ki-surface-s1: var(--ki-color-gray-50)`, is
 resolved on the element that declares it, and Kimen declares its tokens on
 the root and on theme roots. On a plain element the palette token changes
 and nothing that aliases it does, so the region keeps the page's surfaces.
+Semantic tokens are no different: redefining `--ki-surface-s0` or
+`--ki-text-high-em` on a plain element changes what reads them directly, but
+not component tokens such as `--ki-button-*`.
 Your own aliases behave the same way: declare a page alias such as
 `--page-accent: var(--ki-surface-primary-low-em)` on
 `:root, [data-ki-theme]`, not on `:root` alone, so each themed region
@@ -152,9 +160,10 @@ loaded after the tokens, so the attribute still wins:
 
 ### The page contract
 
-Tokens are custom properties: loading them paints nothing. The opt-in page
-contract paints the page from them — background from `--ki-surface-base`,
-text from `--ki-text-high-em`, and the body family:
+Tokens are custom properties: loading them paints nothing. The page
+contract, which pages load with them, paints the page from them —
+background from `--ki-surface-base`, text from `--ki-text-high-em`, and the
+body family:
 
 ```html
 <link rel="stylesheet" href="@kimen/tokens/css" />

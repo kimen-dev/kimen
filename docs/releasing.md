@@ -81,7 +81,9 @@ night blocks no pull request and no merge group.
 2. For a release-worthy change, the dedicated App opens or refreshes one
    pull request on `release/next`, titled `chore(release): vX.Y.Z`. The PR
    sets all three package versions and flips `private: false` where needed.
-   It preserves the required `repository` metadata. It adds a dated workspace changelog
+   It writes the same version into the three agent plugin manifests under
+   `plugins/kimen/`, because an installed plugin refreshes only when its
+   version moves. It preserves the required `repository` metadata. It adds a dated workspace changelog
    entry that includes the existing `[Unreleased]` notes on the first
    automated release. The normal generators refresh the API index and the
    catalog's embedded elements version, then rebuild the MCP binary with the
@@ -91,9 +93,9 @@ night blocks no pull request and no merge group.
    keeping its title as the commit title: `release-tag.yml` only runs for a
    push whose commit title starts with `chore(release): v`.
    `release-tag.yml` verifies that the PR merged at the exact pushed commit
-   and that all three package versions match its title. It pushes an annotated
-   `vX.Y.Z` tag on that commit and creates the GitHub Release from that
-   version's changelog entry. A retry can complete missing GitHub Release
+   and that all three package versions and the plugin manifests match its
+   title. It pushes an annotated `vX.Y.Z` tag on that commit and creates the
+   GitHub Release from that version's changelog entry. A retry can complete missing GitHub Release
    metadata for a matching tag. A conflicting tag fails the run and keeps
    its original target.
 4. The tag push starts `release.yml`, the sole npm publisher. It validates

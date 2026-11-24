@@ -339,6 +339,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-justify-content": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Placement of the button content; start for a card.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-label-padding-inline": {
         "default": null,
         "deprecatedSince": null,
@@ -1503,6 +1511,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for tertiary success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-text-align": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Alignment of the label lines.",
         "replacement": null,
         "required": false,
         "type": null

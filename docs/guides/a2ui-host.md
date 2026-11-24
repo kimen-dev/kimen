@@ -48,7 +48,7 @@ the token stylesheets (the adapter itself does neither):
 import { createA2uiAdapter } from '@kimen/adapter-a2ui';
 import { defineCustomElements } from '@kimen/elements/loader';
 import '@kimen/tokens/css';      // onmars default theme + color-scheme
-import '@kimen/tokens/css/base'; // optional page contract: page background, text, font
+import '@kimen/tokens/css/base'; // page contract: page colors, font, layout before registration
 
 defineCustomElements(); // agent output can name any catalog tag, so register all
 
@@ -76,9 +76,10 @@ The lazy loader is the right registration strategy here: an agent may emit any
 subset of the catalog, so the host cannot tree-shake tags in advance.
 `@kimen/tokens/css` alone keeps the surface legible in both schemes: it
 declares the `color-scheme` the tokens resolve from, as a default your page's
-own `color-scheme` overrides. `@kimen/tokens/css/base` (the page contract) is
-optional and paints the page background, text color and body font from
-tokens; `data-ki-color-scheme` forces a scheme on the page or on the surface
+own `color-scheme` overrides. Load `@kimen/tokens/css/base` (the page
+contract) too: it paints the page background, text color and body font from
+tokens, and lays out group items until their tags register;
+`data-ki-color-scheme` forces a scheme on the page or on the surface
 element alone — see
 [Tokens & theming](../../packages/elements/docs/theming.mdx).
 

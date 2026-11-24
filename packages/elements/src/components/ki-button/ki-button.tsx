@@ -33,17 +33,18 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
  * A token-styled action button with native button semantics.
  *
  * @whenToUse trigger the single main action of a view, supporting actions
- * in descending hierarchy, confirming/destructive actions through tone, or
- * persistent actions such as Bold with `toggle`.
+ * in descending hierarchy, confirming/destructive actions through tone,
+ * persistent actions such as Bold with `toggle`, or with `href` a call to
+ * action that navigates.
  * While the action a button started is in progress, set `loading` on that
  * button instead of disabling it.
- * @whenNotToUse navigation, icon-only actions, form values, or the
- * progress of a page or region (use ki-progress).
+ * @whenNotToUse links in text (ki-link), icon-only actions, form values, or
+ * the progress of a page or region (use ki-progress).
  *
  * @slot - Label content. This is the accessible name source.
  * @slot start - Leading icon or media. Follows writing direction.
  * @slot end - Trailing icon or media. Follows writing direction.
- * @part button - Internal native button.
+ * @part button - Internal native button, or link with `href`.
  * @part label - Label wrapper around the default slot.
  * @part spinner - Loading spinner drawn at the center of the button, in the
  * button's foreground ink, rendered only while `loading` is in effect.
@@ -161,6 +162,22 @@ export class KiButton {
   @Prop({ reflect: true }) command?: KiDialogCommand;
 
   /**
+   * Destination URL. Nonblank, it renders a native link with the same look;
+   * toggle, form and dialog props are then ignored.
+   * @format url
+   */
+  @Prop() href?: string;
+
+  /** Browsing context for `href`; `_blank` alone gets `rel="noreferrer noopener"`. */
+  @Prop() target?: string;
+
+  /** Link relationships for `href`. */
+  @Prop() rel?: string;
+
+  /** File name to download `href` as; empty lets the browser choose. */
+  @Prop() download?: string;
+
+  /**
    * Prevents activation, removes the button from keyboard reach, and exposes
    * the unavailable state through the internal native button. Wins over
    * `loading` when both are set.
@@ -204,7 +221,7 @@ export class KiButton {
   @Prop({ attribute: 'loading-label', reflect: true }) loadingLabel = 'Loading';
 
   @State() private formDisabled = false;
-  private button: HTMLButtonElement | undefined;
+  private button: HTMLElement | undefined;
 
   get #effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -224,7 +241,8 @@ export class KiButton {
     }
   }
 
-  componentDidLoad(): void {
+  // After every render: an href change replaces the native control.
+  componentDidRender(): void {
     this.forwardButtonAria();
   }
 
@@ -242,6 +260,11 @@ export class KiButton {
     if (this.#effectiveDisabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
+      return;
+    }
+
+    // A link only navigates.
+    if (this.href?.trim()) {
       return;
     }
 
@@ -298,12 +321,56 @@ export class KiButton {
   }
 
   #renderButton(disabled: boolean, loading: boolean) {
-    return (
+    const href = this.href?.trim();
+    const ref = (el?: HTMLElement) => {
+      this.button = el;
+    };
+    const content = [
+      <slot name="start" />,
+      <span part="label">
+        <slot />
+      </span>,
+      <slot name="end" />,
+      loading ? (
+        // The circular ki-progress geometry (015): a 40-unit grid, a ring
+        // of radius 18 measured as 100 units, a non-scaling stroke.
+        <svg part="spinner" viewBox="0 0 40 40" aria-hidden="true">
+          <circle
+            cx="20"
+            cy="20"
+            r="18"
+            pathLength="100"
+            fill="none"
+            stroke="currentColor"
+            vector-effect="non-scaling-stroke"
+          />
+        </svg>
+      ) : null,
+    ];
+    // Disabled, like the native button, the link leaves the Tab order: no
+    // href, no tabindex, and role link keeps it a link to assistive technology.
+    const link: Record<string, string | number | undefined> = {
+      ...(disabled ? { role: 'link' } : { href, tabIndex: 0 }),
+      target: this.target,
+      rel: this.rel ?? (this.target === '_blank' ? 'noreferrer noopener' : undefined),
+      download: this.download,
+    };
+    return href ? (
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- The spread carries href, or role link while disabled; Enter clicks a link natively.
+      <a
+        key="button"
+        ref={ref}
+        part="button"
+        {...link}
+        aria-disabled={disabled || loading ? 'true' : undefined}
+        onClick={this.handleClick}
+      >
+        {content}
+      </a>
+    ) : (
       <button
         key="button"
-        ref={(el) => {
-          this.button = el;
-        }}
+        ref={ref}
         part="button"
         type="button"
         {...(this.commandfor === undefined ? {} : { commandfor: this.commandfor })}
@@ -317,26 +384,7 @@ export class KiButton {
         onKeyUp={releaseKeyboardPress}
         onBlur={endKeyboardPress}
       >
-        <slot name="start" />
-        <span part="label">
-          <slot />
-        </span>
-        <slot name="end" />
-        {loading ? (
-          // The circular ki-progress geometry (015): a 40-unit grid, a ring
-          // of radius 18 measured as 100 units, a non-scaling stroke.
-          <svg part="spinner" viewBox="0 0 40 40" aria-hidden="true">
-            <circle
-              cx="20"
-              cy="20"
-              r="18"
-              pathLength="100"
-              fill="none"
-              stroke="currentColor"
-              vector-effect="non-scaling-stroke"
-            />
-          </svg>
-        ) : null}
+        {content}
       </button>
     );
   }

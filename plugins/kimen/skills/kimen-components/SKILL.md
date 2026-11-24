@@ -59,7 +59,7 @@ Then, once per page or app entry point:
 
 ```ts
 import '@kimen/tokens/css';        // required: the theme, light + dark
-import '@kimen/tokens/css/base';   // optional: page background, text colour, body font
+import '@kimen/tokens/css/base';   // page background, text colour, body font, layout before registration
 
 // Register only what you use (tree-shakable)…
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
@@ -74,7 +74,12 @@ defineCustomElements();
   the components have no appearance. Load it once, before the components
   paint.
 - Registration is client-side. In server-rendered pages the tags arrive as
-  markup and upgrade when the registration code runs.
+  markup and upgrade when the registration code runs. Until then an
+  unregistered tag is an inline box, so the labels of group items run
+  together (`DayWeekMonth`): load `@kimen/tokens/css/base`, which lays out
+  segments, radios, checkboxes, options and menu, list, tab, tree, step,
+  timeline, sidebar and mobile-nav items one per line until their tags
+  register.
 - Icons are per-glyph imports of Lucide names, made before the icon mounts:
   `import '@kimen/elements/icons/triangle-alert';` then
   `<ki-icon name="triangle-alert"></ki-icon>`. A name that was not imported
@@ -90,8 +95,9 @@ defineCustomElements();
   consistent styling: buttons, form controls, dialogs, tabs, menus, alerts,
   toasts, cards, layout stacks (`ki-stack`, `ki-grid`).
 - One primary action per view (`<ki-button variant="primary">`); supporting
-  actions take lower variants. Use `loading` on the button whose action is in
-  progress instead of disabling it.
+  actions take lower variants. A call to action that navigates is the same
+  button with `href` (a native link inside). Use `loading` on the button whose
+  action is in progress instead of disabling it.
 - Status and feedback: inline persistent message → `ki-alert`; transient
   confirmation → `ki-toast` in one `ki-toaster` per page; short status text
   on an entity → `ki-badge`; progress of a task → `ki-progress`.
@@ -139,9 +145,13 @@ Customise in this order and stop at the first that works:
 
 1. **Tokens.** Reassign semantic `--ki-*` custom properties (for example
    `--ki-surface-s0`, `--ki-text-high-em`) on `:root`, or for a region on an
-   element that carries `data-ki-theme` (any name, such as
-   `data-ki-theme="sidebar"`); only the root and theme roots recompute the
-   tokens that alias the one you set. Component tokens
+   element that carries `data-ki-theme`. Only the root and theme roots
+   recompute the tokens that alias the one you set: on a plain element the
+   change reaches what reads it directly, not component tokens such as
+   `--ki-button-*`. On a page with its own theme, a region repeats that
+   theme's name (`<section data-ki-theme="acme" class="sheet">`, the `.sheet`
+   rule after the theme rule); another name makes the region another theme,
+   starting from Kimen's defaults. Component tokens
    (`--ki-button-md-radius`) also work on a single element. Never style
    component internals.
 2. **Parts.** `ki-button::part(…)` for the parts a contract lists.
