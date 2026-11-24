@@ -2317,6 +2317,18 @@ brackets so they remain part of the source.
 <ki-code-block language="html" filename="example.html" wrap copyable="false">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>
 ```
 
+Color a Gherkin contract in English or Spanish with `language="gherkin"`.
+Keywords count only where they open a line.
+
+```html
+<ki-code-block language="gherkin" filename="pagos.feature"># language: es
+Característica: Pagar el carrito
+  Escenario: Pagar con tarjeta
+    Dado un carrito con 3 productos y un cupón
+    Cuando el cliente paga
+    Entonces el recibo muestra el total</ki-code-block>
+```
+
 The guarded catalog accepts source strings in the default slot.
 
 ```json
@@ -2341,7 +2353,7 @@ Attributes:
 - `highlight` (string | undefined): Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
 - `highlight-label` (string, default 'Highlighted lines'): Localizable prefix for the accessible description of highlighted lines.
 - `label` (string | undefined, default 'Code'): Figure and scroll area label when there is no language or filename.
-- `language` (string | undefined): Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
+- `language` (string | undefined): Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
 - `line-numbers` (boolean, default false): Show decorative one-based line numbers.
 - `wrap` (boolean, default false): Soft-wrap long lines within the available width.
 
