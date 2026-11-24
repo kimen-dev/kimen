@@ -197,6 +197,15 @@
           "$description": "Distance between the rich heading and its body."
         }
       }
+    },
+    "contrast-more": {
+      "tooltip": {
+        "border-color": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "--ki-tooltip-border-color under more contrast: an edge at 3:1 or more against the page."
+        }
+      }
     }
   }
 }

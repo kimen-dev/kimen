@@ -140,6 +140,43 @@ risks. 043 and 044 share the mechanism above and ship in one PR; 045 uses a
 different mechanism (inherited tokens consumed by component CSS) and ships
 in its own PR.
 
+## Amendment A1: the mode wins over any theme *(decided 2026-11-24)*
+
+**Status**: Decided by the founder on 2026-11-24, after an integrator theme
+lost more contrast (integrator feedback on 0.1.3, item 1). A preference mode
+applies over any theme without the theme doing anything, and a theme still
+chooses its own mode values through tokens.
+
+**Path**: in place, through the Art. II amendment path: the page's own value
+(S12) now goes through the mode token, and S13–S15 are appended. None
+is retired or renumbered.
+
+**A1-D1 — Mode values are tokens.** The value a token takes under a mode is a
+token of its own, `--ki-<mode>-<token>` (`--ki-contrast-more-outline-control`), declared at normal
+priority with the rest of the token set, next to the token it replaces in the
+DTCG sources (`ki.<mode>.<path>`). The shared mode file and the per-theme
+mode files are gone: a theme's mode values are ordinary overrides of those
+tokens (material3 overrides two; onmars sets its own in its theme and dark
+files).
+
+**A1-D2 — The mode re-points with `!important`.** Under the media query and
+under the declaration, on the root and on theme roots, the mode declares
+`--ki-<token>: var(--ki-<mode>-<token>) !important`. An important
+declaration outranks every normal one on the element, so a theme rule that
+sets the token loses under the mode, wherever it loads and whatever its
+specificity. Only the re-pointing is important: a theme that wants other mode
+values sets the mode tokens at normal priority and never needs `!important`
+(Art. VI). Components keep reading the same tokens.
+
+**A1-D3 — Behaviour change.** A theme that followed the earlier guidance and
+restated a reassigned token under the mode's media query or declaration now
+loses to the mode; it moves those values to the mode tokens. A token set on
+an element that is neither the root nor a theme root still wins inside it, as
+any per-element value does. A deprecated token gets no mode token (its
+replacement carries the mode), so `--ki-select-listbox-backdrop-blur` keeps
+its length under reduced transparency; the listbox filter that replaced it
+still turns off.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - A person who needs more contrast gets it everywhere (Priority: P1)
@@ -208,9 +245,9 @@ same component in a material3 page under the mode.
   and this mode adds nothing visible. The two do not conflict.
 - `data-ki-contrast` with any value other than "more", or on an element that
   is neither the root nor a theme root: ignored.
-- A consumer stylesheet that reassigns a token this mode remaps keeps its own
-  value in this mode (S12); to adjust it for more contrast it restates the
-  value under the same media query.
+- A consumer stylesheet or theme that reassigns a token this mode remaps
+  gets the mode's value under the mode (S13, S14); to choose its own value it
+  sets the token's more-contrast token (S12, S15; Amendment A1).
 - Under the mode, translucent surfaces also become opaque (spec 044 S7): a
   contrast ratio over glass depends on whatever is behind it and cannot be
   guaranteed.
@@ -302,9 +339,29 @@ Feature: More contrast when the person asks for it
 
   # S12
   Scenario: A page's own value for a strengthened token wins under more contrast
-    Given an onmars page whose stylesheet sets the control boundary token to "#000000" under more contrast
+    Given an onmars page whose stylesheet sets the more-contrast value of the control boundary to "#000000"
     When the page renders under a "more" contrast system preference
     Then the text field boundary renders in "#000000"
+
+  # S13
+  Scenario: More contrast applies over a theme of the page's own
+    Given a page themed "acme" by its own stylesheet, which sets the control boundary to "#c8c8c8"
+    When the page renders under a "more" contrast system preference
+    Then the text field boundary renders in the more-contrast boundary colour, not "#c8c8c8"
+
+  # S14
+  Scenario: A declared contrast applies over a theme of the page's own
+    Given a page themed "acme" by its own stylesheet, which sets the control boundary to "#c8c8c8"
+    And the page root declares the contrast "more"
+    When the page renders under no contrast system preference
+    Then the text field boundary renders in the more-contrast boundary colour, not "#c8c8c8"
+
+  # S15
+  Scenario: A theme of the page's own chooses its more-contrast values
+    Given an onmars page with a region themed "acme" by its own stylesheet, which sets the more-contrast value of the control boundary to "#000000"
+    When the page renders under a "more" contrast system preference
+    Then the text field boundary inside the region renders in "#000000"
+    And the text field boundary outside the region keeps the more-contrast boundary colour
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -315,7 +372,7 @@ Feature: More contrast when the person asks for it
 | Keyboard path | S4 | |
 | Assistive-tech outcome | — | Token-only feature: no role, name, state or announcement changes; the visual outcome for low-vision users is measured by S1–S6 |
 | Form participation | — | No form behavior changes: values, validity and reset are untouched; only how fields are painted |
-| Theming | S10, S11, S12 | |
+| Theming | S10, S11, S12, S13, S14, S15 | |
 
 ## Requirements *(mandatory)*
 
@@ -334,9 +391,10 @@ Feature: More contrast when the person asks for it
 - **FR-005**: Without the preference and without the declaration, every
   public token MUST resolve to exactly the value it has today.
 - **FR-006**: Disabled controls MUST keep their standard appearance.
-- **FR-007**: The mode MUST be expressed as one token override file of
-  references; the build MUST emit only the tokens whose value differs, per
-  theme, and MUST fail if a remap leaves a theme × scheme below FR-001.
+- **FR-007**: The mode MUST be expressed as tokens, one per remapped token
+  (`--ki-contrast-more-*`, Amendment A1), re-pointed with `!important` under
+  the mode; the build MUST fail if a remap leaves a theme × scheme below
+  FR-001.
 - **FR-008**: Mode precedence MUST NOT depend on the order in which the
   token stylesheets are loaded.
 - **FR-009**: The 13 component focus-ring tokens MUST alias the new semantic

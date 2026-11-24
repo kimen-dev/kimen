@@ -31,7 +31,7 @@ import {
   DENSITIES,
   densityRules,
   layeredOverrides,
-  MODES,
+  modeReassignments,
   renderBaseStylesheet,
   renderThemeStylesheet,
   themeOverrides,
@@ -43,7 +43,6 @@ import {
   material3LightConfig,
   sharedConfig,
   withDensity,
-  withMode,
 } from './style-dictionary.config.mjs';
 
 const dist = new URL('./dist/css/', import.meta.url);
@@ -69,12 +68,12 @@ const themes = {
   material3: { light: material3LightConfig, dark: material3DarkConfig },
 };
 // One theme's two schemes merged into one expression per token, optionally
-// with a mode layered over both.
-async function theme(name, mode, variant = (config) => config) {
+// varied (a density level) in both.
+async function theme(name, variant = (config) => config) {
   const { light, dark } = themes[name];
   return combineSchemes({
-    light: await composition(variant(mode ? withMode(light, mode) : light)),
-    dark: await composition(variant(mode ? withMode(dark, mode) : dark)),
+    light: await composition(variant(light)),
+    dark: await composition(variant(dark)),
   });
 }
 
@@ -82,28 +81,12 @@ const onmars = await theme('onmars');
 const material3Theme = await theme('material3');
 const material3 = themeOverrides({ base: onmars, theme: material3Theme });
 
-// Each mode is emitted as what the cascade below it does not already produce,
-// in cascade order: the default theme's mode rules follow the default rule
-// (and every earlier mode), and a theme re-asserts, after its own rule, the
-// mode values its overrides displaced (./scripts/theme-stylesheet.mjs).
-const baseLayers = [onmars];
-const themeLayers = [];
-const baseModes = [];
-const material3Modes = [];
-for (const mode of MODES) {
-  const declarations = layeredOverrides({
-    target: await theme('onmars', mode.name),
-    layers: baseLayers,
-  });
-  baseLayers.push(declarations);
-  baseModes.push({ mode, declarations });
-  const reasserted = layeredOverrides({
-    target: await theme('material3', mode.name),
-    layers: [...baseLayers, material3, ...themeLayers],
-  });
-  themeLayers.push(reasserted);
-  material3Modes.push({ mode, declarations: reasserted });
-}
+// Each mode re-points the tokens that have a value for it to that value, in
+// the default stylesheet and for every theme at once; a theme's own mode
+// values are among its overrides (./scripts/theme-stylesheet.mjs).
+const baseModes = modeReassignments(onmars, deprecations);
+// The same re-pointing must hold with material3's own mode values.
+modeReassignments(material3Theme, deprecations);
 
 // Density (spec 045): the document-inherited tokens, declared on :root alone,
 // and one rule per level that reassigns them on any element.
@@ -118,7 +101,7 @@ assertInheritedTokens({
   overrides: material3,
   label: 'material3',
 });
-for (const { mode, declarations } of [...baseModes, ...material3Modes]) {
+for (const { mode, declarations } of baseModes) {
   assertInheritedTokens({
     declarations: onmars,
     inherited,
@@ -129,7 +112,7 @@ for (const { mode, declarations } of [...baseModes, ...material3Modes]) {
 const levels = [];
 for (const level of DENSITIES) {
   const declarations = layeredOverrides({
-    target: await theme('onmars', undefined, (config) => withDensity(config, level)),
+    target: await theme('onmars', (config) => withDensity(config, level)),
     layers: [onmars],
   });
   for (const name of declarations.keys()) {
@@ -175,22 +158,17 @@ console.log(
 
 await writeFile(
   new URL('tokens.material3.css', dist),
-  compactTokenStylesheet(
-    renderThemeStylesheet('material3', material3, { deprecations, modes: material3Modes }),
-    {
-      declarations: material3Theme,
-      modes: [...baseModes, ...material3Modes],
-      inline: (name) =>
-        /^--ki-foundation-(?:material3-(?:typescale|motion|shape)-|migrated-component-)/u.test(
-          name,
-        ),
-      foundationsLast: true,
-    },
-  ),
+  compactTokenStylesheet(renderThemeStylesheet('material3', material3, { deprecations }), {
+    declarations: material3Theme,
+    modes: baseModes,
+    inline: (name) =>
+      /^--ki-foundation-(?:material3-(?:typescale|motion|shape)-|migrated-component-)/u.test(name),
+    foundationsLast: true,
+  }),
 );
 
 console.log(
-  `✔ dist/css/tokens.material3.css (theme: material3 — ${material3.size} overrides of onmars; modes: ${modeSummary(material3Modes)})`,
+  `✔ dist/css/tokens.material3.css (theme: material3 — ${material3.size} overrides of onmars)`,
 );
 
 // The page contract (opt-in): what a consumer page needs beyond tokens to

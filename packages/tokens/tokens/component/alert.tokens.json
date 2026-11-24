@@ -282,6 +282,68 @@
           "$description": "dimension used by the alert component for the gap between slotted actions (MarsUI Alert master CTAs gap Space/xl 12px)."
         }
       }
+    },
+    "contrast-more": {
+      "alert": {
+        "border-width": {
+          "$type": "dimension",
+          "$value": "{ki.space.xxs}",
+          "$description": "--ki-alert-border-width under more contrast: a 2px edge."
+        },
+        "neutral": {
+          "border": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-alert-neutral-border under more contrast: an edge at 3:1 or more against the page."
+          }
+        },
+        "success": {
+          "border": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-alert-success-border under more contrast: an edge at 3:1 or more against the page."
+          }
+        },
+        "danger": {
+          "border": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-alert-danger-border under more contrast: an edge at 3:1 or more against the page."
+          }
+        },
+        "info": {
+          "border": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-alert-info-border under more contrast: an edge at 3:1 or more against the page."
+          }
+        },
+        "warning": {
+          "border": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-alert-warning-border under more contrast: an edge at 3:1 or more against the page."
+          }
+        }
+      }
+    },
+    "reduced-transparency": {
+      "alert": {
+        "shell": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.s1}",
+            "$description": "--ki-alert-shell-bg under reduced transparency: the opaque surface it reads as over the page."
+          }
+        },
+        "neutral": {
+          "icon-bg": {
+            "$type": "color",
+            "$value": "{ki.surface.primary-base-em}",
+            "$description": "--ki-alert-neutral-icon-bg under reduced transparency: an opaque frame of the same tone."
+          }
+        }
+      }
     }
   }
 }

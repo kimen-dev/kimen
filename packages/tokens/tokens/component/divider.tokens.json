@@ -17,6 +17,15 @@
         "$value": "{ki.space.md}",
         "$description": "dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007)."
       }
+    },
+    "contrast-more": {
+      "divider": {
+        "color": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "--ki-divider-color under more contrast: the rule at 3:1 or more against the page."
+        }
+      }
     }
   }
 }

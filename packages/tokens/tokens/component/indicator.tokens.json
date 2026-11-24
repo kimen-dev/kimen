@@ -53,6 +53,17 @@
         "$value": "{ki.motion.easing.standard}",
         "$description": "easing used by the indicator component for the highlight-transfer transition (MarsUI standard curve; previously the UA default ease applied)."
       }
+    },
+    "contrast-more": {
+      "indicator": {
+        "dot": {
+          "color": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-indicator-dot-color under more contrast: resting pager dots at 3:1 or more against the page and the current dot."
+          }
+        }
+      }
     }
   }
 }

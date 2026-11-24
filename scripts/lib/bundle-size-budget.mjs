@@ -63,15 +63,23 @@ const BASE_BUDGETS = {
   // kimen-mcp, added here exactly so the headroom stays what it was. The founder
   // approved re-basing all three metrics by that cost, two review fixes included
   // (2026-11-24).
-  mcpApps: { raw: 812_706, gzip: 186_982, brotli: 148_326 },
-  mcpServer: { raw: 2_621_063, gzip: 498_155, brotli: 390_499 },
+  // Preference modes over themes (integrator feedback 0.1.3, item 1) measured
+  // against main 14909122 on macOS: the 37 mode tokens and the important mode
+  // rules grow the embedded onmars stylesheet, adding 5,131 / 434 / 539 B to the
+  // MCP Apps document and 5,131 / 407 / 420 B to kimen-mcp, on top of specs 161
+  // and 162. Approved by the founder (2026-11-24).
+  mcpApps: { raw: 817_837, gzip: 187_416, brotli: 148_865 },
+  mcpServer: { raw: 2_626_194, gzip: 498_562, brotli: 390_919 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
   // Document 2's batch 2 (Sources, InteractiveList, InputVariants, FullscreenDialog)
   // measured 20,246 B together with Carousel, 80 B more than the sum of the marginals
   // each measured alone: minified and brotlied, the combined additions compress worse.
-  tokenStylesheets: { onmars: 12_930, material3: 5_600, base: 250 },
+  // Preference modes over themes measured +348 B for onmars (20,284 to 20,632 B
+  // minified and brotlied) and -223 B for material3, which no longer re-asserts
+  // its mode values. Pending founder approval.
+  tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
 };
 
 export function deriveBundleSizeBudgets(components) {

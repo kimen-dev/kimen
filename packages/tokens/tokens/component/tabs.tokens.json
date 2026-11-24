@@ -65,6 +65,17 @@
           }
         }
       }
+    },
+    "contrast-more": {
+      "tabs": {
+        "divider": {
+          "color": {
+            "$type": "color",
+            "$value": "{ki.outline.strong}",
+            "$description": "--ki-tabs-divider-color under more contrast: the tab-list divider at 3:1 or more."
+          }
+        }
+      }
     }
   }
 }

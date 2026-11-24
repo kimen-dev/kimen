@@ -77,6 +77,25 @@ Feature: Opaque surfaces when the person asks for less transparency
 
   # S11
   Scenario: A page's own opaque value for a glass surface wins
-    Given an onmars light page whose stylesheet sets the floating glass surface token to "#fafafa" under reduced transparency
+    Given an onmars light page whose stylesheet sets the reduced-transparency value of the floating glass surface to "#fafafa"
     When the page renders under a "reduce" transparency system preference
     Then the open "Country" listbox paints "#fafafa"
+
+  # S12
+  Scenario: Reduced transparency applies over a theme of the page's own
+    Given a light page themed "acme" by its own stylesheet, which makes the floating glass surface translucent
+    When the page renders under a "reduce" transparency system preference
+    Then the open "Country" listbox paints an opaque surface without blur
+
+  # S13
+  Scenario: A declared transparency applies over a theme of the page's own
+    Given a light page themed "acme" by its own stylesheet, which makes the floating glass surface translucent
+    And the page root declares the transparency "reduce"
+    When the page renders under no transparency system preference
+    Then the open "Country" listbox paints an opaque surface without blur
+
+  # S14
+  Scenario: A theme of the page's own chooses its reduced-transparency values
+    Given an onmars light page with a region themed "acme" by its own stylesheet, which sets the reduced-transparency value of the floating glass surface to "#fafafa"
+    When the page renders under a "reduce" transparency system preference
+    Then the open "Country" listbox inside the region paints "#fafafa"

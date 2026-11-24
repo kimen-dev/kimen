@@ -34,25 +34,30 @@
 //   :root[data-ki-theme='x'], [data-ki-theme='x'] { ...overrides only... }
 //     A theme emits only the tokens whose expression differs from the base
 //     theme. Everything else is already declared on the same element by the
-//     rule above, so repeating it would only repeat bytes.
+//     rule above, so repeating it would only repeat bytes. That includes its
+//     mode values: they are tokens like any other (below).
 //
-//   @media (<preference>) { <token roots> { ...mode... } }
-//   <token roots carrying, or inside one carrying, the declaration> { ...mode... }
+//   @media (<preference>) { <token roots> { --ki-x: var(--ki-<mode>-x) !important } }
+//   <token roots carrying, or inside one carrying, the declaration> { ...same... }
 //     A MODE (specs 043/044) reassigns part of the token set on top of
-//     whatever theme is active: reduced transparency, more contrast. It is
-//     emitted twice with the same declarations — once for the person's
-//     preference, once for the page's own declaration — and only on token
-//     roots (`:root` and `[data-ki-theme]`), because those are the elements
-//     that redeclare every alias: a mode set anywhere else would change a
-//     token and leave every alias of it holding the old value.
+//     whatever theme is active: reduced transparency, more contrast. The
+//     value a token takes under a mode is a token of its own, declared with
+//     every other one (`--ki-contrast-more-outline-control`), so a theme sets
+//     it like any other token. The mode only re-points each token it
+//     reassigns to that value. It is emitted twice with the same declarations
+//     — once for the person's preference, once for the page's own declaration
+//     — and only on token roots (`:root` and `[data-ki-theme]`), because
+//     those are the elements that redeclare every alias: a mode set anywhere
+//     else would change a token and leave every alias of it holding the old
+//     value.
 //
-//     Precedence never depends on stylesheet order: a default-theme mode rule
-//     has the specificity of the default rule (`:where()` around the
-//     declaration) and follows it in the same sheet, so a theme override
-//     still outranks it; the theme then re-asserts, after its own rule and in
-//     its own sheet, exactly the mode values its overrides displaced. A mode
-//     only ever switches ON: there is no declaration that removes it against
-//     the person's preference.
+//     The mode wins over any theme without the theme doing anything: its
+//     declarations are `!important`, which outranks every normal declaration
+//     on the same element whatever its specificity or stylesheet order. Only
+//     the re-pointing is important, never a value, so a theme that wants other
+//     mode values sets the mode tokens and never needs `!important` itself.
+//     A mode only ever switches ON: there is no declaration that removes it
+//     against the person's preference.
 //
 //   --ki-x: value; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-y */
 //     The only comment the stylesheets carry (spec 041): a deprecated token
@@ -245,11 +250,12 @@ export function themeOverrides({ base, theme }) {
   return new Map([...theme].filter(([name, expression]) => base.get(name) !== expression));
 }
 
-function rule(selectors, declarations, deprecations = new Map()) {
+function rule(selectors, declarations, deprecations = new Map(), { important = false } = {}) {
+  const priority = important ? ' !important' : '';
   const line = ([property, value]) => {
     const deprecation = deprecations.get(property);
     const note = deprecation === undefined ? '' : ` /* ${deprecationComment(deprecation)} */`;
-    return `  ${property}: ${value};${note}`;
+    return `  ${property}: ${value}${priority};${note}`;
   };
   return [`${selectors.join(',\n')} {`, ...declarations.map(line), '}', ''].join('\n');
 }
@@ -273,8 +279,75 @@ export const MODES = Object.freeze([
   }),
 ]);
 
+/** The token that holds `name`'s value under `mode`: `--ki-<mode>-<name>`. */
+export function modeValueName(mode, name) {
+  return `--ki-${mode.name}-${name.slice('--ki-'.length)}`;
+}
+
+const referencesOf = (expression) =>
+  [...expression.matchAll(/var\((--[a-z0-9-]+)\)/gu)].map((match) => match[1]);
+
 /**
- * What a mode has to declare on top of a cascade: the tokens whose target
+ * What each mode reassigns, in `MODES` order: every token that has a value
+ * for the mode (`modeValueName`) among `declarations`, re-pointed to it, in
+ * declaration order. A mode value of a token that does not exist, of another
+ * mode value or of a deprecated token (whose replacement carries the mode
+ * instead) fails, and so does a mode value that leads back to its own token:
+ * under the mode that would be a cycle, and the token would lose its value.
+ */
+export function modeReassignments(declarations, deprecations = new Map()) {
+  const prefixes = MODES.map((mode) => [mode, `--ki-${mode.name}-`]);
+  const isModeValue = (name) => prefixes.some(([, prefix]) => name.startsWith(prefix));
+  const valued = new Map(MODES.map((mode) => [mode, new Set()]));
+  for (const name of declarations.keys()) {
+    const [mode, prefix] = prefixes.find(([, candidate]) => name.startsWith(candidate)) ?? [];
+    if (mode === undefined) continue;
+    const token = `--ki-${name.slice(prefix.length)}`;
+    if (!declarations.has(token) || isModeValue(token)) {
+      throw new Error(`${name} is the ${mode.name} value of ${token}, which is not a token`);
+    }
+    if (deprecations.has(token)) {
+      throw new Error(`${name} is the ${mode.name} value of ${token}, which is deprecated`);
+    }
+    valued.get(mode).add(token);
+  }
+  const modes = MODES.map((mode) => ({
+    mode,
+    declarations: new Map(
+      [...declarations.keys()]
+        .filter((name) => valued.get(mode).has(name))
+        .map((name) => [name, `var(${modeValueName(mode, name)})`]),
+    ),
+  }));
+  for (const { mode } of modes) {
+    // A mode's own declaration activates every mode that lists it.
+    const active = modes.filter(({ mode: candidate }) =>
+      candidate.activations.includes(mode.activations[0]),
+    );
+    const effective = new Map(declarations);
+    for (const { declarations: reassigned } of active) {
+      for (const [name, expression] of reassigned) effective.set(name, expression);
+    }
+    const done = new Set();
+    const visit = (name, trail) => {
+      if (done.has(name)) return;
+      if (trail.includes(name)) {
+        throw new Error(`under ${mode.name} ${[...trail, name].join(' -> ')} is a cycle`);
+      }
+      for (const reference of referencesOf(effective.get(name) ?? '')) {
+        visit(reference, [...trail, name]);
+      }
+      done.add(name);
+    };
+    for (const { declarations: reassigned } of active) {
+      for (const name of reassigned.keys()) visit(name, []);
+    }
+  }
+  return modes;
+}
+
+/**
+ * What a layer has to declare on top of a cascade: the tokens whose target
  * expression differs from the one the layers below produce (each layer a
  * partial map, the first one complete; the last layer that declares a token
  * wins, as in the stylesheet).
@@ -282,11 +355,11 @@ export const MODES = Object.freeze([
 export function layeredOverrides({ target, layers }) {
   const [base] = layers;
   for (const name of base.keys()) {
-    if (!target.has(name)) throw new Error(`the mode does not define ${name}`);
+    if (!target.has(name)) throw new Error(`the target does not define ${name}`);
   }
   for (const name of target.keys()) {
     if (!base.has(name)) {
-      throw new Error(`the mode defines ${name}, which the base layer does not`);
+      throw new Error(`the target defines ${name}, which the base layer does not`);
     }
   }
   const effective = new Map(layers.flatMap((layer) => [...layer]));
@@ -301,39 +374,30 @@ function indented(css) {
 }
 
 /**
- * One mode for the default theme (no `theme`) or re-asserted by a theme: the
- * media-query block and the declaration block, with the same declarations.
+ * One mode: the media-query block and the declaration block, with the same
+ * important declarations, on the root and on every theme root.
  */
-export function renderModeRules(mode, declarations, theme, deprecations) {
+export function renderModeRules(mode, declarations, deprecations) {
   if (declarations.size === 0) return '';
   const activation = mode.activations.join(', ');
-  const preference = theme
-    ? [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`]
-    : [':root', ':where([data-ki-theme])'];
-  const declared = theme
-    ? [
-        `:root[data-ki-theme='${theme}']:where(${activation})`,
-        `[data-ki-theme='${theme}']:where(${activation})`,
-        `[data-ki-theme='${theme}']:where(:is(:root, [data-ki-theme]):is(${activation}) *)`,
-      ]
-    : [
-        `:root:where(${activation})`,
-        `:where([data-ki-theme]:is(${activation}))`,
-        `:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`,
-      ];
+  const preference = [':root', ':where([data-ki-theme])'];
+  const declared = [
+    `:root:where(${activation})`,
+    `:where([data-ki-theme]:is(${activation}))`,
+    `:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`,
+  ];
+  const important = { important: true };
   return [
     `@media ${mode.media} {`,
-    indented(rule(preference, [...declarations], deprecations)).trimEnd(),
+    indented(rule(preference, [...declarations], deprecations, important)).trimEnd(),
     '}',
     '',
-    rule(declared, [...declarations], deprecations),
+    rule(declared, [...declarations], deprecations, important),
   ].join('\n');
 }
 
-function modeRules(modes, theme, deprecations) {
-  return modes.map(({ mode, declarations }) =>
-    renderModeRules(mode, declarations, theme, deprecations),
-  );
+function modeRules(modes, deprecations) {
+  return modes.map(({ mode, declarations }) => renderModeRules(mode, declarations, deprecations));
 }
 
 /** The density levels the stylesheet publishes, besides `default` (spec 045). */
@@ -367,8 +431,6 @@ export function densityRules(levels, base) {
  * references resolve once, on `:root`.
  */
 export function assertInheritedTokens({ declarations, inherited, overrides, label = 'a theme' }) {
-  const referencesOf = (expression) =>
-    [...expression.matchAll(/var\((--[a-z0-9-]+)\)/gu)].map((match) => match[1]);
   const pinned = new Set(inherited);
   for (const name of inherited) {
     const expression = declarations.get(name);
@@ -413,31 +475,27 @@ export function renderBaseStylesheet(
     ...densities.map(({ level, declarations: levelDeclarations }) =>
       rule([`[data-ki-density='${level}']`], [...levelDeclarations], deprecations),
     ),
-    ...modeRules(modes, undefined, deprecations),
+    ...modeRules(modes, deprecations),
   ]
     .filter((block) => block !== '')
     .join('\n');
 }
 
 /**
- * An opt-in theme: its overrides, for a themed document and for a themed
- * subtree, then the mode values those overrides displaced.
+ * An opt-in theme: its overrides, its mode values among them, for a themed
+ * document and for a themed subtree. The default stylesheet's modes re-point
+ * the theme's tokens to them.
  */
-export function renderThemeStylesheet(theme, declarations, { deprecations, modes = [] } = {}) {
+export function renderThemeStylesheet(theme, declarations, { deprecations } = {}) {
   if (!THEME_NAME.test(theme)) throw new Error(`unsupported theme name ${JSON.stringify(theme)}`);
   if (declarations.size === 0) {
     throw new Error(`theme ${theme} does not differ from the base theme`);
   }
-  return [
-    rule(
-      [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`],
-      [...declarations],
-      deprecations,
-    ),
-    ...modeRules(modes, theme, deprecations),
-  ]
-    .filter((block) => block !== '')
-    .join('\n');
+  return rule(
+    [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`],
+    [...declarations],
+    deprecations,
+  );
 }
 
 // CSS custom property values retain whitespace during minification. Compact

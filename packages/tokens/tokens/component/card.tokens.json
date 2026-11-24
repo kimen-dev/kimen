@@ -113,6 +113,20 @@
         "$value": "{ki.typography.family.heading}",
         "$description": "Family used for a clickable card title."
       }
+    },
+    "contrast-more": {
+      "card": {
+        "border-width": {
+          "$type": "dimension",
+          "$value": "{ki.size.border.hairline}",
+          "$description": "--ki-card-border-width under more contrast: cards draw their edge."
+        },
+        "border-color": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "--ki-card-border-color under more contrast: an edge at 3:1 or more against the page."
+        }
+      }
     }
   }
 }
