@@ -81,13 +81,22 @@ function tabFrom(el: Element): HTMLButtonElement {
   return before;
 }
 
+/**
+ * A box size to a hundredth of a pixel. Firefox lays out an <a> and a
+ * <button> of the same content to sizes a few hundred-thousandths of a pixel
+ * apart (111.69999 against 111.70001), far below anything a person sees.
+ */
+function visibleSize(size: number): number {
+  return Math.round(size * 100) / 100;
+}
+
 /** Everything the person sees of the control, box included. */
 function appearanceOf(part: HTMLElement): Record<string, string | number> {
   const style = getComputedStyle(part);
   const box = part.getBoundingClientRect();
   return {
-    width: box.width,
-    height: box.height,
+    width: visibleSize(box.width),
+    height: visibleSize(box.height),
     ...Object.fromEntries(
       [
         'alignItems',
