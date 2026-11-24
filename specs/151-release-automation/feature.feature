@@ -60,3 +60,10 @@ Feature: Kimen prepares and tags releases through a pull request
     When release preparation proposes v0.2.0
     Then every listed @kimen/mcp-server pin and both server.json versions read 0.2.0 in that pull request
     And no file outside the pin list changes
+
+  # S10
+  Scenario: The release pull request versions the agent plugin with the packages
+    Given the three agent plugin manifests declare version 0.1.0
+    When release preparation proposes v0.2.0
+    Then each plugin manifest declares version 0.2.0 in that pull request
+    And the release pull request and its tag are refused while a manifest declares another version

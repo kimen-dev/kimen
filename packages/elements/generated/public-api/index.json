@@ -4986,6 +4986,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.48)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -7991,6 +7992,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -10996,6 +10998,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.48)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -14001,6 +14004,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -17006,6 +17010,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.48)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -20011,6 +20016,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -23016,6 +23022,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.48)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -26021,6 +26028,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -29026,6 +29034,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.48)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -32031,6 +32040,7 @@
                 "--ki-switch-sm-well-radius": "10px",
                 "--ki-switch-thumb-inset": "0.125rem",
                 "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-thumb-width": "1.375rem",
                 "--ki-switch-track-height": "1.375rem",
@@ -35045,6 +35055,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -38050,6 +38061,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.24)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -41055,6 +41067,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -44060,6 +44073,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.24)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -47065,6 +47079,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -50070,6 +50085,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.24)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -53075,6 +53091,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -56080,6 +56097,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.24)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -59085,6 +59103,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.32)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -62090,6 +62109,7 @@
                 "--ki-switch-sm-well-radius": "8px",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
+                "--ki-switch-thumb-shadow": "0 2px 3px -1.5px rgba(0,0,0,0.24)",
                 "--ki-switch-thumb-size": "1.5rem",
                 "--ki-switch-thumb-width": "1.5rem",
                 "--ki-switch-track-height": "2rem",
@@ -82865,7 +82885,7 @@
           "--ki-switch-control-height": {
             "default": "1.75rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for the control footprint height (Toggle md: Space/9xl 28px). The well pads the track by half of (control-height - track-height) on every side.",
+            "description": "dimension used by the switch component for the control footprint height at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. The well pads the track by half of (control-height - track-height) on every side.",
             "replacement": null,
             "required": false,
             "type": null
@@ -82873,7 +82893,7 @@
           "--ki-switch-control-width": {
             "default": "3rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for the control footprint width (Toggle md 10023:1368: Space/14xl 48px). The well is centred in it; set it to the track width, with control-height, to drop the well.",
+            "description": "dimension used by the switch component for the control footprint width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. The well is centred in it; set it to the track width, with control-height, to drop the well.",
             "replacement": null,
             "required": false,
             "type": null
@@ -82919,7 +82939,7 @@
           "--ki-switch-gap": {
             "default": "0.75rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio).",
+            "description": "dimension used by the switch component for the gap between the control and its label at sizes md, lg and xl; sm-gap sets sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -82975,7 +82995,7 @@
           "--ki-switch-lg-control-height": {
             "default": "2rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px).",
+            "description": "dimension used by the switch component for the control footprint height at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -82983,7 +83003,7 @@
           "--ki-switch-lg-control-width": {
             "default": "3.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px).",
+            "description": "dimension used by the switch component for the control footprint width at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -82991,7 +83011,7 @@
           "--ki-switch-lg-min-target": {
             "default": "2rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg min target (Toggle 10023:1125 lg cell height: 32px).",
+            "description": "dimension used by the switch component for min target at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -82999,7 +83019,7 @@
           "--ki-switch-lg-thumb-inset": {
             "default": "0.125rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg thumb inset (Toggle 10023:1125 lg binds Space/xxs, 2px).",
+            "description": "dimension used by the switch component for thumb inset at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83007,7 +83027,7 @@
           "--ki-switch-lg-thumb-radius": {
             "default": "6px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg thumb radius (Toggle 10023:1125 lg pointer binds Radius/small-component/xs).",
+            "description": "dimension used by the switch component for thumb radius at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83015,7 +83035,7 @@
           "--ki-switch-lg-thumb-size": {
             "default": "1.25rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg thumb height (Toggle 10023:1125 lg pointer: 20px).",
+            "description": "dimension used by the switch component for thumb block size at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83023,7 +83043,7 @@
           "--ki-switch-lg-thumb-width": {
             "default": "1.625rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg thumb width (Toggle 10023:1125 lg pointer: 26px).",
+            "description": "dimension used by the switch component for thumb inline size at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83031,7 +83051,7 @@
           "--ki-switch-lg-track-height": {
             "default": "1.625rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg track height (Toggle 10023:1125 lg: 26px).",
+            "description": "dimension used by the switch component for track height at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83039,7 +83059,7 @@
           "--ki-switch-lg-track-radius": {
             "default": "8px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg track radius (Toggle 10023:1125 lg binds Radius/small-component/sm).",
+            "description": "dimension used by the switch component for track radius at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83047,7 +83067,7 @@
           "--ki-switch-lg-track-width": {
             "default": "3rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg track width (Toggle 10023:1125 lg: 48px).",
+            "description": "dimension used by the switch component for track width at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83055,7 +83075,7 @@
           "--ki-switch-lg-well-radius": {
             "default": "10px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for lg well radius (Toggle 10023:1125 lg Base binds Radius/small-component/md).",
+            "description": "dimension used by the switch component for the well radius at size lg.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83063,7 +83083,7 @@
           "--ki-switch-min-target": {
             "default": "1.75rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint).",
+            "description": "dimension used by the switch component for min target at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83071,7 +83091,7 @@
           "--ki-switch-sm-control-height": {
             "default": "1.75rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm control height (Toggle 10023:1125 sm cell: 28px).",
+            "description": "dimension used by the switch component for the control footprint height at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83079,7 +83099,7 @@
           "--ki-switch-sm-control-width": {
             "default": "2.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm control width (Toggle 10023:1125 sm cell: 40px).",
+            "description": "dimension used by the switch component for the control footprint width at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83087,7 +83107,7 @@
           "--ki-switch-sm-gap": {
             "default": "0.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for the sm gap between control and label (Toggle_label 10101:3995 sm binds Space/md, 8px; spec 050 D4).",
+            "description": "dimension used by the switch component for the gap between the control and its label at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83095,7 +83115,7 @@
           "--ki-switch-sm-label-font-size": {
             "default": "0.8125rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for the sm label font size (Toggle_label 10101:3995 sm: UI/para 13/20; spec 050 D4).",
+            "description": "dimension used by the switch component for the label font size at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83103,7 +83123,7 @@
           "--ki-switch-sm-label-line-height": {
             "default": "1.25rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for the sm label line height (Toggle_label 10101:3995 sm: UI/para 13/20).",
+            "description": "dimension used by the switch component for the label line height at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83111,7 +83131,7 @@
           "--ki-switch-sm-min-target": {
             "default": "1.75rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm min target (Toggle 10023:1125 sm cell height: 28px).",
+            "description": "dimension used by the switch component for min target at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83119,7 +83139,7 @@
           "--ki-switch-sm-thumb-inset": {
             "default": "0.125rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm thumb inset (Toggle 10023:1125 sm binds Space/xxs, 2px).",
+            "description": "dimension used by the switch component for thumb inset at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83127,7 +83147,7 @@
           "--ki-switch-sm-thumb-radius": {
             "default": "4px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm thumb radius (Toggle 10023:1125 sm pointer binds Radius/small-component/xxs).",
+            "description": "dimension used by the switch component for thumb radius at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83135,7 +83155,7 @@
           "--ki-switch-sm-thumb-size": {
             "default": "0.875rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm thumb height (Toggle 10023:1125 sm pointer: 14px).",
+            "description": "dimension used by the switch component for thumb block size at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83143,7 +83163,7 @@
           "--ki-switch-sm-thumb-width": {
             "default": "1.125rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm thumb width (Toggle 10023:1125 sm pointer: 18px).",
+            "description": "dimension used by the switch component for thumb inline size at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83151,7 +83171,7 @@
           "--ki-switch-sm-track-height": {
             "default": "1.125rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm track height (Toggle 10023:1125 sm: 18px).",
+            "description": "dimension used by the switch component for track height at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83159,7 +83179,7 @@
           "--ki-switch-sm-track-radius": {
             "default": "6px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm track radius (Toggle 10023:1125 sm binds Radius/small-component/xs).",
+            "description": "dimension used by the switch component for track radius at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83167,7 +83187,7 @@
           "--ki-switch-sm-track-width": {
             "default": "2rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm track width (Toggle 10023:1125 sm: 32px).",
+            "description": "dimension used by the switch component for track width at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83175,7 +83195,7 @@
           "--ki-switch-sm-well-radius": {
             "default": "10px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for sm well radius (Toggle 10023:1125 sm Base binds Radius/small-component/md).",
+            "description": "dimension used by the switch component for the well radius at size sm.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83183,7 +83203,7 @@
           "--ki-switch-thumb-inset": {
             "default": "0.125rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for thumb inset.",
+            "description": "dimension used by the switch component for thumb inset at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83191,15 +83211,29 @@
           "--ki-switch-thumb-radius": {
             "default": "6px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs).",
+            "description": "dimension used by the switch component for thumb radius at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
           },
+          "--ki-switch-thumb-shadow": {
+            "default": {
+              "blur": "3px",
+              "color": "#00000052",
+              "offsetX": 0,
+              "offsetY": "2px",
+              "spread": "-1.5px"
+            },
+            "deprecatedSince": null,
+            "description": "shadow used by the switch component for the thumb in every state and size. Set it to none to drop the shadow.",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
           "--ki-switch-thumb-size": {
             "default": "1.125rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for thumb size.",
+            "description": "dimension used by the switch component for thumb block size at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83207,7 +83241,7 @@
           "--ki-switch-thumb-width": {
             "default": "1.375rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size).",
+            "description": "dimension used by the switch component for thumb inline size at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83215,7 +83249,7 @@
           "--ki-switch-track-height": {
             "default": "1.375rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for track height.",
+            "description": "dimension used by the switch component for track height at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83223,7 +83257,7 @@
           "--ki-switch-track-radius": {
             "default": "8px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for track radius.",
+            "description": "dimension used by the switch component for track radius at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83231,7 +83265,7 @@
           "--ki-switch-track-width": {
             "default": "2.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for track width.",
+            "description": "dimension used by the switch component for track width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83335,7 +83369,7 @@
           "--ki-switch-well-bg-end": {
             "default": "#f9f7f4",
             "deprecatedSince": null,
-            "description": "color used by the switch component for the bottom of the well gradient (Toggle md Base).",
+            "description": "color used by the switch component for the bottom of the well gradient, at every size.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83343,7 +83377,7 @@
           "--ki-switch-well-bg-start": {
             "default": "#ebe7e1",
             "deprecatedSince": null,
-            "description": "color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well.",
+            "description": "color used by the switch component for the top of the well gradient, at every size. Transparent drops the well.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83351,7 +83385,7 @@
           "--ki-switch-well-radius": {
             "default": "10px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md).",
+            "description": "dimension used by the switch component for the radius of the well that holds the track at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83359,7 +83393,7 @@
           "--ki-switch-xl-control-height": {
             "default": "2.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl control height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 40px).",
+            "description": "dimension used by the switch component for the control footprint height at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83367,7 +83401,7 @@
           "--ki-switch-xl-control-width": {
             "default": "4rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl control width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 64px).",
+            "description": "dimension used by the switch component for the control footprint width at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83375,7 +83409,7 @@
           "--ki-switch-xl-min-target": {
             "default": "2.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl min target (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell height: 40px).",
+            "description": "dimension used by the switch component for min target at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83383,7 +83417,7 @@
           "--ki-switch-xl-thumb-inset": {
             "default": "0.25rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl thumb inset (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Space/xs, 4px).",
+            "description": "dimension used by the switch component for thumb inset at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83391,7 +83425,7 @@
           "--ki-switch-xl-thumb-radius": {
             "default": "6px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl thumb radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer binds Radius/small-component/xs).",
+            "description": "dimension used by the switch component for thumb radius at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83399,7 +83433,7 @@
           "--ki-switch-xl-thumb-size": {
             "default": "1.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl thumb height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 24px).",
+            "description": "dimension used by the switch component for thumb block size at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83407,7 +83441,7 @@
           "--ki-switch-xl-thumb-width": {
             "default": "2rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl thumb width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 32px).",
+            "description": "dimension used by the switch component for thumb inline size at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83415,7 +83449,7 @@
           "--ki-switch-xl-track-height": {
             "default": "2rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl track height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 32px).",
+            "description": "dimension used by the switch component for track height at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83423,7 +83457,7 @@
           "--ki-switch-xl-track-radius": {
             "default": "10px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl track radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Radius/small-component/md).",
+            "description": "dimension used by the switch component for track radius at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83431,7 +83465,7 @@
           "--ki-switch-xl-track-width": {
             "default": "3.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl track width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 56px).",
+            "description": "dimension used by the switch component for track width at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -83439,7 +83473,7 @@
           "--ki-switch-xl-well-radius": {
             "default": "12px",
             "deprecatedSince": null,
-            "description": "dimension used by the switch component for xl well radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) Base binds Radius/small-component/lg).",
+            "description": "dimension used by the switch component for the well radius at size xl.",
             "replacement": null,
             "required": false,
             "type": null
@@ -87620,5 +87654,5 @@
       }
     }
   },
-  "surfaceSha256": "9b11e093ea6f77f0ec95a6d07abd2f604af98f1862106b19ab3c0ad62194b7d3"
+  "surfaceSha256": "3370ecabf07037f4bc3e9f8349a76127255aa961895a019c3bb9c59033a80505"
 }

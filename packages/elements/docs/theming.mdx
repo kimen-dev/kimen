@@ -146,9 +146,13 @@ included: the translucent variants are mixes of `--ki-color-brand-500`.
 The same redeclaration means page-level reassignments made on `:root` do not
 flow into a themed subtree: it starts from its theme's own values. Repeat
 them for the subtree if you want both
-(`:root, [data-ki-theme='acme'] { … }`). Your page's own aliases of Kimen
-tokens work the same way: `--page-accent: var(--ki-surface-primary-low-em)`
-declared on `:root` alone keeps the root's colour inside every region.
+(`:root, [data-ki-theme='acme'] { … }`). On a page with its own theme, a
+subtree that adjusts a few tokens repeats that theme's name
+(`<section data-ki-theme="acme" class="sheet">`, the `.sheet` rule after the
+theme rule): another name starts it from the default theme and drops the
+page theme. Your page's own aliases of Kimen tokens work the same way:
+`--page-accent: var(--ki-surface-primary-low-em)` declared on `:root` alone
+keeps the root's colour inside every region.
 
 ### Modes and your own theme
 
