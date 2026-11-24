@@ -104,8 +104,8 @@ accepts the batch; otherwise it paints the full spec, as without an update
 (spec 157).
 
 ```ts
-// 3. Answer a declared action. Ask for relay when the person's choice needs
-//    the model; leave it off for a UI-only action such as a refresh.
+// 3. Answer a declared action. Ask for relay when the model needs to know;
+//    leave it off for a UI-only action such as a refresh.
 const answer = acknowledgeSurfaceAction('confirm-order', { relay: true });
 // structuredContent.kimenAction = { action: 'confirm-order', relay: true }
 ```
@@ -116,7 +116,15 @@ With `relay: true`, a host that advertises text messages receives one
 builds that line from the action and data it sent — never from your answer —
 escapes line breaks and direction controls, and sends nothing above 8192
 bytes. Tell the model how to read it in the description of the tool that
-renders the surface (spec 040).
+renders the surface (spec 040): it reports what the surface dispatched, not
+the person's words.
+
+An action call is a report, not consent (spec 161): it says that a bound
+component fired its event, and some events fire without the person (a
+toast's time runs out, an image fails to load, a spec opens a popover). When
+a model wrote the spec, it also wrote the words on its controls, so confirm a
+consequential effect outside the spec, through the host or your server's own
+rules.
 
 Inside the surface document, `createSurfaceBridge` speaks the MCP Apps
 2026-01-26 lifecycle: it opens with `ui/initialize`, confirms with

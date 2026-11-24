@@ -86,12 +86,14 @@ every 1.0 `callRendererFunction` is refused with `INVALID_FUNCTION_CALL`. The
 surface's data model lives inside the adapter: bindings, `updateDataModel`
 upserts and removals, `ChildList` templates with relative paths and the pure
 formatting functions resolve here, so the catalog never learns about data
-models. A user activation returns as an A2UI `action` event in the surface's
-version (`name`, `surfaceId`, `sourceComponentId`, `timestamp`, resolved
-`context`, and the 1.0 `userMessage`), with the data-model metadata
-(`a2uiClientDataModel` or `a2uiRendererDataModel`) when the surface asked for
-`sendDataModel`. `A2UI_RENDERER_CAPABILITIES` lists what to advertise per
-version, 1.0 first.
+models. A bound event, a person's activation or one that fires on its own,
+returns as an A2UI `action` event in the surface's version (`name`,
+`surfaceId`, `sourceComponentId`, `timestamp`, resolved `context`, and the
+1.0 `userMessage`), with the data-model metadata (`a2uiClientDataModel` or
+`a2uiRendererDataModel`) when the surface asked for `sendDataModel`. An
+action is a report, never the person's consent (spec 161): confirm a
+consequential effect outside the spec. `A2UI_RENDERER_CAPABILITIES` lists
+what to advertise per version, 1.0 first.
 
 The basic catalog maps content `Text` to `ki-markdown`, `Image` to `ki-image`,
 `Icon` to `ki-icon`, `Slider` to `ki-slider`, and `Modal` to a `ki-button`

@@ -171,7 +171,7 @@ export function surfaceToolResult(
 export interface AcknowledgeSurfaceActionOptions {
   /**
    * Ask the surface to relay this action to the model as one `ui/message`
-   * (spec 040 D2). Relay when the person's choice needs the model; leave it
+   * (spec 040 D2). Relay when the model needs to know; leave it
    * off for a UI-only action the tool fully handles (a refresh). Default
    * `false`.
    */

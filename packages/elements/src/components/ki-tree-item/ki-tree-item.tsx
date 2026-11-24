@@ -52,15 +52,24 @@ export class KiTreeItem {
   /** Localized text for the spinner status during an outstanding lazy request. */
   @Prop() loadingLabel = 'Loading';
 
-  /** Emitted when an existing branch expands. */
+  /**
+   * Emitted when an existing branch expands, also when `expanded` is set: it
+   * can fire without a gesture.
+   */
   @Event({ eventName: 'ki-expand', bubbles: true, composed: true })
   kiExpand!: EventEmitter<{ item: HTMLKiTreeItemElement }>;
 
-  /** Emitted when an existing branch collapses. */
+  /**
+   * Emitted when an existing branch collapses, also when `expanded` is
+   * cleared: it can fire without a gesture.
+   */
   @Event({ eventName: 'ki-collapse', bubbles: true, composed: true })
   kiCollapse!: EventEmitter<{ item: HTMLKiTreeItemElement }>;
 
-  /** Emitted once when an empty lazy branch first opens. The listener supplies the children. */
+  /**
+   * Emitted once when an empty lazy branch first opens, also one rendered
+   * expanded: it can fire without a gesture. The listener supplies the children.
+   */
   @Event({ eventName: 'ki-load', bubbles: true, composed: true })
   kiLoad!: EventEmitter<{ item: HTMLKiTreeItemElement }>;
 

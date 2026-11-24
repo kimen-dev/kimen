@@ -72,8 +72,9 @@ export class KiDrawer {
   @Prop({ attribute: 'close-label' }) closeLabel?: string = 'Close';
 
   /**
-   * Requests dismissal before the drawer closes. Call preventDefault() to keep it open,
-   * for example when edits are unsaved. The event carries the reason in detail.reason.
+   * Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it
+   * can fire without a gesture. Call preventDefault() to keep it open, for example when
+   * edits are unsaved. The event carries the reason in detail.reason.
    */
   @Event({ eventName: 'ki-close', bubbles: true, composed: true, cancelable: true })
   private readonly kiClose!: EventEmitter<KiDrawerCloseDetail>;
