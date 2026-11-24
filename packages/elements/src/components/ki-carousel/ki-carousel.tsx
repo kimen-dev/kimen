@@ -107,7 +107,10 @@ export class KiCarousel {
   /** Accessible role description of each slide group. */
   @Prop() slideRoleDescription = 'slide';
 
-  /** Reports the one-based index when the leading slide changes. */
+  /**
+   * Reports the one-based index when the leading slide changes, also on
+   * autoplay or a new `current`: it can fire without a gesture.
+   */
   @Event({ eventName: 'ki-slide-change', bubbles: true, composed: true, cancelable: false })
   slideChange!: EventEmitter<CarouselSlideChangeDetail>;
 

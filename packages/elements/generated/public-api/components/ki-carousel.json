@@ -313,7 +313,7 @@
       "ki-slide-change": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Reports the one-based index when the leading slide changes.",
+        "description": "Reports the one-based index when the leading slide changes, also on\nautoplay or a new `current`: it can fire without a gesture.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<CarouselSlideChangeDetail>"

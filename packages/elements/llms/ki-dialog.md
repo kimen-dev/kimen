@@ -82,7 +82,7 @@ confirmation button with the same label and event.
 
 ## Events
 
-- `ki-close` (CustomEvent<KiDialogCloseDetail>): Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
+- `ki-close` (CustomEvent<KiDialogCloseDetail>): Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path, `close()` and a cleared `open` included, emits a noncancelable notification after close and focus restoration: it can fire without a gesture. Use `open` to observe the modal's live state.
 - `ki-confirm` (CustomEvent<void>): The user activated the confirmation button. Handle validation, submission and dismissal in the application.
 
 ## Methods

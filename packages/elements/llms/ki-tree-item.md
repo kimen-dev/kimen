@@ -66,9 +66,9 @@ import '@kimen/elements/icons/file-code';
 
 ## Events
 
-- `ki-collapse` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch collapses.
-- `ki-expand` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch expands.
-- `ki-load` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted once when an empty lazy branch first opens. The listener supplies the children.
+- `ki-collapse` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch collapses, also when `expanded` is cleared: it can fire without a gesture.
+- `ki-expand` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch expands, also when `expanded` is set: it can fire without a gesture.
+- `ki-load` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted once when an empty lazy branch first opens, also one rendered expanded: it can fire without a gesture. The listener supplies the children.
 
 ## Methods
 

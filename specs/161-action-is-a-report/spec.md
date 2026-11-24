@@ -8,9 +8,9 @@
 
 **Created**: 2026-11-24
 
-**Status**: Draft. Pending founder approval. S1 is a guardrail scenario
-(Art. VIII) and needs explicit founder confirmation; the amendments to `028`
-and `040` below are proposed, not applied.
+**Status**: Approved. The founder approved the scenario and the amendments
+to `028` and `040` below verbatim on 2026-11-24 ("Aprobado tal cual"); S1 is
+a guardrail scenario (Art. VIII).
 
 **Input**: An automated security review of the push of
 `claude/package-api-gate` (PR #568), which merged `main` and so carried
@@ -194,7 +194,7 @@ interaction pattern and changes no behavior.
   click), and to read those descriptions.
 - **FR-004**: Spec 028 and spec 040 MUST be amended as below.
 
-### Amendment to spec 028 (proposed)
+### Amendment to spec 028 (applied)
 
 `specs/028-guarded-renderer/spec.md`, FR-003, after the sentence "Exactly one
 action dispatches per activation: the innermost bound node claims the
@@ -210,7 +210,7 @@ Key Entities, **Declared action**, append:
 
 > A dispatched action reports an event; it is never consent (`161`).
 
-### Amendment to spec 040 (proposed)
+### Amendment to spec 040 (applied)
 
 `specs/040-surface-action-relay/spec.md`, Edge Cases, append:
 

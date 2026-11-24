@@ -3887,7 +3887,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Reports the one-based index when the leading slide changes.",
+          "docs": "Reports the one-based index when the leading slide changes, also on\nautoplay or a new `current`: it can fire without a gesture.",
           "docsTags": []
         }
       ],
@@ -9713,7 +9713,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
+          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path, `close()` and a cleared `open` included,\nemits a noncancelable notification after close and focus restoration: it\ncan fire without a gesture. Use `open` to observe the modal's live state.",
           "docsTags": []
         },
         {
@@ -10169,7 +10169,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason.",
+          "docs": "Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it\ncan fire without a gesture. Call preventDefault() to keep it open, for example when\nedits are unsaved. The event carries the reason in detail.reason.",
           "docsTags": []
         }
       ],
@@ -19790,7 +19790,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Emitted when the popover closes.",
+          "docs": "Emitted when the popover closes, also when `open` is cleared: it can fire\nwithout a gesture.",
           "docsTags": []
         },
         {
@@ -19804,7 +19804,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Emitted when the popover opens.",
+          "docs": "Emitted when the popover opens, also when `open` is set: it can fire\nwithout a gesture.",
           "docsTags": []
         }
       ],
@@ -33166,7 +33166,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted when an existing branch collapses.",
+          "docs": "Emitted when an existing branch collapses, also when `expanded` is\ncleared: it can fire without a gesture.",
           "docsTags": []
         },
         {
@@ -33185,7 +33185,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted when an existing branch expands.",
+          "docs": "Emitted when an existing branch expands, also when `expanded` is set: it\ncan fire without a gesture.",
           "docsTags": []
         },
         {
@@ -33204,7 +33204,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted once when an empty lazy branch first opens. The listener supplies the children.",
+          "docs": "Emitted once when an empty lazy branch first opens, also one rendered\nexpanded: it can fire without a gesture. The listener supplies the children.",
           "docsTags": []
         }
       ],
