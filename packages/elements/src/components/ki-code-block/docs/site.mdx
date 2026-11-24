@@ -11,8 +11,25 @@ const sample = load(3);</ki-code-block>`} />
 
 Supply the snippet as a plain text child. Escape HTML markup in static
 examples or assign `textContent` when you create the element in JavaScript.
-JavaScript, TypeScript and JSON have syntax colors. Other language labels
-display the source as plain text.
+JavaScript, TypeScript, JSON and Gherkin have syntax colors. Other language
+labels display the source as plain text. Markup inside the snippet is never
+rendered, so highlighting written as HTML shows as literal text.
+
+Set `language="gherkin"`, or `feature`, for Gherkin contracts. Keywords from
+Gherkin's English and Spanish dictionaries are colored when they open a line,
+so `Y` or `E` inside a sentence stays plain. Comments such as
+`# language: es`, tags, quoted text, doc strings, table pipes and cells, and
+outline placeholders such as `<count>` are colored too.
+
+<Demo code={`<ki-code-block language="gherkin" filename="checkout.feature">@smoke
+Feature: Pay the cart
+  Scenario Outline: Pay &lt;count&gt; items
+    Given a cart with &lt;count&gt; items
+    When the shopper pays with "card"
+    Then the receipt shows the total
+    Examples:
+      | count |
+      | 3     |</ki-code-block>`} />
 
 Use `line-numbers` to show a gutter and `highlight="3,5-7"` for one-based
 lines or inclusive ranges. Long lines scroll by default. Add `wrap` to wrap

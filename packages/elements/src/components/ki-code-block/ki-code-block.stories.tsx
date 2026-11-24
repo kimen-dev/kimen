@@ -39,6 +39,24 @@ export const Wrapped: Story = {
   ),
 };
 
+const contract = [
+  '# language: es',
+  '@pagos',
+  'Característica: Pagar el carrito',
+  '  Esquema del escenario: Pagar <cantidad> productos',
+  '    Dado un carrito con <cantidad> productos y un cupón',
+  '    Cuando el cliente paga con "tarjeta"',
+  '    Entonces el recibo muestra el total',
+  '    Ejemplos:',
+  '      | cantidad |',
+  '      | 3        |',
+].join('\n');
+
+export const Gherkin: Story = {
+  args: { language: 'gherkin', filename: 'pagos.feature', highlight: '5' },
+  render: (args) => <ki-code-block {...args}>{contract}</ki-code-block>,
+};
+
 export const RightToLeft: Story = {
   render: (args) => (
     <ki-code-block {...args} dir="rtl">

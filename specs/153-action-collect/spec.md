@@ -10,6 +10,9 @@
 
 **Status**: Approved. The founder confirmed S1 to S12 verbatim on 2026-11-21
 ("Aprobado tal cual"), including the Art. VIII guardrail confirmation.
+S13 was added on 2026-11-24 after the real-host test of the MCP Apps
+adapter (the browser bubble opened on a field other than the focused one);
+the founder approved it verbatim on 2026-11-24 ("Apruebo S13").
 
 **Input**: Founder decision of 2026-11-21 on the improvements to land before
 `@kimen/catalog`, `@kimen/emitter` and the adapters are published: a spec
@@ -63,7 +66,7 @@ make every host re-implement the validation the controls already do.
 activate the button, and observe that no action arrives, where the messages
 show and where the focus lands.
 
-**Acceptance Scenarios**: S4, S5, S6 and S11.
+**Acceptance Scenarios**: S4, S5, S6, S11 and S13.
 
 ---
 
@@ -189,6 +192,14 @@ Feature: An action collects the values of other fields
       Then the host receives no action
       And the focus is on "Assignee"
 
+    # S13
+    Scenario: The browser's own message for a blocked action opens on the field that takes the focus
+      Given a spec whose "Add" button collects the required text field "Title" and the number field "Quantity", shown in that order
+      And the person left "Title" empty and typed "two" in "Quantity"
+      When the person activates "Add"
+      Then the host receives no action
+      And the focus and the browser's own validation message are on "Title", and "Quantity" shows its own message
+
   Rule: A collect that cannot work is rejected whole
 
     # S7
@@ -242,9 +253,9 @@ as before.
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
 | Core behavior | S1–S3, S7–S10, S12 | |
-| Keyboard path | S4–S6, S11 | Activation by keyboard or pointer reaches the same component contract; these scenarios fix where the focus lands when a field blocks the action |
+| Keyboard path | S4–S6, S11, S13 | Activation by keyboard or pointer reaches the same component contract; these scenarios fix where the focus lands when a field blocks the action |
 | Assistive-tech outcome | | N/A — the invalid state and its message are exposed by each field under its own contract; the renderer only asks the field to report |
-| Form participation | S4–S6, S11 | Each field's own constraint validation is consulted; no native form exists or is submitted (`152`) |
+| Form participation | S4–S6, S11, S13 | Each field's own constraint validation is consulted; no native form exists or is submitted (`152`) |
 | Theming | | N/A — no styles change |
 
 ## Requirements *(mandatory)*
@@ -268,10 +279,14 @@ as before.
   - `collect-budget`: more than 32 entries.
 - **FR-003**: Before a node with `collect` dispatches, on whichever
   activation it has, the renderer MUST ask every named field for validity:
-  `reportValidity()` when the element offers it, otherwise whether it
+  `checkValidity()` when the element offers it, otherwise whether it
   matches `:invalid`. Every field is asked, so each invalid one shows its
   own message. If any is invalid, nothing is dispatched and the focus moves
-  to the first invalid field in document order.
+  to the first invalid field in document order, which alone is then asked
+  through `reportValidity()` when it offers it, so the browser's message
+  bubble opens on the focused field. (Amended 2026-11-24: asking every
+  field through `reportValidity()` left the bubble on another field in
+  Chromium, seen in the Claude desktop app.)
 - **FR-004**: The action data MUST be what the node dispatches today (`028`
   FR-003) plus one entry per `collect` name: the named field's live
   `checked` when its entry declares one, else `selected`, else `value`,
