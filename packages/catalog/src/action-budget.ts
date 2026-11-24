@@ -17,7 +17,7 @@ export const DEFAULT_ACTION_BURST = 10;
 export const DEFAULT_ACTION_REFILL_MS = 500;
 
 /** One report a bound node offers to the host. */
-export interface ActionReport {
+interface ActionReport {
   /** The bound element; with `action`, the binding a held report belongs to. */
   readonly element: Element;
   /** The declared action the binding reports. */
