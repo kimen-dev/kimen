@@ -471,12 +471,13 @@ export namespace Components {
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
-     * in descending hierarchy, confirming/destructive actions through tone, or
-     * persistent actions such as Bold with `toggle`.
+     * in descending hierarchy, confirming/destructive actions through tone,
+     * persistent actions such as Bold with `toggle`, or with `href` a call to
+     * action that navigates.
      * While the action a button started is in progress, set `loading` on that
      * button instead of disabling it.
-     * @whenNotToUse navigation, icon-only actions, form values, or the
-     * progress of a page or region (use ki-progress).
+     * @whenNotToUse links in text (ki-link), icon-only actions, form values, or
+     * the progress of a page or region (use ki-progress).
      */
     interface KiButton {
         /**
@@ -495,6 +496,15 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
+          * File name to download `href` as; empty lets the browser choose.
+         */
+        "download"?: string;
+        /**
+          * Destination URL. Nonblank, it renders a native link with the same look; toggle, form and dialog props are then ignored.
+          * @format url
+         */
+        "href"?: string;
+        /**
           * Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
           * @default false
          */
@@ -509,6 +519,10 @@ export namespace Components {
          */
         "name"?: string;
         /**
+          * Link relationships for `href`.
+         */
+        "rel"?: string;
+        /**
           * Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
           * @default false
          */
@@ -518,6 +532,10 @@ export namespace Components {
           * @default 'md'
          */
         "size": KiButtonSize;
+        /**
+          * Browsing context for `href`; `_blank` alone gets `rel="noreferrer noopener"`.
+         */
+        "target"?: string;
         /**
           * Enables persistent press state for an action such as Bold. The native button exposes `aria-pressed` and each activation switches `selected`. Use the same label in both states. A toggle does not submit or reset a form.
           * @default false
@@ -607,7 +625,7 @@ export namespace Components {
      */
     interface KiCarousel {
         /**
-          * Rotation interval in milliseconds. Omitting it leaves rotation off.
+          * Rotation interval in milliseconds. Omitting it leaves rotation off. Values below 5000 rotate every 5000 ms.
           * @minimum 1
           * @maximum 2147483647
          */
@@ -984,7 +1002,7 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
+          * Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
          */
         "language"?: string;
         /**
@@ -5263,12 +5281,13 @@ declare global {
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
-     * in descending hierarchy, confirming/destructive actions through tone, or
-     * persistent actions such as Bold with `toggle`.
+     * in descending hierarchy, confirming/destructive actions through tone,
+     * persistent actions such as Bold with `toggle`, or with `href` a call to
+     * action that navigates.
      * While the action a button started is in progress, set `loading` on that
      * button instead of disabling it.
-     * @whenNotToUse navigation, icon-only actions, form values, or the
-     * progress of a page or region (use ki-progress).
+     * @whenNotToUse links in text (ki-link), icon-only actions, form values, or
+     * the progress of a page or region (use ki-progress).
      */
     interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiButtonElementEventMap>(type: K, listener: (this: HTMLKiButtonElement, ev: KiButtonCustomEvent<HTMLKiButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -7647,12 +7666,13 @@ declare namespace LocalJSX {
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
-     * in descending hierarchy, confirming/destructive actions through tone, or
-     * persistent actions such as Bold with `toggle`.
+     * in descending hierarchy, confirming/destructive actions through tone,
+     * persistent actions such as Bold with `toggle`, or with `href` a call to
+     * action that navigates.
      * While the action a button started is in progress, set `loading` on that
      * button instead of disabling it.
-     * @whenNotToUse navigation, icon-only actions, form values, or the
-     * progress of a page or region (use ki-progress).
+     * @whenNotToUse links in text (ki-link), icon-only actions, form values, or
+     * the progress of a page or region (use ki-progress).
      */
     interface KiButton {
         /**
@@ -7671,9 +7691,18 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * File name to download `href` as; empty lets the browser choose.
+         */
+        "download"?: string;
+        /**
           * The `id` of a `<form>` element to associate this element with.
          */
         "form"?: string;
+        /**
+          * Destination URL. Nonblank, it renders a native link with the same look; toggle, form and dialog props are then ignored.
+          * @format url
+         */
+        "href"?: string;
         /**
           * Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
           * @default false
@@ -7693,6 +7722,10 @@ declare namespace LocalJSX {
          */
         "onKi-change"?: (event: KiButtonCustomEvent<{ selected: boolean }>) => void;
         /**
+          * Link relationships for `href`.
+         */
+        "rel"?: string;
+        /**
           * Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
           * @default false
          */
@@ -7702,6 +7735,10 @@ declare namespace LocalJSX {
           * @default 'md'
          */
         "size"?: KiButtonSize;
+        /**
+          * Browsing context for `href`; `_blank` alone gets `rel="noreferrer noopener"`.
+         */
+        "target"?: string;
         /**
           * Enables persistent press state for an action such as Bold. The native button exposes `aria-pressed` and each activation switches `selected`. Use the same label in both states. A toggle does not submit or reset a form.
           * @default false
@@ -7795,7 +7832,7 @@ declare namespace LocalJSX {
      */
     interface KiCarousel {
         /**
-          * Rotation interval in milliseconds. Omitting it leaves rotation off.
+          * Rotation interval in milliseconds. Omitting it leaves rotation off. Values below 5000 rotate every 5000 ms.
           * @minimum 1
           * @maximum 2147483647
          */
@@ -8196,7 +8233,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
+          * Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
          */
         "language"?: string;
         /**
@@ -12465,6 +12502,10 @@ declare namespace LocalJSX {
         "value": string;
         "commandfor": string;
         "command": KiDialogCommand;
+        "href": string;
+        "target": string;
+        "rel": string;
+        "download": string;
         "disabled": boolean;
         "loading": boolean;
         "loadingLabel": string;
@@ -13552,12 +13593,13 @@ declare module "@stencil/core" {
             /**
              * A token-styled action button with native button semantics.
              * @whenToUse trigger the single main action of a view, supporting actions
-             * in descending hierarchy, confirming/destructive actions through tone, or
-             * persistent actions such as Bold with `toggle`.
+             * in descending hierarchy, confirming/destructive actions through tone,
+             * persistent actions such as Bold with `toggle`, or with `href` a call to
+             * action that navigates.
              * While the action a button started is in progress, set `loading` on that
              * button instead of disabling it.
-             * @whenNotToUse navigation, icon-only actions, form values, or the
-             * progress of a page or region (use ki-progress).
+             * @whenNotToUse links in text (ki-link), icon-only actions, form values, or
+             * the progress of a page or region (use ki-progress).
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**

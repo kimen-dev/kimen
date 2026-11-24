@@ -29,7 +29,9 @@ position changes. The noninteractive indicator follows it. The neutral
 catalog exposes the event so a surface can bind a declared action.
 
 When `autoplay` is set in milliseconds, a reader can pause and restart
-rotation. Hover suspends rotation, focus stops it until Play, and reduced
+rotation. Rotation never moves more than once every 5000 ms, so slides
+cannot flash and stay up long enough to read; shorter values rotate every
+5000 ms. Hover suspends rotation, focus stops it until Play, and reduced
 motion keeps it off. Localize the region label, control labels, role
 descriptions and the slide naming template. The viewport supports arrows,
 Home and End. The buttons retain focus while moving slides.

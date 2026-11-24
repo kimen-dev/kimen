@@ -95,8 +95,9 @@ defineCustomElements();
   consistent styling: buttons, form controls, dialogs, tabs, menus, alerts,
   toasts, cards, layout stacks (`ki-stack`, `ki-grid`).
 - One primary action per view (`<ki-button variant="primary">`); supporting
-  actions take lower variants. Use `loading` on the button whose action is in
-  progress instead of disabling it.
+  actions take lower variants. A call to action that navigates is the same
+  button with `href` (a native link inside). Use `loading` on the button whose
+  action is in progress instead of disabling it.
 - Status and feedback: inline persistent message → `ki-alert`; transient
   confirmation → `ki-toast` in one `ki-toaster` per page; short status text
   on an entity → `ki-badge`; progress of a task → `ki-progress`.

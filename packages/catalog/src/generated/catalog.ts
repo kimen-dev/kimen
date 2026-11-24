@@ -540,6 +540,15 @@ export const catalogData = {
           "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button. Wins over\n`loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`.",
           "default": false
         },
+        "download": {
+          "type": "string",
+          "description": "File name to download `href` as; empty lets the browser choose."
+        },
+        "href": {
+          "type": "string",
+          "description": "Destination URL. Nonblank, it renders a native link with the same look;\ntoggle, form and dialog props are then ignored.",
+          "format": "url"
+        },
         "loading": {
           "type": "boolean",
           "description": "Pending state of the action this button started (saving, sending).\nWhile set, every activation is blocked (pointer, Enter and Space) and the\nbutton neither submits nor resets its form, but it stays focusable, in\nthe Tab order and at its width: the label stays laid out, transparent,\nand a spinner is drawn in its place. The internal native button is\nexposed with `aria-disabled=\"true\"` and keeps its name, and\n`loadingLabel` is announced as a polite status message. `disabled`, and\na disabled fieldset, win over it. The application sets it when the\naction starts and clears it when the action ends.\nWhen to use: while the work a click on this button started is running,\nso a second activation cannot repeat it.\nWhen NOT to use: for a button the person cannot use yet (use\n`disabled`), or for the progress of a page or region (use ki-progress).",
@@ -553,6 +562,10 @@ export const catalogData = {
         "name": {
           "type": "string",
           "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent."
+        },
+        "rel": {
+          "type": "string",
+          "description": "Link relationships for `href`."
         },
         "selected": {
           "type": "boolean",
@@ -570,6 +583,10 @@ export const catalogData = {
           ],
           "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls.",
           "default": "md"
+        },
+        "target": {
+          "type": "string",
+          "description": "Browsing context for `href`; `_blank` alone gets `rel=\"noreferrer noopener\"`."
         },
         "toggle": {
           "type": "boolean",
@@ -620,8 +637,8 @@ export const catalogData = {
         "start": "Leading icon or media. Follows writing direction."
       },
       "tag": "ki-button",
-      "whenNotToUse": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress).",
-      "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+      "whenNotToUse": "links in text (ki-link), icon-only actions, form values, or\nthe progress of a page or region (use ki-progress).",
+      "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone,\npersistent actions such as Bold with `toggle`, or with `href` a call to\naction that navigates.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
     },
     "ki-button-group": {
       "description": "Arranges related actions as a spaced group, attached group, or keyboard toolbar.",
@@ -707,7 +724,7 @@ export const catalogData = {
       "props": {
         "autoplay": {
           "type": "number",
-          "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+          "description": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
           "minimum": 1,
           "maximum": 2147483647
         },
@@ -1121,7 +1138,7 @@ export const catalogData = {
         },
         "language": {
           "type": "string",
-          "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish)."
+          "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON."
         },
         "line-numbers": {
           "type": "boolean",

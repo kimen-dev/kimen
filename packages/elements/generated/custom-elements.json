@@ -2799,8 +2799,8 @@
           "customElement": true,
           "tagName": "ki-button",
           "description": "A token-styled action button with native button semantics.",
-          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it.",
-          "whenNotToUse": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress).",
+          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone,\npersistent actions such as Bold with `toggle`, or with `href` a call to\naction that navigates.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it.",
+          "whenNotToUse": "links in text (ki-link), icon-only actions, form values, or\nthe progress of a page or region (use ki-progress).",
           "attributes": [
             {
               "name": "command",
@@ -2826,6 +2826,23 @@
               },
               "default": "false",
               "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button. Wins over\n`loading` when both are set.\nWhen NOT to use: do not use disabled for pending/loading semantics; use\n`loading`."
+            },
+            {
+              "name": "download",
+              "fieldName": "download",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "File name to download `href` as; empty lets the browser choose."
+            },
+            {
+              "name": "href",
+              "fieldName": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Destination URL. Nonblank, it renders a native link with the same look;\ntoggle, form and dialog props are then ignored.",
+              "format": "url"
             },
             {
               "name": "loading",
@@ -2854,6 +2871,14 @@
               "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent."
             },
             {
+              "name": "rel",
+              "fieldName": "rel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Link relationships for `href`."
+            },
+            {
               "name": "selected",
               "fieldName": "selected",
               "type": {
@@ -2870,6 +2895,14 @@
               },
               "default": "'md'",
               "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls."
+            },
+            {
+              "name": "target",
+              "fieldName": "target",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Browsing context for `href`; `_blank` alone gets `rel=\"noreferrer noopener\"`."
             },
             {
               "name": "toggle",
@@ -2956,6 +2989,29 @@
             },
             {
               "kind": "field",
+              "name": "download",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "File name to download `href` as; empty lets the browser choose.",
+              "attribute": "download",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Destination URL. Nonblank, it renders a native link with the same look;\ntoggle, form and dialog props are then ignored.",
+              "attribute": "href",
+              "reflects": false,
+              "format": "url"
+            },
+            {
+              "kind": "field",
               "name": "loading",
               "privacy": "public",
               "type": {
@@ -2991,6 +3047,17 @@
             },
             {
               "kind": "field",
+              "name": "rel",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Link relationships for `href`.",
+              "attribute": "rel",
+              "reflects": false
+            },
+            {
+              "kind": "field",
               "name": "selected",
               "privacy": "public",
               "type": {
@@ -3012,6 +3079,17 @@
               "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls.",
               "attribute": "size",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Browsing context for `href`; `_blank` alone gets `rel=\"noreferrer noopener\"`.",
+              "attribute": "target",
+              "reflects": false
             },
             {
               "kind": "field",
@@ -3102,7 +3180,7 @@
           "cssParts": [
             {
               "name": "button",
-              "description": "Internal native button."
+              "description": "Internal native button, or link with `href`."
             },
             {
               "name": "label",
@@ -3249,6 +3327,10 @@
             {
               "name": "--ki-button-ghost-success-rest-fg",
               "description": "color used by the button component for ghost success rest foreground."
+            },
+            {
+              "name": "--ki-button-justify-content",
+              "description": "Placement of the button content; start for a card."
             },
             {
               "name": "--ki-button-label-padding-inline",
@@ -3833,6 +3915,10 @@
             {
               "name": "--ki-button-tertiary-success-rest-fg",
               "description": "color used by the button component for tertiary success rest foreground."
+            },
+            {
+              "name": "--ki-button-text-align",
+              "description": "Alignment of the label lines."
             },
             {
               "name": "--ki-button-toggle-quiet-bg",
@@ -4524,7 +4610,7 @@
               "type": {
                 "text": "number | undefined"
               },
-              "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+              "description": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
               "minimum": 1,
               "maximum": 2147483647
             },
@@ -4684,7 +4770,7 @@
               "type": {
                 "text": "number | undefined"
               },
-              "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+              "description": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
               "attribute": "autoplay",
               "reflects": false,
               "minimum": 1,
@@ -6999,7 +7085,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish)."
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON."
             },
             {
               "name": "line-numbers",
@@ -7122,7 +7208,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
               "attribute": "language",
               "reflects": false
             },
@@ -9413,6 +9499,10 @@
               "description": "color used by the button component for ghost success rest foreground."
             },
             {
+              "name": "--ki-button-justify-content",
+              "description": "Placement of the button content; start for a card."
+            },
+            {
               "name": "--ki-button-label-padding-inline",
               "description": "dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance)."
             },
@@ -9995,6 +10085,10 @@
             {
               "name": "--ki-button-tertiary-success-rest-fg",
               "description": "color used by the button component for tertiary success rest foreground."
+            },
+            {
+              "name": "--ki-button-text-align",
+              "description": "Alignment of the label lines."
             },
             {
               "name": "--ki-button-toggle-radius",

@@ -27,11 +27,12 @@ The package exports these stylesheets:
 | `@kimen/tokens/css/onmars-fonts.css` | Optional Instrument Sans and Newsreader for onmars v2 |
 | `@kimen/tokens/css/material3-fonts.css` | Optional local metric-adjusted fallback for self-hosted Roboto |
 
-Load the default theme once per page. Load the optional stylesheets alongside it:
+Load the default theme and the page contract once per page, and any other
+stylesheet alongside them:
 
 ```ts
 import '@kimen/tokens/css';
-import '@kimen/tokens/css/base'; // optional: paint the page from tokens
+import '@kimen/tokens/css/base'; // page contract: paint the page, lay out items before registration
 import '@kimen/tokens/css/material3'; // optional: a second theme
 ```
 

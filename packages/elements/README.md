@@ -19,8 +19,9 @@ pnpm add @kimen/elements @kimen/tokens
 
 `@kimen/tokens` provides the `--ki-*` custom properties every component
 consumes; without its stylesheet the components render unstyled. Its
-`@kimen/tokens/css/base` export is the opt-in **page contract**, which
-paints the page itself from the tokens (see [Theming](#theming)).
+`@kimen/tokens/css/base` export is the **page contract**, which pages load
+too: it paints the page itself from the tokens and lays out group items until
+their tags register (see [Theming](#theming)).
 
 ## Register components
 
@@ -80,7 +81,7 @@ document.querySelector('ki-button')?.addEventListener('click', () => {
 
 ```ts
 import '@kimen/tokens/css'; // onmars default theme + color-scheme, light/dark from the system
-import '@kimen/tokens/css/base'; // optional page contract: page background, text color, body font
+import '@kimen/tokens/css/base'; // page contract: page background, text color, body font, layout before registration
 import '@kimen/tokens/css/material3'; // optional: Material 3 reference theme
 ```
 
@@ -93,9 +94,10 @@ import '@kimen/tokens/css/material3'; // optional: Material 3 reference theme
 follow the same scheme as the components and a page that loads nothing else
 stays legible in light and in dark. The declaration is a zero-specificity
 default: a `color-scheme` your own CSS sets on the page wins.
-`@kimen/tokens/css/base` is the opt-in page contract: it paints the page
-background, text color and body font from the semantic tokens, and declares
-no color scheme.
+Load `@kimen/tokens/css/base`, the page contract, with it: it paints the page
+background, text color and body font from the semantic tokens, declares no
+color scheme, and lays out the items of Kimen groups one per line until
+their tags register, so their labels do not run together.
 
 Every visual value is a `--ki-*` custom property; themes reassign tokens, not
 component CSS. Details in the

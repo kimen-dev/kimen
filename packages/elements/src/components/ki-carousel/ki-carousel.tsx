@@ -2,7 +2,14 @@ import { Component, Element, Event, Host, Method, Prop, State, Watch, h } from '
 import type { EventEmitter } from '@stencil/core';
 
 import '../../../icons/chevron-right.js';
-import { leadingLimit, movementTarget, normalizeIndex, wholeStep } from './ki-carousel.position';
+import {
+  leadingLimit,
+  movementTarget,
+  normalizeIndex,
+  ROTATION_FLOOR_MS,
+  rotationInterval,
+  wholeStep,
+} from './ki-carousel.position';
 
 export type CarouselLayout = 'single' | 'multi-browse' | 'uncontained' | 'hero' | 'full-screen';
 
@@ -14,7 +21,6 @@ type SlideSize = 'regular' | 'medium' | 'small' | 'end';
 
 const ITEM_TAG = ['ki', 'carousel', 'item'].join('-');
 const INDICATOR_LIMIT = 20;
-const MAX_INTERVAL = 2_147_483_647;
 const SCROLL_SETTLE_MS = 150;
 
 /**
@@ -61,7 +67,8 @@ export class KiCarousel {
   @Prop() loop = false;
 
   /**
-   * Rotation interval in milliseconds. Omitting it leaves rotation off.
+   * Rotation interval in milliseconds. Omitting it leaves rotation off. Values
+   * below 5000 rotate every 5000 ms.
    * @minimum 1
    * @maximum 2147483647
    */
@@ -135,6 +142,22 @@ export class KiCarousel {
     this.viewport =
       this.host.shadowRoot?.querySelector<HTMLElement>('[part=viewport]') ?? undefined;
     this.observe();
+    this.warnBelowFloor(this.autoplay);
+  }
+
+  @Watch('autoplay')
+  protected warnBelowFloor(autoplay: number | undefined): void {
+    // Stencil replaces NODE_ENV in both lazy and custom-element bundles.
+    if (
+      process.env.NODE_ENV === 'development' &&
+      rotationInterval(autoplay) > 0 &&
+      (autoplay ?? 0) < ROTATION_FLOOR_MS
+    ) {
+      const floor = String(ROTATION_FLOOR_MS);
+      console.warn(
+        `[Kimen] ki-carousel autoplay=${String(autoplay)} is below the ${floor} ms floor and rotates every ${floor} ms.`,
+      );
+    }
   }
 
   componentDidRender(): void {
@@ -224,9 +247,7 @@ export class KiCarousel {
   }
 
   private get interval(): number {
-    return typeof this.autoplay === 'number' && Number.isFinite(this.autoplay) && this.autoplay >= 1
-      ? Math.min(this.autoplay, MAX_INTERVAL)
-      : 0;
+    return rotationInterval(this.autoplay);
   }
 
   private get canRotate(): boolean {
