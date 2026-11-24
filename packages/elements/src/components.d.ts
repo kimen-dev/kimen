@@ -7873,7 +7873,7 @@ declare namespace LocalJSX {
          */
         "nextLabel"?: string;
         /**
-          * Reports the one-based index when the leading slide changes.
+          * Reports the one-based index when the leading slide changes, also on autoplay or a new `current`: it can fire without a gesture.
          */
         "onKi-slide-change"?: (event: KiCarouselCustomEvent<CarouselSlideChangeDetail>) => void;
         /**
@@ -8819,7 +8819,7 @@ declare namespace LocalJSX {
          */
         "heading": string;
         /**
-          * Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
+          * Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path, `close()` and a cleared `open` included, emits a noncancelable notification after close and focus restoration: it can fire without a gesture. Use `open` to observe the modal's live state.
          */
         "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
         /**
@@ -8876,7 +8876,7 @@ declare namespace LocalJSX {
          */
         "modal"?: boolean;
         /**
-          * Requests dismissal before the drawer closes. Call preventDefault() to keep it open, for example when edits are unsaved. The event carries the reason in detail.reason.
+          * Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it can fire without a gesture. Call preventDefault() to keep it open, for example when edits are unsaved. The event carries the reason in detail.reason.
          */
         "onKi-close"?: (event: KiDrawerCustomEvent<KiDrawerCloseDetail>) => void;
         /**
@@ -10276,11 +10276,11 @@ declare namespace LocalJSX {
          */
         "label"?: string | undefined;
         /**
-          * Emitted when the popover closes.
+          * Emitted when the popover closes, also when `open` is cleared: it can fire without a gesture.
          */
         "onKi-close"?: (event: KiPopoverCustomEvent<void>) => void;
         /**
-          * Emitted when the popover opens.
+          * Emitted when the popover opens, also when `open` is set: it can fire without a gesture.
          */
         "onKi-open"?: (event: KiPopoverCustomEvent<void>) => void;
         /**
@@ -12385,15 +12385,15 @@ declare namespace LocalJSX {
          */
         "loadingLabel"?: string;
         /**
-          * Emitted when an existing branch collapses.
+          * Emitted when an existing branch collapses, also when `expanded` is cleared: it can fire without a gesture.
          */
         "onKi-collapse"?: (event: KiTreeItemCustomEvent<{ item: HTMLKiTreeItemElement }>) => void;
         /**
-          * Emitted when an existing branch expands.
+          * Emitted when an existing branch expands, also when `expanded` is set: it can fire without a gesture.
          */
         "onKi-expand"?: (event: KiTreeItemCustomEvent<{ item: HTMLKiTreeItemElement }>) => void;
         /**
-          * Emitted once when an empty lazy branch first opens. The listener supplies the children.
+          * Emitted once when an empty lazy branch first opens, also one rendered expanded: it can fire without a gesture. The listener supplies the children.
          */
         "onKi-load"?: (event: KiTreeItemCustomEvent<{ item: HTMLKiTreeItemElement }>) => void;
         /**

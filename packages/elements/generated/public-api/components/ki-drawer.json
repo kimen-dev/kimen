@@ -313,7 +313,7 @@
       "ki-close": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason.",
+        "description": "Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it\ncan fire without a gesture. Call preventDefault() to keep it open, for example when\nedits are unsaved. The event carries the reason in detail.reason.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<KiDrawerCloseDetail>"

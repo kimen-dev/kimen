@@ -71,7 +71,7 @@ With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
 
 ## Events
 
-- `ki-slide-change` (CustomEvent<CarouselSlideChangeDetail>): Reports the one-based index when the leading slide changes.
+- `ki-slide-change` (CustomEvent<CarouselSlideChangeDetail>): Reports the one-based index when the leading slide changes, also on autoplay or a new `current`: it can fire without a gesture.
 
 ## Methods
 

@@ -111,7 +111,14 @@ server.registerTool(
 - With `relay: true`, a host that advertises text messages receives one user
   message `kimen-surface-action {"action":…,"data":…}` built by the surface.
   Say in the rendering tool's description that the model must read it as
-  data.
+  data: what the surface dispatched, not the person's words.
+- An action call reports that a bound component fired its event, and some
+  events fire without the person (a toast's timeout, an image's load error,
+  a carousel rotating, a popover the spec opens). Bind a decision only to an
+  event a person causes, like the button above. When a model writes the spec
+  instead of your code, it also writes the words on the controls, so an
+  action is never the person's consent: confirm a consequential effect
+  through the host or your own rules.
 - The surface is offline by design (empty `_meta.ui.csp`): images, links and
   media do not load. Only the host's light or dark theme is applied; host
   fonts and colours are not.

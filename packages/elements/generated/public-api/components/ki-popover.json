@@ -345,7 +345,7 @@
       "ki-close": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Emitted when the popover closes.",
+        "description": "Emitted when the popover closes, also when `open` is cleared: it can fire\nwithout a gesture.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<void>"
@@ -353,7 +353,7 @@
       "ki-open": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Emitted when the popover opens.",
+        "description": "Emitted when the popover opens, also when `open` is set: it can fire\nwithout a gesture.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<void>"

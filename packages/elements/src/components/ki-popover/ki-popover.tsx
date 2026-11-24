@@ -88,10 +88,16 @@ export class KiPopover {
    */
   @Prop() appearance?: KiPopoverAppearance = 'default';
 
-  /** Emitted when the popover opens. */
+  /**
+   * Emitted when the popover opens, also when `open` is set: it can fire
+   * without a gesture.
+   */
   @Event({ eventName: 'ki-open', cancelable: false }) kiOpen!: EventEmitter<void>;
 
-  /** Emitted when the popover closes. */
+  /**
+   * Emitted when the popover closes, also when `open` is cleared: it can fire
+   * without a gesture.
+   */
   @Event({ eventName: 'ki-close', cancelable: false }) kiClose!: EventEmitter<void>;
 
   @State() private announcement = '';

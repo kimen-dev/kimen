@@ -65,8 +65,8 @@ Use `open` to drive visibility and listen for `ki-open` and `ki-close` to observ
 
 ## Events
 
-- `ki-close` (CustomEvent<void>): Emitted when the popover closes.
-- `ki-open` (CustomEvent<void>): Emitted when the popover opens.
+- `ki-close` (CustomEvent<void>): Emitted when the popover closes, also when `open` is cleared: it can fire without a gesture.
+- `ki-open` (CustomEvent<void>): Emitted when the popover opens, also when `open` is set: it can fire without a gesture.
 
 ## Methods
 
