@@ -80,6 +80,16 @@ import { formatActionRelay, RELAY_MAX_BYTES, relayBytes } from './relay.js';
 
 type ActionData = Readonly<Record<string, boolean | number | string>>;
 
+/**
+ * Which page revisions showed each revision of one painted live surface: its
+ * current live revision (shown by the current page) and, for each live
+ * revision a later update replaced, the last page revision that showed it.
+ */
+interface PageRevisions {
+  live: number;
+  readonly left: Map<number, number>;
+}
+
 /** One declared action whose `tools/call` awaits the server's answer. */
 interface PendingAction {
   readonly action: string;
@@ -281,6 +291,8 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
   let hostContext: Readonly<Record<string, unknown>> = {};
   /** The live surface painted from the last accepted full spec. */
   let live: LiveSurface | undefined;
+  /** The page revisions that showed each revision of `live` (spec 162 S8). */
+  let pages: PageRevisions | undefined;
   /**
    * The page revision (spec 157 FR-004): +1 per full paint and per applied
    * update, never repeated. Not the live surface's own count, which starts
@@ -330,7 +342,17 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     });
   };
 
-  const dispatch = (action: string, data: ActionData = {}, node?: string): DispatchResult => {
+  /**
+   * `firedOn` is the page revision the action fired on: the current one for
+   * a host's own dispatch, and for a rendered node's action the one it fired
+   * on, which an action the action budget held keeps (spec 162 S8).
+   */
+  const dispatch = (
+    action: string,
+    data: ActionData = {},
+    node?: string,
+    firedOn: number = revision,
+  ): DispatchResult => {
     if (state !== 'ready') {
       const refusal: BridgeRefusal = {
         detail: `action "${action}" cannot leave a surface in state "${state}"`,
@@ -364,16 +386,32 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
       jsonrpc: JSONRPC_VERSION,
       method: METHOD_TOOLS_CALL,
       params: {
-        arguments: { action, data, ...(node === undefined ? {} : { id: node }), revision },
+        arguments: {
+          action,
+          data,
+          ...(node === undefined ? {} : { id: node }),
+          revision: firedOn,
+        },
         name: KIMEN_ACTION_TOOL,
       },
     });
     return { sent: true };
   };
 
-  const onAction = (event: LiveActionEvent): void => {
-    dispatch(event.action, event.data, event.id);
-  };
+  /**
+   * The action channel of one painted live surface. An action names the live
+   * revision it fired on (spec 162 S8); `shown` gives the latest page revision
+   * that showed that live revision. An update with no ops moves the page but
+   * leaves the live surface as it was, so one live revision can span several
+   * page revisions, all showing the same content.
+   */
+  const actionsOf =
+    (shown: PageRevisions) =>
+    (event: LiveActionEvent): void => {
+      const page =
+        event.revision === shown.live ? revision : (shown.left.get(event.revision) ?? revision);
+      dispatch(event.action, event.data, event.id, page);
+    };
 
   /**
    * The guardrail refused hostile content (unknown component, undeclared
@@ -399,10 +437,16 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
    */
   const paint = (spec: unknown, actions: ReadonlySet<string>): ReceiveResult => {
     const mount = options.surface.ownerDocument.createElement('div');
+    const shown: PageRevisions = { left: new Map(), live: 0 };
     const next = createLiveSurface({
       actions: [...actions],
       batchBudgets: { maxBytes: specBytes + INSERT_ENVELOPE_BYTES },
-      onAction,
+      onAction: actionsOf(shown),
+      // The first action the action-rate budget holds (spec 162), reported
+      // like every other refusal of this surface.
+      onDiagnostic: (diagnostic) => {
+        report({ detail: diagnostic.message, reason: diagnostic.rule, value: diagnostic.value });
+      },
       surface: mount,
       ...budgets,
     });
@@ -411,6 +455,8 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     if (!painted.ok) {
       return refuseAll(painted.diagnostics);
     }
+    shown.live = painted.revision;
+    pages = shown;
     options.surface.replaceChildren(mount);
     live = next;
     // The accepted spec's declared actions become the outbound allowlist; a
@@ -461,6 +507,11 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
           ? 'the live surface rejected the batch'
           : `${first.path}: ${first.message}`,
       );
+    }
+    if (pages !== undefined && applied.revision !== pages.live) {
+      // The live revision it replaces was last shown on the current page.
+      pages.left.set(pages.live, revision);
+      pages.live = applied.revision;
     }
     revision += 1;
     return undefined;

@@ -427,8 +427,22 @@ On top of catalog validation the renderer enforces the safe-render semantics:
 
   ```ts
   import { DEFAULT_RENDER_BUDGETS } from '@kimen/catalog';
-  DEFAULT_RENDER_BUDGETS; // { maxBytes: 262144, maxDepth: 32, maxNodes: 512 }
+  DEFAULT_RENDER_BUDGETS;
+  // { actionRefillMs: 500, maxActionBurst: 10, maxBytes: 262144, maxDepth: 32, maxNodes: 512 }
   ```
+
+- **Action-rate budget.** A rendered surface (one `renderUiSpec` call, one
+  stream, one live surface) delivers at most 10 actions at once, then one
+  more every 500 ms (`maxActionBurst` and `actionRefillMs` in `budgets`).
+  Beyond it an action is held, not queued: each binding keeps only its
+  latest report, delivered when the budget allows, so a field bound per edit
+  still reports what the person last typed, and a carousel rotating every
+  millisecond cannot flood the host. A held report names the path and the
+  revision of the moment it fired, and is dropped if its node leaves the
+  surface first. The first hold is reported once to `onDiagnostic` (rule
+  `action-rate-budget`). An action your host consumes itself and never sends
+  on can skip the budget: name it with `isLocalAction`, deciding by what you
+  bound (a node path), never by the action name, which the spec chooses.
 
 - **Version skew fails closed.** A spec may declare the catalog schema version
   it was authored against as a top-level `catalogSchemaVersion` field (the

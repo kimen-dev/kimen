@@ -84,7 +84,10 @@ naming the violation.
 A spec engineered to exhaust the host — thousands of nesting levels, node
 floods — is rejected by declared budgets before rendering starts, and every
 rejection (this story and story 2) pinpoints the offending node and rule so
-an emitting agent can self-correct its next attempt.
+an emitting agent can self-correct its next attempt. A spec that makes a
+component fire its bound event hundreds of times a second still renders, but
+its surface delivers no more actions than its action budget allows
+(`162-action-rate-budget`).
 
 **Why this priority**: denial-of-service resistance and observable
 fail-closed errors make the boundary operable; a silent failure could hide
@@ -456,13 +459,17 @@ governed by its own approved contract (specs `002`–`016`).
   containing `__proto__`, `constructor` or `prototype` keys in any props or
   data object is rejected, and parsing never mutates shared prototypes.
 - **FR-006**: The renderer MUST enforce declared budgets for nesting depth,
-  node count and total payload size, with safe package defaults the host may
+  node count, total payload size and the rate at which a surface delivers
+  actions (`162-action-rate-budget`), with safe package defaults the host may
   tighten. A spec exactly at a budget passes; one beyond it is rejected
   before any node renders. The budgets bind the ACCUMULATED resources of a
   streaming render exactly as they bind a complete document: a stream whose
   accumulated depth, node count or payload size exceeds a budget halts
   fail-closed even if the document never closes — no unbounded-chunk path
-  exists below the budgets.
+  exists below the budgets. The action-rate budget bounds what a rendered
+  surface sends, not what it renders: beyond it, an action is held, the
+  latest report of each binding is delivered when the budget allows, and the
+  first held report is diagnosed (`162`).
 - **FR-007**: Rendering of a complete spec MUST be fail-closed and atomic:
   full validation precedes the first attach, and every rejection produces a
   machine-readable diagnostic carrying node path, violated rule and
@@ -515,7 +522,8 @@ governed by its own approved contract (specs `002`–`016`).
   rule, offending value — safe to display because it is inert data.
 - **Budget**: the declared limits (nesting depth, node count, payload size)
   evaluated before rendering a complete spec and continuously over the
-  accumulated content of a stream.
+  accumulated content of a stream, and the action rate: a burst and a refill
+  interval per surface (`162`).
 
 ## Constitutional Surface *(mandatory)*
 

@@ -129,6 +129,11 @@ host's own confirmation or your server's own rules. A relayed
 `kimen-surface-action` line reports what the surface dispatched, not the
 person's words.
 
+A surface delivers at most 10 actions at once, then one every 500 ms. A
+control that fires faster (a carousel with `autoplay`, a field bound per
+edit) delivers only its latest action beyond that, so never rely on
+receiving every intermediate event.
+
 ## Never do this
 
 - Never set `innerHTML`, `outerHTML` or `insertAdjacentHTML` from model

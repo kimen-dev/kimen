@@ -244,7 +244,8 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
   const surfaces = new Map<string, SurfaceState>();
   const now = options.now ?? (() => new Date());
 
-  const reject = (diagnostic: A2uiDiagnostic, surfaceId?: string): A2uiApplyResult => {
+  /** Sends an A2UI `error` for a surface the adapter knows. */
+  const reportError = (diagnostic: A2uiDiagnostic, surfaceId?: string): void => {
     const state = surfaceId === undefined ? undefined : surfaces.get(surfaceId);
     if (state !== undefined && surfaceId !== undefined && options.onError !== undefined) {
       options.onError({
@@ -257,6 +258,10 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
         version: state.dialect.protocol.emittedVersion,
       });
     }
+  };
+
+  const reject = (diagnostic: A2uiDiagnostic, surfaceId?: string): A2uiApplyResult => {
+    reportError(diagnostic, surfaceId);
     return failure(diagnostic);
   };
 
@@ -382,6 +387,10 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
         budgets: options.budgets,
         catalogSchemaVersion: options.catalogSchemaVersion,
         element: state.element,
+        // A write-back only updates this surface's data model and never
+        // reaches the agent, so the action-rate budget must not hold it: a
+        // held one would be lost if the agent updates the surface first.
+        isLocalAction: (event: ActionEvent) => writes.has(event.path),
         onAction: (event: ActionEvent) => {
           const write = writes.get(event.path);
           if (write !== undefined) {
@@ -392,6 +401,11 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
           if (binding !== undefined) {
             dispatch(surfaceId, state, binding);
           }
+        },
+        // The first action the surface's action-rate budget holds (spec 162):
+        // the agent hears it as an error, as it hears a rejected render.
+        onDiagnostic: (diagnostic) => {
+          reportError(diagnostic, surfaceId);
         },
         spec: translation.spec,
       });
