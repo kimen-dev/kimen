@@ -12,7 +12,7 @@
 ("Aprobado tal cual"), including the Art. VIII guardrail confirmation.
 S13 was added on 2026-11-24 after the real-host test of the MCP Apps
 adapter (the browser bubble opened on a field other than the focused one);
-it waits for the founder's verbatim approval in its pull request.
+the founder approved it verbatim on 2026-11-24 ("Apruebo S13").
 
 **Input**: Founder decision of 2026-11-21 on the improvements to land before
 `@kimen/catalog`, `@kimen/emitter` and the adapters are published: a spec
