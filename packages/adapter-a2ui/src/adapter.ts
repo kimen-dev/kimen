@@ -387,6 +387,10 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
         budgets: options.budgets,
         catalogSchemaVersion: options.catalogSchemaVersion,
         element: state.element,
+        // A write-back only updates this surface's data model and never
+        // reaches the agent, so the action-rate budget must not hold it: a
+        // held one would be lost if the agent updates the surface first.
+        isLocalAction: (event: ActionEvent) => writes.has(event.path),
         onAction: (event: ActionEvent) => {
           const write = writes.get(event.path);
           if (write !== undefined) {

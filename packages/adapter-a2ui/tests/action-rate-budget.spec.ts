@@ -82,3 +82,51 @@ describe('an A2UI surface within its action budget', () => {
     expect(errors[0]?.error.message).toContain('action-rate budget');
   });
 });
+
+describe('a value committed in an A2UI form reaches its data model whatever the budget', () => {
+  it('S9 an update before the budget refills keeps what the person committed', () => {
+    const actions: A2uiActionMessage[] = [];
+    const adapter = createA2uiAdapter({
+      budgets: { actionRefillMs: 2000, maxActionBurst: 1 },
+      onAction: (event) => actions.push(event),
+      surface,
+    });
+    const components = [
+      { children: ['name', 'spend', 'book'], component: 'Column', id: 'root' },
+      { component: 'TextField', id: 'name', label: 'Name', value: { path: '/name' } },
+      {
+        action: { event: { name: 'spend' } },
+        child: 'spend-label',
+        component: 'Button',
+        id: 'spend',
+      },
+      { component: 'Text', id: 'spend-label', text: 'Spend' },
+      {
+        action: { event: { context: { name: { path: '/name' } }, name: 'book' } },
+        child: 'book-label',
+        component: 'Button',
+        id: 'book',
+      },
+      { component: 'Text', id: 'book-label', text: 'Book' },
+    ];
+    const update = { version: 'v0.9.1', updateComponents: { components, surfaceId: 'picks' } };
+    adapter.apply({ version: 'v0.9.1', createSurface: { surfaceId: 'picks', catalogId: BASIC } });
+    adapter.apply({
+      version: 'v0.9.1',
+      updateDataModel: { path: '/', surfaceId: 'picks', value: { name: '' } },
+    });
+    expect(adapter.apply(update).ok).toBe(true);
+    // The person spends the surface's budget of one action.
+    surface.querySelectorAll<HTMLElement>('ki-button')[0]?.click();
+    expect(actions).toHaveLength(1);
+    // The person commits "Ana" in the bound field.
+    const field = surface.querySelector('ki-input');
+    Reflect.set(field ?? {}, 'value', 'Ana');
+    field?.dispatchEvent(new Event('change', { bubbles: true }));
+    // The agent updates the surface before the budget refills.
+    expect(adapter.apply(update).ok).toBe(true);
+    vi.advanceTimersByTime(2000);
+    surface.querySelectorAll<HTMLElement>('ki-button')[1]?.click();
+    expect(actions.at(-1)?.action).toMatchObject({ context: { name: 'Ana' }, name: 'book' });
+  });
+});

@@ -155,7 +155,7 @@ without it, missing actions look like a host bug.
 **Independent Test**: hold a report, re-render, assert it never arrives (S5);
 assert one diagnostic for a flooding spec (S6).
 
-**Acceptance Scenarios**: S5, S6, S8.
+**Acceptance Scenarios**: S5, S6, S8, S9.
 
 ### Edge Cases
 
@@ -244,6 +244,13 @@ Feature: A surface sends its actions within a rate budget
       When the host applies an update that takes the surface to revision 2
       Then the "confirm" action the host receives names revision 1
 
+    # S9
+    Scenario: A value committed in an A2UI form survives an update while the budget is spent
+      Given an A2UI surface whose action budget is spent
+      And a text field bound to the data model path "/name" in which a person has committed "Ana"
+      When the agent updates the surface before the budget refills
+      Then the next action the agent receives carries "Ana" from "/name"
+
   Rule: Exceeding the budget is diagnosable
 
     # S6
@@ -269,7 +276,7 @@ This is guarded-renderer infrastructure, not a UI component.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S8 | |
+| Core behavior | S1–S9 | |
 | Keyboard path | | N/A — no interaction changes; S3's typing is the person's keyboard path to a held report |
 | Assistive-tech outcome | | N/A — names, roles and states are each component's own contract |
 | Form participation | | N/A — a spec owns no form (`152`) |
@@ -295,8 +302,9 @@ This is guarded-renderer infrastructure, not a UI component.
   order their bindings were first held, and a binding held again after its
   delivery goes to the back. A held report MUST name the path and the
   surface revision of the moment its event fired, never those of the moment
-  it leaves (S8); the MCP Apps bridge sends the page revision the action
-  fired on.
+  it leaves (S8). The MCP Apps bridge sends the latest page revision that
+  showed the surface the action fired on: an update with no ops moves the
+  page revision but not the live surface's, and the content stays the same.
 - **FR-003**: A held report whose node is no longer in the surface, or whose
   surface has left the document, when its turn comes MUST be discarded, never
   delivered. A surface MUST keep no timer while nothing is held.
@@ -309,7 +317,11 @@ This is guarded-renderer infrastructure, not a UI component.
   reports a refused render.
 - **FR-005**: The host MAY lower or raise either value through `budgets`, as
   it does the other render budgets (`028` FR-006). The MCP Apps bridge and the
-  A2UI adapter pass their budgets through unchanged, as they do today.
+  A2UI adapter pass their budgets through unchanged, as they do today. A
+  host MAY name, with `isLocalAction`, the actions it consumes itself and
+  never sends on; those reach `onAction` at once and spend nothing. The A2UI
+  adapter names its write-backs to its own data model this way, by the node
+  paths it bound, never by action name, which a spec chooses (S9).
 - **FR-006**: The `kimen-genui` skill, the UI spec guide and the MCP Apps and
   A2UI guides MUST say that a surface delivers at most its action budget and
   that a binding fired faster delivers its latest report.
@@ -367,7 +379,8 @@ interval per surface (`162`)."
 - **Catalog/agent legibility** (Art. I): FR-006 tells agents the budget
   exists and how a fast binding behaves.
 - **Guardrail/security boundary** (Art. VIII): adds a fourth budget to the
-  guardrail. The founder confirmed S1–S8 explicitly.
+  guardrail. The founder confirmed S1–S8 explicitly; S9, added after a code
+  review, needs the same confirmation.
 
 ## Success Criteria *(mandatory)*
 
@@ -376,7 +389,7 @@ interval per surface (`162`)."
 - **SC-001**: The spec measured above (hidden carousel, `autoplay: 1`,
   `loop`) delivers at most 12 actions in its first second through each render
   path and at most 12 `tools/call` through MCP Apps, down from about 200.
-- **SC-002**: S1–S8 pass: S2 in the Chromium browser suite with the real carousel, the others in the unit suites of the catalog and both adapters.
+- **SC-002**: S1–S9 pass: S2 in the Chromium browser suite with the real carousel, the others in the unit suites of the catalog and both adapters.
 - **SC-003**: An idle surface schedules no timer (FR-003).
 
 ## Assumptions
@@ -400,4 +413,5 @@ interval per surface (`162`)."
 4. S8 and the S3 wording, both written after approval, are approved.
 5. The size bases are re-based by the cost measured against main 3329aea1:
    +1,299 / 598 / 771 B for the MCP Apps document and +1,488 / 605 / 656 B
-   for kimen-mcp.
+   for kimen-mcp. Two review fixes (S8's empty update, S9) raised it to
+   +1,472 / 664 / 577 B and +1,661 / 668 / 748 B, which awaits confirmation.

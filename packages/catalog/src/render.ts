@@ -152,6 +152,14 @@ export interface RenderOptions {
    * its result, never here.
    */
   readonly onDiagnostic?: (diagnostic: RenderDiagnostic) => void;
+  /**
+   * Names the actions the host consumes itself and never sends on, such as
+   * the A2UI adapter's write-backs to its own data model (spec 162 S9). Such
+   * an action reaches `onAction` at once and spends nothing of the
+   * action-rate budget. Decide by what the host bound, never by spec data
+   * alone: a spec can choose any action name.
+   */
+  readonly isLocalAction?: (event: ActionEvent) => boolean;
   readonly budgets?: Partial<RenderBudgets>;
   /**
    * The catalog schema version the spec was authored against. When present
@@ -992,6 +1000,8 @@ interface BuildScope {
   readonly surface: Element;
   /** The surface's action-rate budget (spec 162). */
   readonly gate: ActionGate;
+  /** The actions the host consumes itself, which the budget never counts (spec 162 S9). */
+  readonly isLocalAction: ((event: ActionEvent) => boolean) | undefined;
   readonly entries: Readonly<Record<string, CatalogEntry>>;
   readonly idFor: DialogIdFor;
   readonly allowedUrlOrigins: readonly string[] | undefined;
@@ -1035,6 +1045,10 @@ function buildNode(node: UiSpecNode, path: string, scope: BuildScope): Element {
             entries,
             (data) => {
               const event = { action, data, ...(id === undefined ? {} : { id }), path };
+              if (scope.isLocalAction?.(event) === true) {
+                onAction(event);
+                return;
+              }
               scope.gate.offer({
                 action,
                 deliver: () => {
@@ -1189,7 +1203,10 @@ export function toDiagnostic(issue: {
 }
 
 /** The render options that decide a verdict: everything but the surface and the action and diagnostic channels. */
-export type PreflightOptions = Omit<RenderOptions, 'onAction' | 'onDiagnostic' | 'surface'>;
+export type PreflightOptions = Omit<
+  RenderOptions,
+  'isLocalAction' | 'onAction' | 'onDiagnostic' | 'surface'
+>;
 
 /**
  * The guarded renderer's verdict on an untrusted UI spec, without a DOM
@@ -1243,6 +1260,7 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
         referenceTargets(prepared.spec.root, catalog.components),
       ),
       gate: createActionGate(budgets, options.onDiagnostic),
+      isLocalAction: options.isLocalAction,
       nodes: new Map(),
       onAction: options.onAction,
       sourceScope: Symbol(),
@@ -1375,6 +1393,7 @@ export function createStreamingRenderer(
             referenceTargets(report.spec.root, catalog.components),
           ),
           gate,
+          isLocalAction: options.isLocalAction,
           nodes: new Map(),
           onAction: options.onAction,
           sourceScope,

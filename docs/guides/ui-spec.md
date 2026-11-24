@@ -431,7 +431,9 @@ On top of catalog validation the renderer enforces the safe-render semantics:
   millisecond cannot flood the host. A held report names the path and the
   revision of the moment it fired, and is dropped if its node leaves the
   surface first. The first hold is reported once to `onDiagnostic` (rule
-  `action-rate-budget`).
+  `action-rate-budget`). An action your host consumes itself and never sends
+  on can skip the budget: name it with `isLocalAction`, deciding by what you
+  bound (a node path), never by the action name, which the spec chooses.
 
 - **Version skew fails closed.** A spec may declare the catalog schema version
   it was authored against as a top-level `catalogSchemaVersion` field (the

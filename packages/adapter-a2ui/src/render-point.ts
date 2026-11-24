@@ -25,6 +25,8 @@ export interface RenderRequest {
   readonly onAction: (event: ActionEvent) => void;
   /** What goes wrong after the render: the first action the action-rate budget holds (spec 162). */
   readonly onDiagnostic: (diagnostic: RenderDiagnostic) => void;
+  /** The write-backs, which stay in the adapter and spend nothing of the budget (spec 162 S9). */
+  readonly isLocalAction: (event: ActionEvent) => boolean;
   readonly budgets?: Partial<RenderBudgets> | undefined;
   readonly catalogSchemaVersion?: string | undefined;
 }
@@ -32,6 +34,7 @@ export interface RenderRequest {
 /** Renders one surface revision through the guarded renderer, atomically and fail-closed. */
 export function renderSurface(render: GuardedRender, request: RenderRequest): RenderResult {
   const options: RenderOptions = {
+    isLocalAction: request.isLocalAction,
     onAction: request.onAction,
     onDiagnostic: request.onDiagnostic,
     surface: request.element,

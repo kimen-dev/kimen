@@ -64,6 +64,13 @@ Feature: A surface sends its actions within a rate budget
       When the host applies an update that takes the surface to revision 2
       Then the "confirm" action the host receives names revision 1
 
+    # S9
+    Scenario: A value committed in an A2UI form survives an update while the budget is spent
+      Given an A2UI surface whose action budget is spent
+      And a text field bound to the data model path "/name" in which a person has committed "Ana"
+      When the agent updates the surface before the budget refills
+      Then the next action the agent receives carries "Ana" from "/name"
+
   Rule: Exceeding the budget is diagnosable
 
     # S6

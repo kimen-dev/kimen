@@ -382,3 +382,36 @@ describe('a held report names the surface it fired on', () => {
     ]);
   });
 });
+
+describe('an action the host consumes itself spends nothing', () => {
+  it('S9 a local action reaches the host at once while the budget is spent', () => {
+    const events: ActionEvent[] = [];
+    const spec = {
+      actions: ['spend', 'save', 'send'],
+      root: {
+        component: 'ki-stack',
+        slots: {
+          '': [
+            { action: 'spend', component: 'ki-button', slots: { '': ['Spend'] } },
+            { action: 'save', component: 'ki-button', slots: { '': ['Save'] } },
+            { action: 'send', component: 'ki-button', slots: { '': ['Send'] } },
+          ],
+        },
+      },
+      version: 1,
+    };
+    renderUiSpec(spec, {
+      budgets: { actionRefillMs: 2000, maxActionBurst: 1 },
+      // The host decides by what it bound: here, the node at this path.
+      isLocalAction: (event) => event.path === 'root.slots.[1]',
+      onAction: (event) => events.push(event),
+      surface,
+    });
+    click(rendered('ki-button', 0));
+    click(rendered('ki-button', 1));
+    click(rendered('ki-button', 2));
+    expect(events.map((event) => event.action)).toEqual(['spend', 'save']);
+    vi.advanceTimersByTime(2000);
+    expect(events.map((event) => event.action)).toEqual(['spend', 'save', 'send']);
+  });
+});

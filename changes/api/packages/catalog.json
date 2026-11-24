@@ -175,7 +175,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "export type PreflightOptions = Omit<RenderOptions, 'onAction' | 'onDiagnostic' | 'surface'>;"
+          "signature": "export type PreflightOptions = Omit<RenderOptions, 'isLocalAction' | 'onAction' | 'onDiagnostic' | 'surface'>;"
         },
         "RegistrationIssue": {
           "kinds": [
@@ -205,7 +205,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface RenderOptions {\n    readonly surface: Element;\n    readonly onAction?: (event: ActionEvent) => void;\n    readonly onDiagnostic?: (diagnostic: RenderDiagnostic) => void;\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n}"
+          "signature": "interface RenderOptions {\n    readonly surface: Element;\n    readonly onAction?: (event: ActionEvent) => void;\n    readonly onDiagnostic?: (diagnostic: RenderDiagnostic) => void;\n    readonly isLocalAction?: (event: ActionEvent) => boolean;\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n}"
         },
         "RenderResult": {
           "kinds": [

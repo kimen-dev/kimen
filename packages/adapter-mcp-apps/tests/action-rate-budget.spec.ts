@@ -167,3 +167,67 @@ describe('a held action names the page it fired on', () => {
     });
   });
 });
+
+describe('an empty update leaves the page revision of an action right', () => {
+  const page = {
+    actions: ['spend', 'confirm'],
+    root: {
+      component: 'ki-stack',
+      slots: {
+        '': [
+          { action: 'spend', component: 'ki-button', id: 'spend', slots: { '': ['Spend'] } },
+          { action: 'confirm', component: 'ki-button', id: 'pay', slots: { '': ['Pay'] } },
+        ],
+      },
+    },
+    version: 1,
+  };
+
+  /** A ready bridge painted at page revision 1, then updated by an empty batch to revision 2. */
+  const emptied = () => {
+    const sent: SurfaceOutboundMessage[] = [];
+    const bridge = createSurfaceBridge({ send: (message) => sent.push(message), surface });
+    bridge.start();
+    bridge.receive(initializeResult(1, undefined, {}, TEXT_MESSAGE_CAPABILITIES));
+    expect(bridge.receive(toolResult(page)).ok).toBe(true);
+    return { bridge, sent };
+  };
+
+  const emptyUpdate = { baseRevision: 1, batch: { ops: [] } };
+
+  const confirmRevision = (sent: readonly SurfaceOutboundMessage[]): unknown =>
+    actionCalls(sent)
+      .map((message) => ('params' in message ? message.params : undefined))
+      .map((params) => (params as { arguments?: Record<string, unknown> }).arguments)
+      .find((args) => args?.['action'] === 'confirm')?.['revision'];
+
+  it('S8 an action after an empty update names the page revision it fired on', () => {
+    const { bridge, sent } = emptied();
+    expect(bridge.receive(toolResult(page, 'Pay', emptyUpdate)).ok).toBe(true);
+    surface.querySelectorAll<HTMLElement>('ki-button')[1]?.click();
+    expect(confirmRevision(sent)).toBe(2);
+  });
+
+  it('S8 an action held across an empty update names the page it still shows', () => {
+    const { bridge, sent } = emptied();
+    const buttons = surface.querySelectorAll<HTMLElement>('ki-button');
+    for (let index = 0; index < 10; index += 1) {
+      buttons[0]?.click();
+    }
+    buttons[1]?.click();
+    expect(bridge.receive(toolResult(page, 'Pay', emptyUpdate)).ok).toBe(true);
+    vi.advanceTimersByTime(500);
+    // Nothing changed on the page: the latest revision showing it is 2.
+    expect(confirmRevision(sent)).toBe(2);
+    // The server's next update, computed on that revision, still applies.
+    const refusals: unknown[] = [];
+    expect(
+      bridge.receive(
+        toolResult(page, 'Pay', {
+          baseRevision: 2,
+          batch: { ops: [{ id: 'pay', op: 'set', props: { variant: 'primary' } }] },
+        }),
+      ).refusals,
+    ).toEqual(refusals);
+  });
+});
