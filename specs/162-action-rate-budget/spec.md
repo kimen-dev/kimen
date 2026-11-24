@@ -418,5 +418,6 @@ interval per surface (`162`)."
 5. The size bases are re-based by the cost measured against main 3329aea1:
    +1,299 / 598 / 771 B for the MCP Apps document and +1,488 / 605 / 656 B
    for kimen-mcp. Two review fixes (S8's empty update, S9) raised it to
-   +1,472 / 664 / 577 B and +1,661 / 668 / 748 B, which the founder approved
+   +1,472 / 664 / 577 B and +1,661 / 668 / 748 B (raw unchanged against main
+   e96a74d5), which the founder approved
    with S9 (2026-11-24).
