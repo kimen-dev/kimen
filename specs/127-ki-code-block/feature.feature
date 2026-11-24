@@ -78,3 +78,29 @@ Feature: ki-code-block presents a source snippet with syntax and copy controls
     Given a guarded surface renders a code snippet with a declared action
     When the reader successfully copies the snippet
     Then the surface dispatches that action once
+
+  # S13
+  Scenario: Read an English Gherkin contract with syntax colors
+    Given a Gherkin snippet in English with tags, comments, quoted text, a doc string, a table and outline placeholders
+    When the reader views the snippet
+    Then keywords that open a line read as keywords
+    And tags, comments, quoted text, doc strings, table cells and placeholders are visually distinct
+
+  # S14
+  Scenario: Read a Spanish Gherkin contract with syntax colors
+    Given a Gherkin snippet declared in Spanish whose step text also uses the words "y" and "e"
+    When the reader views the snippet
+    Then Spanish keywords that open a line read as keywords
+    And the same words inside a sentence stay plain text
+
+  # S15
+  Scenario: Describe a colored Gherkin contract to assistive technology
+    Given a Gherkin snippet with keywords, tags and a doc string
+    When the reader navigates to the code
+    Then the code area exposes the unchanged source text
+
+  # S16
+  Scenario: Reassign the keyword color for Gherkin
+    Given a theme with a custom syntax keyword ink
+    When the reader views a Gherkin snippet
+    Then its Gherkin keywords use that ink

@@ -13,8 +13,13 @@ const sample = load(3);</ki-code-block>
 ```
 
 Pass the source as a plain text child. Escape HTML in markup or set
-`textContent` from JavaScript. JavaScript, TypeScript and JSON have syntax
-colors. Code in other languages remains readable as plain text.
+`textContent` from JavaScript. JavaScript, TypeScript, JSON and Gherkin have
+syntax colors. Code in other languages remains readable as plain text, and
+markup inside the snippet is never rendered.
+
+Use `language="gherkin"` (or `feature`) for Gherkin contracts in English or
+Spanish. Keywords are colored only where they open a line, together with
+comments, tags, quoted text, doc strings, tables and outline placeholders.
 
 Add `wrap` to soft-wrap long lines or `copyable="false"` to omit the copy
 button. Tab to the scroll area and use the arrow keys to scroll overflow.

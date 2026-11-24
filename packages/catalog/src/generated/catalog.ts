@@ -1121,7 +1121,7 @@ export const catalogData = {
         },
         "language": {
           "type": "string",
-          "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON."
+          "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish)."
         },
         "line-numbers": {
           "type": "boolean",

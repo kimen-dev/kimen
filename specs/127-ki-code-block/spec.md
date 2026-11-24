@@ -8,15 +8,16 @@
 
 | Family | Scenarios | Notes |
 | --- | --- | --- |
-| Core behavior | S1, S2, S3, S4, S12 | Code, copy, presentation and guarded action |
+| Core behavior | S1, S2, S3, S4, S12, S13, S14 | Code, copy, presentation, guarded action and the Gherkin grammar |
 | Keyboard path | S5, S6 | Native scrolling and copy activation |
-| Assistive-tech outcome | S7 | Named figure, highlighted lines and hidden numbers |
+| Assistive-tech outcome | S7, S15 | Named figure, highlighted lines, hidden numbers and unchanged colored source |
 | Form participation | N/A | The figure displays text and its copy button is a non-submit action. There is no field value or validity. |
-| Theming | S8, S9, S10, S11 | Token overrides, system preferences, direction and density |
+| Theming | S8, S9, S10, S11, S16 | Token overrides, system preferences, direction and density |
 
 ## Interpretations
 
 - **Grammar and source** (agent's choice, pending founder confirmation). The default slot supplies literal text and updates when that text changes. JavaScript, TypeScript and JSON have lightweight syntax coloring, including common JavaScript and TypeScript aliases. Other languages display plain text. The language label uses the supplied text. The clipboard receives the original whitespace.
+- **Gherkin grammar** (agent's choice, pending founder confirmation; integrator report on 0.1.3, item 4). `language="gherkin"`, or its file extension `feature`, colors the keywords of Gherkin's official English and Spanish dictionaries. Both dictionaries apply at once, so a `# language: es` header stays an ordinary comment. A keyword counts only when it opens a line after indentation, a block keyword together with its colon, so prose words such as "Y" or "E" stay plain. Comment lines and keywords, including table pipes, use the existing comment and keyword inks. Quoted text, doc strings and table cells use the string ink. Tags use the function ink, like a decorator, and outline placeholders use the number ink because they stand for example values. No new token was needed. Consumer markup inside the snippet stays inert text, so a block never renders highlighting written as HTML.
 - **Line highlighting** (agent's choice, pending founder confirmation). Lines are one-based. Omit malformed and reversed ranges, intersect valid ranges with the displayed lines, and combine overlaps. A visible rule and a localized accessible description identify selected lines. The code and its gutter read left to right inside either interface direction.
 - **Labels and clipboard** (agent's choice, pending founder confirmation). Use a localized fallback figure name when metadata is missing and forward localizable button labels to CopyButton. Publish successful and failed copy events on the code block. Guarded surfaces can bind a declared action to successful copies.
 - **Contrast** (agent's choice, pending founder confirmation). Use supporting text for comments and line numbers so the same inks remain legible in both themes, including on highlighted lines. Declare the `code` token namespace in the component inventory to keep the proposed `--ki-code-*` names.
@@ -105,4 +106,30 @@ Feature: ki-code-block presents a source snippet with syntax and copy controls
     Given a guarded surface renders a code snippet with a declared action
     When the reader successfully copies the snippet
     Then the surface dispatches that action once
+
+  # S13
+  Scenario: Read an English Gherkin contract with syntax colors
+    Given a Gherkin snippet in English with tags, comments, quoted text, a doc string, a table and outline placeholders
+    When the reader views the snippet
+    Then keywords that open a line read as keywords
+    And tags, comments, quoted text, doc strings, table cells and placeholders are visually distinct
+
+  # S14
+  Scenario: Read a Spanish Gherkin contract with syntax colors
+    Given a Gherkin snippet declared in Spanish whose step text also uses the words "y" and "e"
+    When the reader views the snippet
+    Then Spanish keywords that open a line read as keywords
+    And the same words inside a sentence stay plain text
+
+  # S15
+  Scenario: Describe a colored Gherkin contract to assistive technology
+    Given a Gherkin snippet with keywords, tags and a doc string
+    When the reader navigates to the code
+    Then the code area exposes the unchanged source text
+
+  # S16
+  Scenario: Reassign the keyword color for Gherkin
+    Given a theme with a custom syntax keyword ink
+    When the reader views a Gherkin snippet
+    Then its Gherkin keywords use that ink
 ```

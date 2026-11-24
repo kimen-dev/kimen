@@ -25,6 +25,28 @@ const codeToken =
   /(\/\/[^\n]*|\/\*[^]*?(?:\*\/|$))|((['"])(?:\\[^\n]|(?!\3)[^\\\n])*\3?|`(?:\\[^]|[^`\\])*`?)|(-?(?:0[xob][\da-f_]+|\d[\d_]*(?:\.[\d_]*)?|\.\d[\d_]*)(?:e[+-]?[\d_]+)?n?)|[$_\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*/giu;
 const callStart = /[^\S\n]*\(/uy;
 
+const gherkinLanguages = /^(?:gherkin|feature)$/u;
+// Gherkin's official English and Spanish keywords count only where they open a
+// line, block keywords with their colon and step keywords before their space,
+// so the same words stay plain inside a sentence. Comments, tags, table rows
+// and doc strings also open a line. The opening is checked from a non-blank
+// character only, which keeps every pattern linear in the source length.
+// One kind per capture group of gherkinToken, in order:
+const gherkinKinds: SyntaxKind[] = [
+  'comment', // a # line, such as # language: es
+  'keyword', // Feature:, Escenario:, Given, Y, *…
+  'function', // the tags of a tag line, which read like decorators
+  'keyword', // a table row: its pipes, while the cells between take 'string'
+  'string', // a doc string, to its closing delimiter or the end of the source
+  'string', // that doc string's delimiter
+  'number', // an outline placeholder, which stands for an example value
+  'string', // quoted step text
+];
+const gherkinToken =
+  /(?=\S)(?<=^[^\S\n]*)(?:(#.*)|((?:Feature|Business Need|Ability|Rule|Background|Scenario(?:s| Outline| Template)?|Examples?|Característica|Necesidad del negocio|Requisito|Regla(?: de negocio)?|Antecedentes|Escenario|Esquema del escenario|Ejemplos?):|(?:Given|When|Then|And|But|Dad[oa]s?|Cuando|Entonces|Pero|[YE*])(?= ))|(@\S+(?:[^\S\n]+@\S+)*)|(\|.*)|((["`])\6\6[^]*?(?:\n[^\S\n]*\6{3}|(?![^]))))|(<[^\s<>][^<>\n]*>)|("(?:\\.|[^"\\\n])*"?)/gmu;
+// Splits a table row into pipes and the cells between them, which may escape a pipe.
+const tableCell = /((?:\\.|[^\\|])+)/u;
+
 function tokenKind(
   match: RegExpExecArray,
   source: string,
@@ -43,6 +65,7 @@ export function tokenizeCode(source: string, language?: string): CodeToken[][] {
   const text = source.replace(/\r\n?/gu, '\n');
   const grammar = language?.trim().toLowerCase() ?? '';
   const script = scriptLanguages.test(grammar);
+  const gherkin = gherkinLanguages.test(grammar);
 
   let line: CodeToken[] = [];
   const lines = [line];
@@ -57,12 +80,14 @@ export function tokenizeCode(source: string, language?: string): CodeToken[][] {
   };
 
   let end = 0;
-  if (script || grammar === 'json') {
-    for (const match of text.matchAll(codeToken)) {
-      const kind = tokenKind(match, text, script);
+  if (script || gherkin || grammar === 'json') {
+    for (const match of text.matchAll(gherkin ? gherkinToken : codeToken)) {
+      const group = gherkin ? match.slice(1).findIndex(Boolean) : -1;
+      const kind = gherkin ? gherkinKinds[group] : tokenKind(match, text, script);
       if (!kind) continue;
       append(text.slice(end, match.index));
-      append(match[0], kind);
+      const pieces = group === 3 ? match[0].split(tableCell) : [match[0]];
+      for (const [index, piece] of pieces.entries()) append(piece, index % 2 ? 'string' : kind);
       end = match.index + match[0].length;
     }
   }
