@@ -122,8 +122,9 @@ export class KiDialog {
    * Requests dismissal on fullscreen Escape or activation of the header
    * close button. Prevent the default on that cancelable event to keep the
    * modal open. The button reports `method` and Escape reports `escape`.
-   * Every other dismissal path emits a noncancelable notification after close
-   * and focus restoration. Use `open` to observe the modal's live state.
+   * Every other dismissal path, `close()` and a cleared `open` included,
+   * emits a noncancelable notification after close and focus restoration: it
+   * can fire without a gesture. Use `open` to observe the modal's live state.
    */
   @Event({ eventName: 'ki-close', bubbles: true, composed: true, cancelable: false })
   private readonly kiClose!: EventEmitter<KiDialogCloseDetail>;

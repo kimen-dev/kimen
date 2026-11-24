@@ -719,7 +719,7 @@ export const catalogData = {
     "ki-carousel": {
       "description": "An ordered, swipeable sequence with previous and next controls and position feedback.",
       "events": {
-        "ki-slide-change": "Reports the one-based index when the leading slide changes."
+        "ki-slide-change": "Reports the one-based index when the leading slide changes, also on\nautoplay or a new `current`: it can fire without a gesture."
       },
       "props": {
         "autoplay": {
@@ -1138,7 +1138,7 @@ export const catalogData = {
         },
         "language": {
           "type": "string",
-          "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish)."
+          "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON."
         },
         "line-numbers": {
           "type": "boolean",
@@ -1723,7 +1723,7 @@ export const catalogData = {
     "ki-dialog": {
       "description": "A modal dialog for an interrupting decision or a focused task.",
       "events": {
-        "ki-close": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
+        "ki-close": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path, `close()` and a cleared `open` included,\nemits a noncancelable notification after close and focus restoration: it\ncan fire without a gesture. Use `open` to observe the modal's live state.",
         "ki-confirm": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application."
       },
       "props": {
@@ -1792,7 +1792,7 @@ export const catalogData = {
     "ki-drawer": {
       "description": "An edge-aligned sheet for a focused task that keeps the current page in context.",
       "events": {
-        "ki-close": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason."
+        "ki-close": "Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it\ncan fire without a gesture. Call preventDefault() to keep it open, for example when\nedits are unsaved. The event carries the reason in detail.reason."
       },
       "props": {
         "close-label": {
@@ -3433,8 +3433,8 @@ export const catalogData = {
     "ki-popover": {
       "description": "A non-modal popover anchored to a button.",
       "events": {
-        "ki-close": "Emitted when the popover closes.",
-        "ki-open": "Emitted when the popover opens."
+        "ki-close": "Emitted when the popover closes, also when `open` is cleared: it can fire\nwithout a gesture.",
+        "ki-open": "Emitted when the popover opens, also when `open` is set: it can fire\nwithout a gesture."
       },
       "props": {
         "appearance": {
@@ -5739,9 +5739,9 @@ export const catalogData = {
     "ki-tree-item": {
       "description": "An item or expandable branch inside a ki-tree.",
       "events": {
-        "ki-collapse": "Emitted when an existing branch collapses.",
-        "ki-expand": "Emitted when an existing branch expands.",
-        "ki-load": "Emitted once when an empty lazy branch first opens. The listener supplies the children."
+        "ki-collapse": "Emitted when an existing branch collapses, also when `expanded` is\ncleared: it can fire without a gesture.",
+        "ki-expand": "Emitted when an existing branch expands, also when `expanded` is set: it\ncan fire without a gesture.",
+        "ki-load": "Emitted once when an empty lazy branch first opens, also one rendered\nexpanded: it can fire without a gesture. The listener supplies the children."
       },
       "props": {
         "disabled": {

@@ -143,7 +143,7 @@
         {
           "name": "acknowledgeSurfaceAction",
           "signature": "acknowledgeSurfaceAction(action, options?) => SurfaceActionAcknowledgment",
-          "summary": "The action tool's answer for an action your server accepts. With { relay: true } the surface relays that exact action to the model as one ui/message, if the host advertises text messages: one line, kimen-surface-action followed by { action, data } as escaped JSON, at most 8192 bytes, built by the surface from what it sent, never from this result. Relay when the person's choice needs the model; leave it off for UI-only actions such as a refresh."
+          "summary": "The action tool's answer for an action your server accepts. With { relay: true } the surface relays that exact action to the model as one ui/message, if the host advertises text messages: one line, kimen-surface-action followed by { action, data } as escaped JSON, at most 8192 bytes, built by the surface from what it sent, never from this result. Relay when the model needs to know; leave it off for UI-only actions such as a refresh. The line reports what the surface dispatched, never the person's consent (spec 161)."
         },
         {
           "name": "createSurfaceBridge",

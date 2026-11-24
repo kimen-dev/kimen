@@ -5027,7 +5027,7 @@
               "type": {
                 "text": "CustomEvent<CarouselSlideChangeDetail>"
               },
-              "description": "Reports the one-based index when the leading slide changes."
+              "description": "Reports the one-based index when the leading slide changes, also on\nautoplay or a new `current`: it can fire without a gesture."
             }
           ],
           "slots": [
@@ -7085,7 +7085,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish)."
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON."
             },
             {
               "name": "line-numbers",
@@ -7208,7 +7208,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
               "attribute": "language",
               "reflects": false
             },
@@ -11585,7 +11585,7 @@
               "type": {
                 "text": "CustomEvent<KiDialogCloseDetail>"
               },
-              "description": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state."
+              "description": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path, `close()` and a cleared `open` included,\nemits a noncancelable notification after close and focus restoration: it\ncan fire without a gesture. Use `open` to observe the modal's live state."
             },
             {
               "name": "ki-confirm",
@@ -12170,7 +12170,7 @@
               "type": {
                 "text": "CustomEvent<KiDrawerCloseDetail>"
               },
-              "description": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason."
+              "description": "Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it\ncan fire without a gesture. Call preventDefault() to keep it open, for example when\nedits are unsaved. The event carries the reason in detail.reason."
             }
           ],
           "slots": [
@@ -22275,14 +22275,14 @@
               "type": {
                 "text": "CustomEvent<void>"
               },
-              "description": "Emitted when the popover closes."
+              "description": "Emitted when the popover closes, also when `open` is cleared: it can fire\nwithout a gesture."
             },
             {
               "name": "ki-open",
               "type": {
                 "text": "CustomEvent<void>"
               },
-              "description": "Emitted when the popover opens."
+              "description": "Emitted when the popover opens, also when `open` is set: it can fire\nwithout a gesture."
             }
           ],
           "slots": [
@@ -37069,21 +37069,21 @@
               "type": {
                 "text": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
               },
-              "description": "Emitted when an existing branch collapses."
+              "description": "Emitted when an existing branch collapses, also when `expanded` is\ncleared: it can fire without a gesture."
             },
             {
               "name": "ki-expand",
               "type": {
                 "text": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
               },
-              "description": "Emitted when an existing branch expands."
+              "description": "Emitted when an existing branch expands, also when `expanded` is set: it\ncan fire without a gesture."
             },
             {
               "name": "ki-load",
               "type": {
                 "text": "CustomEvent<{ item: HTMLKiTreeItemElement }>"
               },
-              "description": "Emitted once when an empty lazy branch first opens. The listener supplies the children."
+              "description": "Emitted once when an empty lazy branch first opens, also one rendered\nexpanded: it can fire without a gesture. The listener supplies the children."
             }
           ],
           "slots": [

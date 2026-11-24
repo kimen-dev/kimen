@@ -3996,7 +3996,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Reports the one-based index when the leading slide changes.",
+          "docs": "Reports the one-based index when the leading slide changes, also on\nautoplay or a new `current`: it can fire without a gesture.",
           "docsTags": []
         }
       ],
@@ -5730,7 +5730,7 @@
         }
       ],
       "usage": {
-        "examples": "# ki-code-block examples\n\nDisplay a TypeScript snippet with line numbers and a highlighted line.\n\n```html\n<ki-code-block language=\"ts\" filename=\"main.ts\" line-numbers highlight=\"2\">// Load the current sample.\nconst sample = load(3);</ki-code-block>\n```\n\nUse plain text for unsupported syntax. In HTML, escape literal angle\nbrackets so they remain part of the source.\n\n```html\n<ki-code-block language=\"html\" filename=\"example.html\" wrap copyable=\"false\">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>\n```\n\nColor a Gherkin contract in English or Spanish with `language=\"gherkin\"`.\nKeywords count only where they open a line.\n\n```html\n<ki-code-block language=\"gherkin\" filename=\"pagos.feature\"># language: es\nCaracterística: Pagar el carrito\n  Escenario: Pagar con tarjeta\n    Dado un carrito con 3 productos y un cupón\n    Cuando el cliente paga\n    Entonces el recibo muestra el total</ki-code-block>\n```\n\nThe guarded catalog accepts source strings in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"actions\": [\"sampleCopied\"],\n  \"root\": {\n    \"component\": \"ki-code-block\",\n    \"props\": { \"language\": \"js\", \"filename\": \"index.js\", \"line-numbers\": true },\n    \"slots\": { \"\": [\"const sample = load(3);\"] },\n    \"action\": \"sampleCopied\"\n  }\n}\n```\n"
+        "examples": "# ki-code-block examples\n\nDisplay a TypeScript snippet with line numbers and a highlighted line.\n\n```html\n<ki-code-block language=\"ts\" filename=\"main.ts\" line-numbers highlight=\"2\">// Load the current sample.\nconst sample = load(3);</ki-code-block>\n```\n\nUse plain text for unsupported syntax. In HTML, escape literal angle\nbrackets so they remain part of the source.\n\n```html\n<ki-code-block language=\"html\" filename=\"example.html\" wrap copyable=\"false\">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>\n```\n\nThe guarded catalog accepts source strings in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"actions\": [\"sampleCopied\"],\n  \"root\": {\n    \"component\": \"ki-code-block\",\n    \"props\": { \"language\": \"js\", \"filename\": \"index.js\", \"line-numbers\": true },\n    \"slots\": { \"\": [\"const sample = load(3);\"] },\n    \"action\": \"sampleCopied\"\n  }\n}\n```\n"
       },
       "props": [
         {
@@ -5973,7 +5973,7 @@
           "mutable": false,
           "attr": "language",
           "reflectToAttr": false,
-          "docs": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+          "docs": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
           "docsTags": [],
           "values": [
             {
@@ -9822,7 +9822,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
+          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path, `close()` and a cleared `open` included,\nemits a noncancelable notification after close and focus restoration: it\ncan fire without a gesture. Use `open` to observe the modal's live state.",
           "docsTags": []
         },
         {
@@ -10278,7 +10278,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason.",
+          "docs": "Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it\ncan fire without a gesture. Call preventDefault() to keep it open, for example when\nedits are unsaved. The event carries the reason in detail.reason.",
           "docsTags": []
         }
       ],
@@ -19899,7 +19899,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Emitted when the popover closes.",
+          "docs": "Emitted when the popover closes, also when `open` is cleared: it can fire\nwithout a gesture.",
           "docsTags": []
         },
         {
@@ -19913,7 +19913,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Emitted when the popover opens.",
+          "docs": "Emitted when the popover opens, also when `open` is set: it can fire\nwithout a gesture.",
           "docsTags": []
         }
       ],
@@ -33275,7 +33275,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted when an existing branch collapses.",
+          "docs": "Emitted when an existing branch collapses, also when `expanded` is\ncleared: it can fire without a gesture.",
           "docsTags": []
         },
         {
@@ -33294,7 +33294,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted when an existing branch expands.",
+          "docs": "Emitted when an existing branch expands, also when `expanded` is set: it\ncan fire without a gesture.",
           "docsTags": []
         },
         {
@@ -33313,7 +33313,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted once when an empty lazy branch first opens. The listener supplies the children.",
+          "docs": "Emitted once when an empty lazy branch first opens, also one rendered\nexpanded: it can fire without a gesture. The listener supplies the children.",
           "docsTags": []
         }
       ],

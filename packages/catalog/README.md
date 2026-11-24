@@ -294,6 +294,16 @@ name do not apply, so a `ki-dialog` bound per event reports both its
 confirmation and every close. The click on the element is claimed and never
 cancelled.
 
+An action is a report, not consent (spec 161). It says that a bound
+component fired its event, whatever caused it: a person's gesture, a timer
+(`ki-toast`), a failed load (`ki-image`), autoplay (`ki-carousel`), a
+property the spec or a live update set (`ki-popover`, `ki-tree-item`,
+`ki-dialog`, `ki-drawer`) or a call by the host. An event description that
+says "it can fire without a gesture" names such an event. The agent that
+writes a spec also writes the words on its controls, so not even a real click
+is the person's consent to what a host does with the action: confirm a
+consequential effect outside the spec, in the host or the server.
+
 A bound node may `collect` other fields by id (spec 153, catalog schema
 `1.7.0`): `"collect": { "title": "f-title", "quantity": "f-qty" }` on a
 button bound to `add`. At the gesture every named field is asked for
