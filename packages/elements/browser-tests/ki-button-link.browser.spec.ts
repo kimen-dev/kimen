@@ -201,6 +201,25 @@ describe('ki-button with href', () => {
     expect(location.hash).toBe('');
   });
 
+  it('S6 a middle click on a loading button link is canceled and reaches no listener', async () => {
+    const el = await mount({ href: '#ki-button-link-loading', loading: true });
+    let observed = 0;
+    el.addEventListener('auxclick', () => {
+      observed += 1;
+    });
+    const middleClick = () =>
+      new MouseEvent('auxclick', { bubbles: true, button: 1, cancelable: true, composed: true });
+
+    // A middle click opens a link in a new tab through auxclick, not click.
+    expect(control(el).dispatchEvent(middleClick())).toBe(false);
+    expect(observed).toBe(0);
+
+    el.loading = false;
+    await expect.poll(() => control(el).getAttribute('aria-disabled')).toBeNull();
+    expect(control(el).dispatchEvent(middleClick())).toBe(true);
+    expect(observed).toBe(1);
+  });
+
   it('S21 removes a disabled button link from the Tab order, like a disabled button', async () => {
     const el = await mount({ href: '#ki-button-link-disabled', disabled: true });
     const after = document.createElement('button');

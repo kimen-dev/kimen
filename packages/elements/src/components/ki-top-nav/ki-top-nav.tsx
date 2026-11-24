@@ -79,7 +79,10 @@ export class KiTopNav {
   /** Bar size. Only app-bar mode has large and extra-large two-row sizes. */
   @Prop() size: TopNavSize = 'md';
 
-  /** CSS length below which navigation collapses and single-row app bars can center their title. */
+  /**
+   * CSS length below which navigation collapses and single-row app bars can center their title.
+   * `none` never collapses: links that do not fit wrap onto more lines.
+   */
   @Prop() collapseAt = DEFAULT_COLLAPSE_AT;
 
   /** Keep the bar at the block start of the scroll container and draw a bottom border. */
@@ -471,7 +474,7 @@ export class KiTopNav {
     );
   }
 
-  private renderHeader() {
+  private renderHeader(wrap: boolean) {
     const menu = this.compact && this.linkCount > 0;
     const popup = menu
       ? {
@@ -486,7 +489,13 @@ export class KiTopNav {
       <header
         key="header"
         part="bar"
-        class={{ bar: true, header: true, compact: this.compact, 'small-bar': this.size === 'sm' }}
+        class={{
+          bar: true,
+          header: true,
+          compact: this.compact,
+          'small-bar': this.size === 'sm',
+          wrap,
+        }}
       >
         <div class="brand" part="brand">
           <slot name="brand" />
@@ -609,7 +618,10 @@ export class KiTopNav {
   }
 
   render() {
-    const length = (this.collapseAt || DEFAULT_COLLAPSE_AT).trim();
+    const authored = (this.collapseAt || DEFAULT_COLLAPSE_AT).trim();
+    // `none` never collapses: no row is narrower than an empty probe.
+    const wrap = authored.toLowerCase() === 'none';
+    const length = wrap ? '0px' : authored;
     const breakpoint = CSS.supports('inline-size', `max(0px, ${length})`)
       ? length
       : DEFAULT_COLLAPSE_AT;
@@ -630,7 +642,7 @@ export class KiTopNav {
             style={{ inlineSize: breakpoint }}
           />
         </span>
-        {this.appBar ? this.renderAppBar() : this.renderHeader()}
+        {this.appBar ? this.renderAppBar() : this.renderHeader(wrap)}
       </Host>
     );
   }
