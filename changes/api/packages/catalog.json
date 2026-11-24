@@ -1,0 +1,317 @@
+{
+  "modules": {
+    ".": {
+      "declaration": "./dist/index.d.ts",
+      "symbols": {
+        "ActionBinding": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type ActionBinding = string | Readonly<Record<string, string>>;"
+        },
+        "ActionEvent": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface ActionEvent {\n    readonly action: string;\n    readonly id?: string | undefined;\n    readonly path: string;\n    readonly data: Readonly<Record<string, boolean | number | string>>;\n}"
+        },
+        "CATALOG_SCHEMA_VERSION": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const CATALOG_SCHEMA_VERSION: string;"
+        },
+        "COLLECT_MAX_ENTRIES": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const COLLECT_MAX_ENTRIES = 32;"
+        },
+        "Catalog": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface Catalog {\n    readonly catalogSchemaVersion: string;\n    readonly components: Readonly<Record<string, CatalogEntry>>;\n    readonly elementsVersion?: string | undefined;\n}"
+        },
+        "CatalogCreationOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface CatalogCreationOptions {\n    readonly extend?: Catalog;\n}"
+        },
+        "CatalogCreationResult": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type CatalogCreationResult = {\n    readonly ok: true;\n    readonly catalog: Catalog;\n    readonly issues: readonly [\n    ];\n} | {\n    readonly ok: false;\n    readonly issues: readonly RegistrationIssue[];\n};"
+        },
+        "CatalogDefinition": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface CatalogDefinition {\n    readonly components: Readonly<Record<string, CatalogEntry>>;\n}"
+        },
+        "CatalogEntry": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface CatalogEntry {\n    readonly tag: string;\n    readonly description: string;\n    readonly whenToUse: string;\n    readonly whenNotToUse: string;\n    readonly props: Readonly<Record<string, CatalogPropConstraint>>;\n    readonly slots: Readonly<Record<string, string>>;\n    readonly events: Readonly<Record<string, string>>;\n    readonly activationEvent?: string;\n}"
+        },
+        "CatalogPropConstraint": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface CatalogPropConstraint {\n    readonly type: 'boolean' | 'enum' | 'number' | 'number-or-string' | 'string';\n    readonly values?: readonly string[];\n    readonly deprecatedValues?: readonly string[];\n    readonly documentedValues?: readonly string[];\n    readonly default?: boolean | number | string;\n    readonly required?: boolean;\n    readonly allowEmpty?: boolean;\n    readonly minimum?: number;\n    readonly maximum?: number;\n    readonly format?: 'idref' | 'text' | 'url';\n    readonly description: string;\n}"
+        },
+        "DEFAULT_LIVE_BATCH_BUDGETS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const DEFAULT_LIVE_BATCH_BUDGETS: LiveBatchBudgets;"
+        },
+        "DEFAULT_RENDER_BUDGETS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const DEFAULT_RENDER_BUDGETS: RenderBudgets;"
+        },
+        "LiveActionEvent": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveActionEvent extends ActionEvent {\n    readonly revision: number;\n}"
+        },
+        "LiveBatch": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveBatch {\n    readonly ifRevision?: number | undefined;\n    readonly ops: readonly LiveOp[];\n    readonly focus?: string | undefined;\n}"
+        },
+        "LiveBatchBudgets": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveBatchBudgets {\n    readonly maxOps: number;\n    readonly maxBytes: number;\n}"
+        },
+        "LiveBatchResult": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveBatchResult extends RenderResult {\n    readonly revision: number;\n}"
+        },
+        "LiveInsertOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveInsertOp {\n    readonly op: 'insert';\n    readonly parent?: string | undefined;\n    readonly slot?: string | undefined;\n    readonly before?: string | undefined;\n    readonly node: UiSpecNode;\n}"
+        },
+        "LiveOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type LiveOp = LiveInsertOp | LiveSetOp | LiveTextOp | LiveRemoveOp | LiveReplaceOp | LiveResetOp;"
+        },
+        "LiveRemoveOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveRemoveOp {\n    readonly op: 'remove';\n    readonly id: string;\n    readonly force?: boolean | undefined;\n}"
+        },
+        "LiveReplaceOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveReplaceOp {\n    readonly op: 'replace';\n    readonly id: string;\n    readonly node: UiSpecNode;\n    readonly force?: boolean | undefined;\n}"
+        },
+        "LiveResetOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveResetOp {\n    readonly op: 'reset';\n    readonly id: string;\n}"
+        },
+        "LiveSetOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveSetOp {\n    readonly op: 'set';\n    readonly id: string;\n    readonly props: Readonly<Record<string, boolean | number | string | null>>;\n    readonly force?: boolean | undefined;\n}"
+        },
+        "LiveSnapshot": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveSnapshot {\n    readonly revision: number;\n    readonly actions: readonly string[];\n    readonly nodes: readonly UiSpecNode[];\n}"
+        },
+        "LiveSurface": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveSurface {\n    apply(batch: unknown): LiveBatchResult;\n    snapshot(): LiveSnapshot;\n    readonly revision: number;\n}"
+        },
+        "LiveSurfaceOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveSurfaceOptions {\n    readonly surface: Element;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n    readonly actions?: readonly string[];\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly batchBudgets?: Partial<LiveBatchBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly onAction?: (event: LiveActionEvent) => void;\n    readonly allowUserStateOverride?: boolean;\n}"
+        },
+        "LiveTextOp": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface LiveTextOp {\n    readonly op: 'text';\n    readonly id: string;\n    readonly slot?: string | undefined;\n    readonly text: string;\n}"
+        },
+        "NATIVE_PRIMITIVE_TAGS": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const NATIVE_PRIMITIVE_TAGS: readonly string[];"
+        },
+        "NODE_ID_GRAMMAR": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const NODE_ID_GRAMMAR: RegExp;"
+        },
+        "PreflightOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type PreflightOptions = Omit<RenderOptions, 'onAction' | 'surface'>;"
+        },
+        "RegistrationIssue": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface RegistrationIssue {\n    readonly code: RegistrationIssueCode;\n    readonly path: string;\n    readonly message: string;\n    readonly value?: string | undefined;\n}"
+        },
+        "RegistrationIssueCode": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type RegistrationIssueCode = 'collision' | 'depth-budget' | 'empty-definition' | 'forbidden-key' | 'invalid-tag' | 'malformed-constraint' | 'malformed-definition' | 'missing-guidance' | 'size-budget' | 'unsupported-version';"
+        },
+        "RenderBudgets": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface RenderBudgets {\n    readonly maxDepth: number;\n    readonly maxNodes: number;\n    readonly maxBytes: number;\n}"
+        },
+        "RenderDiagnostic": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface RenderDiagnostic {\n    readonly path: string;\n    readonly rule: string;\n    readonly message: string;\n    readonly value?: string | undefined;\n}"
+        },
+        "RenderOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface RenderOptions {\n    readonly surface: Element;\n    readonly onAction?: (event: ActionEvent) => void;\n    readonly budgets?: Partial<RenderBudgets>;\n    readonly catalogSchemaVersion?: string;\n    readonly catalog?: Catalog;\n    readonly allowedUrlOrigins?: readonly string[];\n}"
+        },
+        "RenderResult": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface RenderResult {\n    readonly ok: boolean;\n    readonly diagnostics: readonly RenderDiagnostic[];\n}"
+        },
+        "StreamingRenderer": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface StreamingRenderer {\n    push(node: unknown): RenderResult;\n    close(): void;\n}"
+        },
+        "UiSpec": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface UiSpec {\n    readonly version: 1;\n    readonly actions?: readonly string[] | undefined;\n    readonly root: UiSpecNode;\n}"
+        },
+        "UiSpecNode": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface UiSpecNode {\n    readonly id?: string | undefined;\n    readonly component: string;\n    readonly props?: Readonly<Record<string, boolean | number | string>> | undefined;\n    readonly action?: ActionBinding | undefined;\n    readonly collect?: Readonly<Record<string, string>> | undefined;\n    readonly slots?: Readonly<Record<string, readonly (UiSpecNode | string)[]>> | undefined;\n}"
+        },
+        "VALIDATION_MAX_BYTES": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const VALIDATION_MAX_BYTES = 262144;"
+        },
+        "VALIDATION_MAX_DEPTH": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const VALIDATION_MAX_DEPTH = 256;"
+        },
+        "ValidationContext": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface ValidationContext {\n    readonly catalog?: Catalog | undefined;\n    readonly allowedUrlOrigins?: readonly string[] | undefined;\n}"
+        },
+        "ValidationIssue": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface ValidationIssue {\n    readonly code: 'action-not-allowed' | 'collect-budget' | 'collect-key-conflict' | 'collect-no-value' | 'collect-unknown-node' | 'collect-without-action' | 'depth-budget' | 'duplicate-id' | 'forbidden-key' | 'invalid-child' | 'invalid-command' | 'invalid-command-target' | 'invalid-id' | 'invalid-prop-type' | 'invalid-reference' | 'malformed-spec' | 'missing-required-prop' | 'prop-out-of-range' | 'size-budget' | 'undeclared-action' | 'undeclared-event' | 'unknown-component' | 'unknown-prop' | 'unknown-slot' | 'url-origin' | 'url-scheme';\n    readonly path: string;\n    readonly message: string;\n    readonly value?: string | undefined;\n}"
+        },
+        "ValidationReport": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface ValidationReport {\n    readonly ok: boolean;\n    readonly issues: readonly ValidationIssue[];\n}"
+        },
+        "catalogData": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "generated data: the catalog generated from the elements manifest, sealed by catalog-sync"
+        },
+        "createCatalog": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function createCatalog(definition: unknown, options?: CatalogCreationOptions): CatalogCreationResult;"
+        },
+        "createLiveSurface": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function createLiveSurface(options: LiveSurfaceOptions): LiveSurface;"
+        },
+        "createStreamingRenderer": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function createStreamingRenderer(options: RenderOptions & {\n    readonly actions?: readonly string[];\n}): StreamingRenderer;"
+        },
+        "preflightUiSpec": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function preflightUiSpec(input: unknown, options?: PreflightOptions): RenderResult;"
+        },
+        "renderUiSpec": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function renderUiSpec(input: unknown, options: RenderOptions): RenderResult;"
+        },
+        "selectSpecIcons": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function selectSpecIcons(names: Iterable<string>): void;"
+        },
+        "validateUiSpec": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function validateUiSpec(input: unknown, options?: ValidationContext & {\n    readonly maxBytes?: number;\n}): ValidationReport;"
+        }
+      },
+      "target": "./dist/index.js"
+    }
+  },
+  "package": "@kimen/catalog"
+}
