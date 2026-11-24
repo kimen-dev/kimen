@@ -81,7 +81,6 @@ None.
 ## CSS custom properties
 
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-effect-small-dark-shadow`: MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
@@ -98,52 +97,53 @@ None.
 - `--ki-switch-checked-rest-border`: color used by the switch component for checked rest border.
 - `--ki-switch-checked-rest-thumb`: color used by the switch component for checked rest thumb.
 - `--ki-switch-checked-rest-track`: color used by the switch component for checked rest track.
-- `--ki-switch-control-height`: dimension used by the switch component for the control footprint height (Toggle md: Space/9xl 28px). The well pads the track by half of (control-height - track-height) on every side.
-- `--ki-switch-control-width`: dimension used by the switch component for the control footprint width (Toggle md 10023:1368: Space/14xl 48px). The well is centred in it; set it to the track width, with control-height, to drop the well.
+- `--ki-switch-control-height`: dimension used by the switch component for the control footprint height at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. The well pads the track by half of (control-height - track-height) on every side.
+- `--ki-switch-control-width`: dimension used by the switch component for the control footprint width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. The well is centred in it; set it to the track width, with control-height, to drop the well.
 - `--ki-switch-focus-ring-color`: color used by the switch component for focus ring color.
 - `--ki-switch-focus-ring-offset`: dimension used by the switch component for focus ring offset.
 - `--ki-switch-focus-ring-shadow`: shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-switch-focus-ring-width`: dimension used by the switch component for focus ring width.
-- `--ki-switch-gap`: dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio).
+- `--ki-switch-gap`: dimension used by the switch component for the gap between the control and its label at sizes md, lg and xl; sm-gap sets sm.
 - `--ki-switch-glyph-checked`: Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb.
 - `--ki-switch-glyph-dash-height`: dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash).
 - `--ki-switch-glyph-disabled`: Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs.
 - `--ki-switch-glyph-height`: dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height).
 - `--ki-switch-glyph-unchecked`: Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb.
 - `--ki-switch-glyph-width`: dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb).
-- `--ki-switch-lg-control-height`: dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px).
-- `--ki-switch-lg-control-width`: dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px).
-- `--ki-switch-lg-min-target`: dimension used by the switch component for lg min target (Toggle 10023:1125 lg cell height: 32px).
-- `--ki-switch-lg-thumb-inset`: dimension used by the switch component for lg thumb inset (Toggle 10023:1125 lg binds Space/xxs, 2px).
-- `--ki-switch-lg-thumb-radius`: dimension used by the switch component for lg thumb radius (Toggle 10023:1125 lg pointer binds Radius/small-component/xs).
-- `--ki-switch-lg-thumb-size`: dimension used by the switch component for lg thumb height (Toggle 10023:1125 lg pointer: 20px).
-- `--ki-switch-lg-thumb-width`: dimension used by the switch component for lg thumb width (Toggle 10023:1125 lg pointer: 26px).
-- `--ki-switch-lg-track-height`: dimension used by the switch component for lg track height (Toggle 10023:1125 lg: 26px).
-- `--ki-switch-lg-track-radius`: dimension used by the switch component for lg track radius (Toggle 10023:1125 lg binds Radius/small-component/sm).
-- `--ki-switch-lg-track-width`: dimension used by the switch component for lg track width (Toggle 10023:1125 lg: 48px).
-- `--ki-switch-lg-well-radius`: dimension used by the switch component for lg well radius (Toggle 10023:1125 lg Base binds Radius/small-component/md).
-- `--ki-switch-min-target`: dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint).
-- `--ki-switch-sm-control-height`: dimension used by the switch component for sm control height (Toggle 10023:1125 sm cell: 28px).
-- `--ki-switch-sm-control-width`: dimension used by the switch component for sm control width (Toggle 10023:1125 sm cell: 40px).
-- `--ki-switch-sm-gap`: dimension used by the switch component for the sm gap between control and label (Toggle_label 10101:3995 sm binds Space/md, 8px; spec 050 D4).
-- `--ki-switch-sm-label-font-size`: dimension used by the switch component for the sm label font size (Toggle_label 10101:3995 sm: UI/para 13/20; spec 050 D4).
-- `--ki-switch-sm-label-line-height`: dimension used by the switch component for the sm label line height (Toggle_label 10101:3995 sm: UI/para 13/20).
-- `--ki-switch-sm-min-target`: dimension used by the switch component for sm min target (Toggle 10023:1125 sm cell height: 28px).
-- `--ki-switch-sm-thumb-inset`: dimension used by the switch component for sm thumb inset (Toggle 10023:1125 sm binds Space/xxs, 2px).
-- `--ki-switch-sm-thumb-radius`: dimension used by the switch component for sm thumb radius (Toggle 10023:1125 sm pointer binds Radius/small-component/xxs).
-- `--ki-switch-sm-thumb-size`: dimension used by the switch component for sm thumb height (Toggle 10023:1125 sm pointer: 14px).
-- `--ki-switch-sm-thumb-width`: dimension used by the switch component for sm thumb width (Toggle 10023:1125 sm pointer: 18px).
-- `--ki-switch-sm-track-height`: dimension used by the switch component for sm track height (Toggle 10023:1125 sm: 18px).
-- `--ki-switch-sm-track-radius`: dimension used by the switch component for sm track radius (Toggle 10023:1125 sm binds Radius/small-component/xs).
-- `--ki-switch-sm-track-width`: dimension used by the switch component for sm track width (Toggle 10023:1125 sm: 32px).
-- `--ki-switch-sm-well-radius`: dimension used by the switch component for sm well radius (Toggle 10023:1125 sm Base binds Radius/small-component/md).
-- `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset.
-- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs).
-- `--ki-switch-thumb-size`: dimension used by the switch component for thumb size.
-- `--ki-switch-thumb-width`: dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size).
-- `--ki-switch-track-height`: dimension used by the switch component for track height.
-- `--ki-switch-track-radius`: dimension used by the switch component for track radius.
-- `--ki-switch-track-width`: dimension used by the switch component for track width.
+- `--ki-switch-lg-control-height`: dimension used by the switch component for the control footprint height at size lg.
+- `--ki-switch-lg-control-width`: dimension used by the switch component for the control footprint width at size lg.
+- `--ki-switch-lg-min-target`: dimension used by the switch component for min target at size lg.
+- `--ki-switch-lg-thumb-inset`: dimension used by the switch component for thumb inset at size lg.
+- `--ki-switch-lg-thumb-radius`: dimension used by the switch component for thumb radius at size lg.
+- `--ki-switch-lg-thumb-size`: dimension used by the switch component for thumb block size at size lg.
+- `--ki-switch-lg-thumb-width`: dimension used by the switch component for thumb inline size at size lg.
+- `--ki-switch-lg-track-height`: dimension used by the switch component for track height at size lg.
+- `--ki-switch-lg-track-radius`: dimension used by the switch component for track radius at size lg.
+- `--ki-switch-lg-track-width`: dimension used by the switch component for track width at size lg.
+- `--ki-switch-lg-well-radius`: dimension used by the switch component for the well radius at size lg.
+- `--ki-switch-min-target`: dimension used by the switch component for min target at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-sm-control-height`: dimension used by the switch component for the control footprint height at size sm.
+- `--ki-switch-sm-control-width`: dimension used by the switch component for the control footprint width at size sm.
+- `--ki-switch-sm-gap`: dimension used by the switch component for the gap between the control and its label at size sm.
+- `--ki-switch-sm-label-font-size`: dimension used by the switch component for the label font size at size sm.
+- `--ki-switch-sm-label-line-height`: dimension used by the switch component for the label line height at size sm.
+- `--ki-switch-sm-min-target`: dimension used by the switch component for min target at size sm.
+- `--ki-switch-sm-thumb-inset`: dimension used by the switch component for thumb inset at size sm.
+- `--ki-switch-sm-thumb-radius`: dimension used by the switch component for thumb radius at size sm.
+- `--ki-switch-sm-thumb-size`: dimension used by the switch component for thumb block size at size sm.
+- `--ki-switch-sm-thumb-width`: dimension used by the switch component for thumb inline size at size sm.
+- `--ki-switch-sm-track-height`: dimension used by the switch component for track height at size sm.
+- `--ki-switch-sm-track-radius`: dimension used by the switch component for track radius at size sm.
+- `--ki-switch-sm-track-width`: dimension used by the switch component for track width at size sm.
+- `--ki-switch-sm-well-radius`: dimension used by the switch component for the well radius at size sm.
+- `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-thumb-shadow`: shadow used by the switch component for the thumb in every state and size. Set it to none to drop the shadow.
+- `--ki-switch-thumb-size`: dimension used by the switch component for thumb block size at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-thumb-width`: dimension used by the switch component for thumb inline size at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-track-height`: dimension used by the switch component for track height at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-track-radius`: dimension used by the switch component for track radius at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-track-width`: dimension used by the switch component for track width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
 - `--ki-switch-unchecked-active-border`: color used by the switch component for unchecked active border.
 - `--ki-switch-unchecked-active-thumb`: color used by the switch component for unchecked active thumb.
 - `--ki-switch-unchecked-active-track`: color used by the switch component for unchecked active track (one step beyond hover; the master defines no pressed variant).
@@ -156,20 +156,20 @@ None.
 - `--ki-switch-unchecked-rest-border`: color used by the switch component for unchecked rest border.
 - `--ki-switch-unchecked-rest-thumb`: color used by the switch component for unchecked rest thumb.
 - `--ki-switch-unchecked-rest-track`: color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill).
-- `--ki-switch-well-bg-end`: color used by the switch component for the bottom of the well gradient (Toggle md Base).
-- `--ki-switch-well-bg-start`: color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well.
-- `--ki-switch-well-radius`: dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md).
-- `--ki-switch-xl-control-height`: dimension used by the switch component for xl control height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 40px).
-- `--ki-switch-xl-control-width`: dimension used by the switch component for xl control width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 64px).
-- `--ki-switch-xl-min-target`: dimension used by the switch component for xl min target (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell height: 40px).
-- `--ki-switch-xl-thumb-inset`: dimension used by the switch component for xl thumb inset (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Space/xs, 4px).
-- `--ki-switch-xl-thumb-radius`: dimension used by the switch component for xl thumb radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer binds Radius/small-component/xs).
-- `--ki-switch-xl-thumb-size`: dimension used by the switch component for xl thumb height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 24px).
-- `--ki-switch-xl-thumb-width`: dimension used by the switch component for xl thumb width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 32px).
-- `--ki-switch-xl-track-height`: dimension used by the switch component for xl track height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 32px).
-- `--ki-switch-xl-track-radius`: dimension used by the switch component for xl track radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Radius/small-component/md).
-- `--ki-switch-xl-track-width`: dimension used by the switch component for xl track width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 56px).
-- `--ki-switch-xl-well-radius`: dimension used by the switch component for xl well radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) Base binds Radius/small-component/lg).
+- `--ki-switch-well-bg-end`: color used by the switch component for the bottom of the well gradient, at every size.
+- `--ki-switch-well-bg-start`: color used by the switch component for the top of the well gradient, at every size. Transparent drops the well.
+- `--ki-switch-well-radius`: dimension used by the switch component for the radius of the well that holds the track at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-xl-control-height`: dimension used by the switch component for the control footprint height at size xl.
+- `--ki-switch-xl-control-width`: dimension used by the switch component for the control footprint width at size xl.
+- `--ki-switch-xl-min-target`: dimension used by the switch component for min target at size xl.
+- `--ki-switch-xl-thumb-inset`: dimension used by the switch component for thumb inset at size xl.
+- `--ki-switch-xl-thumb-radius`: dimension used by the switch component for thumb radius at size xl.
+- `--ki-switch-xl-thumb-size`: dimension used by the switch component for thumb block size at size xl.
+- `--ki-switch-xl-thumb-width`: dimension used by the switch component for thumb inline size at size xl.
+- `--ki-switch-xl-track-height`: dimension used by the switch component for track height at size xl.
+- `--ki-switch-xl-track-radius`: dimension used by the switch component for track radius at size xl.
+- `--ki-switch-xl-track-width`: dimension used by the switch component for track width at size xl.
+- `--ki-switch-xl-well-radius`: dimension used by the switch component for the well radius at size xl.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).

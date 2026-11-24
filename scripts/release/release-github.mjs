@@ -5,13 +5,14 @@ import { fileURLToPath, URLSearchParams } from 'node:url';
 import {
   mcpServerMetadataPath,
   mcpServerPinPaths,
+  pluginManifestPaths,
   prepareManifest,
   releaseNotes,
   releasePackages,
   releaseProposal,
   releaseTitlePattern,
   releaseVersionPattern,
-  verifyMcpServerVersion,
+  verifyVersionedFiles,
 } from './release-plan.mjs';
 
 const releaseBranch = 'release/next';
@@ -24,11 +25,14 @@ const generatedFiles = [
   'packages/catalog/src/generated/catalog.ts',
 ];
 export const releaseCommitFiles = [
-  'CHANGELOG.md',
-  ...releasePackages.values(),
-  mcpServerMetadataPath,
-  ...mcpServerPinPaths,
-  ...generatedFiles,
+  ...new Set([
+    'CHANGELOG.md',
+    ...releasePackages.values(),
+    mcpServerMetadataPath,
+    ...mcpServerPinPaths,
+    ...pluginManifestPaths,
+    ...generatedFiles,
+  ]),
 ];
 
 export function mergedReleaseVersion(pulls, { repository, sha }) {
@@ -156,7 +160,7 @@ async function verifyManifests(version) {
     manifests.set(name, manifest);
   }
   const { mcpName } = manifests.get('@kimen/mcp-server');
-  await verifyMcpServerVersion((path) => readFile(path, 'utf8'), version, mcpName);
+  await verifyVersionedFiles((path) => readFile(path, 'utf8'), version, mcpName);
 }
 
 async function proposeRelease({ github, remote, repository, sha, version }) {
