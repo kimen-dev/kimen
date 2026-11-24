@@ -1001,12 +1001,13 @@ CSS custom properties:
 A token-styled action button with native button semantics.
 
 When to use: trigger the single main action of a view, supporting actions
-in descending hierarchy, confirming/destructive actions through tone, or
-persistent actions such as Bold with `toggle`.
+in descending hierarchy, confirming/destructive actions through tone,
+persistent actions such as Bold with `toggle`, or with `href` a call to
+action that navigates.
 While the action a button started is in progress, set `loading` on that
 button instead of disabling it.
-When NOT to use: navigation, icon-only actions, form values, or the
-progress of a page or region (use ki-progress).
+When NOT to use: links in text (ki-link), icon-only actions, form values, or
+the progress of a page or region (use ki-progress).
 
 Examples:
 
@@ -1089,11 +1090,15 @@ Attributes:
 - `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
 - `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
+- `download` (string | undefined): File name to download `href` as; empty lets the browser choose.
+- `href` (string | undefined, URL): Destination URL. Nonblank, it renders a native link with the same look; toggle, form and dialog props are then ignored.
 - `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
 - `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
+- `rel` (string | undefined): Link relationships for `href`.
 - `selected` (boolean, default false): Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
+- `target` (string | undefined): Browsing context for `href`; `_blank` alone gets `rel="noreferrer noopener"`.
 - `toggle` (boolean, default false): Enables persistent press state for an action such as Bold. The native button exposes `aria-pressed` and each activation switches `selected`. Use the same label in both states. A toggle does not submit or reset a form.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. Toggle palettes are specific to the variant. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, and `button` leaves the form alone. Toggle mode and configured dialog commands take precedence over form actions. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
@@ -1106,7 +1111,7 @@ Slots:
 - `start`: Leading icon or media. Follows writing direction.
 
 Parts:
-- `button`: Internal native button.
+- `button`: Internal native button, or link with `href`.
 - `label`: Label wrapper around the default slot.
 - `spinner`: Loading spinner drawn at the center of the button, in the button's foreground ink, rendered only while `loading` is in effect.
 
@@ -1150,6 +1155,7 @@ CSS custom properties:
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-justify-content`: Placement of the button content; start for a card.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
 - `--ki-button-lg-gap`: dimension used by the button component for lg gap.
@@ -1296,6 +1302,7 @@ CSS custom properties:
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-text-align`: Alignment of the label lines.
 - `--ki-button-toggle-quiet-bg`: Background of unselected ghost and quaternary toggle buttons.
 - `--ki-button-toggle-quiet-fg`: Foreground of unselected ghost toggle buttons.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
@@ -2966,6 +2973,7 @@ CSS custom properties:
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-justify-content`: Placement of the button content; start for a card.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
 - `--ki-button-lg-gap`: dimension used by the button component for lg gap.
@@ -3112,6 +3120,7 @@ CSS custom properties:
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-text-align`: Alignment of the label lines.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.

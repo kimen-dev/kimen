@@ -2216,11 +2216,11 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone,\npersistent actions such as Bold with `toggle`, or with `href` a call to\naction that navigates.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
         },
         {
           "name": "whenNotToUse",
-          "text": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress)."
+          "text": "links in text (ki-link), icon-only actions, form values, or\nthe progress of a page or region (use ki-progress)."
         },
         {
           "name": "slot",
@@ -2236,7 +2236,7 @@
         },
         {
           "name": "part",
-          "text": "button - Internal native button."
+          "text": "button - Internal native button, or link with `href`."
         },
         {
           "name": "part",
@@ -2359,6 +2359,63 @@
           "setter": false
         },
         {
+          "name": "download",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "download",
+          "reflectToAttr": false,
+          "docs": "File name to download `href` as; empty lets the browser choose.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "Destination URL. Nonblank, it renders a native link with the same look;\ntoggle, form and dialog props are then ignored.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "loading",
           "type": "boolean",
           "complexType": {
@@ -2428,6 +2485,32 @@
           "attr": "name",
           "reflectToAttr": true,
           "docs": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "rel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "rel",
+          "reflectToAttr": false,
+          "docs": "Link relationships for `href`.",
           "docsTags": [],
           "values": [
             {
@@ -2519,6 +2602,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "target",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "target",
+          "reflectToAttr": false,
+          "docs": "Browsing context for `href`; `_blank` alone gets `rel=\"noreferrer noopener\"`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -2763,7 +2872,7 @@
       "parts": [
         {
           "name": "button",
-          "docs": "Internal native button."
+          "docs": "Internal native button, or link with `href`."
         },
         {
           "name": "label",

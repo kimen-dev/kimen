@@ -1447,6 +1447,8 @@
   --ki-button-font-weight:var(--ki-typography-weight-body-medium);
   --ki-button-padding-block:var(--ki-space-xs);
   --ki-button-label-padding-inline:var(--ki-space-xs);
+  --ki-button-justify-content:center;
+  --ki-button-text-align:center;
   --ki-button-backdrop-blur:var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-backdrop-filter */
   --ki-button-backdrop-filter:var(--ki-effect-component-backdrop-filter);
   --ki-button-focus-ring-color:var(--ki-focus-ring-color);
