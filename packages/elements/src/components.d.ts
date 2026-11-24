@@ -1002,7 +1002,7 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
+          * Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
          */
         "language"?: string;
         /**
@@ -8233,7 +8233,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.
+          * Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
          */
         "language"?: string;
         /**
