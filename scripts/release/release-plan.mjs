@@ -239,6 +239,54 @@ export async function verifyMcpServerVersion(read, version, mcpName) {
   }
 }
 
+// An installed agent plugin refreshes only when its manifest version moves, so
+// the three plugin manifests carry the package release version. The release
+// pull request rewrites their top-level `version` and nothing else.
+export const pluginManifestPaths = Object.freeze([
+  'plugins/kimen/.claude-plugin/plugin.json',
+  'plugins/kimen/.antigravity-plugin/plugin.json',
+  'plugins/kimen/gemini-extension.json',
+]);
+const pluginVersionField = /^ {2}"version": "[^"\n]*"/gmu;
+
+/**
+ * Sets the top-level `version` of one plugin manifest to `version`, leaving
+ * every other byte alone. Fails closed unless the manifest declares exactly
+ * one top-level version on its own two-space-indented line.
+ */
+export function pinPluginManifest(source, version, path) {
+  if (!releaseVersionPattern.test(version)) throw new Error(`Invalid release version ${version}`);
+  let fields = 0;
+  const text = source.replace(pluginVersionField, () => {
+    fields += 1;
+    return `  "version": "${version}"`;
+  });
+  if (fields !== 1 || JSON.parse(text).version !== version) {
+    throw new Error(`${path} must declare one top-level version`);
+  }
+  return text;
+}
+
+/** The kimen-mcp pins, server.json and plugin manifests as the release pull request writes them. */
+export async function prepareVersionedFiles(read, version, mcpName) {
+  const files = await prepareMcpServerVersion(read, version, mcpName);
+  for (const path of pluginManifestPaths) {
+    files.set(path, pinPluginManifest(files.get(path) ?? (await read(path)), version, path));
+  }
+  return files;
+}
+
+/** Fails unless every kimen-mcp pin and every plugin manifest already names `version`. */
+export async function verifyVersionedFiles(read, version, mcpName) {
+  await verifyMcpServerVersion(read, version, mcpName);
+  for (const path of pluginManifestPaths) {
+    const source = await read(path);
+    if (pinPluginManifest(source, version, path) !== source) {
+      throw new Error(`${path} must declare the release version ${version}`);
+    }
+  }
+}
+
 function workspaceRanges(dependencies = {}) {
   return Object.fromEntries(
     Object.entries(dependencies).filter(([, range]) => range.startsWith('workspace:')),
