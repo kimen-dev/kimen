@@ -1,0 +1,16 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-code-block/attributes/language": "13e61dff213130ecc174997023d3a5549dda672c75ca1e02fb27c3d7466d5e7e",
+    "/packages/@kimen~1elements/components/ki-code-block/properties/language": "13e61dff213130ecc174997023d3a5549dda672c75ca1e02fb27c3d7466d5e7e"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "Integrator feedback on 0.1.3, item 4: ki-code-block colors Gherkin (language=\"gherkin\" or \"feature\") with English and Spanish keywords. Only the documented description of the language attribute and property changes; no prop, event, part, slot or token is added, removed or renamed.",
+  "release": "minor",
+  "schemaVersion": 2
+}

@@ -68,7 +68,7 @@
       "language": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
+        "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -422,7 +422,7 @@
       "language": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript and JSON.",
+        "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
