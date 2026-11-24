@@ -92,7 +92,9 @@
   --_ki-button-outline-border: var(--ki-button-outline-rest-border);
 }
 
-button {
+:is(button, a) {
+  /* The link takes the native button's box model and drops its underline. */
+  box-sizing: border-box;
   font-family: var(--ki-button-font-family);
   font-size: var(--_ki-button-font-size);
   font-weight: var(--ki-button-font-weight);
@@ -102,6 +104,12 @@ button {
      label now carries the Text_wrap Space/xs padding itself, so the flex gap
      compensates to keep icon-to-text exactly at the composite. */
   gap: calc(var(--_ki-button-gap) - var(--ki-button-label-padding-inline));
+
+  /* Content alignment is a token (integrator feedback 0.1.3, item 3): a wide
+     button, such as a choice card, can start-align its content, and
+     --ki-button-text-align its lines. It overrides the shared surface, so
+     icon buttons stay centred. */
+  justify-content: var(--ki-button-justify-content);
   line-height: var(--_ki-button-line-height);
 
   /* Density (spec 045): the region's step on top of the size, floored at the
@@ -121,7 +129,8 @@ button {
      stroke, so edge-to-label stays exactly at the token value. */
   padding-block: calc(var(--ki-button-padding-block) - var(--ki-button-border-width));
   padding-inline: calc(var(--_ki-button-padding-inline) - var(--ki-button-border-width));
-  text-align: center;
+  text-align: var(--ki-button-text-align);
+  text-decoration: none;
 }
 
 [part="label"] {
@@ -143,14 +152,14 @@ slot[name="end"]::slotted(*) {
    laid out, so the button keeps its width, and turn transparent under the
    spinner the shared surface draws. Opacity, not visibility: hidden content
    would leave the accessibility tree and take the button's name with it. */
-button[aria-disabled="true"] > [part="label"],
-button[aria-disabled="true"] > slot::slotted(*) {
+:is(button, a[href])[aria-disabled="true"] > [part="label"],
+:is(button, a[href])[aria-disabled="true"] > slot::slotted(*) {
   opacity: 0;
 }
 
 /* The pressed dip; its transition is declared with the shared surface. */
 @media (prefers-reduced-motion: no-preference) {
-  button:is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
+  :is(button, a):is(:active, [data-ki-pressed]):not(:disabled, [aria-disabled="true"]) {
     transform: scale(0.98);
   }
 }

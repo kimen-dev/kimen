@@ -1,0 +1,77 @@
+{
+  "modules": {
+    ".": {
+      "declaration": "./dist/index.d.ts",
+      "symbols": {
+        "Derivation": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type Derivation<T> = {\n    readonly ok: true;\n    readonly artifact: T;\n    readonly issues: readonly [\n    ];\n} | {\n    readonly ok: false;\n    readonly issues: readonly EmitterIssue[];\n};"
+        },
+        "DerivationOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface DerivationOptions {\n    readonly components?: readonly string[];\n    readonly target?: EmitterTarget;\n}"
+        },
+        "EmitterIssue": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface EmitterIssue {\n    readonly code: EmitterIssueCode;\n    readonly path: string;\n    readonly message: string;\n    readonly value?: string | undefined;\n}"
+        },
+        "EmitterIssueCode": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type EmitterIssueCode = 'empty-subset' | 'invalid-option' | 'malformed-catalog' | 'provider-limit' | 'unknown-component' | 'unsupported-version';"
+        },
+        "EmitterTarget": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "export type EmitterTarget = 'draft-2020-12' | 'openai-strict';"
+        },
+        "UiSpecTool": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface UiSpecTool {\n    readonly name: string;\n    readonly description: string;\n    readonly inputSchema: Record<string, unknown>;\n}"
+        },
+        "catalogPrompt": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function catalogPrompt(catalog: Catalog, options?: DerivationOptions): Derivation<string>;"
+        },
+        "normalizeEmission": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function normalizeEmission(value: unknown): unknown;"
+        },
+        "repairPrompt": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function repairPrompt(report: ValidationReport): string | null;"
+        },
+        "uiSpecJsonSchema": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function uiSpecJsonSchema(catalog: Catalog, options?: DerivationOptions): Derivation<Record<string, unknown>>;"
+        },
+        "uiSpecTool": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function uiSpecTool(catalog: Catalog, options?: DerivationOptions): Derivation<UiSpecTool>;"
+        }
+      },
+      "target": "./dist/index.js"
+    }
+  },
+  "package": "@kimen/emitter"
+}

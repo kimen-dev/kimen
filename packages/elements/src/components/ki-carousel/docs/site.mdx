@@ -40,6 +40,8 @@ with Space and Enter. Slide content stays available while fully visible.
 Partially shown previews are inert. Manual changes announce the new position.
 
 Rotation starts only with a positive `autoplay` interval in milliseconds.
+It never moves more than once every 5000 ms, so slides cannot flash and stay
+up long enough to read. Shorter values rotate every 5000 ms.
 Hover suspends rotation. Focus stops it until the reader presses Play.
 Reduced motion keeps rotation off and slide movement immediate. Localize the
 control and slide labels with the props in the API reference.

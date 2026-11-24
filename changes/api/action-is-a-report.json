@@ -1,0 +1,22 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-carousel/events/ki-slide-change": "507beade4368142aa65e687891068517a81a94046f080d28a388c9ff5bac106f",
+    "/packages/@kimen~1elements/components/ki-dialog/events/ki-close/description": "51ab32d363732ea68e97175eaaa310f458587ba1690cc9e13b4322c2528b9f2e",
+    "/packages/@kimen~1elements/components/ki-drawer/events/ki-close": "a4fec7584e106b1bd46c8fc05f26ecdcedafb881186ba11073782cd82a6f6332",
+    "/packages/@kimen~1elements/components/ki-popover/events/ki-close": "67aca001c02c9e57cb5dce3efb2efcaca6c8bacff1362ea339699d9b7660a76b",
+    "/packages/@kimen~1elements/components/ki-popover/events/ki-open": "312ddbfef6bdc9d61660f7587fe4ea7c2924e2dd7e357de852acb1043c1d5c74",
+    "/packages/@kimen~1elements/components/ki-tree-item/events/ki-collapse": "2cb8d5d8b481ee443ac4ad474cb7ce79b06d90996c1e886f45f79e630534bfcc",
+    "/packages/@kimen~1elements/components/ki-tree-item/events/ki-expand": "a49909e099de19d0b607800a88bafa8919e468f4b903ae4fccb5e98334e709b3",
+    "/packages/@kimen~1elements/components/ki-tree-item/events/ki-load": "ba98b20c1365e144bc72ab959f4fbe81cf178a88a7766333bbc1dd18a2e7ed42"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "Event descriptions say when ki-carousel, ki-popover, ki-tree-item, ki-dialog and ki-drawer events can fire without a gesture (spec 161).",
+  "release": "minor",
+  "schemaVersion": 2
+}

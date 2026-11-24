@@ -19,11 +19,11 @@ Load `@kimen/tokens/css` once per page: it is the onmars default theme and
 the only stylesheet the components require. It declares every `--ki-*` token
 for both schemes together with the `color-scheme` they resolve from, so a
 page follows its visitor's light or dark preference with no further setup.
-`@kimen/tokens/css/base` — the page contract — is optional: it paints the
-page background, text color and body font from those tokens and declares no
-color scheme of its own. Without it the page keeps the browser's own canvas
-and text color for the active scheme, and every component stays legible on
-it.
+Load `@kimen/tokens/css/base` — the page contract — with it: it paints the
+page background, text color and body font from those tokens, declares no
+color scheme, and lays out the items of Kimen groups (segments, radios,
+options, menu and list items…) one per line until their tags register, so
+their labels do not run together.
 
 Human-readable documentation: https://kimen.dev/docs/
 
@@ -1001,12 +1001,13 @@ CSS custom properties:
 A token-styled action button with native button semantics.
 
 When to use: trigger the single main action of a view, supporting actions
-in descending hierarchy, confirming/destructive actions through tone, or
-persistent actions such as Bold with `toggle`.
+in descending hierarchy, confirming/destructive actions through tone,
+persistent actions such as Bold with `toggle`, or with `href` a call to
+action that navigates.
 While the action a button started is in progress, set `loading` on that
 button instead of disabling it.
-When NOT to use: navigation, icon-only actions, form values, or the
-progress of a page or region (use ki-progress).
+When NOT to use: links in text (ki-link), icon-only actions, form values, or
+the progress of a page or region (use ki-progress).
 
 Examples:
 
@@ -1023,6 +1024,12 @@ In momentary mode `type` defaults to `submit`. Use `type="button"` for an indepe
   <ki-button type="button">Cancel</ki-button>
   <ki-button variant="primary">Save changes</ki-button>
 </form>
+```
+
+A call to action that navigates takes `href`: the button renders a native link with the same look. Enter follows it, it never submits its form, and `target="_blank"` without `rel` gets `rel="noreferrer noopener"`.
+
+```html
+<ki-button variant="primary" href="/start">Get started</ki-button>
 ```
 
 Use `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.
@@ -1085,15 +1092,37 @@ While the action a button started is in progress, set `loading` on it instead of
 </script>
 ```
 
+A wide button that reads like a card, such as a two-line choice, start-aligns its content and its lines through two tokens (both `center` by default):
+
+```html
+<style>
+  .choice {
+    --ki-button-justify-content: start;
+    --ki-button-text-align: start;
+    display: block;
+  }
+  .choice::part(button) {
+    inline-size: 100%;
+  }
+</style>
+<ki-button class="choice" variant="outline" toggle>
+  <strong>Starter</strong><br />One agent, one repository
+</ki-button>
+```
+
 Attributes:
 - `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
 - `commandfor` (string | undefined): ID of a ki-dialog in the same document or shadow tree as this button. Set it together with `command` to connect a dialog declaratively.
 - `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
+- `download` (string | undefined): File name to download `href` as; empty lets the browser choose.
+- `href` (string | undefined, URL): Destination URL. Nonblank, it renders a native link with the same look; toggle, form and dialog props are then ignored.
 - `loading` (boolean, default false): Pending state of the action this button started (saving, sending). While set, every activation is blocked (pointer, Enter and Space) and the button neither submits nor resets its form, but it stays focusable, in the Tab order and at its width: the label stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its name, and `loadingLabel` is announced as a polite status message. `disabled`, and a disabled fieldset, win over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this button started is running, so a second activation cannot repeat it. When NOT to use: for a button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Saving"). When NOT to use: do not repeat the button's label here; the person already hears it on focus.
 - `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
+- `rel` (string | undefined): Link relationships for `href`.
 - `selected` (boolean, default false): Current press state in toggle mode. Set this to initialize or synchronize the state programmatically without emitting a change.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
+- `target` (string | undefined): Browsing context for `href`; `_blank` alone gets `rel="noreferrer noopener"`.
 - `toggle` (boolean, default false): Enables persistent press state for an action such as Bold. The native button exposes `aria-pressed` and each activation switches `selected`. Use the same label in both states. A toggle does not submit or reset a form.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. Toggle palettes are specific to the variant. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, and `button` leaves the form alone. Toggle mode and configured dialog commands take precedence over form actions. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
@@ -1106,7 +1135,7 @@ Slots:
 - `start`: Leading icon or media. Follows writing direction.
 
 Parts:
-- `button`: Internal native button.
+- `button`: Internal native button, or link with `href`.
 - `label`: Label wrapper around the default slot.
 - `spinner`: Loading spinner drawn at the center of the button, in the button's foreground ink, rendered only while `loading` is in effect.
 
@@ -1150,6 +1179,7 @@ CSS custom properties:
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-justify-content`: Placement of the button content; start for a card.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
 - `--ki-button-lg-gap`: dimension used by the button component for lg gap.
@@ -1296,6 +1326,7 @@ CSS custom properties:
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-text-align`: Alignment of the label lines.
 - `--ki-button-toggle-quiet-bg`: Background of unselected ghost and quaternary toggle buttons.
 - `--ki-button-toggle-quiet-fg`: Foreground of unselected ghost toggle buttons.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
@@ -1608,7 +1639,7 @@ await carousel.goTo(3);
 With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
 
 Attributes:
-- `autoplay` (number | undefined, minimum 1, maximum 2147483647): Rotation interval in milliseconds. Omitting it leaves rotation off.
+- `autoplay` (number | undefined, minimum 1, maximum 2147483647): Rotation interval in milliseconds. Omitting it leaves rotation off. Values below 5000 rotate every 5000 ms.
 - `carousel-role-description` (string, default 'carousel'): Accessible role description of the region.
 - `current` (number, default 1, minimum 1): One-based leading slide. Setting it moves the carousel and clamps the index to the available leading positions.
 - `label` (string, required): Required accessible name of the carousel region.
@@ -1639,7 +1670,7 @@ Parts:
 - `viewport`: Scroll-snap viewport and its keyboard focus outline.
 
 Events:
-- `ki-slide-change` (CustomEvent<CarouselSlideChangeDetail>): Reports the one-based index when the leading slide changes.
+- `ki-slide-change` (CustomEvent<CarouselSlideChangeDetail>): Reports the one-based index when the leading slide changes, also on autoplay or a new `current`: it can fire without a gesture.
 
 Methods:
 - `goTo(index)` (Promise<void>): Moves to the requested one-based leading position within the available range.
@@ -2966,6 +2997,7 @@ CSS custom properties:
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-justify-content`: Placement of the button content; start for a card.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
 - `--ki-button-lg-gap`: dimension used by the button component for lg gap.
@@ -3112,6 +3144,7 @@ CSS custom properties:
 - `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-text-align`: Alignment of the label lines.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
@@ -3519,7 +3552,7 @@ Parts:
 - `heading`: Visible h2 title, rendered only when `heading` is non-empty.
 
 Events:
-- `ki-close` (CustomEvent<KiDialogCloseDetail>): Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path emits a noncancelable notification after close and focus restoration. Use `open` to observe the modal's live state.
+- `ki-close` (CustomEvent<KiDialogCloseDetail>): Requests dismissal on fullscreen Escape or activation of the header close button. Prevent the default on that cancelable event to keep the modal open. The button reports `method` and Escape reports `escape`. Every other dismissal path, `close()` and a cleared `open` included, emits a noncancelable notification after close and focus restoration: it can fire without a gesture. Use `open` to observe the modal's live state.
 - `ki-confirm` (CustomEvent<void>): The user activated the confirmation button. Handle validation, submission and dismissal in the application.
 
 Methods:
@@ -3731,7 +3764,7 @@ Parts:
 - `heading`: The visible title that names the sheet.
 
 Events:
-- `ki-close` (CustomEvent<KiDrawerCloseDetail>): Requests dismissal before the drawer closes. Call preventDefault() to keep it open, for example when edits are unsaved. The event carries the reason in detail.reason.
+- `ki-close` (CustomEvent<KiDrawerCloseDetail>): Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it can fire without a gesture. Call preventDefault() to keep it open, for example when edits are unsaved. The event carries the reason in detail.reason.
 
 Methods:
 - `close()` (Promise<void>): Requests dismissal. An application can veto it by canceling ki-close.
@@ -6871,8 +6904,8 @@ Parts:
 - `surface`: The popover panel.
 
 Events:
-- `ki-close` (CustomEvent<void>): Emitted when the popover closes.
-- `ki-open` (CustomEvent<void>): Emitted when the popover opens.
+- `ki-close` (CustomEvent<void>): Emitted when the popover closes, also when `open` is cleared: it can fire without a gesture.
+- `ki-open` (CustomEvent<void>): Emitted when the popover opens, also when `open` is set: it can fire without a gesture.
 
 Methods: none
 
@@ -9613,7 +9646,6 @@ Methods: none
 
 CSS custom properties:
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-effect-small-dark-shadow`: MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
@@ -9630,52 +9662,53 @@ CSS custom properties:
 - `--ki-switch-checked-rest-border`: color used by the switch component for checked rest border.
 - `--ki-switch-checked-rest-thumb`: color used by the switch component for checked rest thumb.
 - `--ki-switch-checked-rest-track`: color used by the switch component for checked rest track.
-- `--ki-switch-control-height`: dimension used by the switch component for the control footprint height (Toggle md: Space/9xl 28px). The well pads the track by half of (control-height - track-height) on every side.
-- `--ki-switch-control-width`: dimension used by the switch component for the control footprint width (Toggle md 10023:1368: Space/14xl 48px). The well is centred in it; set it to the track width, with control-height, to drop the well.
+- `--ki-switch-control-height`: dimension used by the switch component for the control footprint height at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. The well pads the track by half of (control-height - track-height) on every side.
+- `--ki-switch-control-width`: dimension used by the switch component for the control footprint width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. The well is centred in it; set it to the track width, with control-height, to drop the well.
 - `--ki-switch-focus-ring-color`: color used by the switch component for focus ring color.
 - `--ki-switch-focus-ring-offset`: dimension used by the switch component for focus ring offset.
 - `--ki-switch-focus-ring-shadow`: shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-switch-focus-ring-width`: dimension used by the switch component for focus ring width.
-- `--ki-switch-gap`: dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio).
+- `--ki-switch-gap`: dimension used by the switch component for the gap between the control and its label at sizes md, lg and xl; sm-gap sets sm.
 - `--ki-switch-glyph-checked`: Color of the enabled checked switch's thumb check. Use transparent to hide it. When visible, maintain 3:1 contrast with the thumb.
 - `--ki-switch-glyph-dash-height`: dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash).
 - `--ki-switch-glyph-disabled`: Color of the thumb check or dash on a disabled switch. Use transparent to hide both disabled glyphs.
 - `--ki-switch-glyph-height`: dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height).
 - `--ki-switch-glyph-unchecked`: Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb.
 - `--ki-switch-glyph-width`: dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb).
-- `--ki-switch-lg-control-height`: dimension used by the switch component for lg control height (Toggle 10023:1125 lg cell: 32px).
-- `--ki-switch-lg-control-width`: dimension used by the switch component for lg control width (Toggle 10023:1125 lg cell: 56px).
-- `--ki-switch-lg-min-target`: dimension used by the switch component for lg min target (Toggle 10023:1125 lg cell height: 32px).
-- `--ki-switch-lg-thumb-inset`: dimension used by the switch component for lg thumb inset (Toggle 10023:1125 lg binds Space/xxs, 2px).
-- `--ki-switch-lg-thumb-radius`: dimension used by the switch component for lg thumb radius (Toggle 10023:1125 lg pointer binds Radius/small-component/xs).
-- `--ki-switch-lg-thumb-size`: dimension used by the switch component for lg thumb height (Toggle 10023:1125 lg pointer: 20px).
-- `--ki-switch-lg-thumb-width`: dimension used by the switch component for lg thumb width (Toggle 10023:1125 lg pointer: 26px).
-- `--ki-switch-lg-track-height`: dimension used by the switch component for lg track height (Toggle 10023:1125 lg: 26px).
-- `--ki-switch-lg-track-radius`: dimension used by the switch component for lg track radius (Toggle 10023:1125 lg binds Radius/small-component/sm).
-- `--ki-switch-lg-track-width`: dimension used by the switch component for lg track width (Toggle 10023:1125 lg: 48px).
-- `--ki-switch-lg-well-radius`: dimension used by the switch component for lg well radius (Toggle 10023:1125 lg Base binds Radius/small-component/md).
-- `--ki-switch-min-target`: dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint).
-- `--ki-switch-sm-control-height`: dimension used by the switch component for sm control height (Toggle 10023:1125 sm cell: 28px).
-- `--ki-switch-sm-control-width`: dimension used by the switch component for sm control width (Toggle 10023:1125 sm cell: 40px).
-- `--ki-switch-sm-gap`: dimension used by the switch component for the sm gap between control and label (Toggle_label 10101:3995 sm binds Space/md, 8px; spec 050 D4).
-- `--ki-switch-sm-label-font-size`: dimension used by the switch component for the sm label font size (Toggle_label 10101:3995 sm: UI/para 13/20; spec 050 D4).
-- `--ki-switch-sm-label-line-height`: dimension used by the switch component for the sm label line height (Toggle_label 10101:3995 sm: UI/para 13/20).
-- `--ki-switch-sm-min-target`: dimension used by the switch component for sm min target (Toggle 10023:1125 sm cell height: 28px).
-- `--ki-switch-sm-thumb-inset`: dimension used by the switch component for sm thumb inset (Toggle 10023:1125 sm binds Space/xxs, 2px).
-- `--ki-switch-sm-thumb-radius`: dimension used by the switch component for sm thumb radius (Toggle 10023:1125 sm pointer binds Radius/small-component/xxs).
-- `--ki-switch-sm-thumb-size`: dimension used by the switch component for sm thumb height (Toggle 10023:1125 sm pointer: 14px).
-- `--ki-switch-sm-thumb-width`: dimension used by the switch component for sm thumb width (Toggle 10023:1125 sm pointer: 18px).
-- `--ki-switch-sm-track-height`: dimension used by the switch component for sm track height (Toggle 10023:1125 sm: 18px).
-- `--ki-switch-sm-track-radius`: dimension used by the switch component for sm track radius (Toggle 10023:1125 sm binds Radius/small-component/xs).
-- `--ki-switch-sm-track-width`: dimension used by the switch component for sm track width (Toggle 10023:1125 sm: 32px).
-- `--ki-switch-sm-well-radius`: dimension used by the switch component for sm well radius (Toggle 10023:1125 sm Base binds Radius/small-component/md).
-- `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset.
-- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs).
-- `--ki-switch-thumb-size`: dimension used by the switch component for thumb size.
-- `--ki-switch-thumb-width`: dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size).
-- `--ki-switch-track-height`: dimension used by the switch component for track height.
-- `--ki-switch-track-radius`: dimension used by the switch component for track radius.
-- `--ki-switch-track-width`: dimension used by the switch component for track width.
+- `--ki-switch-lg-control-height`: dimension used by the switch component for the control footprint height at size lg.
+- `--ki-switch-lg-control-width`: dimension used by the switch component for the control footprint width at size lg.
+- `--ki-switch-lg-min-target`: dimension used by the switch component for min target at size lg.
+- `--ki-switch-lg-thumb-inset`: dimension used by the switch component for thumb inset at size lg.
+- `--ki-switch-lg-thumb-radius`: dimension used by the switch component for thumb radius at size lg.
+- `--ki-switch-lg-thumb-size`: dimension used by the switch component for thumb block size at size lg.
+- `--ki-switch-lg-thumb-width`: dimension used by the switch component for thumb inline size at size lg.
+- `--ki-switch-lg-track-height`: dimension used by the switch component for track height at size lg.
+- `--ki-switch-lg-track-radius`: dimension used by the switch component for track radius at size lg.
+- `--ki-switch-lg-track-width`: dimension used by the switch component for track width at size lg.
+- `--ki-switch-lg-well-radius`: dimension used by the switch component for the well radius at size lg.
+- `--ki-switch-min-target`: dimension used by the switch component for min target at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-sm-control-height`: dimension used by the switch component for the control footprint height at size sm.
+- `--ki-switch-sm-control-width`: dimension used by the switch component for the control footprint width at size sm.
+- `--ki-switch-sm-gap`: dimension used by the switch component for the gap between the control and its label at size sm.
+- `--ki-switch-sm-label-font-size`: dimension used by the switch component for the label font size at size sm.
+- `--ki-switch-sm-label-line-height`: dimension used by the switch component for the label line height at size sm.
+- `--ki-switch-sm-min-target`: dimension used by the switch component for min target at size sm.
+- `--ki-switch-sm-thumb-inset`: dimension used by the switch component for thumb inset at size sm.
+- `--ki-switch-sm-thumb-radius`: dimension used by the switch component for thumb radius at size sm.
+- `--ki-switch-sm-thumb-size`: dimension used by the switch component for thumb block size at size sm.
+- `--ki-switch-sm-thumb-width`: dimension used by the switch component for thumb inline size at size sm.
+- `--ki-switch-sm-track-height`: dimension used by the switch component for track height at size sm.
+- `--ki-switch-sm-track-radius`: dimension used by the switch component for track radius at size sm.
+- `--ki-switch-sm-track-width`: dimension used by the switch component for track width at size sm.
+- `--ki-switch-sm-well-radius`: dimension used by the switch component for the well radius at size sm.
+- `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-thumb-shadow`: shadow used by the switch component for the thumb in every state and size. Set it to none to drop the shadow.
+- `--ki-switch-thumb-size`: dimension used by the switch component for thumb block size at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-thumb-width`: dimension used by the switch component for thumb inline size at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-track-height`: dimension used by the switch component for track height at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-track-radius`: dimension used by the switch component for track radius at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-track-width`: dimension used by the switch component for track width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
 - `--ki-switch-unchecked-active-border`: color used by the switch component for unchecked active border.
 - `--ki-switch-unchecked-active-thumb`: color used by the switch component for unchecked active thumb.
 - `--ki-switch-unchecked-active-track`: color used by the switch component for unchecked active track (one step beyond hover; the master defines no pressed variant).
@@ -9688,20 +9721,20 @@ CSS custom properties:
 - `--ki-switch-unchecked-rest-border`: color used by the switch component for unchecked rest border.
 - `--ki-switch-unchecked-rest-thumb`: color used by the switch component for unchecked rest thumb.
 - `--ki-switch-unchecked-rest-track`: color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill).
-- `--ki-switch-well-bg-end`: color used by the switch component for the bottom of the well gradient (Toggle md Base).
-- `--ki-switch-well-bg-start`: color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well.
-- `--ki-switch-well-radius`: dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md).
-- `--ki-switch-xl-control-height`: dimension used by the switch component for xl control height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 40px).
-- `--ki-switch-xl-control-width`: dimension used by the switch component for xl control width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell: 64px).
-- `--ki-switch-xl-min-target`: dimension used by the switch component for xl min target (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) cell height: 40px).
-- `--ki-switch-xl-thumb-inset`: dimension used by the switch component for xl thumb inset (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Space/xs, 4px).
-- `--ki-switch-xl-thumb-radius`: dimension used by the switch component for xl thumb radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer binds Radius/small-component/xs).
-- `--ki-switch-xl-thumb-size`: dimension used by the switch component for xl thumb height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 24px).
-- `--ki-switch-xl-thumb-width`: dimension used by the switch component for xl thumb width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) pointer: 32px).
-- `--ki-switch-xl-track-height`: dimension used by the switch component for xl track height (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 32px).
-- `--ki-switch-xl-track-radius`: dimension used by the switch component for xl track radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) binds Radius/small-component/md).
-- `--ki-switch-xl-track-width`: dimension used by the switch component for xl track width (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6): 56px).
-- `--ki-switch-xl-well-radius`: dimension used by the switch component for xl well radius (Toggle 10023:1125 mobile, shipped as xl (spec 050 D6) Base binds Radius/small-component/lg).
+- `--ki-switch-well-bg-end`: color used by the switch component for the bottom of the well gradient, at every size.
+- `--ki-switch-well-bg-start`: color used by the switch component for the top of the well gradient, at every size. Transparent drops the well.
+- `--ki-switch-well-radius`: dimension used by the switch component for the radius of the well that holds the track at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes.
+- `--ki-switch-xl-control-height`: dimension used by the switch component for the control footprint height at size xl.
+- `--ki-switch-xl-control-width`: dimension used by the switch component for the control footprint width at size xl.
+- `--ki-switch-xl-min-target`: dimension used by the switch component for min target at size xl.
+- `--ki-switch-xl-thumb-inset`: dimension used by the switch component for thumb inset at size xl.
+- `--ki-switch-xl-thumb-radius`: dimension used by the switch component for thumb radius at size xl.
+- `--ki-switch-xl-thumb-size`: dimension used by the switch component for thumb block size at size xl.
+- `--ki-switch-xl-thumb-width`: dimension used by the switch component for thumb inline size at size xl.
+- `--ki-switch-xl-track-height`: dimension used by the switch component for track height at size xl.
+- `--ki-switch-xl-track-radius`: dimension used by the switch component for track radius at size xl.
+- `--ki-switch-xl-track-width`: dimension used by the switch component for track width at size xl.
+- `--ki-switch-xl-well-radius`: dimension used by the switch component for the well radius at size xl.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
@@ -11291,22 +11324,6 @@ the header. Import `@kimen/elements/icons/bell` for the notification glyph.
 <main id="content" tabindex="-1">Workspace</main>
 ```
 
-## Links that wrap instead of collapsing
-
-Use `collapse-at="none"` to keep every link in the bar at every width. Links
-that do not fit wrap onto further lines between the brand and the actions,
-and the bar grows to hold them. No navigation button or menu is rendered.
-
-```html
-<ki-top-nav label="Documentation" collapse-at="none">
-  <a slot="brand" href="/">Kimen</a>
-  <a href="/guide" aria-current="page">Guide</a>
-  <a href="/components">Components</a>
-  <a href="/tokens">Tokens</a>
-  <a href="/changelog">Changelog</a>
-</ki-top-nav>
-```
-
 ## Per-screen bar with search
 
 Use the native `title` attribute in HTML and `screenTitle` for the framework
@@ -11327,7 +11344,7 @@ handlers in the overflow menu. Keep application-specific account menus and
 navigation destinations in the consuming app.
 
 Attributes:
-- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
+- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title.
 - `heading-level` (number, default 1): Native heading level for the screen title. Use 1 through 6 to fit the page outline.
 - `label` (string, default 'Main'): Accessible name of the header's primary navigation landmark. Override for localization.
 - `navigation-label` (string, default 'Open navigation'): Accessible name for the compact navigation button and menu. Override for localization.
@@ -11585,9 +11602,9 @@ Parts:
 - `row`: The painted and focus-highlighted item row.
 
 Events:
-- `ki-collapse` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch collapses.
-- `ki-expand` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch expands.
-- `ki-load` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted once when an empty lazy branch first opens. The listener supplies the children.
+- `ki-collapse` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch collapses, also when `expanded` is cleared: it can fire without a gesture.
+- `ki-expand` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted when an existing branch expands, also when `expanded` is set: it can fire without a gesture.
+- `ki-load` (CustomEvent<{ item: HTMLKiTreeItemElement }>): Emitted once when an empty lazy branch first opens, also one rendered expanded: it can fire without a gesture. The listener supplies the children.
 
 Methods: none
 
@@ -11780,6 +11797,6 @@ Entry points:
 - `createKimenSurfaceResource(name?) => KimenSurfaceResource`: The self-contained ui:// resource the server serves: one HTML document with every script and style inline, a no-network content policy, and the guarded renderer as its only render path.
 - `surfaceToolResult(spec, textFallback, update?) => SurfaceToolResult`: Wraps a neutral UI spec plus a plain-text fallback as an MCP CallToolResult (spec in structuredContent.kimenSurface, text in content), so hosts without interactive surfaces still get text. The optional update { baseRevision, batch } is a live batch computed on the revision an action call carried: the surface applies it, keeping what the person is typing, only on that revision and when the live surface accepts it, and otherwise paints the full spec.
 - `declareActionTool(name?) => KimenActionTool`: The app-only MCP tool (kimen_surface_action, _meta.ui.visibility ["app"]) that receives the surface's declared actions as tools/call { action, data, revision, id? } (the page revision the person acted on and the bound node's id; both optional in its schema); register it on the same server and validate the action.
-- `acknowledgeSurfaceAction(action, options?) => SurfaceActionAcknowledgment`: The action tool's answer for an action your server accepts. With { relay: true } the surface relays that exact action to the model as one ui/message, if the host advertises text messages: one line, kimen-surface-action followed by { action, data } as escaped JSON, at most 8192 bytes, built by the surface from what it sent, never from this result. Relay when the person's choice needs the model; leave it off for UI-only actions such as a refresh.
+- `acknowledgeSurfaceAction(action, options?) => SurfaceActionAcknowledgment`: The action tool's answer for an action your server accepts. With { relay: true } the surface relays that exact action to the model as one ui/message, if the host advertises text messages: one line, kimen-surface-action followed by { action, data } as escaped JSON, at most 8192 bytes, built by the surface from what it sent, never from this result. Relay when the model needs to know; leave it off for UI-only actions such as a refresh. The line reports what the surface dispatched, never the person's consent (spec 161).
 - `createSurfaceBridge(options) => SurfaceBridge`: Runs inside the surface document and speaks the MCP Apps 2026-01-26 lifecycle: sends ui/initialize, refuses an undeclared negotiated version, renders ui/notifications/tool-result specs through the guarded renderer and its live surface only after the handshake (applying a result's update when it was computed on the current page revision), answers ui/resource-teardown and ping, and dispatches only declared actions as tools/call; when the server acknowledges one for relay and the host advertises text messages, relays it once as ui/message. Non-protocol messages are ignored with no state change.
 - `MCP_APPS_PROTOCOL_VERSIONS`: The exact MCP Apps protocol revisions this adapter supports, versioned with the adapter in COMPAT.md.

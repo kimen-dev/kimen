@@ -25,6 +25,22 @@
         "required": false,
         "type": "boolean"
       },
+      "download": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "File name to download `href` as; empty lets the browser choose.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination URL. Nonblank, it renders a native link with the same look;\ntoggle, form and dialog props are then ignored.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "loading": {
         "default": "false",
         "deprecatedSince": null,
@@ -49,6 +65,14 @@
         "required": false,
         "type": "string | undefined"
       },
+      "rel": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Link relationships for `href`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "selected": {
         "default": "false",
         "deprecatedSince": null,
@@ -64,6 +88,14 @@
         "replacement": null,
         "required": false,
         "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
+      "target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Browsing context for `href`; `_blank` alone gets `rel=\"noreferrer noopener\"`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
       },
       "toggle": {
         "default": "false",
@@ -375,6 +407,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "color used by the button component for ghost success rest foreground.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-justify-content": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Placement of the button content; start for a card.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1547,6 +1587,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-text-align": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Alignment of the label lines.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-toggle-quiet-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -1820,7 +1868,7 @@
       "button": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Internal native button.",
+        "description": "Internal native button, or link with `href`.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1867,6 +1915,22 @@
         "required": false,
         "type": "boolean"
       },
+      "download": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "File name to download `href` as; empty lets the browser choose.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
+      "href": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Destination URL. Nonblank, it renders a native link with the same look;\ntoggle, form and dialog props are then ignored.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "loading": {
         "default": "false",
         "deprecatedSince": null,
@@ -1891,6 +1955,14 @@
         "required": false,
         "type": "string | undefined"
       },
+      "rel": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Link relationships for `href`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "selected": {
         "default": "false",
         "deprecatedSince": null,
@@ -1906,6 +1978,14 @@
         "replacement": null,
         "required": false,
         "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+      },
+      "target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Browsing context for `href`; `_blank` alone gets `rel=\"noreferrer noopener\"`.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
       },
       "toggle": {
         "default": "false",

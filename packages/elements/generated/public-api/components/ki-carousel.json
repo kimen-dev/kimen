@@ -4,7 +4,7 @@
       "autoplay": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+        "description": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
         "replacement": null,
         "required": false,
         "type": "number | undefined"
@@ -313,7 +313,7 @@
       "ki-slide-change": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Reports the one-based index when the leading slide changes.",
+        "description": "Reports the one-based index when the leading slide changes, also on\nautoplay or a new `current`: it can fire without a gesture.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<CarouselSlideChangeDetail>"
@@ -421,7 +421,7 @@
       "autoplay": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+        "description": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
         "replacement": null,
         "required": false,
         "type": "number | undefined"

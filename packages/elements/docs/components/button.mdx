@@ -9,10 +9,11 @@ A token-styled action button with native button semantics.
 
 **When to use** — trigger the single main action of a view, supporting
 actions in descending hierarchy, or confirming/destructive actions through
-tone. Use `toggle` for an action that stays pressed between activations.
+tone. Use `toggle` for an action that stays pressed between activations, and
+`href` for a call to action that navigates.
 
-**When NOT to use** — navigation, icon-only actions or progress of a page or
-region.
+**When NOT to use** — links in running text (use `ki-link`), icon-only
+actions or progress of a page or region.
 
 ## Examples
 
@@ -64,6 +65,26 @@ Toggle colours follow the variant and selection state.
 
 <Canvas of={ButtonStories.Toggle} />
 
+## Link mode
+
+Set `href` for a call to action that navigates, such as "Get started". The
+button renders a native link with the same `button` part, so every variant,
+size, token and `::part(button)` rule styles it like the button. Enter
+follows it and Space does not, as on any link. `target`, `rel` and
+`download` pass to the link; `target="_blank"` without `rel` gets
+`rel="noreferrer noopener"`.
+
+A link never submits or resets a form: `type`, `name`, `value`, `toggle`
+and dialog commands do nothing while `href` is set. A disabled link drops
+its destination, leaves the Tab order like a disabled button and is exposed
+as an unavailable link. A blank `href` keeps the native button.
+
+<Canvas of={ButtonStories.Link} />
+
+```html
+<ki-button variant="primary" href="/start">Get started</ki-button>
+```
+
 ## Recipe: buttons in a form
 
 In momentary mode, `type` defaults to `submit`. To cancel a submission, call
@@ -100,6 +121,31 @@ root. The dialog command takes precedence over form submission or reset.
 </ki-dialog>
 ```
 
+## Recipe: a start-aligned choice
+
+`--ki-button-justify-content` places the content along the button and
+`--ki-button-text-align` aligns the lines of a multi-line label. Both are
+`center` by default. Set both to `start` for a wide button that reads like a
+card, such as a two-line choice.
+
+<Canvas of={ButtonStories.StartAligned} />
+
+```html
+<style>
+  .choice {
+    --ki-button-justify-content: start;
+    --ki-button-text-align: start;
+    display: block;
+  }
+  .choice::part(button) {
+    inline-size: 100%;
+  }
+</style>
+<ki-button class="choice" variant="outline" toggle>
+  <strong>Starter</strong><br />One agent, one repository
+</ki-button>
+```
+
 ## Customization
 
 | Token                                   | Controls                              |
@@ -109,13 +155,16 @@ root. The dialog command takes precedence over form submission or reset.
 | `--ki-button-md-radius`                 | Corner radius of the `md` size        |
 | `--ki-button-font-weight`               | Label font weight                     |
 | `--ki-button-focus-ring-color`          | Keyboard focus ring color             |
+| `--ki-button-justify-content`           | Content placement (`center`)          |
+| `--ki-button-text-align`                | Alignment of label lines (`center`)   |
 
 The full matrix follows `--ki-button-{variant}-{tone}-{state}-{bg|border|fg}`
 and `--ki-button-{size}-*`, plus the fidelity-pass effect tokens:
 `--ki-button-{variant}-{state}-shadow` and the per-side bevel
 `--ki-button-{variant}-rest-border-bottom` (raised variants only —
 `quaternary` and `ghost` declare no bevel). Shadow parts: `::part(button)`
-(internal native button) and `::part(label)` (label wrapper).
+(internal native button, or link with `href`) and `::part(label)` (label
+wrapper).
 
 Toggle selection uses the `--ki-button-{variant}-selected-bg` and
 `--ki-button-{variant}-selected-fg` pairs. The selected shape is controlled
@@ -127,6 +176,8 @@ by `--ki-button-toggle-selected-radius`.
   label text; `ki-button` is not for icon-only compact controls.
 - Native button semantics come from the internal native button: Space and
   Enter activation, form association and `event.submitter` behavior.
+- With `href` the internal control is a native link named by the label:
+  Enter follows it, Space does not, and it never acts on a form.
 - `disabled` removes the button from keyboard reach and exposes the
   unavailable state; do not use it for pending/loading semantics.
 - Every size keeps at least the minimum pointer target

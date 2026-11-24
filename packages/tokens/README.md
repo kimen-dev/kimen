@@ -27,11 +27,12 @@ The package exports these stylesheets:
 | `@kimen/tokens/css/onmars-fonts.css` | Optional Instrument Sans and Newsreader for onmars v2 |
 | `@kimen/tokens/css/material3-fonts.css` | Optional local metric-adjusted fallback for self-hosted Roboto |
 
-Load the default theme once per page. Load the optional stylesheets alongside it:
+Load the default theme and the page contract once per page, and any other
+stylesheet alongside them:
 
 ```ts
 import '@kimen/tokens/css';
-import '@kimen/tokens/css/base'; // optional: paint the page from tokens
+import '@kimen/tokens/css/base'; // page contract: paint the page, lay out items before registration
 import '@kimen/tokens/css/material3'; // optional: a second theme
 ```
 
@@ -132,12 +133,16 @@ used). A themed subtree redeclares every token on its own root so that every
 alias is recomputed there; that is also the element to reassign tokens on,
 palette included — `[data-ki-theme='acme'] { --ki-color-brand-500: … }`
 restyles every semantic token, tint and translucent variant built on that
-step inside the region. The name can be any name: one without a theme
-stylesheet starts from onmars. A reassignment on a plain element (`.acme`)
-changes that custom property and none of the tokens that alias it, so the
-region keeps the page's semantic values. Page aliases of Kimen tokens follow
-the same rule: declare them on `:root, [data-ki-theme]`. Neither attribute
-paints the element that carries it: give a region its surface with
+step inside the region. A name without a theme stylesheet starts from
+onmars, so on a page with its own theme a region that adjusts a few tokens
+repeats that theme's name (`<section data-ki-theme="acme" class="sheet">`,
+the `.sheet` rule after the theme rule); another name drops the page theme.
+A reassignment on a plain element (`.acme`) changes that custom property and
+none of the tokens that alias it, so the region keeps the page's semantic
+values and component tokens such as `--ki-button-*`. Page aliases of Kimen
+tokens follow the same rule: declare them on `:root, [data-ki-theme]`.
+Neither attribute paints the element that carries it: give a region its
+surface with
 `background-color: var(--ki-surface-s0); color: var(--ki-text-high-em)`.
 
 ### Preference modes

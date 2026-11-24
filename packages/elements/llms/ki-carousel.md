@@ -37,7 +37,7 @@ With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
 
 ## Attributes
 
-- `autoplay` (number | undefined, minimum 1, maximum 2147483647): Rotation interval in milliseconds. Omitting it leaves rotation off.
+- `autoplay` (number | undefined, minimum 1, maximum 2147483647): Rotation interval in milliseconds. Omitting it leaves rotation off. Values below 5000 rotate every 5000 ms.
 - `carousel-role-description` (string, default 'carousel'): Accessible role description of the region.
 - `current` (number, default 1, minimum 1): One-based leading slide. Setting it moves the carousel and clamps the index to the available leading positions.
 - `label` (string, required): Required accessible name of the carousel region.
@@ -71,7 +71,7 @@ With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
 
 ## Events
 
-- `ki-slide-change` (CustomEvent<CarouselSlideChangeDetail>): Reports the one-based index when the leading slide changes.
+- `ki-slide-change` (CustomEvent<CarouselSlideChangeDetail>): Reports the one-based index when the leading slide changes, also on autoplay or a new `current`: it can fire without a gesture.
 
 ## Methods
 

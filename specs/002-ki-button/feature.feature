@@ -130,3 +130,51 @@ Feature: Button
     When the person activates it
     Then the button becomes selected and reports the new pressed state
     And the button emits a change carrying the new state
+
+  # Family: core behavior (appended)
+  # S20
+  Scenario: A button with a destination is a link to it
+    Given a primary button labeled "Get started" with the destination "/start"
+    When the page renders
+    Then the button is a link whose destination is "/start"
+
+  # S21
+  Scenario: A disabled button link goes nowhere
+    Given a disabled button labeled "Get started" with a destination
+    When the user attempts to activate it
+    Then no navigation and no activation are observed
+
+  # Family: keyboard path (appended)
+  # S22
+  Scenario: Enter follows a focused button link
+    Given a focused button link labeled "Get started" to "#start"
+    When the user presses Enter
+    Then the browser follows the link to "#start"
+
+  # Family: assistive-tech outcome (appended)
+  # S23
+  Scenario: A button link is exposed as a named link
+    Given a button labeled "Get started" with a destination
+    When the accessibility tree is queried
+    Then it exposes a link whose accessible name is "Get started"
+
+  # Family: form participation (appended)
+  # S24
+  Scenario: A button link never submits its form
+    Given a form containing a submit button labeled "Get started" with a destination
+    When the user activates the button
+    Then the form does not submit
+
+  # Family: theming (appended)
+  # S25
+  Scenario: The button tokens restyle a button link
+    Given a primary button and a primary button link under the same reassigned tokens
+    When the page renders
+    Then the link has the same appearance as the button
+
+  # S26
+  Scenario: The alignment tokens alone left-align a button's content
+    Given a wide button with a two-line label
+    And the button content and text alignment tokens set to "start"
+    When the page renders
+    Then both label lines start at the button's inline-start padding

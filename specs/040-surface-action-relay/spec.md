@@ -272,6 +272,13 @@ with an `AppBridge` configured with `message: { text: {} }` and an
   bound like the data does.
 - The person activates two controls quickly: each acknowledged dispatch
   relays once, in the order the acknowledgments arrive.
+- A bound event fires without the person (a toast's time runs out, an
+  image fails to load, a spec opens a popover; spec 161): the surface
+  dispatches, and the server may acknowledge and relay it, exactly as for a
+  gesture, because neither can tell them apart. The relay reports what the
+  surface dispatched; it carries the `user` role because `ui/message` has
+  no other, not because the person said it, and the tool description that
+  tells the model how to read the line says so.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 

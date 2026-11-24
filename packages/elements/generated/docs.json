@@ -2216,11 +2216,11 @@
       "docsTags": [
         {
           "name": "whenToUse",
-          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone, or\npersistent actions such as Bold with `toggle`.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
+          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone,\npersistent actions such as Bold with `toggle`, or with `href` a call to\naction that navigates.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
         },
         {
           "name": "whenNotToUse",
-          "text": "navigation, icon-only actions, form values, or the\nprogress of a page or region (use ki-progress)."
+          "text": "links in text (ki-link), icon-only actions, form values, or\nthe progress of a page or region (use ki-progress)."
         },
         {
           "name": "slot",
@@ -2236,7 +2236,7 @@
         },
         {
           "name": "part",
-          "text": "button - Internal native button."
+          "text": "button - Internal native button, or link with `href`."
         },
         {
           "name": "part",
@@ -2248,7 +2248,7 @@
         }
       ],
       "usage": {
-        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\nIn momentary mode `type` defaults to `submit`. Use `type=\"button\"` for an independent action inside a form.\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nUse `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.\n\n```html\n<ki-button id=\"pin\" variant=\"outline\" toggle selected>Pin</ki-button>\n<script type=\"module\">\n  const button = document.getElementById('pin');\n  button.addEventListener('ki-change', ({ detail: { selected } }) => {\n    console.log('Pinned', selected);\n  });\n</script>\n```\n\nProgrammatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n"
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\nIn momentary mode `type` defaults to `submit`. Use `type=\"button\"` for an independent action inside a form.\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nA call to action that navigates takes `href`: the button renders a native link with the same look. Enter follows it, it never submits its form, and `target=\"_blank\"` without `rel` gets `rel=\"noreferrer noopener\"`.\n\n```html\n<ki-button variant=\"primary\" href=\"/start\">Get started</ki-button>\n```\n\nUse `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.\n\n```html\n<ki-button id=\"pin\" variant=\"outline\" toggle selected>Pin</ki-button>\n<script type=\"module\">\n  const button = document.getElementById('pin');\n  button.addEventListener('ki-change', ({ detail: { selected } }) => {\n    console.log('Pinned', selected);\n  });\n</script>\n```\n\nProgrammatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n\nA wide button that reads like a card, such as a two-line choice, start-aligns its content and its lines through two tokens (both `center` by default):\n\n```html\n<style>\n  .choice {\n    --ki-button-justify-content: start;\n    --ki-button-text-align: start;\n    display: block;\n  }\n  .choice::part(button) {\n    inline-size: 100%;\n  }\n</style>\n<ki-button class=\"choice\" variant=\"outline\" toggle>\n  <strong>Starter</strong><br />One agent, one repository\n</ki-button>\n```\n"
       },
       "props": [
         {
@@ -2359,6 +2359,63 @@
           "setter": false
         },
         {
+          "name": "download",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "download",
+          "reflectToAttr": false,
+          "docs": "File name to download `href` as; empty lets the browser choose.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": false,
+          "docs": "Destination URL. Nonblank, it renders a native link with the same look;\ntoggle, form and dialog props are then ignored.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "loading",
           "type": "boolean",
           "complexType": {
@@ -2428,6 +2485,32 @@
           "attr": "name",
           "reflectToAttr": true,
           "docs": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "rel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "rel",
+          "reflectToAttr": false,
+          "docs": "Link relationships for `href`.",
           "docsTags": [],
           "values": [
             {
@@ -2519,6 +2602,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "target",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "target",
+          "reflectToAttr": false,
+          "docs": "Browsing context for `href`; `_blank` alone gets `rel=\"noreferrer noopener\"`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -2763,7 +2872,7 @@
       "parts": [
         {
           "name": "button",
-          "docs": "Internal native button."
+          "docs": "Internal native button, or link with `href`."
         },
         {
           "name": "label",
@@ -3271,7 +3380,7 @@
           "mutable": false,
           "attr": "autoplay",
           "reflectToAttr": false,
-          "docs": "Rotation interval in milliseconds. Omitting it leaves rotation off.",
+          "docs": "Rotation interval in milliseconds. Omitting it leaves rotation off. Values\nbelow 5000 rotate every 5000 ms.",
           "docsTags": [
             {
               "name": "minimum",
@@ -3887,7 +3996,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Reports the one-based index when the leading slide changes.",
+          "docs": "Reports the one-based index when the leading slide changes, also on\nautoplay or a new `current`: it can fire without a gesture.",
           "docsTags": []
         }
       ],
@@ -9713,7 +9822,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path emits a noncancelable notification after close\nand focus restoration. Use `open` to observe the modal's live state.",
+          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path, `close()` and a cleared `open` included,\nemits a noncancelable notification after close and focus restoration: it\ncan fire without a gesture. Use `open` to observe the modal's live state.",
           "docsTags": []
         },
         {
@@ -10169,7 +10278,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Requests dismissal before the drawer closes. Call preventDefault() to keep it open,\nfor example when edits are unsaved. The event carries the reason in detail.reason.",
+          "docs": "Requests dismissal before the drawer closes, also on `close()` or a cleared `open`: it\ncan fire without a gesture. Call preventDefault() to keep it open, for example when\nedits are unsaved. The event carries the reason in detail.reason.",
           "docsTags": []
         }
       ],
@@ -19790,7 +19899,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Emitted when the popover closes.",
+          "docs": "Emitted when the popover closes, also when `open` is cleared: it can fire\nwithout a gesture.",
           "docsTags": []
         },
         {
@@ -19804,7 +19913,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "Emitted when the popover opens.",
+          "docs": "Emitted when the popover opens, also when `open` is set: it can fire\nwithout a gesture.",
           "docsTags": []
         }
       ],
@@ -32263,7 +32372,7 @@
         }
       ],
       "usage": {
-        "examples": "# Using TopNav\n\n## Application header\n\nUse direct anchors for primary sections and keep the page's skip link before\nthe header. Import `@kimen/elements/icons/bell` for the notification glyph.\n\n```html\n<a href=\"#content\" class=\"skip-link\">Skip to content</a>\n<ki-top-nav label=\"Primary\" collapse-at=\"48rem\" sticky>\n  <a slot=\"brand\" href=\"/\">Kimen</a>\n  <a href=\"/overview\" aria-current=\"page\">Overview</a>\n  <a href=\"/projects\">Projects</a>\n  <ki-icon-button slot=\"actions\" variant=\"ghost\" label=\"Notifications, 3 unread\">\n    <ki-icon name=\"bell\"></ki-icon>\n    <ki-counter slot=\"counter\" value=\"3\"></ki-counter>\n  </ki-icon-button>\n</ki-top-nav>\n<main id=\"content\" tabindex=\"-1\">Workspace</main>\n```\n\n## Links that wrap instead of collapsing\n\nUse `collapse-at=\"none\"` to keep every link in the bar at every width. Links\nthat do not fit wrap onto further lines between the brand and the actions,\nand the bar grows to hold them. No navigation button or menu is rendered.\n\n```html\n<ki-top-nav label=\"Documentation\" collapse-at=\"none\">\n  <a slot=\"brand\" href=\"/\">Kimen</a>\n  <a href=\"/guide\" aria-current=\"page\">Guide</a>\n  <a href=\"/components\">Components</a>\n  <a href=\"/tokens\">Tokens</a>\n  <a href=\"/changelog\">Changelog</a>\n</ki-top-nav>\n```\n\n## Per-screen bar with search\n\nUse the native `title` attribute in HTML and `screenTitle` for the framework\nprop. The leading button and search control keep their names and behavior.\nThe screen heading remains accessible when search occupies its visual space.\n\n```html\n<ki-top-nav variant=\"app-bar\" title=\"Projects\" heading-level=\"2\">\n  <button type=\"button\" slot=\"leading\">Back</button>\n  <input slot=\"search\" type=\"search\" aria-label=\"Search projects\">\n  <button type=\"button\" slot=\"actions\">Filters</button>\n</ki-top-nav>\n```\n\nWhen an app bar has more than three actions, slot the named controls directly.\nAttach handlers to those controls. TopNav uses their existing activation\nhandlers in the overflow menu. Keep application-specific account menus and\nnavigation destinations in the consuming app.\n"
+        "examples": "# Using TopNav\n\n## Application header\n\nUse direct anchors for primary sections and keep the page's skip link before\nthe header. Import `@kimen/elements/icons/bell` for the notification glyph.\n\n```html\n<a href=\"#content\" class=\"skip-link\">Skip to content</a>\n<ki-top-nav label=\"Primary\" collapse-at=\"48rem\" sticky>\n  <a slot=\"brand\" href=\"/\">Kimen</a>\n  <a href=\"/overview\" aria-current=\"page\">Overview</a>\n  <a href=\"/projects\">Projects</a>\n  <ki-icon-button slot=\"actions\" variant=\"ghost\" label=\"Notifications, 3 unread\">\n    <ki-icon name=\"bell\"></ki-icon>\n    <ki-counter slot=\"counter\" value=\"3\"></ki-counter>\n  </ki-icon-button>\n</ki-top-nav>\n<main id=\"content\" tabindex=\"-1\">Workspace</main>\n```\n\n## Per-screen bar with search\n\nUse the native `title` attribute in HTML and `screenTitle` for the framework\nprop. The leading button and search control keep their names and behavior.\nThe screen heading remains accessible when search occupies its visual space.\n\n```html\n<ki-top-nav variant=\"app-bar\" title=\"Projects\" heading-level=\"2\">\n  <button type=\"button\" slot=\"leading\">Back</button>\n  <input slot=\"search\" type=\"search\" aria-label=\"Search projects\">\n  <button type=\"button\" slot=\"actions\">Filters</button>\n</ki-top-nav>\n```\n\nWhen an app bar has more than three actions, slot the named controls directly.\nAttach handlers to those controls. TopNav uses their existing activation\nhandlers in the overflow menu. Keep application-specific account menus and\nnavigation destinations in the consuming app.\n"
       },
       "props": [
         {
@@ -32277,7 +32386,7 @@
           "mutable": false,
           "attr": "collapse-at",
           "reflectToAttr": false,
-          "docs": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
+          "docs": "CSS length below which navigation collapses and single-row app bars can center their title.",
           "docsTags": [
             {
               "name": "default",
@@ -33166,7 +33275,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted when an existing branch collapses.",
+          "docs": "Emitted when an existing branch collapses, also when `expanded` is\ncleared: it can fire without a gesture.",
           "docsTags": []
         },
         {
@@ -33185,7 +33294,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted when an existing branch expands.",
+          "docs": "Emitted when an existing branch expands, also when `expanded` is set: it\ncan fire without a gesture.",
           "docsTags": []
         },
         {
@@ -33204,7 +33313,7 @@
           },
           "cancelable": true,
           "composed": true,
-          "docs": "Emitted once when an empty lazy branch first opens. The listener supplies the children.",
+          "docs": "Emitted once when an empty lazy branch first opens, also one rendered\nexpanded: it can fire without a gesture. The listener supplies the children.",
           "docsTags": []
         }
       ],

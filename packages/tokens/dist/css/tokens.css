@@ -1447,6 +1447,8 @@
   --ki-button-font-weight:var(--ki-typography-weight-body-medium);
   --ki-button-padding-block:var(--ki-space-xs);
   --ki-button-label-padding-inline:var(--ki-space-xs);
+  --ki-button-justify-content:center;
+  --ki-button-text-align:center;
   --ki-button-backdrop-blur:var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-backdrop-filter */
   --ki-button-backdrop-filter:var(--ki-effect-component-backdrop-filter);
   --ki-button-focus-ring-color:var(--ki-focus-ring-color);
@@ -3126,6 +3128,7 @@
   --ki-switch-well-bg-start:var(--ki-surface-s3);
   --ki-switch-well-bg-end:var(--ki-surface-s1);
   --ki-switch-thumb-radius:var(--ki-radius-component-xs);
+  --ki-switch-thumb-shadow:var(--ki-effect-small-dark-shadow);
   --ki-switch-border-width:var(--ki-size-border-hairline);
   --ki-switch-min-target:var(--ki-space-9xl);
   --ki-switch-glyph-width:var(--ki-space-md);
