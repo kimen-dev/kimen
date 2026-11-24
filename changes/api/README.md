@@ -21,9 +21,31 @@ The normative schema is
   is the generated candidate. The gate reconstructs its canonical snapshot
   from the index and component files.
 
+- `packages/<package>.json` is the committed API snapshot of a generative
+  package: `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui` and
+  `@kimen/adapter-mcp-apps`. See
+  [Snapshot a generative package](#snapshot-a-generative-package).
+
 Snapshot and declaration files use canonical JSON: recursively sorted keys,
 two-space indentation, and exactly one trailing line feed. The digest covers
 only the canonical `surface` value.
+
+## Snapshot a generative package
+
+`pnpm check:api` also runs `scripts/gates/check-package-api.mjs`. It reads
+each generative package's built `dist/index.d.ts` and records every exported
+name with its kinds and printed signature. The gate fails when that differs
+from the committed `packages/<package>.json`, and names each added, removed
+or changed export. After a deliberate change, build, run `pnpm api:snapshot`,
+review the diff and commit it with the change.
+
+Two rules keep the snapshot complete and small. Every package-local type a
+public signature reaches must be exported itself, because a signature names
+its types but not their members. A data export (`catalogData`,
+`SURFACE_DOCUMENT`) is recorded by name only, because its declared type is
+the generated data. The package list lives in
+`scripts/lib/package-api-snapshot.mjs`. Unlike the elements gate, these
+snapshots carry no baseline, declaration or release class.
 
 ## Declare a public change
 
