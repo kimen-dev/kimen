@@ -68,6 +68,13 @@ Feature: Kimen prepares and tags releases through a pull request
     When release preparation proposes v0.2.0
     Then every listed @kimen/mcp-server pin and both server.json versions read 0.2.0 in that pull request
     And no file outside the pin list changes
+
+  # S10
+  Scenario: The release pull request versions the agent plugin with the packages
+    Given the three agent plugin manifests declare version 0.1.0
+    When release preparation proposes v0.2.0
+    Then each plugin manifest declares version 0.2.0 in that pull request
+    And the release pull request and its tag are refused while a manifest declares another version
 ```
 
 ## Acceptance notes
@@ -77,3 +84,4 @@ Feature: Kimen prepares and tags releases through a pull request
 - The release pull request goes through the normal required checks. The existing tag-triggered workflow validates and publishes the immutable candidate.
 - The dedicated GitHub App owns branch, pull request, tag and GitHub Release writes. The automation never pushes to `main`.
 - The agent plugin, its docs and the one-click install links run `kimen-mcp` by exact version (`@kimen/mcp-server@X.Y.Z`). Release preparation rewrites those pins, including the ones encoded in the Cursor and VS Code links, and both `version` fields of `packages/mcp-server/server.json`, in the files listed by `mcpServerPinPaths` only. A listed file without a pin, or with an unpinned `@kimen/mcp-server` command, fails preparation before any release file is written, and the release pull request and its tag are refused while any pin differs from the release version.
+- The agent plugin's three manifests (`plugins/kimen/.claude-plugin/plugin.json`, `plugins/kimen/.antigravity-plugin/plugin.json` and `plugins/kimen/gemini-extension.json`) declare the release version, because an installed plugin refreshes only when its manifest version moves. Release preparation rewrites their top-level `version` with the packages, and a manifest without exactly one top-level `version` fails preparation.
