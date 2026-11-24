@@ -438,7 +438,12 @@ governed by its own approved contract (specs `002`–`016`).
   only where the catalog declares that prop and only when the live value has
   the declared type, so nothing undeclared crosses the channel. Exactly one
   action dispatches per activation: the innermost bound node claims the
-  interaction and no enclosing bound node dispatches for it (S4).
+  interaction and no enclosing bound node dispatches for it (S4). An action
+  reports that the bound node's event fired, whatever caused it: a person's
+  gesture, a timer, a failed load, a property the spec or a live update set,
+  or a call by the host (`161-action-is-a-report`). It is never evidence that
+  the person chose it, nor consent to any effect: the agent that writes a
+  spec writes both a control's words and its binding.
 - **FR-004**: No code-execution path from spec data: spec strings are never
   parsed as markup; the catalog surface exposes no event-handler or
   code-valued props; URL-typed values accept only an allowlist (`https`,
@@ -509,7 +514,8 @@ governed by its own approved contract (specs `002`–`016`).
   list (per the `027-runtime-catalog` neutral format) — untrusted but
   explicit, inspectable data; the only names the renderer may dispatch. The
   host consumes dispatched actions as data events and ignores names it does
-  not handle.
+  not handle. A dispatched action reports an event; it is never consent
+  (`161`).
 - **Render surface**: the host-owned mount point where only validated nodes
   attach.
 - **Diagnostic**: a machine-readable rejection record — node path, violated

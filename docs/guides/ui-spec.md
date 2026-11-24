@@ -168,6 +168,15 @@ The person activates **Keep files**, and the host receives `tool.denied`.
   per event reports both `ki-confirm` and `ki-close`, with or without a
   confirm label, and `ki-close` arrives on every close, the host's own
   included, so read it as "it closed", not "it was refused".
+- **Some events fire without the person.** A toast's time runs out, an
+  image fails to load, a carousel rotates, a popover or a lazy tree item
+  renders open, the host closes a dialog: each reports its bound action like
+  a click would. Their descriptions in the catalog say "it can fire without a
+  gesture". Bind an action that stands for a decision, such as an approval,
+  only to an event a person causes (`ki-approve`, `ki-confirm`, a click).
+- **An action is a report, not consent** (spec 161). It says which event
+  fired, never that the person agreed: the spec's author also wrote the words
+  on every control. A host confirms a consequential effect outside the spec.
 - **The data is the same** as for a binding by name: the node's props with
   its live `checked`, `selected` or `value`, and the fields it collects. The
   event's own detail is not carried: a `ki-table` sort does not say the

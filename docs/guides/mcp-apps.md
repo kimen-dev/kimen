@@ -123,14 +123,25 @@ always describe the whole surface, and the batch must turn the surface the
 person saw into it. On a live surface a removable `ki-chip` stays until a
 result removes it.
 
-**Tell the model what the person chose.** An app-only tool's result never
-reaches the model, so a click is invisible to it unless you ask for a relay.
-Answer the action with `acknowledgeSurfaceAction`:
+**An action is a report, not consent.** An action call says that a bound
+component fired the event it is bound to, whatever caused it. Most come from
+a person's click, but some events fire on their own: a toast's time runs
+out, an image fails to load, a carousel rotates, a spec renders a popover
+open or a lazy tree item expanded, the host closes a dialog. Bind a decision
+only to an event a person causes. When a model wrote the spec, it also wrote
+the words on every control and chose its bindings, so even a real click on
+"Approve" is not the person's consent to what your server does with it (spec
+161). Confirm a consequential effect outside the spec: through the host's
+own confirmation, or with your server's own rules.
+
+**Tell the model what the surface reported.** An app-only tool's result
+never reaches the model, so a click is invisible to it unless you ask for a
+relay. Answer the action with `acknowledgeSurfaceAction`:
 
 ```ts
 import { acknowledgeSurfaceAction } from '@kimen/adapter-mcp-apps';
 
-// The person's choice needs the model: relay it.
+// The model needs to know: relay it.
 return acknowledgeSurfaceAction('confirm-order', { relay: true });
 // A UI-only action your tool fully handles (a refresh): no relay.
 return acknowledgeSurfaceAction('refresh-inventory');
@@ -148,7 +159,9 @@ The surface builds that line from the action and data it dispatched, never
 from your answer: line breaks and direction controls are written as `\u`
 escapes, a relay above 8192 bytes is not sent (never cut), and a relay the
 host refuses is reported, never retried. Say how to read the line in the
-description of the tool that renders the surface; `SURFACE_ACTION_RELAY_PREFIX`
+description of the tool that renders the surface, including that it reports
+what the surface dispatched, not the person's words: the line carries the
+`user` role because `ui/message` has no other. `SURFACE_ACTION_RELAY_PREFIX`
 is the exact prefix.
 
 **Return tool results through the surface.** `surfaceToolResult` wraps a
@@ -311,7 +324,8 @@ bridge.dispatch('refresh-inventory');            // { sent: true } → tools/cal
 bridge.dispatch('transfer-funds');               // { sent: false, refusal: { reason: 'undeclared-action', ... } }
 ```
 
-User activation of a rendered, action-bound control dispatches through the
+When a rendered, action-bound control fires its bound event (a person's
+activation, or an event that fires on its own), it dispatches through the
 same path automatically; the host receives
 `{ jsonrpc: '2.0', id, method: 'tools/call', params: { name: 'kimen_surface_action', arguments: { action, data, revision, id? } } }`
 and mediates its own audit/consent step before anything reaches the server.

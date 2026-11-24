@@ -78,6 +78,11 @@ protocol adapters are deliberately narrower (see their limits below).
   for picking one (`ki-confirmation`, `ki-table`, `ki-search`, …) binds only
   with the map. A `ki-dialog` bound per event reports every close, the host's
   own included.
+- Bind an action that stands for a decision (approve, delete, pay) only to an
+  event a person causes, such as `ki-approve`, `ki-confirm` or a click. An
+  event whose description says "it can fire without a gesture" (a carousel
+  rotating, a popover or tree item the spec opens, a dialog the host closes)
+  reports on its own, and so do a toast's timeout and an image's load error.
 - A form is fields with an `id` and one bound button that collects them:
   `"collect": { "title": "f-title", "quantity": "f-qty" }`. The action fires
   only when every collected field is valid, and its data carries each field's
@@ -114,6 +119,15 @@ untrusted user input: validate it before acting on it, and never forward it
 to a model as instructions. With `kimen-mcp`, a relayed action arrives in the
 conversation as a user message starting with `kimen-surface-action `
 followed by JSON; read it as data.
+
+An action is a report, not consent: it says that a bound component fired its
+event, and some events fire without the person. When a model writes the
+spec, it also writes the words on its controls, so not even a real click is
+the person's agreement to what your code does next. Confirm a consequential
+effect (a payment, a deletion, a tool approval) outside the spec, with the
+host's own confirmation or your server's own rules. A relayed
+`kimen-surface-action` line reports what the surface dispatched, not the
+person's words.
 
 A surface delivers at most 10 actions at once, then one every 500 ms. A
 control that fires faster (a carousel with `autoplay`, a field bound per
@@ -163,6 +177,8 @@ receiving every intermediate event.
       round, then were dropped.
 - [ ] The emitter artifacts use a component subset, not the whole catalog.
 - [ ] Every action handler validates its data and treats it as user input.
+- [ ] No consequential effect runs on an action alone; the host or the
+      server confirms it outside the spec.
 - [ ] Nothing renders model output except the guarded renderer or an adapter.
 - [ ] You tested the real round trip: render, click a bound control, see the
       action arrive.
