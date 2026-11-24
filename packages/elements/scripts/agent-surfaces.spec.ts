@@ -328,18 +328,22 @@ describe('agent surfaces', () => {
       'command',
       'commandfor',
       'disabled',
+      'download',
+      'href',
       'loading',
       'loadingLabel',
       'name',
+      'rel',
       'selected',
       'size',
+      'target',
       'toggle',
       'tone',
       'type',
       'value',
       'variant',
     ]);
-    expect(declaration.attributes).toHaveLength(13);
+    expect(declaration.attributes).toHaveLength(17);
     expect(declaration.slots).toHaveLength(3);
     expect(declaration.cssParts.map((part: { name: string }) => part.name)).toEqual([
       'button',
