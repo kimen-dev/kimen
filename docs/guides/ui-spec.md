@@ -115,10 +115,11 @@ and the fields need no action of their own:
 The person types "Buy milk" and 2, then activates **Add**. The host receives
 `add` with the data `{ variant: 'primary', title: 'Buy milk', quantity: 2 }`.
 
-- **Every field is asked first.** A field that answers `reportValidity()`
+- **Every field is asked first.** A field that answers `checkValidity()`
   decides and shows its own message; any other is invalid when it matches
   `:invalid`. If one is invalid, nothing is dispatched, each invalid field
-  shows its message and the first in document order takes the focus. A
+  shows its message and the first in document order takes the focus and the
+  browser's message bubble. A
   required field left empty, or text that is not a number in `ki-number-input`
   or not a date in `ki-date-picker`, stops the action.
 - **Values keep their type.** Each key carries the field's live `checked`,

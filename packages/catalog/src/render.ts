@@ -542,16 +542,32 @@ type ActionData = Readonly<Record<string, Scalar>>;
 
 /**
  * Whether one collected field lets the action leave (spec 153 FR-003). A
- * field that answers `reportValidity()` decides, and shows its own message
- * when invalid; otherwise the platform's `:invalid` state decides, so a
- * control without that method still blocks. A field barred from constraint
- * validation, such as a disabled one, is never invalid.
+ * field that answers `checkValidity()` decides; when invalid it fires
+ * `invalid`, so the field shows its own message, and no browser bubble opens.
+ * Otherwise the platform's `:invalid` state decides, so a control without
+ * that method still blocks. A field barred from constraint validation, such
+ * as a disabled one, is never invalid.
  */
-function reportsValid(element: Element): boolean {
-  const report: unknown = Reflect.get(element, 'reportValidity');
-  const reported: unknown =
-    typeof report === 'function' ? Reflect.apply(report, element, []) : undefined;
-  return typeof reported === 'boolean' ? reported : !element.matches(':invalid');
+function checksValid(element: Element): boolean {
+  const check: unknown = Reflect.get(element, 'checkValidity');
+  const checked: unknown =
+    typeof check === 'function' ? Reflect.apply(check, element, []) : undefined;
+  return typeof checked === 'boolean' ? checked : !element.matches(':invalid');
+}
+
+/**
+ * Hands the focus to the first invalid field. A field that answers
+ * `reportValidity()` is asked once more through it, so the browser's own
+ * message bubble, which an engine shows for one field at a time, opens on
+ * the field that has the focus.
+ */
+function reportAndFocus(element: Element): void {
+  for (const method of ['reportValidity', 'focus']) {
+    const call: unknown = Reflect.get(element, method);
+    if (typeof call === 'function') {
+      Reflect.apply(call, element, []);
+    }
+  }
 }
 
 /** The element that comes first in document order, if any. */
@@ -573,9 +589,10 @@ function firstInDocument(elements: readonly Element[]): Element | undefined {
  * FR-003, FR-004). At the gesture every named field is resolved and asked
  * for validity, all of them so each invalid one shows its message; if any is
  * invalid nothing is dispatched and the first invalid field in document
- * order takes the focus. Otherwise each name carries its field's live
- * `checked`, `selected` or `value`, read as a declared-event activation reads
- * its own state, so only a value of the declared type crosses the channel.
+ * order takes the focus and the browser's bubble. Otherwise each name
+ * carries its field's live `checked`, `selected` or `value`, read as a
+ * declared-event activation reads its own state, so only a value of the
+ * declared type crosses the channel.
  * Without `collect`, the dispatch is returned unchanged.
  */
 export function collectingDispatch(
@@ -594,14 +611,11 @@ export function collectingDispatch(
       return element === undefined ? [] : [{ element, name }];
     });
     const invalid = [...new Set(fields.map(({ element }) => element))].filter(
-      (element) => !reportsValid(element),
+      (element) => !checksValid(element),
     );
     const first = firstInDocument(invalid);
     if (first !== undefined) {
-      const focus: unknown = Reflect.get(first, 'focus');
-      if (typeof focus === 'function') {
-        Reflect.apply(focus, first, []);
-      }
+      reportAndFocus(first);
       return;
     }
     const collected: Record<string, Scalar> = { ...data };
