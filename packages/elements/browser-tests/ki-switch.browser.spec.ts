@@ -145,6 +145,14 @@ function paintedGlyphColor(glyph: SVGElement): string {
   return opacity === '0' ? 'rgba(0, 0, 0, 0)' : color;
 }
 
+/** The computed box-shadow an element gets from `value` in the same context. */
+function shadowProbe(context: HTMLElement, value: string): () => string {
+  const probe = document.createElement('span');
+  probe.style.boxShadow = value;
+  context.append(probe);
+  return () => getComputedStyle(probe).boxShadow;
+}
+
 const themeGlyphs = [
   { attrs: 'checked', kind: 'check', token: '--ki-switch-glyph-checked', color: 'rgb(6, 47, 92)' },
   { attrs: '', kind: 'dash', token: '--ki-switch-glyph-unchecked', color: 'rgb(53, 29, 80)' },
@@ -698,6 +706,44 @@ describe('ki-switch in a real browser', () => {
       .toEqual(
         themeGlyphs.map(({ token, color }) => (token === hiddenToken ? 'rgba(0, 0, 0, 0)' : color)),
       );
+  });
+
+  it.each([
+    { attrs: '', shadow: 'none' },
+    { attrs: 'checked', shadow: '0 0 0 2px rgb(6, 47, 92)' },
+  ])(
+    'S26 a theme setting --ki-switch-thumb-shadow to "$shadow" restyles the thumb of a switch with "$attrs"',
+    async ({ attrs, shadow }) => {
+      cleanup();
+      const theme = document.createElement('div');
+      theme.style.setProperty('--ki-switch-thumb-shadow', shadow);
+      theme.innerHTML = `<ki-switch ${attrs}>Notifications</ki-switch>`;
+      document.body.append(theme);
+      const el = theme.querySelector('ki-switch') as KiSwitchElement;
+      await waitForHydration(el);
+      const expected = shadowProbe(theme, shadow);
+
+      // Only the switch token moved: the shared effect is still the shipped one.
+      const effect = '--ki-effect-small-dark-shadow';
+      expect(getComputedStyle(theme).getPropertyValue(effect)).toBe(
+        getComputedStyle(document.documentElement).getPropertyValue(effect),
+      );
+      await expect.poll(() => getComputedStyle(thumbPart(el)).boxShadow).toBe(expected());
+    },
+  );
+
+  it('S14 S26 the thumb shadow defaults to the shared small dark shadow in onmars and material3', async () => {
+    const onmars = await mount('checked');
+    const onmarsEffect = shadowProbe(document.body, 'var(--ki-effect-small-dark-shadow)');
+    expect(getComputedStyle(thumbPart(onmars)).boxShadow).toBe(onmarsEffect());
+    expect(onmarsEffect()).not.toBe('none');
+
+    ensureMaterial3Tokens();
+    const material = await mount('checked');
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    await settleEntryMotion();
+    const materialEffect = shadowProbe(document.body, 'var(--ki-effect-small-dark-shadow)');
+    expect(getComputedStyle(thumbPart(material)).boxShadow).toBe(materialEffect());
   });
 
   it('S16 mirrors label order and on-state thumb travel under RTL', async () => {
