@@ -222,6 +222,7 @@ export class KiButton {
 
   @State() private formDisabled = false;
   private button: HTMLElement | undefined;
+  #ariaTarget: HTMLElement | undefined;
 
   get #effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -241,9 +242,14 @@ export class KiButton {
     }
   }
 
-  // After every render: an href change replaces the native control.
+  // An href change replaces the native control: forward the host ARIA to a
+  // new control only, so a re-render keeps ARIA another owner set on it
+  // (a dialog opener's aria-haspopup).
   componentDidRender(): void {
-    this.forwardButtonAria();
+    if (this.button !== this.#ariaTarget) {
+      this.#ariaTarget = this.button;
+      this.forwardButtonAria();
+    }
   }
 
   @Watch('aria-description')
@@ -364,6 +370,8 @@ export class KiButton {
         {...link}
         aria-disabled={disabled || loading ? 'true' : undefined}
         onClick={this.handleClick}
+        // A middle click navigates through auxclick: loading cancels it too.
+        onAuxClick={this.handleClick}
       >
         {content}
       </a>
