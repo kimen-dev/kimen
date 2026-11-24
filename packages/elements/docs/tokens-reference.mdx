@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 550 semantic
-and 2419 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 564 semantic
+and 2442 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -51,6 +51,15 @@ every component at once.
 | `--ki-anchored-surface-padding` | `0.75rem` | Interior padding for a small anchored surface. |
 | `--ki-anchored-surface-radius` | `12px` | Corner radius for a small anchored surface. |
 | `--ki-anchored-surface-rich-max-width` | `19rem` | Maximum inline size of an anchored help card. |
+
+### `ki.contrast-more`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-contrast-more-focus-ring-width` | `3px` | --ki-focus-ring-width under more contrast: a 3px keyboard focus ring. |
+| `--ki-contrast-more-outline-control` | `rgba(0, 0, 0, 0.64)` | --ki-outline-control under more contrast: control boundaries at 4.5:1 or more against s0-s2. |
+| `--ki-contrast-more-outline-control-hover` | `rgba(0, 0, 0, 0.72)` | --ki-outline-control-hover under more contrast: the hovered control boundary, a step beyond the rest one. |
+| `--ki-contrast-more-text-supporting` | `rgba(0, 0, 0, 0.72)` | --ki-text-supporting under more contrast: enabled supporting text at 7:1 or more; the med-em step stays, as disabled ink draws from it. |
 
 ### `ki.control`
 
@@ -445,6 +454,21 @@ every component at once.
 | `--ki-placeholder-rect-size` | `6rem` | Default block size of a loading media placeholder. |
 | `--ki-placeholder-shimmer-duration` | `1400ms` | Duration of one loading highlight sweep. |
 | `--ki-placeholder-shimmer-image` | `linear-gradient(90deg, transparent, currentColor, transparent)` | A soft currentColor highlight that can sweep across a loading placeholder. |
+
+### `ki.reduced-transparency`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-reduced-transparency-effect-component-backdrop-filter` | `none` | --ki-effect-component-backdrop-filter under reduced transparency: no backdrop effect. |
+| `--ki-reduced-transparency-effect-component-listbox-backdrop-filter` | `none` | --ki-effect-component-listbox-backdrop-filter under reduced transparency: no backdrop effect. |
+| `--ki-reduced-transparency-surface-danger-tint` | `#fff3f3` | --ki-surface-danger-tint under reduced transparency: the opaque surface it reads as over the page. |
+| `--ki-reduced-transparency-surface-info-tint` | `#d0f1fb` | --ki-surface-info-tint under reduced transparency: the opaque surface it reads as over the page. |
+| `--ki-reduced-transparency-surface-primary-tint` | `#ffebe5` | --ki-surface-primary-tint under reduced transparency: the opaque surface it reads as over the page. |
+| `--ki-reduced-transparency-surface-special-blur-base-dark` | `#ffffff` | --ki-surface-special-blur-base-dark under reduced transparency: the opaque surface it reads as over the page. |
+| `--ki-reduced-transparency-surface-special-blur-base-light` | `#ffffff` | --ki-surface-special-blur-base-light under reduced transparency: the opaque surface it reads as over the page. |
+| `--ki-reduced-transparency-surface-special-secondary-alpha-base` | `#f3f0eb` | --ki-surface-special-secondary-alpha-base under reduced transparency: the opaque surface it reads as over the page. |
+| `--ki-reduced-transparency-surface-success-tint` | `#f4faf3` | --ki-surface-success-tint under reduced transparency: the opaque surface it reads as over the page. |
+| `--ki-reduced-transparency-surface-warning-tint` | `#fffeea` | --ki-surface-warning-tint under reduced transparency: the opaque surface it reads as over the page. |
 
 ### `ki.scale-control`
 
@@ -859,6 +883,14 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-alert-warning-fg` | `#181613` | color used by the alert component for the warning card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
 | `--ki-alert-warning-icon-bg` | `#fcf0dc` | color used by the alert component for the warning icon frame (MarsUI Alert master Feature-icon Surface/warning-base-em-alpha at 12%). |
 | `--ki-alert-warning-icon-fg` | `#945b05` | color used by the alert component for the warning icon glyph (MarsUI Alert master Feature-icon glyph Text/warning-high-em). |
+| `--ki-contrast-more-alert-border-width` | `0.125rem` | --ki-alert-border-width under more contrast: a 2px edge. |
+| `--ki-contrast-more-alert-danger-border` | `rgba(0, 0, 0, 0.48)` | --ki-alert-danger-border under more contrast: an edge at 3:1 or more against the page. |
+| `--ki-contrast-more-alert-info-border` | `rgba(0, 0, 0, 0.48)` | --ki-alert-info-border under more contrast: an edge at 3:1 or more against the page. |
+| `--ki-contrast-more-alert-neutral-border` | `rgba(0, 0, 0, 0.48)` | --ki-alert-neutral-border under more contrast: an edge at 3:1 or more against the page. |
+| `--ki-contrast-more-alert-success-border` | `rgba(0, 0, 0, 0.48)` | --ki-alert-success-border under more contrast: an edge at 3:1 or more against the page. |
+| `--ki-contrast-more-alert-warning-border` | `rgba(0, 0, 0, 0.48)` | --ki-alert-warning-border under more contrast: an edge at 3:1 or more against the page. |
+| `--ki-reduced-transparency-alert-neutral-icon-bg` | `#ffffff` | --ki-alert-neutral-icon-bg under reduced transparency: an opaque frame of the same tone. |
+| `--ki-reduced-transparency-alert-shell-bg` | `#f9f7f4` | --ki-alert-shell-bg under reduced transparency: the opaque surface it reads as over the page. |
 
 ### `ki-audio`
 
@@ -1346,6 +1378,8 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-card-padding-block` | `1rem` | dimension used by the card component for the surface block padding (16px carried by the card surface itself so stacked region paddings no longer double to 32px; formalizes the fallback ki-card.css already consumes). |
 | `--ki-card-radius` | `14px` | dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px). |
 | `--ki-card-title-family` | `'Instrument Sans', system-ui, sans-serif` | Family used for a clickable card title. |
+| `--ki-contrast-more-card-border-color` | `rgba(0, 0, 0, 0.48)` | --ki-card-border-color under more contrast: an edge at 3:1 or more against the page. |
+| `--ki-contrast-more-card-border-width` | `1px` | --ki-card-border-width under more contrast: cards draw their edge. |
 
 ### `ki-carousel`
 
@@ -1671,6 +1705,7 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-details-border` | `rgba(0, 0, 0, 0.48)` | --ki-details-border under more contrast: an edge at 3:1 or more against the page. |
 | `--ki-details-backdrop-filter` | `none` | Complete filter for the backdrop behind the disclosure surface. |
 | `--ki-details-bg` | `#ffffff` | Color of the disclosure surface. |
 | `--ki-details-bg-image` | `none` | Optional image painted over the disclosure surface. |
@@ -1692,6 +1727,8 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-dialog-border` | `1px solid rgba(0, 0, 0, 0.48)` | --ki-dialog-border under more contrast: an edge at 3:1 or more against the page. |
+| `--ki-contrast-more-dialog-divider-color` | `rgba(0, 0, 0, 0.48)` | --ki-dialog-divider-color under more contrast: the dividers at 3:1 or more. |
 | `--ki-dialog-backdrop-bg` | `rgba(24, 22, 19, 0.38)` | color used by the dialog component for backdrop background. |
 | `--ki-dialog-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-dialog-backdrop-filter. backdrop blur used by the dialog component surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; none in onmars v2 and material3; perf-measure before enabling per DNA section 5). |
 | `--ki-dialog-backdrop-filter` | `none` | Complete backdrop filter behind the dialog surface. |
@@ -1739,6 +1776,7 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-divider-color` | `rgba(0, 0, 0, 0.48)` | --ki-divider-color under more contrast: the rule at 3:1 or more against the page. |
 | `--ki-divider-color` | `rgba(24, 22, 19, 0.1)` | color used by the divider component for the rule: Outline/base_em (Black/3 light, White/3 dark), the exact variable bound to every Figma divider variant and the same semantic role ki-list uses for item dividers. |
 | `--ki-divider-radius` | `1000px` | dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps). |
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
@@ -1985,6 +2023,7 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-image-fallback-fg` | `#5e5953` | --ki-image-fallback-fg under more contrast: the strengthened neutral ink. |
 | `--ki-image-caption-fg` | `#5e5953` | Text colour of the visible caption. |
 | `--ki-image-caption-font-family` | `'Instrument Sans', system-ui, sans-serif` | Typeface of the visible caption. |
 | `--ki-image-caption-font-size` | `0.75rem` | Type size of the visible caption. |
@@ -2003,6 +2042,7 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-indicator-dot-color` | `rgba(0, 0, 0, 0.48)` | --ki-indicator-dot-color under more contrast: resting pager dots at 3:1 or more against the page and the current dot. |
 | `--ki-indicator-dot-block-size` | `0.5rem` | dimension used by the indicator component for the resting dot block size: the 8px circle diameter measured in the State=inactive vector (the 16px frame height is row alignment, carried by the current dot). |
 | `--ki-indicator-dot-color` | `rgba(0, 0, 0, 0.48)` | color used by the indicator component for the resting dot fill: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_18, which reads 1.53:1 light and 1.64:1 dark against the page; alpha_48 is the first step of the same ramp that clears the 3:1 FR-012 and WCAG 1.4.11 ask. The scheme flip rides the semantic layer. |
 | `--ki-indicator-dot-current-block-size` | `1rem` | dimension used by the indicator component for the current dot block size: Space/3xl, the exact variable bound as the 16px height of the State=active pill (the full row line; declared family extension, design-extraction §Decisiones). |
@@ -2163,6 +2203,7 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-list-item-divider-color` | `rgba(0, 0, 0, 0.48)` | --ki-list-item-divider-color under more contrast: row dividers at 3:1 or more. |
 | `--ki-list-bg` | `#ffffff` | color used by the list component for background. |
 | `--ki-list-gap` | `0rem` | dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook). |
 | `--ki-list-item-checkbox-radius` | `2px` | Corner radius of a multiple-selection indicator. |
@@ -2696,6 +2737,7 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-select-placeholder-fg` | `#5e5953` | --ki-select-placeholder-fg under more contrast: the strengthened neutral ink. |
 | `--ki-select-border-block-end-width` | `1px` | dimension used by the select component for border block end width. |
 | `--ki-select-border-block-start-width` | `1px` | dimension used by the select component for border block start width. |
 | `--ki-select-border-inline-end-width` | `1px` | dimension used by the select component for border inline end width. |
@@ -3264,6 +3306,7 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-tabs-divider-color` | `rgba(0, 0, 0, 0.48)` | --ki-tabs-divider-color under more contrast: the tab-list divider at 3:1 or more. |
 | `--ki-tabs-divider-color` | `rgba(24, 22, 19, 0.1)` | color used by the tabs component for divider color. |
 | `--ki-tabs-divider-width` | `0rem` | dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override). |
 | `--ki-tabs-gap` | `1.625rem` | dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding). |
@@ -3392,6 +3435,9 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-timeline-dot-fg` | `#5e5953` | --ki-timeline-dot-fg under more contrast: the strengthened neutral ink. |
+| `--ki-contrast-more-timeline-line` | `rgba(0, 0, 0, 0.48)` | --ki-timeline-line under more contrast: the connector at 3:1 or more. |
+| `--ki-contrast-more-timeline-time-fg` | `#5e5953` | --ki-timeline-time-fg under more contrast: the strengthened neutral ink. |
 | `--ki-timeline-dot-backdrop-filter` | `none` | Complete backdrop filter behind a timeline marker, off by default. |
 | `--ki-timeline-dot-bg` | `#f3f0eb` | Fill of the neutral timeline marker. |
 | `--ki-timeline-dot-bg-image` | `none` | Optional decorative image over the timeline marker fill. |
@@ -3497,6 +3543,7 @@ aliases is recomputed only on the root and on theme roots.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-contrast-more-tooltip-border-color` | `rgba(0, 0, 0, 0.48)` | --ki-tooltip-border-color under more contrast: an edge at 3:1 or more against the page. |
 | `--ki-tooltip-arrow-radius` | `2px` | dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step). |
 | `--ki-tooltip-arrow-size` | `0.5rem` | dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger. |
 | `--ki-tooltip-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-tooltip-backdrop-filter. backdrop blur used by the tooltip component card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; none in onmars v2 and material3). |
@@ -3632,61 +3679,64 @@ aliases is recomputed only on the root and on theme roots.
 
 ## Preference modes
 
-The tokens each mode reassigns, on top of the active theme. A theme that
-sets one of them in its own rule replaces the mode value too, because both
-rules declare the same property on the same element: restate it under the
-mode's media query and declaration (see *Docs → Tokens & theming*). More
-contrast also applies reduced transparency.
+The tokens each mode reassigns, on top of the active theme. Under the mode
+each one takes its mode token's value, declared `!important` on the root and
+on theme roots, so the mode applies over any theme. A theme chooses its own
+mode value by setting the mode token, never the token itself (see *Docs →
+Tokens & theming*). More contrast also applies reduced transparency.
 
 ### reduced-transparency
 
 Active under `@media (prefers-reduced-transparency: reduce), (prefers-contrast: more)` and on a token root carrying, or inside one
 carrying, `[data-ki-transparency='reduce']` or `[data-ki-contrast='more']`.
 
-| Token | Value under the mode (onmars) |
-| --- | --- |
-| `--ki-alert-shell-bg` | `var(--ki-surface-s1)` |
-| `--ki-select-listbox-backdrop-blur` | `var(--ki-blur-none)` |
-| `--ki-surface-danger-tint` | `var(--ki-surface-danger-base-em)` |
-| `--ki-surface-info-tint` | `var(--ki-surface-info-base-em)` |
-| `--ki-surface-primary-tint` | `var(--ki-surface-primary-low-em)` |
-| `--ki-surface-special-blur-base-dark` | `var(--ki-surface-special-light-s0-dark-s3)` |
-| `--ki-surface-special-blur-base-light` | `var(--ki-surface-special-light-s0-dark-s3)` |
-| `--ki-surface-special-secondary-alpha-base` | `var(--ki-surface-special-light-s2-dark-s3)` |
-| `--ki-surface-success-tint` | `var(--ki-surface-success-base-em)` |
-| `--ki-surface-warning-tint` | `var(--ki-surface-warning-base-em)` |
+| Token | Mode token | Value (onmars) |
+| --- | --- | --- |
+| `--ki-alert-neutral-icon-bg` | `--ki-reduced-transparency-alert-neutral-icon-bg` | `var(--ki-alert-neutral-bg)` |
+| `--ki-alert-shell-bg` | `--ki-reduced-transparency-alert-shell-bg` | `var(--ki-surface-s1)` |
+| `--ki-effect-component-backdrop-filter` | `--ki-reduced-transparency-effect-component-backdrop-filter` | `none` |
+| `--ki-effect-component-listbox-backdrop-filter` | `--ki-reduced-transparency-effect-component-listbox-backdrop-filter` | `none` |
+| `--ki-surface-danger-tint` | `--ki-reduced-transparency-surface-danger-tint` | `var(--ki-surface-danger-base-em)` |
+| `--ki-surface-info-tint` | `--ki-reduced-transparency-surface-info-tint` | `var(--ki-surface-info-base-em)` |
+| `--ki-surface-primary-tint` | `--ki-reduced-transparency-surface-primary-tint` | `var(--ki-surface-primary-low-em)` |
+| `--ki-surface-special-blur-base-dark` | `--ki-reduced-transparency-surface-special-blur-base-dark` | `var(--ki-surface-special-light-s0-dark-s3)` |
+| `--ki-surface-special-blur-base-light` | `--ki-reduced-transparency-surface-special-blur-base-light` | `var(--ki-surface-special-light-s0-dark-s3)` |
+| `--ki-surface-special-secondary-alpha-base` | `--ki-reduced-transparency-surface-special-secondary-alpha-base` | `var(--ki-surface-special-light-s2-dark-s3)` |
+| `--ki-surface-success-tint` | `--ki-reduced-transparency-surface-success-tint` | `var(--ki-surface-success-base-em)` |
+| `--ki-surface-warning-tint` | `--ki-reduced-transparency-surface-warning-tint` | `var(--ki-surface-warning-base-em)` |
 
 ### contrast-more
 
 Active under `@media (prefers-contrast: more)` and on a token root carrying, or inside one
 carrying, `[data-ki-contrast='more']`.
 
-| Token | Value under the mode (onmars) |
-| --- | --- |
-| `--ki-alert-border-width` | `var(--ki-space-xxs)` |
-| `--ki-alert-danger-border` | `var(--ki-outline-strong)` |
-| `--ki-alert-info-border` | `var(--ki-outline-strong)` |
-| `--ki-alert-neutral-border` | `var(--ki-outline-strong)` |
-| `--ki-alert-success-border` | `var(--ki-outline-strong)` |
-| `--ki-alert-warning-border` | `var(--ki-outline-strong)` |
-| `--ki-card-border-color` | `var(--ki-outline-strong)` |
-| `--ki-details-border` | `var(--ki-outline-strong)` |
-| `--ki-dialog-border` | `var(--ki-size-border-hairline) solid var(--ki-outline-strong)` |
-| `--ki-dialog-divider-color` | `var(--ki-outline-strong)` |
-| `--ki-divider-color` | `var(--ki-outline-strong)` |
-| `--ki-focus-ring-width` | `var(--ki-shadow-ring)` |
-| `--ki-image-fallback-fg` | `var(--ki-text-supporting)` |
-| `--ki-indicator-dot-color` | `var(--ki-outline-strong)` |
-| `--ki-list-item-divider-color` | `var(--ki-outline-strong)` |
-| `--ki-outline-control` | `var(--ki-inverse-white-alpha-64)` |
-| `--ki-outline-control-hover` | `var(--ki-inverse-white-alpha-72)` |
-| `--ki-select-placeholder-fg` | `light-dark(var(--ki-text-supporting), var(--ki-inverse-white-alpha-80))` |
-| `--ki-tabs-divider-color` | `var(--ki-outline-strong)` |
-| `--ki-text-supporting` | `var(--ki-inverse-white-alpha-72)` |
-| `--ki-timeline-dot-fg` | `var(--ki-text-supporting)` |
-| `--ki-timeline-line` | `var(--ki-outline-strong)` |
-| `--ki-timeline-time-fg` | `var(--ki-text-supporting)` |
-| `--ki-tooltip-border-color` | `var(--ki-outline-strong)` |
+| Token | Mode token | Value (onmars) |
+| --- | --- | --- |
+| `--ki-alert-border-width` | `--ki-contrast-more-alert-border-width` | `var(--ki-space-xxs)` |
+| `--ki-alert-danger-border` | `--ki-contrast-more-alert-danger-border` | `var(--ki-outline-strong)` |
+| `--ki-alert-info-border` | `--ki-contrast-more-alert-info-border` | `var(--ki-outline-strong)` |
+| `--ki-alert-neutral-border` | `--ki-contrast-more-alert-neutral-border` | `var(--ki-outline-strong)` |
+| `--ki-alert-success-border` | `--ki-contrast-more-alert-success-border` | `var(--ki-outline-strong)` |
+| `--ki-alert-warning-border` | `--ki-contrast-more-alert-warning-border` | `var(--ki-outline-strong)` |
+| `--ki-card-border-color` | `--ki-contrast-more-card-border-color` | `var(--ki-outline-strong)` |
+| `--ki-card-border-width` | `--ki-contrast-more-card-border-width` | `var(--ki-size-border-hairline)` |
+| `--ki-details-border` | `--ki-contrast-more-details-border` | `var(--ki-outline-strong)` |
+| `--ki-dialog-border` | `--ki-contrast-more-dialog-border` | `var(--ki-size-border-hairline) var(--ki-border-style-solid) var(--ki-outline-strong)` |
+| `--ki-dialog-divider-color` | `--ki-contrast-more-dialog-divider-color` | `var(--ki-outline-strong)` |
+| `--ki-divider-color` | `--ki-contrast-more-divider-color` | `var(--ki-outline-strong)` |
+| `--ki-focus-ring-width` | `--ki-contrast-more-focus-ring-width` | `var(--ki-shadow-ring)` |
+| `--ki-image-fallback-fg` | `--ki-contrast-more-image-fallback-fg` | `var(--ki-text-supporting)` |
+| `--ki-indicator-dot-color` | `--ki-contrast-more-indicator-dot-color` | `var(--ki-outline-strong)` |
+| `--ki-list-item-divider-color` | `--ki-contrast-more-list-item-divider-color` | `var(--ki-outline-strong)` |
+| `--ki-outline-control` | `--ki-contrast-more-outline-control` | `var(--ki-inverse-white-alpha-64)` |
+| `--ki-outline-control-hover` | `--ki-contrast-more-outline-control-hover` | `var(--ki-inverse-white-alpha-72)` |
+| `--ki-select-placeholder-fg` | `--ki-contrast-more-select-placeholder-fg` | `light-dark(var(--ki-text-supporting), var(--ki-inverse-white-alpha-80))` |
+| `--ki-tabs-divider-color` | `--ki-contrast-more-tabs-divider-color` | `var(--ki-outline-strong)` |
+| `--ki-text-supporting` | `--ki-contrast-more-text-supporting` | `var(--ki-inverse-white-alpha-72)` |
+| `--ki-timeline-dot-fg` | `--ki-contrast-more-timeline-dot-fg` | `var(--ki-text-supporting)` |
+| `--ki-timeline-line` | `--ki-contrast-more-timeline-line` | `var(--ki-outline-strong)` |
+| `--ki-timeline-time-fg` | `--ki-contrast-more-timeline-time-fg` | `var(--ki-text-supporting)` |
+| `--ki-tooltip-border-color` | `--ki-contrast-more-tooltip-border-color` | `var(--ki-outline-strong)` |
 
 ## Deprecated tokens
 
