@@ -5,7 +5,7 @@
 | `variant` | `header` | `header` for primary site navigation, `app-bar` for the current screen. |
 | `label` | `Main` | Accessible name of the navigation landmark. |
 | `size` | `md` | `sm` or `md`; app bars also accept two-row `lg` and `xl`. |
-| `collapse-at` | `48rem` | Below this available inline size, navigation moves into a menu. |
+| `collapse-at` | `48rem` | Below this available inline size, navigation moves into a menu. `none` never collapses: the links wrap onto more lines. |
 | `sticky` | `false` | Stick to the scroll container's block-start edge with a bottom border. |
 | `navigation-label` | `Open navigation` | Localized name of the collapsible navigation trigger and its menu. |
 | `overflow-label` | `More actions` | Localized name of the app-bar overflow trigger and its menu. |

@@ -35,6 +35,22 @@ the header. Import `@kimen/elements/icons/bell` for the notification glyph.
 <main id="content" tabindex="-1">Workspace</main>
 ```
 
+## Links that wrap instead of collapsing
+
+Use `collapse-at="none"` to keep every link in the bar at every width. Links
+that do not fit wrap onto further lines between the brand and the actions,
+and the bar grows to hold them. No navigation button or menu is rendered.
+
+```html
+<ki-top-nav label="Documentation" collapse-at="none">
+  <a slot="brand" href="/">Kimen</a>
+  <a href="/guide" aria-current="page">Guide</a>
+  <a href="/components">Components</a>
+  <a href="/tokens">Tokens</a>
+  <a href="/changelog">Changelog</a>
+</ki-top-nav>
+```
+
 ## Per-screen bar with search
 
 Use the native `title` attribute in HTML and `screenTitle` for the framework
@@ -56,7 +72,7 @@ navigation destinations in the consuming app.
 
 ## Attributes
 
-- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title.
+- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
 - `heading-level` (number, default 1): Native heading level for the screen title. Use 1 through 6 to fit the page outline.
 - `label` (string, default 'Main'): Accessible name of the header's primary navigation landmark. Override for localization.
 - `navigation-label` (string, default 'Open navigation'): Accessible name for the compact navigation button and menu. Override for localization.

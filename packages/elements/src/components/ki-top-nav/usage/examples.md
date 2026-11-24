@@ -19,6 +19,22 @@ the header. Import `@kimen/elements/icons/bell` for the notification glyph.
 <main id="content" tabindex="-1">Workspace</main>
 ```
 
+## Links that wrap instead of collapsing
+
+Use `collapse-at="none"` to keep every link in the bar at every width. Links
+that do not fit wrap onto further lines between the brand and the actions,
+and the bar grows to hold them. No navigation button or menu is rendered.
+
+```html
+<ki-top-nav label="Documentation" collapse-at="none">
+  <a slot="brand" href="/">Kimen</a>
+  <a href="/guide" aria-current="page">Guide</a>
+  <a href="/components">Components</a>
+  <a href="/tokens">Tokens</a>
+  <a href="/changelog">Changelog</a>
+</ki-top-nav>
+```
+
 ## Per-screen bar with search
 
 Use the native `title` attribute in HTML and `screenTitle` for the framework

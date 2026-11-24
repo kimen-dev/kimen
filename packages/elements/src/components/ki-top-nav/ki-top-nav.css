@@ -80,6 +80,17 @@
   block-size: var(--ki-top-nav-height-compact);
 }
 
+/* Never collapsed: the links wrap between the brand and the actions, and the
+ * bar grows from its token height to hold their lines. */
+.header.wrap {
+  block-size: auto;
+  min-block-size: var(--ki-top-nav-height);
+}
+
+.header.wrap.small-bar {
+  min-block-size: var(--ki-top-nav-height-compact);
+}
+
 .brand {
   min-inline-size: 0;
 }
@@ -123,6 +134,15 @@ nav {
 
 .nav-menu:not(:popover-open) {
   display: none;
+}
+
+.header.wrap nav {
+  flex: 1;
+}
+
+.wrap .links {
+  flex-wrap: wrap;
+  row-gap: var(--ki-layout-spacing-xs);
 }
 
 .links ::slotted(a[href]) {

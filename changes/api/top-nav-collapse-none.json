@@ -1,0 +1,16 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-top-nav/attributes/collapse-at": "fa7fdfb58ffb07618a7eab9c25e7ccbc17e054e9ca93cfae8ac54343b27d1fb0",
+    "/packages/@kimen~1elements/components/ki-top-nav/properties/collapseAt": "fa7fdfb58ffb07618a7eab9c25e7ccbc17e054e9ca93cfae8ac54343b27d1fb0"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "ki-top-nav collapse-at accepts none: the header never collapses and its links wrap onto more lines (0.1.3 integrator feedback, item 5).",
+  "release": "minor",
+  "schemaVersion": 2
+}

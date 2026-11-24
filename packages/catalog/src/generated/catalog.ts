@@ -5601,7 +5601,7 @@ export const catalogData = {
       "props": {
         "collapse-at": {
           "type": "string",
-          "description": "CSS length below which navigation collapses and single-row app bars can center their title.",
+          "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
           "default": "48rem"
         },
         "heading-level": {
