@@ -86,7 +86,9 @@ export function loadOwnTheme(css: string): () => void {
   const style = document.createElement('style');
   style.textContent = css;
   document.head.append(style);
-  return () => { style.remove(); };
+  return () => {
+    style.remove();
+  };
 }
 
 /** Clear every declaration a test may have left on the document root. */
