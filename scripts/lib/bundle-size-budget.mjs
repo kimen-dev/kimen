@@ -55,8 +55,8 @@ const BASE_BUDGETS = {
   // its diagnostic, the bridge's fired-on revision and the host's local actions
   // add 1,472 / 664 / 577 B to the MCP Apps document and 1,661 / 668 / 748 B to
   // kimen-mcp, added here exactly so the headroom stays what it was. The founder
-  // approved re-basing by the cost measured before two review fixes (2026-11-24);
-  // the fixes' 173 B raw await the founder's confirmation.
+  // approved re-basing all three metrics by that cost, two review fixes included
+  // (2026-11-24).
   mcpApps: { raw: 812_188, gzip: 186_776, brotli: 148_337 },
   mcpServer: { raw: 2_620_019, gzip: 497_781, brotli: 390_793 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.

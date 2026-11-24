@@ -379,8 +379,8 @@ interval per surface (`162`)."
 - **Catalog/agent legibility** (Art. I): FR-006 tells agents the budget
   exists and how a fast binding behaves.
 - **Guardrail/security boundary** (Art. VIII): adds a fourth budget to the
-  guardrail. The founder confirmed S1–S8 explicitly; S9, added after a code
-  review, needs the same confirmation.
+  guardrail. The founder confirmed S1–S9 explicitly; S9 came after a code
+  review.
 
 ## Success Criteria *(mandatory)*
 
@@ -414,4 +414,5 @@ interval per surface (`162`)."
 5. The size bases are re-based by the cost measured against main 3329aea1:
    +1,299 / 598 / 771 B for the MCP Apps document and +1,488 / 605 / 656 B
    for kimen-mcp. Two review fixes (S8's empty update, S9) raised it to
-   +1,472 / 664 / 577 B and +1,661 / 668 / 748 B, which awaits confirmation.
+   +1,472 / 664 / 577 B and +1,661 / 668 / 748 B, which the founder approved
+   with S9 (2026-11-24).
