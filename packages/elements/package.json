@@ -11,9 +11,15 @@
     "directory": "packages/elements"
   },
   "files": [
-    "dist",
+    "dist/index.js",
+    "dist/components",
+    "dist/esm",
+    "!dist/esm/kimen.js",
+    "!dist/esm/kimen.js.map",
+    "dist/types",
     "icons",
-    "loader",
+    "loader/index.d.ts",
+    "loader/index.js",
     "generated/custom-elements.json",
     "llms.txt",
     "llms-full.txt",
@@ -21,8 +27,8 @@
     "NOTICE"
   ],
   "scripts": {
-    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/vendor-stencil-client.mjs && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/build-surfaces.mjs",
-    "test": "node --test scripts/icon-modules.test.mjs scripts/vendor-stencil-client.test.mjs && vitest run && vitest run --config vitest.node.config.ts",
+    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/vendor-stencil-client.mjs && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/prune-package-outputs.mjs && node scripts/build-surfaces.mjs",
+    "test": "node --test scripts/icon-modules.test.mjs scripts/prune-package-outputs.test.mjs scripts/vendor-stencil-client.test.mjs && vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.browser.config.ts",
     "size": "node scripts/run-size-limit.mjs",
@@ -127,14 +133,10 @@
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "customElements": "generated/custom-elements.json",
-  "collection": "dist/collection/collection-manifest.json",
-  "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/kimen/kimen.esm.js",
   "sideEffects": [
     "./icons/*.js",
     "./dist/components/glyph-*.js",
-    "./dist/esm/glyph-*.js",
-    "./dist/cjs/glyph-*.js"
+    "./dist/esm/glyph-*.js"
   ],
   "exports": {
     ".": {

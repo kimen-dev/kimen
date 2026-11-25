@@ -63,12 +63,39 @@ through `workspace:*`. `npm pack`, unlike `pnpm publish`, does not rewrite
   every `@kimen/*` runtime dependency must be a package of the candidate at
   exactly its version. The publisher repeats the `workspace:` check on the
   bytes it is about to publish.
-- The builder and every verifier also refuse a tarball that carries
-  TypeScript build info (`*.tsbuildinfo`), which is compiler cache. The
-  packages built with `tsc -b` write it next to their `tsconfig.json`,
-  outside what they pack, and Nx caches it with `dist`. Delete both
-  together (`tsc -b --clean`): with the build info left behind, `tsc -b`
-  reports the project up to date and writes no `dist`.
+- A tarball holds what a consumer uses, and the builder and every verifier
+  refuse it otherwise (`scripts/lib/package-contents.mjs`). The package
+  must not contain any of these:
+  - TypeScript build info (`*.tsbuildinfo`)
+  - Stencil's `.stencil` cache
+  - stories, tests, fixtures, galleries or size-limit entries
+  - a path, a declaration or a source map that names an absolute build
+    path (`/home/`, `/Users/`, `C:\`)
+  - a source map that does not embed its sources (`sourcesContent`)
+  - a file that nothing reaches. Reachable files are `package.json`, the
+    licence, NOTICE and README, the package's declared metadata assets
+    (such as the llms files and `custom-elements.json` of elements), every
+    path its manifest fields and `exports` name, and what those import, link
+    or reference. A module and its declaration file count as one.
+
+  Each package also has a budget for its tarball and its unpacked size: the
+  size measured when it was set plus about 3 %. Raising a budget needs the
+  founder's approval; `scripts/tests/packaging-budget.test.mjs` pins the
+  numbers.
+- The packages built with `tsc -b` write their build info next to their
+  `tsconfig.json`, outside what they pack, and Nx caches it with `dist`.
+  Delete both together (`tsc -b --clean`): with the build info left behind,
+  `tsc -b` reports the project up to date and writes no `dist`. tsc also
+  leaves behind files it no longer emits, so remove a stale `dist` after
+  pulling a change that drops an output.
+- `@kimen/elements` publishes its ESM entry points only: the per-component
+  modules, the lazy build behind `./loader`, the declarations, the icons and
+  the agent docs. Stencil writes no collection. The CommonJS build and the
+  browser build in `dist/kimen` are still written but not published; the
+  site serves `dist/kimen`. After the build,
+  `packages/elements/scripts/prune-package-outputs.mjs` removes the
+  declarations of internal helpers, which no public declaration imports, and
+  the source maps that map no source.
 
 `scripts/tests/publishable-workspace-protocol.test.mjs` fails closed when a
 release package carries any other `workspace:` runtime range, or a package

@@ -157,6 +157,8 @@ const writePackage = async (root, name, directory, options) => {
     license: 'Apache-2.0',
     repository: repositoryMetadata(directory, options.repositoryOverrides[name]),
     files: ['dist', 'NOTICE'],
+    // The entry point a consumer imports, so every packed file is reachable.
+    exports: { '.': './dist/index.js' },
     ...fixtureDependencies[name],
     ...options.manifestOverrides[name],
     ...(name === mcpName ? mcpFixtureFields : {}),
@@ -173,7 +175,10 @@ const writePackage = async (root, name, directory, options) => {
   await mkdir(join(packageDirectory, 'dist'), { recursive: true });
   await Promise.all([
     writeFile(join(packageDirectory, 'package.json'), canonicalJson(manifest)),
-    writeFile(join(packageDirectory, 'dist/index.js'), `export const name = '${name}';\n`),
+    // ng-packagr writes the Angular package's dist itself (writeBuiltPackage).
+    ...(name === angularName
+      ? []
+      : [writeFile(join(packageDirectory, 'dist/index.js'), `export const name = '${name}';\n`)]),
     writeFile(join(packageDirectory, 'README.md'), `# ${name}\n`),
     ...Object.entries(legalFiles)
       .filter(([, contents]) => contents !== null)
@@ -211,6 +216,8 @@ const createRepositoryFixture = async (overrides = {}) => {
   ]);
   await writeFile(join(root, 'README.md'), '# release mutation fixture\n');
   run('git', ['init', '-b', 'main'], root);
+  // No background repack racing the fixture's removal (ENOTEMPTY).
+  run('git', ['config', 'maintenance.auto', 'false'], root);
   run('git', ['config', 'user.name', 'Kimen fixture'], root);
   run('git', ['config', 'user.email', 'fixture@kimen.invalid'], root);
   run('git', ['add', '.'], root);
@@ -530,6 +537,11 @@ describe('release candidate build and verification mutation boundary', { timeout
     const fixture = await createRepositoryFixture();
     const catalog = fixture.packages['@kimen/catalog'];
     await mkdir(join(catalog, 'dist/no-tsbuildinfo'), { recursive: true });
+    await writeFile(
+      join(catalog, 'dist/index.js'),
+      "export * from './no-tsbuildinfo/index.js';\nexport * from './tsbuildinfo.js';\n",
+    );
+    await writeFile(join(catalog, 'dist/no-tsbuildinfo/index.js'), 'export {};\n');
     await writeFile(join(catalog, 'dist/no-tsbuildinfo/index.d.ts'), 'export {};\n');
     await writeFile(join(catalog, 'dist/tsbuildinfo.js'), 'export {};\n');
 
@@ -805,7 +817,6 @@ describe('release candidate workspace rewrite mutation boundary', { timeout: 30_
       'package/NOTICE',
       'package/README.md',
       'package/fesm2022/kimen-angular.mjs',
-      'package/index.js',
       'package/package.json',
       'package/types/kimen-angular.d.ts',
     ]);

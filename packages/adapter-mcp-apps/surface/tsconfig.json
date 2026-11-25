@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  // The surface runtime runs inside the generated surface document, which
+  // scripts/generate-surface.mjs bundles from these sources. Nothing imports
+  // it from dist, so it lives outside src, is never published, and this
+  // project type-checks it on every build.
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "noEmit": true
+  },
+  "include": ["."]
+}

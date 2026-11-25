@@ -28,7 +28,7 @@
     "packages/adapter-mcp-apps": {
       "entry": [
         "src/index.ts",
-        "src/surface-runtime.ts",
+        "surface/surface-runtime.ts",
         "scripts/generate-surface.mjs",
         "*.config.{ts,mjs}"
       ],

@@ -28,7 +28,7 @@ import { build, transform } from 'esbuild';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(here, '..');
-const runtimeModule = resolve(packageRoot, 'src/surface-runtime.ts');
+const runtimeModule = resolve(packageRoot, 'surface/surface-runtime.ts');
 const outFile = resolve(packageRoot, 'src/generated/surface-document.ts');
 const inventoryFile = resolve(packageRoot, 'src/generated/surface-packages.json');
 
