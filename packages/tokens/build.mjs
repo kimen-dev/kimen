@@ -25,7 +25,6 @@ import { fileURLToPath } from 'node:url';
 
 import StyleDictionary from 'style-dictionary';
 
-import { readComponentTokenUsage } from '../../scripts/lib/component-token-usage.mjs';
 import {
   componentSourceOf,
   declaredNames,
@@ -198,6 +197,11 @@ const sourceOf = new Map(
   sharedTokens
     .filter(({ filePath }) => componentSourceOf(filePath) !== null)
     .map(({ name, filePath }) => [`--${name}`, componentSourceOf(filePath)]),
+);
+// Build-only workspace tooling, outside the published package graph: resolved
+// from the workspace root at run time, as @kimen/elements' surface build does.
+const { readComponentTokenUsage } = await import(
+  new URL('../../scripts/lib/component-token-usage.mjs', import.meta.url).href
 );
 const usage = await readComponentTokenUsage({
   componentsRoot: fileURLToPath(new URL('../elements/src/components/', import.meta.url)),
