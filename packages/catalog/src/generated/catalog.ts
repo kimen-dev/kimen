@@ -268,8 +268,8 @@ export const catalogData = {
           "description": "Optional emphasized text rendered before the message inside the live\nregion. Empty strings render no heading. The heading is a `strong`\nelement, not a document heading, so it never changes page outline.\n\nWhen to use: add a short label when it helps identify the status message.\nWhen NOT to use: do not use heading for page structure; use a real heading\noutside the alert when the document needs one."
         },
         "tone": {
-          "type": "string",
-          "documentedValues": [
+          "type": "enum",
+          "values": [
             "danger",
             "info",
             "neutral",
@@ -5370,8 +5370,8 @@ export const catalogData = {
           "default": false
         },
         "tone": {
-          "type": "string",
-          "documentedValues": [
+          "type": "enum",
+          "values": [
             "danger",
             "info",
             "neutral",
@@ -5406,8 +5406,8 @@ export const catalogData = {
           "minimum": 1
         },
         "placement": {
-          "type": "string",
-          "documentedValues": [
+          "type": "enum",
+          "values": [
             "bottom-center",
             "bottom-end",
             "top-center",
