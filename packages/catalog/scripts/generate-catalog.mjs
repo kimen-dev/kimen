@@ -1,12 +1,26 @@
 #!/usr/bin/env node
 // Catalog generation (spec 027, Art. I): the committed Custom Elements
 // Manifest supplies component contracts. Component manifests explicitly
-// select the custom elements exposed to agents. The output is a generated, committed TypeScript module
-// (src/generated/catalog.ts) holding one entry per opted-in custom element;
-// the catalog-sync gate fails any drift between the committed artifact and a
-// fresh regeneration (tokens-sync / surfaces-sync precedent).
+// select the custom elements exposed to agents. The output is three
+// generated, committed TypeScript modules holding one entry per opted-in
+// custom element; the catalog-sync gate fails any drift between the
+// committed artifacts and a fresh regeneration (tokens-sync / surfaces-sync
+// precedent):
 //
-// Determinism (FR-008): the module body is JSON.stringify with sorted keys,
+// - src/generated/catalog-structure.ts: what the boundary checks and the
+//   renderer writes — tags, props and their constraints, slot and event
+//   names. A custom element's guidance prose is left blank there, so a host
+//   that only validates and renders never downloads it. The native
+//   primitives stay whole: the renderer compares a catalog's native entries
+//   with Kimen's definition in full (spec 037 D9).
+// - src/generated/catalog-guidance.ts: that prose — descriptions, when to
+//   use and when not to use, the prop, slot and event descriptions — which
+//   only prompt-facing code reads, through `catalogData`.
+// - src/generated/catalog.ts: `catalogData`, both written back together
+//   (src/guidance.ts) with the elements version, typed as the literal the
+//   whole catalog is.
+//
+// Determinism (FR-008): each module body is JSON.stringify with sorted keys,
 // two-space indent and one trailing newline; no timestamps, no absolute
 // paths, no machine state. Byte-identical output from any checkout location
 // follows by construction — nothing here reads the environment.
@@ -210,12 +224,12 @@ const sortedRecord = (entries) =>
   Object.fromEntries([...entries].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
 
 /**
- * Pure catalog derivation: manifest in, generated module source out. Throws
- * with every violation named when the manifest cannot yield a sound catalog
- * (missing guidance, unparseable type) — a build failure, never a warning
- * (FR-003; the agent-surfaces Art. I bar).
+ * Pure catalog derivation: manifest in, the whole catalog out (the value of
+ * `catalogData`). Throws with every violation named when the manifest cannot
+ * yield a sound catalog (missing guidance, unparseable type) — a build
+ * failure, never a warning (FR-003; the agent-surfaces Art. I bar).
  */
-export function buildCatalog(
+export function deriveCatalog(
   manifest,
   {
     elementsVersion,
@@ -341,30 +355,164 @@ export function buildCatalog(
   if (violations.length > 0) {
     throw new Error(`catalog generation failed (Art. I):\n${violations.join('\n')}`);
   }
-  const catalog = {
+  return {
     catalogSchemaVersion: CATALOG_SCHEMA_VERSION,
     components: sortedRecord(components),
     elementsVersion,
   };
-  return [
-    '// GENERATED FILE (spec 027, Art. I) — never edit by hand.',
-    '// Sources: packages/elements/generated/custom-elements.json and component.json opt-ins.',
-    '// Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate',
-    '// fails any drift between this artifact and a fresh regeneration.',
-    `export const catalogData = ${JSON.stringify(catalog, null, 2)} as const;`,
-    '',
-  ].join('\n');
 }
 
-// realpath both sides: a symlinked tmpdir (macOS /var -> /private/var) must
-// not defeat direct-invocation detection.
-const invokedUrl = process.argv[1] ? pathToFileURL(realpathSync(process.argv[1])).href : null;
-if (
-  invokedUrl !== null &&
-  invokedUrl === pathToFileURL(realpathSync(fileURLToPath(import.meta.url))).href
-) {
-  const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
-  const repoRoot = process.argv[2] ?? join(packageRoot, '..', '..');
+const blankRecord = (record) => Object.fromEntries(Object.keys(record).map((name) => [name, '']));
+
+/**
+ * The catalog in two parts (Art. VIII): the structure every boundary reads,
+ * with each custom element's guidance prose blank, and that prose by tag.
+ * The native primitives stay whole in the structure and have no guidance
+ * entry: the renderer compares a catalog's native entries with Kimen's
+ * definition in full (spec 037 D9), whichever catalog is in use. A blank
+ * keeps its key where it was, so writing the prose back (src/guidance.ts)
+ * yields the catalog exactly, key order included. The elements version
+ * travels with neither: a release changes catalog.ts alone.
+ */
+export function splitGuidance(catalog, primitiveTags = Object.keys(NATIVE_PRIMITIVES)) {
+  const components = {};
+  const guidance = {};
+  for (const [tag, entry] of Object.entries(catalog.components)) {
+    if (primitiveTags.includes(tag)) {
+      components[tag] = entry;
+      continue;
+    }
+    components[tag] = {
+      ...entry,
+      description: '',
+      events: blankRecord(entry.events),
+      props: Object.fromEntries(
+        Object.entries(entry.props).map(([name, constraint]) => [
+          name,
+          { ...constraint, description: '' },
+        ]),
+      ),
+      slots: blankRecord(entry.slots),
+      whenNotToUse: '',
+      whenToUse: '',
+    };
+    guidance[tag] = {
+      description: entry.description,
+      events: entry.events,
+      props: Object.fromEntries(
+        Object.entries(entry.props).map(([name, constraint]) => [name, constraint.description]),
+      ),
+      slots: entry.slots,
+      whenNotToUse: entry.whenNotToUse,
+      whenToUse: entry.whenToUse,
+    };
+  }
+  return {
+    guidance,
+    structure: { catalogSchemaVersion: catalog.catalogSchemaVersion, components },
+  };
+}
+
+// A property name TypeScript prints bare; any other is quoted.
+const IDENTIFIER = /^[A-Za-z_$][\w$]*$/u;
+const propertyName = (key) => (IDENTIFIER.test(key) ? key : JSON.stringify(key));
+
+/**
+ * The TypeScript type `as const` gives a JSON `value`, printed in the
+ * modules' two-space indent: `catalogData` is joined at load time, so its
+ * literal type is written out rather than inferred.
+ */
+export function constType(value, depth = 0) {
+  const indent = '  '.repeat(depth + 1);
+  const close = '  '.repeat(depth);
+  if (Array.isArray(value)) {
+    return `readonly [${value.map((item) => constType(item, depth)).join(', ')}]`;
+  }
+  if (value !== null && typeof value === 'object') {
+    const entries = Object.entries(value);
+    return entries.length === 0
+      ? '{}'
+      : `{\n${entries.map(([key, item]) => `${indent}readonly ${propertyName(key)}: ${constType(item, depth + 1)};`).join('\n')}\n${close}}`;
+  }
+  return JSON.stringify(value);
+}
+
+/**
+ * JSON `value` with its objects laid out one member per line down to
+ * `levels` deep, and compact below: the structure keeps one line per prop
+ * constraint, where a full layout spends most of the emitted module on
+ * indentation.
+ */
+export function jsonLines(value, levels, depth = 0) {
+  if (
+    depth >= levels ||
+    value === null ||
+    typeof value !== 'object' ||
+    Array.isArray(value) ||
+    Object.keys(value).length === 0
+  ) {
+    return JSON.stringify(value);
+  }
+  const indent = '  '.repeat(depth + 1);
+  const members = Object.entries(value).map(
+    ([key, item]) => `${indent}${JSON.stringify(key)}: ${jsonLines(item, levels, depth + 1)}`,
+  );
+  return `{\n${members.join(',\n')}\n${'  '.repeat(depth)}}`;
+}
+
+const HEADER = [
+  '// GENERATED FILE (spec 027, Art. I) — never edit by hand.',
+  '// Sources: packages/elements/generated/custom-elements.json and component.json opt-ins.',
+  '// Generator: packages/catalog/scripts/generate-catalog.mjs. The catalog-sync gate',
+  '// fails any drift between this artifact and a fresh regeneration.',
+];
+
+/** The three generated modules of one derived catalog, by file name. */
+export function catalogModules(catalog, primitiveTags = Object.keys(NATIVE_PRIMITIVES)) {
+  if (typeof catalog.elementsVersion !== 'string') {
+    throw new Error('catalog generation failed (Art. I): the elements version is required');
+  }
+  const { guidance, structure } = splitGuidance(catalog, primitiveTags);
+  return {
+    'catalog-guidance.ts': [
+      ...HEADER,
+      "import type { CatalogGuidance } from '../guidance.js';",
+      '',
+      '/** The guidance prose of each custom element, by tag: only prompt-facing code reads it. */',
+      `export const catalogGuidance: CatalogGuidance = ${JSON.stringify(guidance, null, 2)};`,
+      '',
+    ].join('\n'),
+    'catalog-structure.ts': [
+      ...HEADER,
+      "import type { Catalog } from '../validate.js';",
+      '',
+      '/**',
+      ' * What the boundary checks and the renderer writes: every entry, with a',
+      " * custom element's guidance prose blank (catalog-guidance.ts holds it).",
+      ' */',
+      // Levels: the catalog, its components, an entry, its props: one line each.
+      `export const catalogStructure: Catalog = ${jsonLines(structure, 4)};`,
+      '',
+    ].join('\n'),
+    'catalog.ts': [
+      ...HEADER,
+      "import { withGuidance } from '../guidance.js';",
+      "import { catalogGuidance } from './catalog-guidance.js';",
+      "import { catalogStructure } from './catalog-structure.js';",
+      '',
+      '/** The whole catalog: the structure with its guidance prose written back. */',
+      'export const catalogData = /* @__PURE__ */ withGuidance(',
+      '  catalogStructure,',
+      '  catalogGuidance,',
+      `  ${JSON.stringify(catalog.elementsVersion)},`,
+      `) as ${constType(catalog)};`,
+      '',
+    ].join('\n'),
+  };
+}
+
+/** What the generator reads from a checkout rooted at `repoRoot`. */
+export async function readCatalogInputs(repoRoot) {
   const manifest = JSON.parse(
     readFileSync(join(repoRoot, 'packages/elements/generated/custom-elements.json'), 'utf8'),
   );
@@ -383,14 +531,29 @@ if (
       .filter(([, entry]) => entry.catalogAction !== undefined)
       .map(([tag, entry]) => [tag, entry.catalogAction]),
   );
-  const output = buildCatalog(manifest, { elementsVersion, catalogTags, catalogActions });
+  return { manifest, options: { elementsVersion, catalogTags, catalogActions } };
+}
+
+// realpath both sides: a symlinked tmpdir (macOS /var -> /private/var) must
+// not defeat direct-invocation detection.
+const invokedUrl = process.argv[1] ? pathToFileURL(realpathSync(process.argv[1])).href : null;
+if (
+  invokedUrl !== null &&
+  invokedUrl === pathToFileURL(realpathSync(fileURLToPath(import.meta.url))).href
+) {
+  const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
+  const repoRoot = process.argv[2] ?? join(packageRoot, '..', '..');
+  const { manifest, options } = await readCatalogInputs(repoRoot);
+  const modules = catalogModules(deriveCatalog(manifest, options));
   const schemePolicy = readFileSync(
     join(repoRoot, 'packages/elements/src/utils/url-scheme.ts'),
     'utf8',
   );
   const outputDir = join(repoRoot, 'packages/catalog/src/generated');
   mkdirSync(outputDir, { recursive: true });
-  writeFileSync(join(outputDir, 'catalog.ts'), output, 'utf8');
+  for (const [file, source] of Object.entries(modules)) {
+    writeFileSync(join(outputDir, file), source, 'utf8');
+  }
   // Share the scheme and origin checks without a runtime dependency on elements.
   writeFileSync(
     join(outputDir, 'url-scheme.ts'),
@@ -398,6 +561,6 @@ if (
     'utf8',
   );
   process.stdout.write(
-    `catalog: generated src/generated/catalog.ts (schema ${CATALOG_SCHEMA_VERSION})\n`,
+    `catalog: generated src/generated/{catalog,catalog-structure,catalog-guidance}.ts (schema ${CATALOG_SCHEMA_VERSION})\n`,
   );
 }

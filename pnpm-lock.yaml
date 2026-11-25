@@ -399,6 +399,9 @@ importers:
       '@vitest/browser-playwright':
         specifier: 5.1.1
         version: 5.1.1(playwright@1.65.1)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.108.2)(sass@1.108.2)(yaml@2.9.1))(vitest@5.1.1)
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
       fast-check:
         specifier: 4.10.3
         version: 4.10.3

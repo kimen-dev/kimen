@@ -16,7 +16,8 @@
  *
  * Internal module — `NATIVE_PRIMITIVE_TAGS` is re-exported by the package.
  */
-import { catalogData } from './generated/catalog.js';
+import type { catalogData } from './generated/catalog.js';
+import { catalogStructure } from './generated/catalog-structure.js';
 
 type Scalar = boolean | number | string;
 
@@ -197,7 +198,10 @@ function samePlainData(left: unknown, right: unknown): boolean {
   );
 }
 
-const canonicalEntries: Readonly<Record<string, unknown>> = catalogData.components;
+// The structure carries the native primitives whole, guidance prose included
+// (only custom elements' prose is left out of it), so this compares the
+// complete generated definition.
+const canonicalEntries: Readonly<Record<string, unknown>> = catalogStructure.components;
 
 /**
  * Why a native tag must not render with `entry`, or null when `tag` is a
@@ -214,7 +218,9 @@ export function nativeEntryViolation(tag: string, entry: unknown): string | null
     : "is a native primitive whose catalog entry is not Kimen's definition";
 }
 
-const divProps = catalogData.components.div.props;
+// The structure is typed as any `Catalog`; its `div` entry is the whole
+// generated one, so it has the literal type `catalogData` gives it.
+const divProps = (catalogStructure.components as typeof catalogData.components).div.props;
 
 /** A validated layout value, or the declared default when absent or unknown. */
 function layoutValue(

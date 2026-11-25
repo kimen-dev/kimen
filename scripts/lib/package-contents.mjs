@@ -31,7 +31,10 @@ import { posix } from 'node:path';
 //   agent docs, the custom-elements manifest.
 // - budget, in bytes: the gzip tarball and its unpacked contents. Each base
 //   is the size measured when it was set (2026-11-25) plus about 3 %, and
-//   raising one needs the founder's approval.
+//   raising one needs the founder's approval. The lean catalog runtime
+//   lowered the catalog, adapter-mcp-apps and mcp-server bases the same day
+//   to what they measured after it, plus the same 3 %. The catalog tarball
+//   (315,254 B) kept its base: 3 % over it would have raised the base.
 export const packageContentRules = Object.freeze({
   '@kimen/elements': Object.freeze({
     mapsEveryModule: false,
@@ -49,13 +52,17 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
-    budget: Object.freeze({ packed: 827_392, unpacked: 4_172_800 }),
+    budget: Object.freeze({ packed: 674_816, unpacked: 3_379_200 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,
-    unmappedModules: Object.freeze(['dist/generated/catalog.js']),
+    unmappedModules: Object.freeze([
+      'dist/generated/catalog-guidance.js',
+      'dist/generated/catalog-structure.js',
+      'dist/generated/catalog.js',
+    ]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 320_512, unpacked: 1_382_400 }),
+    budget: Object.freeze({ packed: 320_512, unpacked: 1_376_256 }),
   }),
   '@kimen/emitter': Object.freeze({
     mapsEveryModule: true,
@@ -73,7 +80,7 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze(['dist/generated/surface-document.js']),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 833_536, unpacked: 3_404_800 }),
+    budget: Object.freeze({ packed: 677_888, unpacked: 2_921_472 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,

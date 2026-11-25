@@ -10,7 +10,7 @@
  * adapters built on top (specs 029/030). The guarded renderer (spec 028)
  * renders untrusted specs into the DOM through this same catalog.
  */
-import { catalogData } from './generated/catalog.js';
+import { catalogStructure } from './generated/catalog-structure.js';
 
 export { catalogData } from './generated/catalog.js';
 export {
@@ -76,4 +76,4 @@ export {
  * generated artifact so code and artifact can never disagree. The elements
  * version the catalog derives from travels in `catalogData.elementsVersion`.
  */
-export const CATALOG_SCHEMA_VERSION: string = catalogData.catalogSchemaVersion;
+export const CATALOG_SCHEMA_VERSION: string = catalogStructure.catalogSchemaVersion;

@@ -5,8 +5,15 @@
 // failure, never a silently wider guardrail (FR-002, FR-016, FR-017).
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import ts from 'typescript';
 
-import { buildCatalog } from '../../packages/catalog/scripts/generate-catalog.mjs';
+import {
+  catalogModules,
+  constType,
+  deriveCatalog,
+  jsonLines,
+  splitGuidance,
+} from '../../packages/catalog/scripts/generate-catalog.mjs';
 
 const manifestWith = (attributes) => ({
   modules: [
@@ -27,11 +34,8 @@ const manifestWith = (attributes) => ({
 
 const catalogOptions = { elementsVersion: '0.0.0', catalogTags: new Set(['ki-probe']) };
 
-const propsOf = (attributes) => {
-  const source = buildCatalog(manifestWith(attributes), catalogOptions);
-  const json = source.slice(source.indexOf('{'), source.lastIndexOf('}') + 1);
-  return JSON.parse(json).components['ki-probe'].props;
-};
+const propsOf = (attributes) =>
+  deriveCatalog(manifestWith(attributes), catalogOptions).components['ki-probe'].props;
 
 test('S2 a deprecated enum value is separate from the values offered to agents', () => {
   const props = propsOf([
@@ -57,7 +61,7 @@ test('S2 deprecated enum metadata must describe an existing non-default value', 
     },
   ]) {
     assert.throws(
-      () => buildCatalog(manifestWith([{ name: 'variant', ...attribute }]), catalogOptions),
+      () => deriveCatalog(manifestWith([{ name: 'variant', ...attribute }]), catalogOptions),
       /ki-probe\.variant: .*deprecated/u,
     );
   }
@@ -89,7 +93,7 @@ test('S17 a malformed bound fails generation naming the attribute', () => {
     { maximum: 1, minimum: 2, name: 'count', type: { text: 'number' } },
   ]) {
     assert.throws(
-      () => buildCatalog(manifestWith([attribute]), catalogOptions),
+      () => deriveCatalog(manifestWith([attribute]), catalogOptions),
       new RegExp(`ki-probe\\.${attribute.name}: .*bound`, 'u'),
     );
   }
@@ -110,7 +114,7 @@ test('S19 a format the catalog does not know, or one on a non-string attribute, 
     { format: 'url', name: 'count', type: { text: 'number' } },
   ]) {
     assert.throws(
-      () => buildCatalog(manifestWith([attribute]), catalogOptions),
+      () => deriveCatalog(manifestWith([attribute]), catalogOptions),
       new RegExp(`ki-probe\\.${attribute.name}: .*format`, 'u'),
     );
   }
@@ -123,7 +127,7 @@ test('a string attribute declared with the idref format becomes a reference cons
   assert.equal(props.for.format, 'idref');
   assert.throws(
     () =>
-      buildCatalog(
+      deriveCatalog(
         manifestWith([{ format: 'idref', name: 'count', type: { text: 'number' } }]),
         catalogOptions,
       ),
@@ -138,7 +142,7 @@ test('a string attribute declared with the text format is never a URL', () => {
   assert.equal(props.action.format, 'text');
   assert.throws(
     () =>
-      buildCatalog(
+      deriveCatalog(
         manifestWith([{ format: 'text', name: 'count', type: { text: 'number' } }]),
         catalogOptions,
       ),
@@ -162,17 +166,17 @@ test('a form-action type offers agents the button value alone', () => {
 
 test('S3 catalog generation only exposes components with an explicit opt-in', () => {
   const manifest = manifestWith([]);
-  const published = buildCatalog(manifest, catalogOptions);
-  const privateOnly = buildCatalog(manifest, { elementsVersion: '0.0.0' });
+  const published = deriveCatalog(manifest, catalogOptions).components;
+  const privateOnly = deriveCatalog(manifest, { elementsVersion: '0.0.0' }).components;
 
-  assert.match(published, /"ki-probe":/u);
-  assert.doesNotMatch(privateOnly, /"ki-probe":/u);
-  assert.match(privateOnly, /"p":/u);
+  assert.equal(Object.hasOwn(published, 'ki-probe'), true);
+  assert.equal(Object.hasOwn(privateOnly, 'ki-probe'), false);
+  assert.equal(Object.hasOwn(privateOnly, 'p'), true);
 });
 
 test('reports an opted-in tag missing from the Custom Elements Manifest', () => {
   assert.throws(
-    () => buildCatalog({ modules: [] }, catalogOptions),
+    () => deriveCatalog({ modules: [] }, catalogOptions),
     /ki-probe: catalog opt-in has no manifest declaration/u,
   );
 });
@@ -183,12 +187,11 @@ test('a catalog action projects only its selected public event', () => {
     { name: 'ki-success', description: 'Succeeded.' },
     { name: 'ki-failure', description: 'Failed.' },
   ];
-  const source = buildCatalog(manifest, {
+  const catalog = deriveCatalog(manifest, {
     ...catalogOptions,
     catalogActions: new Map([['ki-probe', 'ki-success']]),
   });
-  const json = source.slice(source.indexOf('{'), source.lastIndexOf('}') + 1);
-  assert.deepEqual(JSON.parse(json).components['ki-probe'].events, {
+  assert.deepEqual(catalog.components['ki-probe'].events, {
     'ki-success': 'Succeeded.',
   });
 });
@@ -196,7 +199,7 @@ test('a catalog action projects only its selected public event', () => {
 test('a catalog action must select a public event', () => {
   assert.throws(
     () =>
-      buildCatalog(manifestWith([]), {
+      deriveCatalog(manifestWith([]), {
         ...catalogOptions,
         catalogActions: new Map([['ki-probe', 'ki-missing']]),
       }),
@@ -209,4 +212,117 @@ test('preserves a double-quoted manifest string default containing an apostrophe
     { default: `"Couldn't copy"`, name: 'copy-error-label', type: { text: 'string' } },
   ]);
   assert.equal(props['copy-error-label'].default, "Couldn't copy");
+});
+
+// The guidance prose leaves the structure the boundary reads (Art. VIII):
+// a host that validates and renders downloads none of it, and catalogData
+// still carries it (src/guidance.ts writes it back).
+const guidedManifest = () => {
+  const manifest = manifestWith([
+    {
+      default: "'neutral'",
+      description: 'The tone.',
+      name: 'tone',
+      type: { text: '"neutral" | "danger"' },
+    },
+    { description: 'The label.', name: 'label', required: true, type: { text: 'string' } },
+  ]);
+  Object.assign(manifest.modules[0].declarations[0], {
+    events: [{ description: 'Fires on change.', name: 'ki-change' }],
+    slots: [{ description: 'The content.' }, { description: 'Leading.', name: 'start' }],
+  });
+  return manifest;
+};
+
+test('the structure blanks a custom element guidance prose in place and keeps native primitives whole', () => {
+  const catalog = deriveCatalog(guidedManifest(), catalogOptions);
+  const { guidance, structure } = splitGuidance(catalog);
+
+  assert.deepEqual(Object.keys(structure), ['catalogSchemaVersion', 'components']);
+  assert.deepEqual(Object.keys(structure.components), Object.keys(catalog.components));
+  const probe = structure.components['ki-probe'];
+  const whole = catalog.components['ki-probe'];
+  assert.deepEqual(Object.keys(probe), Object.keys(whole));
+  assert.deepEqual([probe.description, probe.whenNotToUse, probe.whenToUse], ['', '', '']);
+  assert.deepEqual(probe.events, { 'ki-change': '' });
+  assert.deepEqual(probe.slots, { '': '', start: '' });
+  for (const [name, constraint] of Object.entries(probe.props)) {
+    assert.deepEqual(Object.keys(constraint), Object.keys(whole.props[name]), name);
+    assert.equal(constraint.description, '', name);
+    assert.deepEqual(
+      { ...constraint, description: whole.props[name].description },
+      whole.props[name],
+    );
+  }
+  assert.deepEqual(guidance, {
+    'ki-probe': {
+      description: 'A probe.',
+      events: { 'ki-change': 'Fires on change.' },
+      props: { label: 'The label.', tone: 'The tone.' },
+      slots: { '': 'The content.', start: 'Leading.' },
+      whenNotToUse: 'Never.',
+      whenToUse: 'Only in this test.',
+    },
+  });
+  for (const tag of ['div', 'img', 'p', 'table']) {
+    assert.deepEqual(structure.components[tag], catalog.components[tag], tag);
+    assert.equal(Object.hasOwn(guidance, tag), false, tag);
+  }
+});
+
+test('writing the guidance back into the blanks yields the catalog, key order included', () => {
+  const catalog = deriveCatalog(guidedManifest(), catalogOptions);
+  const { guidance, structure } = splitGuidance(catalog);
+  // The same fill src/guidance.ts performs; the catalog package tests run that one.
+  const joined = JSON.parse(JSON.stringify(structure.components));
+  for (const [tag, text] of Object.entries(guidance)) {
+    const entry = joined[tag];
+    for (const field of ['description', 'whenNotToUse', 'whenToUse']) entry[field] = text[field];
+    for (const name of Object.keys(entry.props)) entry.props[name].description = text.props[name];
+    for (const name of Object.keys(entry.slots)) entry.slots[name] = text.slots[name];
+    for (const name of Object.keys(entry.events)) entry.events[name] = text.events[name];
+  }
+  assert.equal(
+    JSON.stringify({ ...structure, components: joined, elementsVersion: '0.0.0' }),
+    JSON.stringify(catalog),
+  );
+});
+
+test('catalogData is typed as the literal TypeScript infers for the catalog as const', () => {
+  const value = { 'a-b': [1, -2, 'c'], d: {}, '': true, e: { f: 'g' }, h: [] };
+  const inferred = ts.transpileDeclaration(`export const x = ${JSON.stringify(value)} as const;`, {
+    compilerOptions: { declaration: true },
+  }).outputText;
+  const printed = ts.transpileDeclaration(`export declare const x: ${constType(value)};`, {
+    compilerOptions: { declaration: true },
+  }).outputText;
+  assert.equal(printed, inferred);
+});
+
+test('the structure lays out one line per prop constraint', () => {
+  assert.equal(
+    jsonLines({ a: { b: { c: [1], d: 'e' } }, f: {} }, 2),
+    '{\n  "a": {\n    "b": {"c":[1],"d":"e"}\n  },\n  "f": {}\n}',
+  );
+});
+
+test('the elements version reaches catalog.ts alone, so a release regenerates only it', () => {
+  const manifest = guidedManifest();
+  const modules = catalogModules(deriveCatalog(manifest, catalogOptions));
+  const bumped = catalogModules(
+    deriveCatalog(manifest, { ...catalogOptions, elementsVersion: '9.9.9' }),
+  );
+  assert.deepEqual(Object.keys(modules), [
+    'catalog-guidance.ts',
+    'catalog-structure.ts',
+    'catalog.ts',
+  ]);
+  assert.equal(bumped['catalog-guidance.ts'], modules['catalog-guidance.ts']);
+  assert.equal(bumped['catalog-structure.ts'], modules['catalog-structure.ts']);
+  assert.notEqual(bumped['catalog.ts'], modules['catalog.ts']);
+  assert.doesNotMatch(modules['catalog-structure.ts'], /A probe\.|The tone\.|Fires on change\./u);
+  assert.throws(
+    () => catalogModules(deriveCatalog(manifest, { catalogTags: catalogOptions.catalogTags })),
+    /elements version is required/u,
+  );
 });

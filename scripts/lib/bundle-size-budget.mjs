@@ -75,8 +75,28 @@ const BASE_BUDGETS = {
   // (154 B left on that main); the founder approved re-basing that one metric by
   // the 358 B the placeholder costs (2026-11-24, «Sí, sube 358 B»), added on top
   // of the preference-modes base above.
-  mcpApps: { raw: 818_195, gzip: 187_416, brotli: 148_865 },
-  mcpServer: { raw: 2_626_194, gzip: 498_562, brotli: 390_919 },
+  // The lean catalog runtime (2026-11-25) re-based both DOWN, measured on macOS
+  // against main b1382831: the catalog parses with zod/mini, imported as a
+  // module namespace (the server's `import { z } from 'zod'` pulled in all of
+  // classic zod), and its validator and renderer read the generated structure
+  // without the guidance prose. The document went from 1,527,736 / 374,475 /
+  // 283,998 B to 1,296,064 / 299,600 / 224,778 B, and kimen-mcp from 3,993,653 /
+  // 791,451 / 551,735 B to 3,222,650 / 642,477 / 474,743 B. Each limit (base
+  // plus the component allowances) is now that size plus about 1 % of gzip and
+  // brotli for Linux CI's output and 0.1 % of raw bytes, which esbuild emits
+  // alike everywhere: 1,297,361 / 302,596 / 227,026 and 3,225,873 / 648,902 /
+  // 479,491 B.
+  mcpApps: { raw: 587_281, gzip: 114_073, brotli: 88_985 },
+  mcpServer: { raw: 1_857_264, gzip: 352_284, brotli: 317_242 },
+  // A browser host that validates and renders agent specs (validateUiSpec and
+  // renderUiSpec from the packed @kimen/catalog, bundled for production:
+  // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
+  // measured on macOS against main b1382831 with the lean runtime above,
+  // 125,455 / 29,479 / 25,933 B (it was 715,883 / 169,806 / 136,980 B), with the
+  // same margins. No component declares an allowance here: a component that
+  // joins the catalog grows the host by its structure, so re-base this by the
+  // cost it measures.
+  genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
@@ -93,6 +113,7 @@ export function deriveBundleSizeBudgets(components) {
   const limits = {
     mcpApps: { ...BASE_BUDGETS.mcpApps },
     mcpServer: { ...BASE_BUDGETS.mcpServer },
+    genuiHost: { ...BASE_BUDGETS.genuiHost },
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },
   };
   for (const { tag, metadata } of components) {

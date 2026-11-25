@@ -17,7 +17,7 @@ export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
   optimizeDeps: {
     // Pre-bundled up front so a cold cache never reloads a running spec.
-    include: ['zod'],
+    include: ['zod/mini', 'zod/v4/locales/en.js'],
   },
   test: {
     name: 'catalog-browser',

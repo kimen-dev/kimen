@@ -26,7 +26,7 @@ import {
   isDialogInvoker,
   writeDialogId,
 } from './dialog-commands.js';
-import { catalogData } from './generated/catalog.js';
+import { catalogStructure } from './generated/catalog-structure.js';
 import { MARKDOWN_ORIGINS_ATTRIBUTE } from './generated/url-scheme.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
 import { type PropNameViolation, propNameViolation } from './prop-names.js';
@@ -51,7 +51,7 @@ import {
   validatePlainData,
 } from './validate.js';
 
-const builtInCatalog: Catalog = catalogData;
+const builtInCatalog: Catalog = catalogStructure;
 
 // The elements package's per-icon modules populate this realm-local map.
 // Using the shared key lets the catalog check availability without relying
