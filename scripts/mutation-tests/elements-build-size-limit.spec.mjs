@@ -6,8 +6,10 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import {
   createSizeLimitConfig,
+  MARGINAL_CEILING,
   renderCompositeEntry,
   runSizeLimit,
+  WORST_CASE_CEILING,
 } from '../../packages/elements/scripts/run-size-limit.mjs';
 
 // @spec:018-project-integrity-hardening
@@ -108,37 +110,67 @@ describe('element size-budget mutation boundary', () => {
       {
         name: 'paired marginal cost (runtime excluded)',
         path: '/tmp/paired.ts',
-        ignore: ['@stencil/core', './stencil-client.js'],
-        limit: '9 KB',
+        ignore: ['./stencil-client.js'],
+        limit: '8700 B',
       },
       {
         name: 'paired worst case (full Stencil runtime)',
         path: '/tmp/paired.ts',
-        limit: '25 KB',
+        limit: '12600 B',
       },
       {
         name: 'ki-gamma marginal cost (runtime excluded)',
         path: '/workspace/elements/dist/components/ki-gamma.js',
-        ignore: ['@stencil/core', './stencil-client.js'],
-        limit: '9 KB',
+        ignore: ['./stencil-client.js'],
+        limit: '8700 B',
       },
       {
         name: 'ki-gamma worst case (full Stencil runtime)',
         path: '/workspace/elements/dist/components/ki-gamma.js',
-        limit: '25 KB',
+        limit: '12600 B',
       },
       {
         name: 'ki-zeta marginal cost (runtime excluded)',
         path: '/workspace/elements/dist/components/ki-zeta.js',
-        ignore: ['@stencil/core', './stencil-client.js'],
-        limit: '9 KB',
+        ignore: ['./stencil-client.js'],
+        limit: '8700 B',
       },
       {
         name: 'ki-zeta worst case (full Stencil runtime)',
         path: '/workspace/elements/dist/components/ki-zeta.js',
-        limit: '25 KB',
+        limit: '12600 B',
       },
     ]);
+  });
+
+  it('takes a reviewed worst-case exception above the uniform ceiling, the largest of a composite', () => {
+    expect([MARGINAL_CEILING, WORST_CASE_CEILING]).toEqual([8_700, 12_600]);
+    const metadataByTag = new Map([
+      ['ki-alpha', { sizeBudget: { worstCase: { brotli: 13_000 } } }],
+      ['ki-beta', { sizeBudget: { worstCase: { brotli: 14_000 } } }],
+      ['ki-gamma', { sizeBudget: { worstCase: { brotli: 12_600 } } }],
+      ['ki-zeta', { sizeBudget: { worstCase: { brotli: 12_600.5 } } }],
+    ]);
+    const limits = createSizeLimitConfig({ components, groups, metadataByTag })
+      .filter(({ name }) => name.includes('worst case'))
+      .map(({ name, limit }) => [name.split(' ')[0], limit]);
+
+    expect(Object.fromEntries(limits)).toEqual({
+      paired: '14000 B',
+      'ki-gamma': '12600 B',
+      'ki-zeta': '12600 B',
+    });
+    const exceptionalGamma = new Map([
+      ['ki-gamma', { sizeBudget: { worstCase: { brotli: 12_601 } } }],
+    ]);
+    expect(
+      createSizeLimitConfig({
+        components,
+        groups,
+        onlyTag: 'ki-gamma',
+        metadataByTag: exceptionalGamma,
+      })[1].limit,
+    ).toBe('12601 B');
   });
 
   it('uses member paths when no generated composite entry is supplied', () => {

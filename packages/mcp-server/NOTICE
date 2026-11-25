@@ -59,12 +59,15 @@ Third-party notices: @stencil/core (MIT)
 
 Reviewed upstream release: 4.45.3.
 
-The lazy-loading builds of @kimen/elements and the MCP Apps surface embedded
-in @kimen/adapter-mcp-apps and @kimen/mcp-server distribute Stencil's client
-runtime (internal/client). The per-component element modules ship a copy of
-it as dist/components/stencil-client.js, whose lazy-loader import is left for
-bundlers not to analyse; that copy reads its build flags from the
-@stencil/core dependency.
+@kimen/elements distributes Stencil's client runtime (internal/client),
+compiled by Stencil with the build flags of Kimen's components: inside its
+lazy-loading build, and as dist/components/stencil-client.js beside its
+per-component element modules. The MCP Apps surface embedded in
+@kimen/adapter-mcp-apps and @kimen/mcp-server carries the per-component
+copy. The build changes two things in it: the lazy build's fallback
+component import is assembled at run time, for bundlers not to analyse, and
+a boolean attribute set to "false" reads as false on form-associated
+components too.
 
 The MIT License (MIT)
 

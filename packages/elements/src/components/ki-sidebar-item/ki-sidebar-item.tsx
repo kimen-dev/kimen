@@ -1,4 +1,4 @@
-import { Component, Element, Prop, State, h } from '@stencil/core';
+import { Component, Element, Prop, State, h, type VNode } from '@stencil/core';
 import { getIcon } from '../../utils/icon-registry.mjs';
 import {
   DEFAULT_COUNT_LABEL,
@@ -102,7 +102,9 @@ export class KiSidebarItem {
     this.name = text.join('').replace(/\s+/gu, ' ').trim();
   }
 
-  render() {
+  // Typed, so its declaration names the runtime types the package ships
+  // instead of the Stencil compiler, which consumers do not install.
+  render(): VNode {
     const count = normalizeSidebarCount(this.count);
     const [before, after] = sidebarCountLabelParts(this.name, count, this.countLabel);
     const icon = this.iconName && getIcon(this.iconName) ? this.iconName : undefined;

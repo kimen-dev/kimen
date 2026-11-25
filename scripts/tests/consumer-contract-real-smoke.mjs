@@ -10,11 +10,20 @@ import { readPackedLlmsFromTarball } from '../consumer-contract.mjs';
 
 const repositoryRoot = resolve(fileURLToPath(new URL('../../', import.meta.url)));
 const consumerContract = join(repositoryRoot, 'scripts/consumer-contract.mjs');
-// The packed @kimen/elements depends on exactly this compiler runtime; the
-// offline installer stores are primed with it before the consumer runs.
-const elementsStencil = JSON.parse(
-  await readFile(join(repositoryRoot, 'packages/elements/package.json'), 'utf8'),
-).dependencies['@stencil/core'];
+// The runtime dependencies of the packed @kimen/elements and @kimen/tokens,
+// at their exact versions: the offline installer stores are primed with
+// them before the consumer runs. Today there is none.
+const consumerDependencies = (
+  await Promise.all(
+    ['elements', 'tokens'].map(async (directory) =>
+      Object.entries(
+        JSON.parse(
+          await readFile(join(repositoryRoot, `packages/${directory}/package.json`), 'utf8'),
+        ).dependencies ?? {},
+      ).map(([name, version]) => `${name}@${version}`),
+    ),
+  )
+).flat();
 
 function run(command, arguments_, options) {
   const result = spawnSync(command, arguments_, {
@@ -112,33 +121,35 @@ async function main() {
       ['exec', 'nx', 'run-many', '--target=build', '--projects=@kimen/tokens,@kimen/elements'],
       { cwd: repositoryRoot, env: isolatedEnvironment },
     );
-    run('npm', ['cache', 'add', `@stencil/core@${elementsStencil}`], {
-      cwd: repositoryRoot,
-      env: { ...isolatedEnvironment, npm_config_offline: 'false' },
-    });
-    run(
-      'pnpm',
-      [
-        '--dir',
-        pnpmPrime,
-        '--store-dir',
-        pnpmStore,
-        'add',
-        '--ignore-scripts',
-        '--save-exact',
-        `@stencil/core@${elementsStencil}`,
-      ],
-      {
+    if (consumerDependencies.length > 0) {
+      run('npm', ['cache', 'add', ...consumerDependencies], {
         cwd: repositoryRoot,
-        env: {
-          ...isolatedEnvironment,
-          NPM_CONFIG_STORE_DIR: pnpmStore,
-          XDG_CACHE_HOME: consumerXdgCache,
-          npm_config_offline: 'false',
-          npm_config_store_dir: pnpmStore,
+        env: { ...isolatedEnvironment, npm_config_offline: 'false' },
+      });
+      run(
+        'pnpm',
+        [
+          '--dir',
+          pnpmPrime,
+          '--store-dir',
+          pnpmStore,
+          'add',
+          '--ignore-scripts',
+          '--save-exact',
+          ...consumerDependencies,
+        ],
+        {
+          cwd: repositoryRoot,
+          env: {
+            ...isolatedEnvironment,
+            NPM_CONFIG_STORE_DIR: pnpmStore,
+            XDG_CACHE_HOME: consumerXdgCache,
+            npm_config_offline: 'false',
+            npm_config_store_dir: pnpmStore,
+          },
         },
-      },
-    );
+      );
+    }
     run('pnpm', ['--filter', '@kimen/elements', 'exec', 'playwright', 'install', engine], {
       cwd: repositoryRoot,
       env: isolatedEnvironment,

@@ -20,9 +20,7 @@
 // The plugin refuses to guess: if Stencil's import no longer has the shape
 // below, the build stops.
 
-// Where the Stencil compiler resolves `@stencil/core/internal/client`, with
-// or without the query its lazy build appends.
-const CLIENT_RUNTIME = /[\\/]@stencil[\\/]core[\\/]internal[\\/]client[\\/]index\.js(?:\?.*)?$/u;
+import { isStencilClientRuntime } from './stencil-client-runtime.mjs';
 
 // The lazy import of `src/client/client-load-module.ts`, as Stencil 4 ships it.
 export const LAZY_ENTRY_IMPORT =
@@ -54,7 +52,7 @@ export function unanalysedFallbackImport(source) {
 export const lazyFallbackImport = {
   name: 'kimen-lazy-fallback-import',
   transform(code, id) {
-    if (!CLIENT_RUNTIME.test(id)) return null;
+    if (!isStencilClientRuntime(id)) return null;
     // `map: null` keeps the module's source map: no line moved.
     return { code: unanalysedFallbackImport(code), map: null };
   },

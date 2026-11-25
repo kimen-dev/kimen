@@ -10,12 +10,24 @@ const releaseWorkflow = await readFile(
   new URL('../../.github/workflows/release.yml', import.meta.url),
   'utf8',
 );
-// The offline consumer installs the packed @kimen/elements, whose only runtime
-// dependency is the exact @stencil/core it declares: the primed stores must
-// hold that version, or a compiler bump breaks the prerelease install.
-const elementsStencil = JSON.parse(
-  await readFile(new URL('../../packages/elements/package.json', import.meta.url), 'utf8'),
-).dependencies['@stencil/core'];
+// The offline consumer installs the packed @kimen/elements and @kimen/tokens:
+// the primed installer stores must hold every runtime dependency they
+// declare, at its exact version, or the prerelease install breaks. Today
+// there is none (elements compiles Stencil's runtime into its modules).
+const consumerDependencies = (
+  await Promise.all(
+    ['elements', 'tokens'].map(async (directory) =>
+      Object.entries(
+        JSON.parse(
+          await readFile(
+            new URL(`../../packages/${directory}/package.json`, import.meta.url),
+            'utf8',
+          ),
+        ).dependencies ?? {},
+      ).map(([name, version]) => `${name}@${version}`),
+    ),
+  )
+).flat();
 
 function readJob(source, jobName) {
   const heading = new RegExp(`^  ${jobName}:\\s*$`, 'm').exec(source);
@@ -445,20 +457,27 @@ test('@spec:018-project-integrity-hardening S6 publication reaches the registry 
   );
 });
 
-test('@spec:018-project-integrity-hardening S8 prerelease primes both documented offline installer stores before the consumer runs', () => {
+test('@spec:018-project-integrity-hardening S8 prerelease primes both documented offline installer stores with exactly the consumer dependencies before the consumer runs', () => {
   const browserJob = readJob(releaseWorkflow, 'browser');
-  const npmPrime = `npm cache add --cache "$consumer_cache/npm" @stencil/core@${elementsStencil}`;
-  const pnpmPrime = `XDG_CACHE_HOME="$consumer_cache/xdg" pnpm --dir "$consumer_cache/pnpm-prime" --store-dir "$consumer_cache/pnpm-store" add --ignore-scripts --save-exact @stencil/core@${elementsStencil}`;
   const consumer = 'node scripts/consumer-contract.mjs';
 
   assert.match(
     browserJob,
-    /mkdir -p .*"\$consumer_cache\/npm".*"\$consumer_cache\/pnpm-store".*"\$consumer_cache\/pnpm-prime".*"\$consumer_cache\/xdg"/u,
+    /mkdir -p .*"\$consumer_cache\/npm".*"\$consumer_cache\/pnpm-store".*"\$consumer_cache\/xdg"/u,
   );
-  assert.match(browserJob, new RegExp(npmPrime.replaceAll(/[.*+?^${}()|[\]\\]/gu, '\\$&'), 'u'));
-  assert.match(browserJob, new RegExp(pnpmPrime.replaceAll(/[.*+?^${}()|[\]\\]/gu, '\\$&'), 'u'));
-  assert.ok(browserJob.indexOf(npmPrime) < browserJob.indexOf(consumer));
-  assert.ok(browserJob.indexOf(pnpmPrime) < browserJob.indexOf(consumer));
+  const primed = (pattern) =>
+    [...browserJob.matchAll(pattern)].map((match) => ({ spec: match[1], at: match.index }));
+  const npmPrimed = primed(/npm cache add --cache "\$consumer_cache\/npm" (\S+)/gu);
+  const pnpmPrimed = primed(
+    /pnpm --dir "\$consumer_cache\/pnpm-prime" --store-dir "\$consumer_cache\/pnpm-store" add --ignore-scripts --save-exact (\S+)/gu,
+  );
+  for (const stores of [npmPrimed, pnpmPrimed]) {
+    assert.deepEqual(
+      stores.map(({ spec }) => spec),
+      consumerDependencies,
+    );
+    for (const { at } of stores) assert.ok(at < browserJob.indexOf(consumer));
+  }
 });
 
 test('@spec:018-project-integrity-hardening S6 each candidate verifier binds the immutable digest exactly once', () => {

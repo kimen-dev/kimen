@@ -413,10 +413,6 @@ importers:
         version: 5.1.1(@types/node@26.6.6)(@vitest/browser-playwright@5.1.1)(@vitest/coverage-v8@5.1.1)(@vitest/ui@5.1.1)(happy-dom@21.0.4)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.108.2)(sass@1.108.2)(yaml@2.9.1))
 
   packages/elements:
-    dependencies:
-      '@stencil/core':
-        specifier: 4.45.3
-        version: 4.45.3
     devDependencies:
       '@kimen/tokens':
         specifier: workspace:*
@@ -427,6 +423,9 @@ importers:
       '@stencil/angular-output-target':
         specifier: 1.6.0
         version: 1.6.0(@stencil/core@4.45.3)
+      '@stencil/core':
+        specifier: 4.45.3
+        version: 4.45.3
       '@stencil/react-output-target':
         specifier: 1.8.1
         version: 1.8.1(@stencil/core@4.45.3)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)

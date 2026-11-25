@@ -27,11 +27,11 @@
     "NOTICE"
   ],
   "scripts": {
-    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/vendor-stencil-client.mjs && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/prune-package-outputs.mjs && node scripts/build-surfaces.mjs",
-    "test": "node --test scripts/icon-modules.test.mjs scripts/prune-package-outputs.test.mjs scripts/vendor-stencil-client.test.mjs && vitest run && vitest run --config vitest.node.config.ts",
+    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/prune-package-outputs.mjs && node scripts/build-surfaces.mjs",
+    "test": "node --test scripts/icon-modules.test.mjs scripts/prune-package-outputs.test.mjs && vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.browser.config.ts",
-    "size": "node scripts/run-size-limit.mjs",
+    "size": "node scripts/run-size-limit.mjs && node scripts/page-weight.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -94,6 +94,13 @@
           "{workspaceRoot}/packages/catalog/browser-tests/fixtures/**/*"
         ]
       },
+      "size": {
+        "inputs": [
+          "default",
+          "^default",
+          "componentBudget"
+        ]
+      },
       "storybook": {
         "dependsOn": [
           "build"
@@ -108,13 +115,11 @@
       }
     }
   },
-  "dependencies": {
-    "@stencil/core": "4.45.3"
-  },
   "devDependencies": {
     "@kimen/tokens": "workspace:*",
     "@size-limit/preset-small-lib": "14.3.0",
     "@stencil/angular-output-target": "1.6.0",
+    "@stencil/core": "4.45.3",
     "@stencil/react-output-target": "1.8.1",
     "@stencil/storybook-plugin": "0.7.1",
     "@stencil/vitest": "1.16.2",

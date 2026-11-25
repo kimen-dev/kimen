@@ -49,7 +49,7 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
-    budget: Object.freeze({ packed: 827_392, unpacked: 4_172_800 }),
+    budget: Object.freeze({ packed: 811_008, unpacked: 4_125_696 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,
@@ -73,7 +73,7 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze(['dist/generated/surface-document.js']),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 444_416, unpacked: 1_796_096 }),
+    budget: Object.freeze({ packed: 429_056, unpacked: 1_747_968 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,
