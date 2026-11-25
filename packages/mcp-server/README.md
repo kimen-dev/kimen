@@ -14,17 +14,17 @@ things with Kimen:
    value, so a model can fix the spec and validate again.
 3. **Render it.** In an MCP Apps host the spec appears as real Kimen
    components, inside the self-contained `ui://` surface of
-   [`@kimen/adapter-mcp-apps`](../adapter-mcp-apps/README.md), whose only
-   render path is the guarded renderer. Any other host shows a plain-text
-   outline of the same spec. The server itself never paints and never
-   produces HTML.
+   [`@kimen/adapter-mcp-apps`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-mcp-apps/README.md),
+   whose only render path is the guarded renderer. Any other host shows a
+   plain-text outline of the same spec. The server itself never paints and
+   never produces HTML.
 
 The exact MCP and MCP Apps revisions it serves are in [`COMPAT.md`](./COMPAT.md).
 
 ## Install from npm
 
-Available from the first release, `v0.1.0`. With Node.js 22 or later, use
-this command to install and start the stdio server:
+With Node.js 22 or later, use this command to install and start the stdio
+server:
 
 ```bash
 npx -y -p @kimen/mcp-server@0.2.1 kimen-mcp
@@ -32,7 +32,8 @@ npx -y -p @kimen/mcp-server@0.2.1 kimen-mcp
 
 ## Run from the repository
 
-Build the server locally and point your host at the binary.
+To work on the server or try a change that has not been released, build it
+locally and point your host at the binary.
 
 ```bash
 pnpm exec nx run @kimen/mcp-server:build
@@ -113,5 +114,7 @@ the surface document is `ui://kimen/surface`.
 Use it when an agent should compose Kimen UI in a conversation: explore the
 catalog, draft a spec, validate it, and show it to the person. If you are
 building your own MCP server that returns Kimen surfaces from your own tools,
-use [`@kimen/adapter-mcp-apps`](../adapter-mcp-apps/README.md) directly. If
-you control the rendering page, use [`@kimen/catalog`](../catalog/README.md).
+use
+[`@kimen/adapter-mcp-apps`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-mcp-apps/README.md)
+directly. If you control the rendering page, use
+[`@kimen/catalog`](https://github.com/kimen-dev/kimen/blob/main/packages/catalog/README.md).

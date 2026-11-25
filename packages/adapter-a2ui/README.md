@@ -5,20 +5,22 @@ translates declarative [A2UI](https://a2ui.org/) messages into Kimen's neutral
 runtime catalog and renders every surface through the guarded renderer alone.
 The catalog and the `ki-*` elements are the durable assets; this adapter is
 **disposable by design** — the exact supported A2UI version(s) live in
-[`COMPAT.md`](./COMPAT.md), protocol churn is absorbed here, and an
-unabsorbable break retires the package without touching core.
+[`COMPAT.md`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-a2ui/COMPAT.md),
+protocol churn is absorbed here, and an unabsorbable break retires the
+package without touching core.
 
 ## Why it is safe
 
 The adapter owns no rendering path of its own. It builds a neutral
-[`UiSpec`](../catalog/README.md) and hands it to `renderUiSpec` from
-`@kimen/catalog`; the guardrail's four invariants (only catalog components
-render, only declared actions dispatch, unknown props are rejected, no code
-path executes from message data) are enforced there, once (Art. I). Two
-complementary checks prove the adapter never opens a side channel: the static
-`scope:adapter` module boundary (no other rendering library is importable) and
-a runtime guarantee that every render call the adapter makes arrives at the
-guarded renderer — verified by substituting an instrumented double (S12).
+[`UiSpec`](https://github.com/kimen-dev/kimen/blob/main/packages/catalog/README.md)
+and hands it to `renderUiSpec` from `@kimen/catalog`; the guardrail's four
+invariants (only catalog components render, only declared actions dispatch,
+unknown props are rejected, no code path executes from message data) are
+enforced there, once (Art. I). Two complementary checks prove the adapter
+never opens a side channel: the static `scope:adapter` module boundary (no
+other rendering library is importable) and a runtime guarantee that every
+render call the adapter makes arrives at the guarded renderer — verified by
+substituting an instrumented double (S12).
 
 ## When to use
 
@@ -26,14 +28,26 @@ Use this adapter when your host receives declarative A2UI messages and should
 render them as Kimen components: it owns the A2UI-to-catalog translation, the
 data model, the `action` round-trip and per-node degradation, so you never touch the
 protocol shape yourself. If you control the spec format, skip the adapter and
-use [`@kimen/catalog`](../catalog/README.md) directly; if your host speaks
-MCP Apps, use [`@kimen/adapter-mcp-apps`](../adapter-mcp-apps/README.md).
+use [`@kimen/catalog`](https://github.com/kimen-dev/kimen/blob/main/packages/catalog/README.md)
+directly; if your host speaks MCP Apps, use
+[`@kimen/adapter-mcp-apps`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-mcp-apps/README.md).
 Transport is caller-owned either way — this package consumes
 already-delivered messages.
 
 The end-to-end walkthrough — transport wiring, the `action` round-trip,
 degradation handling and the COMPAT policy — is
-[Build an A2UI host with Kimen](../../docs/guides/a2ui-host.md).
+[Build an A2UI host with Kimen](https://github.com/kimen-dev/kimen/blob/main/docs/guides/a2ui-host.md).
+
+## Install
+
+```sh
+pnpm add @kimen/adapter-a2ui @kimen/elements @kimen/tokens
+# or: npm install @kimen/adapter-a2ui @kimen/elements @kimen/tokens
+```
+
+The adapter depends on `@kimen/catalog` at its own version. The host page
+registers the `ki-*` elements and loads the tokens: install
+`@kimen/elements` and `@kimen/tokens` at that same version.
 
 ## Usage
 
@@ -101,21 +115,26 @@ linked to a `ki-dialog`.
 Text used as a control label stays literal.
 
 An A2UI message is data, never code. Basic-catalog types without a catalog
-counterpart (Video, DateTimeInput, …) degrade per node to a fixed fallback that
-never carries agent content; a type the matrix declares `forbidden` (e.g. raw
-`html`), a property the catalog does not declare, or a client function that
-reaches a browser capability (`openUrl`) rejects the whole message; a message
-with an unsupported `version` is rejected naming the supported set. The
-surface's declared action set is fixed (pass `actions`, or it freezes at the
-first render that binds one) so no later update can bind an undeclared action.
-[`COMPAT.md`](./COMPAT.md) lists every mapping, the lossy ones and the declared
-gaps (two-way binding covers text fields, checkboxes, sliders and
-single-selection pickers, not multiple selection or date and time; every
-update re-renders the whole surface).
+counterpart (Video, DateTimeInput, …) degrade per node to a fixed fallback
+that never carries agent content; a type the matrix declares `forbidden` (e.g.
+raw `html`), a property the catalog does not declare, or a client function
+that reaches a browser capability (`openUrl`) rejects the whole message; a
+message with an unsupported `version` is rejected naming the supported set.
+The surface's declared action set is fixed (pass `actions`, or it freezes at
+the first render that binds one) so no later update can bind an undeclared
+action.
+[`COMPAT.md`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-a2ui/COMPAT.md)
+lists every mapping, the lossy ones and the declared gaps (two-way binding
+covers text fields, checkboxes, sliders and single-selection pickers, not
+multiple selection or date and time; every update re-renders the whole
+surface).
 
 Transport is caller-owned: the adapter consumes already-delivered A2UI
 messages and emits client messages to the supplied callbacks. `deleteSurface`
 drops adapter state; the host owns teardown of its surface element.
 
-See [Build an A2UI host with Kimen](../../docs/guides/a2ui-host.md) for the
-full guide, and the [roadmap](../../docs/roadmap.md) for project context.
+See
+[Build an A2UI host with Kimen](https://github.com/kimen-dev/kimen/blob/main/docs/guides/a2ui-host.md)
+for the full guide, and the
+[roadmap](https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md) for
+project context.

@@ -15,6 +15,19 @@ contract to agents (Art. VIII). The `catalog-sync` gate fails any drift
 between the committed artifact and a fresh regeneration. It declares its own schema
 version (`catalogSchemaVersion`) and the elements version it derives from.
 
+## Install
+
+```sh
+pnpm add @kimen/catalog
+# or: npm install @kimen/catalog
+```
+
+Validation needs nothing else, in the browser or in Node. A page that
+renders specs also registers the `ki-*` elements and loads the tokens:
+install `@kimen/elements` and `@kimen/tokens` at the same version as the
+catalog, because the catalog describes the components of its own
+`@kimen/elements` release (`catalogData.elementsVersion`).
+
 ## When to use
 
 Use `@kimen/catalog` whenever UI structure arrives as data from outside your
@@ -22,14 +35,16 @@ trust boundary — an agent, a protocol message, a stored spec. Call
 `validateUiSpec` when you need a verdict on a spec; call `renderUiSpec` (or
 `createStreamingRenderer` for progressive streams) when a spec should reach
 the DOM. If your host speaks a concrete protocol, use the adapter and let it
-drive this package: [`@kimen/adapter-a2ui`](../adapter-a2ui/README.md) for
-A2UI, [`@kimen/adapter-mcp-apps`](../adapter-mcp-apps/README.md) for MCP
-Apps. Hand-written application UI does not need the catalog — use
+drive this package:
+[`@kimen/adapter-a2ui`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-a2ui/README.md)
+for A2UI,
+[`@kimen/adapter-mcp-apps`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-mcp-apps/README.md)
+for MCP Apps. Hand-written application UI does not need the catalog — use
 `@kimen/elements` directly.
 
 The full spec shape, validation failure modes, budgets and streaming
 semantics are covered in
-[The UI-spec format guide](../../docs/guides/ui-spec.md).
+[The UI-spec format guide](https://github.com/kimen-dev/kimen/blob/main/docs/guides/ui-spec.md).
 
 ## Usage
 
@@ -64,6 +79,17 @@ report.ok; // true — or false with issues naming each offender and location
 
 Use `values` when generating enum props. The optional `deprecatedValues`
 field lists older values the runtime still accepts for existing specs.
+
+A few element props accept any string in markup and fall back on an unknown
+value: `ki-alert` and `ki-toast` `tone`, `ki-toaster` `placement`. Their
+element types are open unions (`"danger" | … | (string & {})`). In the
+built-in catalog they are closed enums like every other `tone`, `variant`
+and `placement` (spec 164), so a spec with an undocumented value is rejected
+as `invalid-prop-type` with the allowed values, and `repairPrompt` can ask
+the model for one of them. Hand-written markup keeps the open values. A
+consumer definition may still declare an open `string` with
+`documentedValues` (see
+[Registering your own components](#registering-your-own-components)).
 
 A UI spec is data, never code. Validation rejects — naming the offender —
 unknown components, unknown props, wrong-typed values, undeclared slots,
@@ -138,7 +164,7 @@ only when the catalog in use carries exactly Kimen's definition of it.
 **Content-Security-Policy.** The renderer writes the `div` layout and the
 `img` sizing through the CSSOM (`style.setProperty`, spec 037 decision D4),
 and a CSP without `'unsafe-inline'` does not block CSSOM writes:
-[`native-csp.browser.spec.ts`](./browser-tests/native-csp.browser.spec.ts)
+[`native-csp.browser.spec.ts`](https://github.com/kimen-dev/kimen/blob/main/packages/catalog/browser-tests/native-csp.browser.spec.ts)
 renders both under `style-src-attr 'none'` and records no violation. The
 browser still reflects those writes into the element's `style` attribute,
 so serialized DOM (`outerHTML`, a DOM snapshot) shows
@@ -404,7 +430,7 @@ applied (from `onAction`) is rejected as `reentrant-batch`. Action events
 carry the node `id`, its current `path`, the `revision` and live `data`;
 `snapshot()` returns the content as deep-frozen plain data. The batch and
 op shapes are exported as `LiveBatch` and `LiveOp` types. See the
-[UI-spec guide](../../docs/guides/ui-spec.md#live-surface).
+[UI-spec guide](https://github.com/kimen-dev/kimen/blob/main/docs/guides/ui-spec.md#live-surface).
 
 ## Registering your own components
 
@@ -447,24 +473,27 @@ if (created.ok) {
 
 The definition is untrusted input and crosses the same purity wall as UI
 specs: unknown keys, prototype-pollution keys, non-data values, accessor
-properties, cycles and over-budget payloads are rejected naming the
-offender (a `RegistrationIssue`: code, path, value). On top of the wall,
-registration enforces its own rules — tags must be conservative
-custom-element names (lowercase ASCII, hyphen required, SVG/MathML reserved
-names excluded), collisions with the extended catalog are hard errors
-(built-ins are never overridden or shadowed), usage guidance
-(`description`, `whenToUse`, `whenNotToUse`) is mandatory because it is
-what an agent selects components by, and enum constraints need non-empty
-values. Prop names become attribute names, so they must be conservative
-attribute names (lowercase ASCII, then letters, digits, `-` or `_`), and
-two classes are forbidden in any letter case (`forbidden-key`): the `on*`
-event-handler namespace, which would install executable inline code, and
-the reserved names `style`, `class`, `slot` and `id`, which spec data never
-writes onto a component (CSS injection and a `style-src-attr 'none'` CSP
-breach, coupling to the host page's stylesheets, the renderer's own slot
-assignment, and collisions with the host page's ids; 032 FR-015/S19).
-`createCatalog` never throws on hostile input: it returns
-`{ ok: false, issues }`, and no partial catalog escapes.
+properties, cycles and over-budget payloads are rejected naming the offender
+(a `RegistrationIssue`: code, path, value). On top of the wall, registration
+enforces its own rules — tags must be conservative custom-element names
+(lowercase ASCII, hyphen required, SVG/MathML reserved names excluded),
+collisions with the extended catalog are hard errors (built-ins are never
+overridden or shadowed), usage guidance (`description`, `whenToUse`,
+`whenNotToUse`) is mandatory because it is what an agent selects components
+by, and enum constraints need non-empty values. A `string` constraint may list
+`documentedValues`: they document the expected values of an open string, and
+validation accepts any string there. `@kimen/emitter` presents such a prop as
+a plain string, so declare an `enum` when a model must pick one of the values.
+Prop names become attribute names, so they must be conservative attribute
+names (lowercase ASCII, then letters, digits, `-` or `_`), and two classes are
+forbidden in any letter case (`forbidden-key`): the `on*` event-handler
+namespace, which would install executable inline code, and the reserved names
+`style`, `class`, `slot` and `id`, which spec data never writes onto a
+component (CSS injection and a `style-src-attr 'none'` CSP breach, coupling to
+the host page's stylesheets, the renderer's own slot assignment, and
+collisions with the host page's ids; 032 FR-015/S19). `createCatalog` never
+throws on hostile input: it returns `{ ok: false, issues }`, and no partial
+catalog escapes.
 
 `Catalog` is a structural type, so nothing stops a host from handing the
 renderers a catalog value it built by hand. Both renderers therefore re-apply
@@ -493,9 +522,11 @@ When no `catalog` option is supplied everything behaves exactly as before:
 the built-in generated catalog is the boundary and unknown tags — including
 your `acme-*` ones — are rejected.
 
-See [The UI-spec format guide](../../docs/guides/ui-spec.md) for the
-complete spec format, and the [roadmap](../../docs/roadmap.md) for project
-context.
+See
+[The UI-spec format guide](https://github.com/kimen-dev/kimen/blob/main/docs/guides/ui-spec.md)
+for the complete spec format, and the
+[roadmap](https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md) for
+project context.
 
 <!-- kimen:capabilities:catalog-readme-status:start -->
 - **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail

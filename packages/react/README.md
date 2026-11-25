@@ -8,6 +8,14 @@ element, and per-component registration at module import (importing a
 component's module registers exactly that element; modules you never
 import tree-shake away).
 
+```sh
+pnpm add @kimen/react @kimen/tokens
+# or: npm install @kimen/react @kimen/tokens
+```
+
+`@kimen/react` depends on `@kimen/elements` at its own version; install
+`@kimen/tokens` at that same version.
+
 ```tsx
 import { KiButton, KiInput } from '@kimen/react';
 import '@kimen/tokens/css';
@@ -46,4 +54,4 @@ export function Form() {
   minimal.
 
 Theming stays at the token layer: see the
-[`@kimen/tokens` README](../tokens/README.md).
+[`@kimen/tokens` README](https://github.com/kimen-dev/kimen/blob/main/packages/tokens/README.md).
