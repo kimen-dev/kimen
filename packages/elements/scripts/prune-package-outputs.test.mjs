@@ -24,7 +24,9 @@ const fixture = {
   NOTICE: 'notices\n',
   'dist/index.js': "export * from './components/index.js';\n",
   // A re-export module: its map names no source.
-  'dist/components/index.js': "export * from './a.js';\n//# sourceMappingURL=index.js.map\n",
+  // Bundled output can link the same map twice.
+  'dist/components/index.js':
+    "export * from './a.js';\n//# sourceMappingURL=index.js.map\n\n//# sourceMappingURL=index.js.map",
   'dist/components/index.js.map': JSON.stringify({
     version: 3,
     sources: [],

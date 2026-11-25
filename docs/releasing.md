@@ -71,7 +71,16 @@ through `workspace:*`. `npm pack`, unlike `pnpm publish`, does not rewrite
   - stories, tests, fixtures, galleries or size-limit entries
   - a path, a declaration or a source map that names an absolute build
     path (`/home/`, `/Users/`, `C:\`)
-  - a source map that does not embed its sources (`sourcesContent`)
+  - a source map that does not embed its sources (`sourcesContent`), or a
+    `sourceMappingURL` that names a map the tarball does not ship
+  - in a package whose build maps every module (the six `tsc -b` packages
+    and Angular), a module without its map. The only exceptions are the
+    generated modules named in `unmappedModules`: the catalog's
+    `dist/generated/catalog.js` and the MCP Apps adapter's
+    `dist/generated/surface-document.js`. Their maps would embed the whole
+    generated catalog and surface document. They ship with neither a map nor
+    a link to one, and `scripts/lib/generated-source-maps.mjs` removes both
+    after the build.
   - a file that nothing reaches. Reachable files are `package.json`, the
     licence, NOTICE and README, the package's declared metadata assets
     (such as the llms files and `custom-elements.json` of elements), every

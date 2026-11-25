@@ -82,6 +82,9 @@ export async function prunePackageOutputs({ packageRoot, workspaceRoot }) {
   const { packageContentRules, reachablePaths } = await import(
     pathToFileURL(resolve(workspaceRoot, 'scripts/lib/package-contents.mjs')).href
   );
+  const { withoutSourceMapLink } = await import(
+    pathToFileURL(resolve(workspaceRoot, 'scripts/lib/generated-source-maps.mjs')).href
+  );
   const manifest = JSON.parse(await readFile(join(packageRoot, 'package.json'), 'utf8'));
   const files = await packedFiles(packageRoot, manifest);
 
@@ -89,10 +92,10 @@ export async function prunePackageOutputs({ packageRoot, workspaceRoot }) {
   for (const [path, bytes] of files) {
     if (!path.startsWith('dist/') || !path.endsWith('.map') || !mapsNoSource(bytes)) continue;
     const module = path.slice(0, -'.map'.length);
-    const link = `//# sourceMappingURL=${posix.basename(path)}`;
-    const source = files.get(module)?.toString('utf8').trimEnd();
-    if (source?.endsWith(link)) {
-      const unlinked = `${source.slice(0, -link.length).trimEnd()}\n`;
+    const source = files.get(module)?.toString('utf8');
+    const unlinked =
+      source === undefined ? null : withoutSourceMapLink(source, posix.basename(path));
+    if (unlinked !== null) {
       await writeFile(join(packageRoot, module), unlinked);
       files.set(module, Buffer.from(unlinked));
     }

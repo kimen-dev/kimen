@@ -23,7 +23,11 @@ import {
   verifyCandidate,
 } from '../release/build-candidate.mjs';
 import { releasePackages } from '../release/release-plan.mjs';
-import { builtManifest, writeBuiltPackage } from '../tests/fixtures/built-package.mjs';
+import {
+  builtManifest,
+  embeddedSourceMap,
+  writeBuiltPackage,
+} from '../tests/fixtures/built-package.mjs';
 import {
   candidateArchive,
   packageRecord as packedRecord,
@@ -178,7 +182,14 @@ const writePackage = async (root, name, directory, options) => {
     // ng-packagr writes the Angular package's dist itself (writeBuiltPackage).
     ...(name === angularName
       ? []
-      : [writeFile(join(packageDirectory, 'dist/index.js'), `export const name = '${name}';\n`)]),
+      : [
+          // Every published module ships with a map that embeds its source.
+          writeFile(
+            join(packageDirectory, 'dist/index.js'),
+            `export const name = '${name}';\n//# sourceMappingURL=index.js.map\n`,
+          ),
+          writeFile(join(packageDirectory, 'dist/index.js.map'), embeddedSourceMap('index.js')),
+        ]),
     writeFile(join(packageDirectory, 'README.md'), `# ${name}\n`),
     ...Object.entries(legalFiles)
       .filter(([, contents]) => contents !== null)
@@ -535,19 +546,19 @@ describe('release candidate build and verification mutation boundary', { timeout
   it('S7 accepts a packed path that only mentions tsbuildinfo', async () => {
     // A local worktree named no-tsbuildinfo appears in Stencil's declaration paths.
     const fixture = await createRepositoryFixture();
-    const catalog = fixture.packages['@kimen/catalog'];
-    await mkdir(join(catalog, 'dist/no-tsbuildinfo'), { recursive: true });
+    const tokens = fixture.packages['@kimen/tokens'];
+    await mkdir(join(tokens, 'dist/no-tsbuildinfo'), { recursive: true });
     await writeFile(
-      join(catalog, 'dist/index.js'),
-      "export * from './no-tsbuildinfo/index.js';\nexport * from './tsbuildinfo.js';\n",
+      join(tokens, 'dist/index.js'),
+      "export * from './no-tsbuildinfo/index.js';\nexport * from './tsbuildinfo.js';\n//# sourceMappingURL=index.js.map\n",
     );
-    await writeFile(join(catalog, 'dist/no-tsbuildinfo/index.js'), 'export {};\n');
-    await writeFile(join(catalog, 'dist/no-tsbuildinfo/index.d.ts'), 'export {};\n');
-    await writeFile(join(catalog, 'dist/tsbuildinfo.js'), 'export {};\n');
+    await writeFile(join(tokens, 'dist/no-tsbuildinfo/index.js'), 'export {};\n');
+    await writeFile(join(tokens, 'dist/no-tsbuildinfo/index.d.ts'), 'export {};\n');
+    await writeFile(join(tokens, 'dist/tsbuildinfo.js'), 'export {};\n');
 
     const candidate = await buildFixture(fixture);
     const { directory } = await extractCandidate(candidate.archivePath);
-    const listing = run('tar', ['-tzf', join(directory, fileOf('@kimen/catalog'))], directory);
+    const listing = run('tar', ['-tzf', join(directory, fileOf('@kimen/tokens'))], directory);
     expect(listing.split('\n')).toEqual(
       expect.arrayContaining([
         'package/dist/no-tsbuildinfo/index.d.ts',
@@ -795,6 +806,7 @@ describe('release candidate workspace rewrite mutation boundary', { timeout: 30_
         'package/NOTICE',
         'package/README.md',
         'package/dist/index.js',
+        'package/dist/index.js.map',
         'package/package.json',
       ]);
     }
@@ -817,6 +829,7 @@ describe('release candidate workspace rewrite mutation boundary', { timeout: 30_
       'package/NOTICE',
       'package/README.md',
       'package/fesm2022/kimen-angular.mjs',
+      'package/fesm2022/kimen-angular.mjs.map',
       'package/package.json',
       'package/types/kimen-angular.d.ts',
     ]);

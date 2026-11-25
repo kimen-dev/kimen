@@ -257,6 +257,7 @@ describe('built package staging', () => {
       'NOTICE',
       'README.md',
       'fesm2022/kimen-angular.mjs',
+      'fesm2022/kimen-angular.mjs.map',
       'package.json',
       'types/kimen-angular.d.ts',
     ]);

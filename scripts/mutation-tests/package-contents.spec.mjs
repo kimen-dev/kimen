@@ -15,7 +15,7 @@ const entriesOf = (files) =>
     bytes: Buffer.from(contents),
   }));
 
-const manifestOf = (fields) => JSON.stringify({ name: '@kimen/emitter', ...fields });
+const manifestOf = (fields) => JSON.stringify({ name: '@kimen/tokens', ...fields });
 
 // A package whose one entry point imports `imports` (relative paths from dist/).
 const aPackage = (
@@ -29,7 +29,7 @@ const aPackage = (
   ...files,
 });
 
-const check = (files, { name = '@kimen/emitter', packed = 100 } = {}) =>
+const check = (files, { name = '@kimen/tokens', packed = 100 } = {}) =>
   packageContentViolation(name, entriesOf(files), packed);
 
 const reached = (files, manifest, assets = []) =>
@@ -59,15 +59,15 @@ describe('package content rules', () => {
       '@kimen/unknown has no package content rules',
     );
     expect(check({ ...aPackage(), 'package.json': '{' })).toBe(
-      '@kimen/emitter tarball has no readable package/package.json',
+      '@kimen/tokens tarball has no readable package/package.json',
     );
     expect(check({ ...aPackage(), 'package.json': 'null' })).toBe(
-      '@kimen/emitter tarball has no readable package/package.json',
+      '@kimen/tokens tarball has no readable package/package.json',
     );
     const withoutManifest = aPackage();
     delete withoutManifest['package.json'];
     expect(check(withoutManifest)).toBe(
-      '@kimen/emitter tarball has no readable package/package.json',
+      '@kimen/tokens tarball has no readable package/package.json',
     );
   });
 
@@ -104,7 +104,7 @@ describe('package content rules', () => {
     ],
   ])('S7 refuses %s as %s', (path, label, remedy) => {
     const message = check(aPackage({ [path]: 'export {};\n' }));
-    expect(message?.startsWith(`@kimen/emitter tarball ships ${label} package/`)).toBe(true);
+    expect(message?.startsWith(`@kimen/tokens tarball ships ${label} package/`)).toBe(true);
     expect(message).toContain(`package/${path}; ${remedy}`);
   });
 
@@ -134,7 +134,7 @@ describe('package content rules', () => {
       ['a', 'b', 'c', 'd', 'e', 'f', 'g'].map((id) => [`dist/${id}.stories.js`, '']),
     );
     expect(check(aPackage(stories))).toBe(
-      '@kimen/emitter tarball ships stories package/dist/a.stories.js, package/dist/b.stories.js, package/dist/c.stories.js, package/dist/d.stories.js, package/dist/e.stories.js and 2 more; keep stories out of the compiled program',
+      '@kimen/tokens tarball ships stories package/dist/a.stories.js, package/dist/b.stories.js, package/dist/c.stories.js, package/dist/d.stories.js, package/dist/e.stories.js and 2 more; keep stories out of the compiled program',
     );
     const five = Object.fromEntries(
       ['a', 'b', 'c', 'd', 'e'].map((id) => [`dist/${id}.stories.js`, '']),
@@ -156,7 +156,7 @@ describe('package content rules', () => {
     const message = check(files);
     if (refused) {
       expect(message).toBe(
-        '@kimen/emitter tarball ships declarations naming an absolute build path in package/dist/index.d.ts; emit declarations only for the package sources',
+        '@kimen/tokens tarball ships declarations naming an absolute build path in package/dist/index.d.ts; emit declarations only for the package sources',
       );
     } else {
       expect(message).toBeUndefined();
@@ -188,7 +188,7 @@ describe('package content rules', () => {
       'dist/index.js.map': embedded([source]),
     });
     expect(check(files)).toBe(
-      '@kimen/emitter tarball ships source maps naming an absolute build path in package/dist/index.js.map; map the sources relative to the output',
+      '@kimen/tokens tarball ships source maps naming an absolute build path in package/dist/index.js.map; map the sources relative to the output',
     );
   });
 
@@ -212,7 +212,7 @@ describe('package content rules', () => {
       'dist/index.js.map': map,
     });
     expect(check(files)).toBe(
-      '@kimen/emitter tarball ships source maps without their sources package/dist/index.js.map; embed sourcesContent (inlineSources) in every published source map',
+      '@kimen/tokens tarball ships source maps without their sources package/dist/index.js.map; embed sourcesContent (inlineSources) in every published source map',
     );
   });
 
@@ -229,24 +229,24 @@ describe('package content rules', () => {
 
   it('S7 refuses a file nothing reaches, and names it', () => {
     expect(check(aPackage({ 'dist/orphan.js': 'export {};\n' }))).toBe(
-      '@kimen/emitter tarball ships files no export, manifest field, metadata asset or import reaches package/dist/orphan.js; stop packing them, or declare the entry point that uses them',
+      '@kimen/tokens tarball ships files no export, manifest field, metadata asset or import reaches package/dist/orphan.js; stop packing them, or declare the entry point that uses them',
     );
   });
 
   it('S7 holds each package within its packed and unpacked budget, inclusive', () => {
-    const { packed, unpacked } = packageContentRules['@kimen/emitter'].budget;
+    const { packed, unpacked } = packageContentRules['@kimen/tokens'].budget;
     const files = aPackage();
     const size = Object.values(files).reduce((total, text) => total + Buffer.byteLength(text), 0);
     expect(check(files, { packed })).toBeUndefined();
     expect(check(files, { packed: packed + 1 })).toBe(
-      `@kimen/emitter tarball is ${packed + 1} B, over its ${packed} B budget; raising it needs the founder's approval`,
+      `@kimen/tokens tarball is ${packed + 1} B, over its ${packed} B budget; raising it needs the founder's approval`,
     );
     const padding = 'a'.repeat(unpacked - size);
     const atBudget = { ...files, 'dist/index.js': `${files['dist/index.js']}${padding}` };
     expect(check(atBudget)).toBeUndefined();
     const overBudget = { ...files, 'dist/index.js': `${files['dist/index.js']}${padding}a` };
     expect(check(overBudget)).toBe(
-      `@kimen/emitter unpacks to ${unpacked + 1} B, over its ${unpacked} B budget; raising it needs the founder's approval`,
+      `@kimen/tokens unpacks to ${unpacked + 1} B, over its ${unpacked} B budget; raising it needs the founder's approval`,
     );
   });
 
@@ -269,13 +269,124 @@ describe('package content rules', () => {
     }
   });
 
+  it('S7 maps every module exactly where the build maps every module', () => {
+    const mappedNames = Object.entries(packageContentRules)
+      .filter(([, rules]) => rules.mapsEveryModule)
+      .map(([name]) => name);
+    expect(mappedNames).toEqual([
+      '@kimen/catalog',
+      '@kimen/emitter',
+      '@kimen/adapter-a2ui',
+      '@kimen/adapter-mcp-apps',
+      '@kimen/react',
+      '@kimen/vue',
+      '@kimen/angular',
+    ]);
+    expect(
+      Object.fromEntries(
+        Object.entries(packageContentRules)
+          .filter(([, rules]) => rules.unmappedModules.length > 0)
+          .map(([name, rules]) => [name, [...rules.unmappedModules]]),
+      ),
+    ).toEqual({
+      '@kimen/catalog': ['dist/generated/catalog.js'],
+      '@kimen/adapter-mcp-apps': ['dist/generated/surface-document.js'],
+    });
+  });
+
+  const mapped = (imports = []) => ({
+    'package.json': JSON.stringify({ name: '@kimen/catalog', exports: './dist/index.js' }),
+    LICENSE: 'licence\n',
+    NOTICE: 'notices\n',
+    'dist/index.js': `${imports.map((path) => `import './${path}';`).join('\n')}\n//# sourceMappingURL=index.js.map\n`,
+    'dist/index.js.map': embedded(['../src/index.ts']),
+  });
+  const inCatalog = (files) => check(files, { name: '@kimen/catalog' });
+
+  it('S7 accepts a mapped package whose every module ships its map', () => {
+    expect(inCatalog(mapped())).toBeUndefined();
+  });
+
+  it.each([['dist/plain.js'], ['dist/plain.mjs'], ['dist/plain.cjs']])(
+    'S7 refuses %s without its map where the build maps every module',
+    (path) => {
+      const files = { ...mapped([path.slice('dist/'.length)]), [path]: 'export {};\n' };
+      expect(inCatalog(files)).toBe(
+        `@kimen/catalog tarball ships modules without a source map package/${path}; publish every module with its map; only the generated modules in unmappedModules ship without one`,
+      );
+    },
+  );
+
+  it('S7 does not ask a declaration or a package that maps nothing for a map', () => {
+    expect(inCatalog({ ...mapped(), 'dist/index.d.ts': 'export {};\n' })).toBeUndefined();
+    expect(check(aPackage({ 'dist/plain.js': '' }, { imports: ['plain.js'] }))).toBeUndefined();
+  });
+
+  it('S7 publishes the named generated module without a map, and refuses it with one', () => {
+    const generated = {
+      ...mapped(['generated/catalog.js']),
+      'dist/generated/catalog.js': 'export {};\n',
+    };
+    expect(inCatalog(generated)).toBeUndefined();
+    const withMap = {
+      ...generated,
+      'dist/generated/catalog.js': 'export {};\n//# sourceMappingURL=catalog.js.map\n',
+      'dist/generated/catalog.js.map': embedded(['../../src/generated/catalog.ts']),
+    };
+    expect(inCatalog(withMap)).toBe(
+      '@kimen/catalog tarball ships a source map for the unmapped generated modules package/dist/generated/catalog.js; run scripts/lib/generated-source-maps.mjs after the build: these modules ship without a map or a link to one',
+    );
+    const unlinkedMap = { ...generated, 'dist/generated/catalog.js.map': embedded(['a.ts']) };
+    expect(inCatalog(unlinkedMap)).toContain('a source map for the unmapped generated modules');
+    // Another package's generated module of the same path is not exempt.
+    const elsewhere = {
+      ...generated,
+      'package.json': JSON.stringify({ name: '@kimen/emitter', exports: './dist/index.js' }),
+    };
+    expect(check(elsewhere, { name: '@kimen/emitter' })).toContain(
+      'modules without a source map package/dist/generated/catalog.js;',
+    );
+  });
+
+  it.each([
+    ['a script', 'dist/index.js', 'export {};\n//# sourceMappingURL=index.js.map\n'],
+    ['a declaration', 'dist/index.d.ts', 'export {};\n//# sourceMappingURL=index.d.ts.map\n'],
+    ['a stylesheet', 'dist/a.css', 'a{}\n/*# sourceMappingURL=a.css.map */\n'],
+  ])('S7 refuses %s linking a map the tarball does not ship', (_kind, path, contents) => {
+    const files = aPackage({ [path]: contents }, { imports: ['a.css'] });
+    expect(check(files)).toBe(
+      `@kimen/tokens tarball ships links to source maps it does not ship in package/${path}; publish the map, or drop the sourceMappingURL comment with it`,
+    );
+  });
+
+  it('S7 an inline, remote or rooted map link is not a packed file', () => {
+    const files = aPackage({
+      'dist/index.js': [
+        'export {};',
+        '//# sourceMappingURL=data:application/json;base64,e30=',
+        '//# sourceMappingURL=https://cdn.example/index.js.map',
+        '//# sourceMappingURL=/index.js.map',
+        '//# sourceMappingURL=#map',
+      ].join('\n'),
+    });
+    expect(check(files)).toBeUndefined();
+  });
+
+  it('S7 resolves a map link relative to its module, without its query', () => {
+    const files = aPackage({
+      'dist/index.js': 'export {};\n//# sourceMappingURL=../maps/index.js.map?v=1\n',
+      'maps/index.js.map': embedded(['../src/index.ts']),
+    });
+    expect(check(files)).toBeUndefined();
+  });
+
   it('S7 ignores entries that are not files under package/', () => {
     const entries = [
       ...entriesOf(aPackage()),
       { name: 'package/dist/folder/', type: '5', bytes: Buffer.alloc(0) },
       { name: 'other/dist/orphan.js', type: '0', bytes: Buffer.from('export {};') },
     ];
-    expect(packageContentViolation('@kimen/emitter', entries, 100)).toBeUndefined();
+    expect(packageContentViolation('@kimen/tokens', entries, 100)).toBeUndefined();
   });
 });
 

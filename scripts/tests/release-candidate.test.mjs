@@ -19,7 +19,7 @@ import test from 'node:test';
 
 import { canonicalJson } from '../lib/canonical-json.mjs';
 import { releasePackages } from '../release/release-plan.mjs';
-import { builtManifest, writeBuiltPackage } from './fixtures/built-package.mjs';
+import { builtManifest, embeddedSourceMap, writeBuiltPackage } from './fixtures/built-package.mjs';
 import { candidateArchive, packageRecord as packedRecord } from './fixtures/candidate-archive.mjs';
 import { mcpFixtureFields, writeMcpFixtureFiles } from './fixtures/mcp-package.mjs';
 
@@ -154,6 +154,9 @@ const defaultLegalFiles = {
   NOTICE: 'Kimen fixture notices\n',
 };
 
+// Every published module ships with a map that embeds its source.
+const mappedModule = (code, file) => `${code}\n//# sourceMappingURL=${file}.map\n`;
+
 async function writePackage(root, fixture) {
   const directory = join(root, 'packages', fixture.directory);
   await mkdir(join(directory, 'dist'), { recursive: true });
@@ -165,8 +168,9 @@ async function writePackage(root, fixture) {
       : [
           writeFile(
             join(directory, 'dist', 'index.js'),
-            `export const packageName = '${fixture.manifest.name}';\n`,
+            mappedModule(`export const packageName = '${fixture.manifest.name}';`, 'index.js'),
           ),
+          writeFile(join(directory, 'dist', 'index.js.map'), embeddedSourceMap('index.js')),
         ]),
     writeFile(join(directory, 'README.md'), `# ${fixture.manifest.name}\n`),
     ...Object.entries(fixture.legalFiles ?? defaultLegalFiles)
@@ -792,7 +796,18 @@ test('S7 a file an entry point imports, with a source map that embeds its source
     'dist/index.js',
     "export * from './helper.js';\n//# sourceMappingURL=index.js.map\n",
   );
-  await writeInPackage(fixture, '@kimen/catalog', 'dist/helper.js', 'export const helper = 1;\n');
+  await writeInPackage(
+    fixture,
+    '@kimen/catalog',
+    'dist/helper.js',
+    mappedModule('export const helper = 1;', 'helper.js'),
+  );
+  await writeInPackage(
+    fixture,
+    '@kimen/catalog',
+    'dist/helper.js.map',
+    embeddedSourceMap('helper.js'),
+  );
   await writeInPackage(
     fixture,
     '@kimen/catalog',
@@ -805,7 +820,73 @@ test('S7 a file an entry point imports, with a source map that embeds its source
 
   assert.deepEqual(
     packedFiles(directory, fileOf('@kimen/catalog')).filter((path) => path.includes('/dist/')),
-    ['package/dist/helper.js', 'package/dist/index.js', 'package/dist/index.js.map'],
+    [
+      'package/dist/helper.js',
+      'package/dist/helper.js.map',
+      'package/dist/index.js',
+      'package/dist/index.js.map',
+    ],
+  );
+});
+
+test('S7 refuses a module without its map where the build maps every module', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  await writeInPackage(
+    fixture,
+    '@kimen/emitter',
+    'dist/index.js',
+    mappedModule("export * from './plain.js';", 'index.js'),
+  );
+  await writeInPackage(fixture, '@kimen/emitter', 'dist/plain.js', 'export {};\n');
+
+  await assert.rejects(
+    buildFixture(t, fixture),
+    /@kimen\/emitter tarball ships modules without a source map package\/dist\/plain\.js;/u,
+  );
+});
+
+test('S7 refuses a link to a source map the tarball does not ship', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  await rm(join(fixture.packages['@kimen/tokens'], 'dist', 'index.js.map'));
+
+  await assert.rejects(
+    buildFixture(t, fixture),
+    /@kimen\/tokens tarball ships links to source maps it does not ship in package\/dist\/index\.js;/u,
+  );
+});
+
+test('S7 publishes a named generated module without a map, and refuses one that keeps it', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  await writeInPackage(
+    fixture,
+    '@kimen/catalog',
+    'dist/index.js',
+    mappedModule("export * from './generated/catalog.js';", 'index.js'),
+  );
+  await writeInPackage(fixture, '@kimen/catalog', 'dist/generated/catalog.js', 'export {};\n');
+
+  const candidate = await buildFixture(t, fixture);
+  const { directory } = await extractCandidate(t, candidate.archivePath);
+  assert.equal(
+    packedFiles(directory, fileOf('@kimen/catalog')).includes('package/dist/generated/catalog.js'),
+    true,
+  );
+
+  await writeInPackage(
+    fixture,
+    '@kimen/catalog',
+    'dist/generated/catalog.js',
+    mappedModule('export {};', 'catalog.js'),
+  );
+  await writeInPackage(
+    fixture,
+    '@kimen/catalog',
+    'dist/generated/catalog.js.map',
+    embeddedSourceMap('catalog.js'),
+  );
+  await assert.rejects(
+    buildFixture(t, fixture),
+    /@kimen\/catalog tarball ships a source map for the unmapped generated modules package\/dist\/generated\/catalog\.js;/u,
   );
 });
 
@@ -816,7 +897,7 @@ test('S7 refuses a tarball over its packed-size budget', async (t) => {
     fixture,
     '@kimen/emitter',
     'dist/index.js',
-    `// ${randomBytes(90_000).toString('base64')}\nexport {};\n`,
+    mappedModule(`// ${randomBytes(90_000).toString('base64')}\nexport {};`, 'index.js'),
   );
 
   await assert.rejects(
@@ -828,7 +909,12 @@ test('S7 refuses a tarball over its packed-size budget', async (t) => {
 test('S7 refuses a tarball that unpacks over its budget', async (t) => {
   const fixture = await createRepositoryFixture(t);
   // Repetition compresses to almost nothing: only the unpacked size grows.
-  await writeInPackage(fixture, '@kimen/emitter', 'dist/index.js', `// ${'a'.repeat(200_000)}\n`);
+  await writeInPackage(
+    fixture,
+    '@kimen/emitter',
+    'dist/index.js',
+    mappedModule(`// ${'a'.repeat(200_000)}`, 'index.js'),
+  );
 
   await assert.rejects(
     buildFixture(t, fixture),
