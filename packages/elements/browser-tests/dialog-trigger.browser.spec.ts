@@ -5,7 +5,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineButton } from '../dist/components/ki-button.js';
 import { defineCustomElement as defineDialog } from '../dist/components/ki-dialog.js';
 import { defineCustomElement as defineIconButton } from '../dist/components/ki-icon-button.js';
-import { parkPointer } from './axe';
+import { parkPointer, settleEntryMotion } from './axe';
 
 const browserCommands = commands as unknown as {
   emulateForcedColors: (forcedColors: 'active' | null) => Promise<void>;
@@ -79,6 +79,9 @@ function watchClose(fixture: HTMLElement): string[] {
 async function openWithPointer(): Promise<void> {
   await page.getByRole('button', { name: 'Delete project…' }).click();
   await expect.element(page.getByRole('dialog', { name: 'Delete project?' })).toBeVisible();
+  // Visible is not at rest: callers act on the surface where the entry motion
+  // leaves it, as every dialog-opening helper does.
+  await settleEntryMotion();
 }
 
 async function expectRestoredOpener(fixture: HTMLElement): Promise<void> {

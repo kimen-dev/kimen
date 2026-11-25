@@ -57,6 +57,10 @@ async function openDialog(): Promise<void> {
   (trigger().element() as HTMLElement).focus();
   await userEvent.keyboard('{Enter}');
   await expect.element(modal()).toBeVisible();
+  // Visible is not at rest: the surface still rises and scales in, and WebKit
+  // can report a stale transform for a frame once that ends. Tests read the
+  // surface where the motion leaves it.
+  await settleEntryMotion();
 }
 
 function part(dialog: TestDialog, name: string): HTMLElement {
