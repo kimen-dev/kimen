@@ -12,10 +12,13 @@ tokens, so loading a token stylesheet is not optional styling — it is the
 styling.
 
 :::note
-Kimen is **pre-v1**. The packages build from the
-[repository](https://github.com/kimen-dev/kimen) today and publish to npm
-with trusted publishing and signed provenance at v1.0.0; the API documented
-here is the release contract.
+Kimen is **pre-v1**. Every Kimen package is on npm, published with trusted
+publishing and signed provenance, and all of them share one version: install
+them together and upgrade them together. Before 1.0.0 a breaking change
+raises the minor version, which npm's default `^` range does not cross; read
+the [changelog](https://github.com/kimen-dev/kimen/blob/main/CHANGELOG.md)
+before you move to a new minor version. This site follows the `main` branch,
+so it can describe a change before that change is released.
 :::
 
 ## Install
@@ -113,6 +116,11 @@ stays on the default theme.
   model and the page contract in depth.
 - [Design tokens](/docs/guides/tokens/) — the token layers and how to
   customize without forking.
+- [Framework integration](/docs/guides/frameworks/) — the generated
+  `@kimen/react`, `@kimen/vue` and `@kimen/angular` wrappers, and the
+  elements in each framework without them.
+- [The UI spec format](/docs/guides/ui-spec/) — `@kimen/catalog`, for UI
+  that an agent writes.
 - [Components](/docs/components/alert/) — the element library with live
   examples and generated API tables.
 - [Storybook workshop](/storybook/) — every component, every state,
