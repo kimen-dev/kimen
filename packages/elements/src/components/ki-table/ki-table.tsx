@@ -222,29 +222,6 @@ export class KiTable {
     if (keys) this.kiSelectionChange.emit({ keys });
   }
 
-  @Listen('keydown')
-  protected scrollFrame(event: KeyboardEvent): void {
-    const { host } = this;
-    if (
-      event.defaultPrevented ||
-      event.composedPath()[0] !== host ||
-      event.altKey ||
-      event.ctrlKey ||
-      event.metaKey ||
-      event.shiftKey ||
-      (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') ||
-      host.scrollWidth <= host.clientWidth
-    ) {
-      return;
-    }
-
-    // WebKit may focus the frame without panning it on horizontal arrows.
-    const before = host.scrollLeft;
-    const direction = event.key === 'ArrowLeft' ? -1 : 1;
-    host.scrollBy({ left: (direction * host.clientWidth) / 4, behavior: 'instant' });
-    if (host.scrollLeft !== before) event.preventDefault();
-  }
-
   private syncSort(head: HTMLTableSectionElement | null): void {
     const headers = new Set(
       Array.from(head?.rows ?? []).flatMap((row) =>

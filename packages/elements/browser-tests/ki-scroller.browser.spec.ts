@@ -14,7 +14,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // resolve from tokens, and the Tab stop follows the overflow state.
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { commands, userEvent } from 'vitest/browser';
+import { commands, server, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-scroller.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
@@ -303,7 +303,10 @@ describe('ki-scroller', () => {
     expect(viewportOf(el).hasAttribute('tabindex')).toBe(false);
 
     lead.focus();
-    await userEvent.keyboard('{Tab}');
+    // Safari on macOS with default settings tabs past buttons; that user
+    // moves between them with Option-Tab. Elsewhere Tab reaches them.
+    const macWebKit = server.browser === 'webkit' && server.platform === 'darwin';
+    await userEvent.keyboard(macWebKit ? '{Alt>}{Tab}{/Alt}' : '{Tab}');
 
     expect(document.activeElement).toBe(after);
     expect(el.contains(document.activeElement)).toBe(false);
