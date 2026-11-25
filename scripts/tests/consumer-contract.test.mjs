@@ -62,6 +62,7 @@ export function installButton(buttonStyles) {
         if (this.shadowRoot) return;
         const root = this.attachShadow({ mode: 'open' });
         root.innerHTML = \`<style>\${buttonStyles}</style><button part="button"><slot></slot></button>\`;
+        this.classList.add('hydrated');
       }
     },
   );
@@ -69,6 +70,14 @@ export function installButton(buttonStyles) {
 `;
 
 const elementsDeclaration = `export declare function defineCustomElement(): void;\n`;
+
+// The lazy loader as the package ships it: a static import of each
+// component bundle, which an application's bundler emits as a chunk.
+const elementsLoader = `
+export function defineCustomElements() {
+  return import('../dist/ki-button.js').then(({ defineCustomElement }) => defineCustomElement());
+}
+`;
 
 const tokensCss = `
 :root {
@@ -543,17 +552,19 @@ async function createConsumerFixture(
         name: '@kimen/elements',
         version: fixtureVersion,
         type: 'module',
-        files: packedLlms ? ['dist', 'llms.txt'] : ['dist'],
+        files: packedLlms ? ['dist', 'loader', 'llms.txt'] : ['dist', 'loader'],
         exports: {
           './ki-*': {
             types: './dist/ki-*.d.ts',
             import: './dist/ki-*.js',
           },
+          './loader': './loader/index.js',
           './runtime': './dist/runtime.js',
         },
       }),
     ),
     writeFixtureFile(fixture.elementsPackage, 'dist/ki-button.js', buttonModule),
+    writeFixtureFile(fixture.elementsPackage, 'loader/index.js', elementsLoader),
     writeFixtureFile(fixture.elementsPackage, 'dist/ki-button.d.ts', elementsDeclaration),
     ...(includeRuntime
       ? [writeFixtureFile(fixture.elementsPackage, 'dist/runtime.js', elementsRuntime)]
@@ -679,6 +690,27 @@ test('@spec:018-project-integrity-hardening S8 compiles every exported llms snip
       webSocketPolicyEnforced: true,
     },
   );
+  // The loader, bundled by an application with esbuild and with Vite.
+  assert.deepEqual(report.loader, [
+    {
+      bundler: 'esbuild',
+      engine: 'chromium',
+      componentChunkLoaded: true,
+      shadowButtonRendered: true,
+      hydrated: true,
+      blockedRequests: [],
+      pageErrors: [],
+    },
+    {
+      bundler: 'vite',
+      engine: 'chromium',
+      componentChunkLoaded: true,
+      shadowButtonRendered: true,
+      hydrated: true,
+      blockedRequests: [],
+      pageErrors: [],
+    },
+  ]);
 
   const installedElements = join(fixture.consumer, 'node_modules/@kimen/elements/package.json');
   const installedPackage = JSON.parse(await readFile(installedElements, 'utf8'));

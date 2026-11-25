@@ -77,7 +77,7 @@ export const packageContentRules = Object.freeze({
       'dist/generated/surface-profile-form.js',
     ]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 833_536, unpacked: 3_404_800 }),
+    budget: Object.freeze({ packed: 444_416, unpacked: 1_796_096 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,

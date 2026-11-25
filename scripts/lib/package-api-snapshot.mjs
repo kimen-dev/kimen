@@ -10,9 +10,10 @@ import { canonicalJson } from './canonical-json.mjs';
 import { buildPublicModuleSurface } from './public-api-snapshot.mjs';
 
 // A data export is declared with the data itself as its type: the generated
-// catalog, or the HTML document built from the elements bundle. That content
-// moves with every component and is owned by its generator, so the snapshot
-// records that the export exists, not what it holds.
+// catalog. That content moves with every component and is owned by its
+// generator, so the snapshot records that the export exists, not what it
+// holds. `SURFACE_DOCUMENT` is declared `string`, so the snapshot records its
+// signature, and a return to a literal type fails this gate.
 export const GENERATIVE_PACKAGES = Object.freeze([
   Object.freeze({
     name: '@kimen/catalog',
@@ -38,9 +39,7 @@ export const GENERATIVE_PACKAGES = Object.freeze([
     name: '@kimen/adapter-mcp-apps',
     directory: 'packages/adapter-mcp-apps',
     snapshot: 'changes/api/packages/adapter-mcp-apps.json',
-    dataExports: Object.freeze({
-      SURFACE_DOCUMENT: 'the surface document built from the elements bundle on every build',
-    }),
+    dataExports: Object.freeze({}),
   }),
 ]);
 

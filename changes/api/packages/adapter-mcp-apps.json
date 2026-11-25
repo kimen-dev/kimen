@@ -223,7 +223,7 @@
           "kinds": [
             "value"
           ],
-          "signature": "generated data: the surface document built from the elements bundle on every build"
+          "signature": "export declare const SURFACE_DOCUMENT: string;"
         },
         "SURFACE_MIME_TYPE": {
           "kinds": [
