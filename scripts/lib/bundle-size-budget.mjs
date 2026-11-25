@@ -75,24 +75,25 @@ const BASE_BUDGETS = {
   // (154 B left on that main); the founder approved re-basing that one metric by
   // the 358 B the placeholder costs (2026-11-24, «Sí, sube 358 B»), added on top
   // of the preference-modes base above.
-  // The lean catalog runtime (2026-11-25) re-based both DOWN, measured on macOS
-  // against main b1382831: the catalog parses with zod/mini, imported as a
-  // module namespace (the server's `import { z } from 'zod'` pulled in all of
-  // classic zod), and its validator and renderer read the generated structure
-  // without the guidance prose. The document went from 1,527,736 / 374,475 /
-  // 283,998 B to 1,296,064 / 299,600 / 224,778 B, and kimen-mcp from 3,993,653 /
-  // 791,451 / 551,735 B to 3,222,650 / 642,477 / 474,743 B. Each limit (base
-  // plus the component allowances) is now that size plus about 1 % of gzip and
-  // brotli for Linux CI's output and 0.1 % of raw bytes, which esbuild emits
-  // alike everywhere: 1,297,361 / 302,596 / 227,026 and 3,225,873 / 648,902 /
-  // 479,491 B.
-  mcpApps: { raw: 587_281, gzip: 114_073, brotli: 88_985 },
-  mcpServer: { raw: 1_857_264, gzip: 352_284, brotli: 317_242 },
+  // The lean catalog runtime (2026-11-25) re-based both DOWN, measured on macOS:
+  // the catalog parses with zod/mini, imported as a module namespace (the
+  // server's `import { z } from 'zod'` pulled in all of classic zod), and its
+  // validator and renderer read the generated structure without the guidance
+  // prose. Against main b1382831 the document was 1,527,736 / 374,475 /
+  // 283,998 B and kimen-mcp 3,993,653 / 791,451 / 551,735 B; with the change,
+  // merged with main 76f2ccfe (0.3.0), they measure 1,296,064 / 299,599 /
+  // 224,749 B and 3,222,650 / 642,477 / 474,797 B. Each limit (base plus the
+  // component allowances) is that size plus about 1 % of gzip and brotli for
+  // Linux CI's output and 0.1 % of raw bytes, which esbuild emits alike
+  // everywhere: 1,297,361 / 302,595 / 226,997 and 3,225,873 / 648,902 /
+  // 479,545 B.
+  mcpApps: { raw: 587_281, gzip: 114_072, brotli: 88_956 },
+  mcpServer: { raw: 1_857_264, gzip: 352_284, brotli: 317_296 },
   // A browser host that validates and renders agent specs (validateUiSpec and
   // renderUiSpec from the packed @kimen/catalog, bundled for production:
   // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
-  // measured on macOS against main b1382831 with the lean runtime above,
-  // 125,455 / 29,479 / 25,933 B (it was 715,883 / 169,806 / 136,980 B), with the
+  // measured on macOS with the lean runtime above, merged with main 76f2ccfe,
+  // 125,455 / 29,479 / 25,933 B (715,883 / 169,806 / 136,980 B before), with the
   // same margins. No component declares an allowance here: a component that
   // joins the catalog grows the host by its structure, so re-base this by the
   // cost it measures.

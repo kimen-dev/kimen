@@ -1,6 +1,6 @@
 {
   "name": "@kimen/react",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": false,
   "license": "Apache-2.0",
   "description": "Generated React bindings for the Kimen ki-* web components (spec 034): typed props from the component contract, ki-* custom events as callback props, tree-shakable per-component imports. Client-side rendering; generated from the same source of truth as every other Kimen artifact and never hand-edited.",
@@ -28,19 +28,20 @@
     }
   },
   "scripts": {
-    "build": "tsc -b --pretty false",
-    "test": "vitest run --project react-wrapper-node",
+    "build": "tsc -b --pretty false && node scripts/vendor-runtime.mjs",
+    "test": "node --test scripts/vendor-runtime.test.mjs && vitest run --project react-wrapper-node",
     "test-browser-wrapper": "vitest run --project react-wrapper-browser"
   },
   "dependencies": {
     "@kimen/elements": "workspace:*",
-    "@stencil/react-output-target": "1.8.1"
+    "@lit/react": "1.0.8"
   },
   "peerDependencies": {
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19"
   },
   "devDependencies": {
+    "@stencil/react-output-target": "1.8.1",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",

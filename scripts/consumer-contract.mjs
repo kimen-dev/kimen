@@ -9,6 +9,8 @@ import { TextDecoder } from 'node:util';
 
 import ts from 'typescript';
 
+import { bundleLoaderApplications, runLoaderBundleSmoke } from './consumer-loader-bundles.mjs';
+
 const repositoryRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const requireFromElements = createRequire(
   new URL('../packages/elements/package.json', import.meta.url),
@@ -1224,6 +1226,7 @@ export async function installTarballs(options, installationExamples, overrides =
 export function consumerRuntime(overrides = {}) {
   return {
     assertImportsAreExported,
+    bundleLoaderApplications,
     compileSnippets,
     installTarballs,
     loadInstalledPackage,
@@ -1233,6 +1236,7 @@ export function consumerRuntime(overrides = {}) {
     realpath,
     requireRegularFile,
     runBrowserSmoke,
+    runLoaderBundleSmoke,
     selectBrowserEngine: selectedBrowserEngine,
     writeFile,
     ...overrides,
@@ -1309,6 +1313,11 @@ export async function executeConsumerContract(options, overrides = {}) {
     installedPackages,
     tokenCssSpecifiers: snippetContract.tokenCssSpecifiers,
   });
+  // The lazy loader, bundled by an application (scripts/consumer-loader-bundles.mjs).
+  const loader = await runtime.runLoaderBundleSmoke({
+    bundles: await runtime.bundleLoaderApplications({ consumerDirectory }),
+    engine,
+  });
   const report = {
     schemaVersion: 1,
     installationExamples,
@@ -1316,6 +1325,7 @@ export async function executeConsumerContract(options, overrides = {}) {
     packages: packageReport,
     snippets: snippetReport,
     browser,
+    loader,
   };
   await runtime.writeFile(options.report, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   return report;

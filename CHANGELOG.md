@@ -7,6 +7,34 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [0.3.0] - 2026-11-25
+
+### Changed
+
+- **release:** every package publishes only what its exports reach, ships source
+  maps that embed their sources, and has a tarball and unpacked size budget;
+  the ten packages together shrink from about 7.6 MB to 5.3 MB packed
+  ([#621](https://github.com/kimen-dev/kimen/pull/621),
+  [#623](https://github.com/kimen-dev/kimen/pull/623))
+
+### Removed
+
+- **elements:** **Breaking:** `@kimen/elements` no longer publishes `dist/cjs`,
+  the Stencil collection (`collection`, `collection:main`) or the `dist/kimen`
+  browser build (`unpkg`). Every export resolves as before; a bare
+  `https://unpkg.com/@kimen/elements` URL no longer serves a script. See the
+  [migration guide](./docs/migrations/package-outputs-0.3.0.md)
+  ([#621](https://github.com/kimen-dev/kimen/pull/621),
+  [#624](https://github.com/kimen-dev/kimen/pull/624))
+
+### Fixed
+
+- **elements:** let a ki-table frame scroll natively from the arrow keys ([#625](https://github.com/kimen-dev/kimen/pull/625))
+- **release:** let a feat raise the minor version whatever its scope ([#610](https://github.com/kimen-dev/kimen/pull/610))
+- **release:** keep TypeScript build info out of the published packages ([#611](https://github.com/kimen-dev/kimen/pull/611))
+- **release:** publish only what consumers use ([#621](https://github.com/kimen-dev/kimen/pull/621))
+- **release:** publish the two generated modules without a source map ([#623](https://github.com/kimen-dev/kimen/pull/623))
+
 ## [0.2.1] - 2026-11-25
 
 ### Added

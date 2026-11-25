@@ -7,6 +7,7 @@ import { vueOutputTarget } from '@stencil/vue-output-target';
 import { compactButtonPalette } from './scripts/compact-button-palette';
 import { readComponentFormBindings } from './scripts/component-metadata.mjs';
 import { glyphChunks } from './scripts/glyph-chunks';
+import { lazyFallbackImport } from './scripts/lazy-fallback-import.mjs';
 
 // Form controls re-dispatch native input/change events across the shadow
 // boundary. The component manifest selects the wrapper binding for its prop.
@@ -25,10 +26,12 @@ export const config: Config = {
   tsconfig: 'tsconfig.stencil.json',
   // Glyph chunks get the prefix package.json `sideEffects` declares. The
   // plugin resolves the glyph modules' registry import, so it runs before
-  // Stencil's node resolution.
+  // Stencil's node resolution. The lazy runtime's fallback import is
+  // rewritten as Stencil ships it, before any other transform.
   rollupPlugins: {
     before: [
       glyphChunks(resolve(__dirname, 'icons'), resolve(__dirname, 'src/utils/icon-registry.mjs')),
+      lazyFallbackImport,
     ],
     after: [compactButtonPalette],
   },
@@ -74,5 +77,11 @@ export const config: Config = {
     }),
   ],
   sourceMap: true,
+  // The lazy loader names every component bundle in a static import, so a
+  // consumer's bundler emits each one as a chunk (the release checks esbuild
+  // and Vite). Without it Vite emits none, and esbuild reads the fallback
+  // import as a glob over the published source maps
+  // (scripts/lazy-fallback-import.mjs).
+  extras: { enableImportInjection: true },
   validatePrimaryPackageOutputTarget: true,
 };

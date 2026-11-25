@@ -34,7 +34,7 @@ import { posix } from 'node:path';
 //   raising one needs the founder's approval. The lean catalog runtime
 //   lowered the catalog, adapter-mcp-apps and mcp-server bases the same day
 //   to what they measured after it, plus the same 3 %. The catalog tarball
-//   (315,254 B) kept its base: 3 % over it would have raised the base.
+//   (315,307 B) kept its base: 3 % over it would have raised the base.
 export const packageContentRules = Object.freeze({
   '@kimen/elements': Object.freeze({
     mapsEveryModule: false,
@@ -80,13 +80,15 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze(['dist/generated/surface-document.js']),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 677_888, unpacked: 2_921_472 }),
+    budget: Object.freeze({ packed: 366_592, unpacked: 1_555_456 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 43_008, unpacked: 381_952 }),
+    // Re-based the same day for the copy of the React output target's
+    // runtime and its MIT notice, which replace the target as a dependency.
+    budget: Object.freeze({ packed: 48_128, unpacked: 392_192 }),
   }),
   '@kimen/vue': Object.freeze({
     mapsEveryModule: true,

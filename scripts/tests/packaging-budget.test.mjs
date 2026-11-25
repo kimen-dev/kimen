@@ -123,8 +123,8 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 587_281, gzip: 114_073, brotli: 88_985 },
-    mcpServer: { raw: 1_857_264, gzip: 352_284, brotli: 317_242 },
+    mcpApps: { raw: 587_281, gzip: 114_072, brotli: 88_956 },
+    mcpServer: { raw: 1_857_264, gzip: 352_284, brotli: 317_296 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
   });
@@ -147,8 +147,8 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 589_481, gzip: 114_253, brotli: 89_150 },
-    mcpServer: { raw: 1_858_564, gzip: 352_474, brotli: 317_417 },
+    mcpApps: { raw: 589_481, gzip: 114_252, brotli: 89_121 },
+    mcpServer: { raw: 1_858_564, gzip: 352_474, brotli: 317_471 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
   });
@@ -295,8 +295,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
-      '@kimen/adapter-mcp-apps': { packed: 677_888, unpacked: 2_921_472 },
-      '@kimen/react': { packed: 43_008, unpacked: 381_952 },
+      '@kimen/adapter-mcp-apps': { packed: 366_592, unpacked: 1_555_456 },
+      '@kimen/react': { packed: 48_128, unpacked: 392_192 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },
     },
