@@ -69,7 +69,10 @@ Each **node** has up to six fields:
 - **`props`** — optional. Scalar values only (`boolean | number | string`),
   keyed by the attribute name the catalog declares. Unknown names are rejected
   (`unknown-prop`), wrong-typed values are rejected (`invalid-prop-type`), and
-  enum-constrained props accept only their declared values.
+  enum-constrained props accept only their declared values. That includes
+  `ki-alert` and `ki-toast` `tone` and `ki-toaster` `placement`: their
+  elements accept any string in markup, but in a spec they are enums like
+  every other `tone`, `variant` and `placement` (spec 164).
 - **`action`** — optional. One name from the document's `actions` list, or
   an object that maps events the component's catalog entry declares to names
   from that list (see [An action per event](#an-action-per-event), catalog
@@ -294,7 +297,7 @@ Query it instead of transcribing it:
 import { catalogData, CATALOG_SCHEMA_VERSION } from '@kimen/catalog';
 
 catalogData.components['ki-button'].props.variant;
-// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary', 'tertiary'], ... }
+// { type: 'enum', values: ['ghost', 'outline', 'primary', 'quaternary', 'secondary'], ... }
 
 catalogData.components['ki-card'].slots;
 // { '': ..., footer: ..., header: ..., media: ... }
@@ -354,7 +357,18 @@ exists — the offending `value`. The codes:
 | `unknown-component` | `component` names a tag outside the catalog |
 | `unknown-prop` | A prop the component does not declare |
 | `invalid-prop-type` | A declared prop with a wrong-typed or out-of-enum value |
+| `missing-required-prop` | A prop the component requires is absent, or a required string holds only white space |
+| `prop-out-of-range` | A number outside the `minimum`/`maximum` its catalog entry declares |
+| `url-scheme` | A URL-typed prop whose scheme is neither `http` nor `https` (relative references pass) |
+| `url-origin` | Under `allowedUrlOrigins`, a URL-typed prop that is not an absolute URL on a listed origin |
 | `unknown-slot` | A slot name the component does not declare |
+| `invalid-child` | A child the parent's content model does not allow (text-only native elements, table parts) |
+| `invalid-id` | A node `id` outside the id grammar |
+| `duplicate-id` | Two nodes of the spec share an `id` |
+| `invalid-reference` | An id-reference prop (`format: "idref"`) that names no node of the same spec or live surface |
+| `invalid-command` | A dialog invoker's `command` is not `show-modal`, `close` or `request-close` |
+| `invalid-command-target` | A dialog invoker's `commandfor` is not the `id` of a `ki-dialog` in the same spec |
+| `action-not-allowed` | An action bound to a node that cannot raise one: a native element, or a passive component such as `ki-icon` |
 | `undeclared-action` | A node binds an action absent from the document's `actions` list |
 | `undeclared-event` | A binding per event names an event the component's catalog entry does not declare |
 | `collect-without-action` | A node has `collect` but no `action` |
