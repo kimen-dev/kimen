@@ -233,7 +233,7 @@ describe('a subset document renders only its subset', () => {
     // carries the second's definition, never its name.
     const components = resolveSubset(['ki-pagination']);
     const pagination = defineKimenSurface({
-      profile: { components, document: '', name: 'pagination' },
+      profile: { components, document: '', icons: ['circle-check'], name: 'pagination' },
     });
     const iconButton = spec({ component: 'ki-icon-button', props: { label: 'Next page' } });
 
@@ -261,9 +261,76 @@ describe('a subset document renders only its subset', () => {
   it('S9 a server cannot serve a profile that names a component outside the catalog', () => {
     expect(() =>
       defineKimenSurface({
-        profile: { components: ['acme-chart'], document: '', name: 'chart' },
+        profile: { components: ['acme-chart'], document: '', icons: [], name: 'chart' },
       }),
     ).toThrow('"acme-chart", which is not in the catalog');
+  });
+});
+
+// The glyphs a realm can draw: the shared registry the elements' icon modules
+// fill, and the selection a surface declares (spec 069 S14).
+const ICON_REGISTRY = Symbol.for('kimen.icon-registry.v1');
+const SPEC_ICONS = Symbol.for('kimen.spec-icons.v1');
+const realm = globalThis as unknown as Record<symbol, unknown>;
+
+/** Runs `check` in a server process that imported the glyph modules of `names`. */
+function inServerWithGlyphs<T>(names: readonly string[], check: () => T): T {
+  Object.defineProperty(globalThis, ICON_REGISTRY, {
+    configurable: true,
+    value: new Map(names.map((name) => [name, '<path d="M0 0"/>'])),
+  });
+  try {
+    return check();
+  } finally {
+    Reflect.deleteProperty(globalThis, ICON_REGISTRY);
+  }
+}
+
+const icon = (name: string): unknown => spec({ component: 'ki-icon', props: { name } });
+
+describe('the server’s verdict on glyphs is the document’s', () => {
+  it('S8 accepts the full document’s stock glyph in a server that imported none', () => {
+    const full = defineKimenSurface();
+
+    expect(full.validate(icon('circle-check'))).toEqual({ diagnostics: [], ok: true });
+    // The process is left as it was found.
+    expect(realm[ICON_REGISTRY]).toBeUndefined();
+    expect(realm[SPEC_ICONS]).toBeUndefined();
+  });
+
+  it('S8 refuses a glyph only the server imported, as the full document does', () => {
+    inServerWithGlyphs(['alert-triangle'], () => {
+      const full = defineKimenSurface();
+
+      expect(full.validate(icon('alert-triangle')).diagnostics).toEqual([
+        expect.objectContaining({ rule: 'unavailable-icon', value: 'alert-triangle' }),
+      ]);
+      expect(full.validate(icon('circle-check')).ok).toBe(true);
+      // The server's own registry and selection are untouched.
+      expect([...(realm[ICON_REGISTRY] as Map<string, string>).keys()]).toEqual(['alert-triangle']);
+      expect(realm[SPEC_ICONS]).toBeUndefined();
+    });
+  });
+
+  it.each(PROFILES)(
+    'S8 the «$name» document refuses ki-icon whatever glyphs the server imported',
+    (profile) => {
+      const surface = defineKimenSurface({ profile });
+      const refusal = [expect.objectContaining({ rule: 'unknown-component', value: 'ki-icon' })];
+
+      expect(surface.validate(icon('circle-check')).diagnostics).toEqual(refusal);
+      inServerWithGlyphs(['alert-triangle'], () => {
+        expect(surface.validate(icon('alert-triangle')).diagnostics).toEqual(refusal);
+      });
+    },
+  );
+
+  it.each([
+    { document: 'full', icons: (): readonly string[] => defineKimenSurface().icons },
+    { document: '«form»', icons: (): readonly string[] => FORM_PROFILE.icons },
+    { document: '«data»', icons: (): readonly string[] => DATA_PROFILE.icons },
+  ])('S8 the $document document declares the glyphs it offers', ({ icons }) => {
+    expect(icons()).toEqual(['circle-check']);
   });
 });
 

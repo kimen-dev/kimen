@@ -97,7 +97,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface KimenSurface {\n    readonly resource: KimenSurfaceResource;\n    readonly toolMeta: {\n        readonly ui: {\n            readonly resourceUri: string;\n        };\n    };\n    readonly actionTool: KimenActionTool;\n    readonly catalog: Catalog;\n    readonly validate: (spec: unknown) => RenderResult;\n}"
+          "signature": "interface KimenSurface {\n    readonly resource: KimenSurfaceResource;\n    readonly toolMeta: {\n        readonly ui: {\n            readonly resourceUri: string;\n        };\n    };\n    readonly actionTool: KimenActionTool;\n    readonly catalog: Catalog;\n    readonly icons: readonly string[];\n    readonly validate: (spec: unknown) => RenderResult;\n}"
         },
         "KimenSurfaceOptions": {
           "kinds": [
@@ -283,7 +283,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface SurfaceProfile {\n    readonly name: string;\n    readonly components: readonly string[];\n    readonly document: string;\n}"
+          "signature": "interface SurfaceProfile {\n    readonly name: string;\n    readonly components: readonly string[];\n    readonly document: string;\n    readonly icons: readonly string[];\n}"
         },
         "SurfaceState": {
           "kinds": [

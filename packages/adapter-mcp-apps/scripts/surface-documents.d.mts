@@ -21,6 +21,8 @@ export interface GeneratedSurfaceDocument {
     readonly version: string;
     readonly license: string;
   }[];
+  /** The glyph names the document offers specs. */
+  readonly icons: readonly string[];
   /** The tags whose definitions the document registers. */
   readonly tags: readonly string[];
   /** For a subset: the effective subset. */

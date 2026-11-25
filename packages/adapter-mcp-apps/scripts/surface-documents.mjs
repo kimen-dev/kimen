@@ -51,8 +51,12 @@ const generatedCatalogDir = resolve(catalogDist, 'generated');
 const { bundledNpmPackages } = await import(
   new URL('../../../scripts/lib/bundled-package-inventory.mjs', import.meta.url).href
 );
-const { STOCK_SURFACE_ICON_SELECTION, stockSurfaceIconModules, stockSurfaceIconSelectionPlugin } =
-  await import(new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href);
+const {
+  STOCK_SURFACE_ICON_SELECTION,
+  stockSurfaceIconModules,
+  stockSurfaceIconNames,
+  stockSurfaceIconSelectionPlugin,
+} = await import(new URL('../../../scripts/lib/stock-surface-icons.mjs', import.meta.url).href);
 const { readComponentMetadataByTag } = await import(
   new URL('../../elements/scripts/component-metadata.mjs', import.meta.url).href
 );
@@ -351,8 +355,9 @@ const digest = (text) => `'sha256-${createHash('sha256').update(text, 'utf8').di
  * subset (spec 165) it registers the definitions of the effective subset and
  * of the waiting placeholder (FR-002), and its built-in catalog is the
  * effective subset alone (FR-004). Returns the HTML, the npm packages bundled
- * into its script, the registered tags and, for a subset, the effective
- * subset and its catalog (the entries the document's generated modules keep).
+ * into its script, the registered tags, the glyph names it offers specs and,
+ * for a subset, the effective subset and its catalog (the entries the
+ * document's generated modules keep).
  */
 export async function generateSurfaceDocument({ subset } = {}) {
   let tags;
@@ -417,5 +422,7 @@ export async function generateSurfaceDocument({ subset } = {}) {
 </body>
 </html>
 `;
-  return { catalog, components, html, packages, tags };
+  // Every document imports the stock glyphs and declares them as the only
+  // names a spec may use (spec 069 S14), so those names are what it offers.
+  return { catalog, components, html, icons: [...stockSurfaceIconNames], packages, tags };
 }

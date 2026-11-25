@@ -303,6 +303,32 @@ describe('a subset document renders only its subset', () => {
   });
 });
 
+describe('the server’s verdict on glyphs is the document’s', () => {
+  // tests/subset-documents.spec.ts holds `validate` to the same outcomes.
+  it('S8 the full document paints its stock glyph and refuses any other', async () => {
+    const full = await embed(SURFACE_DOCUMENT);
+
+    await deliver(full, spec({ component: 'ki-icon', props: { name: 'alert-triangle' } }));
+    await settle();
+    expect(waiting(full.mount)).toBe(true);
+
+    await deliver(full, spec({ component: 'ki-icon', props: { name: 'circle-check' } }));
+    await expect.poll(() => full.mount.querySelector('ki-icon')).not.toBeNull();
+  });
+
+  it.each([
+    { name: 'form', document_: FORM_PROFILE.document },
+    { name: 'data', document_: DATA_PROFILE.document },
+  ])('S8 the «$name» document refuses ki-icon even with its stock glyph', async ({ document_ }) => {
+    const profile = await embed(document_);
+
+    await deliver(profile, spec({ component: 'ki-icon', props: { name: 'circle-check' } }));
+    await settle();
+
+    expect(waiting(profile.mount)).toBe(true);
+  });
+});
+
 describe('a subset changes the weight of the document, not how it looks', () => {
   it.each(['light', 'dark'] as const)(
     'S12 paints a form card with the same computed styles as the full document (%s)',

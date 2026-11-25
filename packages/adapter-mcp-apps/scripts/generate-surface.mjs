@@ -29,7 +29,7 @@ const size = (html, count) => {
   return `${bytes.length} B raw, ${gzipSync(bytes, { level: 9 }).length} B gzip, ${brotliCompressSync(bytes).length} B brotli, ${count} components`;
 };
 
-const { html, packages, tags } = await generateSurfaceDocument();
+const { html, icons, packages, tags } = await generateSurfaceDocument();
 const inventory = `${JSON.stringify(packages, null, 2)}\n`;
 // The annotation is load-bearing. A `const` initialized with a string literal
 // is typed as that literal, so without it the published declaration repeats
@@ -45,6 +45,9 @@ const module = `/**
  * Regeneration is byte-identical (S2).
  */
 export const SURFACE_DOCUMENT: string = ${JSON.stringify(html)};
+
+/** The glyph names the document offers specs (spec 069 S14), for the server's preflight. */
+export const SURFACE_DOCUMENT_ICONS: readonly string[] = Object.freeze(${JSON.stringify(icons)});
 `;
 
 // One module per profile (spec 165). Its constant is declared as a
@@ -80,6 +83,7 @@ import type { SurfaceProfile } from '../surface.js';
 export const ${constant}: SurfaceProfile = Object.freeze({
   components: Object.freeze(${JSON.stringify(generated.components)}),
   document: ${JSON.stringify(generated.html)},
+  icons: Object.freeze(${JSON.stringify(generated.icons)}),
   name: ${JSON.stringify(name)},
 });
 `,
