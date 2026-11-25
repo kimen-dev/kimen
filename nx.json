@@ -14,7 +14,8 @@
       ],
       "cache": true,
       "outputs": [
-        "{projectRoot}/dist"
+        "{projectRoot}/dist",
+        "{projectRoot}/tsconfig.tsbuildinfo"
       ]
     },
     "lint": {

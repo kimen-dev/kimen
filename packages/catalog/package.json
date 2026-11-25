@@ -65,6 +65,7 @@
         ],
         "outputs": [
           "{projectRoot}/dist",
+          "{projectRoot}/tsconfig.tsbuildinfo",
           "{projectRoot}/src/generated"
         ]
       },

@@ -63,6 +63,12 @@ through `workspace:*`. `npm pack`, unlike `pnpm publish`, does not rewrite
   every `@kimen/*` runtime dependency must be a package of the candidate at
   exactly its version. The publisher repeats the `workspace:` check on the
   bytes it is about to publish.
+- The builder and every verifier also refuse a tarball that carries
+  TypeScript build info (`*.tsbuildinfo`), which is compiler cache. The
+  packages built with `tsc -b` write it next to their `tsconfig.json`,
+  outside what they pack, and Nx caches it with `dist`. Delete both
+  together (`tsc -b --clean`): with the build info left behind, `tsc -b`
+  reports the project up to date and writes no `dist`.
 
 `scripts/tests/publishable-workspace-protocol.test.mjs` fails closed when a
 release package carries any other `workspace:` runtime range, or a package

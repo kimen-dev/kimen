@@ -61,7 +61,8 @@
           "{projectRoot}/**/*"
         ],
         "outputs": [
-          "{projectRoot}/dist"
+          "{projectRoot}/dist",
+          "{projectRoot}/tsconfig.tsbuildinfo"
         ]
       }
     }
