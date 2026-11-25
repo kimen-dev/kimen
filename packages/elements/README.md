@@ -6,9 +6,9 @@ Elements Manifest + `llms.txt`). Part of
 [Kimen](https://github.com/kimen-dev/kimen), an AI-first Web Components
 foundation for generative UI.
 
-**Status**: pre-v1, not published to npm yet. The instructions below are the
-contract the first release ships with; they are validated in CI against
-packed tarballs on every release dry run.
+**Status**: pre-v1, published on npm. Before 1.0.0 a minor release may break
+the public API. The instructions below are validated in CI against the
+packed tarballs of every release run, dry runs included.
 
 ## Install
 
@@ -117,9 +117,13 @@ plain `<script type="module">`). Static and server-rendered HTML containing
 Custom elements work natively in React 19+, Vue 3 and Angular: set properties
 and attributes as usual and listen to the `ki-*` `CustomEvent`s
 (`ki-change`, `ki-close`, `ki-dismiss`) with each framework's event syntax.
-Form controls participate in native forms via `ElementInternals`. Details and
-per-framework notes live in the
-[framework documentation](https://kimen.dev/docs/).
+Form controls participate in native forms via `ElementInternals`. The
+generated wrappers [`@kimen/react`](https://www.npmjs.com/package/@kimen/react),
+[`@kimen/vue`](https://www.npmjs.com/package/@kimen/vue) and
+[`@kimen/angular`](https://www.npmjs.com/package/@kimen/angular) add typed
+props and each framework's form idiom on top; the plain tags keep working
+without them. Details and per-framework notes live in the
+[framework documentation](https://kimen.dev/docs/guides/frameworks/).
 
 ## For agents
 

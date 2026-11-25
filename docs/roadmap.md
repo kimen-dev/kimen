@@ -9,7 +9,8 @@ The pnpm + Nx monorepo, deterministic gate suite, component generator,
 release workflow and unattended-loop sandbox exist. Current work is closing
 their enforcement gaps: protected-main rules, mutation gating, sandbox
 credential containment, complete generator wiring and least-privilege
-release separation. The `@kimen` npm organization is registered.
+release separation. The `@kimen` npm organization is registered, and the
+release workflow publishes every package through npm trusted publishing.
 
 ## 2. Tokens and theming (implemented, hardening)
 
@@ -17,20 +18,25 @@ release separation. The `@kimen` npm organization is registered.
 layers (primitive → theme → semantic → component). onmars is the default
 theme, and the Material 3 reference theme proves in CI that any brand can
 re-theme by reassigning the theme and semantic layers alone. A fidelity pass
-added the motion, glass, elevation and bevel token families. Layer-integrity
-and token-reference gates are still being hardened before publication.
+added the motion, glass, elevation and bevel token families. The package is
+published; layer-integrity and token-reference gates are still being
+hardened before v1.0.0.
 
 ## 3. Core components (shipped)
 
-All 29 `<ki-*>` components are implemented: forms (button, icon-button,
-input, textarea, select, option, checkbox, radio, radio-group, switch),
-content (card, list, list-item, divider, avatar, avatar-group, badge, qr,
-scroller, video), and feedback/navigation (alert, dialog, tooltip, progress,
-status, indicator, tabs, tab, tab-panel). Each ships with a Gherkin
-contract, real-browser tests, axe checks, size budgets, generated docs, a
-Custom Elements Manifest and `llms.txt`. A pixel-fidelity pass landed the
-visual language — glass surfaces, bevels, elevation and micro-motion —
-holding every component to 4.5:1 contrast in both schemes.
+The `<ki-*>` components are implemented across forms (button, input,
+textarea, select, combobox, checkbox, radio group, switch, slider, date and
+time inputs, file upload), content and layout (card, list, table, stack,
+grid, markdown, code block, image, video), feedback (alert, toast, progress,
+skeleton, status), overlays and navigation (dialog, drawer, popover, menu,
+tooltip, tabs, sidebar, top nav, pagination, stepper, tree) and
+conversational surfaces (conversation, message, prompt input, reasoning,
+tool call, confirmation, sources). [`llms.txt`](../llms.txt) lists every
+component. Each ships with a Gherkin contract, real-browser tests, axe
+checks, size budgets, generated docs, a Custom Elements Manifest and
+`llms.txt`. A pixel-fidelity pass landed the visual language — glass
+surfaces, bevels, elevation and micro-motion — holding every component to
+4.5:1 contrast in both schemes.
 
 ## 4. Neutral catalog + guardrail renderer (shipped)
 
@@ -80,15 +86,20 @@ packaging is validated mechanically (Angular ships partial-Ivy APF).
 Client-side rendering; the no-wrapper native path stays supported and
 documented.
 
-## 8. v1.0.0
+## 8. Publication (shipped, pre-v1)
 
-Publication to npm with trusted publishing and signed provenance; catalog and
-llms.txt versioned alongside the public API. The
-[documentation site](https://kimen.dev/docs/) is generated
-from the single source of truth. The current release contract covers
-`@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, the catalog, the
-emitter, both protocol adapters and the three framework wrappers, at one
-fixed version — see [releasing.md](./releasing.md).
+All ten packages are on npm: `@kimen/elements`, `@kimen/tokens`,
+`@kimen/mcp-server`, the catalog, the emitter, both protocol adapters and
+the three framework wrappers, at one fixed version, published by the
+release workflow through npm trusted publishing with Sigstore provenance —
+see [releasing.md](./releasing.md). Before 1.0.0 a breaking change raises
+the minor version.
+
+## 9. v1.0.0
+
+A stable public API, with the catalog and llms.txt versioned alongside it.
+The [documentation site](https://kimen.dev/docs/) is generated from the
+single source of truth.
 
 Follow progress through issues and pull requests.
 
