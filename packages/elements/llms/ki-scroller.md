@@ -14,7 +14,7 @@ drag operate the viewport directly.
 ## When not to use
 
 page-level scrolling (the browser's job), carousels or
-paginated media (future indicator/carousel patterns), virtualized long
+paginated media (ki-carousel with ki-indicator), virtualized long
 collections, multi-column tabular data, or nesting scrollers (v1
 guarantees a single scroll axis per region). Cross-axis overflow is an
 authoring mistake: the scroller scrolls its declared axis only and clips

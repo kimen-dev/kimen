@@ -2609,7 +2609,7 @@ export const catalogData = {
       },
       "slots": {},
       "tag": "ki-indicator",
-      "whenNotToUse": "section navigation (ki-tabs), task completion or loading\n(ki-progress), labeled step flows (a stepper is a separate roadmap item),\ninteractive pagination (a future feature — the indicator takes no focus\nand no input; navigation belongs to the composing carousel's own\ncontrols), or conveying quantity without a current position. Position\nchanges are never announced by the indicator itself (no live region): the\ncomposing carousel owns announcements.",
+      "whenNotToUse": "section navigation (ki-tabs), task completion or loading\n(ki-progress), labeled step flows (ki-stepper), interactive pagination\n(ki-pagination — the indicator takes no focus and no input; navigation\nbelongs to the composing carousel's own controls), or conveying quantity\nwithout a current position. Position\nchanges are never announced by the indicator itself (no live region): the\ncomposing carousel owns announcements.",
       "whenToUse": "show the current position within a bounded, sequential set of\npeer views whose navigation lives elsewhere: carousel slides, unlabeled\nonboarding steps, gallery pages. Wire `count` and `current` (1-based) to\nthe sequence the consumer renders and give it a `label` (required\nauthoring: assistive technology reads one graphic named\n\"<label>, <current> / <count>\"). Below two positions an indicator carries\nno information."
     },
     "ki-input": {
@@ -3958,7 +3958,7 @@ export const catalogData = {
         "": "The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis."
       },
       "tag": "ki-scroller",
-      "whenNotToUse": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis.",
+      "whenNotToUse": "page-level scrolling (the browser's job), carousels or\npaginated media (ki-carousel with ki-indicator), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis.",
       "whenToUse": "a bounded region inside a view whose content can outgrow it:\nchat or message panes, code and log blocks, tag rows, sidebar navigation,\ntall menus inside cards. Give it bounds (its size comes entirely from your\nlayout) and a `label` (required: the accessible name of the scroll\nregion). Scrolling stays native — wheel, touch, keyboard and indicator\ndrag operate the viewport directly."
     },
     "ki-search": {
