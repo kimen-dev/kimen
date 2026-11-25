@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/node": "26.6.6",
     "@vitest/browser-playwright": "5.1.1",
-    "fast-check": "4.10.2",
+    "fast-check": "4.10.3",
     "happy-dom": "21.0.4",
     "playwright": "1.65.1",
     "vitest": "5.1.1"
