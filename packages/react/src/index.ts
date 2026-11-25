@@ -8,4 +8,4 @@
  * modules is generated from the component contract and never hand-edited
  * (constitution Art. I); this entry point is the one hand-written shell.
  */
-export * from './components';
+export * from './components.js';

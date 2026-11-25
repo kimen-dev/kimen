@@ -30,3 +30,21 @@ for (const wrapper of WRAPPERS) {
     assert.equal(perComponent.types, './dist/ki-*.d.ts');
   });
 }
+
+// Node and strict ESM resolvers (webpack's fully specified requests) resolve
+// a relative specifier only with its extension. The React root entry once
+// re-exported './components' and failed to import outside a lenient bundler,
+// so every relative specifier of the hand-written shells carries `.js`.
+for (const wrapper of WRAPPERS) {
+  test(`@kimen/${wrapper} root entry names every relative module with its extension`, () => {
+    const entry = readFileSync(`${packagesRoot}${wrapper}/src/index.ts`, 'utf8');
+    const relative = [...entry.matchAll(/\bfrom\s+['"](\.{1,2}\/[^'"]+)['"]/gu)].map(
+      (match) => match[1],
+    );
+    assert.ok(relative.length > 0, 'the root entry re-exports its components');
+    assert.deepEqual(
+      relative.filter((specifier) => !specifier.endsWith('.js')),
+      [],
+    );
+  });
+}
