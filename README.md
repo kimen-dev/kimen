@@ -123,21 +123,23 @@ and the guarded renderer stay the only enforcement points.
 
 | Package | Status | What it is |
 | --- | --- | --- |
-| [`@kimen/elements`](./packages/elements) | Implemented, unpublished | 29 `<ki-*>` Stencil web components |
-| [`@kimen/tokens`](./packages/tokens) | Implemented, unpublished | Design tokens (DTCG), primitive → theme → semantic → component |
-| [`@kimen/catalog`](./packages/catalog) | Implemented, unpublished | Neutral catalog schema + guarded renderer (`validateUiSpec`, `renderUiSpec`, streaming) |
-| [`@kimen/adapter-a2ui`](./packages/adapter-a2ui) | Implemented, unpublished | A2UI protocol adapter over the guarded renderer |
-| [`@kimen/adapter-mcp-apps`](./packages/adapter-mcp-apps) | Implemented, unpublished | MCP Apps adapter: Kimen surfaces as self-contained `ui://` resources |
-| [`@kimen/mcp-server`](./packages/mcp-server) | Implemented, unpublished | MCP server over stdio: agents list the catalog, validate specs and render them as MCP Apps surfaces |
-| [`@kimen/emitter`](./packages/emitter) | Implemented, unpublished | Emitter kit: prompt, provider-lowered JSON Schema and tool definition from any catalog, plus normalize + single-round repair |
-| [`@kimen/react`](./packages/react) | Implemented, unpublished | Generated React bindings: typed props, event callbacks, controlled forms |
-| [`@kimen/vue`](./packages/vue) | Implemented, unpublished | Generated Vue 3 bindings with v-model on the form components |
-| [`@kimen/angular`](./packages/angular) | Implemented, unpublished | Generated Angular standalone components + ControlValueAccessors (APF, Angular ^22) |
-| [`kimen`](./packages/kimen) | Placeholder | Future CLI / meta package |
+| [`@kimen/elements`](./packages/elements) | Published on npm | `<ki-*>` Stencil web components |
+| [`@kimen/tokens`](./packages/tokens) | Published on npm | Design tokens (DTCG), primitive → theme → semantic → component |
+| [`@kimen/mcp-server`](./packages/mcp-server) | Published on npm | MCP server over stdio: agents list the catalog, validate specs and render them as MCP Apps surfaces |
+| [`@kimen/catalog`](./packages/catalog) | Publishes with the next release | Neutral catalog schema + guarded renderer (`validateUiSpec`, `renderUiSpec`, streaming) |
+| [`@kimen/emitter`](./packages/emitter) | Publishes with the next release | Emitter kit: prompt, provider-lowered JSON Schema and tool definition from any catalog, plus normalize + single-round repair |
+| [`@kimen/adapter-a2ui`](./packages/adapter-a2ui) | Publishes with the next release | A2UI protocol adapter over the guarded renderer |
+| [`@kimen/adapter-mcp-apps`](./packages/adapter-mcp-apps) | Publishes with the next release | MCP Apps adapter: Kimen surfaces as self-contained `ui://` resources |
+| [`@kimen/react`](./packages/react) | Publishes with the next release | Generated React bindings: typed props, event callbacks, controlled forms |
+| [`@kimen/vue`](./packages/vue) | Publishes with the next release | Generated Vue 3 bindings with v-model on the form components |
+| [`@kimen/angular`](./packages/angular) | Publishes with the next release | Generated Angular standalone components + ControlValueAccessors (APF, Angular ^22) |
+| [`kimen`](./packages/kimen) | Placeholder, private | Future CLI / meta package; npm refuses the unscoped name |
 
-The current v1 publication contract covers exactly `@kimen/elements` and
-`@kimen/tokens`; whether the catalog and adapters publish at v1 is an open
-founder decision — see [`docs/releasing.md`](./docs/releasing.md).
+`@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server` are published on
+npm. The other seven are in the release set and publish, at the same fixed
+version, with the next release; their npm names are already reserved
+(`0.0.0` under the `bootstrap` tag). See
+[`docs/releasing.md`](./docs/releasing.md).
 
 ## For agents
 

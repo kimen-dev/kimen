@@ -87,8 +87,8 @@ llms.txt versioned alongside the public API. The
 [documentation site](https://kimen.dev/docs/) is generated
 from the single source of truth. The current release contract covers
 `@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, the catalog, the
-emitter and both protocol adapters; the framework wrappers remain
-unpublished until they join it — see [releasing.md](./releasing.md).
+emitter, both protocol adapters and the three framework wrappers, at one
+fixed version — see [releasing.md](./releasing.md).
 
 Follow progress through issues and pull requests.
 
