@@ -13,6 +13,7 @@ import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
 import { expectAccessible, settleEntryMotion } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { whileKeyHeld } from './keyboard';
 import { moveToNewParent } from './reconnect';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
@@ -536,19 +537,10 @@ describe('ki-dialog in a real browser', () => {
         },
         { once: true },
       );
-      // Run locally, macOS WebKit fails here, scrolling 0px. Its keyboard
-      // scroll animation is cancelled by a keyup sent in the same instant as
-      // the keydown, and {ArrowDown} sends them that way. Measured in this
-      // harness (2026-11-25), a plain <div tabindex="0"
-      // style="overflow:auto"> behaves the same as this body, alone or in a
-      // native modal dialog or a shadow root. The tap scrolls 0px; a key held
-      // 16ms scrolls 40px, and 250ms scrolls 242px. PageDown, End and Space
-      // scroll both. Chromium and Firefox scroll on the tap, and the Linux
-      // WebKit of the release matrix passes. The key reaches the body
-      // unprevented, so this is not a component defect.
-      await userEvent.keyboard('{ArrowDown}');
+      // Held, not tapped: in macOS WebKit a tap scrolls no focused scroller,
+      // a plain overflow:auto div in this harness included (whileKeyHeld).
+      await whileKeyHeld('ArrowDown', () => expect.poll(() => body.scrollTop).toBeGreaterThan(0));
       expect(arrowDown).toMatchObject({ key: 'ArrowDown', defaultPrevented: false });
-      await expect.poll(() => body.scrollTop).toBeGreaterThan(0);
       await userEvent.keyboard('{End}');
       await expect
         .poll(() => Math.ceil(body.scrollTop + body.clientHeight))

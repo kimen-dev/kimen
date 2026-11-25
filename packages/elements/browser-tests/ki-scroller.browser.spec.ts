@@ -18,6 +18,7 @@ import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-scroller.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { whileKeyHeld } from './keyboard';
 import { moveToNewParent } from './reconnect';
 
 type KiScrollerElement = HTMLElement & { orientation: string; label?: string };
@@ -282,8 +283,11 @@ describe('ki-scroller', () => {
     viewport.focus();
     expect(el.shadowRoot?.activeElement).toBe(viewport);
     expect(viewport.scrollTop).toBe(0);
-    await userEvent.keyboard('{ArrowDown}');
-    await waitUntil(() => viewport.scrollTop > 0, 'Arrow Down did not scroll the content');
+    // Held, not tapped: in macOS WebKit a tap scrolls no focused scroller,
+    // a plain overflow:auto div in this harness included (whileKeyHeld).
+    await whileKeyHeld('ArrowDown', () =>
+      waitUntil(() => viewport.scrollTop > 0, 'Arrow Down did not scroll the content'),
+    );
   });
 
   it('S8 a fitting scroller adds no Tab stop: focus lands on the button, skipping it', async () => {
