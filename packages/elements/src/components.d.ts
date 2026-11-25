@@ -2180,10 +2180,10 @@ export namespace Components {
      * "<label>, <current> / <count>"). Below two positions an indicator carries
      * no information.
      * @whenNotToUse section navigation (ki-tabs), task completion or loading
-     * (ki-progress), labeled step flows (a stepper is a separate roadmap item),
-     * interactive pagination (a future feature — the indicator takes no focus
-     * and no input; navigation belongs to the composing carousel's own
-     * controls), or conveying quantity without a current position. Position
+     * (ki-progress), labeled step flows (ki-stepper), interactive pagination
+     * (ki-pagination — the indicator takes no focus and no input; navigation
+     * belongs to the composing carousel's own controls), or conveying quantity
+     * without a current position. Position
      * changes are never announced by the indicator itself (no live region): the
      * composing carousel owns announcements.
      */
@@ -3337,7 +3337,7 @@ export namespace Components {
      * region). Scrolling stays native — wheel, touch, keyboard and indicator
      * drag operate the viewport directly.
      * @whenNotToUse page-level scrolling (the browser's job), carousels or
-     * paginated media (future indicator/carousel patterns), virtualized long
+     * paginated media (ki-carousel with ki-indicator), virtualized long
      * collections, multi-column tabular data, or nesting scrollers (v1
      * guarantees a single scroll axis per region). Cross-axis overflow is an
      * authoring mistake: the scroller scrolls its declared axis only and clips
@@ -6007,10 +6007,10 @@ declare global {
      * "<label>, <current> / <count>"). Below two positions an indicator carries
      * no information.
      * @whenNotToUse section navigation (ki-tabs), task completion or loading
-     * (ki-progress), labeled step flows (a stepper is a separate roadmap item),
-     * interactive pagination (a future feature — the indicator takes no focus
-     * and no input; navigation belongs to the composing carousel's own
-     * controls), or conveying quantity without a current position. Position
+     * (ki-progress), labeled step flows (ki-stepper), interactive pagination
+     * (ki-pagination — the indicator takes no focus and no input; navigation
+     * belongs to the composing carousel's own controls), or conveying quantity
+     * without a current position. Position
      * changes are never announced by the indicator itself (no live region): the
      * composing carousel owns announcements.
      */
@@ -6464,7 +6464,7 @@ declare global {
      * region). Scrolling stays native — wheel, touch, keyboard and indicator
      * drag operate the viewport directly.
      * @whenNotToUse page-level scrolling (the browser's job), carousels or
-     * paginated media (future indicator/carousel patterns), virtualized long
+     * paginated media (ki-carousel with ki-indicator), virtualized long
      * collections, multi-column tabular data, or nesting scrollers (v1
      * guarantees a single scroll axis per region). Cross-axis overflow is an
      * authoring mistake: the scroller scrolls its declared axis only and clips
@@ -9499,10 +9499,10 @@ declare namespace LocalJSX {
      * "<label>, <current> / <count>"). Below two positions an indicator carries
      * no information.
      * @whenNotToUse section navigation (ki-tabs), task completion or loading
-     * (ki-progress), labeled step flows (a stepper is a separate roadmap item),
-     * interactive pagination (a future feature — the indicator takes no focus
-     * and no input; navigation belongs to the composing carousel's own
-     * controls), or conveying quantity without a current position. Position
+     * (ki-progress), labeled step flows (ki-stepper), interactive pagination
+     * (ki-pagination — the indicator takes no focus and no input; navigation
+     * belongs to the composing carousel's own controls), or conveying quantity
+     * without a current position. Position
      * changes are never announced by the indicator itself (no live region): the
      * composing carousel owns announcements.
      */
@@ -10738,7 +10738,7 @@ declare namespace LocalJSX {
      * region). Scrolling stays native — wheel, touch, keyboard and indicator
      * drag operate the viewport directly.
      * @whenNotToUse page-level scrolling (the browser's job), carousels or
-     * paginated media (future indicator/carousel patterns), virtualized long
+     * paginated media (ki-carousel with ki-indicator), virtualized long
      * collections, multi-column tabular data, or nesting scrollers (v1
      * guarantees a single scroll axis per region). Cross-axis overflow is an
      * authoring mistake: the scroller scrolls its declared axis only and clips
@@ -13917,10 +13917,10 @@ declare module "@stencil/core" {
              * "<label>, <current> / <count>"). Below two positions an indicator carries
              * no information.
              * @whenNotToUse section navigation (ki-tabs), task completion or loading
-             * (ki-progress), labeled step flows (a stepper is a separate roadmap item),
-             * interactive pagination (a future feature — the indicator takes no focus
-             * and no input; navigation belongs to the composing carousel's own
-             * controls), or conveying quantity without a current position. Position
+             * (ki-progress), labeled step flows (ki-stepper), interactive pagination
+             * (ki-pagination — the indicator takes no focus and no input; navigation
+             * belongs to the composing carousel's own controls), or conveying quantity
+             * without a current position. Position
              * changes are never announced by the indicator itself (no live region): the
              * composing carousel owns announcements.
              */
@@ -14154,7 +14154,7 @@ declare module "@stencil/core" {
              * region). Scrolling stays native — wheel, touch, keyboard and indicator
              * drag operate the viewport directly.
              * @whenNotToUse page-level scrolling (the browser's job), carousels or
-             * paginated media (future indicator/carousel patterns), virtualized long
+             * paginated media (ki-carousel with ki-indicator), virtualized long
              * collections, multi-column tabular data, or nesting scrollers (v1
              * guarantees a single scroll axis per region). Cross-axis overflow is an
              * authoring mistake: the scroller scrolls its declared axis only and clips

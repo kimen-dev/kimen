@@ -14593,7 +14593,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "section navigation (ki-tabs), task completion or loading\n(ki-progress), labeled step flows (a stepper is a separate roadmap item),\ninteractive pagination (a future feature — the indicator takes no focus\nand no input; navigation belongs to the composing carousel's own\ncontrols), or conveying quantity without a current position. Position\nchanges are never announced by the indicator itself (no live region): the\ncomposing carousel owns announcements."
+          "text": "section navigation (ki-tabs), task completion or loading\n(ki-progress), labeled step flows (ki-stepper), interactive pagination\n(ki-pagination — the indicator takes no focus and no input; navigation\nbelongs to the composing carousel's own controls), or conveying quantity\nwithout a current position. Position\nchanges are never announced by the indicator itself (no live region): the\ncomposing carousel owns announcements."
         },
         {
           "name": "part",
@@ -22455,7 +22455,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis."
+          "text": "page-level scrolling (the browser's job), carousels or\npaginated media (ki-carousel with ki-indicator), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis."
         },
         {
           "name": "slot",
