@@ -31,19 +31,25 @@ async function packTarball(t, manifest) {
   const directory = await temporaryDirectory(t, 'kimen-consumer-smoke-package-');
   await writeFile(join(directory, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   await writeFile(join(directory, 'index.js'), 'export {};\n');
+  // npm writes its debug log into its cache while it packs; a cache inside
+  // the packed folder races the packer ("did not encounter expected EOF")
+  // and leaks the log into the tarball. Keep HOME and the cache outside it.
+  const home = await temporaryDirectory(t, 'kimen-consumer-smoke-home-');
   const result = spawnSync('npm', ['pack', '--ignore-scripts', '--json'], {
     cwd: directory,
     encoding: 'utf8',
     env: {
-      HOME: directory,
+      HOME: home,
       LC_ALL: 'C',
       PATH: process.env.PATH,
-      npm_config_cache: join(directory, '.npm-cache'),
+      npm_config_cache: join(home, '.npm-cache'),
       npm_config_offline: 'true',
     },
   });
   assert.equal(result.status, 0, result.stderr);
-  return join(directory, JSON.parse(result.stdout)[0].filename);
+  const [{ filename, files }] = JSON.parse(result.stdout);
+  assert.deepEqual(files.map(({ path }) => path).sort(), ['index.js', 'package.json']);
+  return join(directory, filename);
 }
 
 const generativeManifest = (name, extra = {}) => ({
