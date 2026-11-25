@@ -52,6 +52,11 @@ volume.addEventListener('change', () => saveVolume(volume.value));
 The neutral catalog exposes the `change` action event. Bind it to a declared
 action to receive the current value on commit.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-slider`: the light option, only the tokens ki-slider needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `centered` (boolean, default false): Shows a midpoint tick and fills from that point to a single thumb.

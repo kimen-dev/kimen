@@ -1,0 +1,4 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-search-suggestion-font-family:var(--ki-typography-family-body);
+}

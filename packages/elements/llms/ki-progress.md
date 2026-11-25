@@ -44,6 +44,11 @@ Unknown-duration work sets `indeterminate` instead of a fabricated `value` (whic
 <ki-progress label="Export progress" shape="circular" value="80"></ki-progress>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-progress`: the light option, only the tokens ki-progress needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `indeterminate` (boolean, default false): Unknown-duration mode. When set, no completed fraction or current value is exposed. Its motion is declared only when reduced motion is not requested. When to use: show ongoing work whose duration or total cannot be measured. When NOT to use: do not use for known fractions; use `value` and `max`.

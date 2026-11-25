@@ -1,0 +1,30 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-feature-icon-bg:var(--ki-surface-s2);
+  --ki-feature-icon-fg:var(--ki-text-high-em);
+  --ki-feature-icon-bg-image:var(--ki-surface-image-none);
+  --ki-feature-icon-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-feature-icon-size:var(--ki-size-feature-tile-md);
+  --ki-feature-icon-radius:var(--ki-corner-feature-tile-md);
+  --ki-feature-icon-circle-radius:var(--ki-corner-feature-tile-circle);
+  --ki-feature-icon-xs-size:var(--ki-size-feature-tile-xs);
+  --ki-feature-icon-xs-radius:var(--ki-corner-feature-tile-xs);
+  --ki-feature-icon-sm-size:var(--ki-size-feature-tile-sm);
+  --ki-feature-icon-sm-radius:var(--ki-corner-feature-tile-sm);
+  --ki-feature-icon-lg-size:var(--ki-size-feature-tile-lg);
+  --ki-feature-icon-lg-radius:var(--ki-corner-feature-tile-lg);
+  --ki-feature-icon-xl-size:var(--ki-size-feature-tile-xl);
+  --ki-feature-icon-xl-radius:var(--ki-corner-feature-tile-xl);
+  --ki-feature-icon-primary-bg:var(--ki-surface-primary-med-em);
+  --ki-feature-icon-primary-fg:var(--ki-text-primary-on-primary);
+  --ki-feature-icon-primary-light-bg:var(--ki-surface-primary-low-em);
+  --ki-feature-icon-primary-light-fg:var(--ki-text-primary-on-primary-light);
+  --ki-feature-icon-info-bg:var(--ki-surface-info-tint);
+  --ki-feature-icon-info-fg:var(--ki-text-info-high-em);
+  --ki-feature-icon-success-bg:var(--ki-surface-success-tint);
+  --ki-feature-icon-success-fg:var(--ki-text-success-high-em);
+  --ki-feature-icon-warning-bg:var(--ki-surface-warning-tint);
+  --ki-feature-icon-warning-fg:var(--ki-text-warning-high-em);
+  --ki-feature-icon-danger-bg:var(--ki-surface-danger-tint);
+  --ki-feature-icon-danger-fg:var(--ki-text-danger-high-em);
+}

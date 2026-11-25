@@ -1,0 +1,6 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-format-date-font-family:var(--ki-typography-family-body);
+  --ki-format-number-font-family:var(--ki-typography-family-body);
+  --ki-relative-time-font-family:var(--ki-typography-family-body);
+}

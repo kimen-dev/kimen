@@ -76,6 +76,11 @@ catalog action on the menu's declared `ki-select` event. Application DOM
 listeners can read the selected item's `value` and optional `checked` from
 the event detail.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-menu`: the light option, only the tokens ki-menu needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `anchor` (string, default '', ID of another element of the same spec): Literal ID of the menu button in the same document or containing shadow root.

@@ -22,9 +22,12 @@ const SECTION_START = new RegExp(`^${RULE}\\nThird-party notices: (.+)\\n${RULE}
 // - @kimen/catalog, @kimen/emitter and @kimen/adapter-a2ui ship only Kimen's
 //   compiled sources. Their dependencies are installed, not bundled, so
 //   they carry the header alone.
-// - @kimen/react and @kimen/vue ship the wrappers Stencil's output targets
-//   generate, which import the targets' runtimes as installed dependencies:
-//   the header alone.
+// - @kimen/react ships a copy of the React output target's runtime in
+//   dist/stencil-runtime, which its wrappers import instead of the target
+//   (packages/react/scripts/vendor-runtime.mjs).
+// - @kimen/vue ships the wrappers Stencil's Vue output target generates,
+//   which import the target's runtime as an installed dependency: the
+//   header alone.
 // - @kimen/angular bundles the component helpers and value accessors the
 //   Angular output target copies into its sources.
 const ELEMENT_BUNDLE_NOTICES = Object.freeze([
@@ -47,7 +50,7 @@ export const PACKAGE_NOTICE_SECTIONS = Object.freeze({
     '@modelcontextprotocol/server (Apache-2.0)',
     'zod (MIT)',
   ]),
-  '@kimen/react': NO_THIRD_PARTY_NOTICES,
+  '@kimen/react': Object.freeze(['@stencil/react-output-target (MIT)']),
   '@kimen/vue': NO_THIRD_PARTY_NOTICES,
   '@kimen/angular': Object.freeze(['@stencil/angular-output-target (MIT)']),
 });

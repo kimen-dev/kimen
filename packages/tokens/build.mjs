@@ -4,6 +4,8 @@
 //   dist/css/tokens.css            the onmars default theme, both schemes
 //   dist/css/tokens.material3.css  what material3 changes over the default
 //   dist/css/base.css              the opt-in page contract
+//   dist/css/core.css              spec 166: every token but the component ones
+//   dist/css/ki-<tag>.css          spec 166: the component tokens one tag needs
 //
 // The emitted shape — one `light-dark()` declaration per scheme-dependent
 // token, a colour-scheme contract on the token sheet itself, themed subtrees,
@@ -18,10 +20,20 @@
 // anything the stylesheet cannot express (a token that is not a colour and
 // still depends on the scheme, two tokens compiling to one custom property)
 // fails the build outright.
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 
 import StyleDictionary from 'style-dictionary';
 
+import {
+  componentSourceOf,
+  declaredNames,
+  isFoundation,
+  pick,
+  pickModes,
+  tagSources,
+  unresolvedReferences,
+} from './scripts/component-sheets.mjs';
 import { assertNoDeprecationDue, collectDeprecations } from './scripts/deprecation.mjs';
 import {
   assertInheritedTokens,
@@ -33,6 +45,7 @@ import {
   layeredOverrides,
   modeReassignments,
   renderBaseStylesheet,
+  renderComponentStylesheet,
   renderThemeStylesheet,
   themeOverrides,
 } from './scripts/theme-stylesheet.mjs';
@@ -56,9 +69,8 @@ async function composition(config) {
 // replacement that is not a live published token, or a deprecated token the
 // package still ships at its removal version fails the build.
 const { version } = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8'));
-const deprecations = collectDeprecations(
-  (await new StyleDictionary(sharedConfig).getPlatformTokens('css')).allTokens,
-);
+const sharedTokens = (await new StyleDictionary(sharedConfig).getPlatformTokens('css')).allTokens;
+const deprecations = collectDeprecations(sharedTokens);
 assertNoDeprecationDue(deprecations, version);
 
 await mkdir(dist, { recursive: true });
@@ -156,19 +168,103 @@ console.log(
   `✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark, ${deprecations.size} deprecated; densities: ${densities.map(({ level }) => level).join(', ')}; modes: ${modeSummary(baseModes)})`,
 );
 
-await writeFile(
-  new URL('tokens.material3.css', dist),
-  compactTokenStylesheet(renderThemeStylesheet('material3', material3, { deprecations }), {
+// Every literal foundation the theme reads is inlined (spec 166 D1), so the
+// theme works over the core sheet, which carries no foundation: the values
+// are the same, only the expressions name the literal instead of the token.
+const material3Css = compactTokenStylesheet(
+  renderThemeStylesheet('material3', material3, { deprecations }),
+  {
     declarations: material3Theme,
     modes: baseModes,
-    inline: (name) =>
-      /^--ki-foundation-(?:material3-(?:typescale|motion|shape)-|migrated-component-)/u.test(name),
+    inline: isFoundation,
     foundationsLast: true,
-  }),
+    transitive: true,
+  },
 );
+await writeFile(new URL('tokens.material3.css', dist), material3Css);
 
 console.log(
   `✔ dist/css/tokens.material3.css (theme: material3 — ${material3.size} overrides of onmars)`,
+);
+
+// Spec 166: the core sheet and one sheet per tag, beside the full sheet,
+// which stays exactly as it is. A token belongs to a component source when
+// its base definition lives in tokens/component/; the core carries every
+// other token but the foundations; a tag's sheet carries every source the
+// tag needs (./scripts/component-sheets.mjs). Each split declaration is the
+// full sheet's own, compacted the same way.
+const sourceOf = new Map(
+  sharedTokens
+    .filter(({ filePath }) => componentSourceOf(filePath) !== null)
+    .map(({ name, filePath }) => [`--${name}`, componentSourceOf(filePath)]),
+);
+// Build-only workspace tooling, outside the published package graph: resolved
+// from the workspace root at run time, as @kimen/elements' surface build does.
+const { readComponentTokenUsage } = await import(
+  new URL('../../scripts/lib/component-token-usage.mjs', import.meta.url).href
+);
+const usage = await readComponentTokenUsage({
+  componentsRoot: fileURLToPath(new URL('../elements/src/components/', import.meta.url)),
+});
+const sourcesByTag = tagSources({ usage, sourceOf, expressions: [onmars, material3Theme] });
+const needed = new Set([...sourcesByTag.values()].flat());
+for (const source of new Set(sourceOf.values())) {
+  if (!needed.has(source)) {
+    throw new Error(`no component reads the tokens of tokens/component/${source}.tokens.json`);
+  }
+}
+const isCoreToken = (name) => !sourceOf.has(name) && !isFoundation(name);
+const compactSplit = (css) =>
+  compactTokenStylesheet(css, { declarations: onmars, modes: baseModes, inline: isFoundation });
+
+const coreCss = compactSplit(
+  renderBaseStylesheet(pick(baseWithBackdropDefaults, isCoreToken), {
+    deprecations,
+    modes: pickModes(baseModes, isCoreToken),
+    inherited,
+    densities,
+  }),
+);
+const coreNames = declaredNames(coreCss);
+const coreGaps = unresolvedReferences(coreCss, coreNames);
+if (coreGaps.length > 0) {
+  throw new Error(`the core sheet reads tokens it does not declare: ${coreGaps.join(', ')}`);
+}
+await writeFile(new URL('core.css', dist), coreCss);
+
+for (const file of await readdir(dist)) {
+  if (/^ki-[a-z0-9-]+\.css$/u.test(file)) await rm(new URL(file, dist));
+}
+const splitNames = new Set(coreNames);
+for (const [tag, sources] of sourcesByTag) {
+  const inSheet = (name) => sources.includes(sourceOf.get(name));
+  const css = compactSplit(
+    renderComponentStylesheet(pick(onmars, inSheet), {
+      deprecations,
+      modes: pickModes(baseModes, inSheet),
+    }),
+  );
+  const names = declaredNames(css);
+  const gaps = unresolvedReferences(css, new Set([...coreNames, ...names]));
+  if (gaps.length > 0) {
+    throw new Error(
+      `the ${tag} sheet reads tokens neither it nor the core declares: ${gaps.join(', ')}`,
+    );
+  }
+  for (const name of names) splitNames.add(name);
+  await writeFile(new URL(`${tag}.css`, dist), css);
+}
+const material3Gaps = unresolvedReferences(
+  material3Css,
+  new Set([...splitNames, ...declaredNames(material3Css)]),
+);
+if (material3Gaps.length > 0) {
+  throw new Error(
+    `material3 reads tokens the core and the tag sheets do not declare: ${material3Gaps.join(', ')}`,
+  );
+}
+console.log(
+  `✔ dist/css/core.css and ${sourcesByTag.size} tag sheets (dist/css/ki-*.css), from ${new Set(sourceOf.values()).size} component sources`,
 );
 
 // The page contract (opt-in): what a consumer page needs beyond tokens to

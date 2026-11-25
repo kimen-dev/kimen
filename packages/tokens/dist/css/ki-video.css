@@ -1,0 +1,21 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-video-frame-radius:var(--ki-radius-big-component-xs);
+  --ki-video-scrim-color:var(--ki-inverse-white-alpha-6);
+  --ki-video-scrim-radius:var(--ki-radius-component-6xl);
+  --ki-video-scrim-padding:var(--ki-space-3xl);
+  --ki-video-backdrop-blur:var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-video-backdrop-filter */
+  --ki-video-backdrop-filter:var(--ki-effect-component-backdrop-filter);
+  --ki-video-play-size:var(--ki-space-16xl);
+  --ki-video-play-icon-size:var(--ki-space-9xl);
+  --ki-video-play-radius:var(--ki-radius-component-xl);
+  --ki-video-play-bg:var(--ki-surface-inverse-white);
+  --ki-video-play-fg:var(--ki-text-inverse-black);
+  --ki-video-play-border-color:var(--ki-outline-primary-button-top);
+  --ki-video-play-border-width:var(--ki-size-border-hairline);
+  --ki-video-play-shadow:0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow),0 var(--ki-shadow-distance-6) var(--ki-shadow-distance-6) var(--ki-shadow-spread-6) var(--ki-elevation-shadow),var(--ki-shadow-inner-primary-default);
+  --ki-video-focus-ring-color:var(--ki-focus-ring-color);
+  --ki-video-focus-ring-width:var(--ki-focus-ring-width);
+  --ki-video-focus-ring-offset:var(--ki-focus-ring-offset);
+  --ki-video-motion-duration:var(--ki-motion-duration-fast);
+}

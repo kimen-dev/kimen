@@ -31,6 +31,11 @@ Use the `start` slot for a decorative icon. An icon-only option needs
 The all-elements loader registers `ki-tooltip`. When using direct imports or
 framework wrappers, register it separately for icon-only options.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-segment`: the light option, only the tokens ki-segment needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `aria-label` (string | undefined): Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.

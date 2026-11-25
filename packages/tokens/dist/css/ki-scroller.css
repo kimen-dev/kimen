@@ -1,0 +1,15 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-scroller-thumb-color:var(--ki-inverse-white-alpha-48);
+  --ki-scroller-thumb-thickness:var(--ki-space-xs);
+  --ki-scroller-thumb-radius:var(--ki-radius-round);
+  --ki-scroller-thumb-min-length:var(--ki-space-3xl);
+  --ki-scroller-track-color:var(--ki-transparent-inverse);
+  --ki-scroller-gutter:var(--ki-space-xxs);
+  --ki-scroller-track-inset:var(--ki-space-xs);
+  --ki-scroller-surface:var(--ki-transparent-inverse);
+  --ki-scroller-focus-ring-color:var(--ki-focus-ring-color);
+  --ki-scroller-focus-ring-width:var(--ki-focus-ring-width);
+  --ki-scroller-focus-ring-offset:var(--ki-focus-ring-offset);
+  --ki-scroller-focus-ring-shadow:var(--ki-focus-primary);
+}

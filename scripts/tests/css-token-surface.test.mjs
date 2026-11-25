@@ -595,3 +595,91 @@ test('[S10] density rules may only reassign document-inherited tokens, and defau
     /declares --ki-zero both on its theme roots and as inherited from the document/u,
   );
 });
+
+// Spec 166: the core and the per-tag sheets beside the default stylesheet.
+// (@spec:166-tokens-core-and-component-sheets is carried by
+// scripts/tests/token-sheets.test.mjs; these pin the surface builder.)
+const splitExports = {
+  ...publicExports,
+  './css/core': publicExport('./dist/css/core.css'),
+  './css/ki-*': publicExport('./dist/css/ki-*.css'),
+};
+const coreSheet = `${schemeContract}
+:root,
+:where([data-ki-theme]) {
+  --ki-zero: 0px;
+  --ki-color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));
+}
+`;
+const shadowSheet = `
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-shadow: 0px 1px 2px var(--ki-color);
+}
+`;
+const buildSplit = ({
+  core = coreSheet,
+  sheets = { 'ki-card': shadowSheet, 'ki-option': '' },
+} = {}) =>
+  buildPublicStylesheetSurface({
+    packageExports: splitExports,
+    publicTokenNames,
+    stylesheetSources: { './css': stylesheet, './css/core': core, './css/ki-*': sheets },
+  });
+
+test('the core publishes the contexts of the tokens it declares, the tag sheets their token lists', () => {
+  const surface = buildSplit();
+  assert.deepEqual(surface['./css/core'].contexts.light, {
+    '--ki-color': 'rgb(0,0,0)',
+    '--ki-zero': '0',
+  });
+  assert.deepEqual(surface['./css/ki-*'], {
+    target: './dist/css/ki-*.css',
+    sheets: { 'ki-card': { tokens: ['--ki-shadow'] }, 'ki-option': { tokens: [] } },
+  });
+});
+
+test('a split declaration that differs from the default stylesheet is rejected', () => {
+  assert.throws(
+    () => buildSplit({ core: coreSheet.replace('--ki-zero: 0px', '--ki-zero: 1px') }),
+    /--ki-zero: 1px, which the \.\/css stylesheet does not/u,
+  );
+  assert.throws(
+    () => buildSplit({ sheets: { 'ki-card': shadowSheet.replace('2px', '3px') } }),
+    /--ki-shadow/u,
+  );
+});
+
+test('a tag sheet must declare at zero specificity and resolve over the core alone', () => {
+  assert.throws(
+    () => buildSplit({ sheets: { 'ki-card': shadowSheet.replaceAll(':where(:root)', ':root') } }),
+    /must declare its tokens in one :where\(:root\),:where\(\[data-ki-theme\]\) rule first/u,
+  );
+  assert.throws(
+    () =>
+      buildSplit({
+        core: coreSheet.replace(
+          '  --ki-color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));\n',
+          '',
+        ),
+      }),
+    /references missing custom property --ki-color/u,
+  );
+});
+
+test('a pattern export resolves to its files, keyed by the expanded subpath', async () => {
+  const { stylesheetPatternFiles } = await import('../lib/css-token-surface.mjs');
+  assert.deepEqual(
+    stylesheetPatternFiles('./css/ki-*', './dist/css/ki-*.css', [
+      'ki-card.css',
+      'core.css',
+      'ki-.css',
+      'ki-button.css',
+      'tokens.css',
+    ]),
+    [
+      ['ki-button', 'ki-button.css'],
+      ['ki-card', 'ki-card.css'],
+    ],
+  );
+});

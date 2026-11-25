@@ -113,6 +113,11 @@ Give each row trigger a unique ID and handle the menu's `ki-select` event in
 the application. Translate the checkbox labels with `select-all-label="Sélectionner toutes les lignes"`
 and `row-selection-label="Sélectionner {row}"` on a French page.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-table`: the light option, only the tokens ki-table needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `density` ("compact" | "default", default 'default'): Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.

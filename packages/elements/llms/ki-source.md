@@ -28,6 +28,11 @@ Use a unique identifier in the current document or shadow root. In a
 guarded spec, use the `source-id` prop instead of the native `id`. The
 disclosure displays the hostname from the resolved URL.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-source`: the light option, only the tokens ki-source needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `href` (string, required, URL): Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.

@@ -1,0 +1,13 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-status-size:var(--ki-space-md);
+  --ki-status-radius:var(--ki-radius-round);
+  --ki-status-shadow:var(--ki-effect-component-primary-default-shadow);
+  --ki-status-ring-width:var(--ki-space-xxs);
+  --ki-status-ring-color:var(--ki-outline-inverse-black);
+  --ki-status-neutral-color:var(--ki-outline-control);
+  --ki-status-success-color:var(--ki-surface-success-med-em);
+  --ki-status-danger-color:var(--ki-surface-danger-med-em);
+  --ki-status-info-color:var(--ki-surface-info-high-em);
+  --ki-status-warning-color:var(--ki-text-warning-high-em);
+}

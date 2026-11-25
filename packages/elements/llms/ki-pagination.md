@@ -88,6 +88,11 @@ count. Set `previous-label`, `next-label`, and `load-more-label` for
 translated controls. Use `page-label`, `compact-label`, and `status-label`
 with the named placeholders to translate the generated text.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-pagination`: the light option, only the tokens ki-pagination needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `boundaries` (number, default 1, minimum 0, maximum 10): Number of pages to display at each end of the numbered list.

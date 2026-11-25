@@ -57,6 +57,11 @@ The distance from the viewport edges and the gap between toasts are tokens:
 }
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-toaster`: the light option, only the tokens ki-toaster needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string, default 'Notifications'): Accessible name of the group the toaster exposes while it shows toasts. Override for localization. When to use: provide the name in the document language. When NOT to use: do not put a message here.

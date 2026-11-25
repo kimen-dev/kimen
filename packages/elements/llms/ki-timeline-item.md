@@ -38,6 +38,11 @@ Use `details-label` to localize or describe the disclosure. The control
 appears only when the event supplies details. The main event text stays
 visible while details are collapsed.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-timeline-item`: the light option, only the tokens ki-timeline-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `datetime` (string | undefined): ISO date or date-time. Invalid or missing dates have no time label.

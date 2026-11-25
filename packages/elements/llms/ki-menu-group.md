@@ -22,6 +22,11 @@ Provide a group label and place menu items or dividers in its default slot. A gr
 </ki-menu>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-menu-group`: the light option, only the tokens ki-menu-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string, default ''): Visible and accessible group name.

@@ -23,6 +23,8 @@ The package exports these stylesheets:
 | --- | --- |
 | `@kimen/tokens/css` | The onmars default theme: every `--ki-*` token, both schemes, plus the `color-scheme` contract they resolve from |
 | `@kimen/tokens/css/base` | The page contract: page background/foreground and body font, painted from tokens, and group items laid out as blocks until their tags register |
+| `@kimen/tokens/css/core` | The light option's core: every onmars token except component tokens and `--ki-foundation-*`, with the same `color-scheme` contract, densities and preference modes |
+| `@kimen/tokens/css/ki-<tag>` | The light option's per-tag sheet: the component tokens one `ki-*` tag needs, including those of the components it renders |
 | `@kimen/tokens/css/material3` | The Material 3 reference theme: its overrides of the default theme, opt-in via `data-ki-theme` |
 | `@kimen/tokens/css/onmars-fonts.css` | Optional Instrument Sans and Newsreader for onmars v2 |
 | `@kimen/tokens/css/material3-fonts.css` | Optional local metric-adjusted fallback for self-hosted Roboto |
@@ -38,6 +40,50 @@ import '@kimen/tokens/css/material3'; // optional: a second theme
 
 A theme stylesheet declares only the tokens it changes, so it does nothing on
 its own: `@kimen/tokens/css` must be loaded too.
+
+### The light option: the core and one sheet per tag
+
+`@kimen/tokens/css` is the default and stays the simplest choice. A page that
+uses only a few components can load less (spec 166). Load the core once,
+instead of the full sheet. Then load one sheet for every `ki-*` tag the page
+uses, named like the element import:
+
+```ts
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button'; // beside '@kimen/elements/ki-button'
+import '@kimen/tokens/css/ki-input';
+import '@kimen/tokens/css/base';
+```
+
+| Page | Full sheet | Core and tag sheets |
+| --- | ---: | ---: |
+| One `ki-button` | 20.7 KB | 8.1 KB |
+| Ten components | 20.7 KB | 11.2 KB |
+
+Sizes are minified and brotli-compressed, as a bundler ships them.
+
+- **One sheet per tag you use.** A tag's sheet already carries the tokens of
+  every component that tag renders in its shadow tree: `css/ki-pagination`
+  brings the icon and icon-button tokens it paints with. Your own markup is
+  your own, though: a `ki-button` slotted into a `ki-card` needs
+  `css/ki-button` too. A tag rendered without its sheet paints with
+  undefined tokens. With many components on a page, the full sheet is
+  smaller.
+- **Same values.** Every declaration in the core and the tag sheets is the
+  full sheet's own. Loading the full sheet as well changes nothing.
+- **Overrides keep working.** The core declares its tokens exactly as the
+  full sheet does, so a page override of a core token comes after the core.
+  A tag sheet declares its tokens at zero specificity
+  (`:where(:root), :where([data-ki-theme])`). A page's `:root` or theme-root
+  override of a component token therefore wins in any order, including when
+  a bundler inserts a route's tag sheet after the page's stylesheet. Themes
+  (`@kimen/tokens/css/material3`), preference modes and densities apply as
+  with the full sheet.
+- **No foundations.** The core leaves out the `--ki-foundation-*` tokens. No
+  onmars token reads them, and material3 carries the values it needs. The
+  full sheet still declares them.
+- Script that reads a component token on the root with `getPropertyValue()`
+  gets an empty string while that tag's sheet is not loaded.
 
 ### The page contract
 

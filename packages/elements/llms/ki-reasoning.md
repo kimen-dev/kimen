@@ -84,6 +84,11 @@ import { defineCustomElement } from '@kimen/elements/ki-reasoning';
 defineCustomElement();
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-reasoning`: the light option, only the tokens ki-reasoning needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `done-label` (string, default 'Thought'): Summary text when done and elapsed time is unavailable.

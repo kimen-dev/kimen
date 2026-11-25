@@ -61,6 +61,11 @@ the same text again while it is still set shows nothing.
 <ki-time-input label="Start time" name="start" lang="en-GB" value="09:30" custom-error="That slot was just booked."></ki-time-input>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-time-input`: the light option, only the tokens ki-time-input needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted time ("That slot was just booked"). While it holds text the field is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting at the person's next edit or pick of a time, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for `required`, the bounds or unreadable text, which the field reports itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.

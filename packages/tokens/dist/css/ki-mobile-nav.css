@@ -1,0 +1,29 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-mobile-nav-item-fg:var(--ki-text-supporting);
+  --ki-mobile-nav-item-current-fg:var(--ki-text-primary-high-em);
+  --ki-mobile-nav-item-target-min:var(--ki-navigation-bar-destination-target);
+  --ki-mobile-nav-item-gap:var(--ki-navigation-bar-destination-gap);
+  --ki-mobile-nav-item-focus-radius:var(--ki-corner-control);
+  --ki-mobile-nav-item-icon-size:var(--ki-glyph-size-md);
+  --ki-mobile-nav-item-font-size:var(--ki-typography-size-caption-1);
+  --ki-mobile-nav-item-font-weight:var(--ki-typography-weight-body-medium);
+  --ki-mobile-nav-item-line-height:var(--ki-typography-line-height-caption-1);
+  --ki-mobile-nav-height:var(--ki-navigation-bar-bar-height);
+  --ki-mobile-nav-bg:var(--ki-surface-s0);
+  --ki-mobile-nav-bg-image:var(--ki-surface-image-none);
+  --ki-mobile-nav-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-mobile-nav-border:var(--ki-outline-low-em);
+  --ki-mobile-nav-border-width:var(--ki-spacing-action-hairline);
+  --ki-mobile-nav-floating-bg:var(--ki-surface-raised);
+  --ki-mobile-nav-floating-inset:var(--ki-navigation-bar-bar-inset);
+  --ki-mobile-nav-floating-padding:var(--ki-navigation-bar-bar-padding);
+  --ki-mobile-nav-floating-radius:var(--ki-radius-round);
+  --ki-mobile-nav-floating-shadow:var(--ki-elevation-e4);
+  --ki-mobile-nav-font-family:var(--ki-typography-family-body);
+  --ki-mobile-nav-indicator-bg:var(--ki-surface-primary-low-em);
+  --ki-mobile-nav-indicator-fg:var(--ki-text-primary-high-em);
+  --ki-mobile-nav-indicator-inline-size:var(--ki-navigation-bar-indicator-inline-size);
+  --ki-mobile-nav-indicator-block-size:var(--ki-navigation-bar-indicator-block-size);
+  --ki-mobile-nav-indicator-radius:var(--ki-radius-round);
+}

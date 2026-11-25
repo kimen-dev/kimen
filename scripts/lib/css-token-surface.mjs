@@ -5,6 +5,18 @@ const DEFAULT_THEME_EXPORT = './css';
 const PAGE_CONTRACT_EXPORT = './css/base';
 const THEME_FONT_EXPORTS = new Set(['./css/onmars-fonts.css', './css/material3-fonts.css']);
 /**
+ * Spec 166: the default theme split in two. The core carries every token but
+ * the component ones, with the default stylesheet's own rules; one sheet per
+ * tag carries the component tokens that tag needs, on the token roots at zero
+ * specificity, with their mode rules. Every split declaration is the default
+ * stylesheet's own, which is what lets the snapshot record a tag sheet by the
+ * tokens it declares instead of repeating their values.
+ */
+const CORE_EXPORT = './css/core';
+const TAG_SHEETS_EXPORT = './css/ki-*';
+const TAG_SHEET = /^ki-[a-z0-9]+(?:-[a-z0-9]+)*$/u;
+const TAG_SHEET_SELECTOR = ':where(:root),:where([data-ki-theme])';
+/**
  * The colour-scheme contract the default stylesheet opens with, in this order.
  * Scheme-dependent tokens are `light-dark()` values: without these rules they
  * never leave their light branch.
@@ -631,6 +643,84 @@ function defaultThemeDeclarations(css, label) {
   return { base, modes, densities };
 }
 
+/** Every declaration of `split` must be the default stylesheet's own. */
+function assertDefaultDeclarations(split, full, label) {
+  for (const [name, value] of split) {
+    if (full?.get(name) !== value) {
+      throw new Error(
+        `${label} declares ${name}: ${value}, which the ${DEFAULT_THEME_EXPORT} stylesheet does not`,
+      );
+    }
+  }
+}
+
+/**
+ * The core sheet (spec 166): the default stylesheet's shape and rules, holding
+ * a subset of its declarations, and resolving on its own.
+ */
+function coreDeclarations({ css, label, defaultTheme }) {
+  const core = defaultThemeDeclarations(css, label);
+  assertDefaultDeclarations(core.base, defaultTheme.base, label);
+  for (const [mode, declared] of core.modes) {
+    assertDefaultDeclarations(declared, defaultTheme.modes.get(mode), `${label} mode ${mode}`);
+  }
+  for (const [level, declared] of core.densities) {
+    assertDefaultDeclarations(
+      declared,
+      defaultTheme.densities.get(level),
+      `${label} density ${level}`,
+    );
+  }
+  return core;
+}
+
+/**
+ * One tag sheet (spec 166): empty, or one zero-specificity token-root rule and
+ * the mode blocks of the tokens it declares, every declaration the default
+ * stylesheet's own.
+ */
+function tagSheetDeclarations({ css, label, defaultTheme }) {
+  const source = stripComments(css, label);
+  if (source.trim() === '') return { base: new Map(), modes: new Map() };
+  const [tokens, ...rest] = parseRules(source, label);
+  if (tokens.selector !== TAG_SHEET_SELECTOR || tokens.media !== undefined) {
+    throw new Error(`${label} must declare its tokens in one ${TAG_SHEET_SELECTOR} rule first`);
+  }
+  const base = declarations(tokens.body, `${label} rule ${tokens.prelude}`);
+  const modes = modeDeclarations(rest, { label, known: base });
+  assertDefaultDeclarations(base, defaultTheme.base, label);
+  for (const [mode, declared] of modes) {
+    assertDefaultDeclarations(declared, defaultTheme.modes.get(mode), `${label} mode ${mode}`);
+  }
+  return { base, modes };
+}
+
+/**
+ * The tag sheets, by tag: the public tokens each declares. Each must resolve
+ * over the core alone, so a page that loads the core and a tag's sheet has
+ * every value that tag's tokens read.
+ */
+function tagSheetsSurface({ sources, label, defaultTheme, core, names }) {
+  const sheets = assertRecord(sources, `${label} sources`);
+  if (Object.keys(sheets).length === 0) throw new Error(`${label} expands to no stylesheet`);
+  return sortedObject(
+    Object.entries(sheets).map(([tag, css]) => {
+      if (!TAG_SHEET.test(tag)) throw new Error(`${label} has an invalid tag sheet ${tag}`);
+      if (typeof css !== 'string') throw new Error(`${label} ${tag} must be a string`);
+      const sheetLabel = `${label} ${tag}`;
+      const sheet = tagSheetDeclarations({ css, label: sheetLabel, defaultTheme });
+      const declared = names.filter((name) => sheet.base.has(name));
+      resolvedPublicValues(
+        mergeDeclarations(core.base, sheet.base),
+        declared,
+        'light',
+        `${sheetLabel} over ${CORE_EXPORT}`,
+      );
+      return [tag, { tokens: declared }];
+    }),
+  );
+}
+
 /**
  * An opt-in theme stylesheet: one rule of overrides, scoped to a themed
  * document and to a themed subtree. It declares only what it changes, so its
@@ -749,6 +839,26 @@ function assertFontStylesheet(css, label) {
   }
 }
 
+/**
+ * The files a pattern stylesheet export (`./css/ki-*` -> `./dist/css/ki-*.css`)
+ * resolves to among `fileNames`, the entries of its target directory: one
+ * [key, file name] pair per match, keyed by the expanded subpath after
+ * `./css/` (`ki-button`), in key order.
+ */
+export function stylesheetPatternFiles(subpath, target, fileNames) {
+  const [prefix, suffix] = target.slice(target.lastIndexOf('/') + 1).split('*');
+  const [keyPrefix] = subpath.slice('./css/'.length).split('*');
+  return fileNames
+    .filter(
+      (name) =>
+        name.length > prefix.length + suffix.length &&
+        name.startsWith(prefix) &&
+        name.endsWith(suffix),
+    )
+    .map((name) => [`${keyPrefix}${name.slice(prefix.length, name.length - suffix.length)}`, name])
+    .sort(([left], [right]) => left.localeCompare(right));
+}
+
 /** Build the effective public-token contract of each exported combined stylesheet. */
 export function buildPublicStylesheetSurface({
   packageExports,
@@ -798,6 +908,18 @@ export function buildPublicStylesheetSurface({
     );
     return defaultTheme;
   };
+  let core;
+  const coreOf = (label) => {
+    if (!expectedSubpaths.has(CORE_EXPORT)) {
+      throw new Error(`${label} needs the ${CORE_EXPORT} stylesheet, which is not exported`);
+    }
+    core ??= coreDeclarations({
+      css: sourceOf(CORE_EXPORT),
+      label: `${CORE_EXPORT} stylesheet`,
+      defaultTheme: defaultThemeOf(`${CORE_EXPORT} stylesheet`),
+    });
+    return core;
+  };
   const tokenExports = cssExports.filter(([subpath]) => {
     if (!THEME_FONT_EXPORTS.has(subpath)) return true;
     // The package export is sealed with the other entry points. A face-only
@@ -808,8 +930,37 @@ export function buildPublicStylesheetSurface({
   return sortedObject(
     tokenExports.map(([subpath, entry]) => {
       const target = entry.target;
-      const css = sourceOf(subpath);
       const label = `${subpath} stylesheet`;
+      if (subpath === TAG_SHEETS_EXPORT) {
+        return [
+          subpath,
+          {
+            target,
+            sheets: tagSheetsSurface({
+              sources: sources[subpath],
+              label,
+              defaultTheme: defaultThemeOf(label),
+              core: coreOf(label),
+              names,
+            }),
+          },
+        ];
+      }
+      const css = sourceOf(subpath);
+      if (subpath === CORE_EXPORT) {
+        const { base, modes, densities } = coreOf(label);
+        return [
+          subpath,
+          {
+            target,
+            contexts: contexts(
+              contextDeclarations({ base, baseModes: modes, densities }),
+              names.filter((name) => base.has(name)),
+              label,
+            ),
+          },
+        ];
+      }
       if (subpath === PAGE_CONTRACT_EXPORT) {
         return [subpath, onePageContract({ subpath, target, css })];
       }

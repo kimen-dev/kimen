@@ -58,6 +58,11 @@ When importing the dialog directly, register `ki-button` to use the themed
 confirmation button. A single-element import still provides a native
 confirmation button with the same label and event.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-dialog`: the light option, only the tokens ki-dialog needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `close-label` (string, default 'Close'): Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
