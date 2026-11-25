@@ -58,7 +58,7 @@ specificity, nothing once the tag is defined.
 
 Skipping it is supported in both schemes: the page keeps the browser's own
 canvas and text colour for the active scheme, and every component stays
-legible on it (measured over all 29 components under a dark system preference
+legible on it (measured over every component under a dark system preference
 by `bare-page.browser.spec.ts`).
 
 ## Theme and scheme selection
