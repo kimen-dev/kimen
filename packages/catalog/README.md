@@ -135,6 +135,17 @@ the built-in catalog and with catalogs that `extend` it; a consumer
 definition can never declare one, and the renderer renders a native tag
 only when the catalog in use carries exactly Kimen's definition of it.
 
+**Content-Security-Policy.** The renderer writes the `div` layout and the
+`img` sizing through the CSSOM (`style.setProperty`, spec 037 decision D4),
+and a CSP without `'unsafe-inline'` does not block CSSOM writes:
+[`native-csp.browser.spec.ts`](./browser-tests/native-csp.browser.spec.ts)
+renders both under `style-src-attr 'none'` and records no violation. The
+browser still reflects those writes into the element's `style` attribute,
+so serialized DOM (`outerHTML`, a DOM snapshot) shows
+`style="display: flex; …"`. A static audit that flags every inline `style`
+attribute flags these too. Exempt them in the audit; the CSP does not need
+`'unsafe-inline'` for them.
+
 ### Declared prop limits
 
 A catalog entry states more than a type. Each limit below is generated from

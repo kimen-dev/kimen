@@ -11,12 +11,23 @@ generative UI packages and framework wrappers may still need this page.
 
 ## 1. Build the repository once
 
-Requirements: Node 26 (the repository's CI major) and pnpm (the version is
-pinned in the repository's `package.json`, so Corepack picks it up).
+Requirements: Node 26 (the repository's CI major) and the pnpm version
+named in the `packageManager` field of the repository's root
+`package.json`. An older pnpm fails on the repository's lockfile with
+`ERR_PNPM_BROKEN_LOCKFILE`. Run the pinned version in one of two ways:
+
+- **Corepack** picks the version from `packageManager` on its own. Node 25
+  and later no longer ship it, so install it first:
+  `npm install --global corepack`, then `corepack enable pnpm`.
+- **npx** runs one exact version without a global install. Print the field
+  with `node -p "require('./package.json').packageManager"`, then write
+  `npx -y pnpm@<version>` wherever the commands below say `pnpm`, for
+  example `npx -y pnpm@<version> install --frozen-lockfile`.
 
 ```sh
 git clone https://github.com/kimen-dev/kimen.git
 cd kimen
+pnpm --version   # must print the version in packageManager
 pnpm install --frozen-lockfile
 pnpm exec nx run-many -t build -p @kimen/elements @kimen/tokens @kimen/catalog @kimen/emitter @kimen/adapter-a2ui @kimen/adapter-mcp-apps @kimen/mcp-server
 ```
@@ -40,6 +51,15 @@ entries with version ranges and reinstall.
 
 ## Notes
 
+- Link `@kimen/elements` and the generative UI packages (`@kimen/catalog`
+  and the packages built on it) from the same checkout. The catalog is
+  generated from the component contracts of the checkout it was built in.
+  With elements from npm or from another build, it can accept a component
+  or a prop the registered elements do not have.
+- A `link:` entry points at a folder on the machine that ran the install.
+  A remote CI runner has no such folder, so it cannot install your app. In
+  CI, use the npm release when there is one; otherwise the job has to clone
+  and build Kimen itself at the path the `link:` entry names.
 - Keep the repository checkout: linked packages resolve their own
   dependencies from it.
 - Bundlers that refuse to follow symlinks outside the project root need
