@@ -1,0 +1,10 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-checkbox-group-gap:var(--ki-space-md);
+  --ki-radio-group-gap:var(--ki-space-sm);
+  --ki-radio-group-label-font-size:var(--ki-typography-size-body-1);
+  --ki-radio-group-label-font-weight:var(--ki-typography-weight-body-medium);
+  --ki-radio-group-label-line-height:var(--ki-typography-line-height-para);
+  --ki-radio-group-label-hint-fg:var(--ki-text-supporting);
+  --ki-radio-group-label-hint-gap:var(--ki-space-xs);
+}

@@ -49,6 +49,11 @@ Put a decorative illustration in `media` to replace the icon.
 </ki-empty-state>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-empty-state`: the light option, only the tokens ki-empty-state needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `announce` (boolean, default false): Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.

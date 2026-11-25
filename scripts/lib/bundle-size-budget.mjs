@@ -87,6 +87,12 @@ const BASE_BUDGETS = {
   // minified and brotlied) and -223 B for material3, which no longer re-asserts
   // its mode values. Pending founder approval.
   tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
+  // Spec 166's split sheets, approved by the founder on 2026-11-25: the core,
+  // a page with ki-button (core and its sheet), the ten-component page of the
+  // weight report (core and its fourteen sheets), and a ceiling for every tag
+  // sheet. Fixed: no component marginal adds to them. Measured on macOS at
+  // 6,812 / 8,075 / 11,187 B and 1,971 B for the largest sheet (ki-prompt-input).
+  tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
 };
 
 export function deriveBundleSizeBudgets(components) {
@@ -94,6 +100,7 @@ export function deriveBundleSizeBudgets(components) {
     mcpApps: { ...BASE_BUDGETS.mcpApps },
     mcpServer: { ...BASE_BUDGETS.mcpServer },
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },
+    tokenSheets: { ...BASE_BUDGETS.tokenSheets },
   };
   for (const { tag, metadata } of components) {
     for (const [target, allowances] of Object.entries(metadata.sizeBudget ?? {})) {

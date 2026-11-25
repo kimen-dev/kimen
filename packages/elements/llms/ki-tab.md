@@ -56,6 +56,11 @@ label in the default slot. The label names the tab and its linked panel.
 The group's `icon-layout` controls whether the icon is above the label or
 inline with it.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-tab`: the light option, only the tokens ki-tab needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `disabled` (boolean, default false): Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.

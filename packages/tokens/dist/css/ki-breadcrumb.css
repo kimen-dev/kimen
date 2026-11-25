@@ -1,0 +1,29 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-breadcrumb-bg:var(--ki-surface-transparent);
+  --ki-breadcrumb-fg:var(--ki-text-supporting);
+  --ki-breadcrumb-current-bg:var(--ki-surface-transparent);
+  --ki-breadcrumb-current-fg:var(--ki-text-high-em);
+  --ki-breadcrumb-separator:var(--ki-text-low-em);
+  --ki-breadcrumb-gap:var(--ki-layout-spacing-xs);
+  --ki-breadcrumb-padding-inline:var(--ki-layout-spacing-xs);
+  --ki-breadcrumb-padding-block:var(--ki-layout-spacing-xxs);
+  --ki-breadcrumb-radius:var(--ki-corner-inline);
+  --ki-breadcrumb-separator-size:var(--ki-layout-spacing-sm);
+  --ki-breadcrumb-separator-stroke:var(--ki-typography-underline-thickness-hover);
+  --ki-breadcrumb-glyph-size:var(--ki-glyph-size-sm);
+  --ki-breadcrumb-hover-bg:var(--ki-surface-s2);
+  --ki-breadcrumb-hover-fg:var(--ki-text-high-em);
+  --ki-breadcrumb-menu-bg:var(--ki-surface-s1);
+  --ki-breadcrumb-menu-fg:var(--ki-text-high-em);
+  --ki-breadcrumb-menu-bg-image:var(--ki-surface-image-none);
+  --ki-breadcrumb-menu-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-breadcrumb-menu-padding:var(--ki-layout-spacing-xs);
+  --ki-breadcrumb-menu-radius:var(--ki-corner-inline);
+  --ki-breadcrumb-menu-shadow:var(--ki-elevation-e2);
+  --ki-breadcrumb-menu-max-block-size:var(--ki-layout-spacing-25xl);
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+}

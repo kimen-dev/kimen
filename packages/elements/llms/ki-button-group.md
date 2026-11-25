@@ -85,6 +85,11 @@ main button's click and menu selection as separate actions.
 Keep the icon button's `expanded` property in sync with the menu's `open`
 state. Its native button exposes that state as `aria-expanded`.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-button-group`: the light option, only the tokens ki-button-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `attached` (boolean, default false): Joins neighboring actions at their inner edges. Buttons share the first button's variant and use its size when the group has no explicit size. Use for a closely related set of actions or for a split button.

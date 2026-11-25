@@ -27,6 +27,11 @@ spacing and symbols. A percent takes a ratio.
 </section>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-format-number`: the light option, only the tokens ki-format-number needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `currency` (string | undefined): ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.

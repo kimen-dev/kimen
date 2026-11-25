@@ -95,6 +95,11 @@ Call `await prompt.focusPrompt()` when the person is waiting for the request.
 Keep the proposed inputs stable while the person is deciding. Mount a new
 element if another request for the same tool replaces a pending one.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-confirmation`: the light option, only the tokens ki-confirmation needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `action` (string, required): Tool identifier shown to the person and available for reporting by the host.

@@ -1,0 +1,29 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-tree-bg:var(--ki-surface-s0);
+  --ki-tree-fg:var(--ki-text-high-em);
+  --ki-tree-bg-image:var(--ki-surface-image-none);
+  --ki-tree-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-tree-hover-bg:var(--ki-surface-s2);
+  --ki-tree-hover-fg:var(--ki-text-high-em);
+  --ki-tree-selected-bg:var(--ki-surface-primary-low-em);
+  --ki-tree-selected-fg:var(--ki-text-primary-on-primary-light);
+  --ki-tree-icon-fg:var(--ki-text-med-em);
+  --ki-tree-indent:var(--ki-tree-layout-indent);
+  --ki-tree-row-height:var(--ki-tree-layout-row-min);
+  --ki-tree-touch-row-min:var(--ki-tree-layout-touch-row-min);
+  --ki-tree-padding:var(--ki-spacing-action-inset);
+  --ki-tree-radius:var(--ki-tree-layout-surface-radius);
+  --ki-tree-edge-width:var(--ki-menu-layout-edge-width);
+  --ki-tree-edge:var(--ki-outline-low-em);
+  --ki-tree-focus-ring-width:var(--ki-focus-ring-width);
+  --ki-tree-focus-ring-color:var(--ki-focus-ring-color);
+  --ki-tree-disclosure-duration:var(--ki-motion-duration-short-3);
+  --ki-tree-disclosure-easing:var(--ki-motion-easing-standard);
+  --ki-tree-item-radius:var(--ki-tree-layout-row-radius);
+  --ki-tree-item-gap:var(--ki-spacing-action-inset);
+  --ki-tree-item-padding:var(--ki-spacing-action-gap);
+  --ki-tree-item-target:var(--ki-tree-layout-item-target);
+  --ki-tree-item-box-size:var(--ki-glyph-size-sm);
+  --ki-tree-item-box-radius:var(--ki-corner-inline);
+}

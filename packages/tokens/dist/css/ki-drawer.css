@@ -1,0 +1,78 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-contrast-more-dialog-border:var(--ki-size-border-hairline) var(--ki-border-style-solid) var(--ki-outline-strong);
+  --ki-contrast-more-dialog-divider-color:var(--ki-outline-strong);
+  --ki-dialog-fullscreen-bg:var(--ki-surface-s1);
+  --ki-dialog-fullscreen-fg:var(--ki-text-high-em);
+  --ki-dialog-fullscreen-bg-image:var(--ki-surface-image-none);
+  --ki-dialog-fullscreen-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-dialog-fullscreen-header-height:var(--ki-layout-spacing-16xl);
+  --ki-dialog-fullscreen-header-border:var(--ki-outline-low-em);
+  --ki-dialog-radius:var(--ki-radius-component-3xl);
+  --ki-dialog-padding:var(--ki-space-7xl);
+  --ki-dialog-gap:var(--ki-space-xl);
+  --ki-dialog-min-width:var(--ki-size-surface-sm);
+  --ki-dialog-max-width:var(--ki-size-surface-md);
+  --ki-dialog-bg:var(--ki-surface-special-light-s0-dark-s2);
+  --ki-dialog-bg-image:var(--ki-surface-image-dialog);
+  --ki-dialog-bg-start:var(--ki-surface-special-light-s0-dark-s2); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-bg-image */
+  --ki-dialog-bg-end:var(--ki-surface-special-light-s0-dark-s2); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-bg-image */
+  --ki-dialog-backdrop-blur:var(--ki-effect-component-backdrop-blur); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-dialog-backdrop-filter */
+  --ki-dialog-backdrop-filter:var(--ki-effect-component-backdrop-filter);
+  --ki-dialog-fg:var(--ki-text-high-em);
+  --ki-dialog-border:var(--ki-border-hairline-base-em);
+  --ki-dialog-shadow:var(--ki-elevation-e4);
+  --ki-dialog-backdrop-bg:var(--ki-overlay-high-em);
+  --ki-dialog-heading-font-family:var(--ki-typography-family-display);
+  --ki-dialog-heading-font-size:var(--ki-typography-size-title-2);
+  --ki-dialog-heading-font-weight:var(--ki-typography-weight-display-semibold);
+  --ki-dialog-heading-letter-spacing:var(--ki-typography-letter-spacing-none);
+  --ki-dialog-heading-line-height:var(--ki-typography-line-height-title-2);
+  --ki-dialog-heading-padding-block-start:var(--ki-space-3xl);
+  --ki-dialog-heading-padding-block-end:var(--ki-space-3xl);
+  --ki-dialog-heading-padding-inline:var(--ki-space-5xl);
+  --ki-dialog-body-padding-block-start:var(--ki-space-5xl);
+  --ki-dialog-body-padding-block-end:var(--ki-space-5xl);
+  --ki-dialog-body-padding-inline:var(--ki-space-5xl);
+  --ki-dialog-footer-padding-block-start:var(--ki-space-7xl);
+  --ki-dialog-footer-padding-block-end:var(--ki-space-7xl);
+  --ki-dialog-footer-padding-inline:var(--ki-space-5xl);
+  --ki-dialog-divider-width:var(--ki-size-border-hairline);
+  --ki-dialog-divider-color:var(--ki-outline-base-em);
+  --ki-dialog-focus-ring-color:var(--ki-focus-ring-color);
+  --ki-dialog-focus-ring-width:var(--ki-focus-ring-width);
+  --ki-dialog-focus-ring-offset:var(--ki-focus-ring-offset);
+  --ki-dialog-motion-duration:var(--ki-motion-duration-medium-1);
+  --ki-dialog-motion-easing:var(--ki-motion-easing-out);
+  --ki-drawer-bg:var(--ki-surface-s1);
+  --ki-drawer-bg-image:var(--ki-surface-image-none);
+  --ki-drawer-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-drawer-fg:var(--ki-text-high-em);
+  --ki-drawer-shadow:var(--ki-elevation-e4);
+  --ki-drawer-size:var(--ki-layout-sheet-size);
+  --ki-drawer-radius:var(--ki-corner-sheet);
+  --ki-drawer-heading-font-family:var(--ki-typography-family-heading);
+  --ki-drawer-close-size:var(--ki-layout-spacing-10xl);
+  --ki-drawer-handle-size:var(--ki-layout-spacing-10xl);
+  --ki-drawer-handle-thickness:var(--ki-layout-spacing-xs);
+  --ki-drawer-handle-color:var(--ki-outline-control);
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-dialog-border:var(--ki-contrast-more-dialog-border) !important;
+    --ki-dialog-divider-color:var(--ki-contrast-more-dialog-divider-color) !important;
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-dialog-border:var(--ki-contrast-more-dialog-border) !important;
+  --ki-dialog-divider-color:var(--ki-contrast-more-dialog-divider-color) !important;
+}

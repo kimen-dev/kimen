@@ -65,6 +65,11 @@ and keep secondary controls in their own slot content.
 </ki-card>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-card`: the light option, only the tokens ki-card needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `href` (string | undefined, URL): Destination for the card's title link. Supply a text heading in the header slot. A nonblank href takes precedence over interactive.

@@ -41,6 +41,11 @@ The words convey the message by themselves. The decorative icon is hidden
 from assistive technology and adds no tab stop. Start warnings with the
 consequence.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-note`: the light option, only the tokens ki-note needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `icon` (boolean, default true): Shows the decorative icon. Set icon="false" in HTML to hide it.

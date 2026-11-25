@@ -45,6 +45,11 @@ In modifier mode, Control+Enter and Command+Enter send. Shift+Enter always inser
 
 The application sets `status` to `submitted` while awaiting a response and to `streaming` when output begins. It handles `ki-stop` and sets `status` to `idle` when the response ends or stops.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-prompt-input`: the light option, only the tokens ki-prompt-input needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `accept` (string | undefined, default ''): Comma-separated extensions or MIME types. Empty hides the attachment surface.

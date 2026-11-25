@@ -1,0 +1,3 @@
+/* Spec 166 S10: a page with one ki-button, bundled as an application ships it. */
+@import url("../dist/css/core.css");
+@import url("../dist/css/ki-button.css");

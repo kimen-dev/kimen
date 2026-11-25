@@ -26,6 +26,11 @@ Place commands and links directly inside a menu and supply visible labels.
 The command reports `message` through the parent menu's `ki-select` event.
 The link reports `New event` and follows its native destination.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-fab-menu-item`: the light option, only the tokens ki-fab-menu-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `href` (string | undefined, URL): A nonempty destination renders a native link and preserves relative URL resolution.

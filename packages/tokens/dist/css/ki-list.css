@@ -1,0 +1,77 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-contrast-more-list-item-divider-color:var(--ki-outline-strong);
+  --ki-list-bg:var(--ki-surface-s0);
+  --ki-list-padding:var(--ki-space-zero);
+  --ki-list-gap:var(--ki-space-zero);
+  --ki-list-item-min-height:var(--ki-space-12xl);
+  --ki-list-item-min-height-multiline:var(--ki-space-16xl);
+  --ki-list-item-padding-inline:var(--ki-space-md);
+  --ki-list-item-padding-block:var(--ki-space-lg);
+  --ki-list-item-gap:var(--ki-space-xl);
+  --ki-list-item-radius:var(--ki-radius-0);
+  --ki-list-item-divider-width:var(--ki-space-zero);
+  --ki-list-item-divider-color:var(--ki-outline-base-em);
+  --ki-list-item-primary-font-size:var(--ki-typography-size-body-1);
+  --ki-list-item-primary-line-height:var(--ki-typography-line-height-para);
+  --ki-list-item-primary-font-weight:var(--ki-typography-weight-body-medium);
+  --ki-list-item-primary-fg:var(--ki-text-high-em);
+  --ki-list-item-secondary-font-size:var(--ki-typography-size-caption-2);
+  --ki-list-item-secondary-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-list-item-secondary-font-weight:var(--ki-typography-weight-body-normal);
+  --ki-list-item-secondary-fg:var(--ki-text-supporting);
+  --ki-list-item-sm-min-height:var(--ki-space-10xl);
+  --ki-list-item-sm-min-height-multiline:var(--ki-space-14xl);
+  --ki-list-item-sm-padding-inline:var(--ki-space-md);
+  --ki-list-item-sm-padding-block:var(--ki-space-sm);
+  --ki-list-item-sm-gap:var(--ki-space-lg);
+  --ki-list-item-sm-primary-font-size:var(--ki-typography-size-body-1);
+  --ki-list-item-sm-primary-line-height:var(--ki-typography-line-height-para);
+  --ki-list-item-sm-secondary-font-size:var(--ki-typography-size-caption-2);
+  --ki-list-item-sm-secondary-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-list-item-lg-min-height:var(--ki-space-14xl);
+  --ki-list-item-lg-min-height-multiline:var(--ki-space-18xl);
+  --ki-list-item-lg-padding-inline:var(--ki-space-md);
+  --ki-list-item-lg-padding-block:var(--ki-space-xl);
+  --ki-list-item-lg-gap:var(--ki-space-xl);
+  --ki-list-item-lg-primary-font-size:var(--ki-typography-size-body-2);
+  --ki-list-item-lg-primary-line-height:var(--ki-typography-line-height-body-2);
+  --ki-list-item-lg-secondary-font-size:var(--ki-typography-size-caption-2);
+  --ki-list-item-lg-secondary-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-list-item-xl-min-height:var(--ki-space-15xl);
+  --ki-list-item-xl-min-height-multiline:var(--ki-space-19xl);
+  --ki-list-item-xl-padding-inline:var(--ki-space-xl);
+  --ki-list-item-xl-padding-block:var(--ki-space-2xl);
+  --ki-list-item-xl-gap:var(--ki-space-3xl);
+  --ki-list-item-xl-primary-font-size:var(--ki-typography-size-title-2);
+  --ki-list-item-xl-primary-line-height:var(--ki-typography-line-height-title-2);
+  --ki-list-item-xl-secondary-font-size:var(--ki-typography-size-body-1);
+  --ki-list-item-xl-secondary-line-height:var(--ki-typography-line-height-para);
+  --ki-list-item-hover-bg:var(--ki-surface-s2);
+  --ki-list-item-hover-fg:var(--ki-text-high-em);
+  --ki-list-item-selected-bg:var(--ki-surface-primary-low-em);
+  --ki-list-item-selected-fg:var(--ki-text-primary-on-primary-light);
+  --ki-list-item-interactive-bg:var(--ki-surface-transparent);
+  --ki-list-item-interactive-bg-image:var(--ki-surface-image-none);
+  --ki-list-item-interactive-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-list-item-interactive-radius:var(--ki-radius-component-md);
+  --ki-list-item-indicator-size:var(--ki-typography-inline-icon-size);
+  --ki-list-item-indicator-border-width:var(--ki-layout-spacing-xxs);
+  --ki-list-item-checkbox-selected-bg:var(--ki-surface-primary-med-em);
+  --ki-list-item-checkbox-selected-fg:var(--ki-text-primary-on-primary);
+  --ki-list-item-checkbox-radius:var(--ki-corner-inline);
+  --ki-list-item-radio-radius:var(--ki-corner-activity-mark);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-list-item-divider-color:var(--ki-contrast-more-list-item-divider-color) !important;
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-list-item-divider-color:var(--ki-contrast-more-list-item-divider-color) !important;
+}

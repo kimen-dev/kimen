@@ -190,6 +190,31 @@ function validateModules(packageName, packageSurface) {
   }
 }
 
+function validateTagSheets(packageName, subpath, value) {
+  const sheets = assertRecord(value, `${packageName}.stylesheets.${subpath}.sheets`);
+  if (Object.keys(sheets).length === 0) {
+    throw new TypeError(`${packageName}.stylesheets.${subpath}.sheets must not be empty`);
+  }
+  for (const [tag, sheet] of Object.entries(sheets)) {
+    if (!/^ki-[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(tag)) {
+      throw new TypeError(`${packageName}.stylesheets.${subpath} has invalid tag sheet ${tag}`);
+    }
+    const tokens = assertRecord(
+      sheet,
+      `${packageName}.stylesheets.${subpath}.sheets.${tag}`,
+    ).tokens;
+    if (
+      !Array.isArray(tokens) ||
+      tokens.some((token) => !/^--ki-[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(token)) ||
+      new Set(tokens).size !== tokens.length
+    ) {
+      throw new TypeError(
+        `${packageName}.stylesheets.${subpath}.sheets.${tag}.tokens must list unique token names`,
+      );
+    }
+  }
+}
+
 function validateStylesheets(packageName, packageSurface) {
   if (packageSurface.stylesheets === undefined) return;
   const stylesheets = assertRecord(packageSurface.stylesheets, `${packageName}.stylesheets`);
@@ -214,6 +239,18 @@ function validateStylesheets(packageName, packageSurface) {
           `${packageName}.stylesheets.${subpath} is a page contract and must publish no token contexts`,
         );
       }
+      continue;
+    }
+    // Spec 166's per-tag sheets carry a token list per tag instead of values:
+    // every declaration in them is the default stylesheet's own, which the
+    // stylesheet surface proves while it builds them.
+    if (stylesheet.sheets !== undefined) {
+      if (stylesheet.contexts !== undefined) {
+        throw new TypeError(
+          `${packageName}.stylesheets.${subpath} publishes tag sheets and must publish no token contexts`,
+        );
+      }
+      validateTagSheets(packageName, subpath, stylesheet.sheets);
       continue;
     }
     const contexts = assertRecord(
@@ -542,6 +579,37 @@ function compareModules(before, after, path, packageName, addChange, removals) {
   }
 }
 
+/**
+ * Spec 166's tag sheets: a page that imports a tag's sheet relies on every
+ * token it declares, so a sheet or a token that disappears is major and one
+ * that appears is minor.
+ */
+function compareTagSheets(before, after, path, packageName, addChange) {
+  const beforeSheets = assertRecord(before.sheets ?? {}, `${path.join('.')}.sheets baseline`);
+  const afterSheets = assertRecord(after.sheets ?? {}, `${path.join('.')}.sheets candidate`);
+  for (const tag of new Set([...Object.keys(beforeSheets), ...Object.keys(afterSheets)])) {
+    const sheetPath = [...path, 'sheets', tag];
+    if (!Object.hasOwn(afterSheets, tag)) {
+      addChange('major', sheetPath, 'removed', packageName);
+      continue;
+    }
+    if (!Object.hasOwn(beforeSheets, tag)) {
+      addChange('minor', sheetPath, 'added', packageName);
+      continue;
+    }
+    const beforeTokens = new Set(beforeSheets[tag].tokens);
+    const afterTokens = new Set(afterSheets[tag].tokens);
+    for (const token of beforeTokens) {
+      if (!afterTokens.has(token))
+        addChange('major', [...sheetPath, token], 'removed', packageName);
+    }
+    for (const token of afterTokens) {
+      if (!beforeTokens.has(token)) addChange('minor', [...sheetPath, token], 'added', packageName);
+    }
+  }
+  changedUnknownKeys(before, after, new Set(['target', 'sheets']), path, addChange, packageName);
+}
+
 function compareStylesheets(before, after, path, packageName, addChange) {
   const beforeStylesheets = assertRecord(before ?? {}, `${path.join('.')} baseline`);
   const afterStylesheets = assertRecord(after ?? {}, `${path.join('.')} candidate`);
@@ -568,6 +636,10 @@ function compareStylesheets(before, after, path, packageName, addChange) {
     );
     if (beforeStylesheet.target !== afterStylesheet.target) {
       addChange('major', [...stylesheetPath, 'target'], 'target', packageName);
+    }
+    if (beforeStylesheet.sheets !== undefined || afterStylesheet.sheets !== undefined) {
+      compareTagSheets(beforeStylesheet, afterStylesheet, stylesheetPath, packageName, addChange);
+      continue;
     }
     const beforeContexts = assertRecord(
       beforeStylesheet.contexts,
@@ -698,7 +770,7 @@ function addedCollections(path) {
   if (path.length === 4) {
     if (facet === 'components') return COMPONENT_FACETS;
     if (facet === 'modules') return new Set(['symbols']);
-    if (facet === 'stylesheets') return new Set(['contexts']);
+    if (facet === 'stylesheets') return new Set(['contexts', 'sheets']);
   }
   if (path.length === 6 && facet === 'stylesheets' && group === 'contexts') return new Set();
   return null;

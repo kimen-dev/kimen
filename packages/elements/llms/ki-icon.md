@@ -54,6 +54,11 @@ by name. The icon has no slots or actions.
 }
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-icon`: the light option, only the tokens ki-icon needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.
