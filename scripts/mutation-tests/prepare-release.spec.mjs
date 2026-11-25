@@ -1,6 +1,7 @@
 // @spec:151-release-automation
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { releasePackages } from '../release/release-plan.mjs';
 import {
   changelog,
   nxEntry,
@@ -52,12 +53,8 @@ vi.mock('nx/release', () => ({
   releaseChangelog: nx.releaseChangelog,
 }));
 
-const names = ['@kimen/elements', '@kimen/tokens', '@kimen/mcp-server'];
-const manifestPaths = [
-  'packages/elements/package.json',
-  'packages/tokens/package.json',
-  'packages/mcp-server/package.json',
-];
+const names = [...releasePackages.keys()];
+const manifestPaths = [...releasePackages.values()];
 const noGitWrites = { stageChanges: false, gitCommit: false, gitTag: false, gitPush: false };
 
 /** Git as the release workflow sees it after a merge into main. */
@@ -222,9 +219,7 @@ describe('release preparation', () => {
 
     expect(git.calls).toEqual([
       ['log', '-1', '--format=%P'],
-      ['show', 'parent-sha:packages/elements/package.json'],
-      ['show', 'parent-sha:packages/tokens/package.json'],
-      ['show', 'parent-sha:packages/mcp-server/package.json'],
+      ...manifestPaths.map((path) => ['show', `parent-sha:${path}`]),
     ]);
     expect(nx.releaseVersion).not.toHaveBeenCalled();
     expect(workspace.writes).toEqual([]);
@@ -258,7 +253,7 @@ describe('release preparation', () => {
     expect(log).not.toHaveBeenCalled();
   });
 
-  it('S6 the three release packages start at one stable version under their own names', async () => {
+  it('S6 the release packages start at one stable version under their own names', async () => {
     const elements = 'packages/elements/package.json';
     const refusals = [
       [
@@ -287,11 +282,11 @@ describe('release preparation', () => {
         'Nx must plan exactly the packages in the release scope',
       ],
       [
-        projectsAt('0.1.0', [...names, '@kimen/catalog']),
+        projectsAt('0.1.0', [...names, '@kimen/nx-plugin']),
         'Nx must plan exactly the packages in the release scope',
       ],
       [
-        projectsAt('0.1.0', ['@kimen/catalog', ...names.slice(1)]),
+        projectsAt('0.1.0', ['@kimen/nx-plugin', ...names.slice(1)]),
         'Nx must plan exactly the packages in the release scope',
       ],
       [

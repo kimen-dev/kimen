@@ -1,9 +1,22 @@
 import { isDeepStrictEqual } from 'node:util';
 
+// The fixed-version publication set, in publication order: a package comes
+// after every release package it depends on at runtime, so a partial
+// publication never leaves a published package pointing at a missing one.
 export const releasePackages = new Map([
   ['@kimen/elements', 'packages/elements/package.json'],
   ['@kimen/tokens', 'packages/tokens/package.json'],
   ['@kimen/mcp-server', 'packages/mcp-server/package.json'],
+  ['@kimen/catalog', 'packages/catalog/package.json'],
+  ['@kimen/emitter', 'packages/emitter/package.json'],
+  ['@kimen/adapter-a2ui', 'packages/adapter-a2ui/package.json'],
+  ['@kimen/adapter-mcp-apps', 'packages/adapter-mcp-apps/package.json'],
+]);
+// The manifest fields npm installs for a consumer of the package.
+export const runtimeDependencyFields = Object.freeze([
+  'dependencies',
+  'optionalDependencies',
+  'peerDependencies',
 ]);
 const versionPattern = '(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)';
 export const releaseVersionPattern = new RegExp(`^${versionPattern}$`, 'u');
@@ -267,21 +280,75 @@ export function pinPluginManifest(source, version, path) {
   return text;
 }
 
-/** The kimen-mcp pins, server.json and plugin manifests as the release pull request writes them. */
+// Each protocol adapter states its own release in its compatibility matrix
+// (Art. VIII: the supported protocol versions are versioned with the
+// adapter), and the MCP Apps surface announces it as `appInfo.version` in
+// `ui/initialize`. The release pull request rewrites exactly these.
+export const adapterVersionPaths = Object.freeze([
+  'packages/adapter-a2ui/COMPAT.md',
+  'packages/adapter-mcp-apps/COMPAT.md',
+  'packages/adapter-mcp-apps/src/bridge.ts',
+]);
+const exactVersion = versionPattern.replaceAll('(', '(?:');
+// A compatibility row whose first cell is the adapter version.
+const compatibilityRow = new RegExp(`^\\| (?<current>${exactVersion})(?<padding> *) \\|`, 'gmu');
+const surfaceAppInfo = new RegExp(
+  `^(?<start>export const KIMEN_APP_INFO: Implementation = \\{\\n {2}name: 'kimen-surface',\\n {2}version: ')(?<current>${exactVersion})(?<end>',\\n\\};)$`,
+  'gmu',
+);
+
+/**
+ * Sets the adapter version in one listed file to `version`: every
+ * compatibility row of a COMPAT.md, keeping its cell width when the version
+ * fits, or the `KIMEN_APP_INFO` version of the MCP Apps surface. Fails
+ * closed when a matrix has no row or rows of different releases, or when the
+ * surface does not declare its version exactly once.
+ */
+export function pinAdapterVersion(source, version, path) {
+  if (!releaseVersionPattern.test(version)) throw new Error(`Invalid release version ${version}`);
+  const found = [];
+  const groups = (args) => args.at(-1);
+  if (path.endsWith('.ts')) {
+    const text = source.replace(surfaceAppInfo, (...args) => {
+      const { start, current, end } = groups(args);
+      found.push(current);
+      return `${start}${version}${end}`;
+    });
+    if (found.length !== 1) {
+      throw new Error(`${path} must declare the KIMEN_APP_INFO version exactly once`);
+    }
+    return text;
+  }
+  const text = source.replace(compatibilityRow, (...args) => {
+    const { current, padding } = groups(args);
+    found.push(current);
+    return `| ${version.padEnd(current.length + padding.length)} |`;
+  });
+  if (found.length === 0 || new Set(found).size !== 1) {
+    throw new Error(`${path} must list its compatibility rows under one adapter version`);
+  }
+  return text;
+}
+
+/** The kimen-mcp pins, server.json, plugin manifests and adapter versions as the release pull request writes them. */
 export async function prepareVersionedFiles(read, version, mcpName) {
   const files = await prepareMcpServerVersion(read, version, mcpName);
   for (const path of pluginManifestPaths) {
     files.set(path, pinPluginManifest(files.get(path) ?? (await read(path)), version, path));
   }
+  for (const path of adapterVersionPaths) {
+    files.set(path, pinAdapterVersion(await read(path), version, path));
+  }
   return files;
 }
 
-/** Fails unless every kimen-mcp pin and every plugin manifest already names `version`. */
+/** Fails unless every kimen-mcp pin, plugin manifest and adapter version already names `version`. */
 export async function verifyVersionedFiles(read, version, mcpName) {
   await verifyMcpServerVersion(read, version, mcpName);
-  for (const path of pluginManifestPaths) {
+  for (const path of [...pluginManifestPaths, ...adapterVersionPaths]) {
     const source = await read(path);
-    if (pinPluginManifest(source, version, path) !== source) {
+    const pin = adapterVersionPaths.includes(path) ? pinAdapterVersion : pinPluginManifest;
+    if (pin(source, version, path) !== source) {
       throw new Error(`${path} must declare the release version ${version}`);
     }
   }
@@ -289,8 +356,40 @@ export async function verifyVersionedFiles(read, version, mcpName) {
 
 function workspaceRanges(dependencies = {}) {
   return Object.fromEntries(
-    Object.entries(dependencies).filter(([, range]) => range.startsWith('workspace:')),
+    Object.entries(dependencies).filter(
+      ([, range]) => typeof range === 'string' && range.startsWith('workspace:'),
+    ),
   );
+}
+
+/**
+ * The workspace dependencies a release manifest declares in its runtime
+ * fields, as `{ field, name }` in field order. Each must be exactly
+ * `workspace:*` on a release package published before this one: the
+ * candidate builder rewrites it to the exact release version before packing
+ * (npm pack would ship it verbatim). Any other workspace range, or one on a
+ * package outside the release set, fails closed.
+ */
+export function releaseWorkspaceDependencies(manifest) {
+  const order = [...releasePackages.keys()];
+  const position = order.indexOf(manifest.name);
+  const found = [];
+  for (const field of runtimeDependencyFields) {
+    for (const [name, range] of Object.entries(workspaceRanges(manifest[field]))) {
+      if (range !== 'workspace:*' || !releasePackages.has(name)) {
+        throw new Error(
+          `${manifest.name} ${field} can only use workspace:* on a release package; ${name} is ${range}`,
+        );
+      }
+      if (position === -1 || order.indexOf(name) >= position) {
+        throw new Error(
+          `${manifest.name} ${field} needs ${name}, which must be published before it`,
+        );
+      }
+      found.push({ field, name });
+    }
+  }
+  return found;
 }
 
 export function prepareManifest(manifest, version, before = manifest) {
@@ -309,11 +408,7 @@ export function prepareManifest(manifest, version, before = manifest) {
       `${manifest.name} repository metadata must match the release candidate contract`,
     );
   }
-  for (const field of ['dependencies', 'optionalDependencies', 'peerDependencies']) {
-    if (Object.keys(workspaceRanges(manifest[field])).length > 0) {
-      throw new Error(`${manifest.name} ${field} cannot contain workspace: ranges`);
-    }
-  }
+  releaseWorkspaceDependencies(manifest);
   if (
     !isDeepStrictEqual(
       workspaceRanges(manifest.devDependencies),

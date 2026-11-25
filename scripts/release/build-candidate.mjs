@@ -25,7 +25,12 @@ import {
   verifyMcpBundleNotices,
   verifyMcpTarball,
 } from './mcp-tarball.mjs';
-import { releasePackages } from './release-plan.mjs';
+import {
+  releasePackages,
+  releaseWorkspaceDependencies,
+  runtimeDependencyFields,
+} from './release-plan.mjs';
+import { needsStaging, stageReleasePackage } from './stage-package.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -346,6 +351,7 @@ function validateSourcePackageManifest(manifest, expected, { mode, version }) {
   }
   validateRepositoryMetadata(manifest, expected);
   if (expected.name === MCP_PACKAGE) validateMcpPackage(manifest);
+  releaseWorkspaceDependencies(manifest);
   const lifecycle = forbiddenLifecycleScripts(manifest);
   if (lifecycle.length > 0) {
     fail(`${expected.name} contains forbidden publish lifecycle scripts: ${lifecycle.join(', ')}`);
@@ -559,9 +565,18 @@ export async function buildCandidate(options) {
       const isolatedHome = join(temporaryRoot, `home-${input.expected.directory}`);
       await mkdir(isolatedHome, { recursive: true, mode: 0o700 });
       const isMcp = input.expected.name === MCP_PACKAGE;
-      const directory = isMcp
-        ? await stageMcpPackage(input.directory, join(temporaryRoot, 'mcp-package'), input.manifest)
-        : input.directory;
+      const packageStaging = join(temporaryRoot, `package-${input.expected.directory}`);
+      let directory = input.directory;
+      if (isMcp) {
+        directory = await stageMcpPackage(input.directory, packageStaging, input.manifest);
+      } else if (needsStaging(input.manifest)) {
+        directory = await stageReleasePackage(
+          input.directory,
+          packageStaging,
+          input.manifest,
+          version,
+        );
+      }
       const packedPath = await packPackage({
         directory,
         destination: staging,
@@ -570,10 +585,8 @@ export async function buildCandidate(options) {
       });
       const bytes = await readFile(packedPath);
       verifyPackedLegalFiles(bytes, input.expected);
-      if (isMcp) {
-        verifyPackedManifest(bytes, input.expected, { mode, version });
-        await verifyMcpTarball(bytes, version);
-      }
+      verifyPackedManifest(bytes, input.expected, { mode, version });
+      if (isMcp) await verifyMcpTarball(bytes, version);
       packageFiles.set(expectedFile, bytes);
       records.push(packageRecordFromBytes(input.expected, version, bytes));
     }
@@ -654,6 +667,29 @@ function verifyPackedLegalFiles(bytes, expected) {
   }
 }
 
+// What a consumer installs must resolve from the registry: no workspace:
+// range survives packing, and every Kimen package the tarball needs is one
+// this candidate publishes, at exactly its version.
+function verifyPackedDependencies(manifest, expected, version) {
+  for (const field of runtimeDependencyFields) {
+    if (manifest[field] === undefined) continue;
+    const dependencies = assertPlainObject(manifest[field], `${expected.name} packed ${field}`);
+    for (const [name, range] of Object.entries(dependencies)) {
+      if (typeof range !== 'string' || range.includes('workspace:')) {
+        fail(`${expected.name} packed ${field}.${name} must be a registry range, not workspace:`);
+      }
+      if (
+        name.startsWith('@kimen/') &&
+        (packageDefinition(name) === undefined || range !== version)
+      ) {
+        fail(
+          `${expected.name} packed ${field}.${name} must be ${version}, a package of this candidate; found ${range}`,
+        );
+      }
+    }
+  }
+}
+
 function verifyPackedManifest(bytes, expected, candidateManifest) {
   const entries = packedEntries(bytes, expected);
   const packageJson = entries.find(
@@ -672,6 +708,7 @@ function verifyPackedManifest(bytes, expected, candidateManifest) {
     mode: candidateManifest.mode,
     version: candidateManifest.version,
   });
+  verifyPackedDependencies(manifest, expected, candidateManifest.version);
   if (expected.name === MCP_PACKAGE) {
     validateMcpPackage(manifest, { packed: true });
     const files = entryMap(entries, `${MCP_PACKAGE} tarball`);

@@ -140,6 +140,19 @@ jobs:
           printf 'candidate-sha256=%s\nmode=%s\nsource-sha=%s\n' \
             "$candidate_sha" "$mode" "$GITHUB_SHA" >>"$GITHUB_OUTPUT"
 
+      # The generative UI packages name one another through workspace ranges
+      # the candidate rewrote to its exact version. A fresh npm project
+      # installs them from these tarballs, their third-party dependencies
+      # from the registry and lifecycle scripts off, and each package answers
+      # one call in Node (scripts/release/consumer-smoke.mjs).
+      - name: Smoke the candidate in a clean consumer
+        env:
+          CANDIDATE_SHA256: ${{ steps.candidate.outputs.candidate-sha256 }}
+        run: >-
+          node scripts/release/candidate-cli.mjs smoke
+          --archive "$RUNNER_TEMP/release-candidate/candidate.tar"
+          --sha256 "$CANDIDATE_SHA256"
+
       - name: Upload immutable candidate
         id: upload
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -491,7 +504,7 @@ jobs:
             import { join } from "node:path";
             const root = process.argv[1];
             const manifest = JSON.parse(readFileSync(join(root, "manifest.json"), "utf8"));
-            const expected = ["@kimen/elements", "@kimen/tokens", "@kimen/mcp-server"];
+            const expected = ["@kimen/elements", "@kimen/tokens", "@kimen/mcp-server", "@kimen/catalog", "@kimen/emitter", "@kimen/adapter-a2ui", "@kimen/adapter-mcp-apps"];
             if (manifest.mode !== "release" || manifest.sourceSha !== process.env.CANDIDATE_SOURCE_SHA || manifest.tag !== process.env.GITHUB_REF_NAME || manifest.tag !== "v" + manifest.version) throw new Error("release manifest binding mismatch");
             if (manifest.packages.length !== expected.length || manifest.packages.some((entry, index) => entry.name !== expected[index])) throw new Error("release package set mismatch");
             for (const entry of manifest.packages) {
@@ -515,6 +528,7 @@ jobs:
               if (manifest.name !== process.env.EXPECTED_NAME || manifest.version !== process.env.EXPECTED_VERSION || manifest.private !== false) throw new Error("packed release metadata mismatch");
               if (repository?.type !== "git" || repository?.url !== "git+https://github.com/kimen-dev/kimen.git") throw new Error("packed repository metadata mismatch");
               if (forbidden.some((name) => Object.hasOwn(manifest.scripts ?? {}, name))) throw new Error("publish lifecycle scripts are forbidden");
+              if (["dependencies", "optionalDependencies", "peerDependencies"].some((field) => JSON.stringify(manifest[field] ?? {}).includes("workspace:"))) throw new Error("packed runtime dependencies must not carry workspace: ranges");
             ' "$packed_manifest"
 
             npm view "$package_name" name --json >/dev/null || {

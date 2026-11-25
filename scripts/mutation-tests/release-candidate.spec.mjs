@@ -22,6 +22,11 @@ import {
   validateCandidateManifest,
   verifyCandidate,
 } from '../release/build-candidate.mjs';
+import { releasePackages } from '../release/release-plan.mjs';
+import {
+  candidateArchive,
+  packageRecord as packedRecord,
+} from '../tests/fixtures/candidate-archive.mjs';
 import { mcpFixtureFields, writeMcpFixtureFiles } from '../tests/fixtures/mcp-package.mjs';
 
 // @spec:018-project-integrity-hardening#S7
@@ -31,11 +36,26 @@ const tag = `v${version}`;
 const artifactId = 73_311;
 const candidateSha256 = 'a'.repeat(64);
 const repositoryUrl = 'git+https://github.com/kimen-dev/kimen.git';
-const elementsIntegrity = `sha512-${Buffer.alloc(64, 1).toString('base64')}`;
-const tokensIntegrity = `sha512-${Buffer.alloc(64, 2).toString('base64')}`;
-
 const mcpName = '@kimen/mcp-server';
-const mcpIntegrity = `sha512-${Buffer.alloc(64, 3).toString('base64')}`;
+const packageNames = [...releasePackages.keys()];
+const directoryOf = (name) => releasePackages.get(name).split('/')[1];
+const fileOf = (name) => `${name.slice(1).replace('/', '-')}-${version}.tgz`;
+const integrityOf = (name) =>
+  `sha512-${Buffer.alloc(64, packageNames.indexOf(name) + 1).toString('base64')}`;
+const elementsIntegrity = integrityOf('@kimen/elements');
+const tokensIntegrity = integrityOf('@kimen/tokens');
+// The runtime fields of the fixture packages mirror the repository.
+const catalogDependent = {
+  dependencies: { '@kimen/catalog': 'workspace:*' },
+  devDependencies: { '@kimen/elements': 'workspace:*', vitest: '5.1.0' },
+};
+const fixtureDependencies = {
+  '@kimen/elements': { devDependencies: { '@kimen/tokens': 'workspace:*' } },
+  '@kimen/catalog': { dependencies: { zod: '4.6.7' } },
+  '@kimen/emitter': catalogDependent,
+  '@kimen/adapter-a2ui': catalogDependent,
+  '@kimen/adapter-mcp-apps': catalogDependent,
+};
 
 const hash = (algorithm, bytes, encoding = 'hex') =>
   createHash(algorithm).update(bytes).digest(encoding);
@@ -68,11 +88,7 @@ const aManifest = (overrides = {}) => ({
   sourceSha: '1'.repeat(40),
   tag,
   version,
-  packages: [
-    packageRecord('@kimen/elements', `kimen-elements-${version}.tgz`, elementsIntegrity),
-    packageRecord('@kimen/tokens', `kimen-tokens-${version}.tgz`, tokensIntegrity),
-    packageRecord(mcpName, `kimen-mcp-server-${version}.tgz`, mcpIntegrity),
-  ],
+  packages: packageNames.map((name) => packageRecord(name, fileOf(name), integrityOf(name))),
   ...overrides,
 });
 
@@ -103,28 +119,15 @@ const publicationInput = (overrides = {}) => {
       webkit: successfulEvidence(),
     },
     npmVersion: '11.5.1',
-    registry: {
-      '@kimen/elements': { exists: true, versions: {} },
-      '@kimen/tokens': { exists: true, versions: {} },
-      [mcpName]: { exists: true, versions: {} },
-    },
-    trustedPublishers: {
-      '@kimen/elements': {
-        configured: true,
-        workflow: '.github/workflows/release.yml',
-        environment: 'npm',
-      },
-      '@kimen/tokens': {
-        configured: true,
-        workflow: '.github/workflows/release.yml',
-        environment: 'npm',
-      },
-      [mcpName]: {
-        configured: true,
-        workflow: '.github/workflows/release.yml',
-        environment: 'npm',
-      },
-    },
+    registry: Object.fromEntries(
+      packageNames.map((name) => [name, { exists: true, versions: {} }]),
+    ),
+    trustedPublishers: Object.fromEntries(
+      packageNames.map((name) => [
+        name,
+        { configured: true, workflow: '.github/workflows/release.yml', environment: 'npm' },
+      ]),
+    ),
     authority: {
       kind: 'oidc',
       workflow: '.github/workflows/release.yml',
@@ -145,6 +148,8 @@ const writePackage = async (root, name, directory, options) => {
     license: 'Apache-2.0',
     repository: repositoryMetadata(directory, options.repositoryOverrides[name]),
     files: ['dist', 'NOTICE'],
+    ...fixtureDependencies[name],
+    ...options.manifestOverrides[name],
     ...(name === mcpName ? mcpFixtureFields : {}),
     ...(options.scripts[name] === undefined ? {} : { scripts: options.scripts[name] }),
   };
@@ -159,6 +164,7 @@ const writePackage = async (root, name, directory, options) => {
   await Promise.all([
     writeFile(join(packageDirectory, 'package.json'), canonicalJson(manifest)),
     writeFile(join(packageDirectory, 'dist/index.js'), `export const name = '${name}';\n`),
+    writeFile(join(packageDirectory, 'README.md'), `# ${name}\n`),
     ...Object.entries(legalFiles)
       .filter(([, contents]) => contents !== null)
       .map(([file, contents]) => writeFile(join(packageDirectory, file), contents)),
@@ -175,6 +181,7 @@ const createRepositoryFixture = async (overrides = {}) => {
     candidateOutsideMain: false,
     legalFiles: {},
     packageVersions: {},
+    manifestOverrides: {},
     repositoryOverrides: {},
     scripts: {},
     extraPackages: [],
@@ -183,9 +190,7 @@ const createRepositoryFixture = async (overrides = {}) => {
   const root = await mkdtemp(join(tmpdir(), 'kimen-release-mutation-repo-'));
   onTestFinished(() => rm(root, { recursive: true, force: true }));
   const packageInputs = await Promise.all([
-    writePackage(root, '@kimen/elements', 'elements', options),
-    writePackage(root, '@kimen/tokens', 'tokens', options),
-    writePackage(root, mcpName, 'mcp-server', options),
+    ...packageNames.map((name) => writePackage(root, name, directoryOf(name), options)),
     ...options.extraPackages.map(({ name, directory }) =>
       writePackage(root, name, directory, options),
     ),
@@ -251,7 +256,7 @@ const firstTarSize = (bytes) =>
   Number.parseInt(bytes.subarray(124, 136).toString('ascii').replaceAll('\0', '').trim(), 8);
 
 describe('release candidate manifest mutation boundary', () => {
-  it('S7 accepts only the canonical exact three-package manifest', () => {
+  it('S7 accepts only the canonical exact release-package manifest', () => {
     const manifest = aManifest();
 
     expect(validateCandidateManifest(manifest)).toBe(manifest);
@@ -260,11 +265,16 @@ describe('release candidate manifest mutation boundary', () => {
   it.each([
     ['missing package', [aManifest().packages[0]], /exact package set/i],
     [
-      'catalog package',
+      'tooling package',
       [
         ...aManifest().packages,
-        packageRecord('@kimen/catalog', 'kimen-catalog-1.2.3.tgz', tokensIntegrity),
+        packageRecord('@kimen/nx-plugin', 'kimen-nx-plugin-1.2.3.tgz', tokensIntegrity),
       ],
+      /exact package set/i,
+    ],
+    [
+      'missing catalog',
+      aManifest().packages.filter(({ name }) => name !== '@kimen/catalog'),
       /exact package set/i,
     ],
     [
@@ -307,7 +317,7 @@ describe('release candidate manifest mutation boundary', () => {
   });
 });
 
-describe('release candidate build and verification mutation boundary', () => {
+describe('release candidate build and verification mutation boundary', { timeout: 30_000 }, () => {
   it('S7 dry-run preserves private versions, refs and worktree state', async () => {
     const fixture = await createRepositoryFixture({
       version: '0.0.0',
@@ -325,11 +335,7 @@ describe('release candidate build and verification mutation boundary', () => {
     const result = await buildFixture(fixture, { mode: 'dry-run', tag: null });
 
     expect(result.manifest).toMatchObject({ mode: 'dry-run', tag: null, version: '0.0.0' });
-    expect(result.manifest.packages.map(({ name }) => name)).toEqual([
-      '@kimen/elements',
-      '@kimen/tokens',
-      mcpName,
-    ]);
+    expect(result.manifest.packages.map(({ name }) => name)).toEqual(packageNames);
     expect({
       elements: await readFile(join(fixture.packages['@kimen/elements'], 'package.json'), 'utf8'),
       tokens: await readFile(join(fixture.packages['@kimen/tokens'], 'package.json'), 'utf8'),
@@ -370,9 +376,7 @@ describe('release candidate build and verification mutation boundary', () => {
 
     expect(extracted.listing).toEqual([
       'SHA256SUMS',
-      `kimen-elements-${version}.tgz`,
-      `kimen-mcp-server-${version}.tgz`,
-      `kimen-tokens-${version}.tgz`,
+      ...packageNames.map(fileOf).sort(),
       'manifest.json',
     ]);
     expect(manifestBytes.toString('utf8')).toBe(canonicalJson(manifest));
@@ -481,7 +485,7 @@ describe('release candidate build and verification mutation boundary', () => {
     ).rejects.toThrow(/@kimen\/tokens tarball is missing package\/NOTICE/u);
   });
 
-  it('S7 packs LICENSE and NOTICE into all three tarballs of a complete candidate', async () => {
+  it('S7 packs LICENSE and NOTICE into every tarball of a complete candidate', async () => {
     const fixture = await createRepositoryFixture();
     const candidate = await buildFixture(fixture);
     const directory = await mkdtemp(join(tmpdir(), 'kimen-release-mutation-legal-'));
@@ -519,7 +523,7 @@ describe('release candidate build and verification mutation boundary', () => {
         packageDirectories: [
           fixture.packageDirectories[0],
           fixture.packageDirectories[0],
-          fixture.packageDirectories[2],
+          ...fixture.packageDirectories.slice(2),
         ],
       }),
     ).rejects.toThrow(/unexpected or duplicate/i);
@@ -662,30 +666,195 @@ describe('release candidate build and verification mutation boundary', () => {
   });
 });
 
+const packedManifest = (directory, file) =>
+  JSON.parse(run('tar', ['-xOzf', join(directory, file), 'package/package.json'], directory));
+
+const packedListing = (directory, file) =>
+  run('tar', ['-tzf', join(directory, file)], directory)
+    .split('\n')
+    .sort();
+
+// npm pack of a package directory as the candidate builder runs it.
+const npmPack = async (directory) => {
+  const home = await mkdtemp(join(tmpdir(), 'kimen-release-mutation-pack-'));
+  onTestFinished(() => rm(home, { recursive: true, force: true }));
+  await writeFile(join(home, '.npmrc'), '');
+  const [{ filename }] = JSON.parse(
+    execFileSync('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', home], {
+      cwd: directory,
+      encoding: 'utf8',
+      env: {
+        HOME: home,
+        LC_ALL: 'C',
+        PATH: process.env.PATH,
+        npm_config_cache: join(home, '.npm-cache'),
+        npm_config_offline: 'true',
+        npm_config_userconfig: join(home, '.npmrc'),
+      },
+    }),
+  );
+  return readFile(join(home, filename));
+};
+
+describe('release candidate workspace rewrite mutation boundary', { timeout: 30_000 }, () => {
+  it('S7 stages each catalog dependent with the exact candidate range and no development dependencies', async () => {
+    const fixture = await createRepositoryFixture();
+    const candidate = await buildFixture(fixture);
+    const { directory } = await extractCandidate(candidate.archivePath);
+
+    for (const name of ['@kimen/emitter', '@kimen/adapter-a2ui', '@kimen/adapter-mcp-apps']) {
+      const source = JSON.parse(
+        await readFile(join(fixture.packages[name], 'package.json'), 'utf8'),
+      );
+      const published = { ...source };
+      delete published.devDependencies;
+      expect(packedManifest(directory, fileOf(name))).toEqual({
+        ...published,
+        dependencies: { '@kimen/catalog': version },
+      });
+      expect(packedListing(directory, fileOf(name))).toEqual([
+        'package/LICENSE',
+        'package/NOTICE',
+        'package/README.md',
+        'package/dist/index.js',
+        'package/package.json',
+      ]);
+    }
+  });
+
+  it('S7 packs elements, tokens and the catalog from their directories, byte for byte', async () => {
+    const fixture = await createRepositoryFixture();
+    const candidate = await buildFixture(fixture);
+    const { directory } = await extractCandidate(candidate.archivePath);
+
+    for (const name of ['@kimen/elements', '@kimen/tokens', '@kimen/catalog']) {
+      expect(
+        (await readFile(join(directory, fileOf(name)))).equals(
+          await npmPack(fixture.packages[name]),
+        ),
+      ).toBe(true);
+    }
+    expect(packedManifest(directory, fileOf('@kimen/catalog')).dependencies).toEqual({
+      zod: '4.6.7',
+    });
+  });
+
+  it.each([
+    [
+      'a caret workspace range',
+      { '@kimen/emitter': { dependencies: { '@kimen/catalog': 'workspace:^' } } },
+      '@kimen/emitter dependencies can only use workspace:* on a release package; @kimen/catalog is workspace:^',
+    ],
+    [
+      'a workspace range outside the release set',
+      { '@kimen/adapter-a2ui': { optionalDependencies: { '@kimen/nx-plugin': 'workspace:*' } } },
+      '@kimen/adapter-a2ui optionalDependencies can only use workspace:* on a release package; @kimen/nx-plugin is workspace:*',
+    ],
+    [
+      'a workspace range on a later package',
+      { '@kimen/catalog': { peerDependencies: { '@kimen/emitter': 'workspace:*' } } },
+      '@kimen/catalog peerDependencies needs @kimen/emitter, which must be published before it',
+    ],
+  ])('S7 refuses %s before packing', async (_name, manifestOverrides, message) => {
+    const fixture = await createRepositoryFixture({ manifestOverrides });
+
+    await expect(buildFixture(fixture)).rejects.toThrow(message);
+  });
+
+  it.each([
+    [
+      'dependencies',
+      { '@kimen/elements': '1.2.4' },
+      '@kimen/catalog packed dependencies.@kimen/elements must be 1.2.3, a package of this candidate; found 1.2.4',
+    ],
+    [
+      'peerDependencies',
+      { '@kimen/nx-plugin': version },
+      '@kimen/catalog packed peerDependencies.@kimen/nx-plugin must be 1.2.3, a package of this candidate; found 1.2.3',
+    ],
+    [
+      'optionalDependencies',
+      { '@kimen/tokens': '^1.2.3' },
+      '@kimen/catalog packed optionalDependencies.@kimen/tokens must be 1.2.3, a package of this candidate; found ^1.2.3',
+    ],
+  ])(
+    'S7 refuses a packed %s entry a clean consumer cannot install',
+    async (field, dependencies, message) => {
+      const fixture = await createRepositoryFixture({
+        manifestOverrides: {
+          '@kimen/catalog': { dependencies: { zod: '4.6.7' }, [field]: dependencies },
+        },
+      });
+
+      await expect(buildFixture(fixture)).rejects.toThrow(message);
+    },
+  );
+
+  it('S7 accepts a packed non-Kimen dependency at any range and a Kimen one at the candidate version', async () => {
+    const fixture = await createRepositoryFixture({
+      manifestOverrides: {
+        '@kimen/catalog': { dependencies: { zod: '^4.0.0', '@kimen/elements': version } },
+      },
+    });
+    const candidate = await buildFixture(fixture);
+    const { directory } = await extractCandidate(candidate.archivePath);
+
+    expect(packedManifest(directory, fileOf('@kimen/catalog')).dependencies).toEqual({
+      zod: '^4.0.0',
+      '@kimen/elements': version,
+    });
+  });
+
+  it('S7 refuses a packed runtime field that is not an object', async () => {
+    const fixture = await createRepositoryFixture({
+      manifestOverrides: { '@kimen/tokens': { peerDependencies: ['@kimen/elements'] } },
+    });
+
+    await expect(buildFixture(fixture)).rejects.toThrow(
+      '@kimen/tokens packed peerDependencies must be an object',
+    );
+  });
+
+  it('S7 independent verification refuses a candidate whose dependent tarball kept workspace:*', async () => {
+    const fixture = await createRepositoryFixture();
+    const built = await buildFixture(fixture);
+    const { directory } = await extractCandidate(built.archivePath);
+    const unstaged = await npmPack(fixture.packages['@kimen/adapter-mcp-apps']);
+    const files = new Map();
+    for (const { name, file } of built.manifest.packages) {
+      files.set(
+        file,
+        name === '@kimen/adapter-mcp-apps' ? unstaged : await readFile(join(directory, file)),
+      );
+    }
+    const manifest = {
+      ...built.manifest,
+      packages: built.manifest.packages.map(({ name, file }) =>
+        packedRecord(name, file, files.get(file)),
+      ),
+    };
+    const { archive, sha256 } = candidateArchive(manifest, files);
+    const archivePath = join(directory, 'tampered.tar');
+    await writeFile(archivePath, archive);
+
+    await expect(
+      verifyCandidate({ archivePath, expectedSha256: sha256, environment: {} }),
+    ).rejects.toThrow(
+      '@kimen/adapter-mcp-apps packed dependencies.@kimen/catalog must be a registry range, not workspace:',
+    );
+  });
+});
+
 describe('release publication evaluation mutation boundary', () => {
   it('S7 authorizes only complete same-artifact evidence', async () => {
     await expect(evaluatePublication(publicationInput())).resolves.toEqual({
       status: 'eligible',
-      actions: [
-        {
-          name: '@kimen/elements',
-          action: 'publish',
-          file: `kimen-elements-${version}.tgz`,
-          integrity: elementsIntegrity,
-        },
-        {
-          name: '@kimen/tokens',
-          action: 'publish',
-          file: `kimen-tokens-${version}.tgz`,
-          integrity: tokensIntegrity,
-        },
-        {
-          name: mcpName,
-          action: 'publish',
-          file: `kimen-mcp-server-${version}.tgz`,
-          integrity: mcpIntegrity,
-        },
-      ],
+      actions: packageNames.map((name) => ({
+        name,
+        action: 'publish',
+        file: fileOf(name),
+        integrity: integrityOf(name),
+      })),
     });
   });
 
@@ -847,22 +1016,16 @@ describe('release publication evaluation mutation boundary', () => {
     const partial = publicationInput();
     partial.registry['@kimen/elements'].versions[version] = { integrity: elementsIntegrity };
 
+    const actions = (skipped) =>
+      packageNames.map((name) => ({ name, action: skipped.includes(name) ? 'skip' : 'publish' }));
     await expect(evaluatePublication(partial)).resolves.toMatchObject({
       status: 'eligible',
-      actions: [
-        { name: '@kimen/elements', action: 'skip' },
-        { name: '@kimen/tokens', action: 'publish' },
-        { name: mcpName, action: 'publish' },
-      ],
+      actions: actions(['@kimen/elements']),
     });
 
     partial.registry['@kimen/tokens'].versions[version] = { integrity: tokensIntegrity };
     await expect(evaluatePublication(partial)).resolves.toMatchObject({
-      actions: [
-        { name: '@kimen/elements', action: 'skip' },
-        { name: '@kimen/tokens', action: 'skip' },
-        { name: mcpName, action: 'publish' },
-      ],
+      actions: actions(['@kimen/elements', '@kimen/tokens']),
     });
   });
 

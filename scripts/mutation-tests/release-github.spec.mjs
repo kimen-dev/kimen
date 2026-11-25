@@ -59,7 +59,7 @@ const notes =
   '### Added\n\n- Hand-written feature.\n- Add search.\n\n### Fixed\n\n- Correct focus.';
 const proposal = {
   title: 'chore(release): v0.2.0',
-  body: `Release \`@kimen/elements\`, \`@kimen/tokens\` and \`@kimen/mcp-server\` at \`0.2.0\`. Merging this pull request starts tag creation and candidate validation.\n\n${notes}`,
+  body: `Release \`@kimen/elements\`, \`@kimen/tokens\`, \`@kimen/mcp-server\`, \`@kimen/catalog\`, \`@kimen/emitter\`, \`@kimen/adapter-a2ui\` and \`@kimen/adapter-mcp-apps\` at \`0.2.0\`. Merging this pull request starts tag creation and candidate validation.\n\n${notes}`,
 };
 const releasePull = {
   title: 'chore(release): v0.2.0',
@@ -172,12 +172,16 @@ afterEach(() => {
 });
 
 describe('release commit and pull request helpers', () => {
-  it('S9 the release commit holds the changelog, manifests, pins, plugin manifests and generated API', () => {
+  it('S9 the release commit holds the changelog, manifests, pins, plugin manifests, adapter versions and generated API', () => {
     expect(releaseCommitFiles).toEqual([
       'CHANGELOG.md',
       'packages/elements/package.json',
       'packages/tokens/package.json',
       'packages/mcp-server/package.json',
+      'packages/catalog/package.json',
+      'packages/emitter/package.json',
+      'packages/adapter-a2ui/package.json',
+      'packages/adapter-mcp-apps/package.json',
       'packages/mcp-server/server.json',
       'packages/mcp-server/README.md',
       'plugins/kimen/README.md',
@@ -189,6 +193,9 @@ describe('release commit and pull request helpers', () => {
       'site/docs/src/content/docs/guides/connect-agents.mdx',
       'plugins/kimen/.claude-plugin/plugin.json',
       'plugins/kimen/.antigravity-plugin/plugin.json',
+      'packages/adapter-a2ui/COMPAT.md',
+      'packages/adapter-mcp-apps/COMPAT.md',
+      'packages/adapter-mcp-apps/src/bridge.ts',
       'packages/elements/generated/public-api/index.json',
       'packages/catalog/src/generated/catalog.ts',
     ]);

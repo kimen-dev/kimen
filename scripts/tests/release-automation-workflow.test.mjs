@@ -52,9 +52,11 @@ test('S4 both workflows fail closed and use only scoped App credentials for writ
   }
 });
 
-test('S6 Nx fixed releases target the three publication packages without updating dependents or the lockfile', async () => {
+test('S6 Nx fixed releases target the publication packages without updating dependents or the lockfile', async () => {
   const { release } = JSON.parse(await read('nx.json'));
-  assert.deepEqual(release.projects, ['@kimen/elements', '@kimen/tokens', '@kimen/mcp-server']);
+  const { releasePackages } = await import('../release/release-plan.mjs');
+  assert.deepEqual(release.projects, [...releasePackages.keys()]);
+  assert.equal(release.version.preserveLocalDependencyProtocols, true);
   assert.equal(release.projectsRelationship, 'fixed');
   assert.equal(release.version.conventionalCommits, true);
   assert.equal(release.version.updateDependents, 'never');

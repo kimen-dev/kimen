@@ -5,6 +5,7 @@ import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { buildCandidate, verifyCandidate } from './build-candidate.mjs';
+import { smokeCandidate } from './consumer-smoke.mjs';
 import { releasePackages } from './release-plan.mjs';
 
 function fail(message) {
@@ -71,13 +72,16 @@ export async function runCandidateCli({
   environment = process.env,
   buildCandidateImpl = buildCandidate,
   verifyCandidateImpl = verifyCandidate,
+  smokeCandidateImpl = smokeCandidate,
 } = {}) {
   const [command, ...commandArguments] = arguments_;
   let result;
   if (command === 'build') result = await build(commandArguments, buildCandidateImpl);
   else if (command === 'verify') {
     result = await verify(commandArguments, verifyCandidateImpl, environment);
-  } else fail('usage: candidate-cli.mjs <build|verify> [options]');
+  } else if (command === 'smoke') {
+    result = await verify(commandArguments, smokeCandidateImpl, environment);
+  } else fail('usage: candidate-cli.mjs <build|verify|smoke> [options]');
   stdout.write(`${JSON.stringify(result)}\n`);
   return result;
 }
