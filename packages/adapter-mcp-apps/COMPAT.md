@@ -133,6 +133,17 @@ figures.
   After 10 seconds without a result the skeleton stops shimmering (it never
   does under reduced motion). A host that re-creates the View and does not
   send its result again shows this placeholder instead of an empty page.
+- **Profiles (spec 165).** `profiles/form` and `profiles/data` are smaller
+  documents with the same properties, each carrying one subset of the
+  catalog (`scripts/surface-profiles.mjs`). Each registers only its subset,
+  the components those draw, and the waiting placeholder. Its built-in
+  catalog is the subset, so a spec that names any other component is
+  refused. Each has its own content-policy digests and its own raw, gzip and
+  brotli budget (`tests/subset-documents.spec.ts`). Measured on macOS at
+  spec 165's merge base, against 1,527,736 / 283,998 B for the full document:
+  «form» 596,734 B raw and 110,383 B brotli; «data» 476,345 B raw and
+  92,077 B brotli. Each profile keeps the full token stylesheet. No
+  production host has served two Kimen resources from one server yet.
 
 Host↔surface traffic follows the wire vocabulary above, mediated by the
 host's audit path. The real-browser suite (`browser-tests/`, Chromium) loads

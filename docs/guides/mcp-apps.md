@@ -270,6 +270,49 @@ theme); no webfont is embedded; and the document declares no network, so an
 avatar image or a video source does not load. The document's size and budget
 are in [`COMPAT.md`](../../packages/adapter-mcp-apps/COMPAT.md).
 
+## Smaller documents: profiles
+
+The full document carries all the catalog components, and each card's frame
+parses all of them. When a tool only ever shows one kind of card, serve it a
+profile instead: a predeclared document that carries one subset of the
+catalog (spec 165). Two are published:
+
+| Profile | Import | Components a spec may name |
+|---|---|---|
+| «form» | `@kimen/adapter-mcp-apps/profiles/form` | `ki-card`, `ki-input`, `ki-select` with `ki-option`, `ki-checkbox`, `ki-textarea`, `ki-button`, `ki-stack`, `ki-skeleton` |
+| «data» | `@kimen/adapter-mcp-apps/profiles/data` | `ki-table`, `ki-badge`, `ki-stack`, `ki-skeleton` |
+
+Both also accept the native primitives (headings, paragraphs, layout and the
+native table). A composite brings its parts: «form» names `ki-select`, and
+`ki-option` comes with it.
+
+`defineKimenSurface` wires one surface in a single call, so the resource, the
+tool metadata, the action tool and the catalog always name the same document:
+
+```ts
+import { defineKimenSurface } from '@kimen/adapter-mcp-apps';
+import { FORM_PROFILE } from '@kimen/adapter-mcp-apps/profiles/form';
+
+const signup = defineKimenSurface({ profile: FORM_PROFILE });
+signup.resource;   // ui://kimen/form, the «form» document
+signup.toolMeta;   // the `_meta` of each tool that renders through it
+signup.actionTool; // kimen_surface_action, naming ui://kimen/form
+signup.catalog;    // the catalog to offer the agent for those tools
+signup.validate(spec); // the document's verdict, before you return a result
+```
+
+Without a profile, `defineKimenSurface()` serves the full document under
+`ui://kimen/surface`, exactly as `createKimenSurfaceResource()` does. A
+`name` option serves a profile under a URI of your own.
+
+Inside a profile document the built-in catalog is the profile's subset, and
+the full catalog is not in the document at all. A spec that names any other
+component is refused before anything paints, even a component the document
+carries only because one of its own draws it (`ki-table` draws `ki-icon`, so
+the «data» document defines `ki-icon` but refuses a spec that names it). Each
+document has its own content-policy digests, regenerates byte for byte and
+looks the same as the full document. The full document is unchanged.
+
 ## Inside the surface: the bridge
 
 The bundled document wires itself. Reach for `createSurfaceBridge` when you

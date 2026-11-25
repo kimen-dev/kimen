@@ -79,3 +79,5 @@ export type {
   ViewResponse,
 } from './protocol.js';
 export { SURFACE_DOCUMENT } from './generated/surface-document.js';
+export { defineKimenSurface } from './surface.js';
+export type { KimenSurface, KimenSurfaceOptions, SurfaceProfile } from './surface.js';

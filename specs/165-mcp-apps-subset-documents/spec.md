@@ -9,10 +9,16 @@
 
 **Created**: 2026-11-25
 
-**Status**: Draft for the founder's approval. This is the contract only, and
-nothing is implemented on this branch. S5 to S9 touch the guardrail and
-security boundary (Art. VIII) and need the founder's explicit confirmation.
-The open questions at the end are batched for the same review.
+**Status**: Approved. On 2026-11-25 the founder answered "Aprobado con tus
+respuestas" (relayed by the coordinating agent) to this question: "Spec 165
+(PR #629): 12 scenarios, S5–S9 guardrails (inside a subset document the
+catalog IS that subset, any other component is refused, each document carries
+its CSP digests). Answers to the open questions: Kimen publishes the subsets
+as profiles (first «form» and «data»); server authors can define their own
+later; composites bring their parts automatically; the full token stylesheet
+stays for now; kimen-mcp adopts them in another spec. Do you approve the
+contract like this?" That explicit confirmation covers the guardrail
+scenarios S5 to S9. The answers are recorded under "Resolved questions".
 
 **Input**: the weight report of 2026-11-25 (opportunity 4; kept in the
 founder's `internal/`, not in the repository). The one MCP Apps document
@@ -104,8 +110,8 @@ name the same surface.
 
 - **An empty subset** fails generation, the way an empty catalog definition
   fails today (spec 032, `empty-definition`).
-- **Native primitives** (spec 037) need no definition. A subset may name them,
-  and they count as nameable like any other catalog entry.
+- **Native primitives** (spec 037) need no definition. Every effective subset
+  includes them (Implementation notes).
 - **The waiting placeholder** (spec 163) is a `ki-skeleton`. Every document
   carries it as the document's own part, and a spec may name `ki-skeleton`
   only when the subset names it (FR-002, S7).
@@ -417,39 +423,41 @@ Security, outside the families: S5 (content policy).
   runtime, token split) are independent of this feature. They make every
   document smaller, the full one included.
 
-## Open questions for the founder
+## Resolved questions
 
-1. **Q1. Who defines subsets?** (a) Kimen publishes named profiles
-   (recommended for the first version, D9). (b) A server author generates
-   their own subset documents at build time with a Kimen generator, which
-   needs esbuild and the elements build in their build, and gives full
-   freedom. (c) Both: (a) first, (b) later. S1 to S12 hold under every
-   answer.
-2. **Q2. Which profiles, under which names?** The report measured two:
-   - a form card: `ki-card`, `ki-input`, `ki-select` (with `ki-option`),
-     `ki-checkbox`, `ki-textarea`, `ki-button`, `ki-stack` and `ki-skeleton`;
-   - a table: `ki-table`, `ki-badge`, `ki-stack` and `ki-skeleton`.
+Answered by the founder's approval of 2026-11-25 (Status), except where a
+default is marked as pending confirmation.
 
-   Are these the first profiles, and are the names "form" and "data"?
-3. **Q3. Composites.** Complete the parts automatically (recommended, S2 as
-   written), or fail generation when a subset names a composite without its
-   parts (S2 would become a generation failure)?
-4. **Q4. Tokens in subset documents.** Keep the full token stylesheet in the
-   first version (simplest, so S12 holds trivially), or prune it to the tokens
-   the document's components and page contract read? Pruning saves about
-   15 KB br more on the form card, depends on the token split, and S12 is its
-   guard.
-5. **Q5. Install weight.** Each published profile adds its document to the
-   package (the form card is about 0.6 MB raw before the other reductions;
-   estimate). Subpath exports keep server bundles small but not installs. Is
-   that acceptable, or should profiles live in a separate package?
-6. **Q6. `kimen-mcp`.** Should the stdio server move its render tool to
-   subset surfaces (for example one render tool per profile), or keep the
-   full document? Either changes its tool list, so it is a separate decision
-   and not part of this contract.
-7. **Q7. A subset that changes under the same name.** A host that cached the
-   older document fails closed for newly added components. Leave the name to
-   the server and document the rule (recommended), or derive part of the URI
-   from the subset's content so the URI changes with it?
-8. **Q8. Real hosts.** Before the capability claim moves, run the host test
-   of 2026-11-24 (Claude desktop) with two Kimen resources on one server?
+1. **Q1. Who defines subsets?** Kimen publishes named profiles first (D9).
+   Server authors may define their own subsets later, in another spec.
+2. **Q2. Which profiles?** «form» names `ki-card`, `ki-input`, `ki-select`,
+   `ki-checkbox`, `ki-textarea`, `ki-button`, `ki-stack` and `ki-skeleton`.
+   «data» names `ki-table`, `ki-badge`, `ki-stack` and `ki-skeleton`.
+3. **Q3. Composites.** Their parts come automatically (D5; S2 as written).
+4. **Q4. Tokens.** Every document keeps the full token stylesheet for now.
+5. **Q5. Install weight.** The profiles ship in this package as subpath
+   exports, as the approval instructs. The package's size budget does not
+   cover them, and raising it is the founder's decision (Constitutional
+   Surface).
+6. **Q6. `kimen-mcp`.** It adopts the profiles in another spec. This one
+   leaves it on the full document.
+7. **Q7. A subset that changes under the same name.** *Default, pending
+   confirmation:* the server keeps choosing the name and a profile is served
+   at `ui://kimen/<name>`. A changed profile keeps its URI, and a host that
+   cached the older document fails closed for added components.
+8. **Q8. Real hosts.** *Default, pending confirmation:* the Claude desktop
+   host test of 2026-11-24 runs with two Kimen resources before the
+   capability claim moves. It is not part of the implementing PR.
+
+### Implementation notes, pending confirmation
+
+- **Native primitives are in every profile.** The catalog's native-primitive
+  code reads Kimen's own `div` entry when it loads, so a built-in catalog
+  without the primitives cannot run. The primitives need no definition and
+  are the structural vocabulary of every card (headings, paragraphs, layout,
+  the native table that `ki-table` frames), so the effective subset always
+  includes them. This replaces "a subset may name them" in Edge Cases.
+- **API shape.** Proposal (b) of Constitutional Surface:
+  `defineKimenSurface({ name, profile })`, with `FORM_PROFILE` from
+  `@kimen/adapter-mcp-apps/profiles/form` and `DATA_PROFILE` from
+  `@kimen/adapter-mcp-apps/profiles/data`.

@@ -71,7 +71,11 @@ export const packageContentRules = Object.freeze({
   }),
   '@kimen/adapter-mcp-apps': Object.freeze({
     mapsEveryModule: true,
-    unmappedModules: Object.freeze(['dist/generated/surface-document.js']),
+    unmappedModules: Object.freeze([
+      'dist/generated/surface-document.js',
+      'dist/generated/surface-profile-data.js',
+      'dist/generated/surface-profile-form.js',
+    ]),
     assets: Object.freeze([]),
     budget: Object.freeze({ packed: 833_536, unpacked: 3_404_800 }),
   }),
