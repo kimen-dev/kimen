@@ -24,7 +24,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, realpathSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { catalogData, NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
 import { build, transform } from 'esbuild';
@@ -47,7 +47,7 @@ const tokenStylesheets = ['tokens.css', 'base.css'].map((file) =>
 // real path), found the same way as the others so a test runner can import
 // this module too.
 const catalogDist = realpathSync(resolve(packageRoot, '../catalog/dist'));
-const generatedCatalogModule = resolve(catalogDist, 'generated/catalog.js');
+const generatedCatalogDir = resolve(catalogDist, 'generated');
 const { bundledNpmPackages } = await import(
   new URL('../../../scripts/lib/bundled-package-inventory.mjs', import.meta.url).href
 );
@@ -195,26 +195,48 @@ const validatorPlugin = {
   },
 };
 
+const isRecord = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
+
 /**
- * Serves `catalog` in place of the catalog's generated module (spec 165 D3,
- * FR-004): every module of the catalog reads its built-in catalog from there,
- * so in a subset document the validator, the renderer and the live surface
- * all know the subset and nothing else. `loaded.done` records that the
- * replacement happened; the caller fails the build if it did not.
+ * Serves the catalog's generated modules cut down to `effective` (spec 165
+ * D3, FR-004). Every module of the catalog reads its built-in catalog from a
+ * generated module (`catalogData`, or the prose-free `catalogStructure` it is
+ * built from), so each generated module that exports a catalog is replaced by
+ * the same exports holding only the effective subset's entries. In a subset
+ * document the validator, the renderer and the live surface then know the
+ * subset and nothing else. A generated module that mixes a catalog with other
+ * exports fails the build, and so does a build that replaced none: either
+ * would leave the whole catalog in the document. `loaded.count` records the
+ * replacements.
  */
-function subsetCatalogPlugin(catalog, loaded) {
+function subsetCatalogPlugin(effective, loaded) {
   return {
     name: 'subset-catalog',
     setup(pluginBuild) {
-      pluginBuild.onLoad({ filter: /[\\/]generated[\\/]catalog\.js$/ }, (args) => {
-        if (args.path !== generatedCatalogModule) {
+      pluginBuild.onLoad({ filter: /\.js$/ }, async (args) => {
+        if (dirname(args.path) !== generatedCatalogDir) {
           return undefined;
         }
-        loaded.done = true;
-        return {
-          contents: `export const catalogData = ${JSON.stringify(catalog)};\n`,
-          loader: 'js',
-        };
+        const exports = await import(pathToFileURL(args.path).href);
+        const catalogs = Object.entries(exports).filter(
+          ([, value]) => isRecord(value) && isRecord(value.components),
+        );
+        if (catalogs.length === 0) {
+          return undefined;
+        }
+        if (catalogs.length !== Object.keys(exports).length) {
+          throw new Error(
+            `adapter-mcp-apps: ${args.path} exports more than a catalog; the subset document cannot replace it`,
+          );
+        }
+        loaded.count += 1;
+        const contents = catalogs.map(([name, catalog]) => {
+          const components = Object.fromEntries(
+            Object.entries(catalog.components).filter(([tag]) => effective.has(tag)),
+          );
+          return `export const ${name} = ${JSON.stringify({ ...catalog, components })};`;
+        });
+        return { contents: `${contents.join('\n')}\n`, loader: 'js' };
       });
     },
   };
@@ -261,8 +283,8 @@ function assertInlinable(tag, text) {
   }
 }
 
-async function bundleScript(tags, catalog) {
-  const loaded = { done: false };
+async function bundleScript(tags, effective) {
+  const loaded = { count: 0 };
   const result = await build({
     absWorkingDir: packageRoot,
     bundle: true,
@@ -280,7 +302,7 @@ async function bundleScript(tags, catalog) {
     platform: 'browser',
     plugins: [
       tsExtensionPlugin,
-      ...(catalog === undefined ? [] : [subsetCatalogPlugin(catalog, loaded)]),
+      ...(effective === undefined ? [] : [subsetCatalogPlugin(effective, loaded)]),
       validatorPlugin,
       stockSurfaceIconSelectionPlugin(packageRoot),
     ],
@@ -293,11 +315,11 @@ async function bundleScript(tags, catalog) {
     target: 'es2022',
     write: false,
   });
-  if (catalog !== undefined && !loaded.done) {
+  if (effective !== undefined && loaded.count === 0) {
     // Fail closed: without the replacement the document would carry, and
     // validate against, the whole catalog.
     throw new Error(
-      `adapter-mcp-apps: the subset document did not load the catalog's generated module at ${generatedCatalogModule}`,
+      `adapter-mcp-apps: the subset document loaded no generated catalog module from ${generatedCatalogDir}`,
     );
   }
   let script = result.outputFiles[0].text;
@@ -329,13 +351,14 @@ const digest = (text) => `'sha256-${createHash('sha256').update(text, 'utf8').di
  * subset (spec 165) it registers the definitions of the effective subset and
  * of the waiting placeholder (FR-002), and its built-in catalog is the
  * effective subset alone (FR-004). Returns the HTML, the npm packages bundled
- * into its script, the registered tags and, for a subset, the built-in
- * catalog and the effective subset.
+ * into its script, the registered tags and, for a subset, the effective
+ * subset and its catalog (the entries the document's generated modules keep).
  */
 export async function generateSurfaceDocument({ subset } = {}) {
   let tags;
   let catalog;
   let components;
+  let effective;
   if (subset === undefined) {
     // The registered set IS the catalog (FR-011, Art. I): every component the
     // guarded renderer may render gets its definition, and nothing is
@@ -346,7 +369,7 @@ export async function generateSurfaceDocument({ subset } = {}) {
       .sort();
   } else {
     components = resolveSubset(subset);
-    const effective = new Set(components);
+    effective = new Set(components);
     catalog = {
       ...catalogData,
       components: Object.fromEntries(
@@ -361,7 +384,7 @@ export async function generateSurfaceDocument({ subset } = {}) {
     ].sort();
   }
   const [{ script, packages }, style] = await Promise.all([
-    bundleScript(tags, catalog),
+    bundleScript(tags, effective),
     bundleStyle(),
   ]);
 
