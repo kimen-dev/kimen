@@ -11,6 +11,12 @@ One catalog in; a system prompt, a catalog-specialized JSON Schema and a
 provider-neutral tool definition out, plus the two helpers that close the
 reliability loop.
 
+Install it next to the catalog it reads:
+
+```sh
+npm install @kimen/emitter @kimen/catalog
+```
+
 **Security model, up front**: everything the emitter produces is ADVISORY.
 A derived schema or prompt improves a model's first-try validity; it
 authorizes nothing. Budgets, the URL scheme allowlist, the purity wall and

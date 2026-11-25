@@ -39,6 +39,18 @@ protocol adapters are deliberately narrower (see their limits below). To
 mount the renderer or a live surface in a React component (refs, effects,
 StrictMode, unmount), read `references/react.md`.
 
+Install from npm; the `kimen-mcp` row needs nothing, because the plugin or
+`npx` starts the server. The `@kimen/*` packages release together at one
+version: keep every one you install at that version, because
+`@kimen/catalog` describes the components of its own `@kimen/elements`
+release.
+
+```sh
+pnpm add @kimen/catalog @kimen/emitter @kimen/elements @kimen/tokens  # you own the page
+pnpm add @kimen/adapter-mcp-apps @kimen/catalog                       # MCP server with surfaces
+pnpm add @kimen/adapter-a2ui @kimen/elements @kimen/tokens            # A2UI host page
+```
+
 ## The spec, in one screen
 
 ```json
@@ -165,13 +177,10 @@ receiving every intermediate event.
 - **MCP Apps** support is pinned to the `2026-01-26` revision; under a host
   that negotiates another revision the surface stays empty, and only the
   tool's text result reaches the model.
-- Packages are pre-1.0. `kimen-mcp` runs from npm
-  (`npx -y -p @kimen/mcp-server@0.2.1 kimen-mcp`). If a package you need,
-  such as `@kimen/catalog`, `@kimen/emitter` or an adapter, has no release on
-  npm yet
-  (nothing, or only the `0.0.0` name reservation), link it from a repository
-  build (`references/install-from-source.md` in the `kimen-components`
-  skill).
+- Packages are pre-1.0: a minor release may break the API. `kimen-mcp` runs
+  from npm (`npx -y -p @kimen/mcp-server@0.2.1 kimen-mcp`). To try a change
+  that is not released yet, link a repository build
+  (`references/install-from-source.md` in the `kimen-components` skill).
 - **Content-Security-Policy**: the renderer lays out `div` and sizes `img`
   through the CSSOM (`style.setProperty`), which a CSP without
   `'unsafe-inline'` does not block. Serialized DOM still shows those writes

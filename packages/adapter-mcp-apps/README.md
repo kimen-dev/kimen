@@ -1,13 +1,15 @@
 # @kimen/adapter-mcp-apps
 
 The second Kimen protocol adapter (constitution Art. VIII, spec 030). It
-exposes Kimen surfaces to [MCP Apps](https://modelcontextprotocol.io/seps/1865-mcp-apps-interactive-user-interfaces-for-mcp)
+exposes Kimen surfaces to
+[MCP Apps](https://modelcontextprotocol.io/seps/1865-mcp-apps-interactive-user-interfaces-for-mcp)
 (SEP-1865) hosts as predeclared, self-contained `ui://` resources whose only
 render path is the guarded renderer over the neutral catalog. The catalog and
 the `ki-*` elements are the durable assets; this adapter is **disposable by
-design** — the exact supported protocol revision lives in [`COMPAT.md`](./COMPAT.md),
-and a breaking protocol release is absorbed here or retires the package,
-never touching core.
+design** — the exact supported protocol revision lives in
+[`COMPAT.md`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-mcp-apps/COMPAT.md),
+and a breaking protocol release is absorbed here or retires the package, never
+touching core.
 
 ## Why it is safe
 
@@ -42,18 +44,32 @@ never touching core.
 
 ## When to use
 
-Use this adapter when you build an MCP server whose tool results should
-render as interactive Kimen surfaces in MCP Apps hosts: it produces the
-predeclared `ui://` resource, the tool metadata and the tool-result envelope
-on the server side, and `createSurfaceBridge` connects host traffic to the
-guarded renderer inside the surface. If you control the rendering host
-yourself, skip the adapter and use [`@kimen/catalog`](../catalog/README.md)
+Use this adapter when you build an MCP server whose tool results should render
+as interactive Kimen surfaces in MCP Apps hosts: it produces the predeclared
+`ui://` resource, the tool metadata and the tool-result envelope on the server
+side, and `createSurfaceBridge` connects host traffic to the guarded renderer
+inside the surface. If you control the rendering host yourself, skip the
+adapter and use
+[`@kimen/catalog`](https://github.com/kimen-dev/kimen/blob/main/packages/catalog/README.md)
 directly; if your host speaks A2UI, use
-[`@kimen/adapter-a2ui`](../adapter-a2ui/README.md).
+[`@kimen/adapter-a2ui`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-a2ui/README.md).
 
 The end-to-end walkthrough — declaring the surface, serving the resource,
 returning tool results and host negotiation — is
-[Ship an MCP App with Kimen](../../docs/guides/mcp-apps.md).
+[Ship an MCP App with Kimen](https://github.com/kimen-dev/kimen/blob/main/docs/guides/mcp-apps.md).
+
+## Install
+
+```sh
+pnpm add @kimen/adapter-mcp-apps
+# or: npm install @kimen/adapter-mcp-apps
+```
+
+The adapter depends on `@kimen/catalog` at its own version, and the `ui://`
+document it serves already carries the components and the default tokens,
+so the server installs nothing else from Kimen. Add `@kimen/catalog` at the
+same version as a direct dependency when your server checks specs itself
+(`preflightUiSpec`).
 
 ## Usage
 
@@ -128,16 +144,20 @@ rules.
 
 Inside the surface document, `createSurfaceBridge` speaks the MCP Apps
 2026-01-26 lifecycle: it opens with `ui/initialize`, confirms with
-`ui/notifications/initialized`, renders `ui/notifications/tool-result`
-through the guarded renderer and its live surface, answers `ui/resource-teardown` and `ping`,
-ignores non-protocol traffic, and lets only declared actions leave as
+`ui/notifications/initialized`, renders `ui/notifications/tool-result` through
+the guarded renderer and its live surface, answers `ui/resource-teardown` and
+`ping`, ignores non-protocol traffic, and lets only declared actions leave as
 `tools/call` to `kimen_surface_action` — relayed to the model as one
-`ui/message` when the server's answer asks for it. A host negotiating a protocol version
-outside `COMPAT.md` is refused at the handshake. The host's `theme` reaches
-the document as its color scheme: the packaged document sets it on its root
-element, and a custom document receives it through the bridge's
+`ui/message` when the server's answer asks for it. A host negotiating a
+protocol version outside `COMPAT.md` is refused at the handshake. The host's
+`theme` reaches the document as its color scheme: the packaged document sets
+it on its root element, and a custom document receives it through the bridge's
 `onColorScheme` option. The full wire table, what the document contains, its
-size and its declared boundaries are in [`COMPAT.md`](./COMPAT.md).
+size and its declared boundaries are in
+[`COMPAT.md`](https://github.com/kimen-dev/kimen/blob/main/packages/adapter-mcp-apps/COMPAT.md).
 
-See [Ship an MCP App with Kimen](../../docs/guides/mcp-apps.md) for the full
-guide, and the [roadmap](../../docs/roadmap.md) for project context.
+See
+[Ship an MCP App with Kimen](https://github.com/kimen-dev/kimen/blob/main/docs/guides/mcp-apps.md)
+for the full guide, and the
+[roadmap](https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md) for
+project context.

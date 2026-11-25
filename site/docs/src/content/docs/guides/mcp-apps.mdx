@@ -28,6 +28,17 @@ retires the package, never touching core.
   is ignored with no state change. Outbound traffic is limited to the
   surface's declared actions, mediated by the host.
 
+## Install
+
+```sh
+npm install @kimen/adapter-mcp-apps
+```
+
+The server needs only the adapter: the `ui://` document it serves already
+embeds the guarded renderer, the elements and the default theme. To give
+agents Kimen's tools without writing a server, use `kimen-mcp` instead
+([Connect your agent](/docs/guides/connect-agents/)).
+
 ## Usage — server side
 
 ```ts

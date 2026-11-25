@@ -5,15 +5,156 @@ import { Meta } from '@storybook/addon-docs/blocks';
 # Framework integration
 
 Kimen components are standard custom elements, so they work in React, Vue,
-Angular — and no framework at all — **without wrappers**. Generated framework
-wrappers now exist for the three major frameworks — `@kimen/react`,
-`@kimen/vue` and `@kimen/angular` (typed props, native event bindings, and
-the framework form idiom: controlled props / `v-model` / value accessors) —
-implemented and gate-verified, unpublished like every pre-v1 package. The
-no-wrapper patterns on this page remain fully supported; wrappers add
-typing and idiom, never a requirement.
+Angular — and no framework at all — **without wrappers**. For the three
+frameworks there are also generated wrappers on npm, `@kimen/react`,
+`@kimen/vue` and `@kimen/angular`: typed props, typed event bindings, and
+the framework form idiom (controlled props / `v-model` / value accessors).
+Both paths are supported; wrappers add typing and idiom, never a
+requirement.
 
-Every setup is the same two steps, regardless of framework:
+## Generated wrappers
+
+The wrappers are generated from the same component contract as the
+elements and released with them, at the same version. Each one depends on
+that exact version of `@kimen/elements`, so you install the wrapper and the
+token stylesheets; the framework is a peer dependency. Importing a
+component from a wrapper registers that element, and modules you never
+import are tree-shaken away. Rendering is client-side, as with the elements
+themselves.
+
+### React wrapper
+
+```sh
+npm install @kimen/react @kimen/tokens
+```
+
+Peers: `react` and `react-dom` `^18 || ^19`. TypeScript needs
+`moduleResolution` set to `bundler` or `nodenext`.
+
+```tsx
+import { useState } from 'react';
+import { KiButton, KiInput } from '@kimen/react';
+import '@kimen/tokens/css';
+import '@kimen/tokens/css/base';
+
+export function NameForm({ onSave }: { onSave: (name: string) => void }) {
+  const [name, setName] = useState('');
+  return (
+    <>
+      <KiInput
+        label="Name"
+        value={name}
+        onInput={(event) => setName((event.target as HTMLKiInputElement).value)}
+      />
+      <KiButton variant="primary" onClick={() => onSave(name)}>
+        Save
+      </KiButton>
+    </>
+  );
+}
+```
+
+Form components keep `value` and `checked` live and re-dispatch the native
+`input` and `change` events, so React's own `onInput` and `onChange` work
+as on native inputs. `ki-*` events are typed props: `onKiDismiss`,
+`onKiClose`, `onKiChange`. The modules carry `'use client'`, so in a server
+component tree (the Next.js App Router) they render as client components.
+
+### Vue wrapper
+
+```sh
+npm install @kimen/vue @kimen/tokens
+```
+
+Peers: `vue` `>=3.4.38`; `vue-router` `>=4.5.0` is optional.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { KiButton, KiInput, KiSwitch } from '@kimen/vue';
+import '@kimen/tokens/css';
+import '@kimen/tokens/css/base';
+
+const name = ref('');
+const notify = ref(false);
+const save = () => console.log(name.value, notify.value);
+</script>
+
+<template>
+  <KiInput label="Name" v-model="name" />
+  <KiSwitch v-model="notify">Email notifications</KiSwitch>
+  <KiButton variant="primary" @click="save">Save</KiButton>
+</template>
+```
+
+`v-model` binds `value` on `input` for `ki-input` and `ki-textarea`,
+`checked` on `change` for `ki-checkbox` and `ki-switch`, and `value` on
+`change` for `ki-select` and `ki-radio-group`. The wrappers are Vue
+components, so the `isCustomElement` setting below is not needed.
+
+### Angular wrapper
+
+```sh
+npm install @kimen/angular @kimen/tokens
+```
+
+Peers: `@angular/core` and `@angular/forms` `^22.0.0`, and `rxjs`
+`^7.8.0`. The package is built in the Angular Package Format.
+
+```ts
+import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  BooleanValueAccessor,
+  KiButton,
+  KiCheckbox,
+  KiInput,
+  TextValueAccessor,
+} from '@kimen/angular';
+
+@Component({
+  selector: 'app-settings',
+  standalone: true,
+  imports: [ReactiveFormsModule, KiButton, KiCheckbox, KiInput, BooleanValueAccessor, TextValueAccessor],
+  template: `
+    <ki-input label="Name" [formControl]="name"></ki-input>
+    <ki-checkbox [formControl]="notify">Email notifications</ki-checkbox>
+    <ki-button variant="primary" (click)="save()">Save</ki-button>
+  `,
+})
+export class SettingsComponent {
+  name = new FormControl('');
+  notify = new FormControl(false, { nonNullable: true });
+
+  save(): void {
+    console.log(this.name.value, this.notify.value);
+  }
+}
+```
+
+The value accessors connect the form components to template-driven and
+reactive forms: `TextValueAccessor` for `ki-input` and `ki-textarea`,
+`BooleanValueAccessor` for `ki-checkbox` and `ki-switch`,
+`SelectValueAccessor` for `ki-select` and `ki-radio-group`. Import them
+next to the components they bind. `ki-*` events bind by their DOM name,
+`(ki-dismiss)="onDismiss($event)"`, and `$event` is typed under
+`strictTemplates`. The components use `OnPush`: in a zoneless app, update
+state from event handlers with signals or `markForCheck`. Load the token
+stylesheets globally, for example via `angular.json`:
+
+```json
+"styles": [
+  "src/styles.css",
+  "node_modules/@kimen/tokens/dist/css/tokens.css",
+  "node_modules/@kimen/tokens/dist/css/base.css"
+]
+```
+
+## Without wrappers
+
+Install `@kimen/elements` and `@kimen/tokens`
+([Getting started](https://kimen.dev/docs/getting-started/)). Every setup is then the same
+two steps, regardless of framework:
 
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
@@ -65,7 +206,9 @@ on the element instance are assigned as properties, everything else becomes
 an attribute (during SSR, primitive props render as attributes and
 non-primitives are omitted). Events bind declaratively with `on` + the
 literal event name — **casing and dashes preserved** — so `onki-dismiss`
-listens for `ki-dismiss`:
+listens for `ki-dismiss`. React 18 sets every prop on a custom element as an
+attribute and does not bind custom events from props: on React 18, use
+`@kimen/react` (see Generated wrappers above).
 
 ```tsx
 // main.tsx — register once, at the entry point

@@ -5139,10 +5139,10 @@ authoring: assistive technology reads one graphic named
 "<label>, <current> / <count>"). Below two positions an indicator carries
 no information.
 When NOT to use: section navigation (ki-tabs), task completion or loading
-(ki-progress), labeled step flows (a stepper is a separate roadmap item),
-interactive pagination (a future feature — the indicator takes no focus
-and no input; navigation belongs to the composing carousel's own
-controls), or conveying quantity without a current position. Position
+(ki-progress), labeled step flows (ki-stepper), interactive pagination
+(ki-pagination — the indicator takes no focus and no input; navigation
+belongs to the composing carousel's own controls), or conveying quantity
+without a current position. Position
 changes are never announced by the indicator itself (no live region): the
 composing carousel owns announcements.
 
@@ -7749,7 +7749,7 @@ layout) and a `label` (required: the accessible name of the scroll
 region). Scrolling stays native — wheel, touch, keyboard and indicator
 drag operate the viewport directly.
 When NOT to use: page-level scrolling (the browser's job), carousels or
-paginated media (future indicator/carousel patterns), virtualized long
+paginated media (ki-carousel with ki-indicator), virtualized long
 collections, multi-column tabular data, or nesting scrollers (v1
 guarantees a single scroll axis per region). Cross-axis overflow is an
 authoring mistake: the scroller scrolls its declared axis only and clips
@@ -11772,8 +11772,8 @@ Above the components sits Kimen's GenUI layer: agents emit JSON UI specs
 published component surface, and the guarded renderer turns accepted
 specs into DOM. Protocol adapters translate external vocabularies into
 that neutral core and are disposable by design; the catalog and the
-ki-* elements are the durable assets. These packages live in this
-repository next to @kimen/elements.
+ki-* elements are the durable assets. These packages are published on
+npm at the same version as @kimen/elements; install them at that version.
 
 ### @kimen/catalog
 
@@ -11783,7 +11783,7 @@ When to use: Any boundary where agent-emitted JSON must become Kimen UI: validat
 When NOT to use: Hand-authored pages that never render agent output — use @kimen/elements directly.
 
 Entry points:
-- `validateUiSpec(input, options?) => ValidationReport`: Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, undeclared-event, invalid-child, action-not-allowed, collect-without-action, collect-unknown-node, collect-no-value, collect-key-conflict, collect-budget, url-scheme, url-origin, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value.
+- `validateUiSpec(input, options?) => ValidationReport`: Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, undeclared-event, invalid-child, action-not-allowed, collect-without-action, collect-unknown-node, collect-no-value, collect-key-conflict, collect-budget, url-scheme, url-origin, invalid-id, duplicate-id, invalid-reference, invalid-command, invalid-command-target, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value.
 - `renderUiSpec(input, options) => RenderResult`: Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies) plus the native primitives it carries, only actions declared in the spec dispatch, by name or one per declared event (delivered as data to options.onAction, with the live values of the fields a node collects once each of them is valid), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure.
 - `preflightUiSpec(input, options?) => RenderResult`: The guarded renderer's verdict without a DOM: runs exactly the preparation renderUiSpec runs before its first attach (purity wall, version gate, payload budget, catalog validation, then the depth, node-count, tag, activation and prop-name guards) and renders nothing. Use it at a DOM-less boundary — an MCP server, a service that checks specs before forwarding them — so that "valid" means "the renderer will paint it"; validateUiSpec alone accepts specs the renderer's tighter budgets refuse.
 - `createStreamingRenderer(options) => StreamingRenderer`: Progressive rendering over a streamed spec: each push(node) validates one top-level subtree and attaches it only when fully valid; an invalid node fails closed while previously attached content remains, and the render budgets bind the accumulated stream. The catalog in use is fixed at creation via options.catalog.
@@ -11804,7 +11804,7 @@ Entry points:
 - `catalogPrompt(catalog, options?) => Derivation<string>`: Model-facing prompt: format rules, every component's when-to-use and when-NOT-to-use guidance verbatim, props with enums inline, and one example spec that validates against the same catalog. The universal fallback — works with any model, no structured-output support required.
 - `uiSpecJsonSchema(catalog, options?) => Derivation<JsonSchema>`: The neutral UI-spec format specialized to the catalog as a JSON Schema document: one branch per component, closed props and enums, closed objects everywhere. Targets: draft-2020-12 (default) and openai-strict (all-required closed objects, recursion via $ref, only the keywords the provider documents, its published limits enforced with named offenders). Deterministic and version-stamped; fail-closed on skew, bad subsets and exceeded limits — never a silent truncation.
 - `uiSpecTool(catalog, options?) => Derivation<UiSpecTool>`: Provider-neutral tool definition { name: 'emit_ui', description, inputSchema } wrapping exactly the lowered schema for the same options; maps mechanically onto any provider's tool or function surface.
-- `normalizeEmission(value) => unknown`: Strips the placeholders strict-mode all-required schemas force a model to emit (null-valued props, null action bindings, empty props containers) and touches nothing else. Pure cleanup over a fresh clone; output is untrusted until validateUiSpec passes.
+- `normalizeEmission(value) => unknown`: Strips the placeholders strict-mode all-required schemas force a model to emit (null-valued props, null action bindings and null events of a binding per event, null node ids, empty props containers) and touches nothing else. Pure cleanup over a fresh clone; output is untrusted until validateUiSpec passes.
 - `repairPrompt(report) => string | null`: Formats a failed ValidationReport into ONE corrective message naming every issue's code, path and offender, or null when the report is ok. The single-round-then-fail-closed policy is fixed.
 
 ### @kimen/adapter-a2ui

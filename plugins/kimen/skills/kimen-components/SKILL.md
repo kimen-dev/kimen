@@ -49,10 +49,10 @@ Install both packages from npm with the project's package manager:
 pnpm add @kimen/elements @kimen/tokens   # or: npm install @kimen/elements @kimen/tokens
 ```
 
-Kimen is pre-1.0, so expect breaking changes between minor versions. To use
-an unreleased change, or a Kimen package that has no release on npm yet
-(`npm view <package> version` prints nothing, or only `0.0.0`, which reserves
-the name), link it from a repository build; see
+Every `@kimen/*` package is on npm, and they release together at one
+version: install the ones you use at the same version. Kimen is pre-1.0, so
+expect breaking changes between minor versions. Only to try a change that is
+not released yet, link it from a repository build; see
 `references/install-from-source.md`.
 
 Then, once per page or app entry point:
@@ -135,9 +135,13 @@ defineCustomElements();
 - **Vue 3**: set `compilerOptions.isCustomElement: (tag) => tag.startsWith('ki-')`
   in the Vue plugin, then bind with `:prop` and `@event` (`@ki-close`).
 - **Angular**: add `CUSTOM_ELEMENTS_SCHEMA`, bind `[prop]` and `(event)`.
-- Generated wrappers (`@kimen/react`, `@kimen/vue`, `@kimen/angular`) add
-  typed props and each framework's form idiom. Use them only if they resolve
-  from your registry or link; the plain tags always work.
+- Generated wrappers add typed props and each framework's form idiom, and
+  importing a wrapper component registers its element. Install one with the
+  tokens, for example `pnpm add @kimen/react @kimen/tokens`: `@kimen/react`
+  (peers `react` and `react-dom` `^18 || ^19`), `@kimen/vue` (`vue >=3.4.38`),
+  `@kimen/angular` (`@angular/core` and `@angular/forms` `^22.0.0`, `rxjs
+  ^7.8.0`). Each depends on `@kimen/elements` at its own version. The plain
+  tags always work without them.
 
 ## Theming
 

@@ -147,6 +147,12 @@ it('S4 keeps the header in view when its body scrolls', async () => {
   }
   await openDialog();
   await expect.poll(() => fillsViewport(dialog)).toBe(true);
+  // The fill check passes a few milliseconds before the entry rise ends.
+  // WebKit reports the live value of a running transform transition, and
+  // once it ends, until the next frame, the transform resolved in its first
+  // frames: a read past that end saw the header 11.9px lower (release dry
+  // run 45596091516). Compare positions of the surface at rest.
+  await settleEntryMotion();
   const body = part(dialog, 'body');
   const header = part(dialog, 'header');
   const top = header.getBoundingClientRect().top;

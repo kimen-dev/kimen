@@ -15,10 +15,10 @@ no information.
 ## When not to use
 
 section navigation (ki-tabs), task completion or loading
-(ki-progress), labeled step flows (a stepper is a separate roadmap item),
-interactive pagination (a future feature — the indicator takes no focus
-and no input; navigation belongs to the composing carousel's own
-controls), or conveying quantity without a current position. Position
+(ki-progress), labeled step flows (ki-stepper), interactive pagination
+(ki-pagination — the indicator takes no focus and no input; navigation
+belongs to the composing carousel's own controls), or conveying quantity
+without a current position. Position
 changes are never announced by the indicator itself (no live region): the
 composing carousel owns announcements.
 

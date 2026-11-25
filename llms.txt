@@ -32,8 +32,8 @@ Above the components sits Kimen's GenUI layer: agents emit JSON UI specs
 published component surface, and the guarded renderer turns accepted
 specs into DOM. Protocol adapters translate external vocabularies into
 that neutral core and are disposable by design; the catalog and the
-ki-* elements are the durable assets. These packages live in this
-repository next to @kimen/elements.
+ki-* elements are the durable assets. These packages are published on
+npm at the same version as @kimen/elements; install them at that version.
 
 This file is an index: read it first, then only the documents the task
 needs. Each entry under Components says when to use that component; its

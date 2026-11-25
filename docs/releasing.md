@@ -25,8 +25,8 @@ order, which is also the order the candidate records them in:
 (`release.projects`) declare the set. A package comes after every release
 package it needs at runtime, so a publication that stops partway never
 leaves a published package pointing at a missing one. The first three
-published `v0.1.0`; the generative UI packages (catalog, emitter and both
-adapters) and the framework wrappers join at the next release. A scope
+first reached npm at `0.1.1`; the generative UI packages (catalog, emitter
+and both adapters) and the framework wrappers joined at `0.2.1`. A scope
 change updates the release-candidate contract, workflow tests and this
 document together. Every workspace package outside the set is
 `private: true`. That includes the unscoped `kimen` placeholder, because
@@ -189,8 +189,11 @@ night blocks no pull request and no merge group.
 
 1. On a push to `main`, `release-pr.yml` uses Nx Release to inspect
    conventional commits since the latest reachable `vX.Y.Z` tag. The first
-   run uses the versions on disk and the package history. A `feat` raises
-   the minor version and a `fix` raises the patch version. A breaking change
+   run uses the versions on disk and the package history. A commit counts
+   when it changes a file of a released package. A `feat` raises the minor
+   version and a `fix` raises the patch version, whatever the commit's scope:
+   `nx.json` turns off Nx's `useCommitScope`, under which a scope that names
+   no package (`feat(release)`) only raised the patch. A breaking change
    raises the minor version before `1.0.0` and the major version thereafter.
 2. For a release-worthy change, the dedicated App opens or refreshes one
    pull request on `release/next`, titled `chore(release): vX.Y.Z`. The PR
@@ -239,7 +242,9 @@ scripts. The publisher runner must provide npm `>=11.5.1`.
 
 ## One-time founder setup
 
-Complete these steps before merging the first release PR.
+These steps were completed for all ten packages before `v0.2.1`. Repeat
+steps 1 and 4 for a package that joins the release set, before merging the
+first release PR that includes it.
 
 1. Bootstrap every npm package name. Trusted publishing cannot create a
    package. For a name that does not exist yet, publish a name-reservation
@@ -253,8 +258,9 @@ Complete these steps before merging the first release PR.
    before `v0.1.0`. `@kimen/catalog`, `@kimen/emitter`,
    `@kimen/adapter-a2ui`, `@kimen/adapter-mcp-apps`, `@kimen/react`,
    `@kimen/vue` and `@kimen/angular` were reserved by 2026-11-25. The
-   first automated release that includes a package sets its `latest` tag.
-   The publisher refuses a package whose name does not exist yet.
+   first automated release that includes a package sets its `latest` tag
+   (`0.2.1` did so for those seven). The publisher refuses a package whose
+   name does not exist yet.
 2. Create and install a dedicated GitHub App on `kimen-dev/kimen` with
    repository permissions **Contents: Read and write** and **Pull requests:
    Read and write**. Store its client ID as the `RELEASE_APP_ID` repository
@@ -265,8 +271,7 @@ Complete these steps before merging the first release PR.
 4. Configure a separate npm trusted publisher for each of the ten names.
    Use repository `kimen-dev/kimen`, workflow `release.yml` and environment
    `npm`. Do this last, when the first release PR that includes the name is
-   green and ready to merge: the seven new names need theirs before the next
-   release PR is merged. npm expires a new configuration after two
+   green and ready to merge. npm expires a new configuration after two
    days without a successful publication. Delete and recreate an expired
    configuration.
 
