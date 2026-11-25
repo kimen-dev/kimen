@@ -89,8 +89,7 @@ const READINGS: Readonly<Record<string, Readonly<Record<string, Reading>>>> = {
 };
 
 /** How `attr` of `tag` reads after each write of the sweep. */
-export const expectedReading = (tag: string, attr: string): Reading =>
-  READINGS[tag]?.[attr] ?? KIMEN;
+const expectedReading = (tag: string, attr: string): Reading => READINGS[tag]?.[attr] ?? KIMEN;
 
 const HYDRATION_DEADLINE_MS = 3000;
 
