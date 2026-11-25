@@ -388,9 +388,6 @@ function runtimeExportTarget(entry, label) {
 }
 
 async function readPublicStylesheets({ packageRoot, packageExports, workspaceRoot }) {
-  const { stylesheetPatternFiles } = await import(
-    pathToFileURL(resolve(workspaceRoot, 'scripts/lib/css-token-surface.mjs')).href
-  );
   if (
     packageExports === null ||
     typeof packageExports !== 'object' ||
@@ -420,6 +417,9 @@ async function readPublicStylesheets({ packageRoot, packageExports, workspaceRoo
         }
         if (!target.includes('*')) return [subpath, await readFile(absoluteTarget, 'utf8')];
         // A pattern export (spec 166 `./css/ki-*`): every file it resolves to.
+        const { stylesheetPatternFiles } = await import(
+          pathToFileURL(resolve(workspaceRoot, 'scripts/lib/css-token-surface.mjs')).href
+        );
         const directory = dirname(absoluteTarget);
         const files = stylesheetPatternFiles(subpath, target, await readdir(directory));
         return [

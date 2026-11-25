@@ -223,22 +223,26 @@ describe('a page loads only the token CSS its components need', () => {
     expect(root.getPropertyValue('--ki-button-md-height')).not.toBe('');
   });
 
+  // Reading every computed property of a large gallery twice takes WebKit
+  // several seconds on a loaded machine; the default 15 s is not about this.
+  const SWEEP_TIMEOUT_MS = 60_000;
+
   it.each(componentTags)(
     'S2 %s renders with the core and its own sheet as it does with the full sheet',
     async (tag) => {
-      const gallery = fixtureFor(tag).gallery;
+      const { html, prepare } = fixtureFor(tag).gallery;
       loadSheets(fullCss);
-      const probe = await mount(gallery.html, { prepare: gallery.prepare });
-      const used = lightDomTags(probe);
-      const { full, split } = await compare(
-        gallery.html,
-        [coreCss, ...[...new Set([tag, ...used])].map(sheetFor)],
-        { prepare: gallery.prepare },
-      );
+      const withFull = await mount(html, { prepare });
+      const full = paint(withFull);
+      // The page imports one sheet for every tag its own markup uses.
+      const used = new Set([tag, ...lightDomTags(withFull)]);
+      loadSheets(coreCss, ...[...used].map(sheetFor));
+      const split = paint(await mount(html, { prepare }));
 
       expect(split.length, `${tag} painted a different set of elements`).toBe(full.length);
       expect(firstDifferences(full, split)).toEqual([]);
     },
+    SWEEP_TIMEOUT_MS,
   );
 
   it('S3 a component that renders other components brings their tokens in its own sheet', async () => {
