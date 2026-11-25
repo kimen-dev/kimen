@@ -353,6 +353,16 @@ describe('packed consumer mutation boundary', () => {
         calls.push(`browser:${engine}:${expectedSnippetCount}`);
         return { engine, executedSnippetCount: expectedSnippetCount, themeResolved: true };
       },
+      bundleLoaderApplications: async ({ consumerDirectory }) => {
+        calls.push(`loader-bundles:${consumerDirectory}`);
+        return [
+          { bundler: 'esbuild', directory: '/outside/consumer/loader-application/dist/esbuild' },
+        ];
+      },
+      runLoaderBundleSmoke: async ({ bundles, engine }) => {
+        calls.push(`loader:${engine}:${bundles.map(({ bundler }) => bundler).join()}`);
+        return [{ bundler: 'esbuild', engine, shadowButtonRendered: true }];
+      },
       writeFile: async (path, contents) => {
         calls.push(`write:${path}`);
         reportContents = contents;
@@ -377,11 +387,14 @@ describe('packed consumer mutation boundary', () => {
       'exports:2',
       'compile:2',
       'browser:webkit:2',
+      'loader-bundles:/outside/consumer',
+      'loader:webkit:esbuild',
       'write:/outside/report.json',
     ]);
     expect(report).toMatchObject({
       schemaVersion: 1,
       browser: { engine: 'webkit', executedSnippetCount: 2, themeResolved: true },
+      loader: [{ bundler: 'esbuild', engine: 'webkit', shadowButtonRendered: true }],
       packages: [
         { name: '@kimen/elements', source: 'tarball', workspaceLinked: false },
         { name: '@kimen/tokens', source: 'tarball', workspaceLinked: false },
@@ -1011,6 +1024,7 @@ describe('packed consumer mutation boundary', () => {
     const runtime = consumerContractModule.consumerRuntime({ selectBrowserEngine: override });
     expect(Object.keys(runtime).sort()).toEqual([
       'assertImportsAreExported',
+      'bundleLoaderApplications',
       'compileSnippets',
       'installTarballs',
       'loadInstalledPackage',
@@ -1020,6 +1034,7 @@ describe('packed consumer mutation boundary', () => {
       'realpath',
       'requireRegularFile',
       'runBrowserSmoke',
+      'runLoaderBundleSmoke',
       'selectBrowserEngine',
       'writeFile',
     ]);
