@@ -499,6 +499,51 @@ describe('release candidate build and verification mutation boundary', { timeout
     ).rejects.toThrow(/@kimen\/tokens tarball is missing package\/NOTICE/u);
   });
 
+  it.each([
+    ['@kimen/catalog', 'dist/tsconfig.tsbuildinfo', 'package/dist/tsconfig.tsbuildinfo'],
+    ['@kimen/vue', 'dist/a/b.tsbuildinfo', 'package/dist/a/b.tsbuildinfo'],
+    ['@kimen/angular', 'dist/tsconfig.lib.tsbuildinfo', 'package/tsconfig.lib.tsbuildinfo'],
+  ])('S7 refuses a candidate whose %s tarball would ship %s', async (name, written, packed) => {
+    const fixture = await createRepositoryFixture();
+    const file = join(fixture.packages[name], written);
+    await mkdir(join(file, '..'), { recursive: true });
+    await writeFile(file, '{}\n');
+
+    await expect(buildFixture(fixture)).rejects.toThrow(
+      `${name} tarball ships TypeScript build info ${packed}; keep tsBuildInfoFile outside the files the package packs`,
+    );
+  });
+
+  it('S7 names every build info file a tarball would ship', async () => {
+    const fixture = await createRepositoryFixture();
+    for (const path of ['dist/one.tsbuildinfo', 'dist/two.tsbuildinfo']) {
+      await writeFile(join(fixture.packages['@kimen/tokens'], path), '{}\n');
+    }
+
+    await expect(buildFixture(fixture)).rejects.toThrow(
+      '@kimen/tokens tarball ships TypeScript build info package/dist/one.tsbuildinfo, package/dist/two.tsbuildinfo;',
+    );
+  });
+
+  it('S7 accepts a packed path that only mentions tsbuildinfo', async () => {
+    // A local worktree named no-tsbuildinfo appears in Stencil's declaration paths.
+    const fixture = await createRepositoryFixture();
+    const catalog = fixture.packages['@kimen/catalog'];
+    await mkdir(join(catalog, 'dist/no-tsbuildinfo'), { recursive: true });
+    await writeFile(join(catalog, 'dist/no-tsbuildinfo/index.d.ts'), 'export {};\n');
+    await writeFile(join(catalog, 'dist/tsbuildinfo.js'), 'export {};\n');
+
+    const candidate = await buildFixture(fixture);
+    const { directory } = await extractCandidate(candidate.archivePath);
+    const listing = run('tar', ['-tzf', join(directory, fileOf('@kimen/catalog'))], directory);
+    expect(listing.split('\n')).toEqual(
+      expect.arrayContaining([
+        'package/dist/no-tsbuildinfo/index.d.ts',
+        'package/dist/tsbuildinfo.js',
+      ]),
+    );
+  });
+
   it('S7 packs LICENSE and NOTICE into every tarball of a complete candidate', async () => {
     const fixture = await createRepositoryFixture();
     const candidate = await buildFixture(fixture);
@@ -919,6 +964,36 @@ describe('release candidate workspace rewrite mutation boundary', { timeout: 30_
       verifyCandidate({ archivePath, expectedSha256: sha256, environment: {} }),
     ).rejects.toThrow(
       '@kimen/adapter-mcp-apps packed dependencies.@kimen/catalog must be a registry range, not workspace:',
+    );
+  });
+
+  it('S7 independent verification refuses a candidate whose tarball ships TypeScript build info', async () => {
+    const fixture = await createRepositoryFixture();
+    const built = await buildFixture(fixture);
+    const { directory } = await extractCandidate(built.archivePath);
+    await writeFile(join(fixture.packages['@kimen/tokens'], 'dist/tsconfig.tsbuildinfo'), '{}\n');
+    const withBuildInfo = await npmPack(fixture.packages['@kimen/tokens']);
+    const files = new Map();
+    for (const { name, file } of built.manifest.packages) {
+      files.set(
+        file,
+        name === '@kimen/tokens' ? withBuildInfo : await readFile(join(directory, file)),
+      );
+    }
+    const manifest = {
+      ...built.manifest,
+      packages: built.manifest.packages.map(({ name, file }) =>
+        packedRecord(name, file, files.get(file)),
+      ),
+    };
+    const { archive, sha256 } = candidateArchive(manifest, files);
+    const archivePath = join(directory, 'build-info.tar');
+    await writeFile(archivePath, archive);
+
+    await expect(
+      verifyCandidate({ archivePath, expectedSha256: sha256, environment: {} }),
+    ).rejects.toThrow(
+      '@kimen/tokens tarball ships TypeScript build info package/dist/tsconfig.tsbuildinfo; keep tsBuildInfoFile outside the files the package packs',
     );
   });
 });

@@ -14,7 +14,7 @@ import {
   writeFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
 
 import { canonicalJson } from '../lib/canonical-json.mjs';
@@ -615,6 +615,65 @@ for (const [file, contents, state] of [
     );
   });
 }
+
+// TypeScript's incremental state is compiler cache: it lists the files of the
+// machine that built the package and serves no consumer. 0.2.1 shipped it in
+// six packages, because tsc writes it into outDir unless told otherwise.
+for (const [name, written, packed] of [
+  ['@kimen/catalog', 'dist/tsconfig.tsbuildinfo', 'package/dist/tsconfig.tsbuildinfo'],
+  [
+    '@kimen/emitter',
+    'dist/nested/tsconfig.tsbuildinfo',
+    'package/dist/nested/tsconfig.tsbuildinfo',
+  ],
+  ['@kimen/angular', 'dist/tsconfig.lib.tsbuildinfo', 'package/tsconfig.lib.tsbuildinfo'],
+]) {
+  test(`S7 refuses to build a candidate whose ${name} tarball would ship ${packed}`, async (t) => {
+    const fixture = await createRepositoryFixture(t);
+    const file = join(fixture.packages[name], written);
+    await mkdir(dirname(file), { recursive: true });
+    await writeFile(file, '{"version":"6.0.3"}\n');
+
+    await assert.rejects(buildFixture(t, fixture), (error) => {
+      assert.equal(
+        error.message,
+        `${name} tarball ships TypeScript build info ${packed}; keep tsBuildInfoFile outside the files the package packs`,
+      );
+      return true;
+    });
+  });
+}
+
+test('S7 independent verification refuses a candidate whose tarball ships TypeScript build info', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  const built = await buildFixture(t, fixture);
+  const { directory } = await extractCandidate(t, built.archivePath);
+  // The catalog packs straight from its directory, so npm pack is its tarball.
+  await writeFile(join(fixture.packages['@kimen/catalog'], 'dist', 'tsconfig.tsbuildinfo'), '{}\n');
+  const withBuildInfo = (await npmPack(t, fixture.packages['@kimen/catalog'])).bytes;
+  const files = new Map();
+  for (const { name, file } of built.manifest.packages) {
+    files.set(
+      file,
+      name === '@kimen/catalog' ? withBuildInfo : await readFile(join(directory, file)),
+    );
+  }
+  const manifest = {
+    ...built.manifest,
+    packages: built.manifest.packages.map(({ name, file }) =>
+      packedRecord(name, file, files.get(file)),
+    ),
+  };
+  const { archive, sha256 } = candidateArchive(manifest, files);
+  const archivePath = join(directory, 'build-info-candidate.tar');
+  await writeFile(archivePath, archive);
+  const { verifyCandidate } = await loadSubject();
+
+  await assert.rejects(
+    verifyCandidate({ archivePath, expectedSha256: sha256, environment: {} }),
+    /@kimen\/catalog tarball ships TypeScript build info package\/dist\/tsconfig\.tsbuildinfo/u,
+  );
+});
 
 test('S7 a candidate built from complete packages carries LICENSE and NOTICE in every tarball', async (t) => {
   const fixture = await createRepositoryFixture(t);

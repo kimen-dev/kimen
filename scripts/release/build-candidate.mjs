@@ -57,6 +57,11 @@ const PACKAGE_NAMES = [...releasePackages.keys()].join(', ');
 // same of its own notice. npm packs what the package directory holds, so a
 // tarball without either file is a package that must not be published.
 const REQUIRED_LEGAL_FILES = Object.freeze(['LICENSE', 'NOTICE']);
+// TypeScript's incremental state is compiler cache: it lists the files of the
+// machine that built the package and serves no consumer. tsc writes it into
+// outDir unless tsBuildInfoFile points elsewhere, which is how 0.2.1 shipped
+// it in six packages.
+const BUILD_INFO_SUFFIX = '.tsbuildinfo';
 const FORBIDDEN_LIFECYCLE_SCRIPTS = new Set([
   'postpack',
   'postpublish',
@@ -596,7 +601,7 @@ export async function buildCandidate(options) {
         expectedFile,
       });
       const bytes = await readFile(packedPath);
-      verifyPackedLegalFiles(bytes, input.expected);
+      verifyPackedFiles(bytes, input.expected);
       verifyPackedManifest(bytes, input.expected, { mode, version });
       if (isMcp) await verifyMcpTarball(bytes, version);
       packageFiles.set(expectedFile, bytes);
@@ -667,7 +672,7 @@ function packedEntries(bytes, expected) {
   return parseTar(packageTar);
 }
 
-function verifyPackedLegalFiles(bytes, expected) {
+function verifyPackedFiles(bytes, expected) {
   const entries = packedEntries(bytes, expected);
   for (const file of REQUIRED_LEGAL_FILES) {
     const entry = entries.find(({ name, type }) => name === `package/${file}` && type === '0');
@@ -676,6 +681,14 @@ function verifyPackedLegalFiles(bytes, expected) {
         `${expected.name} tarball is missing package/${file}; a published package carries its licence and its notices`,
       );
     }
+  }
+  const buildInfo = entries
+    .map(({ name }) => name)
+    .filter((name) => name.endsWith(BUILD_INFO_SUFFIX));
+  if (buildInfo.length > 0) {
+    fail(
+      `${expected.name} tarball ships TypeScript build info ${buildInfo.join(', ')}; keep tsBuildInfoFile outside the files the package packs`,
+    );
   }
 }
 
@@ -788,7 +801,7 @@ export async function verifyCandidate({ archivePath, expectedSha256, environment
     ) {
       fail(`${record.name} tarball digest, integrity or size mismatch`);
     }
-    verifyPackedLegalFiles(bytes, REQUIRED_PACKAGES[index]);
+    verifyPackedFiles(bytes, REQUIRED_PACKAGES[index]);
     verifyPackedManifest(bytes, REQUIRED_PACKAGES[index], manifest);
     sumInputs.set(record.file, bytes);
   }
