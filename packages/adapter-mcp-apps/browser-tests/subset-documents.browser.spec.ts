@@ -8,7 +8,7 @@
 import { catalogData, NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
 import { AppBridge, PostMessageTransport } from '@modelcontextprotocol/ext-apps/app-bridge';
 import { afterEach, describe, expect, inject, it } from 'vitest';
-import { commands } from 'vitest/browser';
+import { commands, userEvent } from 'vitest/browser';
 
 import { DATA_PROFILE } from '../src/generated/surface-profile-data.js';
 import { FORM_PROFILE } from '../src/generated/surface-profile-form.js';
@@ -26,13 +26,28 @@ const browserCommands = commands as unknown as {
   emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
 };
 
-const teardown: (() => Promise<void>)[] = [];
+const teardown: (() => Promise<void> | void)[] = [];
 
 afterEach(async () => {
   for (const dispose of teardown.splice(0)) {
     await dispose();
   }
 });
+
+/**
+ * Rests the pointer on a strip at the top of the test page, above every frame
+ * embedded after it, so no component starts hovered. An earlier spec file
+ * may have left the pointer where a frame now is.
+ */
+async function parkPointer(): Promise<void> {
+  const spot = document.createElement('div');
+  spot.style.cssText = 'display: block; block-size: 8px;';
+  document.body.prepend(spot);
+  teardown.push(() => {
+    spot.remove();
+  });
+  await userEvent.hover(spot);
+}
 
 interface Mounted {
   readonly bridge: AppBridge;
@@ -296,6 +311,7 @@ describe('a subset changes the weight of the document, not how it looks', () => 
       // each frame; without motion both settle on their final styles.
       await browserCommands.emulateReducedMotion('reduce');
       try {
+        await parkPointer();
         const form = await embed(FORM_PROFILE.document, theme);
         const full = await embed(SURFACE_DOCUMENT, theme);
 
