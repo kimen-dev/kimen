@@ -58,6 +58,11 @@ Handle `ki-branch-change` to show the requested alternative. Set
 Set `actions-label` when the reply supplies a toolbar. The Conversation
 guide includes the complete Message actions recipe.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-message`: the light option, only the tokens ki-message needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `actions-label` (string | undefined): Names and enables the assistant toolbar.

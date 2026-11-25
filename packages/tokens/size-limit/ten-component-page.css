@@ -1,0 +1,17 @@
+/* Spec 166 S10: the weight report's ten-component page and the children those
+   tags need, bundled as an application ships it. */
+@import url("../dist/css/core.css");
+@import url("../dist/css/ki-button.css");
+@import url("../dist/css/ki-input.css");
+@import url("../dist/css/ki-select.css");
+@import url("../dist/css/ki-option.css");
+@import url("../dist/css/ki-checkbox.css");
+@import url("../dist/css/ki-dialog.css");
+@import url("../dist/css/ki-card.css");
+@import url("../dist/css/ki-tabs.css");
+@import url("../dist/css/ki-tab.css");
+@import url("../dist/css/ki-tab-panel.css");
+@import url("../dist/css/ki-alert.css");
+@import url("../dist/css/ki-toast.css");
+@import url("../dist/css/ki-toaster.css");
+@import url("../dist/css/ki-table.css");

@@ -42,6 +42,11 @@ Use two to six direct items. Fixed placement shares the FAB's safe-area
 and navigation clearance tokens. In static placement, leave space above
 the trigger for the stack.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-fab-menu`: the light option, only the tokens ki-fab-menu needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `close-label` (string, default 'Close menu'): Localized accessible name of the trigger when it becomes the close control.

@@ -26,6 +26,11 @@ announced on each move. Listen for `ki-reorder` to persist the new order.
 <input id="recipient" aria-label="Add recipient">
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-chip-group`: the light option, only the tokens ki-chip-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `focus-target` (string | undefined, ID of another element of the same spec): ID of the entry field in the same document or shadow root for focus after the last chip.

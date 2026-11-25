@@ -74,6 +74,11 @@ and use the actual expanded height if the label wraps. The label hides as the
 user scrolls down the document and reappears on upward scroll. The native
 control retains its accessible name and focus.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-fab`: the light option, only the tokens ki-fab needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `collapse-on-scroll` (boolean, default false): Compact an extended FAB on viewport scroll down and restore on scroll up.

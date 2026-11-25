@@ -1,0 +1,10 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-progress-linear-thickness:var(--ki-space-xs);
+  --ki-progress-linear-radius:var(--ki-radius-round);
+  --ki-progress-circular-size:var(--ki-space-12xl);
+  --ki-progress-circular-track-width:var(--ki-space-xs);
+  --ki-progress-track-color:var(--ki-surface-s3);
+  --ki-progress-indicator-color:var(--ki-surface-primary-med-em);
+  --ki-progress-indeterminate-duration:1600ms;
+}

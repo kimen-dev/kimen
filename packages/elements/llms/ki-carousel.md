@@ -35,6 +35,11 @@ await carousel.goTo(3);
 
 With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-carousel`: the light option, only the tokens ki-carousel needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `autoplay` (number | undefined, minimum 1, maximum 2147483647): Rotation interval in milliseconds. Omitting it leaves rotation off. Values below 5000 rotate every 5000 ms.

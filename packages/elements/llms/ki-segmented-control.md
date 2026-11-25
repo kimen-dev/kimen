@@ -63,6 +63,11 @@ Supply a visible label when space permits. The icon-only option takes its
 accessible name and hover or focus tooltip from `aria-label`. Keep slotted
 content noninteractive.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-segmented-control`: the light option, only the tokens ki-segmented-control needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `full-width` (boolean, default false): Distribute the available inline space evenly among all segments. A label wider than its equal share wraps onto a second line.

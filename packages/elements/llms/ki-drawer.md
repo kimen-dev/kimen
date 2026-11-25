@@ -58,6 +58,11 @@ Use `close-label` to translate the button for your audience.
 Use `modal="false"` when the page behind the drawer should stay interactive.
 `placement="start"` and `placement="end"` follow the inherited direction.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-drawer`: the light option, only the tokens ki-drawer needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `close-label` (string | undefined, default 'Close'): Accessible name for the built-in Close button. Translate this for localized interfaces.

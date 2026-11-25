@@ -1,16 +1,27 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { packageSummaryFromSiteSummary } from '../../packages/elements/scripts/agent-surfaces.mjs';
 
-// The token reference and three exported stylesheets. The build writes no
-// intermediate per-scheme files: a theme's two schemes are one stylesheet.
+// The token reference, the exported theme stylesheets, and the split sheets
+// of spec 166: the core and one sheet per component directory, which is what
+// the token build derives them from. The build writes no intermediate
+// per-scheme files: a theme's two schemes are one stylesheet.
+const componentTags = readdirSync(
+  new URL('../../packages/elements/src/components/', import.meta.url),
+  { withFileTypes: true },
+)
+  .filter((entry) => entry.isDirectory() && entry.name.startsWith('ki-'))
+  .map((entry) => entry.name)
+  .sort();
 const tokens = Object.freeze([
   'packages/elements/docs/tokens-reference.mdx',
   'packages/tokens/dist/css/base.css',
+  'packages/tokens/dist/css/core.css',
+  ...componentTags.map((tag) => `packages/tokens/dist/css/${tag}.css`),
   'packages/tokens/dist/css/tokens.css',
   'packages/tokens/dist/css/tokens.material3.css',
 ]);

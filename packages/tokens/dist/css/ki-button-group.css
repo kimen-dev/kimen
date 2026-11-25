@@ -1,0 +1,18 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-button-group-gap:var(--ki-spacing-action-gap);
+  --ki-button-group-attached-gap:var(--ki-spacing-action-joined-gap);
+  --ki-button-group-seam-overlap:var(--ki-spacing-action-hairline);
+  --ki-button-group-attached-radius:var(--ki-corner-action-seam);
+  --ki-button-group-toolbar-gap:var(--ki-spacing-action-compact-gap);
+  --ki-button-group-padding:var(--ki-spacing-action-inset);
+  --ki-button-group-divider:var(--ki-outline-low-em);
+  --ki-button-group-divider-size:var(--ki-glyph-size-md);
+  --ki-button-group-bg:var(--ki-surface-raised);
+  --ki-button-group-bg-image:var(--ki-surface-image-none);
+  --ki-button-group-fg:var(--ki-text-high-em);
+  --ki-button-group-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-button-group-border-color:var(--ki-outline-low-em);
+  --ki-button-group-border-width:var(--ki-spacing-action-hairline);
+  --ki-button-group-radius:var(--ki-corner-action-frame);
+}

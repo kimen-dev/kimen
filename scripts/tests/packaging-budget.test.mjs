@@ -127,6 +127,7 @@ test('S4: a component with no size allowance leaves every shipped limit unchange
     mcpServer: { raw: 1_857_264, gzip: 352_284, brotli: 317_296 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
+    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   });
 });
 
@@ -151,6 +152,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
     mcpServer: { raw: 1_858_564, gzip: 352_474, brotli: 317_471 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
+    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   });
 });
 
@@ -290,7 +292,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
     ),
     {
       '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
-      '@kimen/tokens': { packed: 220_160, unpacked: 519_168 },
+      // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
+      '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
       '@kimen/mcp-server': { packed: 674_816, unpacked: 3_379_200 },
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
@@ -328,11 +331,26 @@ test('each exported generated token stylesheet has one size budget outside the p
   assert.equal(Object.hasOwn(manifest, 'size-limit'), false);
 
   const { default: limits } = await import(new URL('.size-limit.mjs', tokens).href);
+  // A pattern export (spec 166 `./css/ki-*`) is every file it resolves to.
+  const built = await readdir(new URL('dist/css/', tokens));
+  const exported = Object.values(manifest.exports)
+    .filter((target) => target.startsWith('./dist/css/'))
+    .flatMap((target) => {
+      if (!target.includes('*')) return [target];
+      const [prefix, suffix] = target.slice('./dist/css/'.length).split('*');
+      return built
+        .filter((file) => file.startsWith(prefix) && file.endsWith(suffix))
+        .map((file) => `./dist/css/${file}`);
+    });
+  const sheets = limits.filter(({ path }) => typeof path === 'string' && path.startsWith('dist/'));
+  assert.deepEqual(sheets.map(({ path }) => `./${path}`).sort(), exported.sort());
+  // Spec 166's page budgets measure one bundle of the sheets a page loads.
   assert.deepEqual(
-    limits.map(({ path }) => `./${path}`).sort(),
-    Object.values(manifest.exports)
-      .filter((target) => target.startsWith('./dist/css/'))
+    limits
+      .filter((entry) => !sheets.includes(entry))
+      .map(({ path }) => path)
       .sort(),
+    ['size-limit/button-page.css', 'size-limit/ten-component-page.css'],
   );
   for (const { limit } of limits) {
     assert.match(limit, /^[1-9]\d*(?:\.\d+)? (?:B|KB)$/u);

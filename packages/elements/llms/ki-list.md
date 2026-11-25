@@ -68,6 +68,11 @@ Full item composition — `start` for leading media (decorative beside the visib
 </ki-list>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-list`: the light option, only the tokens ki-list needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name for a list with links, options or trailing controls.

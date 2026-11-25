@@ -25,6 +25,11 @@ Use the results slot of ki-search for independently rendered results.
 The child text is the title. When `value` is omitted, that title supplies the
 query. Use `recent` for a removable history item.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-search-suggestion`: the light option, only the tokens ki-search-suggestion needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `description` (string | undefined): Optional supporting text displayed below the title.

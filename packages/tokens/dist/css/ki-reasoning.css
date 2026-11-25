@@ -1,0 +1,20 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+  --ki-reasoning-fg:var(--ki-text-supporting);
+  --ki-reasoning-bg:var(--ki-surface-transparent);
+  --ki-reasoning-bg-image:var(--ki-surface-image-none);
+  --ki-reasoning-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-reasoning-border:var(--ki-outline-med-em);
+  --ki-reasoning-border-width:var(--ki-activity-size-stroke);
+  --ki-reasoning-summary-gap:var(--ki-layout-spacing-xs);
+  --ki-reasoning-body-gap:var(--ki-layout-spacing-md);
+  --ki-reasoning-body-indent:var(--ki-layout-spacing-xl);
+  --ki-reasoning-list-indent:var(--ki-layout-spacing-5xl);
+  --ki-reasoning-shimmer-fg:var(--ki-text-high-em);
+  --ki-reasoning-shimmer-duration:var(--ki-motion-duration-activity-pulse);
+  --ki-reasoning-shimmer-easing:var(--ki-motion-easing-activity-pulse);
+}
