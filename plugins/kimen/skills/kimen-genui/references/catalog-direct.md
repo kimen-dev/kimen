@@ -80,7 +80,8 @@ if (!result.ok) console.warn(result.diagnostics); // nothing attached; previous 
 ```
 
 `renderUiSpec` is atomic: it validates everything before the first DOM
-write, so a rejected spec leaves the surface untouched.
+write, so a rejected spec leaves the surface untouched. In a React
+component, mount it as `react.md` shows.
 
 ## Streaming and live surfaces
 

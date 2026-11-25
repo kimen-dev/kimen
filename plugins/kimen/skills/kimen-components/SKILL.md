@@ -180,6 +180,13 @@ theme is `import '@kimen/tokens/css/material3'` plus
 logical properties (`margin-inline`, `padding-block`) so layouts mirror in
 right-to-left languages.
 
+## Testing
+
+Test in a real browser, with Playwright or Vitest browser mode: component
+roles and names live in shadow roots, which Testing Library queries never
+enter. Before you write a test that finds a component by role, waits for it
+to render or checks a `ki-alert`, read `references/testing.md`.
+
 ## Before you finish
 
 - [ ] Every `ki-*` tag you used is registered (subpath or loader) and every

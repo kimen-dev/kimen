@@ -121,8 +121,10 @@ export function parseTypeText(text) {
   }
   if (quoted.length > 0 && rest.length === 1 && rest[0] === 'string & {}') {
     // The manifest's deliberately open unions ("danger" | ... | string & {})
-    // accept any string; the documented values remain agent guidance.
-    return { type: 'string', documentedValues: quoted.map((part) => part.slice(1, -1)) };
+    // keep markup tolerant, but a generated spec may use only the literals:
+    // an invented tone would render neutral and lose its live-region urgency
+    // (spec 164 FR-001). Consumer definitions may still declare open strings.
+    return { type: 'enum', values: quoted.map((part) => part.slice(1, -1)) };
   }
   return null;
 }
