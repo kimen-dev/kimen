@@ -57,8 +57,10 @@ and a single founder merges.
   allowlist); see `sandbox/README.md`
 - `/scripts/gates/`: the deterministic gate suite (Art. X)
 - `packages/`: `tokens`, `elements`, `catalog`, `emitter`, `adapter-a2ui`,
-  `adapter-mcp-apps`, `mcp-server` (the `kimen-mcp` stdio binary), `kimen`
-  (placeholder)
+  `adapter-mcp-apps`, `mcp-server` (the `kimen-mcp` stdio binary), the
+  generated framework wrappers `react`, `vue` and `angular`, and `kimen`
+  (private placeholder; npm refuses the unscoped name). The first ten publish
+  to npm at one shared version through `release.yml`
 - `/DESIGN.md`: the visual rules of the default onmars v2 theme (accent roles,
   surfaces and hairlines, type scale, contrast floors); the tokens are the
   source of truth
