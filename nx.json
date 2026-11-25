@@ -56,6 +56,9 @@
       "@kimen/angular"
     ],
     "projectsRelationship": "fixed",
+    "conventionalCommits": {
+      "useCommitScope": false
+    },
     "releaseTag": {
       "pattern": "v{version}",
       "checkAllBranchesWhen": false

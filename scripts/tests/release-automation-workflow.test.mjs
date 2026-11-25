@@ -62,3 +62,12 @@ test('S6 Nx fixed releases target the publication packages without updating depe
   assert.equal(release.version.updateDependents, 'never');
   assert.equal(release.version.versionActionsOptions.skipLockFileUpdate, true);
 });
+
+test('A feat raises the minor version whatever its scope (Nx useCommitScope is off)', async () => {
+  // With Nx's default useCommitScope, a commit whose scope names no package
+  // (feat(release), feat(genui)) counts as an indirect change and bumps only
+  // the patch: #609 shipped as 0.2.1 that way. docs/releasing.md promises that
+  // a feat raises the minor version, so scopes stay descriptive only.
+  const { release } = JSON.parse(await read('nx.json'));
+  assert.deepEqual(release.conventionalCommits, { useCommitScope: false });
+});
