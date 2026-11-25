@@ -137,7 +137,11 @@ node scripts/release/candidate-cli.mjs smoke --archive <candidate.tar> --sha256 
 ```
 
 The browser consumer contract (`scripts/consumer-contract.mjs`) still covers
-elements and tokens in every engine.
+elements and tokens in every engine. It also bundles an application that
+registers `@kimen/elements/loader` with the workspace's esbuild and Vite,
+serves each bundle alone and requires a `ki-button` rendered from its own
+lazy chunk with no request outside the bundle
+(`scripts/consumer-loader-bundles.mjs`).
 
 Each wrapper's `NOTICE` follows what its build contains. The Vue wrapper
 imports its Stencil output target's runtime as an installed dependency and
