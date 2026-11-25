@@ -49,7 +49,7 @@ jobs:
       KIMEN_ANALYTICS: ${{ github.event_name != 'pull_request' && github.ref_name == 'main' && vars.KIMEN_ANALYTICS_ENABLED == 'true' && '1' || '0' }}
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
         with:
           egress-policy: block
           allowed-endpoints: >-
@@ -120,7 +120,7 @@ jobs:
       url: ${{ steps.deployment.outputs.deployment-url }}
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
         with:
           egress-policy: block
           allowed-endpoints: >-
