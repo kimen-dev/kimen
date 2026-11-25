@@ -6,7 +6,7 @@
 // its size budget, its content policy (S21) and its reproducibility.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { brotliCompressSync, gzipSync } from 'node:zlib';
 
@@ -37,6 +37,12 @@ const budgetScript = join(process.cwd(), '../../scripts/lib/bundle-size-budget.m
 const { mcpApps: SIZE_BUDGET } = JSON.parse(
   execFileSync(process.execPath, [budgetScript], { encoding: 'utf8' }),
 ) as { mcpApps: Record<'raw' | 'gzip' | 'brotli', number> };
+
+/**
+ * Every `.d.ts` the package publishes, together. Generated data typed as its
+ * own literal is megabytes; the hand-written API is tens of kilobytes.
+ */
+const DECLARATIONS_MAX_BYTES = 64 * 1024;
 
 /**
  * XML namespace names the DOM requires verbatim (`createElementNS`): they are
@@ -110,6 +116,28 @@ describe('surfaces are predeclared, self-contained and auditable', () => {
     },
     CPU_BOUND_TIMEOUT_MS,
   );
+
+  it('S1 publishes the document as a value, never as a type', () => {
+    // A `const` initialized with a string literal is typed as that literal:
+    // the declaration then repeats the whole document, and every consumer's
+    // type checker reads it (1.56 MB, half the unpacked package, until it was
+    // typed). The built declarations are what the package publishes; the Nx
+    // test target builds them first.
+    const dist = join(process.cwd(), 'dist');
+    const declaration = readFileSync(join(dist, 'generated/surface-document.d.ts'), 'utf8');
+    const statement = /export declare const SURFACE_DOCUMENT\b[^;]*;/.exec(declaration)?.[0] ?? '';
+    // Compared by its head, so a failure does not print the whole document.
+    expect(statement.slice(0, 64)).toBe('export declare const SURFACE_DOCUMENT: string;');
+
+    // No other generated data may become a type either: every declaration the
+    // package ships stays a small multiple of the API it describes (about
+    // 27 kB today), far below any document or catalog.
+    const declarationBytes = readdirSync(dist, { recursive: true, encoding: 'utf8' })
+      .filter((path) => path.endsWith('.d.ts'))
+      .reduce((total, path) => total + statSync(join(dist, path)).size, 0);
+    expect(declarationBytes).toBeGreaterThan(0);
+    expect(declarationBytes).toBeLessThanOrEqual(DECLARATIONS_MAX_BYTES);
+  });
 
   it('S2 references no external origin in the document or its content policy', () => {
     // Every script and style is inline — nothing is fetched.

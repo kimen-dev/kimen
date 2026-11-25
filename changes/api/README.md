@@ -41,9 +41,10 @@ review the diff and commit it with the change.
 
 Two rules keep the snapshot complete and small. Every package-local type a
 public signature reaches must be exported itself, because a signature names
-its types but not their members. A data export (`catalogData`,
-`SURFACE_DOCUMENT`) is recorded by name only, because its declared type is
-the generated data. The package list lives in
+its types but not their members. A data export (`catalogData`) is recorded
+by name only, because its declared type is the generated data.
+`SURFACE_DOCUMENT` is declared `string`, so its signature is recorded like any
+other. The package list lives in
 `scripts/lib/package-api-snapshot.mjs`. Unlike the elements gate, these
 snapshots carry no baseline, declaration or release class.
 
