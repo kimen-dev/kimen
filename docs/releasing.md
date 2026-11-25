@@ -156,8 +156,11 @@ night blocks no pull request and no merge group.
 
 1. On a push to `main`, `release-pr.yml` uses Nx Release to inspect
    conventional commits since the latest reachable `vX.Y.Z` tag. The first
-   run uses the versions on disk and the package history. A `feat` raises
-   the minor version and a `fix` raises the patch version. A breaking change
+   run uses the versions on disk and the package history. A commit counts
+   when it changes a file of a released package. A `feat` raises the minor
+   version and a `fix` raises the patch version, whatever the commit's scope:
+   `nx.json` turns off Nx's `useCommitScope`, under which a scope that names
+   no package (`feat(release)`) only raised the patch. A breaking change
    raises the minor version before `1.0.0` and the major version thereafter.
 2. For a release-worthy change, the dedicated App opens or refreshes one
    pull request on `release/next`, titled `chore(release): vX.Y.Z`. The PR
