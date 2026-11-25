@@ -9,7 +9,7 @@ import { expect, it, onTestFinished } from 'vitest';
 
 import { runCandidateCli } from '../release/candidate-cli.mjs';
 import { releasePackages } from '../release/release-plan.mjs';
-import { writeBuiltPackage } from '../tests/fixtures/built-package.mjs';
+import { embeddedSourceMap, writeBuiltPackage } from '../tests/fixtures/built-package.mjs';
 import { mcpFixtureFields, writeMcpFixtureFiles } from '../tests/fixtures/mcp-package.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -41,10 +41,12 @@ async function createRepository() {
     const directory = path.split('/')[1];
     const packageDirectory = join(root, 'packages', directory);
     await mkdir(packageDirectory, { recursive: true });
+    // Every published module ships with a map that embeds its source.
     await writeFile(
       join(packageDirectory, 'index.js'),
-      `export const name = ${JSON.stringify(name)};\n`,
+      `export const name = ${JSON.stringify(name)};\n//# sourceMappingURL=index.js.map\n`,
     );
+    await writeFile(join(packageDirectory, 'index.js.map'), embeddedSourceMap('index.js'));
     await writeFile(join(packageDirectory, 'LICENSE'), 'Apache License, Version 2.0 (fixture)\n');
     await writeFile(join(packageDirectory, 'NOTICE'), 'Kimen fixture notices\n');
     await writeFile(join(packageDirectory, 'README.md'), `# ${name}\n`);
@@ -62,7 +64,9 @@ async function createRepository() {
       private: true,
       type: 'module',
       // The entry point a consumer imports, so every packed file is reachable.
-      ...(directory === 'angular' ? {} : { files: ['index.js', 'NOTICE'], exports: './index.js' }),
+      ...(directory === 'angular'
+        ? {}
+        : { files: ['index.js', 'index.js.map', 'NOTICE'], exports: './index.js' }),
       ...(directory === 'mcp-server' ? mcpFixtureFields : {}),
       ...(runtime === undefined ? {} : { dependencies: { [runtime]: 'workspace:*' } }),
       repository: {

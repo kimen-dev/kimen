@@ -24,7 +24,7 @@
     }
   },
   "scripts": {
-    "build": "node scripts/generate-surface.mjs && tsc -b --pretty false && tsc -p surface/tsconfig.json --pretty false",
+    "build": "node scripts/generate-surface.mjs && tsc -b --pretty false && tsc -p surface/tsconfig.json --pretty false && node ../../scripts/lib/generated-source-maps.mjs",
     "test": "vitest run",
     "test-browser": "vitest run --config vitest.browser.config.ts"
   },
@@ -75,6 +75,8 @@
           "!{projectRoot}/src/generated/**",
           "{workspaceRoot}/scripts/lib/bundled-package-inventory.mjs",
           "{workspaceRoot}/scripts/lib/stock-surface-icons.mjs",
+          "{workspaceRoot}/scripts/lib/generated-source-maps.mjs",
+          "{workspaceRoot}/scripts/lib/package-contents.mjs",
           "^default"
         ],
         "outputs": [

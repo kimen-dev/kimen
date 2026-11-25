@@ -8,7 +8,10 @@
 //    size-limit artefact, or carry the build machine's absolute path.
 // 2. No declaration file or source map may name an absolute build path,
 //    and every source map must embed its sources (`sourcesContent`): the
-//    sources themselves are not published.
+//    sources themselves are not published. A source-map link must name a
+//    shipped map. Where a package's build maps every module, every module
+//    ships its map, except the generated modules its rules name as unmapped,
+//    which ship neither a map nor a link to one.
 // 3. Every packed file must be reachable: from package.json, its legal files
 //    and README, the package's declared metadata assets, every path its
 //    manifest fields and exports name, and the chain of imports, URL
@@ -16,49 +19,77 @@
 // 4. The tarball and its unpacked contents stay within the package's budget.
 import { posix } from 'node:path';
 
-// Each package's metadata assets (files no import reaches that a consumer
-// still reads: licences, agent docs, the custom-elements manifest) and its
-// size budget, in bytes: the gzip tarball and its unpacked contents. A budget
-// base is the size measured when it was set (2026-11-25) plus about 3 %, and
-// raising one needs the founder's approval.
+// Each package's source-map shape, metadata assets and size budget.
+// - mapsEveryModule: its build maps every module, so a module without a map
+//   is refused. Stencil maps no re-export module and the elements icons and
+//   loader carry none, so elements, like tokens and the MCP bundle, says no.
+// - unmappedModules: the generated modules that ship without a map or a link
+//   to one (founder decision of 2026-11-25). Their maps would embed a whole
+//   generated document or catalog, and a consumer debugs nothing in them.
+//   scripts/lib/generated-source-maps.mjs removes the maps after the build.
+// - assets: files no import reaches that a consumer still reads: licences,
+//   agent docs, the custom-elements manifest.
+// - budget, in bytes: the gzip tarball and its unpacked contents. Each base
+//   is the size measured when it was set (2026-11-25) plus about 3 %, and
+//   raising one needs the founder's approval.
 export const packageContentRules = Object.freeze({
   '@kimen/elements': Object.freeze({
+    mapsEveryModule: false,
+    unmappedModules: Object.freeze([]),
     assets: Object.freeze(['generated/custom-elements.json', 'llms-full.txt', 'llms.txt', 'llms/']),
     budget: Object.freeze({ packed: 2_948_096, unpacked: 13_445_120 }),
   }),
   '@kimen/tokens': Object.freeze({
+    mapsEveryModule: false,
+    unmappedModules: Object.freeze([]),
     assets: Object.freeze(['fonts/InstrumentSans-OFL.txt', 'fonts/Newsreader-OFL.txt']),
     budget: Object.freeze({ packed: 220_160, unpacked: 519_168 }),
   }),
   '@kimen/mcp-server': Object.freeze({
+    mapsEveryModule: false,
+    unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
     budget: Object.freeze({ packed: 827_392, unpacked: 4_172_800 }),
   }),
   '@kimen/catalog': Object.freeze({
+    mapsEveryModule: true,
+    unmappedModules: Object.freeze(['dist/generated/catalog.js']),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 408_576, unpacked: 1_817_600 }),
+    budget: Object.freeze({ packed: 320_512, unpacked: 1_382_400 }),
   }),
   '@kimen/emitter': Object.freeze({
+    mapsEveryModule: true,
+    unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
     budget: Object.freeze({ packed: 43_008, unpacked: 151_552 }),
   }),
   '@kimen/adapter-a2ui': Object.freeze({
+    mapsEveryModule: true,
+    unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
     budget: Object.freeze({ packed: 102_400, unpacked: 413_696 }),
   }),
   '@kimen/adapter-mcp-apps': Object.freeze({
+    mapsEveryModule: true,
+    unmappedModules: Object.freeze(['dist/generated/surface-document.js']),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 1_227_776, unpacked: 5_079_040 }),
+    budget: Object.freeze({ packed: 833_536, unpacked: 3_404_800 }),
   }),
   '@kimen/react': Object.freeze({
+    mapsEveryModule: true,
+    unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
     budget: Object.freeze({ packed: 43_008, unpacked: 381_952 }),
   }),
   '@kimen/vue': Object.freeze({
+    mapsEveryModule: true,
+    unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
     budget: Object.freeze({ packed: 36_864, unpacked: 236_544 }),
   }),
   '@kimen/angular': Object.freeze({
+    mapsEveryModule: true,
+    unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
     budget: Object.freeze({ packed: 56_320, unpacked: 649_216 }),
   }),
@@ -161,6 +192,20 @@ function embedsSources(map) {
 }
 
 const ABSOLUTE_SOURCE = /^(?:\/|[A-Za-z]:[\\/]|file:)/u;
+
+// The packed paths the source-map links of a script, declaration or
+// stylesheet name. An inline (data:) or remote map is not a packed file.
+function sourceMapTargets(path, bytes) {
+  const source = text(bytes);
+  const links = STYLESHEET.test(path)
+    ? [...matches(SOURCE_MAP_BLOCK, source, 1)]
+    : SCRIPT.test(path) || DECLARATION.test(path)
+      ? [...matches(SOURCE_MAP_LINE, source, 1)]
+      : [];
+  return links
+    .filter((link) => !/^(?:[A-Za-z][A-Za-z0-9+.-]*:|\/|#)/u.test(link))
+    .map((link) => posix.normalize(posix.join(posix.dirname(path), link.replace(/[?#].*$/su, ''))));
+}
 
 // ---------------------------------------------------------------- references
 
@@ -435,6 +480,44 @@ export function packageContentViolation(name, entries, packedSize) {
       maps,
       'embed sourcesContent (inlineSources) in every published source map',
     );
+  }
+  const dangling = paths.filter((path) =>
+    sourceMapTargets(path, files.get(path)).some((target) => !files.has(target)),
+  );
+  if (dangling.length > 0) {
+    return describe(
+      name,
+      'links to source maps it does not ship in',
+      dangling,
+      'publish the map, or drop the sourceMappingURL comment with it',
+    );
+  }
+  const unmapped = new Set(rules.unmappedModules);
+  const mappedAnyway = rules.unmappedModules.filter(
+    (module) =>
+      files.has(`${module}.map`) ||
+      (files.has(module) && sourceMapTargets(module, files.get(module)).length > 0),
+  );
+  if (mappedAnyway.length > 0) {
+    return describe(
+      name,
+      'a source map for the unmapped generated modules',
+      mappedAnyway,
+      'run scripts/lib/generated-source-maps.mjs after the build: these modules ship without a map or a link to one',
+    );
+  }
+  if (rules.mapsEveryModule) {
+    const unmappedScripts = paths.filter(
+      (path) => SCRIPT.test(path) && !unmapped.has(path) && !files.has(`${path}.map`),
+    );
+    if (unmappedScripts.length > 0) {
+      return describe(
+        name,
+        'modules without a source map',
+        unmappedScripts,
+        'publish every module with its map; only the generated modules in unmappedModules ship without one',
+      );
+    }
   }
 
   let manifest;

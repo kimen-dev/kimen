@@ -24,7 +24,7 @@
     }
   },
   "scripts": {
-    "build": "node scripts/generate-catalog.mjs && tsc -b --pretty false",
+    "build": "node scripts/generate-catalog.mjs && tsc -b --pretty false && node ../../scripts/lib/generated-source-maps.mjs",
     "test": "vitest run",
     "test-browser": "vitest run --config vitest.browser.config.ts"
   },
@@ -61,7 +61,9 @@
           "{workspaceRoot}/packages/elements/src/components/*/component.json",
           "{workspaceRoot}/packages/elements/scripts/component-metadata.mjs",
           "{workspaceRoot}/packages/elements/src/utils/url-scheme.ts",
-          "{workspaceRoot}/packages/elements/package.json"
+          "{workspaceRoot}/packages/elements/package.json",
+          "{workspaceRoot}/scripts/lib/generated-source-maps.mjs",
+          "{workspaceRoot}/scripts/lib/package-contents.mjs"
         ],
         "outputs": [
           "{projectRoot}/dist",

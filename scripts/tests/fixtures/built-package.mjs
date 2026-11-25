@@ -1,9 +1,20 @@
 // A package whose build writes its own publishable directory, the way
 // ng-packagr writes @kimen/angular's dist/: a manifest derived from the
 // source one (no scripts, devDependencies or files; entry fields added), the
-// bundled module, its declarations and a copy of the README.
+// bundled module with its source map, its declarations and a copy of the README.
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+
+/** A source map that embeds its one source, as the release requires. */
+export function embeddedSourceMap(file) {
+  return `${JSON.stringify({
+    version: 3,
+    file,
+    sources: ['../src/index.ts'],
+    sourcesContent: ['export const fixture = true;\n'],
+    mappings: '',
+  })}\n`;
+}
 
 /** The dist/package.json ng-packagr derives from `manifest`. */
 export function builtManifest(manifest, overrides = {}) {
@@ -34,7 +45,11 @@ export async function writeBuiltPackage(directory, manifest, overrides = {}) {
       join(dist, 'package.json'),
       `${JSON.stringify(builtManifest(manifest, overrides), null, 2)}\n`,
     ),
-    writeFile(join(dist, 'fesm2022/kimen-angular.mjs'), 'export class KiButton {}\n'),
+    writeFile(
+      join(dist, 'fesm2022/kimen-angular.mjs'),
+      'export class KiButton {}\n//# sourceMappingURL=kimen-angular.mjs.map\n',
+    ),
+    writeFile(join(dist, 'fesm2022/kimen-angular.mjs.map'), embeddedSourceMap('kimen-angular.mjs')),
     writeFile(join(dist, 'types/kimen-angular.d.ts'), 'export declare class KiButton {}\n'),
     writeFile(join(dist, 'README.md'), `# ${manifest.name} (as built)\n`),
   ]);
