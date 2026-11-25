@@ -23,8 +23,8 @@ preferred version (upstream status `current`); **0.9.1** stays supported
 
 | Adapter version | A2UI specification | Status    | Upstream commit                            | Accepted envelope `version` | Emitted `version` |
 | --------------- | ------------------ | --------- | ------------------------------------------ | --------------------------- | ----------------- |
-| 0.2.1           | 1.0                | preferred | `57f961f143da23f4212313e432a64b5843d978f9` | `1.0`                       | `1.0`             |
-| 0.2.1           | 0.9.1              | previous  | `85120b91e2fe94cb20c8ddef0b545d3da2ae161f` | `v0.9.1`, `v0.9`            | `v0.9.1`          |
+| 0.3.0           | 1.0                | preferred | `57f961f143da23f4212313e432a64b5843d978f9` | `1.0`                       | `1.0`             |
+| 0.3.0           | 0.9.1              | previous  | `85120b91e2fe94cb20c8ddef0b545d3da2ae161f` | `v0.9.1`, `v0.9`            | `v0.9.1`          |
 
 - **1.0** is implemented from `specification/v1_0/` (protocol and schemas)
   and `catalogs/basic/v1/` (basic catalog). Upstream has no git tag for the
