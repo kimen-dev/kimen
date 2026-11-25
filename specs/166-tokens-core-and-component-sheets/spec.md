@@ -9,9 +9,17 @@
 
 **Created**: 2026-11-25
 
-**Status**: Draft, for the founder's approval. Contract only: nothing is
-implemented. Design decisions D1 to D7 are the agent's recommendations; the
-open questions at the end ask the founder to confirm or change them.
+**Status**: Approved. On 2026-11-25 the founder approved S1 to S11 and the
+recommended answers ("Aprobado con tus respuestas", relayed by the
+coordinating session). The question was whether they approved the contract
+as follows: option (c), with the full sheet unchanged and
+`@kimen/tokens/css/core` and `@kimen/tokens/css/ki-<tag>` added; F1 for the
+foundations; one sheet per tag; the names `css/core` and `css/ki-<tag>`;
+material3 kept whole; the full sheet as the documented default, with the
+`kimen-components` skill offering the split as the light option; and budgets
+of 7,000 B for the core, 8,300 B with `ki-button`, 11,400 B with ten
+components and 2,200 B per tag sheet. Q5 was not taken up and is out of
+scope. The answers are recorded under *Resolved questions*.
 
 **Input**: The weight report of 2026-11-25 (opportunities 5 and 9). A page
 with one `ki-button` downloads the whole onmars token sheet, 20.7 KB brotli,
@@ -133,10 +141,10 @@ bundler or none, and it leaves `@kimen/elements` untouched. It gives a page that
 the full saving of (a): 8.1 KB br for a `ki-button` page instead of
 20.7 KB, and 35 to 45 % less root-level recalculation. Option (b) is the best
 for agent legibility, but it makes every existing page heavier and couples
-the two packages. It can be layered on top of (c) later, because it would
-adopt exactly the sheets (c) publishes (question Q5).
+the two packages. It could be layered on top of (c), because it would adopt
+exactly the sheets (c) publishes; the founder left that out of scope (Q5).
 
-## Design decisions (recommended)
+## Design decisions (approved)
 
 - **D1 · Foundations.** The core and the tag sheets declare no
   `--ki-foundation-*`. material3 inlines the 97 foundation values it reads,
@@ -144,7 +152,7 @@ adopt exactly the sheets (c) publishes (question Q5).
   foundations, so it works over the core: +19 B br, and every material3
   token keeps its value. The full sheet keeps all 268 foundations
   unchanged. This saves 1.85 KB br on every split page and removes no name
-  from any existing export. Founder decision: question Q1.
+  from any existing export. Approved as F1 (Q1).
 - **D2 · One self-contained sheet per tag.** `css/ki-pagination` carries
   every component source `ki-pagination` needs: its own, and the button,
   icon-button, icon and counter sources of the components it renders.
@@ -165,10 +173,10 @@ adopt exactly the sheets (c) publishes (question Q5).
   their selectors and `!important` in both.
 - **D5 · material3 stays whole.** It is opt-in, 5.5 KB br, and the reference
   second theme. Splitting it would double the export matrix for a theme no
-  known consumer ships per component. Question Q4.
+  known consumer ships per component. Approved (Q4).
 - **D6 · The full sheet stays the documented default.** Guides and the
   `kimen-components` skill keep `import '@kimen/tokens/css'` first and
-  present the split as the way to ship less. Question Q6.
+  present the split as the light option. Approved (Q6).
 - **D7 · Generated, never hand-written.** The sources each tag sheet carries
   are derived by the build from the compiled component styles (shared field
   styles included) and the tags each component renders, the same inputs that
@@ -209,36 +217,33 @@ adopt exactly the sheets (c) publishes (question Q5).
   same bytes; size-limit already measures the minified sheet; and it would
   drop the deprecation comments that spec 041 publishes on purpose.
 
-## Open questions for the founder
+## Resolved questions
 
-1. **Q1 · Foundations (D1).** Choose one:
-   - **F1** (recommended): the core and the tag sheets carry no foundations;
-     material3 inlines the 97 it reads; the full sheet keeps all 268. Saves
-     1.85 KB br per split page and removes nothing.
-   - **F2**: F1, and also deprecate the 268 in the full sheet through spec
-     041's cycle, removing them at the next major. That adds 1.85 KB br to
-     every full-sheet page's saving, but retires names a consumer could read
-     today.
-   - **F3**: keep the foundations in the core for a third-party theme that
-     reads them. The core and every split page cost 1.85 KB br more, and the
-     six `onmars-v1` foundations that read dialog and tooltip tokens must
-     move to those tag sheets.
-2. **Q2 · Granularity (D2).** Self-contained tag sheets (recommended), or one
-   sheet per component source with a generated list per tag?
-3. **Q3 · Names (D3).** `css/core` and `css/ki-<tag>`, or
-   `css/components/ki-<tag>`?
-4. **Q4 · material3 (D5).** Keep it whole (recommended), or split it into a
-   core part and per-tag parts too?
-5. **Q5 · A later option (b).** Should a separate spec, once (c) ships, let
-   each element adopt its tag sheet into the document by itself when the
-   page loaded the core and not the tag sheet?
-6. **Q6 · Documented default (D6).** Keep the full sheet first (recommended),
-   or make the core and tag sheets the default for new applications and
-   for the `kimen-components` skill?
-7. **Q7 · Budgets.** Approve S10's budgets: the core 7,000 B, the core with
-   `ki-button` 8,300 B, the ten-component page 11,400 B, and a ceiling of
-   2,200 B for the largest tag sheet, all brotli and under F1. The full
-   sheet keeps its budget. Under F3 each split budget rises by 1,900 B.
+Answered by the founder on 2026-11-25 ("Aprobado con tus respuestas"): each
+question takes the recommended answer.
+
+1. **Q1 · Foundations (D1): F1.** The core and the tag sheets carry no
+   `--ki-foundation-*`. material3 inlines the 97 foundation values it reads.
+   The full sheet keeps all 268. The alternatives were F2, which also
+   deprecates the 268 in the full sheet through spec 041's cycle, and F3,
+   which keeps them in the core for third-party themes at 1.85 KB br per
+   split page.
+2. **Q2 · Granularity (D2): one self-contained sheet per tag.** The
+   alternative was one sheet per component source with a generated list per
+   tag.
+3. **Q3 · Names (D3): `css/core` and `css/ki-<tag>`.** The alternative was
+   `css/components/ki-<tag>`.
+4. **Q4 · material3 (D5): kept whole.** The alternative was splitting it
+   into a core part and per-tag parts too.
+5. **Q5 · A later option (b): not taken up; out of scope.** Elements do not
+   adopt their own tag sheet, in this feature or as a follow-up it commits
+   to.
+6. **Q6 · Documented default (D6): the full sheet stays the default.** The
+   `kimen-components` skill and the token README offer the core and tag
+   sheets as the light option.
+7. **Q7 · Budgets: approved.** The core 7,000 B, the core with `ki-button`
+   8,300 B, the ten-component page 11,400 B, and 2,200 B for each tag sheet,
+   all brotli. The full sheet keeps its budget.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -425,7 +430,7 @@ Scenario vocabulary:
 - **The ten-component page** is the weight report's set, listed under
   *Weight per page*, with the children those tags need.
 - **Measured** (S10): size-limit, as the existing token budgets measure.
-  The budgets assume D1 = F1 (question Q1).
+  The budgets assume D1 = F1, as approved (Q1).
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
@@ -558,7 +563,8 @@ the components the split sheets paint.
 - **Out of scope:** a development-time warning for a tag rendered without
   its sheet; the MCP Apps document and `kimen-mcp` switching to the core
   (the report's opportunity 4 is the place for that); a page budget for JS
-  and CSS together; the elements adopting their own sheet (Q5).
+  and CSS together; the elements adopting their own sheet (Q5, not taken
+  up).
 - **The tag-to-source map** comes from the same compiled styles that already
   produce each component's CSS custom-property documentation. Building it
   needs the elements' styles before the token sheets are written; the plan
