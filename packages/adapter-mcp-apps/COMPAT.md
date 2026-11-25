@@ -139,10 +139,10 @@ figures.
   the components those draw, and the waiting placeholder. Its built-in
   catalog is the subset, so a spec that names any other component is
   refused. Each has its own content-policy digests and its own raw, gzip and
-  brotli budget (`tests/subset-documents.spec.ts`). Measured on macOS at
-  spec 165's merge base, against 1,527,736 / 283,998 B for the full document:
-  «form» 596,734 B raw and 110,383 B brotli; «data» 476,345 B raw and
-  92,077 B brotli. Each profile keeps the full token stylesheet. No
+  brotli budget (`tests/subset-documents.spec.ts`). Measured on macOS on
+  2026-11-25 (main 808e6400 plus spec 165), against 1,527,736 B raw and
+  283,829 B brotli for the full document: «form» 596,734 B raw and
+  110,381 B brotli; «data» 476,345 B raw and 91,912 B brotli. Each profile keeps the full token stylesheet. No
   production host has served two Kimen resources from one server yet.
 
 Host↔surface traffic follows the wire vocabulary above, mediated by the
