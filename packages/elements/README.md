@@ -10,6 +10,12 @@ foundation for generative UI.
 the public API. The instructions below are validated in CI against the
 packed tarballs of every release run, dry runs included.
 
+**Upgrading to 0.3.0**: the package no longer ships `dist/cjs`, the Stencil
+collection or the `dist/kimen` browser build, and drops the `collection`,
+`collection:main` and `unpkg` fields. No export changed. If you loaded Kimen
+from `https://unpkg.com/@kimen/elements` without a path, see the
+[migration guide](https://github.com/kimen-dev/kimen/blob/main/docs/migrations/package-outputs-0.3.0.md).
+
 ## Install
 
 ```sh
