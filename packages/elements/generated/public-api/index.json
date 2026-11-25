@@ -2449,7 +2449,7 @@
             "target": "./dist/components/ki-tooltip.js"
           }
         },
-        "version": "0.2.1"
+        "version": "0.3.0"
       },
       "@kimen/tokens": {
         "exports": {
@@ -87706,9 +87706,9 @@
             "type": null
           }
         },
-        "version": "0.2.1"
+        "version": "0.3.0"
       }
     }
   },
-  "surfaceSha256": "4e8c851c9328432d3be0173a3682e7db35dcca4686d8ab19d8618d7553444292"
+  "surfaceSha256": "a2a00f13307cde280f625851df1169d60a37109f4cc5d8730438bf0bd281a48d"
 }
