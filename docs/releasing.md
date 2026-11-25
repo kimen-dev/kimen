@@ -124,7 +124,8 @@ The smoke then gives each framework wrapper a consumer of its own: the
 wrapper and elements from their tarballs, the framework from the registry
 at the exact versions the wrapper develops against (React and its types,
 Vue without the optional `vue-router`, Angular core, common, forms,
-platform-browser and RxJS). The workspace TypeScript compiler type-checks a
+platform-browser and RxJS). The React consumer must not install
+`@stencil/react-output-target` or `ts-morph`. The workspace TypeScript compiler type-checks a
 one-component consumer that passes a typed prop and must reject a wrong
 one, and the workspace esbuild bundles it through the installed packages.
 The React and Vue wrappers are also imported in Node; Angular's partially
@@ -138,11 +139,20 @@ node scripts/release/candidate-cli.mjs smoke --archive <candidate.tar> --sha256 
 The browser consumer contract (`scripts/consumer-contract.mjs`) still covers
 elements and tokens in every engine.
 
-Each wrapper's `NOTICE` follows what its build contains. The React and Vue
-wrappers import their Stencil output target's runtime as an installed
-dependency and carry the header alone. The Angular bundle compiles in the
-component helpers and value accessors that `@stencil/angular-output-target`
-copies into its sources, so its `NOTICE` carries that MIT notice.
+Each wrapper's `NOTICE` follows what its build contains. The Vue wrapper
+imports its Stencil output target's runtime as an installed dependency and
+carries the header alone. The React output target's runtime is one module
+over `@lit/react`, but the package that ships it also depends on the
+target's build tooling (`ts-morph` and others, about 19 MB). So
+`@kimen/react` develops against the target as a devDependency and depends
+on `@lit/react` instead: after `tsc`,
+`packages/react/scripts/vendor-runtime.mjs` copies the runtime unchanged
+into `dist/stencil-runtime`, points the compiled wrappers and their source
+maps at the copy, and stops the build if the copy imports a package the
+wrapper does not install. Its `NOTICE` carries the target's MIT notice. The
+Angular bundle compiles in the component helpers and value accessors that
+`@stencil/angular-output-target` copies into its sources, so its `NOTICE`
+carries that MIT notice.
 
 **Versioned adapter files.** Each protocol adapter states its release in
 its `COMPAT.md` matrix, and the MCP Apps surface announces it as
