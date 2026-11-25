@@ -8,8 +8,11 @@
 
 **Created**: 2026-11-25
 
-**Status**: Draft, waiting for the founder's approval. S1 to S4 are guardrail
-scenarios (Art. VIII): they narrow what the guarded renderer accepts.
+**Status**: Approved. The founder approved S1 to S6 as written on 2026-11-25
+(dictated as "Y sí lo pruebo", meaning "Y sí, lo apruebo"), answering
+whether they approved the spec 164 contract as it stood. S1 to S4 are
+guardrail scenarios (Art. VIII): they narrow what the guarded renderer
+accepts.
 
 **Input**: Feedback from an integrator building a React 19 app with Kimen
 GenUI (2026-11-25). Their review found that `validateUiSpec` accepts any
