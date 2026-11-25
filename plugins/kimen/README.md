@@ -25,7 +25,7 @@ the library changes.
 | OpenCode, GitHub Copilot, Cursor and other agents | `npx skills add kimen-dev/kimen --skill kimen-components --skill kimen-genui` | no |
 
 The plugin and the extension start the server with
-`npx -y -p @kimen/mcp-server@0.2.0 kimen-mcp`, so they need Node 22 or later.
+`npx -y -p @kimen/mcp-server@0.2.1 kimen-mcp`, so they need Node 22 or later.
 Gemini CLI installs extensions only from the root of a repository, hence the
 clone. The last row uses the open [`skills` CLI](https://skills.sh/) (Node
 22.20 or later). It asks which agents to install for and puts the skills in

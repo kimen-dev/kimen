@@ -7,6 +7,17 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [0.2.1] - 2026-11-25
+
+### Added
+
+- **release:** publish the generative UI packages and framework wrappers ([#609](https://github.com/kimen-dev/kimen/pull/609))
+
+### Fixed
+
+- **catalog:** close the built-in open unions over their documented values (spec 164) ([#606](https://github.com/kimen-dev/kimen/pull/606))
+- **deps:** update sandbox toolchain ([#603](https://github.com/kimen-dev/kimen/pull/603))
+
 ## [0.2.0] - 2026-11-24
 
 ### Added

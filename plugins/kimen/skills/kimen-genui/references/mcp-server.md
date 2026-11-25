@@ -3,7 +3,7 @@
 `kimen-mcp` is Kimen's MCP server over stdio, published on npm as
 `@kimen/mcp-server` (Node 22 or later). The Kimen plugin for Claude Code,
 Codex and Antigravity and the Gemini CLI extension start it for you; any
-other client runs `npx -y -p @kimen/mcp-server@0.2.0 kimen-mcp`. Setup for each
+other client runs `npx -y -p @kimen/mcp-server@0.2.1 kimen-mcp`. Setup for each
 client (Claude Code, Claude Desktop, Codex, Antigravity, OpenCode, Gemini
 CLI, VS Code, Cursor) is in <https://kimen.dev/docs/guides/connect-agents/>.
 If its tools are not in your tool list, the server is not connected: say so
