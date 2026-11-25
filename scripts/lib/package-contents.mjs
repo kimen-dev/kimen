@@ -82,7 +82,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 43_008, unpacked: 381_952 }),
+    // Re-based the same day for the copy of the React output target's
+    // runtime and its MIT notice, which replace the target as a dependency.
+    budget: Object.freeze({ packed: 48_128, unpacked: 392_192 }),
   }),
   '@kimen/vue': Object.freeze({
     mapsEveryModule: true,

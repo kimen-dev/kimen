@@ -121,7 +121,7 @@ it('names exactly the sections each published package answers for', () => {
       '@kimen/adapter-a2ui': [],
       '@kimen/adapter-mcp-apps': bundleNotices,
       '@kimen/mcp-server': [...bundleNotices, ...mcpNotices],
-      '@kimen/react': [],
+      '@kimen/react': ['@stencil/react-output-target (MIT)'],
       '@kimen/vue': [],
       '@kimen/angular': ['@stencil/angular-output-target (MIT)'],
     },
@@ -242,6 +242,12 @@ const repositoryNotice = [
   '',
   'Angular helpers body.',
   '',
+  RULE,
+  'Third-party notices: @stencil/react-output-target (MIT)',
+  RULE,
+  '',
+  'React runtime body.',
+  '',
 ].join('\n');
 
 async function repositoryFixture(notice) {
@@ -315,7 +321,6 @@ it('writes a byte copy of the licence and the derived notice into each published
     'packages/catalog',
     'packages/emitter',
     'packages/adapter-a2ui',
-    'packages/react',
     'packages/vue',
   ]) {
     assert.equal(
@@ -326,6 +331,10 @@ it('writes a byte copy of the licence and the derived notice into each published
   assert.equal(
     await readFile(join(root, 'packages/angular/NOTICE'), 'utf8'),
     `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: @stencil/angular-output-target (MIT)\n${RULE}\n\nAngular helpers body.\n`,
+  );
+  assert.equal(
+    await readFile(join(root, 'packages/react/NOTICE'), 'utf8'),
+    `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: @stencil/react-output-target (MIT)\n${RULE}\n\nReact runtime body.\n`,
   );
 });
 

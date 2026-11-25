@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
@@ -111,31 +111,36 @@ test('the package notices include the third-party works shipped in each tarball'
   ]);
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], ['onmars theme fonts (SIL OFL 1.1)']);
   // Compiled Kimen sources only: their dependencies are installed, not bundled.
-  for (const name of [
-    '@kimen/catalog',
-    '@kimen/emitter',
-    '@kimen/adapter-a2ui',
-    '@kimen/react',
-    '@kimen/vue',
-  ]) {
+  for (const name of ['@kimen/catalog', '@kimen/emitter', '@kimen/adapter-a2ui', '@kimen/vue']) {
     assert.deepEqual(PACKAGE_NOTICE_SECTIONS[name], []);
   }
+  // The React package ships a copy of its output target's runtime.
+  assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/react'], ['@stencil/react-output-target (MIT)']);
   // The Angular bundle carries the helpers the Angular output target copies.
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/angular'], [
     '@stencil/angular-output-target (MIT)',
   ]);
 });
 
-// The React and Vue wrappers import their output target's runtime from the
-// installed dependency; the Angular one compiles copies of its helpers into
-// the bundle it publishes.
+// The Vue wrappers import their output target's runtime from the installed
+// dependency. The React build copies its target's runtime into the package
+// and points the compiled wrappers at the copy, and the Angular one compiles
+// copies of its helpers into the bundle it publishes.
+const reactTarget = 'packages/react/node_modules/@stencil/react-output-target';
+
 test('the wrapper builds bundle third-party code only where their notices say so', async () => {
-  const [react, vue, angular] = await Promise.all([
+  const [reactSource, reactModule, reactDeclaration, vue, angular] = await Promise.all([
     read('packages/react/src/ki-button.ts'),
+    read('packages/react/dist/ki-button.js'),
+    read('packages/react/dist/ki-button.d.ts'),
     read('packages/vue/src/ki-button.ts'),
     read('packages/angular/src/directives/angular-component-lib/utils.ts'),
   ]);
-  assert.match(react, /from '@stencil\/react-output-target\/runtime'/u);
+  assert.match(reactSource, /from '@stencil\/react-output-target\/runtime'/u);
+  for (const published of [reactModule, reactDeclaration]) {
+    assert.match(published, /from '\.\/stencil-runtime\/runtime\.js'/u);
+    assert.doesNotMatch(published, /@stencil\/react-output-target/u);
+  }
   assert.match(vue, /from '@stencil\/vue-output-target\/runtime'/u);
   const target = join(
     repositoryRoot,
@@ -144,21 +149,67 @@ test('the wrapper builds bundle third-party code only where their notices say so
   assert.equal(angular, await readFile(target, 'utf8'), 'the Angular helpers are a verbatim copy');
 });
 
-test('the Angular output target notice reproduces the licence the installed target ships with', async () => {
-  const [notice, licence] = await Promise.all([
-    read('NOTICE'),
-    read('packages/elements/node_modules/@stencil/angular-output-target/LICENSE.md'),
+// The NOTICE calls the copy unchanged: each file is its upstream file, byte
+// for byte. The runtime's declaration entry takes the module entry's name.
+test('the React runtime copy is the installed output target runtime, byte for byte', async () => {
+  const copy = join(repositoryRoot, 'packages/react/dist/stencil-runtime');
+  const files = (await readdir(copy)).sort();
+  const chunk = files.find((file) => /^create-component-[\w-]+\.js$/u.test(file));
+  assert.ok(chunk, 'the copy has no create-component chunk');
+  assert.deepEqual(files, [
+    chunk,
+    `${chunk}.map`,
+    'create-component.d.ts',
+    'runtime.d.ts',
+    'runtime.js',
+    'runtime.js.map',
   ]);
-  const section = noticeSections(notice).sections.get('@stencil/angular-output-target (MIT)');
-  assert.ok(section, 'the repository NOTICE has no Angular output target section');
-  const flattened = section.replaceAll(/\s+/gu, ' ');
-  for (const paragraph of licence.split(/\n\s*\n/u)) {
-    const expected = paragraph.replaceAll(/\s+/gu, ' ').trim();
-    if (expected !== '') {
-      assert.ok(flattened.includes(expected), `missing from the notice: ${expected}`);
-    }
+  const upstream = {
+    'runtime.d.ts': 'dist/runtime/index.d.ts',
+    'create-component.d.ts': 'dist/runtime/create-component.d.ts',
+  };
+  for (const file of files) {
+    const [copied, original] = await Promise.all([
+      readFile(join(copy, file)),
+      readFile(join(repositoryRoot, reactTarget, upstream[file] ?? `dist/${file}`)),
+    ]);
+    assert.equal(copied.equals(original), true, `${file} differs from the output target's`);
   }
 });
+
+// The runtime the build copies must be the one the generator wrote the
+// wrappers against: both packages pin the same output target release.
+test('the React wrapper copies the runtime of the output target that generates it', async () => {
+  const [react, elements] = await Promise.all([
+    read('packages/react/package.json').then(JSON.parse),
+    read('packages/elements/package.json').then(JSON.parse),
+  ]);
+  const pinned = elements.devDependencies['@stencil/react-output-target'];
+  assert.match(pinned, /^\d+\.\d+\.\d+$/u);
+  assert.equal(react.devDependencies['@stencil/react-output-target'], pinned);
+  assert.equal(react.dependencies['@stencil/react-output-target'], undefined);
+});
+
+for (const [title, licencePath] of [
+  [
+    '@stencil/angular-output-target (MIT)',
+    'packages/elements/node_modules/@stencil/angular-output-target/LICENSE.md',
+  ],
+  ['@stencil/react-output-target (MIT)', `${reactTarget}/LICENSE.md`],
+]) {
+  test(`the ${title} notice reproduces the licence the installed target ships with`, async () => {
+    const [notice, licence] = await Promise.all([read('NOTICE'), read(licencePath)]);
+    const section = noticeSections(notice).sections.get(title);
+    assert.ok(section, `the repository NOTICE has no ${title} section`);
+    const flattened = section.replaceAll(/\s+/gu, ' ');
+    for (const paragraph of licence.split(/\n\s*\n/u)) {
+      const expected = paragraph.replaceAll(/\s+/gu, ' ').trim();
+      if (expected !== '') {
+        assert.ok(flattened.includes(expected), `missing from the notice: ${expected}`);
+      }
+    }
+  });
+}
 
 test('the Stencil notice reproduces the licence the installed runtime ships with', async () => {
   const [notice, stencilLicence] = await Promise.all([
