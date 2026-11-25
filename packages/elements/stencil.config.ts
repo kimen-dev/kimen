@@ -33,7 +33,12 @@ export const config: Config = {
     after: [compactButtonPalette],
   },
   outputTargets: [
-    { type: 'dist', esmLoaderPath: '../loader' },
+    // No Stencil collection: the package publishes the ESM lazy build behind
+    // ./loader and the per-component modules, and nothing consumes a
+    // collection. The CommonJS build and the browser build in dist/kimen are
+    // still written; the site serves dist/kimen, and the package publishes
+    // neither (package.json `files`).
+    { type: 'dist', esmLoaderPath: '../loader', collectionDir: null },
     { type: 'dist-custom-elements', customElementsExportBehavior: 'single-export-module' },
     { type: 'docs-json', file: 'generated/docs.json' },
     reactOutputTarget({

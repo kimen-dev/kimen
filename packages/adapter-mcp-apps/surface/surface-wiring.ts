@@ -11,9 +11,9 @@
  *   outbound — a reply is addressed to the host that spoke, when it has an
  *              address at all
  */
-import type { SurfaceBridge, SurfaceColorScheme } from './bridge.js';
-import { createSurfaceBridge } from './bridge.js';
-import type { SurfaceOutboundMessage } from './protocol.js';
+import type { SurfaceBridge, SurfaceColorScheme } from '../src/bridge.js';
+import { createSurfaceBridge } from '../src/bridge.js';
+import type { SurfaceOutboundMessage } from '../src/protocol.js';
 
 /** One inbound `message` event, structurally — a test substitutes a double. */
 export interface SurfaceMessageEvent {

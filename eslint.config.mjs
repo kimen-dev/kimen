@@ -133,6 +133,7 @@ export default tseslint.config(
       'tools/**',
       'packages/*/scripts/**',
       '**/.storybook/**',
+      'packages/elements/stencil-env.d.ts',
     ],
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: {

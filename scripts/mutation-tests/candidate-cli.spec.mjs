@@ -33,6 +33,8 @@ async function createRepository() {
   const root = await mkdtemp(join(tmpdir(), 'kimen-candidate-cli-mutation-'));
   onTestFinished(() => rm(root, { force: true, recursive: true }));
   mustRun('git', ['init', '--initial-branch=main'], root);
+  // No background repack racing the fixture's removal (ENOTEMPTY).
+  mustRun('git', ['config', 'maintenance.auto', 'false'], root);
   mustRun('git', ['config', 'user.email', 'fixture@example.invalid'], root);
   mustRun('git', ['config', 'user.name', 'Fixture'], root);
   for (const [name, path] of releasePackages) {
@@ -59,7 +61,8 @@ async function createRepository() {
       version: '0.0.0',
       private: true,
       type: 'module',
-      ...(directory === 'angular' ? {} : { files: ['index.js', 'NOTICE'] }),
+      // The entry point a consumer imports, so every packed file is reachable.
+      ...(directory === 'angular' ? {} : { files: ['index.js', 'NOTICE'], exports: './index.js' }),
       ...(directory === 'mcp-server' ? mcpFixtureFields : {}),
       ...(runtime === undefined ? {} : { dependencies: { [runtime]: 'workspace:*' } }),
       repository: {

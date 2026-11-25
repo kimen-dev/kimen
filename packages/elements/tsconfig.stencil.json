@@ -1,6 +1,17 @@
 {
   "extends": "./tsconfig.json",
+  // Stencil compiles the package sources only. Stories, galleries, browser
+  // specs, the size-limit entries and the browser-test declarations stay out
+  // of dist; the TypeScript gate checks them through tsconfig.json.
+  "compilerOptions": {
+    // Components read process.env.NODE_ENV, which Stencil replaces at build
+    // time; see stencil-env.d.ts.
+    "types": ["./stencil-env.d.ts"]
+  },
+  "include": ["src"],
   "exclude": [
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx",
     "src/components/**/gallery.ts",
     "src/components/**/*.browser.spec.ts",
     "src/components/**/*.browser.spec.tsx"

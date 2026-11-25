@@ -9,8 +9,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import type { SurfaceColorScheme } from '../src/index.js';
-import type { SurfaceMessageEvent, SurfaceWindow } from '../src/surface-wiring.js';
-import { wireSurface } from '../src/surface-wiring.js';
+import type { SurfaceMessageEvent, SurfaceWindow } from '../surface/surface-wiring.js';
+import { wireSurface } from '../surface/surface-wiring.js';
 import {
   confirmSurface,
   hostContextChanged,

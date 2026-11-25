@@ -17,6 +17,7 @@ import { promisify } from 'node:util';
 import { gunzipSync } from 'node:zlib';
 
 import { canonicalJson } from '../lib/canonical-json.mjs';
+import { packageContentViolation } from '../lib/package-contents.mjs';
 import {
   MCP_BINARY,
   MCP_PACKAGE,
@@ -57,11 +58,6 @@ const PACKAGE_NAMES = [...releasePackages.keys()].join(', ');
 // same of its own notice. npm packs what the package directory holds, so a
 // tarball without either file is a package that must not be published.
 const REQUIRED_LEGAL_FILES = Object.freeze(['LICENSE', 'NOTICE']);
-// TypeScript's incremental state is compiler cache: it lists the files of the
-// machine that built the package and serves no consumer. tsc writes it into
-// outDir unless tsBuildInfoFile points elsewhere, which is how 0.2.1 shipped
-// it in six packages.
-const BUILD_INFO_SUFFIX = '.tsbuildinfo';
 const FORBIDDEN_LIFECYCLE_SCRIPTS = new Set([
   'postpack',
   'postpublish',
@@ -682,14 +678,11 @@ function verifyPackedFiles(bytes, expected) {
       );
     }
   }
-  const buildInfo = entries
-    .map(({ name }) => name)
-    .filter((name) => name.endsWith(BUILD_INFO_SUFFIX));
-  if (buildInfo.length > 0) {
-    fail(
-      `${expected.name} tarball ships TypeScript build info ${buildInfo.join(', ')}; keep tsBuildInfoFile outside the files the package packs`,
-    );
-  }
+  // Only what a consumer uses: no build cache, test or story artefact, no
+  // absolute build path, no map without its sources, nothing no entry point
+  // reaches, and within the package's size budget.
+  const violation = packageContentViolation(expected.name, entries, bytes.length);
+  if (violation !== undefined) fail(violation);
 }
 
 // What a consumer installs must resolve from the registry: no workspace:
