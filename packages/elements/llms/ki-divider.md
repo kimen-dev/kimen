@@ -44,6 +44,11 @@ An inset is a per-instance layout decision — use logical margins on the instan
 <ki-divider style="margin-inline: 16px"></ki-divider>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-divider`: the light option, only the tokens ki-divider needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `orientation` ("horizontal" | "vertical", default 'horizontal'): Layout axis of the rule: `horizontal` spans the available inline size between stacked content; `vertical` stretches to the cross size its layout context provides, between side-by-side content. A structural axis, never appearance — thickness, color, end caps and gutter are per-theme `--ki-divider-*` tokens. An unrecognized value matches no style selector, so the divider keeps the default horizontal rendering (fallback by CSS construction — no validation code).

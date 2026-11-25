@@ -46,6 +46,11 @@ document or shadow root. Set the trigger's accessible name directly.
 For an important count update, update the trigger name and the counter, then
 write one localized announcement to the pre-existing status region.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-counter`: the light option, only the tokens ki-counter needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `dot` (boolean, default false): Show a dot independently of the count, including when the value is zero.

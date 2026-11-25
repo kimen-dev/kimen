@@ -126,6 +126,7 @@ test('S4: a component with no size allowance leaves every shipped limit unchange
     mcpApps: { raw: 818_195, gzip: 187_416, brotli: 148_865 },
     mcpServer: { raw: 2_626_194, gzip: 498_562, brotli: 390_919 },
     tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
+    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   });
 });
 
@@ -149,6 +150,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
     mcpApps: { raw: 820_395, gzip: 187_596, brotli: 149_030 },
     mcpServer: { raw: 2_627_494, gzip: 498_752, brotli: 391_094 },
     tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
+    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   });
 });
 
@@ -309,11 +311,26 @@ test('each exported generated token stylesheet has one size budget outside the p
   assert.equal(Object.hasOwn(manifest, 'size-limit'), false);
 
   const { default: limits } = await import(new URL('.size-limit.mjs', tokens).href);
+  // A pattern export (spec 166 `./css/ki-*`) is every file it resolves to.
+  const built = await readdir(new URL('dist/css/', tokens));
+  const exported = Object.values(manifest.exports)
+    .filter((target) => target.startsWith('./dist/css/'))
+    .flatMap((target) => {
+      if (!target.includes('*')) return [target];
+      const [prefix, suffix] = target.slice('./dist/css/'.length).split('*');
+      return built
+        .filter((file) => file.startsWith(prefix) && file.endsWith(suffix))
+        .map((file) => `./dist/css/${file}`);
+    });
+  const sheets = limits.filter(({ path }) => typeof path === 'string' && path.startsWith('dist/'));
+  assert.deepEqual(sheets.map(({ path }) => `./${path}`).sort(), exported.sort());
+  // Spec 166's page budgets measure one bundle of the sheets a page loads.
   assert.deepEqual(
-    limits.map(({ path }) => `./${path}`).sort(),
-    Object.values(manifest.exports)
-      .filter((target) => target.startsWith('./dist/css/'))
+    limits
+      .filter((entry) => !sheets.includes(entry))
+      .map(({ path }) => path)
       .sort(),
+    ['size-limit/button-page.css', 'size-limit/ten-component-page.css'],
   );
   for (const { limit } of limits) {
     assert.match(limit, /^[1-9]\d*(?:\.\d+)? (?:B|KB)$/u);

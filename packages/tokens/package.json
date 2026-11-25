@@ -19,10 +19,16 @@
   "exports": {
     "./css": "./dist/css/tokens.css",
     "./css/base": "./dist/css/base.css",
+    "./css/core": "./dist/css/core.css",
+    "./css/ki-*": "./dist/css/ki-*.css",
     "./css/material3": "./dist/css/tokens.material3.css",
     "./css/material3-fonts.css": "./css/material3-fonts.css",
     "./css/onmars-fonts.css": "./css/onmars-fonts.css"
   },
+  "sideEffects": [
+    "./css/*.css",
+    "./dist/css/*.css"
+  ],
   "scripts": {
     "build": "node ./build.mjs && pnpm run reference",
     "contrast": "node ./scripts/check-contrast.mjs",
@@ -46,6 +52,14 @@
         "outputs": [
           "{projectRoot}/dist",
           "{workspaceRoot}/packages/elements/docs/tokens-reference.mdx"
+        ],
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/packages/elements/src/components/**/*",
+          "{workspaceRoot}/packages/elements/src/utils/**/*.css",
+          "{workspaceRoot}/scripts/lib/component-token-usage.mjs",
+          "{workspaceRoot}/scripts/lib/token-inventory.mjs"
         ]
       }
     }

@@ -56,6 +56,11 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 </ki-list>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-list-item`: the light option, only the tokens ki-list-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `disabled` (boolean, default false): Excludes this option from focus, selection by the user, and form data.

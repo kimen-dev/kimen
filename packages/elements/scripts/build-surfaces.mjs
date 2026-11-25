@@ -346,6 +346,7 @@ async function buildPublicApi({
   const stylesheetSources = await readPublicStylesheets({
     packageRoot: dirname(tokensPackageJsonPath),
     packageExports: tokensPackage.exports,
+    workspaceRoot,
   });
 
   return buildRepositoryPublicApiSnapshot({
@@ -386,7 +387,10 @@ function runtimeExportTarget(entry, label) {
   throw new Error(`${label} has no runtime target`);
 }
 
-async function readPublicStylesheets({ packageRoot, packageExports }) {
+async function readPublicStylesheets({ packageRoot, packageExports, workspaceRoot }) {
+  const { stylesheetPatternFiles } = await import(
+    pathToFileURL(resolve(workspaceRoot, 'scripts/lib/css-token-surface.mjs')).href
+  );
   if (
     packageExports === null ||
     typeof packageExports !== 'object' ||
@@ -414,7 +418,21 @@ async function readPublicStylesheets({ packageRoot, packageExports }) {
         ) {
           throw new Error(`@kimen/tokens export ${subpath} escapes its package root`);
         }
-        return [subpath, await readFile(absoluteTarget, 'utf8')];
+        if (!target.includes('*')) return [subpath, await readFile(absoluteTarget, 'utf8')];
+        // A pattern export (spec 166 `./css/ki-*`): every file it resolves to.
+        const directory = dirname(absoluteTarget);
+        const files = stylesheetPatternFiles(subpath, target, await readdir(directory));
+        return [
+          subpath,
+          Object.fromEntries(
+            await Promise.all(
+              files.map(async ([key, file]) => [
+                key,
+                await readFile(join(directory, file), 'utf8'),
+              ]),
+            ),
+          ),
+        ];
       }),
     ),
   );

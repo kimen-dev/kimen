@@ -1,0 +1,30 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-date-picker-bg:var(--ki-surface-raised);
+  --ki-date-picker-fg:var(--ki-text-high-em);
+  --ki-date-picker-bg-image:var(--ki-surface-image-none);
+  --ki-date-picker-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-date-picker-border:var(--ki-outline-low-em);
+  --ki-date-picker-shadow:var(--ki-elevation-e3);
+  --ki-date-picker-radius:var(--ki-corner-calendar-surface);
+  --ki-date-picker-day-size:var(--ki-control-size-md);
+  --ki-date-picker-day-radius:var(--ki-control-radius-item);
+  --ki-date-picker-selected-bg:var(--ki-surface-primary-med-em);
+  --ki-date-picker-selected-fg:var(--ki-text-primary-on-primary);
+  --ki-date-picker-range-bg:var(--ki-surface-primary-low-em);
+  --ki-date-picker-range-fg:var(--ki-text-primary-on-primary-light);
+  --ki-date-picker-today-border:var(--ki-outline-primary-high-em);
+  --ki-date-picker-weekday-bg:var(--ki-surface-raised);
+  --ki-date-picker-weekday-fg:var(--ki-text-supporting);
+  --ki-date-picker-outside-bg:var(--ki-surface-raised);
+  --ki-date-picker-outside-fg:var(--ki-text-supporting);
+  --ki-date-picker-day-hover-bg:var(--ki-surface-s3);
+  --ki-date-picker-day-hover-fg:var(--ki-text-high-em);
+  --ki-date-picker-heading-family:var(--ki-typography-family-heading);
+  --ki-date-picker-field-bg:var(--ki-surface-s2);
+  --ki-date-picker-field-fg:var(--ki-text-high-em);
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+}

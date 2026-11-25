@@ -1,0 +1,30 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-ai-label-bg:var(--ki-surface-primary-low-em);
+  --ki-ai-label-fg:var(--ki-text-primary-on-primary-light);
+  --ki-ai-label-bg-image:var(--ki-surface-image-none);
+  --ki-ai-label-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-ai-label-radius:var(--ki-corner-compact-mark);
+  --ki-ai-label-gap:var(--ki-layout-spacing-xs);
+  --ki-ai-label-border-width:var(--ki-outline-hairline-width);
+  --ki-ai-label-sm-height:var(--ki-layout-spacing-5xl);
+  --ki-ai-label-sm-padding-inline:var(--ki-layout-spacing-sm);
+  --ki-ai-label-sm-icon-size:var(--ki-layout-spacing-xl);
+  --ki-ai-label-md-height:var(--ki-layout-spacing-7xl);
+  --ki-ai-label-md-padding-inline:var(--ki-layout-spacing-md);
+  --ki-ai-label-md-icon-size:var(--ki-glyph-size-sm);
+  --ki-ai-label-popover-bg:var(--ki-surface-s1);
+  --ki-ai-label-popover-fg:var(--ki-text-high-em);
+  --ki-ai-label-popover-bg-image:var(--ki-surface-image-none);
+  --ki-ai-label-popover-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-ai-label-popover-border:var(--ki-outline-low-em);
+  --ki-ai-label-popover-radius:var(--ki-corner-anchored-panel);
+  --ki-ai-label-popover-shadow:var(--ki-elevation-e3);
+  --ki-ai-label-popover-width:var(--ki-surface-size-compact);
+  --ki-ai-label-popover-padding:var(--ki-layout-spacing-xl);
+  --ki-ai-label-popover-gap:var(--ki-layout-spacing-md);
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+}

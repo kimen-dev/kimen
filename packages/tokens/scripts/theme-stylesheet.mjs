@@ -482,6 +482,30 @@ export function renderBaseStylesheet(
 }
 
 /**
+ * The token roots of a per-tag sheet (spec 166 D4): the same elements as the
+ * default stylesheet's token rule, at zero specificity. A bundler that splits
+ * CSS per route inserts a tag sheet after the page's own stylesheet; at zero
+ * specificity the page's `:root` or theme-root override still wins.
+ */
+export const COMPONENT_TOKEN_ROOTS = Object.freeze([':where(:root)', ':where([data-ki-theme])']);
+
+/**
+ * One tag's component tokens (spec 166): every token of the component sources
+ * the tag needs, on the zero-specificity token roots, then each mode's
+ * re-pointing of those tokens exactly as the default stylesheet writes it. A
+ * tag that needs no component token gets an empty sheet, so every tag has one.
+ */
+export function renderComponentStylesheet(declarations, { deprecations, modes = [] } = {}) {
+  if (declarations.size === 0) return '';
+  return [
+    rule(COMPONENT_TOKEN_ROOTS, [...declarations], deprecations),
+    ...modeRules(modes, deprecations),
+  ]
+    .filter((block) => block !== '')
+    .join('\n');
+}
+
+/**
  * An opt-in theme: its overrides, its mode values among them, for a themed
  * document and for a themed subtree. The default stylesheet's modes re-point
  * the theme's tokens to them.
@@ -501,14 +525,35 @@ export function renderThemeStylesheet(theme, declarations, { deprecations } = {}
 // CSS custom property values retain whitespace during minification. Compact
 // the generated values and substitute fixed private foundations while keeping
 // their declarations and every reference to a public token.
-export function compactTokenStylesheet(css, { declarations, modes, inline, foundationsLast }) {
+//
+// `transitive` also substitutes an inlined token whose value becomes a literal
+// once the inlined tokens it reads are substituted (an elevation level built
+// from two shadow colours). Material 3 uses it so it reads no foundation from
+// the default sheet (spec 166 D1); the default sheet keeps the single pass.
+export function compactTokenStylesheet(
+  css,
+  { declarations, modes, inline, foundationsLast, transitive = false },
+) {
   const reassigned = new Set(modes.flatMap(({ declarations }) => [...declarations.keys()]));
+  const inlinable = ([name]) => inline(name) && !reassigned.has(name);
+  const isLiteral = (value) => !/\b(?:var|light-dark)\(/u.test(value);
   const literals = new Map(
-    [...declarations].filter(
-      ([name, value]) =>
-        inline(name) && !reassigned.has(name) && !/\b(?:var|light-dark)\(/u.test(value),
-    ),
+    [...declarations].filter((entry) => inlinable(entry) && isLiteral(entry[1])),
   );
+  for (let grew = transitive; grew; ) {
+    grew = false;
+    for (const [name, value] of declarations) {
+      if (literals.has(name) || !inlinable([name])) continue;
+      const substituted = value.replaceAll(
+        /var\((--ki-[\w-]+)\)/gu,
+        (part, reference) => literals.get(reference) ?? part,
+      );
+      if (isLiteral(substituted)) {
+        literals.set(name, substituted);
+        grew = true;
+      }
+    }
+  }
   const compactValue = (value) =>
     value.replaceAll(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|, +/gu, (part) =>
       part.startsWith(',') ? ',' : part,

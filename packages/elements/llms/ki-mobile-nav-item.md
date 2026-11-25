@@ -27,6 +27,11 @@ link inside `ki-mobile-nav`.
 Mark the active destination with `current`. The second link shows `99+` in the
 badge and is announced as “Inbox, 125 unread”. A zero count hides the badge.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-mobile-nav-item`: the light option, only the tokens ki-mobile-nav-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `count` (number | undefined): Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.

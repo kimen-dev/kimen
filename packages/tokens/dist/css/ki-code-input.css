@@ -1,0 +1,20 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-code-input-cell-size:var(--ki-layout-spacing-14xl);
+  --ki-code-input-cell-size-sm:var(--ki-control-size-md);
+  --ki-code-input-gap:var(--ki-layout-spacing-md);
+  --ki-code-input-radius:var(--ki-radius-component-md);
+  --ki-code-input-bg:var(--ki-surface-s0);
+  --ki-code-input-bg-image:var(--ki-surface-image-none);
+  --ki-code-input-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-code-input-border:var(--ki-outline-control);
+  --ki-code-input-fg:var(--ki-text-high-em);
+  --ki-code-input-disabled-fg:var(--ki-text-med-em);
+  --ki-code-input-active-border:var(--ki-focus-ring-color);
+  --ki-code-input-error-border:var(--ki-outline-danger-high-em);
+  --ki-code-input-selection-bg:var(--ki-surface-s2);
+  --ki-code-input-selection-fg:var(--ki-text-high-em);
+  --ki-code-input-font-size:var(--ki-typography-size-title-2);
+  --ki-code-input-touch-font-size:var(--ki-layout-spacing-3xl);
+  --ki-code-input-blink-duration:var(--ki-motion-duration-activity-pulse);
+}

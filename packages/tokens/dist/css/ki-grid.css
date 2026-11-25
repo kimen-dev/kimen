@@ -1,0 +1,6 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-stack-gap:var(--ki-layout-spacing-md);
+  --ki-grid-gap:var(--ki-layout-spacing-xl);
+  --ki-grid-min:var(--ki-layout-grid-min);
+}

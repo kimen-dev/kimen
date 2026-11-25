@@ -24,6 +24,11 @@ label and add `href` to link to an ancestor page. A level without
 </ki-breadcrumb>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-breadcrumb-item`: the light option, only the tokens ki-breadcrumb-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `current` (boolean, default false): Explicitly marks the final level as current. The owning breadcrumb treats its final level as current by position, including when this marker is omitted.

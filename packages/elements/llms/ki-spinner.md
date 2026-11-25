@@ -42,6 +42,11 @@ import { defineCustomElement } from '@kimen/elements/ki-spinner';
 defineCustomElement();
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-spinner`: the light option, only the tokens ki-spinner needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string, required): Localized name of the ongoing activity, such as "Saving changes". Supply a meaningful label for every spinner, even when the text is hidden. Use the activity's name whenever it can be more specific than "Loading".

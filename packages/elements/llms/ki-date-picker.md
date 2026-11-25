@@ -61,6 +61,11 @@ starts: setting the same text again while it is still set shows nothing.
 </ki-date-picker>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-date-picker`: the light option, only the tokens ki-date-picker needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `apply-label` (string, default 'Apply'): Localized label of the confirmation button that saves a complete draft.

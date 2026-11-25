@@ -60,6 +60,11 @@ to the Account step.
 </ki-stepper>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-stepper`: the light option, only the tokens ki-stepper needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `count-label` (string | undefined, default 'Steps ({total})'): Compact disclosure text without a current step. Include {total}.

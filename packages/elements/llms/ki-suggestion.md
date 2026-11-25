@@ -29,6 +29,11 @@ button's accessible name. Use `description` for separate context.
 Register both tags for direct imports. Listen to `ki-select` on the group
 for the chosen title.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-suggestion`: the light option, only the tokens ki-suggestion needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `description` (string | undefined): Optional accessible description, visible below the title in cards.
