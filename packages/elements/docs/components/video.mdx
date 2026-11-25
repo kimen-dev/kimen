@@ -17,9 +17,9 @@ yields), and give the control a `label` (required: the accessible name of
 the play button).
 
 **When NOT to use** — decorative background or ambient loops (plain CSS and
-`<video>` are the tool), audio-only content (a future audio component),
-embeds from streaming platforms that ship their own player chrome (use
-their embed), or static imagery (use an image, not a video). `autoplay` on
+`<video>` are the tool), audio-only content (`ki-audio`), embeds from
+streaming platforms that ship their own player chrome (use their embed), or
+static imagery (use an image, not a video). `autoplay` on
 the slotted media is unsupported: playback begins only by explicit user
 activation — never on scroll, hover or visibility — so preexisting
 `autoplay` and `controls` on the slotted media are cleared when it arrives
