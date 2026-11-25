@@ -86,9 +86,9 @@ Publication to npm with trusted publishing and signed provenance; catalog and
 llms.txt versioned alongside the public API. The
 [documentation site](https://kimen.dev/docs/) is generated
 from the single source of truth. The current release contract covers
-`@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server`; the catalog, the
-emitter, the adapters and the framework wrappers remain unpublished until a
-founder decision — see [releasing.md](./releasing.md).
+`@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, the catalog, the
+emitter and both protocol adapters; the framework wrappers remain
+unpublished until they join it — see [releasing.md](./releasing.md).
 
 Follow progress through issues and pull requests.
 
