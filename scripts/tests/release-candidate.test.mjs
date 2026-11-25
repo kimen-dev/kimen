@@ -2,7 +2,7 @@
 // @spec:151-release-automation
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import {
   access,
   appendFile,
@@ -127,6 +127,8 @@ function packageFixture(name, directory, options) {
       license: 'Apache-2.0',
       repository: repositoryMetadata(directory, options.repositoryOverrides?.[name]),
       files: ['dist', 'NOTICE'],
+      // The entry point a consumer imports, so every packed file is reachable.
+      exports: { '.': './dist/index.js' },
       ...fixtureDependencies[name],
       ...options.manifestOverrides?.[name],
       ...(name === mcpName
@@ -157,10 +159,15 @@ async function writePackage(root, fixture) {
   await mkdir(join(directory, 'dist'), { recursive: true });
   await Promise.all([
     writeFile(join(directory, 'package.json'), canonicalJson(fixture.manifest)),
-    writeFile(
-      join(directory, 'dist', 'index.js'),
-      `export const packageName = '${fixture.manifest.name}';\n`,
-    ),
+    // ng-packagr writes the Angular package's dist itself (writeBuiltPackage).
+    ...(fixture.manifest.name === angularName
+      ? []
+      : [
+          writeFile(
+            join(directory, 'dist', 'index.js'),
+            `export const packageName = '${fixture.manifest.name}';\n`,
+          ),
+        ]),
     writeFile(join(directory, 'README.md'), `# ${fixture.manifest.name}\n`),
     ...Object.entries(fixture.legalFiles ?? defaultLegalFiles)
       .filter(([, contents]) => contents !== null)
@@ -212,6 +219,8 @@ async function createRepositoryFixture(t, overrides = {}) {
   await writeFile(join(root, 'README.md'), '# release fixture\n');
 
   run('git', ['init', '-b', 'main'], root);
+  // No background repack racing the fixture's removal (ENOTEMPTY).
+  run('git', ['config', 'maintenance.auto', 'false'], root);
   run('git', ['config', 'user.name', 'Kimen fixture'], root);
   run('git', ['config', 'user.email', 'fixture@kimen.invalid'], root);
   run('git', ['add', '.'], root);
@@ -672,6 +681,185 @@ test('S7 independent verification refuses a candidate whose tarball ships TypeSc
   await assert.rejects(
     verifyCandidate({ archivePath, expectedSha256: sha256, environment: {} }),
     /@kimen\/catalog tarball ships TypeScript build info package\/dist\/tsconfig\.tsbuildinfo/u,
+  );
+});
+
+// A published package holds what a consumer uses (scripts/lib/package-contents.mjs).
+async function writeInPackage(fixture, name, path, contents) {
+  const file = join(fixture.packages[name], path);
+  await mkdir(dirname(file), { recursive: true });
+  await writeFile(file, contents);
+}
+
+for (const [label, name, written, packed] of [
+  ['stories', '@kimen/catalog', 'dist/ki-x.stories.js', 'package/dist/ki-x.stories.js'],
+  [
+    'tests',
+    '@kimen/emitter',
+    'dist/emission.browser.spec.js',
+    'package/dist/emission.browser.spec.js',
+  ],
+  [
+    'tests',
+    '@kimen/angular',
+    'dist/__screenshots__/button.png',
+    'package/__screenshots__/button.png',
+  ],
+  [
+    'fixtures',
+    '@kimen/adapter-a2ui',
+    'dist/fixtures/surface.json',
+    'package/dist/fixtures/surface.json',
+  ],
+  ['galleries', '@kimen/react', 'dist/gallery.js', 'package/dist/gallery.js'],
+  [
+    'size-limit entries',
+    '@kimen/vue',
+    'dist/size-limit/pair.js',
+    'package/dist/size-limit/pair.js',
+  ],
+  [
+    'an absolute build path',
+    '@kimen/elements',
+    'dist/types/home/runner/work/kimen/x.d.ts',
+    'package/dist/types/home/runner/work/kimen/x.d.ts',
+  ],
+  [
+    'Stencil build cache',
+    '@kimen/elements',
+    'dist/types/.stencil/x.d.ts',
+    'package/dist/types/.stencil/x.d.ts',
+  ],
+]) {
+  test(`S7 refuses to build a candidate whose ${name} tarball would ship ${label} (${packed})`, async (t) => {
+    const fixture = await createRepositoryFixture(t);
+    await writeInPackage(fixture, name, written, 'export {};\n');
+
+    await assert.rejects(buildFixture(t, fixture), (error) => {
+      assert.equal(
+        error.message.startsWith(`${name} tarball ships ${label} ${packed};`),
+        true,
+        error.message,
+      );
+      return true;
+    });
+  });
+}
+
+for (const [label, name, path, contents, expected] of [
+  [
+    'a declaration naming a POSIX build path',
+    '@kimen/catalog',
+    'dist/index.d.ts',
+    "export type Spec = import('/home/runner/work/kimen/src/spec').Spec;\n",
+    /@kimen\/catalog tarball ships declarations naming an absolute build path in package\/dist\/index\.d\.ts;/u,
+  ],
+  [
+    'a declaration naming a Windows build path',
+    '@kimen/emitter',
+    'dist/index.d.ts',
+    "export type Spec = import('C:\\\\work\\\\kimen\\\\spec').Spec;\n",
+    /@kimen\/emitter tarball ships declarations naming an absolute build path in package\/dist\/index\.d\.ts;/u,
+  ],
+  [
+    'a source map without its sources',
+    '@kimen/emitter',
+    'dist/index.js.map',
+    '{"version":3,"sources":["../src/index.ts"],"mappings":""}\n',
+    /@kimen\/emitter tarball ships source maps without their sources package\/dist\/index\.js\.map;/u,
+  ],
+  [
+    'a file nothing reaches',
+    '@kimen/tokens',
+    'dist/unused.js',
+    'export {};\n',
+    /@kimen\/tokens tarball ships files no export, manifest field, metadata asset or import reaches package\/dist\/unused\.js;/u,
+  ],
+]) {
+  test(`S7 refuses to build a candidate with ${label}`, async (t) => {
+    const fixture = await createRepositoryFixture(t);
+    await writeInPackage(fixture, name, path, contents);
+
+    await assert.rejects(buildFixture(t, fixture), expected);
+  });
+}
+
+test('S7 a file an entry point imports, with a source map that embeds its source, is published', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  await writeInPackage(
+    fixture,
+    '@kimen/catalog',
+    'dist/index.js',
+    "export * from './helper.js';\n//# sourceMappingURL=index.js.map\n",
+  );
+  await writeInPackage(fixture, '@kimen/catalog', 'dist/helper.js', 'export const helper = 1;\n');
+  await writeInPackage(
+    fixture,
+    '@kimen/catalog',
+    'dist/index.js.map',
+    '{"version":3,"sources":["../src/index.ts"],"sourcesContent":["export * from \'./helper.js\';"],"mappings":""}\n',
+  );
+
+  const candidate = await buildFixture(t, fixture);
+  const { directory } = await extractCandidate(t, candidate.archivePath);
+
+  assert.deepEqual(
+    packedFiles(directory, fileOf('@kimen/catalog')).filter((path) => path.includes('/dist/')),
+    ['package/dist/helper.js', 'package/dist/index.js', 'package/dist/index.js.map'],
+  );
+});
+
+test('S7 refuses a tarball over its packed-size budget', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  // Random bytes do not compress: the tarball grows with them.
+  await writeInPackage(
+    fixture,
+    '@kimen/emitter',
+    'dist/index.js',
+    `// ${randomBytes(90_000).toString('base64')}\nexport {};\n`,
+  );
+
+  await assert.rejects(
+    buildFixture(t, fixture),
+    /@kimen\/emitter tarball is \d+ B, over its \d+ B budget; raising it needs the founder's approval/u,
+  );
+});
+
+test('S7 refuses a tarball that unpacks over its budget', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  // Repetition compresses to almost nothing: only the unpacked size grows.
+  await writeInPackage(fixture, '@kimen/emitter', 'dist/index.js', `// ${'a'.repeat(200_000)}\n`);
+
+  await assert.rejects(
+    buildFixture(t, fixture),
+    /@kimen\/emitter unpacks to \d+ B, over its \d+ B budget; raising it needs the founder's approval/u,
+  );
+});
+
+test('S7 independent verification refuses a candidate whose tarball ships a file nothing reaches', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  const built = await buildFixture(t, fixture);
+  const { directory } = await extractCandidate(t, built.archivePath);
+  await writeInPackage(fixture, '@kimen/tokens', 'dist/unused.js', 'export {};\n');
+  const withUnused = (await npmPack(t, fixture.packages['@kimen/tokens'])).bytes;
+  const files = new Map();
+  for (const { name, file } of built.manifest.packages) {
+    files.set(file, name === '@kimen/tokens' ? withUnused : await readFile(join(directory, file)));
+  }
+  const manifest = {
+    ...built.manifest,
+    packages: built.manifest.packages.map(({ name, file }) =>
+      packedRecord(name, file, files.get(file)),
+    ),
+  };
+  const { archive, sha256 } = candidateArchive(manifest, files);
+  const archivePath = join(directory, 'unreachable-candidate.tar');
+  await writeFile(archivePath, archive);
+  const { verifyCandidate } = await loadSubject();
+
+  await assert.rejects(
+    verifyCandidate({ archivePath, expectedSha256: sha256, environment: {} }),
+    /@kimen\/tokens tarball ships files no export, manifest field, metadata asset or import reaches package\/dist\/unused\.js;/u,
   );
 });
 

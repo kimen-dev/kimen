@@ -12,6 +12,7 @@ import {
 } from '../../packages/elements/scripts/run-size-limit.mjs';
 import { checkPackaging, createAttwPlan } from '../gates/check-packaging.mjs';
 import { deriveBundleSizeBudgets } from '../lib/bundle-size-budget.mjs';
+import { packageContentRules } from '../lib/package-contents.mjs';
 import { releasePackages } from '../release/release-plan.mjs';
 import { builtPackageOutputs } from '../release/stage-package.mjs';
 
@@ -197,6 +198,12 @@ test('no release package writes TypeScript build info into what it packs, and Nx
     const buildInfo = ts.getTsBuildInfoEmitOutputFilePath(parsed.options);
     if (buildInfo === undefined) continue;
     writers.push(name);
+    // The published maps carry their sources, which the package does not ship.
+    assert.equal(
+      parsed.options.sourceMap === true && parsed.options.inlineSources === true,
+      true,
+      `${name} must emit source maps with inlineSources`,
+    );
     const path = relative(directory, buildInfo);
     const manifest = JSON.parse(await readFile(join(workspaceRoot, manifestPath), 'utf8'));
     const packed = Object.hasOwn(builtPackageOutputs, name)
@@ -224,6 +231,57 @@ test('no release package writes TypeScript build info into what it packs, and Nx
     '@kimen/react',
     '@kimen/vue',
   ]);
+});
+
+// Founder decision of 2026-11-25: @kimen/elements publishes its ESM entry
+// points only. The Stencil collection, the CommonJS build and the browser
+// build in dist/kimen (which the site still serves) are not published, and
+// no manifest field points at them.
+test('elements publishes no collection, CommonJS or CDN build', async () => {
+  const manifest = JSON.parse(
+    await readFile(`${workspaceRoot}/packages/elements/package.json`, 'utf8'),
+  );
+  for (const field of ['main', 'collection', 'collection:main', 'unpkg', 'jsdelivr', 'browser']) {
+    assert.equal(Object.hasOwn(manifest, field), false, `${field} must not be declared`);
+  }
+  for (const entry of manifest.files) {
+    assert.doesNotMatch(
+      entry,
+      /^(?:dist|loader)$|^dist\/(?:cjs|collection|kimen)\b|\.cjs\.js$/u,
+      `${entry} would publish an unpublished build`,
+    );
+  }
+  assert.equal(JSON.stringify(manifest.exports).includes('require'), false);
+  assert.equal(
+    manifest.sideEffects.some((pattern) => pattern.includes('/cjs/')),
+    false,
+  );
+  const stencil = await readFile(`${workspaceRoot}/packages/elements/stencil.config.ts`, 'utf8');
+  assert.match(stencil, /type: 'dist',[^}]*collectionDir: null/u);
+});
+
+// The release candidate refuses a tarball over its package budget
+// (scripts/lib/package-contents.mjs). The bases are the sizes measured on
+// 2026-11-25 plus about 3 %; raising one needs the founder's approval, so it
+// changes here and there together.
+test('each release package has its pinned tarball and unpacked size budget', () => {
+  assert.deepEqual(
+    Object.fromEntries(
+      Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
+    ),
+    {
+      '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
+      '@kimen/tokens': { packed: 220_160, unpacked: 519_168 },
+      '@kimen/mcp-server': { packed: 827_392, unpacked: 4_172_800 },
+      '@kimen/catalog': { packed: 408_576, unpacked: 1_817_600 },
+      '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
+      '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
+      '@kimen/adapter-mcp-apps': { packed: 1_227_776, unpacked: 5_079_040 },
+      '@kimen/react': { packed: 43_008, unpacked: 381_952 },
+      '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
+      '@kimen/angular': { packed: 56_320, unpacked: 649_216 },
+    },
+  );
 });
 
 test('size budgets derive defaults and one entry per declared composite group', () => {

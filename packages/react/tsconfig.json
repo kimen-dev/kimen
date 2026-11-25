@@ -6,7 +6,8 @@
     "jsx": "react-jsx",
     "outDir": "dist",
     "rootDir": "src",
-    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo",
+    "inlineSources": true
   },
   "include": ["src"]
 }

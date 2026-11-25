@@ -150,6 +150,8 @@ const classifyKnownPath = (path) => {
   if (
     /^(?:scripts|tools|\.github\/scripts|sandbox)\/.*\.[cm]?[jt]sx?$/.test(path) ||
     /^packages\/[^/]+\/(?:src|scripts)\/.*\.[cm]?[jt]sx?$/.test(path) ||
+    // The MCP Apps surface runtime, bundled into the generated surface document.
+    /^packages\/adapter-mcp-apps\/surface\/.*\.[cm]?[jt]sx?$/.test(path) ||
     /^packages\/tokens\/build\.mjs$/.test(path)
   ) {
     return core(path, 'node');
