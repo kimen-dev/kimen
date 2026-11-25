@@ -3,6 +3,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it, type Mock, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
+import { whileKeyHeld } from '../../../browser-tests/keyboard';
 import { defineCustomElement as defineCheckbox } from '../../../dist/components/ki-checkbox.js';
 import { defineCustomElement as defineTable } from '../../../dist/components/ki-table.js';
 
@@ -271,8 +272,9 @@ it('S11: Tab reaches a scrollable static table and ArrowRight pans it', async ()
   find('#before').focus();
   await userEvent.keyboard('{Tab}');
   expect(document.activeElement).toBe(frame);
-  await userEvent.keyboard('{ArrowRight}');
-  await expect.poll(() => frame.scrollLeft).toBeGreaterThan(0);
+  // Held, not tapped: in macOS WebKit a tap scrolls no focused scroller,
+  // a plain overflow:auto div in this harness included (whileKeyHeld).
+  await whileKeyHeld('ArrowRight', () => expect.poll(() => frame.scrollLeft).toBeGreaterThan(0));
 });
 
 it('S12: exposes native table headers and only the application’s active sort', async () => {

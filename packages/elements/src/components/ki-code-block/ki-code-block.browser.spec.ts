@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from 'vite
 import { commands, page, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
+import { whileKeyHeld } from '../../../browser-tests/keyboard';
 import { defineCustomElement } from '../../../dist/components/ki-code-block.js';
 
 const styles = document.createElement('style');
@@ -203,8 +204,9 @@ it('S5 tabs to the scroll area with visible focus and scrolls using ArrowRight',
   await userEvent.tab();
   expect(host.shadowRoot?.activeElement).toBe(scroll);
   expect(getComputedStyle(scroll).outlineStyle).toBe('solid');
-  await userEvent.keyboard('{ArrowRight}');
-  await expect.poll(() => scroll.scrollLeft).toBeGreaterThan(0);
+  // Held, not tapped: in macOS WebKit a tap scrolls no focused scroller,
+  // a plain overflow:auto div in this harness included (whileKeyHeld).
+  await whileKeyHeld('ArrowRight', () => expect.poll(() => scroll.scrollLeft).toBeGreaterThan(0));
 });
 
 it('S6 activates Copy code once with Enter and keeps native focus', async () => {
