@@ -1,6 +1,6 @@
 {
   "name": "@kimen/tokens",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "license": "Apache-2.0",
   "description": "Kimen design tokens (DTCG) compiled to CSS custom properties. Primitive \u2192 theme \u2192 semantic layers; onmars is the default theme (light + dark).",

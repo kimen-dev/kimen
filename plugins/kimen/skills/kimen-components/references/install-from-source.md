@@ -1,7 +1,7 @@
 # Using Kimen from a repository build
 
 Install Kimen from npm whenever you can (`pnpm add @kimen/elements
-@kimen/tokens`; the MCP server runs with `npx -y -p @kimen/mcp-server@0.2.0
+@kimen/tokens`; the MCP server runs with `npx -y -p @kimen/mcp-server@0.2.1
 kimen-mcp`). Use a local build of the repository only for what npm does not
 have: an unreleased change, or a Kimen package with no release yet. Check
 with `npm view <package> version`: nothing, or only `0.0.0` (a name

@@ -2,7 +2,7 @@
   "mcpServers": {
     "kimen": {
       "command": "npx",
-      "args": ["-y", "-p", "@kimen/mcp-server@0.2.0", "kimen-mcp"]
+      "args": ["-y", "-p", "@kimen/mcp-server@0.2.1", "kimen-mcp"]
     }
   }
 }
