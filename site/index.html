@@ -222,8 +222,8 @@
             <a class="action" href="./playground/">Open the playground</a>
           </div>
           <p class="note">
-            Pre-v1: not on npm yet. These are the commands v1 ships with;
-            <a href="https://github.com/kimen-dev/kimen">build it from the repository</a> today.
+            On npm with signed provenance. Pre-v1: a minor release can break the API; see the
+            <a href="https://github.com/kimen-dev/kimen/blob/main/CHANGELOG.md">changelog</a>.
           </p>
         </div>
         <aside
@@ -571,7 +571,8 @@ defineCustomElement();
                     class="code"
                     data-ki-theme="onmars"
                     data-ki-color-scheme="dark"
-                  ><code><i class="kw">import</i> { KiButton, KiInput } <i class="kw">from</i> <i class="s">'@kimen/react'</i>;
+                  ><code><i class="cm">// pnpm add @kimen/react @kimen/tokens</i>
+<i class="kw">import</i> { KiButton, KiInput } <i class="kw">from</i> <i class="s">'@kimen/react'</i>;
 <i class="kw">import</i> <i class="s">'@kimen/tokens/css'</i>;
 
 <i class="tg">&lt;KiInput</i> <i class="at">label</i>=<i class="s">"Name"</i> <i class="at">onInput</i>={onName} <i class="tg">/&gt;</i>
@@ -582,7 +583,8 @@ defineCustomElement();
                     class="code"
                     data-ki-theme="onmars"
                     data-ki-color-scheme="dark"
-                  ><code><i class="kw">import</i> { KiButton, KiInput } <i class="kw">from</i> <i class="s">'@kimen/vue'</i>;
+                  ><code><i class="cm">// pnpm add @kimen/vue @kimen/tokens</i>
+<i class="kw">import</i> { KiButton, KiInput } <i class="kw">from</i> <i class="s">'@kimen/vue'</i>;
 <i class="kw">import</i> <i class="s">'@kimen/tokens/css'</i>;
 
 <i class="tg">&lt;KiInput</i> <i class="at">label</i>=<i class="s">"Name"</i> <i class="at">v-model</i>=<i class="s">"name"</i> <i class="tg">/&gt;</i>
@@ -593,7 +595,8 @@ defineCustomElement();
                     class="code"
                     data-ki-theme="onmars"
                     data-ki-color-scheme="dark"
-                  ><code><i class="kw">import</i> { KiButton, KiInput, TextValueAccessor } <i class="kw">from</i> <i class="s">'@kimen/angular'</i>;
+                  ><code><i class="cm">// pnpm add @kimen/angular @kimen/tokens</i>
+<i class="kw">import</i> { KiButton, KiInput, TextValueAccessor } <i class="kw">from</i> <i class="s">'@kimen/angular'</i>;
 
 <i class="cm">// standalone component imports: [KiButton, KiInput, TextValueAccessor]</i>
 <i class="tg">&lt;ki-input</i> <i class="at">label</i>=<i class="s">"Name"</i> [<i class="at">formControl</i>]=<i class="s">"name"</i><i class="tg">&gt;&lt;/ki-input&gt;</i>
@@ -643,13 +646,12 @@ adapter.apply(message); <i class="cm">// A2UI 1.0 or v0.9.1</i></code></pre></ki
                     class="code"
                     data-ki-theme="onmars"
                     data-ki-color-scheme="dark"
-                  ><code><i class="cm"># Build the server from the repository (pre-v1)</i>
-pnpm exec nx run @kimen/mcp-server:build
+                  ><code><i class="cm"># Claude Code: the plugin brings the skills and kimen-mcp</i>
+claude plugin marketplace add kimen-dev/kimen
+claude plugin install kimen@kimen
 
-<i class="cm"># Point Claude Code, or any MCP client, at it</i>
-claude mcp add kimen -- node --permission \
-  --allow-fs-read=/absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs \
-  /absolute/path/to/kimen/packages/mcp-server/dist/kimen-mcp.mjs
+<i class="cm"># Other MCP clients start @kimen/mcp-server from npm with npx:</i>
+<i class="cm"># https://kimen.dev/docs/guides/connect-agents/</i>
 
 <i class="cm"># Agents list the catalog, validate specs, render MCP Apps</i></code></pre></ki-tab-panel
                 >
@@ -1282,8 +1284,8 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
           <div class="status-grid">
             <div>
               <p class="section-lede">
-                Pre-v1. Build and use the packages from the repository today. The roadmap tracks the
-                first npm release and the remaining protocol adapters.
+                Pre-v1 and on npm: every package is released at one version, with signed
+                provenance. The roadmap tracks the work left before 1.0.0.
               </p>
               <a class="action" href="https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md"
                 >Read the roadmap
@@ -1335,14 +1337,14 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
                     <strong>Catalog + guardrail</strong>schema-validated specs rendered fail-closed
                   </p>
                 </li>
-                <li data-state="current">
+                <li data-state="done">
                   <span aria-hidden="true"
                     ><svg class="icon" viewBox="0 0 16 16" focusable="false">
-                      <circle cx="8" cy="8" r="3"></circle>
+                      <path d="m3 8 3 3 7-7"></path>
                     </svg></span
                   >
                   <p>
-                    <strong>Protocol adapters</strong>A2UI and MCP Apps available; AG-UI streams
+                    <strong>Protocol adapters</strong>A2UI and MCP Apps shipped; AG-UI streams
                     reach the A2UI adapter
                   </p>
                 </li>
@@ -1352,7 +1354,10 @@ Install with `pnpm add @kimen/elements @kimen/tokens`.
                       <circle cx="8" cy="8" r="3"></circle>
                     </svg></span
                   >
-                  <p><strong>v1.0.0</strong>npm with trusted publishing and signed provenance</p>
+                  <p>
+                    <strong>v1.0.0</strong>a stable API: from then on, a breaking change raises the
+                    major version
+                  </p>
                 </li>
               </ol>
             </div>

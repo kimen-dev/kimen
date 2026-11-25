@@ -11,6 +11,17 @@ catalog artifact is generated from the committed Custom Elements Manifest of
 `@kimen/elements` and gated against drift, so it can never disagree with the
 components.
 
+Install it with the elements and tokens it renders:
+
+```sh
+npm install @kimen/catalog @kimen/elements @kimen/tokens
+```
+
+Validating specs needs only `@kimen/catalog`, so a server that only checks
+specs can install it alone. The page that renders them also registers the
+elements and loads the token stylesheet, as in
+[the guarded renderer](#the-guarded-renderer) below.
+
 A UI spec is **data, never code**: a JSON tree of catalog components, typed
 props, slotted children and declared actions.
 
@@ -19,7 +30,7 @@ import { catalogData, validateUiSpec } from '@kimen/catalog';
 
 // What may an agent emit? One entry per published element:
 catalogData.components['ki-button'].props.variant;
-// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary'], ... }
+// { type: 'enum', values: ['ghost', 'outline', 'primary', 'quaternary', 'secondary'], ... }
 
 // Validate an agent-emitted UI spec before anything renders:
 const report = validateUiSpec({
@@ -44,7 +55,12 @@ report.ok; // true — or false with issues naming each offender and location
 ```
 
 Use `values` when generating enum props. The optional `deprecatedValues`
-field lists older values the runtime still accepts for existing specs.
+field lists older values the runtime still accepts for existing specs. The
+catalog's enums are closed even where an element tolerates any string in
+markup (`ki-alert` and `ki-toast` `tone`, `ki-toaster` `placement`): a spec
+with an invented value fails validation with the allowed values listed, so
+the [repair prompt](/docs/guides/emitting-specs/#always-validate--the-loop)
+can ask for one of them.
 
 ## What validation rejects
 
@@ -131,6 +147,10 @@ rejected spec never touches the DOM:
 
 ```ts
 import { renderUiSpec } from '@kimen/catalog';
+import { defineCustomElements } from '@kimen/elements/loader';
+import '@kimen/tokens/css';
+
+defineCustomElements(); // register the elements once per page
 
 const result = renderUiSpec(spec, {
   surface: document.querySelector('#genui'),
