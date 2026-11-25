@@ -487,7 +487,7 @@ export function renderBaseStylesheet(
  * CSS per route inserts a tag sheet after the page's own stylesheet; at zero
  * specificity the page's `:root` or theme-root override still wins.
  */
-export const COMPONENT_TOKEN_ROOTS = Object.freeze([':where(:root)', ':where([data-ki-theme])']);
+const COMPONENT_TOKEN_ROOTS = Object.freeze([':where(:root)', ':where([data-ki-theme])']);
 
 /**
  * One tag's component tokens (spec 166): every token of the component sources
