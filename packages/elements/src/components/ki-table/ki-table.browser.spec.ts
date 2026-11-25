@@ -1,7 +1,7 @@
 // @spec:097-ki-table
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it, type Mock, vi } from 'vitest';
-import { commands, page, userEvent } from 'vitest/browser';
+import { commands, page, server, userEvent } from 'vitest/browser';
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
 import { whileKeyHeld } from '../../../browser-tests/keyboard';
 import { defineCustomElement as defineCheckbox } from '../../../dist/components/ki-checkbox.js';
@@ -51,6 +51,17 @@ function spyOn(type: string) {
 
 function eventDetail(listener: Mock<(event: Event) => void>): unknown {
   return (listener.mock.lastCall?.[0] as CustomEvent<unknown> | undefined)?.detail;
+}
+
+/** How far one held ArrowRight moves a focused scroller, once it comes to rest. */
+async function arrowRightStep(scroller: HTMLElement): Promise<number> {
+  scroller.focus();
+  const ended = new Promise((resolve) => {
+    scroller.addEventListener('scrollend', resolve, { once: true });
+  });
+  await whileKeyHeld('ArrowRight', () => expect.poll(() => scroller.scrollLeft).toBeGreaterThan(0));
+  await ended;
+  return scroller.scrollLeft;
 }
 
 beforeAll(() => {
@@ -262,7 +273,7 @@ it('S10: Space changes a row checkbox focused through the Tab sequence', async (
   expect(find('[data-key="search"]').getAttribute('aria-selected')).toBe('true');
 });
 
-it('S11: Tab reaches a scrollable static table and ArrowRight pans it', async () => {
+it('S11: Tab reaches a scrollable static table and ArrowRight scrolls it natively', async () => {
   fixture.innerHTML = `<button type="button" tabindex="0" id="before">Before</button>
     <ki-table style="inline-size: 10rem"><table style="min-inline-size: 20rem">
     <caption>Services</caption><thead><tr><th scope="col">Name</th><th scope="col">Requests</th></tr></thead>
@@ -272,9 +283,39 @@ it('S11: Tab reaches a scrollable static table and ArrowRight pans it', async ()
   find('#before').focus();
   await userEvent.keyboard('{Tab}');
   expect(document.activeElement).toBe(frame);
+  const presses: KeyboardEvent[] = [];
+  frame.addEventListener('keydown', (event) => presses.push(event));
   // Held, not tapped: in macOS WebKit a tap scrolls no focused scroller,
   // a plain overflow:auto div in this harness included (whileKeyHeld).
   await whileKeyHeld('ArrowRight', () => expect.poll(() => frame.scrollLeft).toBeGreaterThan(0));
+  // The browser scrolls the frame: the table leaves the key alone.
+  expect(presses.map((event) => event.defaultPrevented)).toEqual([false]);
+});
+
+// Founder decision, 2026-11-25: the frame scrolls natively from the arrow keys
+// in every browser, with no pan of its own.
+it('S11: a held ArrowRight moves the frame by the browser’s own step', async (context) => {
+  // Chromium and Firefox move a focused scroller one step per press. WebKit
+  // (measured on macOS) keeps scrolling while the key is down, so its step
+  // depends on the hold; the test above covers its scroll.
+  if (server.browser === 'webkit') {
+    context.skip('WebKit scrolls for as long as the key is held');
+  }
+  const wide = `<table style="min-inline-size: 40rem"><caption>Services</caption>
+    <thead><tr><th scope="col">Name</th><th scope="col">Requests</th></tr></thead>
+    <tbody>${billing}</tbody></table>`;
+  fixture.innerHTML = `<div id="native" tabindex="0" style="overflow: auto; inline-size: 20rem">${wide}</div>
+    <ki-table style="inline-size: 20rem">${wide}</ki-table>`;
+  const native = find('#native');
+  const frame = find('ki-table');
+  await expect.poll(() => frame.tabIndex).toBe(0);
+  // Firefox sizes an arrow-key step from the scroller's font.
+  const { fontFamily, fontSize, lineHeight } = getComputedStyle(frame);
+  Object.assign(native.style, { fontFamily, fontSize, lineHeight });
+
+  const nativeStep = await arrowRightStep(native);
+  expect(nativeStep).toBeGreaterThan(0);
+  expect(await arrowRightStep(frame)).toBeCloseTo(nativeStep, 0);
 });
 
 it('S12: exposes native table headers and only the application’s active sort', async () => {
