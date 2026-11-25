@@ -4,9 +4,9 @@ Kimen design tokens: DTCG JSON sources compiled to CSS custom properties
 (`--ki-*`). Part of [Kimen](https://github.com/kimen-dev/kimen), an AI-first
 Web Components foundation for generative UI.
 
-**Status**: pre-v1, not published to npm yet. The instructions below are the
-contract the first release ships with; they are validated in CI against
-packed tarballs on every release dry run.
+**Status**: pre-v1, published on npm. Before 1.0.0 a minor release may break
+the public API. The instructions below are validated in CI against the
+packed tarballs of every release run, dry runs included.
 
 ## Install
 

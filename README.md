@@ -5,7 +5,7 @@
 [![ci](https://github.com/kimen-dev/kimen/actions/workflows/ci.yml/badge.svg)](https://github.com/kimen-dev/kimen/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 
-**An AI-first Web Components foundation for generative UI.** Kimen ships 29
+**An AI-first Web Components foundation for generative UI.** Kimen ships
 standards-first `<ki-*>` components, a layered design-token system with two
 complete themes, a neutral runtime catalog whose guarded renderer accepts or
 rejects agent-emitted UI specs fail-closed, and protocol adapters for A2UI
@@ -15,10 +15,11 @@ and MCP Apps:
 agent → JSON spec → validation → guarded renderer → <ki-*> components
 ```
 
-**Status**: pre-v1. Everything above is implemented and gate-verified in CI;
-nothing is published to npm yet. The commands below are the exact contract
-the first release ships with, validated against packed tarballs on every
-release dry run (`scripts/consumer-contract.mjs`).
+**Status**: pre-v1, published on npm. Every `@kimen/*` package releases at
+one shared version through npm trusted publishing with Sigstore provenance;
+before 1.0.0 a minor release may break the public API. The commands below are
+validated against the packed tarballs of every release run, dry runs
+included (`scripts/consumer-contract.mjs`).
 
 **Explore**: [documentation site](https://kimen.dev/docs/) ·
 [Storybook workshop](https://kimen.dev/storybook/) ·
@@ -126,20 +127,21 @@ and the guarded renderer stay the only enforcement points.
 | [`@kimen/elements`](./packages/elements) | Published on npm | `<ki-*>` Stencil web components |
 | [`@kimen/tokens`](./packages/tokens) | Published on npm | Design tokens (DTCG), primitive → theme → semantic → component |
 | [`@kimen/mcp-server`](./packages/mcp-server) | Published on npm | MCP server over stdio: agents list the catalog, validate specs and render them as MCP Apps surfaces |
-| [`@kimen/catalog`](./packages/catalog) | Publishes with the next release | Neutral catalog schema + guarded renderer (`validateUiSpec`, `renderUiSpec`, streaming) |
-| [`@kimen/emitter`](./packages/emitter) | Publishes with the next release | Emitter kit: prompt, provider-lowered JSON Schema and tool definition from any catalog, plus normalize + single-round repair |
-| [`@kimen/adapter-a2ui`](./packages/adapter-a2ui) | Publishes with the next release | A2UI protocol adapter over the guarded renderer |
-| [`@kimen/adapter-mcp-apps`](./packages/adapter-mcp-apps) | Publishes with the next release | MCP Apps adapter: Kimen surfaces as self-contained `ui://` resources |
-| [`@kimen/react`](./packages/react) | Publishes with the next release | Generated React bindings: typed props, event callbacks, controlled forms |
-| [`@kimen/vue`](./packages/vue) | Publishes with the next release | Generated Vue 3 bindings with v-model on the form components |
-| [`@kimen/angular`](./packages/angular) | Publishes with the next release | Generated Angular standalone components + ControlValueAccessors (APF, Angular ^22) |
+| [`@kimen/catalog`](./packages/catalog) | Published on npm | Neutral catalog schema + guarded renderer (`validateUiSpec`, `renderUiSpec`, streaming) |
+| [`@kimen/emitter`](./packages/emitter) | Published on npm | Emitter kit: prompt, provider-lowered JSON Schema and tool definition from any catalog, plus normalize + single-round repair |
+| [`@kimen/adapter-a2ui`](./packages/adapter-a2ui) | Published on npm | A2UI protocol adapter over the guarded renderer |
+| [`@kimen/adapter-mcp-apps`](./packages/adapter-mcp-apps) | Published on npm | MCP Apps adapter: Kimen surfaces as self-contained `ui://` resources |
+| [`@kimen/react`](./packages/react) | Published on npm | Generated React bindings: typed props, event callbacks, controlled forms |
+| [`@kimen/vue`](./packages/vue) | Published on npm | Generated Vue 3 bindings with v-model on the form components |
+| [`@kimen/angular`](./packages/angular) | Published on npm | Generated Angular standalone components + ControlValueAccessors (APF, Angular ^22) |
 | [`kimen`](./packages/kimen) | Placeholder, private | Future CLI / meta package; npm refuses the unscoped name |
 
-`@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server` are published on
-npm. The other seven are in the release set and publish, at the same fixed
-version, with the next release; their npm names are already reserved
-(`0.0.0` under the `bootstrap` tag). See
-[`docs/releasing.md`](./docs/releasing.md).
+The ten `@kimen/*` packages publish together at one fixed version, and their
+dependencies on each other are exact: the emitter and both adapters depend
+on `@kimen/catalog` of their own version, and the framework wrappers on
+`@kimen/elements`. Install every `@kimen/*` package an application uses at
+that same version; the catalog describes the components of its own
+`@kimen/elements` release. See [`docs/releasing.md`](./docs/releasing.md).
 
 ## For agents
 

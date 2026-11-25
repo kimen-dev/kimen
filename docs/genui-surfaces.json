@@ -6,8 +6,8 @@
     "published component surface, and the guarded renderer turns accepted",
     "specs into DOM. Protocol adapters translate external vocabularies into",
     "that neutral core and are disposable by design; the catalog and the",
-    "ki-* elements are the durable assets. These packages live in this",
-    "repository next to @kimen/elements."
+    "ki-* elements are the durable assets. These packages are published on",
+    "npm at the same version as @kimen/elements; install them at that version."
   ],
   "packages": [
     {
@@ -18,7 +18,7 @@
         {
           "name": "validateUiSpec",
           "signature": "validateUiSpec(input, options?) => ValidationReport",
-          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, undeclared-event, invalid-child, action-not-allowed, collect-without-action, collect-unknown-node, collect-no-value, collect-key-conflict, collect-budget, url-scheme, url-origin, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
+          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, undeclared-event, invalid-child, action-not-allowed, collect-without-action, collect-unknown-node, collect-no-value, collect-key-conflict, collect-budget, url-scheme, url-origin, invalid-id, duplicate-id, invalid-reference, invalid-command, invalid-command-target, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
         },
         {
           "name": "renderUiSpec",
@@ -82,7 +82,7 @@
         {
           "name": "normalizeEmission",
           "signature": "normalizeEmission(value) => unknown",
-          "summary": "Strips the placeholders strict-mode all-required schemas force a model to emit (null-valued props, null action bindings, empty props containers) and touches nothing else. Pure cleanup over a fresh clone; output is untrusted until validateUiSpec passes."
+          "summary": "Strips the placeholders strict-mode all-required schemas force a model to emit (null-valued props, null action bindings and null events of a binding per event, null node ids, empty props containers) and touches nothing else. Pure cleanup over a fresh clone; output is untrusted until validateUiSpec passes."
         },
         {
           "name": "repairPrompt",

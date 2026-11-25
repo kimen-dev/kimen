@@ -7,6 +7,23 @@ every published component as a standalone, typed Angular component —
 the form components into template-driven and reactive forms over their
 re-dispatched native `input`/`change` events.
 
+```sh
+pnpm add @kimen/angular @kimen/tokens
+# or: npm install @kimen/angular @kimen/tokens
+```
+
+`@kimen/angular` depends on `@kimen/elements` at its own version; install
+`@kimen/tokens` at that same version and load its two stylesheets once, for
+example in the `styles` array of `angular.json`:
+
+```json
+"styles": [
+  "node_modules/@kimen/tokens/dist/css/tokens.css",
+  "node_modules/@kimen/tokens/dist/css/base.css",
+  "src/styles.css"
+]
+```
+
 ```ts
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -42,8 +59,9 @@ export class SettingsComponent {
   — `checked` on `change`), `SelectValueAccessor` (`ki-select`,
   `ki-radio-group` — `value` on `change`). Import them alongside the
   components they bind.
-- **Peers**: `@angular/core` and `@angular/forms` `^22` (the library ships
-  partial-Ivy Angular Package Format built on Angular 22).
+- **Peers**: `@angular/core` and `@angular/forms` `^22.0.0` and `rxjs`
+  `^7.8.0` (the library ships partial-Ivy Angular Package Format built on
+  Angular 22).
 - **Zoneless note**: the generated components are OnPush; Stencil events
   arrive outside any scheduler — in zoneless apps drive updates with
   signals or `markForCheck` in handlers.
@@ -55,4 +73,4 @@ export class SettingsComponent {
   import time; modules you never import tree-shake away.
 
 Theming stays at the token layer: see the
-[`@kimen/tokens` README](../tokens/README.md).
+[`@kimen/tokens` README](https://github.com/kimen-dev/kimen/blob/main/packages/tokens/README.md).

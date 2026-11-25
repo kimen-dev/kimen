@@ -1,13 +1,12 @@
 # Using Kimen from a repository build
 
-Install Kimen from npm whenever you can (`pnpm add @kimen/elements
-@kimen/tokens`; the MCP server runs with `npx -y -p @kimen/mcp-server@0.2.1
-kimen-mcp`). Use a local build of the repository only for what npm does not
-have: an unreleased change, or a Kimen package with no release yet. Check
-with `npm view <package> version`: nothing, or only `0.0.0` (a name
-reservation with no code), means unpublished. The first release, 0.1.0,
-publishes `@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server`; the
-generative UI packages and framework wrappers may still need this page.
+Install Kimen from npm. Every `@kimen/*` package is published there, all
+at one version: `pnpm add @kimen/elements @kimen/tokens`, the other packages
+the same way, and the MCP server runs with `npx -y -p @kimen/mcp-server@0.2.1
+kimen-mcp`. A repository build is for working on Kimen itself, or for trying
+a change that is merged but not released yet (`npm view @kimen/elements
+version` prints the latest release). An app that depends on a local build
+installs only on machines that have that build.
 
 ## 1. Build the repository once
 
@@ -44,10 +43,10 @@ pnpm add link:$KIMEN/elements link:$KIMEN/tokens
 pnpm add link:$KIMEN/catalog link:$KIMEN/emitter link:$KIMEN/adapter-mcp-apps link:$KIMEN/adapter-a2ui
 ```
 
-Import paths are the same as for the published packages
+Import paths are the same as for the npm packages
 (`@kimen/elements/ki-button`, `@kimen/tokens/css`, `@kimen/catalog`, …), so
-nothing changes in your code when the packages publish: replace the `link:`
-entries with version ranges and reinstall.
+going back to npm changes nothing in your code: replace the `link:` entries
+with the release version and reinstall.
 
 ## Notes
 
@@ -58,8 +57,8 @@ entries with version ranges and reinstall.
   or a prop the registered elements do not have.
 - A `link:` entry points at a folder on the machine that ran the install.
   A remote CI runner has no such folder, so it cannot install your app. In
-  CI, use the npm release when there is one; otherwise the job has to clone
-  and build Kimen itself at the path the `link:` entry names.
+  CI, use the npm release; a job that needs an unreleased change has to
+  clone and build Kimen itself at the path the `link:` entry names.
 - Keep the repository checkout: linked packages resolve their own
   dependencies from it.
 - Bundlers that refuse to follow symlinks outside the project root need

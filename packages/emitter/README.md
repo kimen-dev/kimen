@@ -14,6 +14,17 @@ purity wall and catalog membership are enforced ONLY by `validateUiSpec`
 and the guarded renderer in `@kimen/catalog` — always run emissions
 through them, whatever your provider's "guaranteed" mode promises.
 
+## Install
+
+```sh
+pnpm add @kimen/emitter @kimen/catalog
+# or: npm install @kimen/emitter @kimen/catalog
+```
+
+`@kimen/emitter` depends on `@kimen/catalog` at its own version. Install the
+catalog as a direct dependency too, at that same version: your code imports
+`catalogData`, `createCatalog` and `validateUiSpec` from it.
+
 ## Deriving guidance for your model
 
 ```ts
@@ -47,6 +58,13 @@ uiSpecTool(catalog, { target: 'openai-strict' });        // → { ok, artifact: 
   enforced with named offenders).
 - **Tool** (`uiSpecTool`): `{ name: 'emit_ui', description, inputSchema }`
   — maps mechanically onto any provider's tool/function surface.
+
+Both the prompt and the schema offer a prop's values as a closed set only when
+the catalog declares it an `enum`. In the built-in catalog that includes
+`ki-alert` and `ki-toast` `tone` and `ki-toaster` `placement`, whose elements
+accept any string in markup (spec 164). A consumer prop declared as an open
+`string` with `documentedValues` reaches the model as a plain string; declare
+it an `enum` when the model must pick one of its values.
 
 ### Which target for which provider
 
@@ -93,10 +111,11 @@ model got WRONG stays wrong so validation reports it. `repairPrompt`
 formats every issue (code, path, named offender) into a single corrective
 message; the one-round-then-fail-closed policy is deliberate and fixed.
 
-See [the emitting-specs guide](../../docs/guides/emitting-specs.md) for
-provider wiring patterns, and
-[the UI-spec format guide](../../docs/guides/ui-spec.md) for the format
-itself.
+See
+[the emitting-specs guide](https://github.com/kimen-dev/kimen/blob/main/docs/guides/emitting-specs.md)
+for provider wiring patterns, and
+[the UI-spec format guide](https://github.com/kimen-dev/kimen/blob/main/docs/guides/ui-spec.md)
+for the format itself.
 
 <!-- kimen:capabilities:emitter-readme-status:start -->
 - **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail

@@ -2,20 +2,22 @@
 
 > *Kimen* (Norwegian/Danish): the seed, the germ from which something grows.
 
-**This is a legitimate name placeholder.** The implemented Kimen foundation
-is a library of standards-first web components (`<ki-*>`), a layered
-design-token system, a neutral runtime catalog with a guarded renderer for
-agent-emitted UI specs, an emitter kit that constrains a model to that
-catalog, protocol adapters for A2UI and MCP Apps, and an MCP server. This
-package will eventually expose the CLI / meta entry point for that system.
+**This is a private workspace placeholder.** The implemented Kimen
+foundation is a library of standards-first web components (`<ki-*>`), a
+layered design-token system, a neutral runtime catalog with a guarded
+renderer for agent-emitted UI specs, an emitter kit that constrains a model
+to that catalog, protocol adapters for A2UI and MCP Apps, generated React,
+Vue and Angular wrappers, and an MCP server. This package holds the place of
+a future CLI / meta entry point for that system. npm refuses the unscoped
+name `kimen` (E403, too similar to the existing package `mime`), so this
+package is never published under it.
 
-The project is pre-v1. Its packages live under the
-[`@kimen` scope](https://www.npmjs.com/org/kimen). `@kimen/elements`,
-`@kimen/tokens` and `@kimen/mcp-server` are published on npm.
+The project is pre-v1. Its packages are published on npm under the
+[`@kimen` scope](https://www.npmjs.com/org/kimen), all at one shared
+version: `@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`,
 `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui`,
-`@kimen/adapter-mcp-apps` and the framework wrappers (`@kimen/react`,
-`@kimen/vue`, `@kimen/angular`) are implemented in the repository and not
-published yet.
+`@kimen/adapter-mcp-apps`, `@kimen/react`, `@kimen/vue` and
+`@kimen/angular`.
 
 Follow the build: https://github.com/kimen-dev/kimen
 Documentation: https://kimen.dev/docs/

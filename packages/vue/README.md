@@ -6,6 +6,14 @@ the component contract, native event bindings, and **`v-model` on the form
 components** wired over their re-dispatched native events (no
 `compilerOptions.isCustomElement` juggling, no manual event glue).
 
+```sh
+pnpm add @kimen/vue @kimen/tokens
+# or: npm install @kimen/vue @kimen/tokens
+```
+
+`@kimen/vue` depends on `@kimen/elements` at its own version; install
+`@kimen/tokens` at that same version.
+
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
@@ -27,7 +35,7 @@ const notify = ref(false);
 - **v-model bindings** (generated per component): `ki-input`/`ki-textarea`
   bind `value` on `input`; `ki-checkbox`/`ki-switch` bind `checked` on
   `change`; `ki-select`/`ki-radio-group` bind `value` on `change`.
-- **Peers**: `vue >= 3.4.38`.
+- **Peers**: `vue >= 3.4.38`; `vue-router >= 4.5.0` is an optional peer.
 - **Client-side only**: SSR/DSD support is a deferred bet of the
   repository.
 - Generated from the same source of truth as every other Kimen artifact
@@ -37,4 +45,4 @@ const notify = ref(false);
   import tree-shake away.
 
 Theming stays at the token layer: see the
-[`@kimen/tokens` README](../tokens/README.md).
+[`@kimen/tokens` README](https://github.com/kimen-dev/kimen/blob/main/packages/tokens/README.md).
