@@ -22,6 +22,23 @@ a side channel: a static module boundary (no other rendering library is
 importable) and a runtime guarantee that every render call arrives at the
 guarded renderer.
 
+## Install
+
+```sh
+npm install @kimen/adapter-a2ui @kimen/elements @kimen/tokens
+```
+
+The adapter depends on `@kimen/catalog` at its own version, so the catalog
+comes with it. The page that holds the surface registers the elements and
+loads the token stylesheet once:
+
+```ts
+import { defineCustomElements } from '@kimen/elements/loader';
+import '@kimen/tokens/css';
+
+defineCustomElements();
+```
+
 ## Usage
 
 ```ts
