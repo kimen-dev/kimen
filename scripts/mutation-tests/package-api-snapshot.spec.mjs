@@ -496,9 +496,7 @@ it('the gate covers the four generative packages with their data exports', () =>
       name: '@kimen/adapter-mcp-apps',
       directory: 'packages/adapter-mcp-apps',
       snapshot: 'changes/api/packages/adapter-mcp-apps.json',
-      dataExports: {
-        SURFACE_DOCUMENT: 'the surface document built from the elements bundle on every build',
-      },
+      dataExports: {},
     },
   ]);
   assert.equal(Object.isFrozen(GENERATIVE_PACKAGES), true);
