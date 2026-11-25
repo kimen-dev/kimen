@@ -298,6 +298,7 @@ signup.resource;   // ui://kimen/form, the «form» document
 signup.toolMeta;   // the `_meta` of each tool that renders through it
 signup.actionTool; // kimen_surface_action, naming ui://kimen/form
 signup.catalog;    // the catalog to offer the agent for those tools
+signup.icons;      // the glyph names the document offers (circle-check)
 signup.validate(spec); // the document's verdict, before you return a result
 ```
 
