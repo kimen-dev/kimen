@@ -244,6 +244,15 @@ question takes the recommended answer.
 7. **Q7 · Budgets: approved.** The core 7,000 B, the core with `ki-button`
    8,300 B, the ten-component page 11,400 B, and 2,200 B for each tag sheet,
    all brotli. The full sheet keeps its budget.
+8. **Q8 · The package's install size: raised.** The contract measured page
+   weight, not install size. One sheet per tag repeats shared sources on
+   disk, so the implementation took `@kimen/tokens` from 213,013 B packed
+   and 504,037 B unpacked to 268,679 B and 1,190,678 B. That was past its
+   tarball budget (`scripts/lib/package-contents.mjs`, 220,160 / 519,168 B).
+   Even per-source sheets would have added about 220 KB unpacked. On
+   2026-11-25 the founder approved raising the budget to 276,736 B packed
+   and 1,226,400 B unpacked, the measured size plus 3 % ("Sí, apruebo",
+   relayed by the coordinating session).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -529,7 +538,8 @@ the components the split sheets paint.
   removed or renamed (F2 would deprecate the foundations, removing them only
   at a major). MINOR.
 - **Bundle budget** (Art. IV): the full sheet unchanged (20,686 B br
-  measured against its 20,724 B budget). New
+  measured against its 20,724 B budget). The package's tarball budget rises
+  to 276,736 / 1,226,400 B (Q8). New
   budgets as in S10 and Q7. material3 +19 B br under D1 = F1, inside its
   352 B of headroom. No runtime dependency.
 - **Accessibility** (Art. V): unchanged. The contrast gate sweeps the
