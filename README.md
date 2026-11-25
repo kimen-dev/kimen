@@ -50,7 +50,7 @@ defineKiButton();
 it declares the `color-scheme` they resolve from, so the browser paints the
 canvas, scrollbars and native controls in the same scheme as the components:
 a page that loads nothing else stays legible in light and in dark (measured
-over all 29 components under a dark system preference). That declaration is
+over every component under a dark system preference). That declaration is
 a zero-specificity default — a `color-scheme` your own CSS sets on the page
 wins, and the tokens follow it.
 

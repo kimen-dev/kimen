@@ -35,7 +35,9 @@ to that renderer.
 
 When in doubt and you own the page, take the last row: it reaches every
 catalog component, streams, and keeps a live surface updated in place. The
-protocol adapters are deliberately narrower (see their limits below).
+protocol adapters are deliberately narrower (see their limits below). To
+mount the renderer or a live surface in a React component (refs, effects,
+StrictMode, unmount), read `references/react.md`.
 
 ## The spec, in one screen
 
@@ -170,6 +172,11 @@ receiving every intermediate event.
   (nothing, or only the `0.0.0` name reservation), link it from a repository
   build (`references/install-from-source.md` in the `kimen-components`
   skill).
+- **Content-Security-Policy**: the renderer lays out `div` and sizes `img`
+  through the CSSOM (`style.setProperty`), which a CSP without
+  `'unsafe-inline'` does not block. Serialized DOM still shows those writes
+  as `style` attributes: exempt them in a static "no inline styles" audit;
+  do not loosen the CSP.
 
 ## Before you finish
 
