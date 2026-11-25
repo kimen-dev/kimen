@@ -107,6 +107,34 @@ export async function checkPackaging({
   ]) {
     execute('pnpm', ['exec', 'attw', '--pack', packageDirectory, '--profile', 'esm-only'], root);
   }
+  // The framework wrappers as they pack: React and Vue from their
+  // directories, checked at the root and one generated per-component
+  // subpath; Angular from the Angular Package Format directory ng-packagr
+  // writes, which only npm can pack (it is not a workspace package).
+  for (const packageDirectory of ['packages/react', 'packages/vue']) {
+    execute('pnpm', ['exec', 'publint', packageDirectory], root);
+    execute(
+      'pnpm',
+      [
+        'exec',
+        'attw',
+        '--pack',
+        packageDirectory,
+        '--profile',
+        'esm-only',
+        '--entrypoints',
+        '.',
+        './ki-button',
+      ],
+      root,
+    );
+  }
+  execute('pnpm', ['exec', 'publint', 'packages/angular/dist', '--pack', 'npm'], root);
+  execute(
+    'pnpm',
+    ['exec', 'attw', '--pack', 'packages/angular/dist', '--profile', 'esm-only'],
+    root,
+  );
   execute(
     'pnpm',
     [

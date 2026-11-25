@@ -62,6 +62,9 @@ describe('release scope', () => {
       ['@kimen/emitter', 'packages/emitter/package.json'],
       ['@kimen/adapter-a2ui', 'packages/adapter-a2ui/package.json'],
       ['@kimen/adapter-mcp-apps', 'packages/adapter-mcp-apps/package.json'],
+      ['@kimen/react', 'packages/react/package.json'],
+      ['@kimen/vue', 'packages/vue/package.json'],
+      ['@kimen/angular', 'packages/angular/package.json'],
     ]);
     expect(runtimeDependencyFields).toEqual([
       'dependencies',
@@ -372,7 +375,7 @@ Highlights of this release.
 
     expect(proposal).toEqual({
       title: 'chore(release): v0.2.0',
-      body: 'Release `@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui` and `@kimen/adapter-mcp-apps` at `0.2.0`. Merging this pull request starts tag creation and candidate validation.\n\n### Added\n\n- Hand-written feature.\n- Add search.\n\n### Fixed\n\n- Correct focus.',
+      body: 'Release `@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui`, `@kimen/adapter-mcp-apps`, `@kimen/react`, `@kimen/vue` and `@kimen/angular` at `0.2.0`. Merging this pull request starts tag creation and candidate validation.\n\n### Added\n\n- Hand-written feature.\n- Add search.\n\n### Fixed\n\n- Correct focus.',
     });
     expect(() => releaseProposal(releasedChangelog, '0.3.0')).toThrow(
       'Changelog entry for 0.3.0 is missing or empty',
@@ -733,9 +736,9 @@ describe('release manifests', () => {
         prepareManifest({ ...elements, [field]: { '@kimen/tokens': 'workspace:*' } }, '0.2.0'),
       ).toThrow(`@kimen/elements ${field} needs @kimen/tokens, which must be published before it`);
       expect(() =>
-        prepareManifest({ ...emitter, [field]: { '@kimen/react': 'workspace:*' } }, '0.2.0'),
+        prepareManifest({ ...emitter, [field]: { '@kimen/nx-plugin': 'workspace:*' } }, '0.2.0'),
       ).toThrow(
-        `@kimen/emitter ${field} can only use workspace:* on a release package; @kimen/react is workspace:*`,
+        `@kimen/emitter ${field} can only use workspace:* on a release package; @kimen/nx-plugin is workspace:*`,
       );
       expect(prepareManifest({ ...elements, [field]: { lit: '^3.0.0' } }, '0.2.0')).toEqual({
         ...elements,

@@ -121,6 +121,9 @@ it('names exactly the sections each published package answers for', () => {
       '@kimen/adapter-a2ui': [],
       '@kimen/adapter-mcp-apps': bundleNotices,
       '@kimen/mcp-server': [...bundleNotices, ...mcpNotices],
+      '@kimen/react': [],
+      '@kimen/vue': [],
+      '@kimen/angular': ['@stencil/angular-output-target (MIT)'],
     },
   );
   assert.equal(Object.isFrozen(PACKAGE_NOTICE_SECTIONS), true);
@@ -233,6 +236,12 @@ const repositoryNotice = [
   'Fonts body.',
   '',
   ...mcpNotices.flatMap((title) => [RULE, `Third-party notices: ${title}`, RULE, '', title, '']),
+  RULE,
+  'Third-party notices: @stencil/angular-output-target (MIT)',
+  RULE,
+  '',
+  'Angular helpers body.',
+  '',
 ].join('\n');
 
 async function repositoryFixture(notice) {
@@ -259,6 +268,9 @@ it('writes a byte copy of the licence and the derived notice into each published
       '@kimen/adapter-a2ui': 'packages/adapter-a2ui',
       '@kimen/adapter-mcp-apps': 'packages/adapter-mcp-apps',
       '@kimen/mcp-server': 'packages/mcp-server',
+      '@kimen/react': 'packages/react',
+      '@kimen/vue': 'packages/vue',
+      '@kimen/angular': 'packages/angular',
     },
   );
   assert.equal(Object.isFrozen(PACKAGE_DIRECTORIES), true);
@@ -274,6 +286,9 @@ it('writes a byte copy of the licence and the derived notice into each published
     { name: '@kimen/adapter-a2ui', directory: 'packages/adapter-a2ui' },
     { name: '@kimen/adapter-mcp-apps', directory: 'packages/adapter-mcp-apps' },
     { name: '@kimen/mcp-server', directory: 'packages/mcp-server' },
+    { name: '@kimen/react', directory: 'packages/react' },
+    { name: '@kimen/vue', directory: 'packages/vue' },
+    { name: '@kimen/angular', directory: 'packages/angular' },
   ]);
   for (const directory of Object.values(PACKAGE_DIRECTORIES)) {
     assert.equal(
@@ -296,12 +311,22 @@ it('writes a byte copy of the licence and the derived notice into each published
     await readFile(join(root, 'packages/tokens/NOTICE'), 'utf8'),
     `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: onmars theme fonts (SIL OFL 1.1)\n${RULE}\n\nFonts body.\n`,
   );
-  for (const directory of ['packages/catalog', 'packages/emitter', 'packages/adapter-a2ui']) {
+  for (const directory of [
+    'packages/catalog',
+    'packages/emitter',
+    'packages/adapter-a2ui',
+    'packages/react',
+    'packages/vue',
+  ]) {
     assert.equal(
       await readFile(join(root, directory, 'NOTICE'), 'utf8'),
       'Kimen\nCopyright 2026 Example\n',
     );
   }
+  assert.equal(
+    await readFile(join(root, 'packages/angular/NOTICE'), 'utf8'),
+    `Kimen\nCopyright 2026 Example\n\n${RULE}\nThird-party notices: @stencil/angular-output-target (MIT)\n${RULE}\n\nAngular helpers body.\n`,
+  );
 });
 
 it('leaves a package untouched when its notice cannot be derived', async () => {

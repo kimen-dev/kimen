@@ -5,7 +5,14 @@ import { join } from 'node:path';
 
 import { describe, expect, it, onTestFinished } from 'vitest';
 
-import { needsStaging, releaseManifest, stageReleasePackage } from '../release/stage-package.mjs';
+import {
+  builtPackageOutputs,
+  needsStaging,
+  releaseManifest,
+  stageBuiltPackage,
+  stageReleasePackage,
+} from '../release/stage-package.mjs';
+import { builtManifest, writeBuiltPackage } from '../tests/fixtures/built-package.mjs';
 
 // The daily mutation run executes this directory only, so the staging rules
 // the candidate builder relies on are pinned here directly as well as through
@@ -193,10 +200,153 @@ describe('release package staging', () => {
       stageReleasePackage(
         source,
         staging,
-        emitter({ dependencies: { '@kimen/react': 'workspace:*' } }),
+        emitter({ dependencies: { '@kimen/nx-plugin': 'workspace:*' } }),
         '1.2.3',
       ),
-    ).rejects.toThrow('@kimen/react is workspace:*');
+    ).rejects.toThrow('@kimen/nx-plugin is workspace:*');
+    await expect(lstat(staging)).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+});
+
+const angular = (overrides = {}) => ({
+  name: '@kimen/angular',
+  version: '1.2.3',
+  private: false,
+  license: 'Apache-2.0',
+  repository: {
+    type: 'git',
+    url: 'git+https://github.com/kimen-dev/kimen.git',
+    directory: 'packages/angular',
+  },
+  scripts: { build: 'ng-packagr -p ng-package.json' },
+  dependencies: { '@kimen/elements': 'workspace:*', tslib: '2.9.1' },
+  peerDependencies: { '@angular/core': '^22.0.0' },
+  devDependencies: { 'ng-packagr': '22.2.6' },
+  ...overrides,
+});
+
+const angularSource = async (manifest = angular(), builtOverrides = {}) => {
+  const source = await temporaryDirectory('kimen-stage-built-');
+  await writeFile(join(source, 'package.json'), JSON.stringify(manifest));
+  for (const [file, text] of [
+    ['LICENSE', 'source licence\n'],
+    ['NOTICE', 'source notice\n'],
+    ['README.md', '# source readme\n'],
+  ]) {
+    await writeFile(join(source, file), text);
+  }
+  await writeBuiltPackage(source, manifest, builtOverrides);
+  await writeFile(join(source, 'dist/LICENSE'), 'licence copied by the build\n');
+  return source;
+};
+
+describe('built package staging', () => {
+  it('S7 only @kimen/angular publishes from its build output, from dist', () => {
+    expect(builtPackageOutputs).toEqual({ '@kimen/angular': 'dist' });
+    expect(Object.isFrozen(builtPackageOutputs)).toBe(true);
+  });
+
+  it('S7 stages the build output with the source legal files and README and the release manifest', async () => {
+    const manifest = angular();
+    const source = await angularSource(manifest);
+    const staging = join(await temporaryDirectory('kimen-stage-target-'), 'package');
+
+    await expect(stageBuiltPackage(source, staging, manifest, '1.2.3')).resolves.toBe(staging);
+    expect(await listing(staging)).toEqual([
+      'LICENSE',
+      'NOTICE',
+      'README.md',
+      'fesm2022/kimen-angular.mjs',
+      'package.json',
+      'types/kimen-angular.d.ts',
+    ]);
+    for (const [file, text] of [
+      ['LICENSE', 'source licence\n'],
+      ['NOTICE', 'source notice\n'],
+      ['README.md', '# source readme\n'],
+    ]) {
+      expect(await readFile(join(staging, file), 'utf8')).toBe(text);
+    }
+    expect(JSON.parse(await readFile(join(staging, 'package.json'), 'utf8'))).toEqual({
+      ...builtManifest(manifest),
+      dependencies: { '@kimen/elements': '1.2.3', tslib: '2.9.1' },
+    });
+    expect(await readFile(join(staging, 'package.json'), 'utf8')).toBe(
+      `${JSON.stringify(releaseManifest(builtManifest(manifest), '1.2.3'), null, 2)}\n`,
+    );
+  });
+
+  it('S7 refuses a package that publishes from its source directory', async () => {
+    const source = await sourcePackage();
+    const staging = join(await temporaryDirectory('kimen-stage-target-'), 'package');
+
+    await expect(stageBuiltPackage(source, staging, emitter(), '1.2.3')).rejects.toThrow(
+      '@kimen/emitter publishes from its source directory',
+    );
+  });
+
+  it('S7 refuses a build output whose manifest is missing or not JSON', async () => {
+    const manifest = angular();
+    const source = await angularSource(manifest);
+    await writeFile(join(source, 'dist/package.json'), '{ not json');
+    const staging = join(await temporaryDirectory('kimen-stage-target-'), 'package');
+
+    await expect(stageBuiltPackage(source, staging, manifest, '1.2.3')).rejects.toThrow(
+      /^@kimen\/angular has no readable dist\/package\.json; build it first: /u,
+    );
+  });
+
+  it('S7 a source field the build does not carry must be absent from the build too', async () => {
+    const manifest = angular({ optionalDependencies: { lit: '^3.0.0' } });
+    const source = await angularSource(manifest, { optionalDependencies: undefined });
+    const staging = join(await temporaryDirectory('kimen-stage-target-'), 'package');
+
+    await expect(stageBuiltPackage(source, staging, manifest, '1.2.3')).rejects.toThrow(
+      '@kimen/angular dist/package.json optionalDependencies differs from its source manifest; rebuild it',
+    );
+  });
+
+  it.each(['dist/package.json', 'dist/fesm2022/link.mjs', 'NOTICE'])(
+    'S7 refuses a symbolic link at %s',
+    async (link) => {
+      const manifest = angular();
+      const source = await angularSource(manifest);
+      const outside = await temporaryDirectory('kimen-stage-outside-');
+      const target = join(outside, 'target');
+      await writeFile(
+        target,
+        link === 'dist/package.json' ? JSON.stringify(builtManifest(manifest)) : 'x\n',
+      );
+      await rm(join(source, link), { force: true });
+      await symlink(target, join(source, link));
+      const staging = join(await temporaryDirectory('kimen-stage-target-'), 'package');
+
+      await expect(stageBuiltPackage(source, staging, manifest, '1.2.3')).rejects.toThrow(
+        `Release staging refuses the symbolic link ${join(source, link)}`,
+      );
+    },
+  );
+
+  it('S7 refuses a build output that is itself a symbolic link', async () => {
+    const manifest = angular();
+    const built = await angularSource(manifest);
+    const source = await temporaryDirectory('kimen-stage-linked-');
+    await symlink(join(built, 'dist'), join(source, 'dist'));
+    const staging = join(await temporaryDirectory('kimen-stage-target-'), 'package');
+
+    await expect(stageBuiltPackage(source, staging, manifest, '1.2.3')).rejects.toThrow(
+      'Release staging refuses the symbolic link',
+    );
+  });
+
+  it('S7 refuses a workspace range the release cannot rewrite in the built manifest', async () => {
+    const manifest = angular({ dependencies: { '@kimen/elements': 'workspace:^' } });
+    const source = await angularSource(manifest);
+    const staging = join(await temporaryDirectory('kimen-stage-target-'), 'package');
+
+    await expect(stageBuiltPackage(source, staging, manifest, '1.2.3')).rejects.toThrow(
+      '@kimen/angular dependencies can only use workspace:* on a release package; @kimen/elements is workspace:^',
+    );
     await expect(lstat(staging)).rejects.toMatchObject({ code: 'ENOENT' });
   });
 });

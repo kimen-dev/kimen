@@ -11,6 +11,9 @@ export const releasePackages = new Map([
   ['@kimen/emitter', 'packages/emitter/package.json'],
   ['@kimen/adapter-a2ui', 'packages/adapter-a2ui/package.json'],
   ['@kimen/adapter-mcp-apps', 'packages/adapter-mcp-apps/package.json'],
+  ['@kimen/react', 'packages/react/package.json'],
+  ['@kimen/vue', 'packages/vue/package.json'],
+  ['@kimen/angular', 'packages/angular/package.json'],
 ]);
 // The manifest fields npm installs for a consumer of the package.
 export const runtimeDependencyFields = Object.freeze([

@@ -59,7 +59,7 @@ const notes =
   '### Added\n\n- Hand-written feature.\n- Add search.\n\n### Fixed\n\n- Correct focus.';
 const proposal = {
   title: 'chore(release): v0.2.0',
-  body: `Release \`@kimen/elements\`, \`@kimen/tokens\`, \`@kimen/mcp-server\`, \`@kimen/catalog\`, \`@kimen/emitter\`, \`@kimen/adapter-a2ui\` and \`@kimen/adapter-mcp-apps\` at \`0.2.0\`. Merging this pull request starts tag creation and candidate validation.\n\n${notes}`,
+  body: `Release \`@kimen/elements\`, \`@kimen/tokens\`, \`@kimen/mcp-server\`, \`@kimen/catalog\`, \`@kimen/emitter\`, \`@kimen/adapter-a2ui\`, \`@kimen/adapter-mcp-apps\`, \`@kimen/react\`, \`@kimen/vue\` and \`@kimen/angular\` at \`0.2.0\`. Merging this pull request starts tag creation and candidate validation.\n\n${notes}`,
 };
 const releasePull = {
   title: 'chore(release): v0.2.0',
@@ -182,6 +182,9 @@ describe('release commit and pull request helpers', () => {
       'packages/emitter/package.json',
       'packages/adapter-a2ui/package.json',
       'packages/adapter-mcp-apps/package.json',
+      'packages/react/package.json',
+      'packages/vue/package.json',
+      'packages/angular/package.json',
       'packages/mcp-server/server.json',
       'packages/mcp-server/README.md',
       'plugins/kimen/README.md',

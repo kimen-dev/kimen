@@ -7,12 +7,15 @@ import { join } from 'node:path';
 import test from 'node:test';
 
 import {
+  frameworkVersions,
   GENERATIVE_CONSUMER,
   inspectTarball,
   probeGenerativeModules,
+  probeWrapperConsumer,
   runGenerativeProbe,
   smokeGenerativeConsumer,
   verifyInstalledPackages,
+  WRAPPER_CONSUMERS,
 } from '../release/consumer-smoke.mjs';
 
 const version = '1.2.3';
@@ -357,5 +360,90 @@ export const createKimenSurfaceResource = (name) => ({ uri: 'ui://kimen/' + name
   await assert.rejects(
     runGenerativeProbe(root, '9.9.9'),
     /must describe @kimen\/elements 9\.9\.9/u,
+  );
+});
+
+test('S7 each wrapper consumer installs its framework at the wrapper development versions', async () => {
+  assert.deepEqual(
+    WRAPPER_CONSUMERS.map(({ name }) => name),
+    ['@kimen/react', '@kimen/vue', '@kimen/angular'],
+  );
+  for (const consumer of WRAPPER_CONSUMERS) {
+    const manifest = JSON.parse(
+      await readFile(
+        new URL(
+          `../../packages/${consumer.name.slice('@kimen/'.length)}/package.json`,
+          import.meta.url,
+        ),
+        'utf8',
+      ),
+    );
+    assert.deepEqual(
+      await frameworkVersions(consumer),
+      consumer.frameworks.map((framework) => `${framework}@${manifest.devDependencies[framework]}`),
+    );
+  }
+  // vue-router is an optional peer of @kimen/vue: its consumer does without.
+  const vue = WRAPPER_CONSUMERS.find(({ name }) => name === '@kimen/vue');
+  assert.deepEqual(vue.frameworks, ['vue']);
+  assert.deepEqual(vue.absent, ['vue-router']);
+});
+
+// Offline: stub packages, the real workspace compiler, bundler and Node.
+test('S7 a wrapper consumer type-checks, bundles and imports the installed wrapper, and fails on a wrong prop', async (t) => {
+  const root = await temporaryDirectory(t, 'kimen-consumer-smoke-wrapper-');
+  const stub = async (name, files, exports) => {
+    const directory = join(root, 'node_modules', name);
+    await mkdir(directory, { recursive: true });
+    await writeFile(
+      join(directory, 'package.json'),
+      JSON.stringify({ name, type: 'module', exports }),
+    );
+    for (const [file, text] of Object.entries(files)) await writeFile(join(directory, file), text);
+  };
+  await writeFile(join(root, 'package.json'), '{"private":true,"type":"module"}\n');
+  await stub(
+    '@kimen/react',
+    {
+      'index.js':
+        "import { tag } from '@kimen/elements/tag.js';\nexport const KiButton = { tag, tone: 'danger' };\n",
+      'index.d.ts': "export declare const KiButton: { tone: 'danger' | 'neutral' };\n",
+    },
+    { '.': { types: './index.d.ts', import: './index.js' } },
+  );
+  await stub(
+    '@kimen/elements',
+    { 'tag.js': "export const tag = 'ki-button';\n" },
+    { './tag.js': './tag.js' },
+  );
+  const consumer = {
+    name: '@kimen/react',
+    entry: 'consumer.ts',
+    absent: ['vue-router'],
+    nodeImport: true,
+    source: `import { KiButton } from '@kimen/react';
+export const tone: 'danger' | 'neutral' = KiButton.tone;
+// @ts-expect-error a tone is not a number
+export const wrong: number = KiButton.tone;
+`,
+  };
+
+  const report = await probeWrapperConsumer(root, consumer);
+  assert.equal(report.typecheck, 'passed');
+  assert.equal(report.bundle.inputs, 3);
+  assert.equal(report.nodeImport, true);
+
+  await assert.rejects(
+    probeWrapperConsumer(root, {
+      ...consumer,
+      source:
+        "import { KiButton } from '@kimen/react';\n// @ts-expect-error\nexport const tone: string = KiButton.tone;\n",
+    }),
+    /Unused '@ts-expect-error' directive/u,
+  );
+  await stub('vue-router', { 'index.js': '' }, { '.': './index.js' });
+  await assert.rejects(
+    probeWrapperConsumer(root, consumer),
+    /the @kimen\/react consumer must not install vue-router/u,
   );
 });

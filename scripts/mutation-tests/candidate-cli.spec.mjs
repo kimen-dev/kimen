@@ -9,6 +9,7 @@ import { expect, it, onTestFinished } from 'vitest';
 
 import { runCandidateCli } from '../release/candidate-cli.mjs';
 import { releasePackages } from '../release/release-plan.mjs';
+import { writeBuiltPackage } from '../tests/fixtures/built-package.mjs';
 import { mcpFixtureFields, writeMcpFixtureFiles } from '../tests/fixtures/mcp-package.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -45,29 +46,33 @@ async function createRepository() {
     await writeFile(join(packageDirectory, 'LICENSE'), 'Apache License, Version 2.0 (fixture)\n');
     await writeFile(join(packageDirectory, 'NOTICE'), 'Kimen fixture notices\n');
     await writeFile(join(packageDirectory, 'README.md'), `# ${name}\n`);
+    const runtime = {
+      emitter: '@kimen/catalog',
+      'adapter-a2ui': '@kimen/catalog',
+      'adapter-mcp-apps': '@kimen/catalog',
+      react: '@kimen/elements',
+      vue: '@kimen/elements',
+      angular: '@kimen/elements',
+    }[directory];
+    const manifest = {
+      name,
+      version: '0.0.0',
+      private: true,
+      type: 'module',
+      ...(directory === 'angular' ? {} : { files: ['index.js', 'NOTICE'] }),
+      ...(directory === 'mcp-server' ? mcpFixtureFields : {}),
+      ...(runtime === undefined ? {} : { dependencies: { [runtime]: 'workspace:*' } }),
+      repository: {
+        type: 'git',
+        url: 'git+https://github.com/kimen-dev/kimen.git',
+        directory: `packages/${directory}`,
+      },
+    };
     await writeFile(
       join(packageDirectory, 'package.json'),
-      `${JSON.stringify(
-        {
-          name,
-          version: '0.0.0',
-          private: true,
-          type: 'module',
-          files: ['index.js', 'NOTICE'],
-          ...(directory === 'mcp-server' ? mcpFixtureFields : {}),
-          ...(['emitter', 'adapter-a2ui', 'adapter-mcp-apps'].includes(directory)
-            ? { dependencies: { '@kimen/catalog': 'workspace:*' } }
-            : {}),
-          repository: {
-            type: 'git',
-            url: 'git+https://github.com/kimen-dev/kimen.git',
-            directory: `packages/${directory}`,
-          },
-        },
-        null,
-        2,
-      )}\n`,
+      `${JSON.stringify(manifest, null, 2)}\n`,
     );
+    if (directory === 'angular') await writeBuiltPackage(packageDirectory, manifest);
     if (directory === 'mcp-server') await writeMcpFixtureFiles(packageDirectory, '0.0.0');
   }
   mustRun('git', ['add', '.'], root);

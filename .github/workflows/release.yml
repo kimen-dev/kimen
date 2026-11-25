@@ -504,7 +504,7 @@ jobs:
             import { join } from "node:path";
             const root = process.argv[1];
             const manifest = JSON.parse(readFileSync(join(root, "manifest.json"), "utf8"));
-            const expected = ["@kimen/elements", "@kimen/tokens", "@kimen/mcp-server", "@kimen/catalog", "@kimen/emitter", "@kimen/adapter-a2ui", "@kimen/adapter-mcp-apps"];
+            const expected = ["@kimen/elements", "@kimen/tokens", "@kimen/mcp-server", "@kimen/catalog", "@kimen/emitter", "@kimen/adapter-a2ui", "@kimen/adapter-mcp-apps", "@kimen/react", "@kimen/vue", "@kimen/angular"];
             if (manifest.mode !== "release" || manifest.sourceSha !== process.env.CANDIDATE_SOURCE_SHA || manifest.tag !== process.env.GITHUB_REF_NAME || manifest.tag !== "v" + manifest.version) throw new Error("release manifest binding mismatch");
             if (manifest.packages.length !== expected.length || manifest.packages.some((entry, index) => entry.name !== expected[index])) throw new Error("release package set mismatch");
             for (const entry of manifest.packages) {

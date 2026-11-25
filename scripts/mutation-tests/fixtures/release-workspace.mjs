@@ -97,11 +97,14 @@ export const surfaceAppInfo = (version) => `export const KIMEN_APP_INFO: Impleme
 };
 `;
 
-// The release packages that need the catalog of the same release at runtime.
-const catalogDependents = new Set([
-  '@kimen/emitter',
-  '@kimen/adapter-a2ui',
-  '@kimen/adapter-mcp-apps',
+// The release packages that need another package of the same release at runtime.
+const runtimeDependency = new Map([
+  ['@kimen/emitter', '@kimen/catalog'],
+  ['@kimen/adapter-a2ui', '@kimen/catalog'],
+  ['@kimen/adapter-mcp-apps', '@kimen/catalog'],
+  ['@kimen/react', '@kimen/elements'],
+  ['@kimen/vue', '@kimen/elements'],
+  ['@kimen/angular', '@kimen/elements'],
 ]);
 
 /**
@@ -112,8 +115,8 @@ const catalogDependents = new Set([
 export const releaseManifest = (name, version, { isPrivate = true, extra = '' } = {}) => {
   const directory = releasePackages.get(name).replace('/package.json', '');
   const mcp = name === '@kimen/mcp-server' ? `\n  "mcpName": "${mcpName}",` : '';
-  const runtime = catalogDependents.has(name)
-    ? `\n  "dependencies": { "@kimen/catalog": "workspace:*" },`
+  const runtime = runtimeDependency.has(name)
+    ? `\n  "dependencies": { "${runtimeDependency.get(name)}": "workspace:*" },`
     : '';
   return `{
   "name": "${name}",${mcp}

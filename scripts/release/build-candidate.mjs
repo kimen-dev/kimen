@@ -30,7 +30,12 @@ import {
   releaseWorkspaceDependencies,
   runtimeDependencyFields,
 } from './release-plan.mjs';
-import { needsStaging, stageReleasePackage } from './stage-package.mjs';
+import {
+  builtPackageOutputs,
+  needsStaging,
+  stageBuiltPackage,
+  stageReleasePackage,
+} from './stage-package.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -569,6 +574,13 @@ export async function buildCandidate(options) {
       let directory = input.directory;
       if (isMcp) {
         directory = await stageMcpPackage(input.directory, packageStaging, input.manifest);
+      } else if (Object.hasOwn(builtPackageOutputs, input.expected.name)) {
+        directory = await stageBuiltPackage(
+          input.directory,
+          packageStaging,
+          input.manifest,
+          version,
+        );
       } else if (needsStaging(input.manifest)) {
         directory = await stageReleasePackage(
           input.directory,

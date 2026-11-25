@@ -19,6 +19,7 @@ import test from 'node:test';
 
 import { canonicalJson } from '../lib/canonical-json.mjs';
 import { releasePackages } from '../release/release-plan.mjs';
+import { builtManifest, writeBuiltPackage } from './fixtures/built-package.mjs';
 import { candidateArchive, packageRecord as packedRecord } from './fixtures/candidate-archive.mjs';
 import { mcpFixtureFields, writeMcpFixtureFiles } from './fixtures/mcp-package.mjs';
 
@@ -40,10 +41,14 @@ const tokensIntegrity = integrityOf('@kimen/tokens');
 const repositoryUrl = 'git+https://github.com/kimen-dev/kimen.git';
 // The runtime fields of each fixture package mirror the repository: the
 // catalog needs zod from the registry, its dependents need the catalog from
-// the same release.
+// the same release, and the framework wrappers need elements.
 const catalogDependent = {
   dependencies: { '@kimen/catalog': 'workspace:*' },
   devDependencies: { '@kimen/elements': 'workspace:*', vitest: '5.1.0' },
+};
+const elementsDependent = {
+  dependencies: { '@kimen/elements': 'workspace:*' },
+  devDependencies: { vitest: '5.1.0' },
 };
 const fixtureDependencies = {
   '@kimen/elements': { devDependencies: { '@kimen/tokens': 'workspace:*' } },
@@ -51,7 +56,12 @@ const fixtureDependencies = {
   '@kimen/emitter': catalogDependent,
   '@kimen/adapter-a2ui': catalogDependent,
   '@kimen/adapter-mcp-apps': catalogDependent,
+  '@kimen/react': elementsDependent,
+  '@kimen/vue': elementsDependent,
+  '@kimen/angular': { ...elementsDependent, peerDependencies: { '@angular/core': '^22.0.0' } },
 };
+// Packed from the directory its build writes, with its own manifest.
+const angularName = '@kimen/angular';
 
 async function loadSubject() {
   let subject;
@@ -107,7 +117,7 @@ function repositoryMetadata(directory, overrides = {}) {
 }
 
 function packageFixture(name, directory, options) {
-  return {
+  const fixture = {
     directory,
     manifest: {
       name,
@@ -128,7 +138,11 @@ function packageFixture(name, directory, options) {
       ...(options.scripts?.[name] === undefined ? {} : { scripts: options.scripts[name] }),
     },
     legalFiles: { ...defaultLegalFiles, ...options.legalFiles?.[name] },
+    builtOverrides: options.builtOverrides?.[name],
   };
+  // ng-packagr packs what it writes; the Angular source lists no files.
+  if (name === angularName) delete fixture.manifest.files;
+  return fixture;
 }
 
 // A published package carries its licence and its notices. `null` leaves the
@@ -154,6 +168,9 @@ async function writePackage(root, fixture) {
   ]);
   if (fixture.manifest.name === mcpName) {
     await writeMcpFixtureFiles(directory, fixture.manifest.version);
+  }
+  if (fixture.manifest.name === angularName && fixture.builtOverrides !== null) {
+    await writeBuiltPackage(directory, fixture.manifest, fixture.builtOverrides);
   }
   return directory;
 }
@@ -692,26 +709,102 @@ async function npmPack(t, directory) {
   };
 }
 
-for (const name of ['@kimen/emitter', '@kimen/adapter-a2ui', '@kimen/adapter-mcp-apps']) {
-  test(`S7 packs ${name} with its catalog range rewritten to the candidate version`, async (t) => {
+for (const [name, dependency] of [
+  ['@kimen/emitter', '@kimen/catalog'],
+  ['@kimen/adapter-a2ui', '@kimen/catalog'],
+  ['@kimen/adapter-mcp-apps', '@kimen/catalog'],
+  ['@kimen/react', '@kimen/elements'],
+  ['@kimen/vue', '@kimen/elements'],
+]) {
+  test(`S7 packs ${name} with its ${dependency} range rewritten to the candidate version`, async (t) => {
     const fixture = await createRepositoryFixture(t);
     const candidate = await buildFixture(t, fixture);
     const { directory } = await extractCandidate(t, candidate.archivePath);
     const packed = packedManifest(directory, fileOf(name));
     const source = JSON.parse(await readFile(join(fixture.packages[name], 'package.json'), 'utf8'));
 
-    assert.deepEqual(packed.dependencies, { '@kimen/catalog': version });
+    assert.deepEqual(packed.dependencies, { [dependency]: version });
     assert.equal(packed.devDependencies, undefined);
     assert.doesNotMatch(JSON.stringify(packed), /workspace:/u);
     // Only the rewritten ranges and the dropped development dependencies differ.
     const rest = { ...source };
     delete rest.devDependencies;
-    assert.deepEqual(packed, { ...rest, dependencies: { '@kimen/catalog': version } });
+    assert.deepEqual(packed, { ...rest, dependencies: { [dependency]: version } });
     // The staged copy packs the files npm packs from the package directory.
     assert.deepEqual(
       packedFiles(directory, fileOf(name)),
       (await npmPack(t, fixture.packages[name])).files,
     );
+  });
+}
+
+async function listFiles(directory, prefix = '') {
+  const { readdir } = await import('node:fs/promises');
+  const files = [];
+  for (const entry of await readdir(join(directory, prefix), { withFileTypes: true })) {
+    const path = prefix === '' ? entry.name : `${prefix}/${entry.name}`;
+    if (entry.isDirectory()) files.push(...(await listFiles(directory, path)));
+    else files.push(path);
+  }
+  return files;
+}
+
+test('S7 packs @kimen/angular from the directory its build writes, with the source legal files and README', async (t) => {
+  const fixture = await createRepositoryFixture(t);
+  const candidate = await buildFixture(t, fixture);
+  const { directory } = await extractCandidate(t, candidate.archivePath);
+  const file = fileOf(angularName);
+  const source = JSON.parse(
+    await readFile(join(fixture.packages[angularName], 'package.json'), 'utf8'),
+  );
+
+  assert.deepEqual(packedManifest(directory, file), {
+    ...builtManifest(source),
+    dependencies: { '@kimen/elements': version },
+  });
+  const built = (await listFiles(join(fixture.packages[angularName], 'dist'))).filter(
+    (path) => path !== 'package.json',
+  );
+  assert.deepEqual(
+    packedFiles(directory, file),
+    [...new Set([...built, 'LICENSE', 'NOTICE', 'README.md', 'package.json'])]
+      .map((path) => `package/${path}`)
+      .sort(),
+  );
+  // The README, licence and notices are the source ones, not the build's copy.
+  assert.equal(
+    run('tar', ['-xOzf', join(directory, file), 'package/README.md'], directory),
+    `# ${angularName}`,
+  );
+  assert.equal(
+    run('tar', ['-xOzf', join(directory, file), 'package/NOTICE'], directory),
+    'Kimen fixture notices',
+  );
+});
+
+for (const [label, builtOverrides, pattern] of [
+  [
+    'a build of another version',
+    { version: '1.2.2' },
+    /@kimen\/angular dist\/package\.json version differs from its source manifest; rebuild it/u,
+  ],
+  [
+    'a build with other runtime dependencies',
+    { dependencies: { '@kimen/elements': 'workspace:*', tslib: '2.9.1' } },
+    /@kimen\/angular dist\/package\.json dependencies differs from its source manifest/u,
+  ],
+  [
+    'a build for another repository directory',
+    { repository: { type: 'git', url: repositoryUrl, directory: 'packages/react' } },
+    /@kimen\/angular dist\/package\.json repository differs from its source manifest/u,
+  ],
+  ['no build at all', null, /@kimen\/angular has no readable dist\/package\.json; build it first/u],
+]) {
+  test(`S7 refuses to pack @kimen/angular from ${label}`, async (t) => {
+    const fixture = await createRepositoryFixture(t, {
+      builtOverrides: { [angularName]: builtOverrides },
+    });
+    await assert.rejects(buildFixture(t, fixture), pattern);
   });
 }
 

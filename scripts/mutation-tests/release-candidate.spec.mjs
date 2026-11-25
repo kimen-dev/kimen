@@ -23,6 +23,7 @@ import {
   verifyCandidate,
 } from '../release/build-candidate.mjs';
 import { releasePackages } from '../release/release-plan.mjs';
+import { builtManifest, writeBuiltPackage } from '../tests/fixtures/built-package.mjs';
 import {
   candidateArchive,
   packageRecord as packedRecord,
@@ -49,13 +50,21 @@ const catalogDependent = {
   dependencies: { '@kimen/catalog': 'workspace:*' },
   devDependencies: { '@kimen/elements': 'workspace:*', vitest: '5.1.0' },
 };
+const elementsDependent = {
+  dependencies: { '@kimen/elements': 'workspace:*' },
+  devDependencies: { vitest: '5.1.0' },
+};
 const fixtureDependencies = {
   '@kimen/elements': { devDependencies: { '@kimen/tokens': 'workspace:*' } },
   '@kimen/catalog': { dependencies: { zod: '4.6.7' } },
   '@kimen/emitter': catalogDependent,
   '@kimen/adapter-a2ui': catalogDependent,
   '@kimen/adapter-mcp-apps': catalogDependent,
+  '@kimen/react': elementsDependent,
+  '@kimen/vue': elementsDependent,
+  '@kimen/angular': elementsDependent,
 };
+const angularName = '@kimen/angular';
 
 const hash = (algorithm, bytes, encoding = 'hex') =>
   createHash(algorithm).update(bytes).digest(encoding);
@@ -153,6 +162,7 @@ const writePackage = async (root, name, directory, options) => {
     ...(name === mcpName ? mcpFixtureFields : {}),
     ...(options.scripts[name] === undefined ? {} : { scripts: options.scripts[name] }),
   };
+  if (name === angularName) delete manifest.files;
   // A published package carries its licence and its notices. `null` leaves a
   // file out of the fixture, an empty string writes an empty one.
   const legalFiles = {
@@ -170,6 +180,9 @@ const writePackage = async (root, name, directory, options) => {
       .map(([file, contents]) => writeFile(join(packageDirectory, file), contents)),
   ]);
   if (name === mcpName) await writeMcpFixtureFiles(packageDirectory, manifest.version);
+  if (name === angularName && options.builtOverrides !== null) {
+    await writeBuiltPackage(packageDirectory, manifest, options.builtOverrides);
+  }
   return { directory: packageDirectory, manifest };
 };
 
@@ -182,6 +195,7 @@ const createRepositoryFixture = async (overrides = {}) => {
     legalFiles: {},
     packageVersions: {},
     manifestOverrides: {},
+    builtOverrides: {},
     repositoryOverrides: {},
     scripts: {},
     extraPackages: [],
@@ -702,15 +716,22 @@ describe('release candidate workspace rewrite mutation boundary', { timeout: 30_
     const candidate = await buildFixture(fixture);
     const { directory } = await extractCandidate(candidate.archivePath);
 
-    for (const name of ['@kimen/emitter', '@kimen/adapter-a2ui', '@kimen/adapter-mcp-apps']) {
+    for (const name of [
+      '@kimen/emitter',
+      '@kimen/adapter-a2ui',
+      '@kimen/adapter-mcp-apps',
+      '@kimen/react',
+      '@kimen/vue',
+    ]) {
       const source = JSON.parse(
         await readFile(join(fixture.packages[name], 'package.json'), 'utf8'),
       );
       const published = { ...source };
       delete published.devDependencies;
+      const [dependency] = Object.keys(source.dependencies);
       expect(packedManifest(directory, fileOf(name))).toEqual({
         ...published,
-        dependencies: { '@kimen/catalog': version },
+        dependencies: { [dependency]: version },
       });
       expect(packedListing(directory, fileOf(name))).toEqual([
         'package/LICENSE',
@@ -720,6 +741,63 @@ describe('release candidate workspace rewrite mutation boundary', { timeout: 30_
         'package/package.json',
       ]);
     }
+  });
+
+  it('S7 packs @kimen/angular from its build output with the source legal files and README', async () => {
+    const fixture = await createRepositoryFixture();
+    const candidate = await buildFixture(fixture);
+    const { directory } = await extractCandidate(candidate.archivePath);
+    const source = JSON.parse(
+      await readFile(join(fixture.packages[angularName], 'package.json'), 'utf8'),
+    );
+
+    expect(packedManifest(directory, fileOf(angularName))).toEqual({
+      ...builtManifest(source),
+      dependencies: { '@kimen/elements': version },
+    });
+    expect(packedListing(directory, fileOf(angularName))).toEqual([
+      'package/LICENSE',
+      'package/NOTICE',
+      'package/README.md',
+      'package/fesm2022/kimen-angular.mjs',
+      'package/index.js',
+      'package/package.json',
+      'package/types/kimen-angular.d.ts',
+    ]);
+    for (const [file, contents] of [
+      ['README.md', `# ${angularName}`],
+      ['LICENSE', 'Apache License, Version 2.0 (fixture)'],
+      ['NOTICE', 'Kimen fixture notices'],
+    ]) {
+      expect(
+        run('tar', ['-xOzf', join(directory, fileOf(angularName)), `package/${file}`], directory),
+      ).toBe(contents);
+    }
+  });
+
+  it.each([
+    ['version', { version: '1.2.2' }],
+    ['private', { private: true }],
+    ['license', { license: 'MIT' }],
+    ['repository', { repository: repositoryMetadata('react') }],
+    ['dependencies', { dependencies: { '@kimen/elements': 'workspace:*', tslib: '2.9.1' } }],
+    ['optionalDependencies', { optionalDependencies: { lit: '^3.0.0' } }],
+    ['peerDependencies', { peerDependencies: { '@angular/core': '^21.0.0' } }],
+    ['name', { name: '@kimen/react' }],
+  ])('S7 refuses an Angular build whose %s differs from its source', async (field, overrides) => {
+    const fixture = await createRepositoryFixture({ builtOverrides: overrides });
+
+    await expect(buildFixture(fixture)).rejects.toThrow(
+      `@kimen/angular dist/package.json ${field} differs from its source manifest; rebuild it`,
+    );
+  });
+
+  it('S7 refuses to pack @kimen/angular before it is built', async () => {
+    const fixture = await createRepositoryFixture({ builtOverrides: null });
+
+    await expect(buildFixture(fixture)).rejects.toThrow(
+      /^@kimen\/angular has no readable dist\/package\.json; build it first: ENOENT/u,
+    );
   });
 
   it('S7 packs elements, tokens and the catalog from their directories, byte for byte', async () => {

@@ -7,12 +7,15 @@ import { join } from 'node:path';
 import { expect, it, onTestFinished } from 'vitest';
 
 import {
+  frameworkVersions,
   GENERATIVE_CONSUMER,
   inspectTarball,
   probeGenerativeModules,
+  probeWrapperConsumer,
   runGenerativeProbe,
   smokeGenerativeConsumer,
   verifyInstalledPackages,
+  WRAPPER_CONSUMERS,
 } from '../release/consumer-smoke.mjs';
 
 // The daily mutation run executes this directory only, so the cases of
@@ -355,3 +358,172 @@ export const createKimenSurfaceResource = (name) => ({ uri: 'ui://kimen/' + name
     /must describe @kimen\/elements 9\.9\.9/u,
   );
 });
+
+// The wrapper consumers install each framework at the exact version the
+// wrapper develops against, and Vue's without the optional vue-router.
+it('S7 each wrapper consumer pins its framework to the wrapper development versions', async () => {
+  expect(WRAPPER_CONSUMERS.map(({ name }) => name)).toEqual([
+    '@kimen/react',
+    '@kimen/vue',
+    '@kimen/angular',
+  ]);
+  const versions = {};
+  for (const consumer of WRAPPER_CONSUMERS) {
+    const manifest = JSON.parse(
+      await readFile(
+        new URL(`../../packages/${consumer.name.slice(7)}/package.json`, import.meta.url),
+        'utf8',
+      ),
+    );
+    versions[consumer.name] = await frameworkVersions(consumer);
+    expect(versions[consumer.name]).toEqual(
+      consumer.frameworks.map((framework) => `${framework}@${manifest.devDependencies[framework]}`),
+    );
+  }
+  expect(versions['@kimen/vue']).toEqual([expect.stringMatching(/^vue@\d+\.\d+\.\d+$/u)]);
+  expect(WRAPPER_CONSUMERS[1].absent).toEqual(['vue-router']);
+  expect(WRAPPER_CONSUMERS.map(({ nodeImport }) => nodeImport)).toEqual([true, true, false]);
+  for (const consumer of WRAPPER_CONSUMERS) {
+    expect(consumer.source).toContain(`from '${consumer.name}'`);
+    expect(consumer.source).toContain('// @ts-expect-error');
+  }
+});
+
+it('S7 a wrapper consumer refuses a framework the wrapper does not pin exactly', async () => {
+  const root = await temporaryDirectory('kimen-consumer-smoke-versions-');
+  await mkdir(join(root, 'packages/vue'), { recursive: true });
+  for (const range of ['^3.5.0', undefined]) {
+    await writeFile(
+      join(root, 'packages/vue/package.json'),
+      JSON.stringify({ devDependencies: range === undefined ? {} : { vue: range } }),
+    );
+    await expect(frameworkVersions(WRAPPER_CONSUMERS[1], root)).rejects.toThrow(
+      `@kimen/vue must develop against an exact vue; found ${range}`,
+    );
+  }
+  await expect(
+    frameworkVersions({ name: '@kimen/nx-plugin', frameworks: [] }, root),
+  ).rejects.toThrow('@kimen/nx-plugin is not a release package');
+});
+
+// An offline consumer of stub packages runs the real workspace compiler,
+// bundler and Node import of the probe.
+async function stubWrapperConsumer({ elementsImport = true, extra = [] } = {}) {
+  const root = await temporaryDirectory('kimen-consumer-smoke-wrapper-');
+  const stub = async (name, files, exports) => {
+    const directory = join(root, 'node_modules', name);
+    await mkdir(directory, { recursive: true });
+    await writeFile(
+      join(directory, 'package.json'),
+      JSON.stringify({ name, type: 'module', exports }),
+    );
+    for (const [file, text] of Object.entries(files)) await writeFile(join(directory, file), text);
+  };
+  await writeFile(join(root, 'package.json'), '{"private":true,"type":"module"}\n');
+  await stub(
+    '@kimen/react',
+    {
+      'index.js': elementsImport
+        ? "import { tag } from '@kimen/elements/tag.js';\nexport const KiButton = { tag, tone: 'danger' };\n"
+        : "export const KiButton = { tone: 'danger' };\n",
+      'index.d.ts': "export declare const KiButton: { tone: 'danger' | 'neutral' };\n",
+    },
+    { '.': { types: './index.d.ts', import: './index.js' } },
+  );
+  await stub(
+    '@kimen/elements',
+    { 'tag.js': "export const tag = 'ki-button';\n" },
+    { './tag.js': './tag.js' },
+  );
+  for (const name of extra) await stub(name, { 'index.js': '' }, { '.': './index.js' });
+  return root;
+}
+
+const stubConsumer = (overrides = {}) => ({
+  name: '@kimen/react',
+  frameworks: [],
+  absent: ['vue-router'],
+  entry: 'consumer.ts',
+  source: `import { KiButton } from '@kimen/react';
+export const tone: 'danger' | 'neutral' = KiButton.tone;
+// @ts-expect-error a tone is not a number
+export const wrong: number = KiButton.tone;
+`,
+  nodeImport: true,
+  ...overrides,
+});
+
+it('S7 a wrapper consumer type-checks, bundles and imports the installed wrapper', async () => {
+  const root = await stubWrapperConsumer();
+  const report = await probeWrapperConsumer(root, stubConsumer());
+
+  expect(report).toMatchObject({ typecheck: 'passed', nodeImport: true });
+  expect(report.bundle.inputs).toBe(3);
+  expect(report.bundle.bytes).toBeGreaterThan(0);
+  expect(JSON.parse(await readFile(join(root, 'tsconfig.json'), 'utf8'))).toMatchObject({
+    compilerOptions: { moduleResolution: 'bundler', strict: true, noEmit: true },
+    files: ['consumer.ts'],
+  });
+  await expect(
+    probeWrapperConsumer(root, stubConsumer({ nodeImport: false })),
+  ).resolves.toMatchObject({ nodeImport: false });
+}, 60_000);
+
+it.each([
+  [
+    'installs a package it must do without',
+    { extra: ['vue-router'] },
+    {},
+    'the @kimen/react consumer must not install vue-router',
+  ],
+  [
+    'does not type-check',
+    {},
+    {
+      source:
+        "import { KiButton } from '@kimen/react';\nexport const wrong: number = KiButton.tone;\n",
+    },
+    /tsc -p tsconfig\.json failed: .*consumer\.ts\(2,14\): error TS2322/su,
+  ],
+  [
+    'accepts a wrong prop',
+    {},
+    {
+      source:
+        "import { KiButton } from '@kimen/react';\n// @ts-expect-error\nexport const tone: string = KiButton.tone;\n",
+    },
+    /Unused '@ts-expect-error' directive/u,
+  ],
+  [
+    'does not reach elements',
+    { elementsImport: false },
+    {},
+    'the @kimen/react consumer bundle does not resolve @kimen/elements from node_modules',
+  ],
+  [
+    'cannot resolve an import',
+    {},
+    { source: "import { KiButton } from '@kimen/missing';\nexport const tone = KiButton;\n" },
+    /tsc -p tsconfig\.json failed/u,
+  ],
+])(
+  'S7 a wrapper consumer fails when it %s',
+  async (_label, layout, overrides, expected) => {
+    const root = await stubWrapperConsumer(layout);
+
+    await expect(probeWrapperConsumer(root, stubConsumer(overrides))).rejects.toThrow(expected);
+  },
+  60_000,
+);
+
+it('S7 a wrapper consumer fails when the wrapper does not export its component in Node', async () => {
+  const root = await stubWrapperConsumer();
+  await writeFile(
+    join(root, 'node_modules/@kimen/react/index.js'),
+    "import '@kimen/elements/tag.js';\nexport const KiButton = undefined;\n",
+  );
+
+  await expect(probeWrapperConsumer(root, stubConsumer())).rejects.toThrow(
+    /KiButton is not exported/u,
+  );
+}, 60_000);

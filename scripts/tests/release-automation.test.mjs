@@ -95,7 +95,7 @@ test('S2 the dated entry folds in Unreleased notes and keeps previous versions',
   const proposal = releaseProposal(result, '0.2.0');
   assert.ok(
     proposal.body.startsWith(
-      'Release `@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui` and `@kimen/adapter-mcp-apps` at `0.2.0`.',
+      'Release `@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui`, `@kimen/adapter-mcp-apps`, `@kimen/react`, `@kimen/vue` and `@kimen/angular` at `0.2.0`.',
     ),
   );
   assert.equal(proposal.title, 'chore(release): v0.2.0');
@@ -236,6 +236,9 @@ test('S6 only the release manifests can be prepared and their runtime ranges sta
     'emitter',
     'adapter-a2ui',
     'adapter-mcp-apps',
+    'react',
+    'vue',
+    'angular',
   ]) {
     const manifest = named(name);
     assert.deepEqual(prepareManifest(manifest, '0.2.0'), { ...manifest, private: false });
@@ -250,9 +253,12 @@ test('S6 only the release manifests can be prepared and their runtime ranges sta
       '@kimen/emitter',
       '@kimen/adapter-a2ui',
       '@kimen/adapter-mcp-apps',
+      '@kimen/react',
+      '@kimen/vue',
+      '@kimen/angular',
     ],
   );
-  assert.throws(() => prepareManifest(named('react'), '0.2.0'), /scope/u);
+  assert.throws(() => prepareManifest(named('nx-plugin'), '0.2.0'), /scope/u);
   assert.throws(
     () =>
       prepareManifest({ ...elements, dependencies: { '@kimen/tokens': 'workspace:^' } }, '0.2.0'),
@@ -279,8 +285,8 @@ test('S6 a release manifest needs other release packages only as workspace:* on 
       );
     }
     assert.throws(
-      () => releaseWorkspaceDependencies(emitter(field, 'workspace:*', '@kimen/react')),
-      /on a release package; @kimen\/react is workspace:\*/u,
+      () => releaseWorkspaceDependencies(emitter(field, 'workspace:*', '@kimen/nx-plugin')),
+      /on a release package; @kimen\/nx-plugin is workspace:\*/u,
     );
     assert.throws(
       () => releaseWorkspaceDependencies(emitter(field, 'workspace:*', '@kimen/adapter-a2ui')),
@@ -295,10 +301,17 @@ test('S6 a release manifest needs other release packages only as workspace:* on 
     }),
     [],
   );
+  assert.deepEqual(
+    releaseWorkspaceDependencies({
+      name: '@kimen/react',
+      dependencies: { '@kimen/elements': 'workspace:*' },
+    }),
+    [{ field: 'dependencies', name: '@kimen/elements' }],
+  );
   assert.throws(
     () =>
       releaseWorkspaceDependencies({
-        name: '@kimen/react',
+        name: '@kimen/nx-plugin',
         dependencies: { '@kimen/elements': 'workspace:*' },
       }),
     /must be published before it/u,
