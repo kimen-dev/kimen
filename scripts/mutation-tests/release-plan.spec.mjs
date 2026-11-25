@@ -2,9 +2,11 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  adapterVersionPaths,
   buildChangelog,
   mcpServerMetadataPath,
   mcpServerPinPaths,
+  pinAdapterVersion,
   pinMcpServer,
   pinPluginManifest,
   pinServerMetadata,
@@ -17,12 +19,15 @@ import {
   releaseProposal,
   releaseTitlePattern,
   releaseVersionPattern,
+  releaseWorkspaceDependencies,
+  runtimeDependencyFields,
   selectReleaseVersion,
   verifyMcpServerVersion,
   verifyVersionedFiles,
 } from '../release/release-plan.mjs';
 import {
   changelog,
+  compatibility,
   cursorLink,
   guide,
   mcpConfig,
@@ -32,6 +37,7 @@ import {
   releasedChangelog,
   repositoryUrl,
   serverJson,
+  surfaceAppInfo,
   versionedFiles,
   vscodeLink,
 } from './fixtures/release-workspace.mjs';
@@ -47,12 +53,34 @@ const readerOf = (files) => async (path) => {
 };
 
 describe('release scope', () => {
-  it('S6 the publication scope is exactly the three release packages', () => {
+  it('S6 the publication scope is exactly the release packages, each after what it needs', () => {
     expect([...releasePackages]).toEqual([
       ['@kimen/elements', 'packages/elements/package.json'],
       ['@kimen/tokens', 'packages/tokens/package.json'],
       ['@kimen/mcp-server', 'packages/mcp-server/package.json'],
+      ['@kimen/catalog', 'packages/catalog/package.json'],
+      ['@kimen/emitter', 'packages/emitter/package.json'],
+      ['@kimen/adapter-a2ui', 'packages/adapter-a2ui/package.json'],
+      ['@kimen/adapter-mcp-apps', 'packages/adapter-mcp-apps/package.json'],
+      ['@kimen/react', 'packages/react/package.json'],
+      ['@kimen/vue', 'packages/vue/package.json'],
+      ['@kimen/angular', 'packages/angular/package.json'],
     ]);
+    expect(runtimeDependencyFields).toEqual([
+      'dependencies',
+      'optionalDependencies',
+      'peerDependencies',
+    ]);
+    expect(Object.isFrozen(runtimeDependencyFields)).toBe(true);
+  });
+
+  it('S11 the adapter version files are the two compatibility matrices and the MCP Apps surface', () => {
+    expect(adapterVersionPaths).toEqual([
+      'packages/adapter-a2ui/COMPAT.md',
+      'packages/adapter-mcp-apps/COMPAT.md',
+      'packages/adapter-mcp-apps/src/bridge.ts',
+    ]);
+    expect(Object.isFrozen(adapterVersionPaths)).toBe(true);
   });
 
   it('S9 the pin list names every file that installs kimen-mcp by version', () => {
@@ -342,12 +370,12 @@ Highlights of this release.
     expect(releaseNotes('# Changelog\n', '0.1.0')).toBeUndefined();
   });
 
-  it('S2 the release pull request names the three packages and carries only its notes', () => {
+  it('S2 the release pull request names the release packages and carries only its notes', () => {
     const proposal = releaseProposal(releasedChangelog, '0.2.0');
 
     expect(proposal).toEqual({
       title: 'chore(release): v0.2.0',
-      body: 'Release `@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server` at `0.2.0`. Merging this pull request starts tag creation and candidate validation.\n\n### Added\n\n- Hand-written feature.\n- Add search.\n\n### Fixed\n\n- Correct focus.',
+      body: 'Release `@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui`, `@kimen/adapter-mcp-apps`, `@kimen/react`, `@kimen/vue` and `@kimen/angular` at `0.2.0`. Merging this pull request starts tag creation and candidate validation.\n\n### Added\n\n- Hand-written feature.\n- Add search.\n\n### Fixed\n\n- Correct focus.',
     });
     expect(() => releaseProposal(releasedChangelog, '0.3.0')).toThrow(
       'Changelog entry for 0.3.0 is missing or empty',
@@ -546,7 +574,10 @@ describe('plugin manifests', () => {
       mcpServerMetadataPath,
       'plugins/kimen/.claude-plugin/plugin.json',
       'plugins/kimen/.antigravity-plugin/plugin.json',
+      ...adapterVersionPaths,
     ]);
+    expect(prepared.get('packages/adapter-a2ui/COMPAT.md')).toBe(compatibility('0.2.0'));
+    expect(prepared.get('packages/adapter-mcp-apps/src/bridge.ts')).toBe(surfaceAppInfo('0.2.0'));
     expect(prepared.get('plugins/kimen/gemini-extension.json')).toBe(
       pluginManifest('0.2.0', '0.2.0'),
     );
@@ -564,6 +595,78 @@ describe('plugin manifests', () => {
     await expect(verifyVersionedFiles(readerOf(laggingPin), '0.2.0', mcpName)).rejects.toThrow(
       'plugins/kimen/mcp_config.json must pin @kimen/mcp-server to the release version 0.2.0',
     );
+    for (const path of adapterVersionPaths) {
+      const laggingAdapter = new Map(prepared).set(path, before.get(path));
+      await expect(
+        verifyVersionedFiles(readerOf(laggingAdapter), '0.2.0', mcpName),
+      ).rejects.toThrow(`${path} must declare the release version 0.2.0`);
+    }
+  });
+});
+
+describe('adapter versions', () => {
+  it('S11 every compatibility row takes the release version and keeps its cell width', () => {
+    const padded = [
+      '| Adapter version | Spec |',
+      '| --------------- | ---- |',
+      '| 0.1.0           | 1.0  |',
+      '| 0.1.0           | 0.9  |',
+      'Text | 0.1.0 | is not a row.',
+      '',
+    ].join('\n');
+    expect(pinAdapterVersion(padded, '0.2.0', 'COMPAT.md')).toBe(
+      padded.replaceAll('| 0.1.0           |', '| 0.2.0           |'),
+    );
+    expect(pinAdapterVersion(padded, '12.345.6789', 'COMPAT.md')).toBe(
+      padded.replaceAll('| 0.1.0           |', '| 12.345.6789     |'),
+    );
+    expect(pinAdapterVersion(compatibility('0.1.0'), '123.456.789', 'COMPAT.md')).toBe(
+      compatibility('123.456.789'),
+    );
+    expect(pinAdapterVersion(compatibility('0.2.0'), '0.2.0', 'COMPAT.md')).toBe(
+      compatibility('0.2.0'),
+    );
+  });
+
+  it('S11 a matrix without a row or with rows of two releases fails closed', () => {
+    for (const source of [
+      '| Adapter version | Spec |\n| --- | --- |\n',
+      '| 0.1 | 1.0 |\n',
+      '| v0.1.0 | 1.0 |\n',
+      '|0.1.0| 1.0 |\n',
+      `${compatibility('0.1.0')}| 0.1.1 | 2026-02-01 | supported |\n`,
+    ]) {
+      expect(() => pinAdapterVersion(source, '0.2.0', 'packages/x/COMPAT.md')).toThrow(
+        'packages/x/COMPAT.md must list its compatibility rows under one adapter version',
+      );
+    }
+  });
+
+  it('S11 the MCP Apps surface takes the release version in KIMEN_APP_INFO only', () => {
+    const source = `// version: '0.1.0'\n${surfaceAppInfo('0.1.0')}const other = { version: '0.1.0' };\n`;
+    expect(pinAdapterVersion(source, '0.2.0', 'bridge.ts')).toBe(
+      `// version: '0.1.0'\n${surfaceAppInfo('0.2.0')}const other = { version: '0.1.0' };\n`,
+    );
+    for (const broken of [
+      '',
+      surfaceAppInfo('0.1.0').replace("'kimen-surface'", "'kimen'"),
+      surfaceAppInfo('0.1.0').replace('KIMEN_APP_INFO', 'APP_INFO'),
+      surfaceAppInfo('0.1.0').replace("'0.1.0'", "'0.1'"),
+      surfaceAppInfo('0.1.0').replace('\n};', '\n  title: "x",\n};'),
+      `${surfaceAppInfo('0.1.0')}${surfaceAppInfo('0.1.0')}`,
+    ]) {
+      expect(() => pinAdapterVersion(broken, '0.2.0', 'src/bridge.ts')).toThrow(
+        'src/bridge.ts must declare the KIMEN_APP_INFO version exactly once',
+      );
+    }
+  });
+
+  it('S11 an invalid release version is refused before any file is read', () => {
+    for (const version of ['0.2', 'v0.2.0', '01.2.3', '0.2.0-rc.1']) {
+      expect(() => pinAdapterVersion(compatibility('0.1.0'), version, 'COMPAT.md')).toThrow(
+        `Invalid release version ${version}`,
+      );
+    }
   });
 });
 
@@ -576,18 +679,18 @@ describe('release manifests', () => {
     devDependencies: { '@kimen/tokens': 'workspace:*', vitest: '^4.0.0' },
   };
 
-  it('S6 only the three release manifests can be prepared and become publishable', () => {
-    for (const name of ['elements', 'tokens', 'mcp-server']) {
+  it('S6 only the release manifests can be prepared and become publishable', () => {
+    for (const [name, path] of releasePackages) {
       const manifest = {
         ...elements,
-        name: `@kimen/${name}`,
-        repository: { ...elements.repository, directory: `packages/${name}` },
+        name,
+        repository: { ...elements.repository, directory: path.replace('/package.json', '') },
       };
       expect(prepareManifest(manifest, '0.2.0')).toEqual({ ...manifest, private: false });
     }
     expect(prepareManifest({ ...elements, private: false }, '0.2.0').private).toBe(false);
-    expect(() => prepareManifest({ ...elements, name: '@kimen/catalog' }, '0.2.0')).toThrow(
-      '@kimen/catalog is outside the release scope',
+    expect(() => prepareManifest({ ...elements, name: '@kimen/nx-plugin' }, '0.2.0')).toThrow(
+      '@kimen/nx-plugin is outside the release scope',
     );
   });
 
@@ -614,20 +717,70 @@ describe('release manifests', () => {
     }
   });
 
-  it('S6 no consumer dependency of a published package keeps a workspace range', () => {
+  it('S6 a consumer dependency on another package of the release is workspace:* on one published before', () => {
+    const emitter = {
+      ...elements,
+      name: '@kimen/emitter',
+      repository: { ...elements.repository, directory: 'packages/emitter' },
+    };
     for (const field of ['dependencies', 'optionalDependencies', 'peerDependencies']) {
       expect(() =>
         prepareManifest(
           { ...elements, [field]: { lit: '^3.0.0', '@kimen/tokens': 'workspace:^' } },
           '0.2.0',
         ),
-      ).toThrow(`@kimen/elements ${field} cannot contain workspace: ranges`);
+      ).toThrow(
+        `@kimen/elements ${field} can only use workspace:* on a release package; @kimen/tokens is workspace:^`,
+      );
+      expect(() =>
+        prepareManifest({ ...elements, [field]: { '@kimen/tokens': 'workspace:*' } }, '0.2.0'),
+      ).toThrow(`@kimen/elements ${field} needs @kimen/tokens, which must be published before it`);
+      expect(() =>
+        prepareManifest({ ...emitter, [field]: { '@kimen/nx-plugin': 'workspace:*' } }, '0.2.0'),
+      ).toThrow(
+        `@kimen/emitter ${field} can only use workspace:* on a release package; @kimen/nx-plugin is workspace:*`,
+      );
       expect(prepareManifest({ ...elements, [field]: { lit: '^3.0.0' } }, '0.2.0')).toEqual({
         ...elements,
         [field]: { lit: '^3.0.0' },
         private: false,
       });
+      const dependent = { ...emitter, [field]: { '@kimen/catalog': 'workspace:*', lit: '^3.0.0' } };
+      expect(prepareManifest(dependent, '0.2.0')).toEqual({ ...dependent, private: false });
     }
+  });
+
+  it('S6 the workspace dependencies of a release manifest are listed in field order and refused outside it', () => {
+    expect(
+      releaseWorkspaceDependencies({
+        name: '@kimen/adapter-mcp-apps',
+        peerDependencies: { '@kimen/elements': 'workspace:*' },
+        dependencies: { zod: '4.6.7', '@kimen/catalog': 'workspace:*' },
+        optionalDependencies: { '@kimen/tokens': 'workspace:*' },
+        devDependencies: { '@kimen/mcp-server': 'workspace:^' },
+      }),
+    ).toEqual([
+      { field: 'dependencies', name: '@kimen/catalog' },
+      { field: 'optionalDependencies', name: '@kimen/tokens' },
+      { field: 'peerDependencies', name: '@kimen/elements' },
+    ]);
+    expect(releaseWorkspaceDependencies({ name: '@kimen/elements' })).toEqual([]);
+    expect(() =>
+      releaseWorkspaceDependencies({
+        name: '@kimen/catalog',
+        dependencies: { '@kimen/catalog': 'workspace:*' },
+      }),
+    ).toThrow(
+      '@kimen/catalog dependencies needs @kimen/catalog, which must be published before it',
+    );
+    expect(() =>
+      releaseWorkspaceDependencies({
+        name: '@kimen/nx-plugin',
+        dependencies: { '@kimen/elements': 'workspace:*' },
+      }),
+    ).toThrow(
+      '@kimen/nx-plugin dependencies needs @kimen/elements, which must be published before it',
+    );
   });
 
   it('S6 release preparation cannot add or change a workspace dev range', () => {

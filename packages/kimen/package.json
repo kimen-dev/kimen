@@ -1,6 +1,7 @@
 {
   "name": "kimen",
   "version": "0.0.1",
+  "private": true,
   "description": "Kimen: the neutral, multi-protocol GenUI catalog in web components. Placeholder while pre-v1; the real packages ship under the @kimen scope.",
   "license": "Apache-2.0",
   "type": "module",

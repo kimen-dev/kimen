@@ -7,6 +7,9 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, it, onTestFinished } from 'vitest';
 
+import { runCandidateCli } from '../release/candidate-cli.mjs';
+import { releasePackages } from '../release/release-plan.mjs';
+import { writeBuiltPackage } from '../tests/fixtures/built-package.mjs';
 import { mcpFixtureFields, writeMcpFixtureFiles } from '../tests/fixtures/mcp-package.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -32,11 +35,8 @@ async function createRepository() {
   mustRun('git', ['init', '--initial-branch=main'], root);
   mustRun('git', ['config', 'user.email', 'fixture@example.invalid'], root);
   mustRun('git', ['config', 'user.name', 'Fixture'], root);
-  for (const [name, directory] of [
-    ['@kimen/elements', 'elements'],
-    ['@kimen/tokens', 'tokens'],
-    ['@kimen/mcp-server', 'mcp-server'],
-  ]) {
+  for (const [name, path] of releasePackages) {
+    const directory = path.split('/')[1];
     const packageDirectory = join(root, 'packages', directory);
     await mkdir(packageDirectory, { recursive: true });
     await writeFile(
@@ -45,26 +45,34 @@ async function createRepository() {
     );
     await writeFile(join(packageDirectory, 'LICENSE'), 'Apache License, Version 2.0 (fixture)\n');
     await writeFile(join(packageDirectory, 'NOTICE'), 'Kimen fixture notices\n');
+    await writeFile(join(packageDirectory, 'README.md'), `# ${name}\n`);
+    const runtime = {
+      emitter: '@kimen/catalog',
+      'adapter-a2ui': '@kimen/catalog',
+      'adapter-mcp-apps': '@kimen/catalog',
+      react: '@kimen/elements',
+      vue: '@kimen/elements',
+      angular: '@kimen/elements',
+    }[directory];
+    const manifest = {
+      name,
+      version: '0.0.0',
+      private: true,
+      type: 'module',
+      ...(directory === 'angular' ? {} : { files: ['index.js', 'NOTICE'] }),
+      ...(directory === 'mcp-server' ? mcpFixtureFields : {}),
+      ...(runtime === undefined ? {} : { dependencies: { [runtime]: 'workspace:*' } }),
+      repository: {
+        type: 'git',
+        url: 'git+https://github.com/kimen-dev/kimen.git',
+        directory: `packages/${directory}`,
+      },
+    };
     await writeFile(
       join(packageDirectory, 'package.json'),
-      `${JSON.stringify(
-        {
-          name,
-          version: '0.0.0',
-          private: true,
-          type: 'module',
-          files: ['index.js', 'NOTICE'],
-          ...(directory === 'mcp-server' ? mcpFixtureFields : {}),
-          repository: {
-            type: 'git',
-            url: 'git+https://github.com/kimen-dev/kimen.git',
-            directory: `packages/${directory}`,
-          },
-        },
-        null,
-        2,
-      )}\n`,
+      `${JSON.stringify(manifest, null, 2)}\n`,
     );
+    if (directory === 'angular') await writeBuiltPackage(packageDirectory, manifest);
     if (directory === 'mcp-server') await writeMcpFixtureFiles(packageDirectory, '0.0.0');
   }
   mustRun('git', ['add', '.'], root);
@@ -95,11 +103,7 @@ it('S7 CLI builds and independently verifies one dry-run candidate', async () =>
   const result = JSON.parse(built.stdout);
   expect(result.manifest.mode).toBe('dry-run');
   expect(result.manifest.tag).toBeNull();
-  expect(result.manifest.packages.map(({ name }) => name)).toEqual([
-    '@kimen/elements',
-    '@kimen/tokens',
-    '@kimen/mcp-server',
-  ]);
+  expect(result.manifest.packages.map(({ name }) => name)).toEqual([...releasePackages.keys()]);
   expect((await readFile(result.archivePath)).length).toBeGreaterThan(0);
 
   const verified = run(
@@ -109,7 +113,7 @@ it('S7 CLI builds and independently verifies one dry-run candidate', async () =>
   );
   expect(verified.status, `${verified.stdout}\n${verified.stderr}`).toBe(0);
   expect(JSON.parse(verified.stdout).candidateSha256).toBe(result.candidateSha256);
-});
+}, 30_000);
 
 it.each([
   ['unknown command', ['unknown'], /usage/iu],
@@ -120,8 +124,43 @@ it.each([
     /duplicate option --archive/iu,
   ],
   ['unknown verify option', ['verify', '--unknown', 'a'], /invalid.*--unknown/iu],
+  ['missing smoke digest', ['smoke', '--archive', 'a'], /missing --sha256/iu],
+  ['unknown smoke option', ['smoke', '--registry', 'a'], /invalid.*--registry/iu],
 ])('S7 CLI rejects %s', (_name, arguments_, expected) => {
   const result = run(process.execPath, [candidateCli, ...arguments_], repositoryRoot);
   expect(result.status).not.toBe(0);
   expect(`${result.stdout}\n${result.stderr}`).toMatch(expected);
+});
+
+it('S7 CLI smokes the candidate it is given, by its digest and in the caller environment', async () => {
+  const calls = [];
+  const written = [];
+  const result = await runCandidateCli({
+    arguments_: ['smoke', '--archive', 'candidate.tar', '--sha256', 'f'.repeat(64)],
+    environment: { PATH: '/bin' },
+    stdout: { write: (text) => written.push(text) },
+    smokeCandidateImpl: async (options) => {
+      calls.push(options);
+      return { version: '1.2.3', generative: { installed: ['@kimen/catalog'] } };
+    },
+    verifyCandidateImpl: () => {
+      throw new Error('smoke must not dispatch to verify');
+    },
+  });
+
+  expect(calls).toEqual([
+    {
+      archivePath: join(process.cwd(), 'candidate.tar'),
+      environment: { PATH: '/bin' },
+      expectedSha256: 'f'.repeat(64),
+    },
+  ]);
+  expect(result).toEqual({ version: '1.2.3', generative: { installed: ['@kimen/catalog'] } });
+  expect(written).toEqual([`${JSON.stringify(result)}\n`]);
+});
+
+it('S7 CLI usage names its three commands', async () => {
+  await expect(
+    runCandidateCli({ arguments_: [], stdout: { write: () => undefined } }),
+  ).rejects.toThrow('candidate-cli: usage: candidate-cli.mjs <build|verify|smoke> [options]');
 });

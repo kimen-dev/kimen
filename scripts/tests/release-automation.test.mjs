@@ -5,9 +5,11 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
+  adapterVersionPaths,
   buildChangelog,
   mcpServerMetadataPath,
   mcpServerPinPaths,
+  pinAdapterVersion,
   pinMcpServer,
   pinPluginManifest,
   pinServerMetadata,
@@ -18,6 +20,7 @@ import {
   releaseNotes,
   releasePackages,
   releaseProposal,
+  releaseWorkspaceDependencies,
   selectReleaseVersion,
   verifyMcpServerVersion,
   verifyVersionedFiles,
@@ -90,7 +93,11 @@ test('S2 the dated entry folds in Unreleased notes and keeps previous versions',
   assert.equal(releaseNotes(result, '0.1.0'), '### Fixed\n\n- Previous fix.');
   assert.throws(() => buildChangelog(result, '0.2.0', nxEntry), /already exists/u);
   const proposal = releaseProposal(result, '0.2.0');
-  assert.match(proposal.body, /@kimen\/elements.*@kimen\/tokens.*@kimen\/mcp-server/u);
+  assert.ok(
+    proposal.body.startsWith(
+      'Release `@kimen/elements`, `@kimen/tokens`, `@kimen/mcp-server`, `@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui`, `@kimen/adapter-mcp-apps`, `@kimen/react`, `@kimen/vue` and `@kimen/angular` at `0.2.0`.',
+    ),
+  );
   assert.equal(proposal.title, 'chore(release): v0.2.0');
   assert.match(proposal.body, /@kimen\/elements.*@kimen\/tokens/u);
   assert.ok(proposal.body.endsWith(releaseNotes(result, '0.2.0')));
@@ -203,7 +210,7 @@ test('S5 existing tags cannot be rewritten and a partial release can be retried'
   assert.deepEqual(methods, ['GET', 'POST']);
 });
 
-test('S6 only the three release manifests can be prepared and their runtime ranges stay installable', () => {
+test('S6 only the release manifests can be prepared and their runtime ranges stay installable', () => {
   const elements = {
     name: '@kimen/elements',
     version: '0.2.0',
@@ -215,20 +222,112 @@ test('S6 only the three release manifests can be prepared and their runtime rang
     },
     devDependencies: { '@kimen/tokens': 'workspace:*' },
   };
-  for (const name of ['elements', 'tokens', 'mcp-server']) {
-    const manifest = {
-      ...elements,
-      name: `@kimen/${name}`,
-      repository: { ...elements.repository, directory: `packages/${name}` },
-    };
+  const named = (name, extra = {}) => ({
+    ...elements,
+    name: `@kimen/${name}`,
+    repository: { ...elements.repository, directory: `packages/${name}` },
+    ...extra,
+  });
+  for (const name of [
+    'elements',
+    'tokens',
+    'mcp-server',
+    'catalog',
+    'emitter',
+    'adapter-a2ui',
+    'adapter-mcp-apps',
+    'react',
+    'vue',
+    'angular',
+  ]) {
+    const manifest = named(name);
     assert.deepEqual(prepareManifest(manifest, '0.2.0'), { ...manifest, private: false });
   }
-  assert.throws(() => prepareManifest({ ...elements, name: '@kimen/catalog' }, '0.2.0'), /scope/u);
+  assert.deepEqual(
+    [...releasePackages.keys()],
+    [
+      '@kimen/elements',
+      '@kimen/tokens',
+      '@kimen/mcp-server',
+      '@kimen/catalog',
+      '@kimen/emitter',
+      '@kimen/adapter-a2ui',
+      '@kimen/adapter-mcp-apps',
+      '@kimen/react',
+      '@kimen/vue',
+      '@kimen/angular',
+    ],
+  );
+  assert.throws(() => prepareManifest(named('nx-plugin'), '0.2.0'), /scope/u);
   assert.throws(
-    () => prepareManifest({ ...elements, dependencies: elements.devDependencies }, '0.2.0'),
-    /workspace:/u,
+    () =>
+      prepareManifest({ ...elements, dependencies: { '@kimen/tokens': 'workspace:^' } }, '0.2.0'),
+    /workspace:\*/u,
   );
   assert.throws(() => prepareManifest({ ...elements, version: '0.1.0' }, '0.2.0'), /version/u);
+});
+
+// The candidate builder rewrites workspace:* to the exact release version;
+// it can only do so for a package the same release publishes first.
+test('S6 a release manifest needs other release packages only as workspace:* on ones published before it', () => {
+  const emitter = (field, range, name = '@kimen/catalog') => ({
+    name: '@kimen/emitter',
+    [field]: { [name]: range, zod: '4.6.7' },
+  });
+  for (const field of ['dependencies', 'optionalDependencies', 'peerDependencies']) {
+    assert.deepEqual(releaseWorkspaceDependencies(emitter(field, 'workspace:*')), [
+      { field, name: '@kimen/catalog' },
+    ]);
+    for (const range of ['workspace:^', 'workspace:~', 'workspace:0.2.0']) {
+      assert.throws(
+        () => releaseWorkspaceDependencies(emitter(field, range)),
+        new RegExp(`@kimen/emitter ${field} can only use workspace:\\* on a release package`, 'u'),
+      );
+    }
+    assert.throws(
+      () => releaseWorkspaceDependencies(emitter(field, 'workspace:*', '@kimen/nx-plugin')),
+      /on a release package; @kimen\/nx-plugin is workspace:\*/u,
+    );
+    assert.throws(
+      () => releaseWorkspaceDependencies(emitter(field, 'workspace:*', '@kimen/adapter-a2ui')),
+      /needs @kimen\/adapter-a2ui, which must be published before it/u,
+    );
+  }
+  assert.deepEqual(
+    releaseWorkspaceDependencies({
+      name: '@kimen/catalog',
+      dependencies: { zod: '4.6.7' },
+      devDependencies: { '@kimen/elements': 'workspace:*' },
+    }),
+    [],
+  );
+  assert.deepEqual(
+    releaseWorkspaceDependencies({
+      name: '@kimen/react',
+      dependencies: { '@kimen/elements': 'workspace:*' },
+    }),
+    [{ field: 'dependencies', name: '@kimen/elements' }],
+  );
+  assert.throws(
+    () =>
+      releaseWorkspaceDependencies({
+        name: '@kimen/nx-plugin',
+        dependencies: { '@kimen/elements': 'workspace:*' },
+      }),
+    /must be published before it/u,
+  );
+});
+
+// Every release package reached from another one at runtime is in the set
+// and comes first, as the repository manifests declare them today.
+test('S6 the repository release manifests only need earlier release packages', async () => {
+  for (const [name, path] of releasePackages) {
+    const manifest = JSON.parse(await readFile(new URL(`../../${path}`, import.meta.url), 'utf8'));
+    assert.equal(manifest.name, name);
+    for (const { name: dependency } of releaseWorkspaceDependencies(manifest)) {
+      assert.ok(releasePackages.has(dependency), `${name} needs ${dependency}`);
+    }
+  }
 });
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -383,6 +482,61 @@ test('S9 the pin list covers every kimen-mcp pin in the repository, all at one v
   await verifyMcpServerVersion(readRepositoryFile, version, manifest.mcpName);
 });
 
+const compatibility = (version) => `| Adapter version | Protocol | Status |
+| --- | --- | --- |
+| ${version} | 2026-01-26 | supported |
+`;
+const surface = (version) => `/** The surface's \`appInfo\`. */
+export const KIMEN_APP_INFO: Implementation = {
+  name: 'kimen-surface',
+  version: '${version}',
+};
+`;
+
+test('S11 an adapter states the release version in every compatibility row and in its surface', () => {
+  assert.equal(
+    pinAdapterVersion(compatibility('0.1.0'), '0.2.0', 'COMPAT.md'),
+    compatibility('0.2.0'),
+  );
+  const padded = '| 0.1.0           | 1.0 | preferred |\n| 0.1.0           | 0.9.1 | previous |\n';
+  assert.equal(
+    pinAdapterVersion(padded, '10.20.30', 'COMPAT.md'),
+    '| 10.20.30        | 1.0 | preferred |\n| 10.20.30        | 0.9.1 | previous |\n',
+  );
+  assert.equal(
+    pinAdapterVersion(compatibility('9.9.9'), '10.20.300', 'COMPAT.md'),
+    compatibility('10.20.300'),
+  );
+  assert.equal(pinAdapterVersion(surface('0.1.0'), '0.2.0', 'bridge.ts'), surface('0.2.0'));
+  for (const [source, path, pattern] of [
+    ['No table here.\n', 'COMPAT.md', /COMPAT\.md must list its compatibility rows/u],
+    [
+      `${compatibility('0.1.0')}| 0.0.9 | 2025-06-18 | previous |\n`,
+      'COMPAT.md',
+      /one adapter version/u,
+    ],
+    [surface('0.1.0').replace("'kimen-surface'", "'other'"), 'bridge.ts', /exactly once/u],
+    [`${surface('0.1.0')}${surface('0.1.0')}`, 'bridge.ts', /exactly once/u],
+  ]) {
+    assert.throws(() => pinAdapterVersion(source, '0.2.0', path), pattern);
+  }
+  assert.throws(
+    () => pinAdapterVersion(surface('0.1.0'), '0.2', 'bridge.ts'),
+    /Invalid release version/u,
+  );
+});
+
+test('S11 the repository adapter files declare the version of the release packages', async () => {
+  const { version } = JSON.parse(
+    await readRepositoryFile(releasePackages.get('@kimen/adapter-mcp-apps')),
+  );
+  for (const path of adapterVersionPaths) {
+    const source = await readRepositoryFile(path);
+    assert.equal(pinAdapterVersion(source, version, path), source, `${path} declares ${version}`);
+    assert.ok(releaseCommitFiles.includes(path), `${path} is committed with the release`);
+  }
+});
+
 const pluginManifest = (version, pin) =>
   `{
   "name": "kimen",
@@ -438,6 +592,10 @@ test('S10 the release pull request versions the plugin manifests along with the 
     ...pluginManifestPaths.map((path) => [path, pluginManifest('0.1.0')]),
     ['plugins/kimen/gemini-extension.json', pluginManifest('0.1.0', '0.1.0')],
     [mcpServerMetadataPath, serverJson('0.1.0')],
+    ...adapterVersionPaths.map((path) => [
+      path,
+      path.endsWith('.ts') ? surface('0.1.0') : compatibility('0.1.0'),
+    ]),
   ]);
   const read = async (path) => {
     if (!before.has(path)) assert.fail(`release preparation read an unlisted file: ${path}`);
@@ -456,10 +614,16 @@ test('S10 the release pull request versions the plugin manifests along with the 
   );
   assert.equal(prepared.get(pluginManifestPaths[0]), pluginManifest('0.2.0'));
   await verifyVersionedFiles(async (path) => prepared.get(path), '0.2.0', mcpName);
+  assert.equal(prepared.get(adapterVersionPaths[2]), surface('0.2.0'));
   const lagging = new Map(prepared).set(pluginManifestPaths[1], pluginManifest('0.1.0'));
   await assert.rejects(
     verifyVersionedFiles(async (path) => lagging.get(path), '0.2.0', mcpName),
     /\.antigravity-plugin\/plugin\.json must declare the release version 0\.2\.0/u,
+  );
+  const laggingAdapter = new Map(prepared).set(adapterVersionPaths[0], compatibility('0.1.0'));
+  await assert.rejects(
+    verifyVersionedFiles(async (path) => laggingAdapter.get(path), '0.2.0', mcpName),
+    /adapter-a2ui\/COMPAT\.md must declare the release version 0\.2\.0/u,
   );
   for (const path of pluginManifestPaths) {
     assert.ok(releaseCommitFiles.includes(path), `${path} is committed with the release`);

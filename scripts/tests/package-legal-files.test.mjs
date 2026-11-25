@@ -9,6 +9,7 @@ import {
   noticeSections,
   PACKAGE_NOTICE_SECTIONS,
 } from '../lib/package-notices.mjs';
+import { builtPackageOutputs } from '../release/stage-package.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const read = (path) => readFile(join(repositoryRoot, path), 'utf8');
@@ -110,8 +111,52 @@ test('the package notices include the third-party works shipped in each tarball'
   ]);
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], ['onmars theme fonts (SIL OFL 1.1)']);
   // Compiled Kimen sources only: their dependencies are installed, not bundled.
-  for (const name of ['@kimen/catalog', '@kimen/emitter', '@kimen/adapter-a2ui']) {
+  for (const name of [
+    '@kimen/catalog',
+    '@kimen/emitter',
+    '@kimen/adapter-a2ui',
+    '@kimen/react',
+    '@kimen/vue',
+  ]) {
     assert.deepEqual(PACKAGE_NOTICE_SECTIONS[name], []);
+  }
+  // The Angular bundle carries the helpers the Angular output target copies.
+  assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/angular'], [
+    '@stencil/angular-output-target (MIT)',
+  ]);
+});
+
+// The React and Vue wrappers import their output target's runtime from the
+// installed dependency; the Angular one compiles copies of its helpers into
+// the bundle it publishes.
+test('the wrapper builds bundle third-party code only where their notices say so', async () => {
+  const [react, vue, angular] = await Promise.all([
+    read('packages/react/src/ki-button.ts'),
+    read('packages/vue/src/ki-button.ts'),
+    read('packages/angular/src/directives/angular-component-lib/utils.ts'),
+  ]);
+  assert.match(react, /from '@stencil\/react-output-target\/runtime'/u);
+  assert.match(vue, /from '@stencil\/vue-output-target\/runtime'/u);
+  const target = join(
+    repositoryRoot,
+    'packages/elements/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts',
+  );
+  assert.equal(angular, await readFile(target, 'utf8'), 'the Angular helpers are a verbatim copy');
+});
+
+test('the Angular output target notice reproduces the licence the installed target ships with', async () => {
+  const [notice, licence] = await Promise.all([
+    read('NOTICE'),
+    read('packages/elements/node_modules/@stencil/angular-output-target/LICENSE.md'),
+  ]);
+  const section = noticeSections(notice).sections.get('@stencil/angular-output-target (MIT)');
+  assert.ok(section, 'the repository NOTICE has no Angular output target section');
+  const flattened = section.replaceAll(/\s+/gu, ' ');
+  for (const paragraph of licence.split(/\n\s*\n/u)) {
+    const expected = paragraph.replaceAll(/\s+/gu, ' ').trim();
+    if (expected !== '') {
+      assert.ok(flattened.includes(expected), `missing from the notice: ${expected}`);
+    }
   }
 });
 
@@ -141,6 +186,9 @@ for (const [name, directory] of [
   ['@kimen/adapter-a2ui', 'packages/adapter-a2ui'],
   ['@kimen/adapter-mcp-apps', 'packages/adapter-mcp-apps'],
   ['@kimen/mcp-server', 'packages/mcp-server'],
+  ['@kimen/react', 'packages/react'],
+  ['@kimen/vue', 'packages/vue'],
+  ['@kimen/angular', 'packages/angular'],
 ]) {
   test(`${name} carries the repository licence byte for byte`, async () => {
     const [rootLicence, packageLicence] = await Promise.all([
@@ -165,10 +213,15 @@ for (const [name, directory] of [
   });
 
   // npm always packs a LICENSE file; a NOTICE only travels when the manifest
-  // lists it.
+  // lists it. A package published from its build output lists no files: the
+  // candidate builder adds both to that output (scripts/release/stage-package.mjs).
   test(`${name} lists its NOTICE among the files it packs`, async () => {
     const manifest = JSON.parse(await read(`${directory}/package.json`));
 
-    assert.equal(manifest.files.includes('NOTICE'), true);
+    if (Object.hasOwn(builtPackageOutputs, name)) {
+      assert.equal(manifest.files, undefined);
+    } else {
+      assert.equal(manifest.files.includes('NOTICE'), true);
+    }
   });
 }

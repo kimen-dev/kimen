@@ -17,6 +17,9 @@ export const PACKAGE_DIRECTORIES = Object.freeze({
   '@kimen/adapter-a2ui': 'packages/adapter-a2ui',
   '@kimen/adapter-mcp-apps': 'packages/adapter-mcp-apps',
   '@kimen/mcp-server': 'packages/mcp-server',
+  '@kimen/react': 'packages/react',
+  '@kimen/vue': 'packages/vue',
+  '@kimen/angular': 'packages/angular',
 });
 
 export async function writePackageLegalFiles({ repositoryRoot }) {

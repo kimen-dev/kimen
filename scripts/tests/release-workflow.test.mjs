@@ -508,17 +508,54 @@ test('@spec:018-project-integrity-hardening S8 exact candidate consumer receives
   assert.match(browserJob, /--cache-dir "\$consumer_cache"/u);
 });
 
-test('S7 each release fence expects the three canonical packages and checks the installed MCP server', () => {
-  const scope = '["@kimen/elements", "@kimen/tokens", "@kimen/mcp-server"]';
+test('S7 each release fence expects its canonical packages and checks the installed MCP server', async () => {
+  const { releasePackages } = await import('../release/release-plan.mjs');
+  const list = (names) => `[${names.map((name) => `"${name}"`).join(', ')}]`;
+  // The browser consumer contract stays on the packages it installs in a page.
+  const consumerScope = list(['@kimen/elements', '@kimen/tokens', '@kimen/mcp-server']);
   const browser = readJob(releaseWorkflow, 'browser');
   const independent = readJob(releaseWorkflow, 'verify-candidate');
   const publish = readJob(releaseWorkflow, 'publish');
 
-  assert.ok(browser.includes(`const expectedPackages = ${scope};`));
+  assert.ok(browser.includes(`const expectedPackages = ${consumerScope};`));
   assert.ok(browser.includes('[...report.packages, verification.mcpServer]'));
-  assert.ok(publish.includes(`const expected = ${scope};`));
+  assert.ok(publish.includes(`const expected = ${list([...releasePackages.keys()])};`));
   assert.match(publish, /manifest\.packages\.length !== expected\.length/u);
   assert.match(independent, /node-version: 26/u);
   assert.match(independent, /node scripts\/release\/candidate-cli\.mjs verify/u);
   assert.doesNotMatch(independent, /registry\.npmjs\.org|id-token: write/u);
+});
+
+// The publisher re-reads every packed manifest from the exact bytes it is
+// about to publish, so a workspace: range that reached a tarball stops the
+// release there even though the candidate builder and verifiers refuse it.
+test('S7 the publisher refuses a packed manifest whose runtime dependencies carry a workspace range', () => {
+  const publish = readJob(releaseWorkflow, 'publish');
+  const check =
+    'if (["dependencies", "optionalDependencies", "peerDependencies"].some((field) => JSON.stringify(manifest[field] ?? {}).includes("workspace:"))) throw new Error("packed runtime dependencies must not carry workspace: ranges");';
+
+  assert.equal(occurrenceCount(publish, check), 1);
+  assert.ok(publish.indexOf(check) < publish.indexOf('npm publish "$package_path"'));
+  assert.doesNotMatch(publish, /actions\/checkout|pnpm install|npm (?:ci|install)/u);
+});
+
+// The clean-consumer smoke runs in validate-core, on the candidate it just
+// built and by its digest, before the candidate is uploaded; that job already
+// reaches the registry its third-party dependencies come from.
+test('S7 validate-core smokes the exact candidate in a clean consumer before uploading it', () => {
+  const validateCore = readJob(releaseWorkflow, 'validate-core');
+  const build = 'node scripts/release/candidate-cli.mjs build';
+  const smoke = 'node scripts/release/candidate-cli.mjs smoke';
+  const upload = 'name: Upload immutable candidate';
+
+  assert.equal(occurrenceCount(validateCore, smoke), 1);
+  assert.ok(validateCore.indexOf(build) < validateCore.indexOf(smoke));
+  assert.ok(validateCore.indexOf(smoke) < validateCore.indexOf(upload));
+  assert.match(
+    validateCore,
+    /^ {10}CANDIDATE_SHA256: \$\{\{ steps\.candidate\.outputs\.candidate-sha256 \}\}$/mu,
+  );
+  assert.match(validateCore, /--archive "\$RUNNER_TEMP\/release-candidate\/candidate\.tar"/u);
+  assert.match(validateCore, /--sha256 "\$CANDIDATE_SHA256"/u);
+  assert.match(validateCore, /^ {12}registry\.npmjs\.org:443$/mu);
 });

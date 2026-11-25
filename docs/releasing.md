@@ -1,34 +1,114 @@
 # Releasing Kimen
 
-Kimen publishes `@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server`
-from one immutable `release-candidate-v1` archive. Validation builds the
-bytes once. Browser jobs and the publisher consume that artifact.
-Versioning and GitHub writes happen in separate jobs before publication.
+Kimen publishes ten packages from one immutable `release-candidate-v1`
+archive. Validation builds the bytes once. Browser jobs and the publisher
+consume that artifact. Versioning and GitHub writes happen in separate jobs
+before publication.
 
-## v1 publication scope
+## Publication scope
 
-The first automated release, `v0.1.0`, publishes all three packages at a
-single fixed version. The candidate records `@kimen/elements` first,
-`@kimen/tokens` second and `@kimen/mcp-server` third.
+Every release publishes the ten packages at a single fixed version, in this
+order, which is also the order the candidate records them in:
 
-`@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui`,
-`@kimen/adapter-mcp-apps` and the framework wrappers `@kimen/react`,
-`@kimen/vue` and `@kimen/angular` are implemented in this repository but
-remain `private: true`. Their publication and versioning require a founder
-decision. A scope change updates the release-candidate contract, workflow
-tests and this document together.
+1. `@kimen/elements`
+2. `@kimen/tokens`
+3. `@kimen/mcp-server`
+4. `@kimen/catalog`
+5. `@kimen/emitter`
+6. `@kimen/adapter-a2ui`
+7. `@kimen/adapter-mcp-apps`
+8. `@kimen/react`
+9. `@kimen/vue`
+10. `@kimen/angular`
 
-**Internal-dependency rewrite (wrappers/adapters).** These packages depend on
-`@kimen/elements` or `@kimen/catalog` through the `workspace:*` protocol. The
-current pack path is `npm pack`, which — unlike `pnpm publish` — does **not**
-rewrite `workspace:` ranges, so a naive publish would ship `workspace:*`
-verbatim and fail the consumer install with `EUNSUPPORTEDPROTOCOL` (Angular's
-`ng-packagr` `dist/package.json` already carries the range). Before any of
-these publish, `build-candidate` must rewrite each `workspace:` range to the
-exact candidate version at pack time and the clean-consumer install smoke test
-(`scripts/tests/consumer-contract*`) must be extended to the new tarballs. The
-`publishable-workspace-protocol` infra test fails closed if a non-`private`
-package still carries a `workspace:` runtime range.
+`scripts/release/release-plan.mjs` (`releasePackages`) and `nx.json`
+(`release.projects`) declare the set. A package comes after every release
+package it needs at runtime, so a publication that stops partway never
+leaves a published package pointing at a missing one. The first three
+published `v0.1.0`; the generative UI packages (catalog, emitter and both
+adapters) and the framework wrappers join at the next release. A scope
+change updates the release-candidate contract, workflow tests and this
+document together. Every workspace package outside the set is
+`private: true`. That includes the unscoped `kimen` placeholder, because
+npm refuses that name (E403, "Package name too similar to existing package
+mime") and it can never be published under it.
+
+**Internal-dependency rewrite.** The emitter and both adapters depend on
+`@kimen/catalog`, and the three framework wrappers on `@kimen/elements`,
+through `workspace:*`. `npm pack`, unlike `pnpm publish`, does not rewrite
+`workspace:` ranges, so the candidate builder does it:
+
+- A release package may name another release package in `dependencies`,
+  `optionalDependencies` or `peerDependencies` only as exactly
+  `workspace:*`, and only one published before it. Any other `workspace:`
+  range, or one on a package outside the set, fails closed before anything
+  is packed (`releaseWorkspaceDependencies`).
+- Such a package is packed from a staged copy
+  (`scripts/release/stage-package.mjs`): what its `files` lists plus
+  `LICENSE` and `README.md`, with each `workspace:*` set to the exact
+  candidate version and `devDependencies` removed. A glob, an
+  out-of-package path or a symbolic link stops the build.
+- `@kimen/angular` is an Angular Package Format library: `ng-packagr`
+  writes the publishable package, with its own `package.json`, to
+  `packages/angular/dist`. The candidate is staged from that directory,
+  plus `LICENSE`, `NOTICE` and `README.md` from `packages/angular`. Its
+  name, version, `private`, licence, repository and runtime dependency
+  fields must equal the source manifest's, so a stale build stops the
+  release. The `workspace:*` range is rewritten as above.
+- A package without such a range (elements, tokens, the catalog) is packed
+  straight from its directory, so its bytes are what `npm pack` produces
+  there. The MCP server keeps its own staging.
+- After packing, the builder and every independent verifier re-read each
+  packed manifest: no runtime field may hold a `workspace:` string, and
+  every `@kimen/*` runtime dependency must be a package of the candidate at
+  exactly its version. The publisher repeats the `workspace:` check on the
+  bytes it is about to publish.
+
+`scripts/tests/publishable-workspace-protocol.test.mjs` fails closed when a
+release package carries any other `workspace:` runtime range, or a package
+outside the set that is not `private` carries one at all.
+
+**Clean-consumer smoke.** Right after it builds the candidate,
+`validate-core` installs the generative UI packages, with elements and
+tokens, from their tarballs into a fresh npm project: third-party
+dependencies such as `zod` and `@stencil/core` come from the registry and
+lifecycle scripts stay off. Each `@kimen/*` package must be installed
+exactly once, from its tarball. Then each package answers one DOM-free call
+in Node: `validateUiSpec` on a one-node spec, `catalogPrompt` and
+`uiSpecJsonSchema`, an A2UI adapter refusing an unsupported version, and the
+MCP Apps surface resource and the version it announces.
+
+The smoke then gives each framework wrapper a consumer of its own: the
+wrapper and elements from their tarballs, the framework from the registry
+at the exact versions the wrapper develops against (React and its types,
+Vue without the optional `vue-router`, Angular core, common, forms,
+platform-browser and RxJS). The workspace TypeScript compiler type-checks a
+one-component consumer that passes a typed prop and must reject a wrong
+one, and the workspace esbuild bundles it through the installed packages.
+The React and Vue wrappers are also imported in Node; Angular's partially
+compiled output needs the Angular compiler there, so it stops at the type
+check and the bundle. Run the smoke locally on a built candidate with:
+
+```sh
+node scripts/release/candidate-cli.mjs smoke --archive <candidate.tar> --sha256 <digest>
+```
+
+The browser consumer contract (`scripts/consumer-contract.mjs`) still covers
+elements and tokens in every engine.
+
+Each wrapper's `NOTICE` follows what its build contains. The React and Vue
+wrappers import their Stencil output target's runtime as an installed
+dependency and carry the header alone. The Angular bundle compiles in the
+component helpers and value accessors that `@stencil/angular-output-target`
+copies into its sources, so its `NOTICE` carries that MIT notice.
+
+**Versioned adapter files.** Each protocol adapter states its release in
+its `COMPAT.md` matrix, and the MCP Apps surface announces it as
+`KIMEN_APP_INFO.version`. The release pull request rewrites the adapter
+version in `packages/adapter-a2ui/COMPAT.md`,
+`packages/adapter-mcp-apps/COMPAT.md` and
+`packages/adapter-mcp-apps/src/bridge.ts` to the package version, and
+tagging verifies them (`adapterVersionPaths`).
 
 ## Modes
 
@@ -36,7 +116,7 @@ package still carries a `workspace:` runtime range.
 |---|---|---|---|---|
 | Dry run | Manual `release` workflow dispatch at the revision to validate | Current exact versions; `private: true` is accepted | Read-only repository token; no OIDC publisher runs | Core, candidate, independent verification, Chromium/Firefox/WebKit (four shards each) and the capability binding all execute; nothing is published |
 | Nightly dry run | The `release` schedule, 05:41 UTC, on the latest commit of `main` | As for a dry run | As for a dry run; `publish` also requires a tag ref, and GitHub runs a schedule on the default branch only | The same jobs as a dry run; nothing is published |
-| Release | The release App pushes an annotated `vX.Y.Z` tag after the release PR is merged | All three packages are version `X.Y.Z`, `private: false`, and carry exact repository metadata | Only `publish`, after every validation job, receives `id-token: write` in the protected `npm` environment | Missing versions publish; byte-identical existing versions are skipped |
+| Release | The release App pushes an annotated `vX.Y.Z` tag after the release PR is merged | All ten packages are version `X.Y.Z`, `private: false`, and carry exact repository metadata | Only `publish`, after every validation job, receives `id-token: write` in the protected `npm` environment | Missing versions publish; byte-identical existing versions are skipped |
 
 Dry run never creates tags, changes versions or carries dormant publication
 authority. A non-tag dispatch always emits a manifest whose `mode` is
@@ -58,7 +138,8 @@ night blocks no pull request and no merge group.
   according to that user's Actions notification settings.
 - The failing job names the failing part. `browser (webkit 3/4)` is the third
   WebKit shard of the browser gate or its consumer check. `validate-core`
-  covers the core gates, packaging and the candidate build. A failed browser
+  covers the core gates, packaging, the candidate build and its
+  clean-consumer smoke. A failed browser
   shard skips `capability-claims`, because it needs every shard.
   `gh run view <run-id> --log-failed` prints the failing steps.
 - The `ci` nightly tests the same `main` in Chromium at 04:23 UTC. If it
@@ -80,10 +161,10 @@ night blocks no pull request and no merge group.
    raises the minor version before `1.0.0` and the major version thereafter.
 2. For a release-worthy change, the dedicated App opens or refreshes one
    pull request on `release/next`, titled `chore(release): vX.Y.Z`. The PR
-   sets all three package versions and flips `private: false` where needed.
+   sets all ten package versions and flips `private: false` where needed.
    It writes the same version into the three agent plugin manifests under
    `plugins/kimen/`, because an installed plugin refreshes only when its
-   version moves. It preserves the required `repository` metadata. It adds a dated workspace changelog
+   version moves, and into the adapter versioned files. It preserves the required `repository` metadata. It adds a dated workspace changelog
    entry that includes the existing `[Unreleased]` notes on the first
    automated release. The normal generators refresh the API index and the
    catalog's embedded elements version, then rebuild the MCP binary with the
@@ -93,7 +174,8 @@ night blocks no pull request and no merge group.
    keeping its title as the commit title: `release-tag.yml` only runs for a
    push whose commit title starts with `chore(release): v`.
    `release-tag.yml` verifies that the PR merged at the exact pushed commit
-   and that all three package versions and the plugin manifests match its
+   and that all ten package versions, the plugin manifests and the
+   adapter versioned files match its
    title. It pushes an annotated `vX.Y.Z` tag on that commit and creates the
    GitHub Release from that version's changelog entry. A retry can complete missing GitHub Release
    metadata for a matching tag. A conflicting tag fails the run and keeps
@@ -126,16 +208,20 @@ scripts. The publisher runner must provide npm `>=11.5.1`.
 
 Complete these steps before merging the first release PR.
 
-1. Bootstrap all three npm package names. Trusted publishing cannot create a
-   package. In a local checkout, keep `0.0.0`, set `private: false` on
-   `@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server`, and
-   build and validate their tarballs with the local dry-run candidate CLI.
-   Extract the three validated tarballs from `candidate.tar`. Manually publish
-   each tarball using your npm account with
-   `npm publish <tarball> --access public --tag bootstrap --ignore-scripts`.
-   The bootstrap versions reserve the names. The first automated release
-   sets `latest` to `0.1.0`. Keep these local manifest
-   edits out of `main`.
+1. Bootstrap every npm package name. Trusted publishing cannot create a
+   package. For a name that does not exist yet, publish a name-reservation
+   placeholder from your npm account: version `0.0.0`, a `package.json`
+   with the package name, the repository metadata and
+   `"publishConfig": { "tag": "bootstrap" }`, plus a README saying it
+   reserves the name (what `@kimen/elements@0.0.0` is: three files).
+   Publish it with
+   `npm publish <directory> --access public --tag bootstrap --ignore-scripts`.
+   `@kimen/elements`, `@kimen/tokens` and `@kimen/mcp-server` were reserved
+   before `v0.1.0`. `@kimen/catalog`, `@kimen/emitter`,
+   `@kimen/adapter-a2ui`, `@kimen/adapter-mcp-apps`, `@kimen/react`,
+   `@kimen/vue` and `@kimen/angular` were reserved by 2026-11-25. The
+   first automated release that includes a package sets its `latest` tag.
+   The publisher refuses a package whose name does not exist yet.
 2. Create and install a dedicated GitHub App on `kimen-dev/kimen` with
    repository permissions **Contents: Read and write** and **Pull requests:
    Read and write**. Store its client ID as the `RELEASE_APP_ID` repository
@@ -143,11 +229,13 @@ Complete these steps before merging the first release PR.
 3. Create the GitHub environment `npm` and choose its deployment policy.
    Require founder approval to review each publication, or leave approval
    disabled for fully automatic publication after the release PR merges.
-4. Configure a separate npm trusted publisher for each of the three names.
+4. Configure a separate npm trusted publisher for each of the ten names.
    Use repository `kimen-dev/kimen`, workflow `release.yml` and environment
-   `npm`. Do this last, when the first release PR is green and ready to merge.
-   npm expires a new configuration after two days without a successful
-   publication. Delete and recreate an expired configuration.
+   `npm`. Do this last, when the first release PR that includes the name is
+   green and ready to merge: the seven new names need theirs before the next
+   release PR is merged. npm expires a new configuration after two
+   days without a successful publication. Delete and recreate an expired
+   configuration.
 
 GitHub Actions uses OIDC for npm. Keep `NPM_TOKEN` and `NODE_AUTH_TOKEN` out
 of Actions. For the external steps, see the
@@ -157,7 +245,8 @@ of Actions. For the external steps, see the
 
 `validate-core` has `contents: read`, runs the frozen deterministic core gates
 (`scripts/gates/gates-core.sh`) and the packaging contract, packs the exact
-three packages and uploads one non-overwriting artifact. It exports the GitHub
+ten packages, smokes them in clean consumers and uploads one
+non-overwriting artifact. It exports the GitHub
 artifact ID/digest plus an independently computed SHA-256 of `candidate.tar`,
 and keeps its current-run gate evidence as a separate artifact.
 
@@ -185,14 +274,17 @@ tarball offline in a temporary npm project, then launch the installed
 `kimen-mcp` bin. A legacy MCP handshake must return the candidate version
 and list the five Kimen tools. They also verify that the packed NOTICE covers
 the npm code recorded in both the server bundle and its embedded browser
-surface. The release builder omits the MCP package's development dependencies
-from the packed manifest.
+surface. The release builder omits the development dependencies of the MCP package
+and of every staged package from the packed manifest.
 
 `publish` needs `validate-core`, every browser shard, `verify-candidate` and
 `capability-claims`; it runs only on a tag ref, for release manifests. The
 publisher has no checkout and performs no dependency install, build,
-versioning or repository script execution. Its only elevated permission is short-lived OIDC
-(`id-token: write`) in the protected `npm` environment.
+versioning or repository script execution. Before each publication it checks
+the packed manifest's name, version, `private: false` and repository, and
+refuses publish lifecycle scripts and any `workspace:` runtime range. Its
+only elevated permission is short-lived OIDC (`id-token: write`) in the
+protected `npm` environment.
 
 Every owned job uses a full-SHA-pinned action, explicit job permissions and
 blocked egress with a declared endpoint allowlist. The publisher's list is

@@ -46,10 +46,30 @@ test('S1: packaging invokes publint once per publishable package and checks ever
       'packages/adapter-a2ui',
       'packages/adapter-mcp-apps',
       'packages/mcp-server',
+      'packages/react',
+      'packages/vue',
+      'packages/angular/dist',
     ],
   );
+  // Each wrapper is checked as it packs, at its root and one per-component subpath.
+  for (const directory of ['packages/react', 'packages/vue']) {
+    assert.ok(
+      calls.some(
+        ({ args }) => args[1] === 'attw' && args[3] === directory && args.includes('./ki-button'),
+      ),
+      directory,
+    );
+  }
+  assert.ok(
+    calls.some(
+      ({ args }) => args.join(' ') === 'exec attw --pack packages/angular/dist --profile esm-only',
+    ),
+  );
   const componentAttw = calls.filter(
-    ({ args }) => args[1] === 'attw' && args.some((arg) => arg.startsWith('./ki-')),
+    ({ args }) =>
+      args[1] === 'attw' &&
+      args[3] === 'packages/elements' &&
+      args.some((arg) => arg.startsWith('./ki-')),
   );
   assert.equal(componentAttw.length, 1);
   const expectedSubpaths = (

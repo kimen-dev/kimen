@@ -46,7 +46,14 @@
     "projects": [
       "@kimen/elements",
       "@kimen/tokens",
-      "@kimen/mcp-server"
+      "@kimen/mcp-server",
+      "@kimen/catalog",
+      "@kimen/emitter",
+      "@kimen/adapter-a2ui",
+      "@kimen/adapter-mcp-apps",
+      "@kimen/react",
+      "@kimen/vue",
+      "@kimen/angular"
     ],
     "projectsRelationship": "fixed",
     "releaseTag": {
