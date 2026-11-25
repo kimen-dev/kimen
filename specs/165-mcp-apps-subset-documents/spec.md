@@ -111,7 +111,7 @@ name the same surface.
 - **An empty subset** fails generation, the way an empty catalog definition
   fails today (spec 032, `empty-definition`).
 - **Native primitives** (spec 037) need no definition. Every effective subset
-  includes them (Implementation notes).
+  includes them (Implementation decisions).
 - **The waiting placeholder** (spec 163) is a `ki-skeleton`. Every document
   carries it as the document's own part, and a spec may name `ki-skeleton`
   only when the subset names it (FR-002, S7).
@@ -119,7 +119,7 @@ name the same surface.
   A host may cache both.
 - **A host that cached an older document under the same URI** (the server
   changed the subset but kept the name) refuses specs that use a newly added
-  component. This fails closed. Open question Q7.
+  component. This fails closed (Q7).
 - **Protocol behaviour** is the same in every document: the handshake,
   bridge, outbound allowlist, relay (spec 040), live updates (spec 157),
   action-rate budget (spec 162) and waiting state (spec 163).
@@ -425,8 +425,13 @@ Security, outside the families: S5 (content policy).
 
 ## Resolved questions
 
-Answered by the founder's approval of 2026-11-25 (Status), except where a
-default is marked as pending confirmation.
+Q1 to Q4 and Q6 were answered by the founder's approval of 2026-11-25
+(Status). On the same day the founder confirmed Q5, Q7, Q8 and the two
+implementation decisions below, all of which had been recorded as defaults
+pending confirmation ("las specs que faltan por aprobar las apruebo"). The
+founder also approved a ceiling for the package budget ("Sí, apruebo"), in
+answer to: "¿Apruebas el techo de 696.320 / 2.932.736 B, recalculado tras
+#634 y #636?"
 
 1. **Q1. Who defines subsets?** Kimen publishes named profiles first (D9).
    Server authors may define their own subsets later, in another spec.
@@ -436,20 +441,20 @@ default is marked as pending confirmation.
 3. **Q3. Composites.** Their parts come automatically (D5; S2 as written).
 4. **Q4. Tokens.** Every document keeps the full token stylesheet for now.
 5. **Q5. Install weight.** The profiles ship in this package as subpath
-   exports, as the approval instructs. The package's size budget does not
-   cover them, and raising it is the founder's decision (Constitutional
-   Surface).
+   exports. The package's budget ceiling is 696,320 B packed and 2,932,736 B
+   unpacked. Once #634 (catalog) and #636 (elements runtime) land, the budget
+   is set to the measured size plus 3 %, never above that ceiling.
 6. **Q6. `kimen-mcp`.** It adopts the profiles in another spec. This one
    leaves it on the full document.
-7. **Q7. A subset that changes under the same name.** *Default, pending
-   confirmation:* the server keeps choosing the name and a profile is served
-   at `ui://kimen/<name>`. A changed profile keeps its URI, and a host that
-   cached the older document fails closed for added components.
-8. **Q8. Real hosts.** *Default, pending confirmation:* the Claude desktop
-   host test of 2026-11-24 runs with two Kimen resources before the
-   capability claim moves. It is not part of the implementing PR.
+7. **Q7. A subset that changes under the same name.** The server keeps
+   choosing the name and a profile is served at `ui://kimen/<name>`. A changed
+   profile keeps its URI, and a host that cached the older document fails
+   closed for added components.
+8. **Q8. Real hosts.** The Claude desktop host test of 2026-11-24 runs with
+   two Kimen resources before the capability claim moves. It is not part of
+   the implementing PR.
 
-### Implementation notes, pending confirmation
+### Implementation decisions (confirmed 2026-11-25)
 
 - **Native primitives are in every profile.** The catalog's native-primitive
   code reads Kimen's own `div` entry when it loads, so a built-in catalog
