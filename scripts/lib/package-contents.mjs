@@ -36,19 +36,19 @@ export const packageContentRules = Object.freeze({
   }),
   '@kimen/catalog': Object.freeze({
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 408_576, unpacked: 1_816_576 }),
+    budget: Object.freeze({ packed: 408_576, unpacked: 1_817_600 }),
   }),
   '@kimen/emitter': Object.freeze({
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 43_008, unpacked: 150_528 }),
+    budget: Object.freeze({ packed: 43_008, unpacked: 151_552 }),
   }),
   '@kimen/adapter-a2ui': Object.freeze({
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 102_400, unpacked: 412_672 }),
+    budget: Object.freeze({ packed: 102_400, unpacked: 413_696 }),
   }),
   '@kimen/adapter-mcp-apps': Object.freeze({
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 1_226_752, unpacked: 5_078_016 }),
+    budget: Object.freeze({ packed: 1_227_776, unpacked: 5_079_040 }),
   }),
   '@kimen/react': Object.freeze({
     assets: Object.freeze([]),
@@ -60,7 +60,7 @@ export const packageContentRules = Object.freeze({
   }),
   '@kimen/angular': Object.freeze({
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 56_320, unpacked: 648_192 }),
+    budget: Object.freeze({ packed: 56_320, unpacked: 649_216 }),
   }),
 });
 

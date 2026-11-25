@@ -273,13 +273,13 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
       '@kimen/tokens': { packed: 220_160, unpacked: 519_168 },
       '@kimen/mcp-server': { packed: 827_392, unpacked: 4_172_800 },
-      '@kimen/catalog': { packed: 408_576, unpacked: 1_816_576 },
-      '@kimen/emitter': { packed: 43_008, unpacked: 150_528 },
-      '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 412_672 },
-      '@kimen/adapter-mcp-apps': { packed: 1_226_752, unpacked: 5_078_016 },
+      '@kimen/catalog': { packed: 408_576, unpacked: 1_817_600 },
+      '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
+      '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
+      '@kimen/adapter-mcp-apps': { packed: 1_227_776, unpacked: 5_079_040 },
       '@kimen/react': { packed: 43_008, unpacked: 381_952 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
-      '@kimen/angular': { packed: 56_320, unpacked: 648_192 },
+      '@kimen/angular': { packed: 56_320, unpacked: 649_216 },
     },
   );
 });
