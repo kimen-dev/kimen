@@ -1253,11 +1253,29 @@
                 ],
                 "signature": "export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger';"
               },
+              "TopNavScrollBehavior": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type TopNavScrollBehavior = 'none' | 'elevate' | 'collapse';"
+              },
               "TopNavSize": {
                 "kinds": [
                   "type"
                 ],
                 "signature": "export type TopNavSize = 'sm' | 'md' | 'lg' | 'xl';"
+              },
+              "TopNavTitleAlign": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type TopNavTitleAlign = 'start' | 'center';"
+              },
+              "TopNavVariant": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type TopNavVariant = 'header' | 'app-bar';"
               }
             },
             "target": "./dist/components/index.js"
@@ -2259,11 +2277,29 @@
                 ],
                 "signature": "export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger';"
               },
+              "TopNavScrollBehavior": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type TopNavScrollBehavior = 'none' | 'elevate' | 'collapse';"
+              },
               "TopNavSize": {
                 "kinds": [
                   "type"
                 ],
                 "signature": "export type TopNavSize = 'sm' | 'md' | 'lg' | 'xl';"
+              },
+              "TopNavTitleAlign": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type TopNavTitleAlign = 'start' | 'center';"
+              },
+              "TopNavVariant": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type TopNavVariant = 'header' | 'app-bar';"
               },
               "applyPolyfills": {
                 "kinds": [
@@ -87710,5 +87746,5 @@
       }
     }
   },
-  "surfaceSha256": "a2a00f13307cde280f625851df1169d60a37109f4cc5d8730438bf0bd281a48d"
+  "surfaceSha256": "ffca7c18f9640da55d34926b38aceb90f776bc92542785c6a8939061babeebc3"
 }
