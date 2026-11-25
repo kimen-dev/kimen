@@ -393,6 +393,9 @@ test('S7 each wrapper consumer installs its framework at the wrapper development
   const vue = WRAPPER_CONSUMERS.find(({ name }) => name === '@kimen/vue');
   assert.deepEqual(vue.frameworks, ['vue']);
   assert.deepEqual(vue.absent, ['vue-router']);
+  // @kimen/react ships its output target's runtime instead of depending on it.
+  const react = WRAPPER_CONSUMERS.find(({ name }) => name === '@kimen/react');
+  assert.deepEqual(react.absent, ['@stencil/react-output-target', 'ts-morph']);
 });
 
 // Offline: stub packages, the real workspace compiler, bundler and Node.
