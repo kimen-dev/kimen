@@ -107,6 +107,22 @@ The release is blocked by this regression.
 The npm tarball shrinks from 2,645,926 to 1,863,796 B. Its unpacked contents
 shrink from 12,306,230 to 7,966,374 B.
 
+### Shared shadow styles on top of the per-component loader
+
+The same Chromium measurement, against `c082ac07`. All figures are bytes
+Brotli across the JavaScript files the page requested.
+
+| Page | esbuild main | esbuild shared styles | Vite main | Vite shared styles |
+|---|---:|---:|---:|---:|
+| Loader alone | 1,948 | 1,929 | 4,576 | 4,606 |
+| One `ki-button` | 12,875 | 12,875 | 15,097 | 15,093 |
+| Ten gate components | 53,620 | 52,041 | 55,583 | 54,003 |
+| All 107 | 256,725 | 252,446 | 256,724 | 252,506 |
+
+Vite's loader entry grows by 30 B Brotli. The one-button page grows by
+60 B raw in esbuild and 118 B raw in Vite. These are release blockers for
+the shared-styles change.
+
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
 ```gherkin
