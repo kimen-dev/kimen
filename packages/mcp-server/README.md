@@ -27,7 +27,7 @@ With Node.js 22 or later, use this command to install and start the stdio
 server:
 
 ```bash
-npx -y -p @kimen/mcp-server@0.3.0 kimen-mcp
+npx -y -p @kimen/mcp-server@0.4.0 kimen-mcp
 ```
 
 ## Run from the repository

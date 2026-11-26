@@ -7,6 +7,27 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [0.4.0] - 2026-11-26
+
+### Added
+
+- **adapter-mcp-apps:** publish form and data surface documents (spec 165) ([#629](https://github.com/kimen-dev/kimen/pull/629))
+- **tokens:** core and per-component token sheets (spec 166) ([#630](https://github.com/kimen-dev/kimen/pull/630))
+
+### Changed
+
+- **catalog:** parse with zod/mini and keep guidance prose out of the GenUI host ([#634](https://github.com/kimen-dev/kimen/pull/634))
+- **elements:** compile the Stencil runtime into the per-component modules ([#636](https://github.com/kimen-dev/kimen/pull/636))
+- **react:** ship the output target runtime instead of its build tooling ([#633](https://github.com/kimen-dev/kimen/pull/633))
+
+### Fixed
+
+- **adapter-mcp-apps:** declare SURFACE_DOCUMENT as string, not as its own text ([#628](https://github.com/kimen-dev/kimen/pull/628))
+- **deps:** update dependency astro to v7.4.13 ([#637](https://github.com/kimen-dev/kimen/pull/637))
+- **deps:** update dependency @anthropic-ai/claude-code to v2.1.328 ([#641](https://github.com/kimen-dev/kimen/pull/641))
+- **elements:** bundle the lazy loader with Vite and esbuild ([#632](https://github.com/kimen-dev/kimen/pull/632))
+- **elements:** export the ki-top-nav types its declarations use ([#638](https://github.com/kimen-dev/kimen/pull/638))
+
 ## [0.3.0] - 2026-11-25
 
 ### Changed
