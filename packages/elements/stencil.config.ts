@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { angularOutputTarget, type ValueAccessorConfig } from '@stencil/angular-output-target';
 import type { Config } from '@stencil/core';
+import { parseFlags } from '@stencil/core/cli';
 import { reactOutputTarget } from '@stencil/react-output-target';
 import { vueOutputTarget } from '@stencil/vue-output-target';
 
@@ -9,10 +10,16 @@ import { compactButtonPalette } from './scripts/compact-button-palette';
 import { componentChunkNames } from './scripts/component-chunk-names.mjs';
 import { readComponentFormBindings } from './scripts/component-metadata.mjs';
 import { glyphChunks } from './scripts/glyph-chunks';
+import { shortVdomKeys } from './scripts/short-vdom-keys.mjs';
 
 // Form controls re-dispatch native input/change events across the shadow
 // boundary. The component manifest selects the wrapper binding for its prop.
 const formValueBindings = readComponentFormBindings(resolve(__dirname, 'src/components'));
+
+// Stencil's CLI defaults to production and gives --prod precedence over --dev.
+// HMR can diff against the previous build's VNodes, where the same ordinal
+// short key may have belonged to another element.
+const { dev, prod } = parseFlags(process.argv.slice(2));
 
 // Kimen elements build (constitution Art. I, IV).
 // docs-json output feeds the Art. I pipeline: docs-json → CEM → catalog → llms.txt.
@@ -27,7 +34,9 @@ export const config: Config = {
   tsconfig: 'tsconfig.stencil.json',
   // Glyph chunks get the prefix package.json `sideEffects` declares. The
   // plugin resolves the glyph modules' registry import, so it runs before
-  // Stencil's node resolution.
+  // Stencil's node resolution. After Stencil's transforms, the button
+  // palette is compacted and 40-character vDOM keys are shortened in
+  // both production builds.
   rollupPlugins: {
     before: [
       // Stencil's runtime reads `attr="false"` as false on every component,
@@ -37,7 +46,7 @@ export const config: Config = {
       componentChunkNames,
       glyphChunks(resolve(__dirname, 'icons'), resolve(__dirname, 'src/utils/icon-registry.mjs')),
     ],
-    after: [compactButtonPalette],
+    after: dev && !prod ? [compactButtonPalette] : [compactButtonPalette, shortVdomKeys],
   },
   outputTargets: [
     // Retain the browseable site build (dist/kimen) and declarations, including

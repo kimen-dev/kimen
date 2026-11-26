@@ -40,9 +40,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['generated/custom-elements.json', 'llms.txt', 'llms/']),
-    // Spec 167 removes dist/esm. The package measured 1,874,953 B packed
-    // and 7,978,410 B unpacked; each limit adds 3% headroom.
-    budget: Object.freeze({ packed: 1_931_202, unpacked: 8_217_763 }),
+    // Spec 167 removes dist/esm. After short vDOM keys the package measures
+    // 1,863,796 B packed and 7,966,374 B unpacked. Both limits add 3 %.
+    budget: Object.freeze({ packed: 1_919_710, unpacked: 8_205_366 }),
   }),
   '@kimen/tokens': Object.freeze({
     mapsEveryModule: false,
@@ -57,7 +57,8 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
-    budget: Object.freeze({ packed: 659_456, unpacked: 3_331_072 }),
+    // Short vDOM keys reduced this to 625,652 / 3,203,759 B, plus 3 %.
+    budget: Object.freeze({ packed: 644_422, unpacked: 3_299_872 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,
@@ -89,11 +90,8 @@ export const packageContentRules = Object.freeze({
       'dist/generated/surface-profile-form.js',
     ]),
     assets: Object.freeze([]),
-    // Spec 165 adds the «form» and «data» profile documents. The founder
-    // approved 696,320 / 2,932,736 B as a ceiling on 2026-11-25 ("Sí,
-    // apruebo"), to be re-measured once #634 and #636 landed: 509,550 /
-    // 2,307,112 B on 2026-11-26, plus about 3 %.
-    budget: Object.freeze({ packed: 525_312, unpacked: 2_376_704 }),
+    // Short vDOM keys reduced this to 489,805 / 2,239,840 B, plus 3 %.
+    budget: Object.freeze({ packed: 504_500, unpacked: 2_307_036 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,

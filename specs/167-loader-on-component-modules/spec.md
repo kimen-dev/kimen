@@ -91,21 +91,21 @@ Only `exclude` affects registration among the existing loader options.
 ## Measured weight
 
 Brotli quality 11, summed across every JavaScript file Chromium requested.
-Main is `955eda0d`. Repeat with
+Main is `c42f5518`. Repeat with
 `node scripts/measure-loader.mjs <elements-tarball>`.
 
 | Page | esbuild main | esbuild branch | Vite main | Vite branch |
 |---|---:|---:|---:|---:|
-| Loader alone | 16,269 B | 1,928 B | 18,617 B | 4,589 B |
-| One `ki-button` | 19,929 B | 12,875 B | 22,304 B | 15,099 B |
-| Ten gate components | 59,844 B | 54,522 B | 62,401 B | 56,432 B |
-| All 107 | 261,253 B | 265,816 B | 264,687 B | 265,912 B |
+| Loader alone | 16,295 B | 1,948 B | 18,610 B | 4,576 B |
+| One `ki-button` | 19,959 B | 12,875 B | 22,291 B | 15,097 B |
+| Ten gate components | 59,015 B | 53,620 B | 61,585 B | 55,583 B |
+| All 107 | 252,292 B | 256,725 B | 255,536 B | 256,724 B |
 
-The all-107 page exceeds main by 4,563 B in esbuild and 1,225 B in Vite.
+The all-107 page exceeds main by 4,433 B in esbuild and 1,188 B in Vite.
 The release is blocked by this regression.
 
-The npm tarball shrinks from 2,658,736 to 1,875,151 B. Its unpacked contents
-shrink from 12,331,612 to 7,979,064 B.
+The npm tarball shrinks from 2,645,926 to 1,863,796 B. Its unpacked contents
+shrink from 12,306,230 to 7,966,374 B.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
