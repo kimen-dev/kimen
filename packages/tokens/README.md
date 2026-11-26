@@ -340,9 +340,13 @@ import '@kimen/tokens/css/core'; // with your tag sheets, or '@kimen/tokens/css'
 import '@kimen/tokens/css/onmars-fonts.css';
 ```
 
-The font stylesheet bundles the upright Latin variable faces for Instrument
-Sans (body) and Newsreader (display). Earlier onmars tokens name Inter and
-use their own fallback stack. Keep your Inter source with those versions.
+The font stylesheet bundles upright Latin Instrument Sans (body, weights
+400–700) and Newsreader (display, weight 500). Newsreader retains automatic
+optical sizing across its 6–72 axis. If your CSS requests a different weight,
+the browser can use the weight-500 face, synthesize a heavier weight, or use a
+fallback. Provide your own Newsreader faces if you need other designed weights.
+Earlier onmars tokens name Inter and use their own fallback stack. Keep your
+Inter source with those versions.
 
 To use the bundled metric-adjusted faces, put the aliases after the web
 fonts in your stack. Apply the overrides to the onmars theme root and load

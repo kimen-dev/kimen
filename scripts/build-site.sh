@@ -53,7 +53,7 @@ find site -maxdepth 1 -type f -exec cp {} "$OUT/" \;
 cp -R site/playground/. "$OUT/playground/"
 cp -R site/privacy/. "$OUT/privacy/"
 cp -R site/assets/fonts/. "$OUT/assets/fonts/"
-cp packages/tokens/fonts/{InstrumentSans,Newsreader}{Variable.woff2,-OFL.txt} "$OUT/assets/fonts/"
+cp packages/tokens/fonts/{InstrumentSansVariable.woff2,InstrumentSans-OFL.txt,Newsreader-OFL.txt} "$OUT/assets/fonts/"
 cp packages/elements/browser-tests/visual/fonts/RobotoVariable.woff2 "$OUT/assets/fonts/"
 cp packages/tokens/dist/css/tokens.css packages/tokens/dist/css/tokens.material3.css "$OUT/assets/tokens/"
 cp -R packages/elements/dist/kimen "$OUT/assets/elements/kimen"

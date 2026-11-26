@@ -288,9 +288,8 @@ test('elements publishes no collection, CommonJS or CDN build', async () => {
 });
 
 // The release candidate refuses a tarball over its package budget
-// (scripts/lib/package-contents.mjs). The bases are the sizes measured on
-// 2026-11-25 plus about 3 %; raising one needs the founder's approval, so it
-// changes here and there together.
+// (scripts/lib/package-contents.mjs). These limits pin the measured sizes and
+// their package-specific headroom. Any changes go in both files.
 test('each release package has its pinned tarball and unpacked size budget', () => {
   assert.deepEqual(
     Object.fromEntries(
@@ -298,8 +297,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
     ),
     {
       '@kimen/elements': { packed: 2_725_235, unpacked: 12_675_417 },
-      // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
-      '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
+      // Rebased for Newsreader at weight 500.
+      '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
       '@kimen/mcp-server': { packed: 644_422, unpacked: 3_299_872 },
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },

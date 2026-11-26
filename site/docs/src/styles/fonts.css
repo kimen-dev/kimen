@@ -14,7 +14,7 @@
   font-style: normal;
   font-weight: 200 800;
   font-display: swap;
-  src: url("../../../../packages/tokens/fonts/NewsreaderVariable.woff2") format("woff2");
+  src: url("../../../assets/fonts/NewsreaderVariable.woff2") format("woff2");
 }
 
 @font-face {
