@@ -58,8 +58,10 @@ not released yet, link it from a repository build; see
 Then, once per page or app entry point:
 
 ```ts
-import '@kimen/tokens/css';        // required: the theme, light + dark
-import '@kimen/tokens/css/base';   // page background, text colour, body font, layout before registration
+import '@kimen/tokens/css/core';       // required: the theme, light + dark
+import '@kimen/tokens/css/ki-button';  // required: one sheet per ki-* tag the page uses
+import '@kimen/tokens/css/ki-input';
+import '@kimen/tokens/css/base';       // page background, text colour, body font, layout before registration
 
 // Register only what you use (tree-shakable)…
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
@@ -70,29 +72,32 @@ import { defineCustomElements } from '@kimen/elements/loader';
 defineCustomElements();
 ```
 
-- The token stylesheet is not optional styling: without `@kimen/tokens/css`
-  the components have no appearance. Load it once, before the components
+- The token stylesheets are not optional styling: without them the
+  components have no appearance. Load them once, before the components
   paint.
-- **The light option.** A page that uses a few components can load less:
-  `@kimen/tokens/css/core` once, instead of `@kimen/tokens/css`, plus one
-  sheet per tag it uses, named like the element import
-  (`@kimen/tokens/css/ki-button` beside `@kimen/elements/ki-button`). A tag's
-  sheet already carries the tokens of the components that tag renders, so
-  you never add sheets for those; you add one for every `ki-*` tag your own
-  markup uses, slotted ones included. A tag without its sheet paints
-  silently wrong. A page with one `ki-button` drops from about 20.7 KB to
-  8.1 KB of token CSS (brotli). With many components, keep the full sheet.
+- **One token sheet per tag.** The core carries every token but the
+  component ones. Each `ki-*` tag the page uses needs its own sheet, named
+  like the element import (`@kimen/tokens/css/ki-button` beside
+  `@kimen/elements/ki-button`). A tag's sheet already carries the tokens of
+  the components that tag renders, so you never add sheets for those; you
+  add one for every `ki-*` tag your own markup uses, slotted ones included
+  (`ki-tab` and `ki-tab-panel` inside `ki-tabs`). A tag without its sheet
+  paints silently wrong.
+- **The simple alternative: the full sheet.** `@kimen/tokens/css` in place
+  of the core and the tag sheets declares every token in one stylesheet.
+  Use it when the page uses most of the catalog or cannot list its tags in
+  advance. It costs more: a page with one `ki-button` ships about 8.1 KB of
+  token CSS with the core and its sheet, and 20.7 KB with the full sheet
+  (brotli).
 
   ```ts
-  import '@kimen/tokens/css/core';
-  import '@kimen/tokens/css/ki-button';
-  import '@kimen/tokens/css/ki-input';
+  import '@kimen/tokens/css';
   import '@kimen/tokens/css/base';
   ```
 
-  Overrides work the same way. Load your own `:root` or theme-root token
-  overrides after the core. A tag sheet never beats them, even when a
-  bundler loads it later.
+- Overrides work the same way with either. Load your own `:root` or
+  theme-root token overrides after the core. A tag sheet never beats them,
+  even when a bundler loads it later.
 - Registration is client-side. In server-rendered pages the tags arrive as
   markup and upgrade when the registration code runs. Until then an
   unregistered tag is an inline box, so the labels of group items run
@@ -215,9 +220,9 @@ to render or checks a `ki-alert`, read `references/testing.md`.
 
 - [ ] Every `ki-*` tag you used is registered (subpath or loader) and every
       icon name is imported.
-- [ ] `@kimen/tokens/css` loads once, before first paint, or, for the light
-      option, `@kimen/tokens/css/core` plus the sheet of every `ki-*` tag
-      the page's markup uses.
+- [ ] `@kimen/tokens/css/core` loads once, before first paint, with the
+      sheet of every `ki-*` tag the page's markup uses, or the full
+      `@kimen/tokens/css` in place of both.
 - [ ] Every attribute, slot and event name was read from the contract, not
       guessed; enum values are spelled as listed.
 - [ ] Every control has an accessible name; one primary action per view.

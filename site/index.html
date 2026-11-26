@@ -560,7 +560,8 @@
                     data-ki-color-scheme="dark"
                   ><code><i class="cm">// pnpm add @kimen/elements @kimen/tokens</i>
 <i class="kw">import</i> { defineCustomElement } <i class="kw">from</i> <i class="s">'@kimen/elements/ki-button'</i>;
-<i class="kw">import</i> <i class="s">'@kimen/tokens/css'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css/core'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css/ki-button'</i>;
 
 defineCustomElement();
 
@@ -573,7 +574,9 @@ defineCustomElement();
                     data-ki-color-scheme="dark"
                   ><code><i class="cm">// pnpm add @kimen/react @kimen/tokens</i>
 <i class="kw">import</i> { KiButton, KiInput } <i class="kw">from</i> <i class="s">'@kimen/react'</i>;
-<i class="kw">import</i> <i class="s">'@kimen/tokens/css'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css/core'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css/ki-button'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css/ki-input'</i>;
 
 <i class="tg">&lt;KiInput</i> <i class="at">label</i>=<i class="s">"Name"</i> <i class="at">onInput</i>={onName} <i class="tg">/&gt;</i>
 <i class="tg">&lt;KiButton</i> <i class="at">variant</i>=<i class="s">"primary"</i> <i class="at">onClick</i>={save}<i class="tg">&gt;</i>Save<i class="tg">&lt;/KiButton&gt;</i></code></pre></ki-tab-panel
@@ -585,7 +588,9 @@ defineCustomElement();
                     data-ki-color-scheme="dark"
                   ><code><i class="cm">// pnpm add @kimen/vue @kimen/tokens</i>
 <i class="kw">import</i> { KiButton, KiInput } <i class="kw">from</i> <i class="s">'@kimen/vue'</i>;
-<i class="kw">import</i> <i class="s">'@kimen/tokens/css'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css/core'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css/ki-button'</i>;
+<i class="kw">import</i> <i class="s">'@kimen/tokens/css/ki-input'</i>;
 
 <i class="tg">&lt;KiInput</i> <i class="at">label</i>=<i class="s">"Name"</i> <i class="at">v-model</i>=<i class="s">"name"</i> <i class="tg">/&gt;</i>
 <i class="tg">&lt;KiButton</i> <i class="at">variant</i>=<i class="s">"primary"</i> <i class="at">@click</i>=<i class="s">"save"</i><i class="tg">&gt;</i>Save<i class="tg">&lt;/KiButton&gt;</i></code></pre></ki-tab-panel

@@ -44,7 +44,7 @@ pnpm add link:$KIMEN/catalog link:$KIMEN/emitter link:$KIMEN/adapter-mcp-apps li
 ```
 
 Import paths are the same as for the npm packages
-(`@kimen/elements/ki-button`, `@kimen/tokens/css`, `@kimen/catalog`, …), so
+(`@kimen/elements/ki-button`, `@kimen/tokens/css/core`, `@kimen/catalog`, …), so
 going back to npm changes nothing in your code: replace the `link:` entries
 with the release version and reinstall.
 

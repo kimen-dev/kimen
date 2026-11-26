@@ -13,16 +13,23 @@ pnpm add @kimen/angular @kimen/tokens
 ```
 
 `@kimen/angular` depends on `@kimen/elements` at its own version; install
-`@kimen/tokens` at that same version and load its two stylesheets once, for
-example in the `styles` array of `angular.json`:
+`@kimen/tokens` at that same version and load its stylesheets once, for
+example in the `styles` array of `angular.json`: the token core, one sheet
+for every `ki-*` tag you render, and the page contract.
 
 ```json
 "styles": [
-  "node_modules/@kimen/tokens/dist/css/tokens.css",
+  "node_modules/@kimen/tokens/dist/css/core.css",
+  "node_modules/@kimen/tokens/dist/css/ki-button.css",
+  "node_modules/@kimen/tokens/dist/css/ki-checkbox.css",
+  "node_modules/@kimen/tokens/dist/css/ki-input.css",
   "node_modules/@kimen/tokens/dist/css/base.css",
   "src/styles.css"
 ]
 ```
+
+The full `node_modules/@kimen/tokens/dist/css/tokens.css` replaces the core
+and the tag sheets when the app uses most of the catalog.
 
 ```ts
 import { Component } from '@angular/core';

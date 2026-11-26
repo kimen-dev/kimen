@@ -12,7 +12,7 @@ into a Kimen UI spec and renders it through the guarded renderer. Transport
 ```ts
 import { createA2uiAdapter, A2UI_RENDERER_CAPABILITIES } from '@kimen/adapter-a2ui';
 import { defineCustomElements } from '@kimen/elements/loader';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css'; // every token: the agent can name any catalog tag
 
 defineCustomElements();
 
