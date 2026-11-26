@@ -15,7 +15,8 @@
 // glyph, `../../../icons/x.js`) then points at a `dist/icons/` that does not
 // exist, and the release packaging gate (attw) fails the package. Given the
 // source root a declaration directory mirrors, the build re-bases each such
-// specifier onto the file it named in the source.
+// specifier onto the file it named in the source. A glyph import is the
+// exception: the build drops it (dropGlyphImports).
 import { existsSync, statSync } from 'node:fs';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
@@ -164,6 +165,41 @@ export function rebaseDeclarationSpecifiers(
   });
 }
 
+/**
+ * Removes each side-effect import of a glyph module from a declaration that
+ * mirrors `sourceRoot` under `outputRoot`: an import with no bindings whose
+ * specifier, read from the source location, names a `.js` file directly in
+ * `glyphRoot`. A glyph module registers an icon and exports nothing, so the
+ * import carries no type, and the one declaration the package gives every
+ * glyph sits behind its `./icons/*` export, which a relative path does not
+ * reach. Without all three roots it removes nothing.
+ */
+export function dropGlyphImports(text, fileName, { outputRoot, sourceRoot, glyphRoot } = {}) {
+  if (outputRoot === undefined || sourceRoot === undefined || glyphRoot === undefined) {
+    return { text, rewritten: 0 };
+  }
+  const sourceFile = ts.createSourceFile(fileName, text, ts.ScriptTarget.Latest, true);
+  const sourceDirectory = resolve(sourceRoot, relative(outputRoot, dirname(fileName)));
+  const glyphImports = sourceFile.statements.filter(
+    (statement) =>
+      ts.isImportDeclaration(statement) &&
+      statement.importClause === undefined &&
+      ts.isStringLiteral(statement.moduleSpecifier) &&
+      isRelative(statement.moduleSpecifier.text) &&
+      extname(statement.moduleSpecifier.text) === '.js' &&
+      dirname(resolve(sourceDirectory, statement.moduleSpecifier.text)) === glyphRoot,
+  );
+  let dropped = text;
+  // Back to front, each with its line break, so the positions still to be
+  // applied stay where they are.
+  for (const statement of glyphImports.toReversed()) {
+    const end = statement.getEnd();
+    const lineEnd = dropped.startsWith('\n', end) ? end + 1 : end;
+    dropped = `${dropped.slice(0, statement.getStart(sourceFile))}${dropped.slice(lineEnd)}`;
+  }
+  return { text: dropped, rewritten: glyphImports.length };
+}
+
 async function declarationFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const nested = await Promise.all(
@@ -181,8 +217,13 @@ async function declarationFiles(directory) {
 /**
  * `sourceRoots` maps a declaration directory to the source directory it is a
  * copy of, for the directories whose specifiers may need re-basing.
+ * `glyphRoot` is the directory of the glyph modules whose imports those
+ * declarations drop.
  */
-export async function normalizeDeclarationDirectories(directories, { sourceRoots = {} } = {}) {
+export async function normalizeDeclarationDirectories(
+  directories,
+  { sourceRoots = {}, glyphRoot } = {},
+) {
   const report = { declarations: 0, rewrittenFiles: 0, rewrittenSpecifiers: 0 };
   for (const directory of directories) {
     const files = await declarationFiles(directory);
@@ -191,12 +232,13 @@ export async function normalizeDeclarationDirectories(directories, { sourceRoots
     if (files.length === 0) {
       throw new Error(`${directory}: no declaration files found; build the package first`);
     }
-    const roots = { outputRoot: directory, sourceRoot: sourceRoots[directory] };
+    const roots = { outputRoot: directory, sourceRoot: sourceRoots[directory], glyphRoot };
     for (const file of files) {
       const source = await readFile(file, 'utf8');
-      const rebased = rebaseDeclarationSpecifiers(source, file, roots);
+      const dropped = dropGlyphImports(source, file, roots);
+      const rebased = rebaseDeclarationSpecifiers(dropped.text, file, roots);
       const named = rewriteDeclarationSpecifiers(rebased.text, file);
-      const rewritten = rebased.rewritten + named.rewritten;
+      const rewritten = dropped.rewritten + rebased.rewritten + named.rewritten;
       report.declarations += 1;
       if (rewritten > 0) {
         await writeFile(file, named.text, 'utf8');

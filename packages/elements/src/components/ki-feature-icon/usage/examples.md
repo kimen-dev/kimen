@@ -1,11 +1,13 @@
 # Using ki-feature-icon
 
-Load the token stylesheet, register each custom element, and import the
-Lucide glyph you use. Place one glyph with its default inherited size
+Load the token core and the sheets of the tags you write, register each
+custom element, and import the Lucide glyph you use. Place one glyph with its default inherited size
 in the slot, next to the heading that names the section.
 
 ```js
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-feature-icon';
+import '@kimen/tokens/css/ki-icon';
 import '@kimen/elements/icons/shield-check';
 import { defineCustomElement as defineFeatureIcon } from '@kimen/elements/ki-feature-icon';
 import { defineCustomElement as defineIcon } from '@kimen/elements/ki-icon';

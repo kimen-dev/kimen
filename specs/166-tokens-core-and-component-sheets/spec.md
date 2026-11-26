@@ -21,6 +21,14 @@ of 7,000 B for the core, 8,300 B with `ki-button`, 11,400 B with ten
 components and 2,200 B per tag sheet. Q5 was not taken up and is out of
 scope. The answers are recorded under *Resolved questions*.
 
+**Amended 2026-11-26**: the founder approved step 2 of the Stencil and Lit
+report, relayed by the coordinating session. The core and the tag sheets
+become the documented default, and the full sheet stays documented as the
+simple alternative. The page-weight gate of `@kimen/elements` measures the
+split as its primary figure and keeps a full-sheet line. This reverses D6,
+Q6 and the last sentence of FR-010. No export, sheet or value changes, so
+S1 to S11 stand as written.
+
 **Input**: The weight report of 2026-11-25 (opportunities 5 and 9). A page
 with one `ki-button` downloads the whole onmars token sheet, 20.7 KB brotli,
 and reaches about 11 % of its declarations. Component tokens are about two
@@ -153,6 +161,13 @@ exactly the sheets (c) publishes; the founder left that out of scope (Q5).
   token keeps its value. The full sheet keeps all 268 foundations
   unchanged. This saves 1.85 KB br on every split page and removes no name
   from any existing export. Approved as F1 (Q1).
+
+  **Amendment (2026-11-26).** The full sheet keeps the four published
+  onmars v1 foundation tokens for the legacy dialog and tooltip under
+  spec 062 S4 until 1.0.0. It omits the 264 private foundation declarations.
+  material3 drops its private overrides and inlines the two foundation
+  shadow expressions it still reads, preserving the resolved theme values.
+  This supersedes spec 060's instruction to keep the private declarations.
 - **D2 · One self-contained sheet per tag.** `css/ki-pagination` carries
   every component source `ki-pagination` needs: its own, and the button,
   icon-button, icon and counter sources of the components it renders.
@@ -176,7 +191,9 @@ exactly the sheets (c) publishes; the founder left that out of scope (Q5).
   known consumer ships per component. Approved (Q4).
 - **D6 · The full sheet stays the documented default.** Guides and the
   `kimen-components` skill keep `import '@kimen/tokens/css'` first and
-  present the split as the light option. Approved (Q6).
+  present the split as the light option. Approved (Q6). Reversed on
+  2026-11-26 (see the amendment under *Status*): guides and both agent
+  skills now lead with the core and the tag sheets.
 - **D7 · Generated, never hand-written.** The sources each tag sheet carries
   are derived by the build from the compiled component styles (shared field
   styles included) and the tags each component renders, the same inputs that
@@ -228,6 +245,11 @@ question takes the recommended answer.
    deprecates the 268 in the full sheet through spec 041's cycle, and F3,
    which keeps them in the core for third-party themes at 1.85 KB br per
    split page.
+
+   **Amendment (2026-11-26).** The founder approved omitting the 264 private
+   foundations from the full sheet and retaining the four published onmars
+   v1 foundations until 1.0.0 (D1). This supersedes
+   spec 060's instruction to keep the private declarations.
 2. **Q2 · Granularity (D2): one self-contained sheet per tag.** The
    alternative was one sheet per component source with a generated list per
    tag.
@@ -240,7 +262,8 @@ question takes the recommended answer.
    to.
 6. **Q6 · Documented default (D6): the full sheet stays the default.** The
    `kimen-components` skill and the token README offer the core and tag
-   sheets as the light option.
+   sheets as the light option. Reversed on 2026-11-26: the core and the tag
+   sheets are the default, the full sheet the simple alternative.
 7. **Q7 · Budgets: approved.** The core 7,000 B, the core with `ki-button`
    8,300 B, the ten-component page 11,400 B, and 2,200 B for each tag sheet,
    all brotli. The full sheet keeps its budget.
@@ -464,6 +487,13 @@ the components the split sheets paint.
   MUST resolve every token to the value it has today in every context; under
   D1 its expressions may name a literal where they named a foundation. The
   public stylesheet surface recorded for these three exports MUST NOT change.
+
+  **Amendment (2026-11-26).** The declaration requirement for
+  `@kimen/tokens/css` applies to the public token surface, including the four
+  published onmars v1 foundations until 1.0.0. The full sheet MUST omit the
+  264 private foundations, superseding spec 060's instruction to keep their
+  declarations. material3 may inline private foundation expressions to
+  preserve their resolved values.
 - **FR-002 (core)**: `@kimen/tokens/css/core` MUST declare the colour-scheme
   contract and every token whose DTCG source is not a component token source
   (`tokens/component/*.tokens.json`): primitives, the theme, semantic tokens,
@@ -513,7 +543,9 @@ the components the split sheets paint.
 - **FR-010 (documentation)**: the token README, the theming and framework
   guides, the token reference and each component's generated site and agent
   documentation MUST name the core and the component's tag sheet. The full
-  sheet MUST stay the first, default path (D6).
+  sheet MUST stay the first, default path (D6). Amended 2026-11-26: the core
+  and the tag sheets are the first, default path, and the full sheet MUST
+  stay documented as the simple alternative.
 - **FR-011 (scope)**: the runtime code and published modules of
   `@kimen/elements`, the framework wrappers, the catalog, the MCP Apps
   document and `kimen-mcp` MUST NOT change in this feature; they keep loading

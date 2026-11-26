@@ -26,6 +26,18 @@ gate hold every token pair to WCAG numbers in CI.
    `--ki-alert-*`. Every component page lists its own tokens in its
    generated *CSS custom properties* table.
 
+## Loading them
+
+A page loads the token **core** once, `@kimen/tokens/css/core`, and one sheet
+for every `ki-*` tag it uses, named like the element import:
+`@kimen/tokens/css/ki-button` beside `@kimen/elements/ki-button`. The core
+holds the palette and semantic layers; each tag's sheet holds the component
+tokens that tag needs, including those of the components it renders. The
+simple alternative is the full sheet, `@kimen/tokens/css`, with every token
+in one stylesheet: better for a page that uses most of the catalog or cannot
+list its tags in advance. See
+[Getting started](/docs/getting-started/#load-a-theme).
+
 ## The families
 
 Beyond color, the token surface covers everything a theme wants to control:
@@ -108,7 +120,8 @@ Three rules keep customization safe:
 ## Machine-readable
 
 The tokens ship as plain CSS custom properties in the built stylesheets
-(`@kimen/tokens/css`, `css/material3`, `css/base`) — no runtime, no
+(`@kimen/tokens/css/core`, one `css/ki-<tag>` sheet per component, the
+full `@kimen/tokens/css`, `css/material3`, `css/base`) — no runtime, no
 preprocessor coupling. Per-component consumption is declared in the
 [Custom Elements Manifest](/docs/resources/working-with-ai/), so
 agents and tooling can read the styling contract the same way you do.

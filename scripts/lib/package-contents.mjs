@@ -39,8 +39,11 @@ export const packageContentRules = Object.freeze({
   '@kimen/elements': Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
-    assets: Object.freeze(['generated/custom-elements.json', 'llms-full.txt', 'llms.txt', 'llms/']),
-    budget: Object.freeze({ packed: 2_948_096, unpacked: 13_445_120 }),
+    assets: Object.freeze(['generated/custom-elements.json', 'llms.txt', 'llms/']),
+    // Lowered on 2026-11-26 to what the package measured once it shipped one
+    // glyph declaration and no complete llms summary (2,658,037 / 12,324,770
+    // B), plus 3 %.
+    budget: Object.freeze({ packed: 2_738_176, unpacked: 12_694_528 }),
   }),
   '@kimen/tokens': Object.freeze({
     mapsEveryModule: false,

@@ -508,30 +508,36 @@ describe('agent surfaces', () => {
     expect(shippedPreamble).toContain(
       "import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';",
     );
-    expect(shippedPreamble).toContain("import '@kimen/tokens/css';");
+    expect(shippedPreamble).toContain("import '@kimen/tokens/css/core';");
+    expect(shippedPreamble).toContain("import '@kimen/tokens/css/ki-button';");
     expect(shippedPreamble).not.toContain('/dist/');
   });
 
   it('S2 shipped installation guidance attributes color-scheme to the stylesheet that declares it', async () => {
-    const [shippedPreamble, themeCss, pageContractCss] = await Promise.all([
+    const [shippedPreamble, coreCss, themeCss, pageContractCss] = await Promise.all([
       readFile(new URL('./scripts/llms-preamble.txt', packageRoot), 'utf8'),
+      readFile(new URL('../tokens/dist/css/core.css', packageRoot), 'utf8'),
       readFile(new URL('../tokens/dist/css/tokens.css', packageRoot), 'utf8'),
       readFile(new URL('../tokens/dist/css/base.css', packageRoot), 'utf8'),
     ]);
     const guidance = shippedPreamble.replace(/\s+/gu, ' ');
 
-    // The facts the guidance must describe: the token stylesheet owns the
-    // scheme; the page contract paints the page from tokens and lays out
-    // unregistered group items.
+    // The facts the guidance must describe: the token stylesheets (the core,
+    // and the full sheet that replaces it) own the scheme; the page contract
+    // paints the page from tokens and lays out unregistered group items.
+    expect(coreCss).toContain('color-scheme: light dark;');
     expect(themeCss).toContain('color-scheme: light dark;');
     expect(pageContractCss).not.toContain('color-scheme');
     expect(pageContractCss).toMatch(/:where\(:not\(:defined\)\) \{\s+display: block;/u);
     expect(guidance).not.toMatch(/page contract declares `color-scheme`/u);
     expect(guidance).toContain(
-      '`@kimen/tokens/css` once per page: it is the onmars default theme and the only stylesheet the components require',
+      '`@kimen/tokens/css/core` once per page: it is the onmars default theme without the component tokens',
     );
     expect(guidance).toContain('together with the `color-scheme` they resolve from');
-    expect(guidance).toContain('Load `@kimen/tokens/css/base` — the page contract — with it');
+    expect(guidance).toContain(
+      'The simple alternative is `@kimen/tokens/css` once per page in place of the core and the tag sheets',
+    );
+    expect(guidance).toContain('Load `@kimen/tokens/css/base` — the page contract — with either');
     expect(guidance).toContain('one per line until their tags register');
     expect(guidance).not.toMatch(/page contract — is optional/u);
   });
@@ -1001,9 +1007,9 @@ describe('agent surfaces', () => {
         () => '',
       ),
       await readFile(new URL('./llms.txt', packageRoot), 'utf8'),
-      await readFile(new URL('./llms-full.txt', packageRoot), 'utf8'),
       await readFile(new URL('./llms/ki-button.md', packageRoot), 'utf8'),
       await readFile(new URL('../../llms.txt', packageRoot), 'utf8'),
+      await readFile(new URL('../../llms-full.txt', packageRoot), 'utf8'),
     ]) {
       expect(artifact).not.toContain('"timestamp"');
       // Windows drive noise requires an ISOLATED drive letter (C:\...): a
@@ -1160,7 +1166,6 @@ describe('agent surfaces', () => {
       'packages/elements/generated/docs.d.ts',
       'packages/elements/generated/docs.json',
       'packages/elements/generated/public-api',
-      'packages/elements/llms-full.txt',
       'packages/elements/llms.txt',
       'packages/elements/llms/theming.md',
     ]) {

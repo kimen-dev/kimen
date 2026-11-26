@@ -30,7 +30,8 @@ npm install @kimen/adapter-a2ui @kimen/elements @kimen/tokens
 
 The adapter depends on `@kimen/catalog` at its own version, so the catalog
 comes with it. The page that holds the surface registers the elements and
-loads the token stylesheet once:
+loads the token stylesheet once. The agent can name any catalog tag, so the
+page loads the full sheet rather than the core and one sheet per tag:
 
 ```ts
 import { defineCustomElements } from '@kimen/elements/loader';

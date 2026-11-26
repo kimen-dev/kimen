@@ -9,19 +9,32 @@ Register each component before using it. Every component is exported from
 
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
 import '@kimen/tokens/css/base';
 
 defineKiButton();
 ```
 
-Load `@kimen/tokens/css` once per page: it is the onmars default theme and
-the only stylesheet the components require. It declares every `--ki-*` token
-for both schemes together with the `color-scheme` they resolve from, so a
-page follows its visitor's light or dark preference with no further setup.
-Load `@kimen/tokens/css/base` — the page contract — with it: it paints the
-page background, text color and body font from those tokens, declares no
-color scheme, and lays out the items of Kimen groups (segments, radios,
+Load `@kimen/tokens/css/core` once per page: it is the onmars default theme
+without the component tokens. It declares the shared `--ki-*` tokens for
+both schemes together with the `color-scheme` they resolve from, so a page
+follows its visitor's light or dark preference with no further setup. Then
+load one sheet for every `ki-*` tag the page uses, named like its element
+import: `@kimen/tokens/css/ki-button` beside `@kimen/elements/ki-button`. A
+tag's sheet carries the component tokens that tag needs, including those of
+the components it renders, so you add one only for the tags your own markup
+writes, slotted ones included. A tag without its sheet paints with undefined
+tokens.
+
+The simple alternative is `@kimen/tokens/css` once per page in place of the
+core and the tag sheets: every token in one stylesheet. Use it when a page
+uses most of the catalog, or renders tags it cannot list in advance, such as
+agent-generated UI.
+
+Load `@kimen/tokens/css/base` — the page contract — with either: it paints
+the page background, text color and body font from those tokens, declares
+no color scheme, and lays out the items of Kimen groups (segments, radios,
 options, menu and list items…) one per line until their tags register, so
 their labels do not run together.
 
@@ -47,8 +60,9 @@ a token under a mode sets its mode token, `--ki-<mode>-<token>` (for example
 `--ki-contrast-more-outline-control`), never the token under a media query.
 
 To use the bundled Material 3 reference theme, side-effect import its
-stylesheet (exported as `@kimen/tokens/css/material3`) in addition to
-`@kimen/tokens/css`, then select it on the document root:
+stylesheet (exported as `@kimen/tokens/css/material3`) in addition to the
+core and tag sheets (or `@kimen/tokens/css`), then select it on the document
+root:
 
 ```html
 <html data-ki-theme="material3" data-ki-color-scheme="dark">
@@ -4234,12 +4248,14 @@ Examples:
 
 # Using ki-feature-icon
 
-Load the token stylesheet, register each custom element, and import the
-Lucide glyph you use. Place one glyph with its default inherited size
+Load the token core and the sheets of the tags you write, register each
+custom element, and import the Lucide glyph you use. Place one glyph with its default inherited size
 in the slot, next to the heading that names the section.
 
 ```js
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-feature-icon';
+import '@kimen/tokens/css/ki-icon';
 import '@kimen/elements/icons/shield-check';
 import { defineCustomElement as defineFeatureIcon } from '@kimen/elements/ki-feature-icon';
 import { defineCustomElement as defineIcon } from '@kimen/elements/ki-icon';
@@ -6730,8 +6746,9 @@ Examples:
 
 # Pagination examples
 
-Import `@kimen/tokens/css` and register the element with
-`defineCustomElement` from `@kimen/elements/components/ki-pagination.js`.
+Import `@kimen/tokens/css/core` and `@kimen/tokens/css/ki-pagination`, and
+register the element with `defineCustomElement` from
+`@kimen/elements/components/ki-pagination.js`.
 
 ## Replace a results page
 
@@ -8705,10 +8722,12 @@ Examples:
 
 # Slider examples
 
-Import the element and one theme stylesheet before mounting the examples.
+Import the element, the token core and the slider's token sheet before
+mounting the examples.
 
 ```js
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-slider';
 import { defineCustomElement } from '@kimen/elements/ki-slider';
 
 defineCustomElement();

@@ -123,12 +123,13 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 541_336, gzip: 99_026, brotli: 76_054 },
-    mcpServer: { raw: 1_811_324, gzip: 337_323, brotli: 304_294 },
+    mcpApps: { raw: 523_351, gzip: 96_667, brotli: 74_129 },
+    mcpServer: { raw: 1_793_339, gzip: 334_930, brotli: 302_397 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
-    tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
+    tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 32_000, tenComponents: 58_900 },
+    pages: { button: 18_566, tenComponents: 48_157 },
+    fullSheetPages: { button: 29_554, tenComponents: 55_963 },
   });
 });
 
@@ -141,6 +142,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
         mcpServer: { raw: 1300, gzip: 190, brotli: 175 },
         tokenStylesheets: { onmars: 100, material3: 50 },
         pages: { tenComponents: 40 },
+        fullSheetPages: { button: 30 },
       },
     },
   };
@@ -150,12 +152,13 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 543_536, gzip: 99_206, brotli: 76_219 },
-    mcpServer: { raw: 1_812_624, gzip: 337_513, brotli: 304_469 },
+    mcpApps: { raw: 525_551, gzip: 96_847, brotli: 74_294 },
+    mcpServer: { raw: 1_794_639, gzip: 335_120, brotli: 302_572 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
-    tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
+    tokenStylesheets: { onmars: 11_781, material3: 5_215, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 32_000, tenComponents: 58_940 },
+    pages: { button: 18_566, tenComponents: 48_197 },
+    fullSheetPages: { button: 29_584, tenComponents: 55_963 },
   });
 });
 
@@ -294,7 +297,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
+      // Lowered for the install trims (one glyph declaration, no package llms-full.txt).
+      '@kimen/elements': { packed: 2_738_176, unpacked: 12_694_528 },
       // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
       '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
       '@kimen/mcp-server': { packed: 659_456, unpacked: 3_331_072 },
