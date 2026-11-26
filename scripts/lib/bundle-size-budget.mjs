@@ -92,8 +92,16 @@ const BASE_BUDGETS = {
   // macOS: -45,945 / 15,040 / 13,040 B for the document and -46,089 / 14,995 /
   // 13,015 B for kimen-mcp, taken off here exactly so the headroom stays what
   // it was.
-  mcpApps: { raw: 541_336, gzip: 99_026, brotli: 76_054 },
-  mcpServer: { raw: 1_811_324, gzip: 337_323, brotli: 304_294 },
+  // Short keys for the elements Stencil's compiler keys
+  // (packages/elements/scripts/short-vdom-keys.mjs, 2026-11-26) re-based both
+  // DOWN, measured against main de03accd on macOS: the document went from
+  // 1,250,119 / 284,547 / 211,781 to 1,237,731 / 273,016 / 204,312 B, and
+  // kimen-mcp from 3,176,710 / 627,508 / 461,902 to 3,164,322 / 615,937 /
+  // 454,028 B. Each limit is now that size plus 0.1 % of raw bytes and 1 % of
+  // gzip and brotli: 1,238,969 / 275,747 / 206,356 and 3,167,487 / 622,097 /
+  // 458,569 B.
+  mcpApps: { raw: 528_889, gzip: 87_224, brotli: 68_315 },
+  mcpServer: { raw: 1_798_878, gzip: 325_479, brotli: 296_320 },
   // A browser host that validates and renders agent specs (validateUiSpec and
   // renderUiSpec from the packed @kimen/catalog, bundled for production:
   // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
@@ -123,8 +131,10 @@ const BASE_BUDGETS = {
   // (packages/elements/scripts/page-weight.mjs): one ki-button, and the ten
   // components of a typical form page. Measured on 2026-11-26 against main
   // ac20a900 with the runtime compiled for Kimen (31,028 and 57,175 B), plus
-  // about 3 %.
-  pages: { button: 32_000, tenComponents: 58_900 },
+  // about 3 %. The short vDOM keys took the ten-component page to 56,426 B
+  // (its script 36,381 -> 35,632 B), and its limit to that plus 1 %; ki-button
+  // carries no compiler key, so its page stays.
+  pages: { button: 32_000, tenComponents: 56_991 },
 };
 
 export function deriveBundleSizeBudgets(components) {

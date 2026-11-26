@@ -10,6 +10,7 @@ import { componentChunkNames } from './scripts/component-chunk-names.mjs';
 import { readComponentFormBindings } from './scripts/component-metadata.mjs';
 import { glyphChunks } from './scripts/glyph-chunks';
 import { lazyFallbackImport } from './scripts/lazy-fallback-import.mjs';
+import { shortVdomKeys } from './scripts/short-vdom-keys.mjs';
 
 // Form controls re-dispatch native input/change events across the shadow
 // boundary. The component manifest selects the wrapper binding for its prop.
@@ -29,7 +30,9 @@ export const config: Config = {
   // Glyph chunks get the prefix package.json `sideEffects` declares. The
   // plugin resolves the glyph modules' registry import, so it runs before
   // Stencil's node resolution. The lazy runtime's fallback import is
-  // rewritten as Stencil ships it, before any other transform.
+  // rewritten as Stencil ships it, before any other transform. After
+  // Stencil's transforms, the button palette is compacted and the compiler's
+  // 40-character vDOM keys are shortened, in both builds.
   rollupPlugins: {
     before: [
       // Stencil's runtime reads `attr="false"` as false on every component,
@@ -40,7 +43,7 @@ export const config: Config = {
       glyphChunks(resolve(__dirname, 'icons'), resolve(__dirname, 'src/utils/icon-registry.mjs')),
       lazyFallbackImport,
     ],
-    after: [compactButtonPalette],
+    after: [compactButtonPalette, shortVdomKeys],
   },
   outputTargets: [
     // No Stencil collection: the package publishes the ESM lazy build behind

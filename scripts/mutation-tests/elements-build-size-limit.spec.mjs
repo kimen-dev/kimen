@@ -116,7 +116,7 @@ describe('element size-budget mutation boundary', () => {
       {
         name: 'paired worst case (full Stencil runtime)',
         path: '/tmp/paired.ts',
-        limit: '12600 B',
+        limit: '12199 B',
       },
       {
         name: 'ki-gamma marginal cost (runtime excluded)',
@@ -127,7 +127,7 @@ describe('element size-budget mutation boundary', () => {
       {
         name: 'ki-gamma worst case (full Stencil runtime)',
         path: '/workspace/elements/dist/components/ki-gamma.js',
-        limit: '12600 B',
+        limit: '12199 B',
       },
       {
         name: 'ki-zeta marginal cost (runtime excluded)',
@@ -138,18 +138,18 @@ describe('element size-budget mutation boundary', () => {
       {
         name: 'ki-zeta worst case (full Stencil runtime)',
         path: '/workspace/elements/dist/components/ki-zeta.js',
-        limit: '12600 B',
+        limit: '12199 B',
       },
     ]);
   });
 
   it('takes a reviewed worst-case exception above the uniform ceiling, the largest of a composite', () => {
-    expect([MARGINAL_CEILING, WORST_CASE_CEILING]).toEqual([8_700, 12_600]);
+    expect([MARGINAL_CEILING, WORST_CASE_CEILING]).toEqual([8_700, 12_199]);
     const metadataByTag = new Map([
       ['ki-alpha', { sizeBudget: { worstCase: { brotli: 13_000 } } }],
       ['ki-beta', { sizeBudget: { worstCase: { brotli: 14_000 } } }],
-      ['ki-gamma', { sizeBudget: { worstCase: { brotli: 12_600 } } }],
-      ['ki-zeta', { sizeBudget: { worstCase: { brotli: 12_600.5 } } }],
+      ['ki-gamma', { sizeBudget: { worstCase: { brotli: 12_199 } } }],
+      ['ki-zeta', { sizeBudget: { worstCase: { brotli: 12_199.5 } } }],
     ]);
     const limits = createSizeLimitConfig({ components, groups, metadataByTag })
       .filter(({ name }) => name.includes('worst case'))
@@ -157,11 +157,11 @@ describe('element size-budget mutation boundary', () => {
 
     expect(Object.fromEntries(limits)).toEqual({
       paired: '14000 B',
-      'ki-gamma': '12600 B',
-      'ki-zeta': '12600 B',
+      'ki-gamma': '12199 B',
+      'ki-zeta': '12199 B',
     });
     const exceptionalGamma = new Map([
-      ['ki-gamma', { sizeBudget: { worstCase: { brotli: 12_601 } } }],
+      ['ki-gamma', { sizeBudget: { worstCase: { brotli: 12_200 } } }],
     ]);
     expect(
       createSizeLimitConfig({
@@ -170,7 +170,7 @@ describe('element size-budget mutation boundary', () => {
         onlyTag: 'ki-gamma',
         metadataByTag: exceptionalGamma,
       })[1].limit,
-    ).toBe('12601 B');
+    ).toBe('12200 B');
   });
 
   it('uses member paths when no generated composite entry is supplied', () => {

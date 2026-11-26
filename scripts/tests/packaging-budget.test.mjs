@@ -123,12 +123,12 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 541_336, gzip: 99_026, brotli: 76_054 },
-    mcpServer: { raw: 1_811_324, gzip: 337_323, brotli: 304_294 },
+    mcpApps: { raw: 528_889, gzip: 87_224, brotli: 68_315 },
+    mcpServer: { raw: 1_798_878, gzip: 325_479, brotli: 296_320 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 32_000, tenComponents: 58_900 },
+    pages: { button: 32_000, tenComponents: 56_991 },
   });
 });
 
@@ -150,12 +150,12 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 543_536, gzip: 99_206, brotli: 76_219 },
-    mcpServer: { raw: 1_812_624, gzip: 337_513, brotli: 304_469 },
+    mcpApps: { raw: 531_089, gzip: 87_404, brotli: 68_480 },
+    mcpServer: { raw: 1_800_178, gzip: 325_669, brotli: 296_495 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 32_000, tenComponents: 58_940 },
+    pages: { button: 32_000, tenComponents: 57_031 },
   });
 });
 
@@ -326,7 +326,7 @@ test('size budgets derive defaults and one entry per declared composite group', 
   );
   assert.deepEqual(config[0].path, ['dist/components/ki-alpha.js', 'dist/components/ki-beta.js']);
   assert.equal(config[0].limit, '8700 B');
-  assert.equal(config[1].limit, '12600 B');
+  assert.equal(config[1].limit, '12199 B');
 });
 
 test('each exported generated token stylesheet has one size budget outside the package manifest', async () => {
