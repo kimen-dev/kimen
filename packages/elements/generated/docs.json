@@ -32552,8 +32552,9 @@
             "resolved": "\"collapse\" | \"elevate\" | \"none\"",
             "references": {
               "TopNavScrollBehavior": {
-                "location": "global",
-                "id": "global::TopNavScrollBehavior"
+                "location": "local",
+                "path": "src/components/ki-top-nav/ki-top-nav.tsx",
+                "id": "src/components/ki-top-nav/ki-top-nav.tsx::TopNavScrollBehavior"
               }
             }
           },
@@ -32702,8 +32703,9 @@
             "resolved": "\"center\" | \"start\"",
             "references": {
               "TopNavTitleAlign": {
-                "location": "global",
-                "id": "global::TopNavTitleAlign"
+                "location": "local",
+                "path": "src/components/ki-top-nav/ki-top-nav.tsx",
+                "id": "src/components/ki-top-nav/ki-top-nav.tsx::TopNavTitleAlign"
               }
             }
           },
@@ -32741,8 +32743,9 @@
             "resolved": "\"app-bar\" | \"header\"",
             "references": {
               "TopNavVariant": {
-                "location": "global",
-                "id": "global::TopNavVariant"
+                "location": "local",
+                "path": "src/components/ki-top-nav/ki-top-nav.tsx",
+                "id": "src/components/ki-top-nav/ki-top-nav.tsx::TopNavVariant"
               }
             }
           },
@@ -33962,6 +33965,26 @@
       "docstring": "",
       "path": "src/components/ki-toolbar/ki-toolbar.tsx"
     },
+    "src/components/ki-top-nav/ki-top-nav.tsx::TopNavVariant": {
+      "declaration": "export type TopNavVariant = 'header' | 'app-bar';",
+      "docstring": "",
+      "path": "src/components/ki-top-nav/ki-top-nav.tsx"
+    },
+    "src/components/ki-top-nav/ki-top-nav.layout.ts::TopNavSize": {
+      "declaration": "export type TopNavSize = 'sm' | 'md' | 'lg' | 'xl';",
+      "docstring": "",
+      "path": "src/components/ki-top-nav/ki-top-nav.layout.ts"
+    },
+    "src/components/ki-top-nav/ki-top-nav.tsx::TopNavTitleAlign": {
+      "declaration": "export type TopNavTitleAlign = 'start' | 'center';",
+      "docstring": "",
+      "path": "src/components/ki-top-nav/ki-top-nav.tsx"
+    },
+    "src/components/ki-top-nav/ki-top-nav.tsx::TopNavScrollBehavior": {
+      "declaration": "export type TopNavScrollBehavior = 'none' | 'elevate' | 'collapse';",
+      "docstring": "",
+      "path": "src/components/ki-top-nav/ki-top-nav.tsx"
+    },
     "src/components/ki-tree/ki-tree.tsx::KiTreeSelection": {
       "declaration": "export type KiTreeSelection = 'none' | 'single' | 'multiple';",
       "docstring": "",
@@ -34006,11 +34029,6 @@
       "declaration": "export interface KiToastShowOptions {\n  /** One action, rendered as a ghost `ki-button size=\"sm\"`; its click calls `onClick`. */\n  action?: { label: string; onClick?: (event: MouseEvent) => void };\n  /** Shows the dismiss button; `true` by default. */\n  dismissible?: boolean;\n  /** Milliseconds before the toast leaves on its own; see `ki-toast`'s `duration`. */\n  duration?: number;\n  /** The message text. */\n  message: string;\n  /** The optional bold first line. */\n  title?: string;\n  /** `neutral` (default), `info`, `success`, `warning` or `danger`. */\n  tone?: string;\n}",
       "docstring": "What `show()` turns into a toast (spec 049 FR-018).",
       "path": "src/components/ki-toaster/ki-toaster.show.ts"
-    },
-    "src/components/ki-top-nav/ki-top-nav.layout.ts::TopNavSize": {
-      "declaration": "export type TopNavSize = 'sm' | 'md' | 'lg' | 'xl';",
-      "docstring": "",
-      "path": "src/components/ki-top-nav/ki-top-nav.layout.ts"
     }
   }
 }
