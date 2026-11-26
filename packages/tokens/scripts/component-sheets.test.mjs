@@ -10,9 +10,12 @@ import test from 'node:test';
 import {
   componentSourceOf,
   declaredNames,
+  expandReferences,
   isFoundation,
+  isPrivateFoundationToken,
   pick,
   pickModes,
+  PUBLISHED_FOUNDATIONS,
   tagSources,
   unresolvedReferences,
 } from './component-sheets.mjs';
@@ -40,6 +43,66 @@ test('a token belongs to the component source of the file that defines it', () =
   assert.equal(componentSourceOf('tokens/themes/onmars-v2.tokens.json'), null);
   assert.equal(isFoundation('--ki-foundation-material3-palette-primary40'), true);
   assert.equal(isFoundation('--ki-surface-s0'), false);
+});
+
+test('only the onmars v1 glass images stay published foundations', () => {
+  assert.deepEqual(PUBLISHED_FOUNDATIONS, [
+    '--ki-foundation-onmars-v1-dialog-bg-image',
+    '--ki-foundation-onmars-v1-tooltip-arrow-end',
+    '--ki-foundation-onmars-v1-tooltip-arrow-start',
+    '--ki-foundation-onmars-v1-tooltip-bg-image',
+  ]);
+  assert.ok(Object.isFrozen(PUBLISHED_FOUNDATIONS));
+  for (const name of PUBLISHED_FOUNDATIONS) assert.equal(isPrivateFoundationToken(name), false);
+  assert.equal(
+    isPrivateFoundationToken(
+      '--ki-foundation-migrated-component-button-button-tertiary-hover-shadow',
+    ),
+    true,
+  );
+  assert.equal(isPrivateFoundationToken('--ki-foundation-onmars-v1-dialog-bg'), true);
+  assert.equal(isPrivateFoundationToken('--ki-button-tertiary-hover-shadow'), false);
+});
+
+test('a theme keeps the value of a private foundation by carrying its expression', () => {
+  const source = new Map([
+    ['--ki-foundation-key', 'light-dark(var(--ki-color-black-24), var(--ki-color-black-32))'],
+    ['--ki-foundation-level', '0 1px 2px var(--ki-foundation-key)'],
+    ['--ki-foundation-kept', '1px'],
+    ['--ki-color-black-24', 'rgba(0, 0, 0, 0.24)'],
+  ]);
+  const overrides = new Map([
+    ['--ki-button-shadow', 'var(--ki-foundation-level), var(--ki-foundation-key)'],
+    ['--ki-button-width', 'var(--ki-foundation-kept)'],
+    ['--ki-button-ink', 'var(--ki-color-black-24)'],
+  ]);
+  const expand = (name) => name !== '--ki-foundation-kept' && isFoundation(name);
+  assert.deepEqual(
+    [...expandReferences(overrides, source, expand)],
+    [
+      [
+        '--ki-button-shadow',
+        '0 1px 2px light-dark(var(--ki-color-black-24), var(--ki-color-black-32)), light-dark(var(--ki-color-black-24), var(--ki-color-black-32))',
+      ],
+      ['--ki-button-width', 'var(--ki-foundation-kept)'],
+      ['--ki-button-ink', 'var(--ki-color-black-24)'],
+    ],
+  );
+});
+
+test('expanding a private foundation fails on a cycle or a name the theme lacks', () => {
+  const cycle = new Map([
+    ['--ki-foundation-a', 'var(--ki-foundation-b)'],
+    ['--ki-foundation-b', 'var(--ki-foundation-a)'],
+  ]);
+  assert.throws(
+    () => expandReferences(new Map([['--ki-x', 'var(--ki-foundation-a)']]), cycle, isFoundation),
+    /^Error: --ki-x -> --ki-foundation-a -> --ki-foundation-b -> --ki-foundation-a is a cycle$/u,
+  );
+  assert.throws(
+    () => expandReferences(new Map([['--ki-x', 'var(--ki-foundation-z)']]), cycle, isFoundation),
+    /^Error: --ki-x reads --ki-foundation-z, which is not declared$/u,
+  );
 });
 
 test('S1 a tag sheet carries the sources of the tokens the tag reads, and no other', () => {
