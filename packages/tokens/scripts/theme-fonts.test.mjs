@@ -8,8 +8,11 @@ test('S3 the exported font stylesheets resolve and bundled faces include their l
   const material3 = new URL(import.meta.resolve('@kimen/tokens/css/material3-fonts.css'));
   const css = await readFile(onmars, 'utf8');
 
-  for (const name of ['InstrumentSans', 'Newsreader']) {
-    const asset = `../fonts/${name}Variable.woff2`;
+  for (const [name, file] of [
+    ['InstrumentSans', 'InstrumentSansVariable.woff2'],
+    ['Newsreader', 'NewsreaderOnmars.woff2'],
+  ]) {
+    const asset = `../fonts/${file}`;
     assert.ok(css.includes(asset), `onmars stylesheet references ${asset}`);
     const font = await readFile(new URL(asset, onmars));
     assert.equal(font.subarray(0, 4).toString(), 'wOF2');

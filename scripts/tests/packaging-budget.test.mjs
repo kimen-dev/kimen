@@ -298,8 +298,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
     ),
     {
       '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
-      // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
-      '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
+      // Rebased for the reduced Newsreader weight range.
+      '@kimen/tokens': { packed: 242_238, unpacked: 1_192_291 },
       '@kimen/mcp-server': { packed: 659_456, unpacked: 3_331_072 },
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },

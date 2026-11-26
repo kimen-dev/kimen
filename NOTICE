@@ -113,10 +113,9 @@ labels keep the approved design metrics on every platform:
 Third-party notices: onmars theme fonts (SIL OFL 1.1)
 ================================================================================
 
-The optional onmars v2 font stylesheet uses the following Latin variable faces
-from the Kimen design-system reference. The public site also serves the same
-bytes. The complete SIL Open Font License 1.1 texts and copyright notices are
-distributed alongside the fonts.
+The optional onmars v2 font stylesheet and public site use the following Latin
+variable faces from the Kimen design-system reference. The complete SIL Open
+Font License 1.1 texts and copyright notices are distributed alongside the fonts.
 
   - packages/tokens/fonts/InstrumentSansVariable.woff2
     Instrument Sans — https://github.com/Instrument/instrument-sans
@@ -125,12 +124,18 @@ distributed alongside the fonts.
     Copyright 2022 The Instrument Sans Project Authors
     License: fonts/InstrumentSans-OFL.txt
 
-  - packages/tokens/fonts/NewsreaderVariable.woff2
+  - site/assets/fonts/NewsreaderVariable.woff2
     Newsreader — https://github.com/productiontype/Newsreader
     Font revision: 1.003 (WOFF2 metadata)
     SHA-256: 6e4f2958c3a7c4a80acde4e5a679abe7e01bc1e30b92be3c7a8b696ef401d101
     Copyright 2020 The Newsreader Project Authors
-    License: fonts/Newsreader-OFL.txt
+    License: packages/tokens/fonts/Newsreader-OFL.txt
+
+  - packages/tokens/fonts/NewsreaderOnmars.woff2
+    Derived instance of Newsreader 1.003 with the weight axis restricted to 400–800.
+    SHA-256: cfd194b3b42cd52e0adb5fe316334d961b35ec8839fb297d654a65f73d751d26
+    Copyright 2020 The Newsreader Project Authors
+    License: packages/tokens/fonts/Newsreader-OFL.txt
 
 ================================================================================
 Third-party notices: Roboto font (SIL OFL 1.1)

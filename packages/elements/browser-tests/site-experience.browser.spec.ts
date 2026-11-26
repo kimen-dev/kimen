@@ -8,8 +8,8 @@ import { commands, page, userEvent } from 'vitest/browser';
 
 /* eslint-disable @nx/enforce-module-boundaries -- this integration contract intentionally consumes the hand-written site outside the elements project */
 import instrumentSansWoff2Url from '../../../packages/tokens/fonts/InstrumentSansVariable.woff2?url';
-import newsreaderWoff2Url from '../../../packages/tokens/fonts/NewsreaderVariable.woff2?url';
 import jetBrainsMonoWoff2Url from '../../../site/assets/fonts/JetBrainsMonoVariable.woff2?url';
+import newsreaderWoff2Url from '../../../site/assets/fonts/NewsreaderVariable.woff2?url';
 import siteFontsCss from '../../../site/fonts.css?raw';
 import landingCss from '../../../site/landing.css?raw';
 import landingHtml from '../../../site/index.html?raw';
