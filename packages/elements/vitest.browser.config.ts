@@ -8,6 +8,7 @@ import type { Page } from 'playwright';
 import { defineConfig } from 'vitest/config';
 
 import { componentRegistrationPlugin } from './scripts/component-registration-plugin.mjs';
+import { loaderBrowserPlugin } from './scripts/loader-browser-plugin.mjs';
 import { measureThemeFonts } from './scripts/measure-theme-fonts.ts';
 import { siteAssetsPlugin } from './scripts/site-assets-plugin.mjs';
 
@@ -189,7 +190,12 @@ const visualBaselinePath = (spec: string, name: string, engine: string, platform
 
 export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
-  plugins: [distSourceCoveragePlugin, componentRegistrationPlugin(), siteAssetsPlugin()],
+  plugins: [
+    distSourceCoveragePlugin,
+    componentRegistrationPlugin(),
+    siteAssetsPlugin(),
+    loaderBrowserPlugin(),
+  ],
   optimizeDeps: {
     // dist/components imports @stencil/core/internal/client at runtime.
     // Pre-bundling it up front prevents the mid-run dependency discovery

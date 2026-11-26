@@ -6,3 +6,4 @@ pnpm --filter @kimen/tokens build
 node packages/elements/scripts/build-surfaces.mjs --prepare-package-summary
 node packages/elements/scripts/generate-icons.mjs
 pnpm --filter @kimen/elements exec stencil build
+node packages/elements/scripts/write-loader.mjs

@@ -98,10 +98,9 @@ through `workspace:*`. `npm pack`, unlike `pnpm publish`, does not rewrite
   leaves behind files it no longer emits, so remove a stale `dist` after
   pulling a change that drops an output.
 - `@kimen/elements` publishes its ESM entry points only: the per-component
-  modules, the lazy build behind `./loader`, the declarations, the icons and
-  the agent docs. Stencil writes no collection. The CommonJS build and the
-  browser build in `dist/kimen` are still written but not published; the
-  site serves `dist/kimen`. Its per-component modules carry Stencil's client
+  modules, the loader and root facade built from those modules, the
+  declarations, the icons and the agent docs. The site serves the browser
+  build in `dist/kimen`. The per-component modules carry Stencil's client
   runtime, compiled for Kimen's components, as
   `dist/components/stencil-client.js`, so the package declares no runtime
   dependency: `@stencil/core` is a build tool. After the build,

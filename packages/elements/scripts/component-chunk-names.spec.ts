@@ -55,7 +55,6 @@ describe('the Stencil runtime of @kimen/elements', () => {
 
     const modules = [
       ...(await files(components, '.js')),
-      ...(await files(join(packageRoot, 'dist/esm'), '.js')),
       ...(await files(join(packageRoot, 'loader'), '.js')),
       join(packageRoot, 'dist/index.js'),
     ];

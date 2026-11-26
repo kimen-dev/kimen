@@ -35,7 +35,7 @@ document.querySelector('#range').addEventListener('ki-change', ({ detail }) => {
 </ki-segmented-control>
 ```
 
-The all-elements loader already registers the tooltip. With direct imports
+The loader discovers the tooltip in the segment’s shadow root. With direct imports
 or framework wrappers, register it before mounting an icon-only option.
 
 ```js

@@ -9,13 +9,9 @@
 
 **Created**: 2026-11-26
 
-**Status**: Draft, awaiting the founder's approval of the scenarios. On
-2026-11-26 the founder chose option (a), relayed by the coordinating agent:
-the loader moves onto `dist/components` as a breaking change
-(`perf(elements)!`, released as 0.5.0). The conditions: a public way to hand
-the loader a shadow root, this contract first, every document that states
-the old behaviour updated, `customElements.whenDefined` as the guidance
-that replaces `componentOnReady()`, and no runtime byte added.
+**Status**: The founder approved scenarios S1–S11 on 2026-11-26 and chose
+to release the loader change as a breaking change in 0.5.0. The all-107 page
+must fit within the current payload in both bundlers.
 
 **Input**: step 3 of the Stencil-vs-Lit report (2026-11-26) and opportunity
 10 of the weight report (2026-11-25), both in the founder's `internal/`.
@@ -27,9 +23,7 @@ every component.
 **Constitution check**: Art. II requires this contract: the behaviour of a
 public entry point changes. Art. IX: it is a breaking change of the loader's
 documented behaviour, released in a minor version while Kimen is pre-1.0
-(the founder's release rule of 2026-11-20). No export is removed or
-renamed and no declaration changes; the public API gate records one
-addition, `observeRoot`.
+(the founder's release rule of 2026-11-20). The public API gate records one addition, `observeRoot`.
 
 ## What changes for a consumer
 
@@ -61,7 +55,11 @@ configured a runtime that no longer exists.
   draw some children by name, such as `ki-markdown`'s `ki-code-block` and
   `ki-segment`'s `ki-tooltip`), and every root handed to `observeRoot`.
   An undefined `ki-*` element in any of them loads its tag's module, which
-  defines the tag and the components it imports.
+  defines the tag. Children drawn in shadow DOM are discovered separately.
+- **Chunk grouping.** Each registry entry imports a class-only module. The
+  bundler can combine the component facade, its implementation and helpers
+  with the same importers. Each independently usable tag has a separate entry,
+  and conditional shadow children are discovered at render time.
 - **`observeRoot(root)`** is the one new export: it searches a root the
   application owns (an open or closed shadow root, or any element) and keeps
   watching it. It returns a promise that resolves once the components
@@ -80,6 +78,15 @@ configured a runtime that no longer exists.
 - **The root facade** (`import { KiButton } from '@kimen/elements'`)
   re-exports the 20 frozen values from the per-component modules. Its
   declarations do not change.
+
+## Consumer migration
+
+Keep calling `defineCustomElements()` in the browser. Render or append each
+tag before awaiting `customElements.whenDefined(tag)`. Use a retrying locator
+or poll for the first render where you used `componentOnReady()`. Pass
+application-owned open or closed shadow roots to `observeRoot(root)`, or
+register tags directly from their subpaths if you need them before insertion.
+Only `exclude` affects registration among the existing loader options.
 
 ## Measured weight (to repeat on the final build)
 

@@ -174,14 +174,18 @@ defineKiButton();
 ```
 
 Register each element you use from its subpath (tree-shakable; internally
-nested Kimen elements are defined recursively), or register the whole
-catalog at once with the lazy loader:
+nested Kimen elements are defined recursively), or start the loader to define
+tags as they appear:
 
 ```ts
 import { defineCustomElements } from '@kimen/elements/loader';
 
 defineCustomElements();
 ```
+
+When a framework renders into its own shadow root, pass that root to
+`observeRoot(root)` from the loader. Append the element before waiting for
+`customElements.whenDefined(tag)` if you need to call its methods.
 
 The token sheets still follow the tags your markup writes. A page that
 cannot list them in advance loads the full sheet, `@kimen/tokens/css`, in

@@ -1,4 +1,5 @@
 // @spec:018-project-integrity-hardening#S8
+// @spec:167-loader-on-component-modules
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises';
@@ -6,6 +7,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join, relative, sep } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+
+import { bundleLoaderApplications, runLoaderBundleSmoke } from '../consumer-loader-bundles.mjs';
 
 import {
   browserSnippetContract,
@@ -924,4 +927,32 @@ test('@spec:018-project-integrity-hardening S8 rejects an elements tarball that 
 
   assert.notEqual(result.status, 0);
   assert.match(diagnostic(result), /packed llms|llms.*(?:missing|tarball)/iu);
+});
+
+// Run the production builders on the actual package before testing how the
+// installed tarballs behave in the isolated consumer.
+test('S3: esbuild and Vite request only the displayed button component', async (t) => {
+  const consumerDirectory = await mkdtemp(join(tmpdir(), 'kimen-loader-contract-'));
+  t.after(() => rm(consumerDirectory, { force: true, recursive: true }));
+  const packages = join(consumerDirectory, 'node_modules/@kimen');
+  await mkdir(packages, { recursive: true });
+  await symlink(join(repositoryRoot, 'packages/elements'), join(packages, 'elements'));
+
+  const bundles = await bundleLoaderApplications({ consumerDirectory });
+  const evidence = await runLoaderBundleSmoke({
+    bundles,
+    engine: process.env.KIMEN_BROWSER_ENGINE ?? 'chromium',
+  });
+
+  assert.deepEqual(
+    evidence.map(({ bundler, componentChunkLoaded, shadowButtonRendered }) => ({
+      bundler,
+      componentChunkLoaded,
+      shadowButtonRendered,
+    })),
+    [
+      { bundler: 'esbuild', componentChunkLoaded: true, shadowButtonRendered: true },
+      { bundler: 'vite', componentChunkLoaded: true, shadowButtonRendered: true },
+    ],
+  );
 });

@@ -14,8 +14,8 @@ import type { MarkdownInline } from './ki-markdown.inline';
 type Content = VNode | string;
 type Destination = ReturnType<typeof markdownDestination>;
 
-// Like Toaster, Markdown composes already registered elements. The full
-// loader registers them together. Direct-import hosts register the children.
+// Markdown composes Kimen elements by tag. The loader defines these
+// children when rendered. Direct-import hosts register them explicitly.
 function childTag(name: 'link' | 'note' | 'code-block'): string {
   return ['ki', name].join('-');
 }

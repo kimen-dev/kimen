@@ -9,7 +9,6 @@ import { compactButtonPalette } from './scripts/compact-button-palette';
 import { componentChunkNames } from './scripts/component-chunk-names.mjs';
 import { readComponentFormBindings } from './scripts/component-metadata.mjs';
 import { glyphChunks } from './scripts/glyph-chunks';
-import { lazyFallbackImport } from './scripts/lazy-fallback-import.mjs';
 
 // Form controls re-dispatch native input/change events across the shadow
 // boundary. The component manifest selects the wrapper binding for its prop.
@@ -28,8 +27,7 @@ export const config: Config = {
   tsconfig: 'tsconfig.stencil.json',
   // Glyph chunks get the prefix package.json `sideEffects` declares. The
   // plugin resolves the glyph modules' registry import, so it runs before
-  // Stencil's node resolution. The lazy runtime's fallback import is
-  // rewritten as Stencil ships it, before any other transform.
+  // Stencil's node resolution.
   rollupPlugins: {
     before: [
       // Stencil's runtime reads `attr="false"` as false on every component,
@@ -38,16 +36,13 @@ export const config: Config = {
       booleanAttributes,
       componentChunkNames,
       glyphChunks(resolve(__dirname, 'icons'), resolve(__dirname, 'src/utils/icon-registry.mjs')),
-      lazyFallbackImport,
     ],
     after: [compactButtonPalette],
   },
   outputTargets: [
-    // No Stencil collection: the package publishes the ESM lazy build behind
-    // ./loader and the per-component modules, and nothing consumes a
-    // collection. The CommonJS build and the browser build in dist/kimen are
-    // still written; the site serves dist/kimen, and the package publishes
-    // neither (package.json `files`).
+    // Retain the browseable site build (dist/kimen) and declarations, including
+    // the loader's types. The post-build pass writes the published ESM loader
+    // over dist/components and the deprecated root facade.
     { type: 'dist', esmLoaderPath: '../loader', collectionDir: null },
     // The per-component modules bundle Stencil's client runtime, compiled with
     // the build flags Kimen's components use, instead of importing the generic
@@ -92,11 +87,5 @@ export const config: Config = {
     }),
   ],
   sourceMap: true,
-  // The lazy loader names every component bundle in a static import, so a
-  // consumer's bundler emits each one as a chunk (the release checks esbuild
-  // and Vite). Without it Vite emits none, and esbuild reads the fallback
-  // import as a glob over the published source maps
-  // (scripts/lazy-fallback-import.mjs).
-  extras: { enableImportInjection: true },
   validatePrimaryPackageOutputTarget: true,
 };

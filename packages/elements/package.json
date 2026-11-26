@@ -13,13 +13,11 @@
   "files": [
     "dist/index.js",
     "dist/components",
-    "dist/esm",
-    "!dist/esm/kimen.js",
-    "!dist/esm/kimen.js.map",
     "dist/types",
     "icons",
     "loader/index.d.ts",
     "loader/index.js",
+    "loader/register",
     "generated/custom-elements.json",
     "llms.txt",
     "llms-full.txt",
@@ -27,7 +25,7 @@
     "NOTICE"
   ],
   "scripts": {
-    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/prune-package-outputs.mjs && node scripts/build-surfaces.mjs",
+    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/write-loader.mjs && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/prune-package-outputs.mjs && node scripts/build-surfaces.mjs",
     "test": "node --test scripts/icon-modules.test.mjs scripts/prune-package-outputs.test.mjs && vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.browser.config.ts",
@@ -140,8 +138,7 @@
   "customElements": "generated/custom-elements.json",
   "sideEffects": [
     "./icons/*.js",
-    "./dist/components/glyph-*.js",
-    "./dist/esm/glyph-*.js"
+    "./dist/components/glyph-*.js"
   ],
   "exports": {
     ".": {

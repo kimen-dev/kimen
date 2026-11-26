@@ -184,6 +184,7 @@ describe('consumer loader bundles', () => {
     for (const variant of [
       { requested: ['index.html', 'assets/index-a.js'] },
       { requested: ['assets/my-ki-button.js'] },
+      { requested: ['assets/ki-button2-abc.js', 'assets/ki-card-def.js'] },
       { requested: ['assets/ki-button.entry-b.css'] },
       { observation: { hydrated: true, shadowButtonRendered: false } },
       { observation: { hydrated: false, shadowButtonRendered: true } },
