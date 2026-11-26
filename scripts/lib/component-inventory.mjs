@@ -21,8 +21,9 @@ const LOADER_TARGET = Object.freeze({
   types: './loader/index.d.ts',
   import: './loader/index.js',
 });
+// Every glyph module shares one empty declaration.
 const ICON_TARGET = Object.freeze({
-  types: './icons/*.d.ts',
+  types: './icons/_glyph.d.ts',
   import: './icons/*.js',
 });
 const compareText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
