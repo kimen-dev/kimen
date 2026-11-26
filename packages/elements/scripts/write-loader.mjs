@@ -3,11 +3,6 @@ import { access, mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/pro
 import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import {
-  discoverComponents,
-  FROZEN_LEGACY_ROOT,
-} from '../../../scripts/lib/component-inventory.mjs';
-
 import { RUNTIME_CHUNK } from './component-chunk-names.mjs';
 
 const templatePath = new URL('loader-template.js.txt', import.meta.url);
@@ -89,6 +84,9 @@ export async function writeLoader({ packageRoot, components, values }) {
 async function main() {
   const packageRoot = fileURLToPath(new URL('..', import.meta.url));
   const workspaceRoot = fileURLToPath(new URL('../../..', import.meta.url));
+  const { discoverComponents, FROZEN_LEGACY_ROOT } = await import(
+    pathToFileURL(resolve(workspaceRoot, 'scripts/lib/component-inventory.mjs')).href
+  );
   const components = await discoverComponents({ workspaceRoot });
   await writeLoader({ packageRoot, components, values: FROZEN_LEGACY_ROOT.values });
 }
