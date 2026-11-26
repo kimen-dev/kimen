@@ -12,8 +12,9 @@ const packageRoot = fileURLToPath(new URL('..', import.meta.url));
 // a strict project reads it: `skipLibCheck: false`, so an error inside the
 // published declarations (a type they use but do not import, say) reaches
 // the consumer's build. One consumer file imports the types of every
-// per-component subpath, the components barrel, the lazy loader and the
-// deprecated root.
+// per-component subpath, the components barrel, the lazy loader, the
+// deprecated root and two glyph modules, a canonical name and an alias: a
+// strict project refuses a subpath that resolves to no declaration (TS7016).
 let consumer = '';
 let subpaths: string[] = [];
 
@@ -48,6 +49,8 @@ beforeAll(async () => {
     '@kimen/elements/components',
     '@kimen/elements/loader',
     '@kimen/elements',
+    '@kimen/elements/icons/circle-check',
+    '@kimen/elements/icons/alert-triangle',
   ];
   const imports = entries.map(
     (specifier, index) => `import type * as module${String(index)} from '${specifier}';`,

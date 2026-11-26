@@ -12,13 +12,19 @@ pnpm add @kimen/vue @kimen/tokens
 ```
 
 `@kimen/vue` depends on `@kimen/elements` at its own version; install
-`@kimen/tokens` at that same version.
+`@kimen/tokens` at that same version. Load the token core once and one token sheet for every `ki-*` tag you
+render, named like the element (`@kimen/tokens/css/ki-button` for
+`KiButton`), or the full `@kimen/tokens/css` in place of both when the app
+uses most of the catalog.
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
 import { KiButton, KiInput, KiSwitch } from '@kimen/vue';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
+import '@kimen/tokens/css/ki-input';
+import '@kimen/tokens/css/ki-switch';
 import '@kimen/tokens/css/base';
 
 const name = ref('');

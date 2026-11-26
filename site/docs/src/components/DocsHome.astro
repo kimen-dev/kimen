@@ -5,7 +5,8 @@ import ComponentIndex from './ComponentIndex.astro';
 const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/u, '')}/`;
 const install = 'pnpm add @kimen/elements @kimen/tokens';
 const example = `import { defineCustomElement } from '@kimen/elements/ki-button';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
 
 defineCustomElement();
 
@@ -15,7 +16,7 @@ const paths = [
   {
     title: 'By hand, in any framework',
     description:
-      'Import the elements you use, load the token stylesheet and write markup. React, Vue and Angular also have typed wrappers.',
+      'Import the elements you use, load the token core and their token sheets, and write markup. React, Vue and Angular also have typed wrappers.',
     links: [
       ['getting-started', 'Getting started'],
       ['guides/frameworks', 'Framework integration'],

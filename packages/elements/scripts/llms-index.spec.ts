@@ -262,7 +262,8 @@ describe('language-model index and documents', () => {
     expect(index).toContain(
       "import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';",
     );
-    expect(index).toContain("import '@kimen/tokens/css';");
+    expect(index).toContain("import '@kimen/tokens/css/core';");
+    expect(index).toContain("import '@kimen/tokens/css/ki-button';");
     expect(index).not.toContain('Attributes:');
     expect(index).not.toContain('--ki-button-');
     expect(index).not.toContain('When NOT to use');
@@ -426,8 +427,8 @@ describe('language-model index and documents', () => {
         '',
         '## Token stylesheets',
         '',
-        '- `@kimen/tokens/css`: every token, once per page. The default.',
-        '- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-demo`: the light option, only the tokens ki-demo needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.',
+        '- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-demo`: the default, only the tokens ki-demo needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.',
+        '- `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.',
         '',
         '## Attributes',
         '',
@@ -489,35 +490,36 @@ describe('language-model index and documents', () => {
         components: [aComponent({ tag: 'ki-first' }), aComponent({ tag: 'ki-second' })],
       };
       const { result } = await generateInto(directory, docs);
-      const packageFull = await readFile(join(directory, 'package/llms-full.txt'), 'utf8');
+      const elementsFull = buildLlmsTxt(docs, fixturePackage, fixturePreamble, {});
       const rootFull = await readFile(join(directory, 'root/llms-full.txt'), 'utf8');
 
       expect(result.ok).toBe(true);
-      expect(packageFull).toBe(buildLlmsTxt(docs, fixturePackage, fixturePreamble, {}));
-      expect(packageFull).toContain('Install with `pnpm add @kimen/elements @kimen/tokens`.');
-      expect(packageFull).toContain('## Theming');
-      expect(packageFull).toContain('### ki-first\n\nA demo element.\n\nWhen to use: show a demo.');
-      expect(packageFull).toContain('### ki-second');
-      // The repository copy is the package one plus the GenUI layer.
-      expect(rootFull.startsWith(packageFull)).toBe(true);
+      expect(rootFull).toContain('Install with `pnpm add @kimen/elements @kimen/tokens`.');
+      expect(rootFull).toContain('## Theming');
+      expect(rootFull).toContain('### ki-first\n\nA demo element.\n\nWhen to use: show a demo.');
+      expect(rootFull).toContain('### ki-second');
+      // The elements summary, then the GenUI layer.
+      expect(rootFull.startsWith(elementsFull)).toBe(true);
       expect(rootFull).toContain('## GenUI layer');
-      expect(packageFull).not.toContain('## GenUI layer');
+      expect(elementsFull).not.toContain('## GenUI layer');
+      // The package ships the documents its index links, not this summary.
+      await expect(readFile(join(directory, 'package/llms-full.txt'), 'utf8')).rejects.toThrow(
+        /ENOENT/u,
+      );
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
   });
 
-  it('S10 both complete summaries cover every published component', async () => {
-    const [docs, packageFull, rootFull] = await Promise.all([
+  it('S10 the complete summary covers every published component', async () => {
+    const [docs, rootFull] = await Promise.all([
       readDocs(),
-      readFile(new URL('./llms-full.txt', packageRoot), 'utf8'),
       readFile(new URL('llms-full.txt', workspaceRoot), 'utf8'),
     ]);
 
     for (const { tag } of docs.components) {
-      expect(packageFull).toContain(`\n### ${tag}\n`);
+      expect(rootFull).toContain(`\n### ${tag}\n`);
     }
-    expect(rootFull.startsWith(packageFull)).toBe(true);
   });
 
   it('S11 every link of the packaged index is a relative path to a file the generation writes', async () => {
@@ -532,7 +534,6 @@ describe('language-model index and documents', () => {
       expect(links.map((link) => link.url)).toEqual([
         'llms/ki-first.md',
         'llms/theming.md',
-        'llms-full.txt',
         'generated/custom-elements.json',
       ]);
       for (const { url } of links.filter((link) => link.name !== 'custom-elements.json')) {
@@ -568,6 +569,7 @@ describe('language-model index and documents', () => {
     ]);
     const index = buildLlmsIndex(docs, pkg, preamble, {
       base: siteOrigin,
+      fullSummary: true,
       manifestHref: `${siteOrigin}assets/elements/custom-elements.json`,
       genUi,
     });

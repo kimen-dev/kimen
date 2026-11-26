@@ -219,10 +219,9 @@ describe('build-surfaces mutation boundary', () => {
       await expect(readFile(staleShard)).rejects.toMatchObject({ code: 'ENOENT' });
       await expect(readFile(staleWrapper)).rejects.toMatchObject({ code: 'ENOENT' });
       expect(await readFile(wrapperShell, 'utf8')).toBe('// handwritten wrapper shell\n');
-      // Each index owns its companions: the complete summary beside it and
-      // the documents it links in the directory named after it.
+      // Each index owns the documents it links, in the directory named after
+      // it; only the repository index has the complete summary beside it.
       const packageIndex = await readFile(resolve(packageRoot, 'llms.txt'), 'utf8');
-      const packageLlms = await readFile(resolve(packageRoot, 'llms-full.txt'), 'utf8');
       const packageDocument = await readFile(resolve(packageRoot, 'llms/ki-demo.md'), 'utf8');
       const rootIndex = await readFile(resolve(root, 'llms.txt'), 'utf8');
       const rootLlms = await readFile(resolve(root, 'llms-full.txt'), 'utf8');
@@ -238,7 +237,6 @@ describe('build-surfaces mutation boundary', () => {
           [resolve(apiRoot, 'index.json'), publicApiBytes],
           [componentShard, componentBytes],
           [resolve(packageRoot, 'llms.txt'), packageIndex],
-          [resolve(packageRoot, 'llms-full.txt'), packageLlms],
           [resolve(packageRoot, 'llms/ki-demo.md'), packageDocument],
           [resolve(root, 'llms.txt'), rootIndex],
           [resolve(root, 'llms-full.txt'), rootLlms],
@@ -248,7 +246,8 @@ describe('build-surfaces mutation boundary', () => {
       // The packaged index links by relative path, the repository index by
       // the address the site publishes; only the latter knows the GenUI layer.
       expect(packageIndex).toContain('- [ki-demo](llms/ki-demo.md): Use for demonstrations.');
-      expect(packageIndex).toContain('- [llms-full.txt](llms-full.txt): ');
+      expect(packageIndex).not.toContain('llms-full.txt');
+      expect(rootIndex).toContain('- [llms-full.txt](https://kimen.dev/llms-full.txt): ');
       expect(packageIndex).not.toContain('@kimen/catalog');
       expect(rootIndex).toContain(
         '- [ki-demo](https://kimen.dev/llms/ki-demo.md): Use for demonstrations.',
@@ -287,11 +286,13 @@ describe('build-surfaces mutation boundary', () => {
         browserBaseline: ['chromium', 'firefox', 'webkit'],
         completedMethods: 1,
       });
-      // The root summary extends the package one with the GenUI layer built
+      // The root summary is the elements one, then the GenUI layer built
       // from the hand-written docs/genui-surfaces.json source (Art. I: the
       // artifact stays generated; only its sources are hand-maintained).
-      expect(rootLlms.startsWith(packageLlms)).toBe(true);
-      expect(packageLlms).not.toContain('## GenUI layer');
+      const genUiLayer = rootLlms.indexOf('\n## GenUI layer\n');
+      expect(genUiLayer).toBeGreaterThan(0);
+      expect(rootLlms.slice(0, genUiLayer)).toContain('### ki-demo');
+      expect(rootLlms.slice(0, genUiLayer)).not.toContain('### @kimen/catalog');
       expect(rootLlms).toContain('## GenUI layer');
       expect(rootLlms).toContain('Fixture GenUI layer prose.');
       expect(rootLlms).toContain('### @kimen/catalog');
@@ -300,7 +301,7 @@ describe('build-surfaces mutation boundary', () => {
       expect(rootLlms).toContain(
         'Entry points:\n- `validateUiSpec(input, options?) => ValidationReport`: Validates a fixture spec.',
       );
-      expect(packageLlms).toContain('CSS custom properties:\n- `--ki-demo-color`: Demo color.');
+      expect(rootLlms).toContain('CSS custom properties:\n- `--ki-demo-color`: Demo color.');
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -351,14 +352,12 @@ describe('build-surfaces mutation boundary', () => {
 
       // A redirected index takes its companions with it: nothing is written
       // next to an index the caller did not name.
-      const packageFullPath = resolve(custom, 'output-package-llms-full.txt');
       const rootFullPath = resolve(custom, 'output-root-llms-full.txt');
       expect([...result.outputs.keys()]).toEqual([
         paths.docsPath,
         paths.manifestPath,
         paths.publicApiPath,
         paths.packageLlmsPath,
-        packageFullPath,
         resolve(custom, 'output-package-llms/ki-demo.md'),
         paths.rootLlmsPath,
         rootFullPath,
@@ -371,9 +370,9 @@ describe('build-surfaces mutation boundary', () => {
       expect(JSON.parse(await readFile(paths.manifestPath, 'utf8')).modules[0].path).toBe(
         'custom/ki-demo.js',
       );
-      const packageLlms = await readFile(packageFullPath, 'utf8');
       const rootLlms = await readFile(rootFullPath, 'utf8');
-      expect(rootLlms.startsWith(packageLlms)).toBe(true);
+      expect(rootLlms.startsWith('# ')).toBe(true);
+      expect(rootLlms).toContain('Custom preamble.');
       expect(rootLlms).toContain('Injected GenUI layer prose.');
       expect(await readFile(paths.rootLlmsPath, 'utf8')).toContain('Injected GenUI layer prose.');
       expect(await readFile(paths.packageLlmsPath, 'utf8')).toContain('Custom preamble.');

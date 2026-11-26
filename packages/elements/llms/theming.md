@@ -18,8 +18,9 @@ a token under a mode sets its mode token, `--ki-<mode>-<token>` (for example
 `--ki-contrast-more-outline-control`), never the token under a media query.
 
 To use the bundled Material 3 reference theme, side-effect import its
-stylesheet (exported as `@kimen/tokens/css/material3`) in addition to
-`@kimen/tokens/css`, then select it on the document root:
+stylesheet (exported as `@kimen/tokens/css/material3`) in addition to the
+core and tag sheets (or `@kimen/tokens/css`), then select it on the document
+root:
 
 ```html
 <html data-ki-theme="material3" data-ki-color-scheme="dark">

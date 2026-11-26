@@ -64,7 +64,7 @@ if (!report.ok) {
 ```ts
 import { renderUiSpec } from '@kimen/catalog';
 import { defineCustomElements } from '@kimen/elements/loader';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css'; // every token: agent output can name any catalog tag
 
 defineCustomElements(); // agent output can name any catalog tag
 
@@ -78,6 +78,12 @@ const result = renderUiSpec(spec, {
 });
 if (!result.ok) console.warn(result.diagnostics); // nothing attached; previous content intact
 ```
+
+An ordinary page loads the token core and one sheet per tag it writes
+(`@kimen/tokens/css/core`, `@kimen/tokens/css/ki-button`, …). A generated
+surface cannot list its tags in advance, so it loads the full sheet,
+`@kimen/tokens/css`, instead. A surface whose catalog you restrict to a known
+list (`{ components: [...] }`) may load the core and those tags' sheets.
 
 `renderUiSpec` is atomic: it validates everything before the first DOM
 write, so a rejected spec leaves the surface untouched. In a React

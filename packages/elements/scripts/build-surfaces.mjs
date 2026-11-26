@@ -1,4 +1,4 @@
-import { access, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -11,7 +11,6 @@ import {
   buildManifest,
   buildRootLlmsTxt,
   normalizeDocs,
-  packageSummaryFromSiteSummary,
   serializeJson,
   validateDocs,
   validateGenUiSurfaces,
@@ -25,27 +24,6 @@ const workspaceRoot = resolve(packageRoot, '../..');
 // and the manifest path is where the assembler copies custom-elements.json.
 const SITE_ORIGIN = 'https://kimen.dev/';
 const SITE_MANIFEST_PATH = 'assets/elements/custom-elements.json';
-
-export async function preparePackageSummary({
-  packageRoot: selectedPackageRoot = packageRoot,
-  workspaceRoot: selectedWorkspaceRoot = workspaceRoot,
-} = {}) {
-  const target = resolve(selectedPackageRoot, 'llms-full.txt');
-  try {
-    await access(target);
-    return;
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
-  }
-  // Stencil validates package.json's file list before the normal surfaces
-  // build regenerates both summaries from the fresh component metadata.
-  const siteSummary = await readFile(resolve(selectedWorkspaceRoot, 'llms-full.txt'), 'utf8');
-  try {
-    await writeFile(target, packageSummaryFromSiteSummary(siteSummary), { flag: 'wx' });
-  } catch (error) {
-    if (error.code !== 'EEXIST') throw error;
-  }
-}
 
 export async function runBuildSurfaces(options = {}) {
   const selectedPackageRoot = options.packageRoot ?? packageRoot;
@@ -112,15 +90,15 @@ export async function runBuildSurfaces(options = {}) {
     ).href
   );
   const manifest = completeCemMethodSignatures({ manifest: rawManifest, docs });
-  // Each index owns two companions next to it (llms.txt → llms-full.txt and
-  // llms/): the complete summary and the documents the index links. The
-  // packaged index links them by relative path; the repository index, which
-  // the site publishes, by their address on the site.
+  // Each index owns the documents it links, in llms/ next to it. The packaged
+  // index links them by relative path; the repository index, which the site
+  // publishes, by their address on the site, with the complete summary
+  // (llms-full.txt) beside it. The package ships no complete summary: it
+  // would repeat the documents.
   const packageCompanions = llmsCompanions(paths.packageLlmsPath);
   const rootCompanions = llmsCompanions(paths.rootLlmsPath);
-  const packageFull = buildLlmsTxt(docs, pkg, preamble, manifestInputs);
   const rootFull = buildRootLlmsTxt(
-    packageFull,
+    buildLlmsTxt(docs, pkg, preamble, manifestInputs),
     buildGenUiSection(genUiInputs.genUi, genUiInputs.packages),
   );
   const packageIndex = buildLlmsIndex(docs, pkg, preamble, {
@@ -128,6 +106,7 @@ export async function runBuildSurfaces(options = {}) {
   });
   const rootIndex = buildLlmsIndex(docs, pkg, preamble, {
     base: SITE_ORIGIN,
+    fullSummary: true,
     manifestHref: `${SITE_ORIGIN}${SITE_MANIFEST_PATH}`,
     genUi: genUiInputs,
   });
@@ -165,7 +144,6 @@ export async function runBuildSurfaces(options = {}) {
     [paths.manifestPath, serializeJson(manifest)],
     ...publicApiFiles,
     [paths.packageLlmsPath, packageIndex],
-    [packageCompanions.fullPath, packageFull],
     ...packageDocuments.map(([file, content]) => [
       join(packageCompanions.documentsDirectory, file),
       content,
@@ -461,17 +439,13 @@ function formatViolations(violations) {
 // not — compare real filesystem paths so a checkout under a path with spaces
 // or non-ASCII characters cannot silently skip generation (S6).
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (process.argv[2] === '--prepare-package-summary') {
-    await preparePackageSummary();
-  } else {
-    const result = await runBuildSurfaces({
-      wrapperDirectories: ['react', 'vue'].map((name) =>
-        resolve(workspaceRoot, 'packages', name, 'src'),
-      ),
-    });
-    if (!result.ok) {
-      process.stderr.write(result.stderr);
-      process.exit(1);
-    }
+  const result = await runBuildSurfaces({
+    wrapperDirectories: ['react', 'vue'].map((name) =>
+      resolve(workspaceRoot, 'packages', name, 'src'),
+    ),
+  });
+  if (!result.ok) {
+    process.stderr.write(result.stderr);
+    process.exit(1);
   }
 }

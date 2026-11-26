@@ -397,7 +397,7 @@ describe('component inventory mutation boundary', () => {
         import: './dist/components/*.js',
       },
       './icons/*': {
-        types: './icons/*.d.ts',
+        types: './icons/_glyph.d.ts',
         import: './icons/*.js',
       },
     };

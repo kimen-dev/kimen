@@ -9,19 +9,32 @@ Register each component before using it. Every component is exported from
 
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
 import '@kimen/tokens/css/base';
 
 defineKiButton();
 ```
 
-Load `@kimen/tokens/css` once per page: it is the onmars default theme and
-the only stylesheet the components require. It declares every `--ki-*` token
-for both schemes together with the `color-scheme` they resolve from, so a
-page follows its visitor's light or dark preference with no further setup.
-Load `@kimen/tokens/css/base` — the page contract — with it: it paints the
-page background, text color and body font from those tokens, declares no
-color scheme, and lays out the items of Kimen groups (segments, radios,
+Load `@kimen/tokens/css/core` once per page: it is the onmars default theme
+without the component tokens. It declares the shared `--ki-*` tokens for
+both schemes together with the `color-scheme` they resolve from, so a page
+follows its visitor's light or dark preference with no further setup. Then
+load one sheet for every `ki-*` tag the page uses, named like its element
+import: `@kimen/tokens/css/ki-button` beside `@kimen/elements/ki-button`. A
+tag's sheet carries the component tokens that tag needs, including those of
+the components it renders, so you add one only for the tags your own markup
+writes, slotted ones included. A tag without its sheet paints with undefined
+tokens.
+
+The simple alternative is `@kimen/tokens/css` once per page in place of the
+core and the tag sheets: every token in one stylesheet. Use it when a page
+uses most of the catalog, or renders tags it cannot list in advance, such as
+agent-generated UI.
+
+Load `@kimen/tokens/css/base` — the page contract — with either: it paints
+the page background, text color and body font from those tokens, declares
+no color scheme, and lays out the items of Kimen groups (segments, radios,
 options, menu and list items…) one per line until their tags register, so
 their labels do not run together.
 
@@ -149,5 +162,4 @@ methods, CSS custom properties and examples.
 
 ## Optional
 
-- [llms-full.txt](llms-full.txt): everything in one file — this guidance and every component contract. Large: fetch it only when the whole library is needed at once.
 - [custom-elements.json](generated/custom-elements.json): the same component contracts as a Custom Elements Manifest (JSON).

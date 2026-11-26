@@ -51,8 +51,8 @@ Put a decorative illustration in `media` to replace the icon.
 
 ## Token stylesheets
 
-- `@kimen/tokens/css`: every token, once per page. The default.
-- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-empty-state`: the light option, only the tokens ki-empty-state needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-empty-state`: the default, only the tokens ki-empty-state needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
 ## Attributes
 

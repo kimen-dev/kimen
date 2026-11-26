@@ -23,11 +23,12 @@ test('@spec:069-ki-icon#S10 imports register only the selected names', async (t)
   const output = join(directory, 'icons');
   await generateIconModules({ output });
 
+  // One module per glyph, their shared registry and their one declaration.
   const files = new Set(await readdir(output));
-  assert.equal(files.size, 2193 * 2 + 1);
+  assert.equal(files.size, 2193 + 2);
+  assert.equal(await readFile(join(output, '_glyph.d.ts'), 'utf8'), 'export {};\n');
   for (const name of Object.keys(icons)) {
     assert.ok(files.has(`${name}.js`), `missing module for ${name}`);
-    assert.ok(files.has(`${name}.d.ts`), `missing type declaration for ${name}`);
   }
   assert.equal(getIcon('circle-check'), undefined);
   await import(pathToFileURL(join(output, 'check-circle-2.js')));
@@ -74,7 +75,7 @@ test('@spec:069-ki-icon#S10 the package exports side-effectful glyph modules ind
   const manifest = JSON.parse(await readFile(new URL('package.json', elements), 'utf8'));
 
   assert.deepEqual(manifest.exports['./icons/*'], {
-    types: './icons/*.d.ts',
+    types: './icons/_glyph.d.ts',
     import: './icons/*.js',
   });
   assert.ok(manifest.files.includes('icons'));

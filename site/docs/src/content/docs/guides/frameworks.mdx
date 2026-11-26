@@ -33,7 +33,9 @@ Peers: `react` and `react-dom` `^18 || ^19`. TypeScript needs
 ```tsx
 import { useState } from 'react';
 import { KiButton, KiInput } from '@kimen/react';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
+import '@kimen/tokens/css/ki-input';
 import '@kimen/tokens/css/base';
 
 export function NameForm({ onSave }: { onSave: (name: string) => void }) {
@@ -71,7 +73,10 @@ Peers: `vue` `>=3.4.38`; `vue-router` `>=4.5.0` is optional.
 <script setup lang="ts">
 import { ref } from 'vue';
 import { KiButton, KiInput, KiSwitch } from '@kimen/vue';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
+import '@kimen/tokens/css/ki-input';
+import '@kimen/tokens/css/ki-switch';
 import '@kimen/tokens/css/base';
 
 const name = ref('');
@@ -139,12 +144,16 @@ next to the components they bind. `ki-*` events bind by their DOM name,
 `(ki-dismiss)="onDismiss($event)"`, and `$event` is typed under
 `strictTemplates`. The components use `OnPush`: in a zoneless app, update
 state from event handlers with signals or `markForCheck`. Load the token
-stylesheets globally, for example via `angular.json`:
+stylesheets globally, for example via `angular.json`: the core, one sheet
+per `ki-*` tag the app uses, and the page contract.
 
 ```json
 "styles": [
   "src/styles.css",
-  "node_modules/@kimen/tokens/dist/css/tokens.css",
+  "node_modules/@kimen/tokens/dist/css/core.css",
+  "node_modules/@kimen/tokens/dist/css/ki-button.css",
+  "node_modules/@kimen/tokens/dist/css/ki-checkbox.css",
+  "node_modules/@kimen/tokens/dist/css/ki-input.css",
   "node_modules/@kimen/tokens/dist/css/base.css"
 ]
 ```
@@ -153,11 +162,13 @@ stylesheets globally, for example via `angular.json`:
 
 Install `@kimen/elements` and `@kimen/tokens`
 ([Getting started](/docs/getting-started/)). Every setup is then the same
-two steps, regardless of framework:
+two steps, regardless of framework: register the element, and load the token
+core with the token sheet of each tag you use.
 
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
 
 defineKiButton();
 ```
@@ -171,6 +182,10 @@ import { defineCustomElements } from '@kimen/elements/loader';
 
 defineCustomElements();
 ```
+
+The token sheets still follow the tags your markup writes. A page that
+cannot list them in advance loads the full sheet, `@kimen/tokens/css`, in
+place of the core and the tag sheets: every token in one stylesheet.
 
 Registration is client-side: on server-rendered pages the `ki-*` tags render
 as plain markup and upgrade in the browser once the registration code runs.
@@ -211,7 +226,8 @@ and does not bind custom events from props: on React 18, use
 ```tsx
 // main.tsx — register once, at the entry point
 import { defineCustomElement as defineKiAlert } from '@kimen/elements/ki-alert';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-alert';
 
 defineKiAlert();
 ```
@@ -286,7 +302,8 @@ native event, and `ki-*` events bind the same way (`@ki-close`,
 import { ref } from 'vue';
 import type { KiInput } from '@kimen/elements/ki-input';
 import { defineCustomElement as defineKiInput } from '@kimen/elements/ki-input';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-input';
 
 defineKiInput();
 
@@ -336,10 +353,14 @@ export class NotificationsComponent {
 }
 ```
 
-Load the token stylesheet globally, for example via `angular.json`:
+Load the token stylesheets globally, for example via `angular.json`:
 
 ```json
-"styles": ["src/styles.css", "node_modules/@kimen/tokens/dist/css/tokens.css"]
+"styles": [
+  "src/styles.css",
+  "node_modules/@kimen/tokens/dist/css/core.css",
+  "node_modules/@kimen/tokens/dist/css/ki-switch.css"
+]
 ```
 
 ## Native form participation — no bindings required
