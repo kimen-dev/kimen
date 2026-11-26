@@ -22,7 +22,7 @@ texts and copyright notices are distributed alongside the fonts.
   - packages/tokens/fonts/NewsreaderOnmars.woff2
     Newsreader — https://github.com/productiontype/Newsreader
     Font revision: 1.003 (WOFF2 metadata)
-    Derived instance with the weight axis restricted to 400–800.
-    SHA-256: cfd194b3b42cd52e0adb5fe316334d961b35ec8839fb297d654a65f73d751d26
+    Derived instance at weight 500 with the optical-size axis retained.
+    SHA-256: 92dc20ebc3a8a89604ab90f52babe4efe93781880a21f972e1fc2c45db5e88cc
     Copyright 2020 The Newsreader Project Authors
     License: fonts/Newsreader-OFL.txt

@@ -49,9 +49,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['fonts/InstrumentSans-OFL.txt', 'fonts/Newsreader-OFL.txt']),
-    // The reduced Newsreader face brings the package to 235,182 / 1,157,564 B
-    // with 3 % headroom on both measurements.
-    budget: Object.freeze({ packed: 242_238, unpacked: 1_192_291 }),
+    // Newsreader at weight 500 brings the package to 195,198 / 1,100,266 B
+    // with 3 % packed and 0.1 % unpacked headroom.
+    budget: Object.freeze({ packed: 201_054, unpacked: 1_101_367 }),
   }),
   '@kimen/mcp-server': Object.freeze({
     mapsEveryModule: false,

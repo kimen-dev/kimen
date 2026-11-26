@@ -14,7 +14,7 @@ afterEach(() => {
 });
 
 it.each([
-  { theme: 'onmars', body: ['Instrument Sans', '400 700'], heading: ['Newsreader', '400 800'] },
+  { theme: 'onmars', body: ['Instrument Sans', '400 700'], heading: ['Newsreader', '500'] },
   { theme: 'material3', body: ['Roboto', '100 900'], heading: ['Roboto', '100 900'] },
 ] as const)('mounts the $theme dialog gallery with its fixture faces loaded', async (families) => {
   const gallery = await mountGallery(fixtureFor('ki-dialog').gallery, families.theme);
