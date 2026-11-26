@@ -805,6 +805,24 @@
         ],
         "signature": "interface KiTopNav extends Components.KiTopNav, HTMLElement {\n}\nexport const KiTopNav: {\n    prototype: KiTopNav;\n    new (): KiTopNav;\n};"
       },
+      "TopNavScrollBehavior": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type TopNavScrollBehavior = 'none' | 'elevate' | 'collapse';"
+      },
+      "TopNavTitleAlign": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type TopNavTitleAlign = 'start' | 'center';"
+      },
+      "TopNavVariant": {
+        "kinds": [
+          "type"
+        ],
+        "signature": "export type TopNavVariant = 'header' | 'app-bar';"
+      },
       "defineCustomElement": {
         "kinds": [
           "value"

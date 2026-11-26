@@ -16,9 +16,10 @@ const INLINE_ACTIONS = 3;
 const MENU_ID = 'top-nav-menu';
 const TRIGGER_ID = 'top-nav-trigger';
 
-type TopNavVariant = 'header' | 'app-bar';
-type TopNavTitleAlign = 'start' | 'center';
-type TopNavScrollBehavior = 'none' | 'elevate' | 'collapse';
+// Exported: the generated declarations of the element name them.
+export type TopNavVariant = 'header' | 'app-bar';
+export type TopNavTitleAlign = 'start' | 'center';
+export type TopNavScrollBehavior = 'none' | 'elevate' | 'collapse';
 interface LinkAttributes {
   role: string | null;
   tabindex: string | null;

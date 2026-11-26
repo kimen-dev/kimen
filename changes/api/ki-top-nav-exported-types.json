@@ -1,0 +1,23 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/modules/.~1components/symbols/TopNavScrollBehavior": "69208886c9b04565d4a8b919b1e81c5a77bd6f793520d813b862643b696c98cd",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/TopNavTitleAlign": "aa0fe33d6a67af4c9145265339d422dc76dc20da5de8afa44551cb19270e4458",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/TopNavVariant": "1b1b171c8fa8c51c1b4c4653e74d24a948873f1b7087d8a74b2b817637b77bd2",
+    "/packages/@kimen~1elements/modules/.~1ki-top-nav/symbols/TopNavScrollBehavior": "69208886c9b04565d4a8b919b1e81c5a77bd6f793520d813b862643b696c98cd",
+    "/packages/@kimen~1elements/modules/.~1ki-top-nav/symbols/TopNavTitleAlign": "aa0fe33d6a67af4c9145265339d422dc76dc20da5de8afa44551cb19270e4458",
+    "/packages/@kimen~1elements/modules/.~1ki-top-nav/symbols/TopNavVariant": "1b1b171c8fa8c51c1b4c4653e74d24a948873f1b7087d8a74b2b817637b77bd2",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/TopNavScrollBehavior": "69208886c9b04565d4a8b919b1e81c5a77bd6f793520d813b862643b696c98cd",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/TopNavTitleAlign": "aa0fe33d6a67af4c9145265339d422dc76dc20da5de8afa44551cb19270e4458",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/TopNavVariant": "1b1b171c8fa8c51c1b4c4653e74d24a948873f1b7087d8a74b2b817637b77bd2"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "ki-top-nav exports TopNavVariant, TopNavTitleAlign and TopNavScrollBehavior, the types its generated declarations already name",
+  "release": "minor",
+  "schemaVersion": 2
+}
