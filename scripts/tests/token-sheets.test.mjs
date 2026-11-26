@@ -219,6 +219,23 @@ test('the core and the tag sheets together declare the full sheet’s tokens, fo
   assert.ok(fullMain.declarations.size > 3000);
 });
 
+// The full sheet keeps only the published onmars v1 glass images (spec 062
+// S4, until 1.0.0); every other foundation is private, and material3 names
+// none, so it reassigns only names the full sheet declares.
+test('the full sheet declares the published foundations only, and material3 names none', () => {
+  assert.deepEqual([...fullNames].filter((name) => name.startsWith('--ki-foundation-')).sort(), [
+    '--ki-foundation-onmars-v1-dialog-bg-image',
+    '--ki-foundation-onmars-v1-tooltip-arrow-end',
+    '--ki-foundation-onmars-v1-tooltip-arrow-start',
+    '--ki-foundation-onmars-v1-tooltip-bg-image',
+  ]);
+  assert.doesNotMatch(sheet('tokens.material3.css'), /--ki-foundation-/u);
+  const undeclared = [...customProperties(sheet('tokens.material3.css'))].filter(
+    (name) => !fullNames.has(name),
+  );
+  assert.deepEqual(undeclared, []);
+});
+
 test('S6 material3 reads only tokens the core, the tag sheets and itself declare', () => {
   const material3 = sheet('tokens.material3.css');
   const declared = new Set([

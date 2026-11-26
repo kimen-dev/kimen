@@ -28,9 +28,12 @@ import StyleDictionary from 'style-dictionary';
 import {
   componentSourceOf,
   declaredNames,
+  expandReferences,
   isFoundation,
+  isPrivateFoundationToken,
   pick,
   pickModes,
+  PUBLISHED_FOUNDATIONS,
   tagSources,
   unresolvedReferences,
 } from './scripts/component-sheets.mjs';
@@ -59,6 +62,17 @@ import {
 } from './style-dictionary.config.mjs';
 
 const dist = new URL('./dist/css/', import.meta.url);
+
+// A sheet that names a private foundation anywhere, in a declaration, a
+// reference or a fallback, would read or publish a token no sheet declares.
+function assertNoPrivateFoundation(css, file) {
+  const named = [...new Set(css.match(/--ki-foundation-[a-z0-9-]+/gu) ?? [])].filter(
+    isPrivateFoundationToken,
+  );
+  if (named.length > 0) {
+    throw new Error(`dist/css/${file} names private foundations: ${named.join(', ')}`);
+  }
+}
 
 async function composition(config) {
   const dictionary = await new StyleDictionary(config).getPlatformTokens('css');
@@ -145,22 +159,32 @@ const baseWithBackdropDefaults = new Map([
   ['--_ki-backdrop-filter-default', 'blur(var(--ki-effect-component-backdrop-blur))'],
   ['--_ki-listbox-backdrop-filter-default', 'blur(var(--ki-blur-48))'],
 ]);
-await writeFile(
-  new URL('tokens.css', dist),
-  compactTokenStylesheet(
-    renderBaseStylesheet(baseWithBackdropDefaults, {
-      deprecations,
-      modes: baseModes,
-      inherited,
-      densities,
-    }),
-    {
-      declarations: onmars,
-      modes: baseModes,
-      inline: (name) => name.startsWith('--ki-foundation-'),
-    },
-  ),
+// The full sheet declares no private foundation: every one it read is inlined
+// where it is read, and only the published onmars v1 glass images remain
+// (./scripts/component-sheets.mjs, PUBLISHED_FOUNDATIONS).
+for (const name of PUBLISHED_FOUNDATIONS) {
+  if (!onmars.has(name)) throw new Error(`the published foundation ${name} no longer exists`);
+}
+const inFullSheet = (name) => !isPrivateFoundationToken(name);
+const fullCss = compactTokenStylesheet(
+  renderBaseStylesheet(pick(baseWithBackdropDefaults, inFullSheet), {
+    deprecations,
+    modes: pickModes(baseModes, inFullSheet),
+    inherited,
+    densities,
+  }),
+  {
+    declarations: onmars,
+    modes: baseModes,
+    inline: isFoundation,
+  },
 );
+assertNoPrivateFoundation(fullCss, 'tokens.css');
+const fullGaps = unresolvedReferences(fullCss, declaredNames(fullCss));
+if (fullGaps.length > 0) {
+  throw new Error(`the full sheet reads tokens it does not declare: ${fullGaps.join(', ')}`);
+}
+await writeFile(new URL('tokens.css', dist), fullCss);
 
 const modeSummary = (modes) =>
   modes.map(({ mode, declarations }) => `${mode.name} ${declarations.size}`).join(', ');
@@ -168,11 +192,18 @@ console.log(
   `✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark, ${deprecations.size} deprecated; densities: ${densities.map(({ level }) => level).join(', ')}; modes: ${modeSummary(baseModes)})`,
 );
 
-// Every literal foundation the theme reads is inlined (spec 166 D1), so the
-// theme works over the core sheet, which carries no foundation: the values
-// are the same, only the expressions name the literal instead of the token.
+// Every foundation the theme reads is inlined (spec 166 D1), so the theme
+// works over the core sheet, which carries no foundation, and over the full
+// sheet, which carries no private one: the values are the same, only the
+// expressions name the foundation's own expression instead of the token. A
+// theme reassigns names the full sheet declares, never others, so it drops
+// its overrides of private foundations, which nothing reads once inlined.
+const material3Overrides = pick(
+  expandReferences(material3, material3Theme, isPrivateFoundationToken),
+  inFullSheet,
+);
 const material3Css = compactTokenStylesheet(
-  renderThemeStylesheet('material3', material3, { deprecations }),
+  renderThemeStylesheet('material3', material3Overrides, { deprecations }),
   {
     declarations: material3Theme,
     modes: baseModes,
@@ -181,18 +212,19 @@ const material3Css = compactTokenStylesheet(
     transitive: true,
   },
 );
+assertNoPrivateFoundation(material3Css, 'tokens.material3.css');
 await writeFile(new URL('tokens.material3.css', dist), material3Css);
 
 console.log(
-  `✔ dist/css/tokens.material3.css (theme: material3 — ${material3.size} overrides of onmars)`,
+  `✔ dist/css/tokens.material3.css (theme: material3 — ${material3Overrides.size} overrides of onmars)`,
 );
 
-// Spec 166: the core sheet and one sheet per tag, beside the full sheet,
-// which stays exactly as it is. A token belongs to a component source when
-// its base definition lives in tokens/component/; the core carries every
-// other token but the foundations; a tag's sheet carries every source the
-// tag needs (./scripts/component-sheets.mjs). Each split declaration is the
-// full sheet's own, compacted the same way.
+// Spec 166: the core sheet and one sheet per tag, beside the full sheet. A
+// token belongs to a component source when its base definition lives in
+// tokens/component/; the core carries every other token but the foundations;
+// a tag's sheet carries every source the tag needs
+// (./scripts/component-sheets.mjs). Each split declaration is the full
+// sheet's own, compacted the same way.
 const sourceOf = new Map(
   sharedTokens
     .filter(({ filePath }) => componentSourceOf(filePath) !== null)
