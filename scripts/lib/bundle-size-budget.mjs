@@ -121,10 +121,15 @@ const BASE_BUDGETS = {
   tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   // Whole pages, script and token stylesheets, in brotli bytes
   // (packages/elements/scripts/page-weight.mjs): one ki-button, and the ten
-  // components of a typical form page. Measured on 2026-11-26 against main
-  // ac20a900 with the runtime compiled for Kimen (31,028 and 57,175 B), plus
-  // about 3 %.
-  pages: { button: 32_000, tenComponents: 58_900 },
+  // components of a typical form page. `pages` is the primary figure, the
+  // documented token setup: the core and one sheet per tag the page writes
+  // (spec 166, the default since the founder's approval of 2026-11-26).
+  // `fullSheetPages` loads the full sheet instead, the simple alternative.
+  // Both measured on 2026-11-26 on macOS against main de03accd: 18,382 and
+  // 47,680 B with the split sheets, 31,028 and 57,175 B with the full sheet,
+  // each plus 1 %.
+  pages: { button: 18_566, tenComponents: 48_157 },
+  fullSheetPages: { button: 31_339, tenComponents: 57_747 },
 };
 
 export function deriveBundleSizeBudgets(components) {
@@ -135,6 +140,7 @@ export function deriveBundleSizeBudgets(components) {
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },
     tokenSheets: { ...BASE_BUDGETS.tokenSheets },
     pages: { ...BASE_BUDGETS.pages },
+    fullSheetPages: { ...BASE_BUDGETS.fullSheetPages },
   };
   for (const { tag, metadata } of components) {
     for (const [target, allowances] of Object.entries(metadata.sizeBudget ?? {})) {
