@@ -290,7 +290,11 @@ describe('package content rules', () => {
       ),
     ).toEqual({
       '@kimen/catalog': ['dist/generated/catalog.js'],
-      '@kimen/adapter-mcp-apps': ['dist/generated/surface-document.js'],
+      '@kimen/adapter-mcp-apps': [
+        'dist/generated/surface-document.js',
+        'dist/generated/surface-profile-data.js',
+        'dist/generated/surface-profile-form.js',
+      ],
     });
   });
 

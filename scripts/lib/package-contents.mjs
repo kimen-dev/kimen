@@ -74,9 +74,16 @@ export const packageContentRules = Object.freeze({
   }),
   '@kimen/adapter-mcp-apps': Object.freeze({
     mapsEveryModule: true,
-    unmappedModules: Object.freeze(['dist/generated/surface-document.js']),
+    unmappedModules: Object.freeze([
+      'dist/generated/surface-document.js',
+      'dist/generated/surface-profile-data.js',
+      'dist/generated/surface-profile-form.js',
+    ]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 444_416, unpacked: 1_796_096 }),
+    // Spec 165 adds the «form» and «data» profile documents. The founder
+    // approved this as a ceiling on 2026-11-25 ("Sí, apruebo"): once #634
+    // and #636 land, the budget is re-measured plus 3 %, never above it.
+    budget: Object.freeze({ packed: 696_320, unpacked: 2_932_736 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,

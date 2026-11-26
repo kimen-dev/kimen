@@ -50,11 +50,16 @@ export interface KimenSurfaceResource {
  * (S2 edge case).
  */
 export function createKimenSurfaceResource(name = 'surface'): KimenSurfaceResource {
+  return surfaceResource(name, SURFACE_DOCUMENT);
+}
+
+/** The resource serving `document` under `name` (internal: a profile's document, spec 165). */
+export function surfaceResource(name: string, document: string): KimenSurfaceResource {
   return {
     _meta: { ui: { csp: NO_NETWORK_POLICY } },
     mimeType: SURFACE_MIME_TYPE,
     name,
-    text: SURFACE_DOCUMENT,
+    text: document,
     uri: surfaceResourceUri(name),
   };
 }

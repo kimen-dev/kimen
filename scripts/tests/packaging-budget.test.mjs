@@ -279,7 +279,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       '@kimen/catalog': { packed: 320_512, unpacked: 1_382_400 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
-      '@kimen/adapter-mcp-apps': { packed: 444_416, unpacked: 1_796_096 },
+      // Spec 165 profiles: the ceiling the founder approved on 2026-11-25.
+      '@kimen/adapter-mcp-apps': { packed: 696_320, unpacked: 2_932_736 },
       '@kimen/react': { packed: 48_128, unpacked: 392_192 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },

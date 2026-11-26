@@ -53,6 +53,8 @@ describe('generated modules published without a source map', () => {
     const root = await aPackage('@kimen/adapter-mcp-apps', {
       'dist/generated/surface-document.js':
         'export const html = "";\n//# sourceMappingURL=other.js.map\n',
+      'dist/generated/surface-profile-data.js': 'export const data = {};\n',
+      'dist/generated/surface-profile-form.js': 'export const form = {};\n',
     });
 
     await unmapGeneratedModules(root);
