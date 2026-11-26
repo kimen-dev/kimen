@@ -120,6 +120,22 @@ it('S7 resumes following after the reader goes back to the end', async () => {
   await expectAtEnd(viewport);
 });
 
+it('S7 keeps following when a scroll notification arrives after a new message', async () => {
+  const { conversation, viewport } = await mount();
+  await pause(viewport);
+  viewport.scrollTop = viewport.scrollHeight;
+  // Deliver the return scroll and a later notification for the same offset
+  // with transcript growth in between, before the resize observer can follow.
+  viewport.dispatchEvent(new Event('scroll'));
+  const before = viewport.scrollHeight;
+  conversation.append(message('Reply appended'));
+  viewport.dispatchEvent(new Event('scroll'));
+
+  await expect.poll(() => viewport.scrollHeight).toBeGreaterThan(before);
+  await expectAtEnd(viewport);
+  await expect.element(jump).not.toBeInTheDocument();
+});
+
 it('S8 returns to the latest reply and restores log focus using the keyboard', async () => {
   const { conversation, viewport } = await mount();
   await pause(viewport);

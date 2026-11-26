@@ -1180,4 +1180,19 @@ describe('ki-dialog boolean presence in a real browser', () => {
     await expect.poll(() => el.getAttribute('open')).toBe('');
     await el.close();
   });
+
+  it('keeps an already open dialog closed when its open attribute is changed to "false"', async () => {
+    cleanup();
+    const el = await mountDialog({ open: true });
+    const dialog = internalDialog(el);
+    expect(dialog.matches(':modal')).toBe(true);
+
+    el.setAttribute('open', 'false');
+    // Attribute observers run before the next render can reflect the new value.
+    await Promise.resolve();
+
+    expect(el.open).toBe(false);
+    expect(dialog.matches(':modal')).toBe(false);
+    await expect.poll(() => el.hasAttribute('open')).toBe(false);
+  });
 });

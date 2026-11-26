@@ -88,11 +88,14 @@ export class KiConversation {
   };
 
   private onScroll = (): void => {
-    if (!this.stickToBottom || !this.viewport) return;
-    // A scroll caused by following can be delivered after more text has
-    // already changed the scroll height. Only a changed offset can pause us.
-    if (!this.awayFromEnd && this.viewport.scrollTop === this.followedOffset) return;
-    this.setAwayFromEnd(!this.atEnd(this.viewport));
+    const viewport = this.viewport;
+    if (!this.stickToBottom || !viewport) return;
+    // A queued scroll can arrive after more text changes the scroll height.
+    // Accept the reader's return offset just like an automatic scroll.
+    if (!this.awayFromEnd && viewport.scrollTop === this.followedOffset) return;
+    const atEnd = this.atEnd(viewport);
+    if (atEnd) this.followedOffset = viewport.scrollTop;
+    this.setAwayFromEnd(!atEnd);
   };
 
   private goToEnd = (): void => {

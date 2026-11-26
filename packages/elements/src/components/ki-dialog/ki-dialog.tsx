@@ -153,6 +153,11 @@ export class KiDialog {
 
   @Watch('open')
   protected handleOpenChange(): void {
+    // A replacement with "false" closes an open dialog. Remove that value
+    // before the presence observer can reopen the dialog ahead of reflection.
+    if (!this.open && this.host.getAttribute('open') === 'false') {
+      this.host.removeAttribute('open');
+    }
     this.syncDialogToHost();
   }
 
