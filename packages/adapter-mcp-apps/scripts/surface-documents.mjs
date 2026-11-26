@@ -297,9 +297,9 @@ async function bundleScript(tags, effective) {
     // A side-effect import that the elements package does not declare in
     // `sideEffects` is one esbuild removes: a component's own glyph went
     // missing from the document that way. Fail the build instead. (The
-    // per-component modules ship a Stencil runtime whose unreachable lazy
-    // import esbuild no longer reads as an empty glob, so no warning needs
-    // silencing: packages/elements/scripts/vendor-stencil-client.mjs.)
+    // per-component modules carry a Stencil runtime compiled without lazy
+    // loading, so no import of theirs reads as a glob and no warning needs
+    // silencing.)
     logOverride: { 'ignored-bare-import': 'error' },
     metafile: true,
     minify: true,

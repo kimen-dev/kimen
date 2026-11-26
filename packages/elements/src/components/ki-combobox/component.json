@@ -22,7 +22,7 @@
       "brotli": 4880
     },
     "worstCase": {
-      "brotli": 25200
+      "brotli": 12700
     },
     "tokenStylesheets": {
       "onmars": 101,

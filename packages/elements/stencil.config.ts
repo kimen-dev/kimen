@@ -4,7 +4,9 @@ import type { Config } from '@stencil/core';
 import { reactOutputTarget } from '@stencil/react-output-target';
 import { vueOutputTarget } from '@stencil/vue-output-target';
 
+import { booleanAttributes } from './scripts/boolean-attributes.mjs';
 import { compactButtonPalette } from './scripts/compact-button-palette';
+import { componentChunkNames } from './scripts/component-chunk-names.mjs';
 import { readComponentFormBindings } from './scripts/component-metadata.mjs';
 import { glyphChunks } from './scripts/glyph-chunks';
 import { lazyFallbackImport } from './scripts/lazy-fallback-import.mjs';
@@ -30,6 +32,11 @@ export const config: Config = {
   // rewritten as Stencil ships it, before any other transform.
   rollupPlugins: {
     before: [
+      // Stencil's runtime reads `attr="false"` as false on every component,
+      // form-associated or not, and the per-component build keeps readable
+      // chunk names, its runtime's among them, for the glyph prefix to wrap.
+      booleanAttributes,
+      componentChunkNames,
       glyphChunks(resolve(__dirname, 'icons'), resolve(__dirname, 'src/utils/icon-registry.mjs')),
       lazyFallbackImport,
     ],
@@ -42,7 +49,15 @@ export const config: Config = {
     // still written; the site serves dist/kimen, and the package publishes
     // neither (package.json `files`).
     { type: 'dist', esmLoaderPath: '../loader', collectionDir: null },
-    { type: 'dist-custom-elements', customElementsExportBehavior: 'single-export-module' },
+    // The per-component modules bundle Stencil's client runtime, compiled with
+    // the build flags Kimen's components use, instead of importing the generic
+    // one from @stencil/core: a page that registers one ki-button downloads
+    // a runtime of a third the size, and the package has no runtime dependency.
+    {
+      type: 'dist-custom-elements',
+      customElementsExportBehavior: 'single-export-module',
+      externalRuntime: false,
+    },
     { type: 'docs-json', file: 'generated/docs.json' },
     reactOutputTarget({
       outDir: '../react/src',

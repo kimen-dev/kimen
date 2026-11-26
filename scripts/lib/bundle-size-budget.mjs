@@ -87,8 +87,13 @@ const BASE_BUDGETS = {
   // brotli for Linux CI's output and 0.1 % of raw bytes, which esbuild emits
   // alike everywhere: 1,297,361 / 302,589 / 227,135 and 3,226,022 / 648,936 /
   // 479,558 B.
-  mcpApps: { raw: 587_281, gzip: 114_066, brotli: 89_094 },
-  mcpServer: { raw: 1_857_413, gzip: 352_318, brotli: 317_309 },
+  // The per-component modules' Stencil runtime compiled for Kimen
+  // (externalRuntime: false, 2026-11-25) measured against main ac20a900 on
+  // macOS: -45,945 / 15,040 / 13,040 B for the document and -46,089 / 14,995 /
+  // 13,015 B for kimen-mcp, taken off here exactly so the headroom stays what
+  // it was.
+  mcpApps: { raw: 541_336, gzip: 99_026, brotli: 76_054 },
+  mcpServer: { raw: 1_811_324, gzip: 337_323, brotli: 304_294 },
   // A browser host that validates and renders agent specs (validateUiSpec and
   // renderUiSpec from the packed @kimen/catalog, bundled for production:
   // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
@@ -114,6 +119,12 @@ const BASE_BUDGETS = {
   // sheet. Fixed: no component marginal adds to them. Measured on macOS at
   // 6,812 / 8,075 / 11,187 B and 1,971 B for the largest sheet (ki-prompt-input).
   tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
+  // Whole pages, script and token stylesheets, in brotli bytes
+  // (packages/elements/scripts/page-weight.mjs): one ki-button, and the ten
+  // components of a typical form page. Measured on 2026-11-26 against main
+  // ac20a900 with the runtime compiled for Kimen (31,028 and 57,175 B), plus
+  // about 3 %.
+  pages: { button: 32_000, tenComponents: 58_900 },
 };
 
 export function deriveBundleSizeBudgets(components) {
@@ -123,6 +134,7 @@ export function deriveBundleSizeBudgets(components) {
     genuiHost: { ...BASE_BUDGETS.genuiHost },
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },
     tokenSheets: { ...BASE_BUDGETS.tokenSheets },
+    pages: { ...BASE_BUDGETS.pages },
   };
   for (const { tag, metadata } of components) {
     for (const [target, allowances] of Object.entries(metadata.sizeBudget ?? {})) {
@@ -140,7 +152,8 @@ export function deriveBundleSizeBudgets(components) {
   return limits;
 }
 
-function readBundleSizeBudgets() {
+/** The shipped limits: the bases above plus every component's declared allowances. */
+export function readBundleSizeBudgets() {
   const componentsRoot = fileURLToPath(
     new URL('../../packages/elements/src/components/', import.meta.url),
   );

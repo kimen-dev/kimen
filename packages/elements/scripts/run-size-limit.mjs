@@ -5,12 +5,12 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { RUNTIME_CHUNK } from './component-chunk-names.mjs';
 import { readComponentMetadataByTag } from './component-metadata.mjs';
-import { VENDORED_RUNTIME } from './vendor-stencil-client.mjs';
 
-// The Stencil client runtime: the dependency's, and the copy the
-// per-component modules import by relative path (vendor-stencil-client.mjs).
-const RUNTIME = Object.freeze(['@stencil/core', `./${VENDORED_RUNTIME}`]);
+// The Stencil client runtime, the chunk every per-component module imports
+// by relative path (component-chunk-names.mjs).
+const RUNTIME = Object.freeze([`./${RUNTIME_CHUNK}`]);
 
 const compareText = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 const toDistPath = (tag, projectRoot) =>
@@ -45,6 +45,14 @@ export function renderCompositeEntry(group, projectRoot) {
   );
 }
 
+// The uniform per-component ceilings, in brotli bytes: what a component adds
+// beside the shared Stencil runtime, and what a page that registers it alone
+// downloads. Each is the largest measured on 2026-11-25, with the runtime
+// compiled for Kimen, plus about 3 %. Lowering one needs no approval;
+// raising one needs the founder's.
+export const MARGINAL_CEILING = 8_700;
+export const WORST_CASE_CEILING = 12_600;
+
 /**
  * The uniform worst-case ceiling, unless a member declares a reviewed exception in its
  * component.json (`sizeBudget.worstCase.brotli`, in bytes). A composite takes its largest.
@@ -52,8 +60,8 @@ export function renderCompositeEntry(group, projectRoot) {
 function worstCaseLimit(members, metadataByTag) {
   const exceptions = members
     .map((tag) => metadataByTag.get(tag)?.sizeBudget?.worstCase?.brotli)
-    .filter((bytes) => Number.isSafeInteger(bytes) && bytes > 25_000);
-  return exceptions.length === 0 ? '25 KB' : `${String(Math.max(...exceptions))} B`;
+    .filter((bytes) => Number.isSafeInteger(bytes) && bytes > WORST_CASE_CEILING);
+  return `${String(Math.max(WORST_CASE_CEILING, ...exceptions))} B`;
 }
 
 export function createSizeLimitConfig({
@@ -137,7 +145,7 @@ export function createSizeLimitConfig({
         name: `${subject.id} marginal cost (runtime excluded)`,
         path,
         ignore: [...RUNTIME],
-        limit: '9 KB',
+        limit: `${String(MARGINAL_CEILING)} B`,
       },
       {
         name: `${subject.id} worst case (full Stencil runtime)`,

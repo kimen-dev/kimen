@@ -55,7 +55,7 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
-    budget: Object.freeze({ packed: 674_816, unpacked: 3_379_200 }),
+    budget: Object.freeze({ packed: 659_456, unpacked: 3_331_072 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,
@@ -88,9 +88,10 @@ export const packageContentRules = Object.freeze({
     ]),
     assets: Object.freeze([]),
     // Spec 165 adds the «form» and «data» profile documents. The founder
-    // approved this as a ceiling on 2026-11-25 ("Sí, apruebo"): once #634
-    // and #636 land, the budget is re-measured plus 3 %, never above it.
-    budget: Object.freeze({ packed: 696_320, unpacked: 2_932_736 }),
+    // approved 696,320 / 2,932,736 B as a ceiling on 2026-11-25 ("Sí,
+    // apruebo"), to be re-measured once #634 and #636 landed: 509,550 /
+    // 2,307,112 B on 2026-11-26, plus about 3 %.
+    budget: Object.freeze({ packed: 525_312, unpacked: 2_376_704 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,

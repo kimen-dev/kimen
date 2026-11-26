@@ -27,7 +27,7 @@
       "onmars": 151
     },
     "worstCase": {
-      "brotli": 28000
+      "brotli": 15000
     }
   }
 }

@@ -101,7 +101,10 @@ through `workspace:*`. `npm pack`, unlike `pnpm publish`, does not rewrite
   modules, the lazy build behind `./loader`, the declarations, the icons and
   the agent docs. Stencil writes no collection. The CommonJS build and the
   browser build in `dist/kimen` are still written but not published; the
-  site serves `dist/kimen`. After the build,
+  site serves `dist/kimen`. Its per-component modules carry Stencil's client
+  runtime, compiled for Kimen's components, as
+  `dist/components/stencil-client.js`, so the package declares no runtime
+  dependency: `@stencil/core` is a build tool. After the build,
   `packages/elements/scripts/prune-package-outputs.mjs` removes the
   declarations of internal helpers, which no public declaration imports, and
   the source maps that map no source.
@@ -113,8 +116,8 @@ outside the set that is not `private` carries one at all.
 **Clean-consumer smoke.** Right after it builds the candidate,
 `validate-core` installs the generative UI packages, with elements and
 tokens, from their tarballs into a fresh npm project: third-party
-dependencies such as `zod` and `@stencil/core` come from the registry and
-lifecycle scripts stay off. Each `@kimen/*` package must be installed
+dependencies such as `zod` come from the registry and lifecycle scripts stay
+off. Each `@kimen/*` package must be installed
 exactly once, from its tarball. Then each package answers one DOM-free call
 in Node: `validateUiSpec` on a one-node spec, `catalogPrompt` and
 `uiSpecJsonSchema`, an A2UI adapter refusing an unsupported version, and the
