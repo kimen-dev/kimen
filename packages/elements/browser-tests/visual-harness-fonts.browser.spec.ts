@@ -60,17 +60,37 @@ it('matches the full Newsreader face for dialog headings at different text sizes
   const previousSize = root.style.fontSize;
   const text = new Range();
   text.selectNodeContents(heading);
+  const box = ({ x, y, width, height }: DOMRect) => ({ x, y, width, height });
   const lineMetrics = () =>
     [...text.getClientRects()].map(({ width, height }) => ({ width, height }));
 
   try {
     for (const size of [12, 16, 22, 32]) {
+      const label = `root font size ${String(size)}px`;
       root.style.fontSize = `${String(size)}px`;
       heading.style.removeProperty('font-family');
+      const bundledHeadingBox = box(heading.getBoundingClientRect());
+      const bundledDialogBox = box(dialog.getBoundingClientRect());
       const bundled = lineMetrics();
       expect(bundled[0]?.width).toBeGreaterThan(0);
+
       heading.style.fontFamily = reference.family;
-      expect(lineMetrics(), `root font size ${String(size)}px`).toEqual(bundled);
+      expect(box(heading.getBoundingClientRect()), `heading box at ${label}`).toEqual(
+        bundledHeadingBox,
+      );
+      expect(box(dialog.getBoundingClientRect()), `dialog box at ${label}`).toEqual(
+        bundledDialogBox,
+      );
+      const referenceLines = lineMetrics();
+      expect(
+        referenceLines.map(({ height }) => height),
+        label,
+      ).toEqual(bundled.map(({ height }) => height));
+      // Pinning the TrueType weight rounds glyph outlines, shifting text widths by a fraction of a CSS pixel.
+      for (const [index, { width }] of bundled.entries()) {
+        const referenceWidth = referenceLines[index]?.width ?? Number.NaN;
+        expect(Math.abs(width - referenceWidth), label).toBeLessThanOrEqual(0.1);
+      }
     }
   } finally {
     root.style.fontSize = previousSize;
