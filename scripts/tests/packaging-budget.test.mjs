@@ -297,7 +297,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
+      // Lowered for the install trims (one glyph declaration, no package llms-full.txt).
+      '@kimen/elements': { packed: 2_738_176, unpacked: 12_694_528 },
       // Rebased for the reduced Newsreader weight range.
       '@kimen/tokens': { packed: 242_238, unpacked: 1_192_291 },
       '@kimen/mcp-server': { packed: 659_456, unpacked: 3_331_072 },

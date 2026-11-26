@@ -1007,9 +1007,9 @@ describe('agent surfaces', () => {
         () => '',
       ),
       await readFile(new URL('./llms.txt', packageRoot), 'utf8'),
-      await readFile(new URL('./llms-full.txt', packageRoot), 'utf8'),
       await readFile(new URL('./llms/ki-button.md', packageRoot), 'utf8'),
       await readFile(new URL('../../llms.txt', packageRoot), 'utf8'),
+      await readFile(new URL('../../llms-full.txt', packageRoot), 'utf8'),
     ]) {
       expect(artifact).not.toContain('"timestamp"');
       // Windows drive noise requires an ISOLATED drive letter (C:\...): a
@@ -1166,7 +1166,6 @@ describe('agent surfaces', () => {
       'packages/elements/generated/docs.d.ts',
       'packages/elements/generated/docs.json',
       'packages/elements/generated/public-api',
-      'packages/elements/llms-full.txt',
       'packages/elements/llms.txt',
       'packages/elements/llms/theming.md',
     ]) {

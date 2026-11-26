@@ -154,9 +154,10 @@ without them. Details and per-framework notes live in the
 how to install and load the library, when to use each component, and a
 relative link per component to a Markdown document under `llms/` with its
 attributes, slots, parts, events, methods, CSS custom properties, examples
-and when-to-use / when-not-to-use guidance. `llms-full.txt` is all of it in
-one file, and `generated/custom-elements.json` is the machine-readable
-Custom Elements Manifest. All of them are generated from component JSDoc;
+and when-to-use / when-not-to-use guidance; read only the documents a task
+needs. `generated/custom-elements.json` is the machine-readable Custom
+Elements Manifest, and [kimen.dev/llms-full.txt](https://kimen.dev/llms-full.txt)
+has every document in one file. All of them are generated from component JSDoc;
 never edit them by hand. The `llms.txt` code examples are executed against
 the packed packages during release validation, so they are guaranteed to
 run.
