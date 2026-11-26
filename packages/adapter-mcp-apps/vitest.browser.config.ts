@@ -24,6 +24,8 @@ export default defineConfig({
   test: {
     name: 'adapter-mcp-apps-browser',
     include: ['browser-tests/**/*.browser.spec.ts'],
+    // Spec 165 S7 embeds a subset document that no profile publishes.
+    globalSetup: ['browser-tests/subset-documents.global-setup.mjs'],
     browser: {
       enabled: true,
       headless: true,

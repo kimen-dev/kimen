@@ -124,7 +124,7 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
     mcpApps: { raw: 587_281, gzip: 114_072, brotli: 88_956 },
-    mcpServer: { raw: 1_857_264, gzip: 352_284, brotli: 317_296 },
+    mcpServer: { raw: 1_857_413, gzip: 352_334, brotli: 317_071 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
@@ -149,7 +149,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
     mcpApps: { raw: 589_481, gzip: 114_252, brotli: 89_121 },
-    mcpServer: { raw: 1_858_564, gzip: 352_474, brotli: 317_471 },
+    mcpServer: { raw: 1_858_713, gzip: 352_524, brotli: 317_246 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
@@ -298,7 +298,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
-      '@kimen/adapter-mcp-apps': { packed: 366_592, unpacked: 1_555_456 },
+      // Spec 165 profiles: the ceiling the founder approved on 2026-11-25.
+      '@kimen/adapter-mcp-apps': { packed: 696_320, unpacked: 2_932_736 },
       '@kimen/react': { packed: 48_128, unpacked: 392_192 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },

@@ -294,7 +294,11 @@ describe('package content rules', () => {
         'dist/generated/catalog-structure.js',
         'dist/generated/catalog.js',
       ],
-      '@kimen/adapter-mcp-apps': ['dist/generated/surface-document.js'],
+      '@kimen/adapter-mcp-apps': [
+        'dist/generated/surface-document.js',
+        'dist/generated/surface-profile-data.js',
+        'dist/generated/surface-profile-form.js',
+      ],
     });
   });
 

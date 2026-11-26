@@ -32,9 +32,9 @@ import { posix } from 'node:path';
 // - budget, in bytes: the gzip tarball and its unpacked contents. Each base
 //   is the size measured when it was set (2026-11-25) plus about 3 %, and
 //   raising one needs the founder's approval. The lean catalog runtime
-//   lowered the catalog, adapter-mcp-apps and mcp-server bases the same day
-//   to what they measured after it, plus the same 3 %. The catalog tarball
-//   (315,307 B) kept its base: 3 % over it would have raised the base.
+//   lowered the catalog and mcp-server bases the same day to what they
+//   measured after it, plus the same 3 %. The catalog tarball (315,307 B)
+//   kept its base: 3 % over it would have raised the base.
 export const packageContentRules = Object.freeze({
   '@kimen/elements': Object.freeze({
     mapsEveryModule: false,
@@ -81,9 +81,16 @@ export const packageContentRules = Object.freeze({
   }),
   '@kimen/adapter-mcp-apps': Object.freeze({
     mapsEveryModule: true,
-    unmappedModules: Object.freeze(['dist/generated/surface-document.js']),
+    unmappedModules: Object.freeze([
+      'dist/generated/surface-document.js',
+      'dist/generated/surface-profile-data.js',
+      'dist/generated/surface-profile-form.js',
+    ]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 366_592, unpacked: 1_555_456 }),
+    // Spec 165 adds the «form» and «data» profile documents. The founder
+    // approved this as a ceiling on 2026-11-25 ("Sí, apruebo"): once #634
+    // and #636 land, the budget is re-measured plus 3 %, never above it.
+    budget: Object.freeze({ packed: 696_320, unpacked: 2_932_736 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,

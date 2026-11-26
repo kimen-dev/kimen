@@ -21,6 +21,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./profiles/data": {
+      "types": "./dist/generated/surface-profile-data.d.ts",
+      "import": "./dist/generated/surface-profile-data.js"
+    },
+    "./profiles/form": {
+      "types": "./dist/generated/surface-profile-form.d.ts",
+      "import": "./dist/generated/surface-profile-form.js"
     }
   },
   "scripts": {
