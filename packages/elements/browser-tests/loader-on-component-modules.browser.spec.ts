@@ -41,9 +41,10 @@ async function freshRealm(importRoot = false) {
   `;
   const loaded = new Promise<void>((resolve, reject) => {
     realm.loaderReady = resolve;
-    script.addEventListener('error', () => { reject(new Error('Could not load the built loader')); }, {
-      once: true,
-    });
+    function onError() {
+      reject(new Error('Could not load the built loader'));
+    }
+    script.addEventListener('error', onError, { once: true });
   });
   realm.document.head.append(script);
   await loaded;
