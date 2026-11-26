@@ -140,8 +140,10 @@ design tokens (`--ki-*`, `@kimen/tokens`).
   https://kimen.dev/llms.txt and each component has
   https://kimen.dev/llms/<tag>.md. Never guess attribute, slot, event or
   token names. Follow each component's "When to use" and "When not to use".
-- Load `@kimen/tokens/css` once per page and register every tag you use
-  (`@kimen/elements/<tag>` or the `@kimen/elements/loader`).
+- Load `@kimen/tokens/css/core` once per page plus
+  `@kimen/tokens/css/<tag>` for every tag you use, or `@kimen/tokens/css`
+  (every token) when the page cannot list its tags, and register every tag
+  you use (`@kimen/elements/<tag>` or the `@kimen/elements/loader`).
 - Style through `--ki-*` tokens first, then `::part()`, then slots. No
   `!important`, no hard-coded colours or spacing.
 - Agent-generated UI is a JSON UI spec rendered by `@kimen/catalog`'s guarded

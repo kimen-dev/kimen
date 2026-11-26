@@ -1,7 +1,8 @@
 # Pagination examples
 
-Import `@kimen/tokens/css` and register the element with
-`defineCustomElement` from `@kimen/elements/components/ki-pagination.js`.
+Import `@kimen/tokens/css/core` and `@kimen/tokens/css/ki-pagination`, and
+register the element with `defineCustomElement` from
+`@kimen/elements/components/ki-pagination.js`.
 
 ## Replace a results page
 

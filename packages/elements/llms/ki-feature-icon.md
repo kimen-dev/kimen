@@ -16,12 +16,14 @@ or the sole label of a section.
 
 # Using ki-feature-icon
 
-Load the token stylesheet, register each custom element, and import the
-Lucide glyph you use. Place one glyph with its default inherited size
+Load the token core and the sheets of the tags you write, register each
+custom element, and import the Lucide glyph you use. Place one glyph with its default inherited size
 in the slot, next to the heading that names the section.
 
 ```js
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-feature-icon';
+import '@kimen/tokens/css/ki-icon';
 import '@kimen/elements/icons/shield-check';
 import { defineCustomElement as defineFeatureIcon } from '@kimen/elements/ki-feature-icon';
 import { defineCustomElement as defineIcon } from '@kimen/elements/ki-icon';
@@ -70,8 +72,8 @@ default slot. The host imports the glyph before rendering the surface.
 
 ## Token stylesheets
 
-- `@kimen/tokens/css`: every token, once per page. The default.
-- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-feature-icon`: the light option, only the tokens ki-feature-icon needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-feature-icon`: the default, only the tokens ki-feature-icon needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
 ## Attributes
 

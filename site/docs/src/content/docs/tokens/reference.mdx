@@ -28,7 +28,9 @@ from the built stylesheet at every site build:
 
   | Export | Contents |
   | --- | --- |
-  | `@kimen/tokens/css` | The default **onmars** theme, light and dark, and the `color-scheme` its tokens resolve from |
+  | `@kimen/tokens/css/core` | The default **onmars** theme without component tokens, light and dark, and the `color-scheme` its tokens resolve from |
+  | `@kimen/tokens/css/ki-<tag>` | The component tokens one `ki-*` tag needs, including those of the components it renders: one sheet per tag the page uses |
+  | `@kimen/tokens/css` | The full sheet, the simple alternative to the core and the tag sheets: every onmars token in one stylesheet |
   | `@kimen/tokens/css/material3` | The **material3** reference theme, opt-in via `data-ki-theme` |
   | `@kimen/tokens/css/base` | The [page contract](/docs/guides/theming/#the-page-contract) pages load with the theme: page background, text color and body font, and group items laid out until their tags register |
 

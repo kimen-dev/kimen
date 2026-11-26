@@ -1,9 +1,11 @@
 # Slider examples
 
-Import the element and one theme stylesheet before mounting the examples.
+Import the element, the token core and the slider's token sheet before
+mounting the examples.
 
 ```js
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-slider';
 import { defineCustomElement } from '@kimen/elements/ki-slider';
 
 defineCustomElement();

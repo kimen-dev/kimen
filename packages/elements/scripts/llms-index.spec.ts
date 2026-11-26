@@ -262,7 +262,8 @@ describe('language-model index and documents', () => {
     expect(index).toContain(
       "import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';",
     );
-    expect(index).toContain("import '@kimen/tokens/css';");
+    expect(index).toContain("import '@kimen/tokens/css/core';");
+    expect(index).toContain("import '@kimen/tokens/css/ki-button';");
     expect(index).not.toContain('Attributes:');
     expect(index).not.toContain('--ki-button-');
     expect(index).not.toContain('When NOT to use');
@@ -426,8 +427,8 @@ describe('language-model index and documents', () => {
         '',
         '## Token stylesheets',
         '',
-        '- `@kimen/tokens/css`: every token, once per page. The default.',
-        '- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-demo`: the light option, only the tokens ki-demo needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.',
+        '- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-demo`: the default, only the tokens ki-demo needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.',
+        '- `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.',
         '',
         '## Attributes',
         '',

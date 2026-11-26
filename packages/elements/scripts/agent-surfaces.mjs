@@ -454,12 +454,12 @@ function buildComponentDocument(component, inputs) {
   ].join('\n\n')}\n`;
 }
 
-// Spec 166: the full sheet stays the default; the core and one sheet per tag,
-// named like the element import, are the light option.
+// Spec 166: the core and one sheet per tag, named like the element import, are
+// the default (since 2026-11-26); the full sheet is the simple alternative.
 function tokenStylesheetsFor(tag) {
   return [
-    '`@kimen/tokens/css`: every token, once per page. The default.',
-    `\`@kimen/tokens/css/core\` once per page and \`@kimen/tokens/css/${tag}\`: the light option, only the tokens ${tag} needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.`,
+    `\`@kimen/tokens/css/core\` once per page and \`@kimen/tokens/css/${tag}\`: the default, only the tokens ${tag} needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.`,
+    '`@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.',
   ];
 }
 

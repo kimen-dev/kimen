@@ -29,19 +29,36 @@ npm install @kimen/elements @kimen/tokens
 
 ## Load a theme
 
-One stylesheet is required: a theme (`css` is the default **onmars** theme).
-Load the **page contract** (`css/base`) with it:
+The default **onmars** theme comes in two parts: the token **core**
+(`css/core`), loaded once, and one sheet for every `ki-*` tag the page uses,
+named like the element import (`css/ki-button` beside
+`@kimen/elements/ki-button`). Load the **page contract** (`css/base`) with
+them:
 
 ```ts
-import '@kimen/tokens/css'; /* onmars theme + color-scheme, light + dark */
+import '@kimen/tokens/css/core'; /* onmars theme + color-scheme, light + dark */
+import '@kimen/tokens/css/ki-button'; /* the component tokens of each ki-* tag the page uses */
 import '@kimen/tokens/css/base'; /* page contract: page background, text color, body font, layout before registration */
 ```
 
-The theme stylesheet declares every `--ki-*` token and the `color-scheme`
-they resolve from, so the browser paints its canvas, scrollbars and native
+The core declares the shared `--ki-*` tokens and the `color-scheme` they
+resolve from, so the browser paints its canvas, scrollbars and native
 controls in the same scheme as the components: a page that loads nothing
 else stays legible for a visitor who prefers dark — measured across the component suite. That declaration is a default with zero specificity, so a
 `color-scheme` your own CSS sets on the page wins and the tokens follow it.
+
+A tag's sheet carries the component tokens that tag needs, including those of
+the components it renders, so add one only for the tags your own markup
+writes, slotted ones included: a `ki-tabs` needs `css/ki-tab` and
+`css/ki-tab-panel` for the tabs and panels you slot into it. A tag without
+its sheet paints with undefined tokens.
+
+The simple alternative is the full sheet, `@kimen/tokens/css`, in place of
+the core and the tag sheets: every token in one stylesheet. A page with one
+`ki-button` loads 8.1 KB of token CSS with the core and its sheet, and
+20.7 KB with the full sheet (brotli). Use the full sheet when a page uses
+most of the catalog, or registers everything with the lazy loader below and
+cannot list its tags in advance.
 
 The page contract paints the page itself from the tokens — background from
 `--ki-surface-base`, text from `--ki-text-high-em`, and the body font family.
@@ -102,7 +119,8 @@ stylesheet and set one attribute, and every component re-skins with zero
 component changes.
 
 ```html
-<link rel="stylesheet" href="@kimen/tokens/css" />
+<link rel="stylesheet" href="@kimen/tokens/css/core" />
+<link rel="stylesheet" href="@kimen/tokens/css/ki-button" />
 <link rel="stylesheet" href="@kimen/tokens/css/material3" />
 <html data-ki-theme="material3">
 ```

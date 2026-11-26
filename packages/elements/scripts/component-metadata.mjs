@@ -15,8 +15,10 @@ const budgetFields = {
   mcpApps: ['raw', 'gzip', 'brotli'],
   mcpServer: ['raw', 'gzip', 'brotli'],
   tokenStylesheets: ['onmars', 'material3'],
-  // Brotli bytes a component adds to a page of the page-weight gate.
+  // Brotli bytes a component adds to a page of the page-weight gate, with the
+  // core and tag sheets (`pages`) and with the full sheet (`fullSheetPages`).
   pages: ['button', 'tenComponents'],
+  fullSheetPages: ['button', 'tenComponents'],
   // A reviewed exception to the uniform worst-case (full Stencil runtime)
   // ceiling of run-size-limit.mjs, in brotli bytes.
   worstCase: ['brotli'],
