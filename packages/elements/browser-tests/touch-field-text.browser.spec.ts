@@ -89,7 +89,8 @@ async function mount(
     throw new Error(`${field} did not mount`);
   }
   await customElements.whenDefined(field);
-  // The dist/components build has no componentOnReady: wait for the render.
+  // Defined is not rendered: wait for the native control itself, through the
+  // DOM alone, so the wait holds whatever compiles the component.
   const selector = field === 'ki-input' ? 'input' : 'textarea';
   const deadline = Date.now() + SETTLE_DEADLINE_MS;
   while (!host.shadowRoot?.querySelector(selector) && Date.now() < deadline) {
