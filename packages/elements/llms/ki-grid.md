@@ -38,6 +38,11 @@ own available inline size drops below 30rem.
 </ki-grid>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-grid`: the light option, only the tokens ki-grid needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `columns` (number | undefined, minimum 1): Positive whole track count. Below 30rem of available inline size the fixed grid uses one column. Omit columns for automatic tracks.

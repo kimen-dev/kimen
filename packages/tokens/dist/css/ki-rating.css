@@ -1,0 +1,25 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+  --ki-rating-on-fg:var(--ki-text-warning-high-em);
+  --ki-rating-on-bg:var(--ki-surface-transparent);
+  --ki-rating-off-fg:var(--ki-outline-control);
+  --ki-rating-off-bg:var(--ki-surface-transparent);
+  --ki-rating-disabled-fg:var(--ki-text-low-em);
+  --ki-rating-hover-bg:var(--ki-surface-s2);
+  --ki-rating-hover-bg-image:var(--ki-surface-image-none);
+  --ki-rating-hover-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-rating-label-bg:var(--ki-surface-transparent);
+  --ki-rating-label-fg:var(--ki-text-base);
+  --ki-rating-label-gap:var(--ki-layout-spacing-xs);
+  --ki-rating-score-bg:var(--ki-surface-transparent);
+  --ki-rating-score-fg:var(--ki-text-supporting);
+  --ki-rating-score-gap:var(--ki-layout-spacing-md);
+  --ki-rating-size:var(--ki-glyph-size-md);
+  --ki-rating-gap:var(--ki-layout-spacing-xxs);
+  --ki-rating-target-size:var(--ki-control-size-sm);
+  --ki-rating-target-radius:var(--ki-control-radius-item);
+}

@@ -48,6 +48,11 @@ Without a `label` the dot is decorative and contributes nothing to the accessibi
 </div>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-status`: the light option, only the tokens ki-status needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name for the state ("Online", "Build failing"). With a label the dot is exposed to assistive technology as a named non-interactive image (role `img`); without one it is decorative and contributes nothing to the accessibility tree — the meaning must then live in adjacent visible text (FR-003, FR-008). The label is never rendered visually: visible status text belongs to ki-badge. Runtime changes are not announced (no live region, FR-005).

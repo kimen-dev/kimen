@@ -28,6 +28,11 @@ Place a citation after its claim and set `ref` to the matching source identifier
 Use `citationRef` in JSX. Tab to the link for a preview. Escape dismisses the
 preview, and Enter opens the list and moves focus to the source link.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-citation`: the light option, only the tokens ki-citation needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `ref` (string, required): ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.

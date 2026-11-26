@@ -29,6 +29,11 @@ one answer at a time.
 </ki-accordion>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-accordion`: the light option, only the tokens ki-accordion needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `exclusive` (boolean, default false): Whether the accordion allows at most one direct member to be open.

@@ -1,0 +1,44 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-contrast-more-timeline-dot-fg:var(--ki-text-supporting);
+  --ki-contrast-more-timeline-line:var(--ki-outline-strong);
+  --ki-contrast-more-timeline-time-fg:var(--ki-text-supporting);
+  --ki-timeline-dot-size:var(--ki-layout-spacing-9xl);
+  --ki-timeline-dot-radius:var(--ki-corner-activity-mark);
+  --ki-timeline-dot-icon-size:var(--ki-layout-spacing-2xl);
+  --ki-timeline-dot-bg:var(--ki-surface-s2);
+  --ki-timeline-dot-fg:var(--ki-text-med-em);
+  --ki-timeline-dot-bg-image:var(--ki-surface-image-none);
+  --ki-timeline-dot-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-timeline-dot-primary-bg:var(--ki-surface-primary-low-em);
+  --ki-timeline-dot-primary-fg:var(--ki-text-primary-on-primary-light);
+  --ki-timeline-dot-success-bg:var(--ki-surface-success-tint);
+  --ki-timeline-dot-success-fg:var(--ki-text-success-high-em);
+  --ki-timeline-dot-warning-bg:var(--ki-surface-warning-tint);
+  --ki-timeline-dot-warning-fg:var(--ki-text-warning-high-em);
+  --ki-timeline-dot-danger-bg:var(--ki-surface-danger-tint);
+  --ki-timeline-dot-danger-fg:var(--ki-text-danger-high-em);
+  --ki-timeline-line:var(--ki-outline-low-em);
+  --ki-timeline-line-width:var(--ki-control-border-width);
+  --ki-timeline-time-bg:var(--ki-surface-transparent);
+  --ki-timeline-time-fg:var(--ki-text-med-em);
+  --ki-timeline-gap:var(--ki-layout-spacing-xl);
+  --ki-timeline-item-fg:var(--ki-text-high-em);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-timeline-dot-fg:var(--ki-contrast-more-timeline-dot-fg) !important;
+    --ki-timeline-line:var(--ki-contrast-more-timeline-line) !important;
+    --ki-timeline-time-fg:var(--ki-contrast-more-timeline-time-fg) !important;
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-timeline-dot-fg:var(--ki-contrast-more-timeline-dot-fg) !important;
+  --ki-timeline-line:var(--ki-contrast-more-timeline-line) !important;
+  --ki-timeline-time-fg:var(--ki-contrast-more-timeline-time-fg) !important;
+}

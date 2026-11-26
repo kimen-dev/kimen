@@ -1,0 +1,33 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-file-upload-bg:var(--ki-surface-s1);
+  --ki-file-upload-fg:var(--ki-text-high-em);
+  --ki-file-upload-bg-image:var(--ki-surface-image-none);
+  --ki-file-upload-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-file-upload-border:var(--ki-outline-control);
+  --ki-file-upload-border-width:var(--ki-outline-hairline-width);
+  --ki-file-upload-radius:var(--ki-radius-component-lg);
+  --ki-file-upload-active-bg:var(--ki-surface-primary-tint);
+  --ki-file-upload-active-fg:var(--ki-text-high-em);
+  --ki-file-upload-active-border:var(--ki-focus-ring-color);
+  --ki-file-upload-row-bg:var(--ki-surface-s0);
+  --ki-file-upload-row-fg:var(--ki-text-high-em);
+  --ki-file-upload-row-bg-image:var(--ki-surface-image-none);
+  --ki-file-upload-row-backdrop-filter:var(--ki-effect-no-backdrop-filter);
+  --ki-file-upload-row-border:var(--ki-outline-low-em);
+  --ki-file-upload-row-radius:var(--ki-radius-component-md);
+  --ki-file-upload-error-bg:var(--ki-surface-s0);
+  --ki-file-upload-error-fg:var(--ki-text-danger-high-em);
+  --ki-file-upload-error-border:var(--ki-outline-danger-med-em);
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+  --ki-progress-linear-thickness:var(--ki-space-xs);
+  --ki-progress-linear-radius:var(--ki-radius-round);
+  --ki-progress-circular-size:var(--ki-space-12xl);
+  --ki-progress-circular-track-width:var(--ki-space-xs);
+  --ki-progress-track-color:var(--ki-surface-s3);
+  --ki-progress-indicator-color:var(--ki-surface-primary-med-em);
+  --ki-progress-indeterminate-duration:1600ms;
+}

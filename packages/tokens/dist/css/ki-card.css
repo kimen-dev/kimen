@@ -1,0 +1,47 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-contrast-more-card-border-width:var(--ki-size-border-hairline);
+  --ki-contrast-more-card-border-color:var(--ki-outline-strong);
+  --ki-card-bg:var(--ki-surface-special-light-s0-dark-s1);
+  --ki-card-fg:var(--ki-text-high-em);
+  --ki-card-border-color:var(--ki-outline-low-em);
+  --ki-card-border-width:var(--ki-size-border-hairline);
+  --ki-card-radius:var(--ki-radius-component-xl);
+  --ki-card-elevation:var(--ki-elevation-none);
+  --ki-card-gap:var(--ki-space-xl);
+  --ki-card-media-padding:var(--ki-space-md);
+  --ki-card-padding-block:var(--ki-space-3xl);
+  --ki-card-media-radius:var(--ki-radius-big-component-sm);
+  --ki-card-header-padding:var(--ki-space-3xl);
+  --ki-card-body-padding:var(--ki-space-3xl);
+  --ki-card-footer-padding:var(--ki-space-3xl);
+  --ki-card-bg-image:var(--ki-surface-image-none);
+  --ki-card-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-card-elevated-bg:var(--ki-surface-s1);
+  --ki-card-elevated-fg:var(--ki-text-high-em);
+  --ki-card-elevated-shadow:var(--ki-elevation-e1);
+  --ki-card-filled-bg:var(--ki-surface-s2);
+  --ki-card-filled-fg:var(--ki-text-high-em);
+  --ki-card-outlined-bg:var(--ki-surface-s0);
+  --ki-card-outlined-fg:var(--ki-text-high-em);
+  --ki-card-outlined-border:var(--ki-outline-low-em);
+  --ki-card-outlined-border-width:var(--ki-size-border-hairline);
+  --ki-card-hover-shadow:var(--ki-elevation-e2);
+  --ki-card-hover-overlay:var(--ki-surface-hover-overlay);
+  --ki-card-title-family:var(--ki-typography-family-heading);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-card-border-color:var(--ki-contrast-more-card-border-color) !important;
+    --ki-card-border-width:var(--ki-contrast-more-card-border-width) !important;
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-card-border-color:var(--ki-contrast-more-card-border-color) !important;
+  --ki-card-border-width:var(--ki-contrast-more-card-border-width) !important;
+}

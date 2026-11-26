@@ -1,0 +1,10 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-qr-size:var(--ki-size-qr);
+  --ki-qr-color:var(--ki-color-gray-950);
+  --ki-qr-background:var(--ki-surface-white);
+  --ki-qr-module-radius:var(--ki-radius-0);
+  --ki-qr-finder-radius:var(--ki-radius-0);
+  --ki-qr-quiet-zone:var(--ki-space-md);
+  --ki-qr-radius:var(--ki-radius-0);
+}

@@ -68,6 +68,11 @@ default slot. The host imports the glyph before rendering the surface.
 }
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-feature-icon`: the light option, only the tokens ki-feature-icon needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `shape` ("circle" | "square", default 'square'): Rounded square or circle. Unknown values use square.

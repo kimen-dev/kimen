@@ -54,6 +54,11 @@ chart a text equivalent through its own HTML semantics.
 </ki-stat>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-stat`: the light option, only the tokens ki-stat needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `delta` (number | undefined): Optional finite change. Its sign determines the trend and its magnitude is displayed.

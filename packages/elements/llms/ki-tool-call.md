@@ -53,6 +53,11 @@ A consumer-owned control in the error slot can declare its own action.
 </script>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-tool-call`: the light option, only the tokens ki-tool-call needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `approval-label` (string, default 'Needs approval'): Status text for a call waiting on an approval decision.

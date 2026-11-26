@@ -43,7 +43,10 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['fonts/InstrumentSans-OFL.txt', 'fonts/Newsreader-OFL.txt']),
-    budget: Object.freeze({ packed: 220_160, unpacked: 519_168 }),
+    // Spec 166's core and per-tag token sheets measured 268,679 / 1,190,678 B;
+    // the founder approved raising the base to that plus 3 % on 2026-11-25
+    // ("Sí, apruebo"), up from 220,160 / 519,168 B.
+    budget: Object.freeze({ packed: 276_736, unpacked: 1_226_400 }),
   }),
   '@kimen/mcp-server': Object.freeze({
     mapsEveryModule: false,
@@ -79,7 +82,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 43_008, unpacked: 381_952 }),
+    // Re-based the same day for the copy of the React output target's
+    // runtime and its MIT notice, which replace the target as a dependency.
+    budget: Object.freeze({ packed: 48_128, unpacked: 392_192 }),
   }),
   '@kimen/vue': Object.freeze({
     mapsEveryModule: true,

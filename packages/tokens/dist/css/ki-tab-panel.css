@@ -1,0 +1,10 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-tab-panel-padding-block:var(--ki-space-lg);
+  --ki-tab-panel-padding-inline:var(--ki-space-lg);
+  --ki-tab-panel-bg:var(--ki-transparent-inverse);
+  --ki-tab-panel-fg:var(--ki-text-high-em);
+  --ki-tab-panel-focus-ring-color:var(--ki-focus-ring-color);
+  --ki-tab-panel-focus-ring-width:var(--ki-focus-ring-width);
+  --ki-tab-panel-focus-ring-offset:var(--ki-focus-ring-offset);
+}

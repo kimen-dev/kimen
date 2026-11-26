@@ -49,6 +49,11 @@ The group's `size` governs every visible member and the counter, overriding memb
 </ki-avatar-group>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-avatar-group`: the light option, only the tokens ki-avatar-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `max` (number | undefined): Visible cap for the member stack. When the member count exceeds it, the first `max` members render followed by a "+N" counter accounting exactly for the hidden rest. Without it — or when it is not a positive whole number — every member renders and no counter appears; malformed agent-generated markup never breaks the page (FR-009, S14, S15).

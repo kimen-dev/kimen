@@ -23,6 +23,11 @@ Load `@kimen/elements/icons/inbox` to use the named icon.
 </ki-sidebar>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-sidebar-item`: the light option, only the tokens ki-sidebar-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `count` (number | undefined): Positive unread count. Fractional values round down.

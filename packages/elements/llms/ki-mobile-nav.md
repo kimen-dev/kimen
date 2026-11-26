@@ -38,6 +38,11 @@ import '@kimen/elements/icons/inbox';
 Omit `variant` for an edge-to-edge bar. When switching to TopNav or Sidebar,
 use one app breakpoint to hide this bar and show the wider navigation.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-mobile-nav`: the light option, only the tokens ki-mobile-nav needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string, default 'Main'): Accessible name of the landmark. Supply a distinct name when the page has more than one navigation landmark.

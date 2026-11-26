@@ -447,10 +447,20 @@ function buildComponentDocument(component, inputs) {
     `## When to use\n\n${getDocsTag(component, 'whenToUse')}`,
     `## When not to use\n\n${getDocsTag(component, 'whenNotToUse')}`,
     ...(usage === null ? [] : [`## Examples\n\n${usage}`]),
+    documentSection('Token stylesheets', tokenStylesheetsFor(component.tag)),
     ...componentFacets(component, inputs).map(([label, entries]) =>
       documentSection(label, entries),
     ),
   ].join('\n\n')}\n`;
+}
+
+// Spec 166: the full sheet stays the default; the core and one sheet per tag,
+// named like the element import, are the light option.
+function tokenStylesheetsFor(tag) {
+  return [
+    '`@kimen/tokens/css`: every token, once per page. The default.',
+    `\`@kimen/tokens/css/core\` once per page and \`@kimen/tokens/css/${tag}\`: the light option, only the tokens ${tag} needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.`,
+  ];
 }
 
 // Every facet of a component as [label, one-line entries], in the order the

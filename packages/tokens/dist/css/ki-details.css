@@ -1,0 +1,37 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-contrast-more-details-border:var(--ki-outline-strong);
+  --ki-details-bg:var(--ki-surface-s0);
+  --ki-details-fg:var(--ki-text-high-em);
+  --ki-details-bg-image:var(--ki-surface-image-none);
+  --ki-details-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-details-border:var(--ki-outline-low-em);
+  --ki-details-border-width:var(--ki-outline-hairline-width);
+  --ki-details-radius:var(--ki-corner-panel);
+  --ki-details-padding:var(--ki-spacing-standard-inset);
+  --ki-details-summary-padding-block:var(--ki-spacing-compact-inset);
+  --ki-details-summary-hover-bg:var(--ki-surface-s1);
+  --ki-details-summary-hover-fg:var(--ki-text-high-em);
+  --ki-details-body-bg:var(--ki-surface-s0);
+  --ki-details-body-fg:var(--ki-text-supporting);
+  --ki-details-disabled-fg:var(--ki-text-med-em);
+  --ki-details-motion-duration:var(--ki-motion-duration-fast);
+  --ki-details-motion-easing:var(--ki-motion-easing-standard);
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-details-border:var(--ki-contrast-more-details-border) !important;
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-details-border:var(--ki-contrast-more-details-border) !important;
+}

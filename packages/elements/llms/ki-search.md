@@ -43,6 +43,11 @@ update saved history. Set `loading` during a request. The results slot stays
 visible while suggestions load. To offer voice search, supply a button
 with an accessible name in the trailing slot and handle its activation.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-search`: the light option, only the tokens ki-search needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `back-label` (string, default 'Back'): Accessible name of the full-screen Back button.

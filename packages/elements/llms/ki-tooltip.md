@@ -54,6 +54,11 @@ The external trigger must be in the same document or shadow tree.
 For an explanation with controls, use `ki-popover` with
 `kind="toggletip"` and `appearance="rich"`.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-tooltip`: the light option, only the tokens ki-tooltip needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `for` (string | undefined, ID of another element of the same spec): ID of the rich tooltip's external trigger in the same document or shadow tree.

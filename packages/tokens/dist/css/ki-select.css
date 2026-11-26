@@ -1,0 +1,116 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-contrast-more-select-placeholder-fg:light-dark(var(--ki-text-supporting),var(--ki-inverse-white-alpha-80));
+  --ki-option-min-target:var(--ki-space-11xl);
+  --ki-option-padding-inline:var(--ki-space-md);
+  --ki-option-radius:var(--ki-radius-component-lg);
+  --ki-option-font-size:var(--ki-typography-size-body-1);
+  --ki-option-rest-bg:var(--ki-transparent-inverse);
+  --ki-option-rest-fg:var(--ki-text-high-em);
+  --ki-option-hover-bg:var(--ki-surface-hover-overlay-inverse);
+  --ki-option-hover-fg:var(--ki-text-high-em);
+  --ki-option-highlight-bg:var(--ki-surface-hover-overlay-inverse);
+  --ki-option-highlight-fg:var(--ki-text-high-em);
+  --ki-option-selected-bg:var(--ki-surface-primary-low-em);
+  --ki-option-selected-fg:var(--ki-text-high-em);
+  --ki-option-disabled-bg:var(--ki-surface-disabled-base-em);
+  --ki-option-disabled-fg:var(--ki-text-low-em);
+  --ki-select-height:var(--ki-space-12xl);
+  --ki-select-min-target:var(--ki-space-7xl);
+  --ki-select-padding-inline:var(--ki-space-lg);
+  --ki-select-gap:var(--ki-space-xs);
+  --ki-select-radius:var(--ki-radius-component-md);
+  --ki-select-font-size:var(--ki-typography-size-body-1);
+  --ki-select-font-weight:var(--ki-typography-weight-body-medium);
+  --ki-select-line-height:var(--ki-typography-line-height-body-1);
+  --ki-select-indicator-size:var(--ki-space-4xl);
+  --ki-select-indicator-glyph-size:var(--ki-space-md);
+  --ki-select-border-width:var(--ki-size-border-hairline);
+  --ki-select-border-block-start-width:var(--ki-select-border-width);
+  --ki-select-border-block-end-width:var(--ki-select-border-width);
+  --ki-select-border-inline-start-width:var(--ki-select-border-width);
+  --ki-select-border-inline-end-width:var(--ki-select-border-width);
+  --ki-select-label-gap:var(--ki-space-xs);
+  --ki-select-label-padding-inline:var(--ki-space-xxs);
+  --ki-select-label-font-size:var(--ki-typography-size-body-1);
+  --ki-select-label-font-weight:var(--ki-typography-weight-body-medium);
+  --ki-select-label-line-height:var(--ki-typography-line-height-para);
+  --ki-select-label-hint-fg:var(--ki-text-supporting);
+  --ki-select-label-hint-gap:var(--ki-space-xs);
+  --ki-select-rest-bg:var(--ki-surface-special-light-s0-dark-s1);
+  --ki-select-rest-fg:var(--ki-text-high-em);
+  --ki-select-rest-border:var(--ki-outline-control);
+  --ki-select-rest-label-fg:var(--ki-text-supporting);
+  --ki-select-hover-bg:var(--ki-surface-special-light-s2-dark-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-surface-hover-overlay-inverse */
+  --ki-select-hover-fg:var(--ki-text-high-em);
+  --ki-select-hover-border:var(--ki-outline-control-hover);
+  --ki-select-hover-label-fg:var(--ki-text-high-em);
+  --ki-select-focus-bg:var(--ki-surface-special-light-s0-dark-s4);
+  --ki-select-focus-fg:var(--ki-text-high-em);
+  --ki-select-focus-border:var(--ki-select-rest-border);
+  --ki-select-focus-label-fg:var(--ki-text-high-em);
+  --ki-select-disabled-bg:var(--ki-surface-disabled-base-em);
+  --ki-select-disabled-fg:var(--ki-text-base-em);
+  --ki-select-disabled-border:var(--ki-outline-base-em);
+  --ki-select-disabled-label-fg:var(--ki-text-base-em);
+  --ki-select-placeholder-fg:var(--ki-text-supporting);
+  --ki-select-listbox-bg:var(--ki-surface-special-blur-base-light);
+  --ki-select-listbox-bg-image:var(--ki-surface-image-listbox);
+  --ki-select-listbox-backdrop-blur:var(--ki-blur-48); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
+  --ki-select-listbox-backdrop-filter:var(--ki-effect-component-listbox-backdrop-filter);
+  --ki-select-listbox-radius:var(--ki-radius-big-component-xs);
+  --ki-select-listbox-elevation:var(--ki-elevation-shadow-med); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-shadow */
+  --ki-select-listbox-shadow:var(--ki-elevation-e3);
+  --ki-select-listbox-padding:var(--ki-space-md);
+  --ki-select-listbox-max-block-size:var(--ki-size-surface-xs);
+  --ki-select-listbox-offset:var(--ki-space-xs);
+  --ki-select-focus-ring-color:var(--ki-focus-ring-color);
+  --ki-select-focus-ring-width:var(--ki-focus-ring-width);
+  --ki-select-focus-ring-offset:var(--ki-focus-ring-offset);
+  --ki-select-focus-ring-shadow:var(--ki-focus-primary);
+  --ki-select-xs-height:var(--ki-space-7xl);
+  --ki-select-xs-padding-inline:var(--ki-space-sm);
+  --ki-select-xs-radius:var(--ki-radius-component-xs);
+  --ki-select-xs-font-size:var(--ki-typography-size-caption-2);
+  --ki-select-xs-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-select-xs-indicator-size:var(--ki-space-2xl);
+  --ki-select-xs-label-font-size:var(--ki-typography-size-caption-2);
+  --ki-select-xs-label-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-select-sm-height:var(--ki-space-10xl);
+  --ki-select-sm-padding-inline:var(--ki-space-md);
+  --ki-select-sm-radius:var(--ki-radius-component-sm);
+  --ki-select-sm-font-size:var(--ki-typography-size-caption-2);
+  --ki-select-sm-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-select-sm-indicator-size:var(--ki-space-3xl);
+  --ki-select-sm-label-font-size:var(--ki-typography-size-caption-2);
+  --ki-select-sm-label-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-select-lg-height:var(--ki-space-14xl);
+  --ki-select-lg-padding-inline:var(--ki-space-xl);
+  --ki-select-lg-radius:var(--ki-radius-component-lg);
+  --ki-select-lg-font-size:var(--ki-typography-size-body-2);
+  --ki-select-lg-line-height:var(--ki-typography-line-height-body-2);
+  --ki-select-lg-indicator-size:var(--ki-space-5xl);
+  --ki-select-lg-label-font-size:var(--ki-typography-size-body-2);
+  --ki-select-lg-label-line-height:var(--ki-typography-line-height-body-2);
+  --ki-select-xl-height:var(--ki-space-16xl);
+  --ki-select-xl-padding-inline:var(--ki-space-2xl);
+  --ki-select-xl-radius:var(--ki-radius-component-xl);
+  --ki-select-xl-font-size:var(--ki-typography-size-title-2);
+  --ki-select-xl-line-height:var(--ki-typography-line-height-title-2);
+  --ki-select-xl-indicator-size:var(--ki-space-7xl);
+  --ki-select-xl-label-font-size:var(--ki-typography-size-body-2);
+  --ki-select-xl-label-line-height:var(--ki-typography-line-height-body-2);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-select-placeholder-fg:var(--ki-contrast-more-select-placeholder-fg) !important;
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-select-placeholder-fg:var(--ki-contrast-more-select-placeholder-fg) !important;
+}

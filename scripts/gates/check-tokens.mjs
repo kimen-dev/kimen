@@ -8,6 +8,7 @@ import {
   buildPublicStylesheetSurface,
   splitTopLevel,
   stripComments,
+  stylesheetPatternFiles,
 } from '../lib/css-token-surface.mjs';
 import { isLegacyBackdropBlur, parseTokenComposition } from '../lib/token-inventory.mjs';
 
@@ -182,7 +183,18 @@ function shadowListTokens(css, label) {
   return tokens;
 }
 
-async function shadowListIssues(uses, tokenRoot, readText) {
+async function stylesheetSource(tokenRoot, subpath, target, { readText, listDirectory }) {
+  if (!target.includes('*')) return readText(join(tokenRoot, target), 'utf8');
+  const directory = join(tokenRoot, target.slice(0, target.lastIndexOf('/')));
+  const files = stylesheetPatternFiles(subpath, target, await listDirectory(directory));
+  return Object.fromEntries(
+    await Promise.all(
+      files.map(async ([key, file]) => [key, await readText(join(directory, file), 'utf8')]),
+    ),
+  );
+}
+
+async function shadowListIssues(uses, tokenRoot, readText, listDirectory) {
   const publicTokenNames = [...new Set(uses.flatMap(({ tokens }) => tokens))];
   if (publicTokenNames.length === 0) return [];
 
@@ -198,7 +210,7 @@ async function shadowListIssues(uses, tokenRoot, readText) {
       await Promise.all(
         cssExports.map(async ([name, target]) => [
           name,
-          await readText(join(tokenRoot, target), 'utf8'),
+          await stylesheetSource(tokenRoot, name, target, { readText, listDirectory }),
         ]),
       ),
     ),
@@ -230,6 +242,7 @@ export async function checkTokens({
   workspaceRoot,
   loadConfig = (href) => import(href),
   readText = readFile,
+  listDirectory = readdir,
 }) {
   const tokenRoot = join(workspaceRoot, 'packages/tokens');
   const configPath = join(workspaceRoot, configRelativePath);
@@ -285,7 +298,7 @@ export async function checkTokens({
     );
     if (tokens.length > 0) shadowUses.push({ path, tokens });
   }
-  diagnostics.push(...(await shadowListIssues(shadowUses, tokenRoot, readText)));
+  diagnostics.push(...(await shadowListIssues(shadowUses, tokenRoot, readText, listDirectory)));
 
   return { compositions, diagnostics, recordsByCssName };
 }

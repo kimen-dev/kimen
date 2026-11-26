@@ -1,0 +1,17 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-skeleton-bg:var(--ki-surface-s3);
+  --ki-skeleton-bg-image:var(--ki-surface-image-none);
+  --ki-skeleton-backdrop-filter:var(--ki-effect-component-no-backdrop-filter);
+  --ki-skeleton-highlight:var(--ki-surface-s1);
+  --ki-skeleton-radius:var(--ki-placeholder-radius);
+  --ki-skeleton-circle-radius:var(--ki-placeholder-circle-radius);
+  --ki-skeleton-line-size:var(--ki-placeholder-line-size);
+  --ki-skeleton-line-gap:var(--ki-spacing-inline);
+  --ki-skeleton-last-line-scale:var(--ki-placeholder-last-line-scale);
+  --ki-skeleton-circle-size:var(--ki-placeholder-circle-size);
+  --ki-skeleton-rect-size:var(--ki-placeholder-rect-size);
+  --ki-skeleton-shimmer-image:var(--ki-placeholder-shimmer-image);
+  --ki-skeleton-shimmer-duration:var(--ki-placeholder-shimmer-duration);
+  --ki-skeleton-shimmer-easing:var(--ki-motion-easing-standard);
+}
