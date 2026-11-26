@@ -171,7 +171,7 @@ export function loaderBundleEvidence({ bundler, engine, observation, requested, 
   return evidence;
 }
 
-const loadPlaywright = () =>
+export const loadPlaywright = () =>
   createRequire(join(repositoryRoot, 'packages/elements/package.json'))('playwright');
 
 /**

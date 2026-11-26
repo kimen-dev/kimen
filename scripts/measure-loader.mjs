@@ -4,17 +4,19 @@
 // individually with Brotli quality 11.
 import { execFileSync } from 'node:child_process';
 import { mkdir, mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
-import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { extname, join, relative, resolve } from 'node:path';
 import { brotliCompressSync, constants } from 'node:zlib';
 
 import { PAGES } from '../packages/elements/scripts/page-weight.mjs';
 
-import { bundleFile, bundleLoaderApplications } from './consumer-loader-bundles.mjs';
+import {
+  bundleFile,
+  bundleLoaderApplications,
+  loadPlaywright,
+} from './consumer-loader-bundles.mjs';
 
 const origin = 'https://loader.kimen.invalid';
-const require = createRequire(new URL('../packages/elements/package.json', import.meta.url));
 
 function application(tags) {
   return [
@@ -98,7 +100,7 @@ async function main(tarball) {
       ...Object.fromEntries(Object.entries(PAGES).map(([name, { tags }]) => [name, tags])),
       all,
     };
-    const { chromium } = require('playwright');
+    const { chromium } = loadPlaywright();
     const browser = await chromium.launch({ headless: true });
     try {
       const results = {};
