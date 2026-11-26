@@ -96,8 +96,11 @@ const BASE_BUDGETS = {
   // 210,069 B for the document and 3,158,789 / 625,295 / 460,045 B for
   // kimen-mcp. The bases give those totals 0.1% raw and 1% compressed headroom
   // after the existing component allowances are added.
-  mcpApps: { raw: 523_351, gzip: 96_667, brotli: 74_129 },
-  mcpServer: { raw: 1_793_339, gzip: 334_930, brotli: 302_397 },
+  // Short vDOM keys reduced those artifacts to 1,219,810 / 270,846 /
+  // 202,532 B and 3,146,401 / 613,611 / 452,333 B against main 955eda0d,
+  // with the same headroom after adding the component allowances.
+  mcpApps: { raw: 510_950, gzip: 85_032, brotli: 66_517 },
+  mcpServer: { raw: 1_780_939, gzip: 323_130, brotli: 294_608 },
   // A browser host that validates and renders agent specs (validateUiSpec and
   // renderUiSpec from the packed @kimen/catalog, bundled for production:
   // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
@@ -131,10 +134,11 @@ const BASE_BUDGETS = {
   // documented token setup: the core and one sheet per tag the page writes
   // (spec 166, the default since the founder's approval of 2026-11-26).
   // `fullSheetPages` loads the full sheet instead, the simple alternative.
-  // Measured on 2026-11-26 on macOS at 18,382 and 47,680 B with the split
-  // sheets, and 29,261 and 55,408 B with the pruned full sheet, each plus 1%.
-  pages: { button: 18_566, tenComponents: 48_157 },
-  fullSheetPages: { button: 29_554, tenComponents: 55_963 },
+  // On macOS the button pages measured 18,382 and 29,261 B. Short vDOM keys
+  // reduced the ten-component pages to 46,931 B with split sheets and
+  // 54,659 B with the pruned full sheet. The limits add 1 %.
+  pages: { button: 18_566, tenComponents: 47_401 },
+  fullSheetPages: { button: 29_554, tenComponents: 55_206 },
 };
 
 export function deriveBundleSizeBudgets(components) {
