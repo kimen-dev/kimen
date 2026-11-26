@@ -161,6 +161,13 @@ exactly the sheets (c) publishes; the founder left that out of scope (Q5).
   token keeps its value. The full sheet keeps all 268 foundations
   unchanged. This saves 1.85 KB br on every split page and removes no name
   from any existing export. Approved as F1 (Q1).
+
+  **Amendment (2026-11-26).** The full sheet keeps the four published
+  onmars v1 foundation tokens for the legacy dialog and tooltip under
+  spec 062 S4 until 1.0.0. It omits the 264 private foundation declarations.
+  material3 drops its private overrides and inlines the two foundation
+  shadow expressions it still reads, preserving the resolved theme values.
+  This supersedes spec 060's instruction to keep the private declarations.
 - **D2 · One self-contained sheet per tag.** `css/ki-pagination` carries
   every component source `ki-pagination` needs: its own, and the button,
   icon-button, icon and counter sources of the components it renders.
@@ -238,6 +245,11 @@ question takes the recommended answer.
    deprecates the 268 in the full sheet through spec 041's cycle, and F3,
    which keeps them in the core for third-party themes at 1.85 KB br per
    split page.
+
+   **Amendment (2026-11-26).** The founder approved omitting the 264 private
+   foundations from the full sheet and retaining the four published onmars
+   v1 foundations until 1.0.0 (D1). This supersedes
+   spec 060's instruction to keep the private declarations.
 2. **Q2 · Granularity (D2): one self-contained sheet per tag.** The
    alternative was one sheet per component source with a generated list per
    tag.
@@ -475,6 +487,13 @@ the components the split sheets paint.
   MUST resolve every token to the value it has today in every context; under
   D1 its expressions may name a literal where they named a foundation. The
   public stylesheet surface recorded for these three exports MUST NOT change.
+
+  **Amendment (2026-11-26).** The declaration requirement for
+  `@kimen/tokens/css` applies to the public token surface, including the four
+  published onmars v1 foundations until 1.0.0. The full sheet MUST omit the
+  264 private foundations, superseding spec 060's instruction to keep their
+  declarations. material3 may inline private foundation expressions to
+  preserve their resolved values.
 - **FR-002 (core)**: `@kimen/tokens/css/core` MUST declare the colour-scheme
   contract and every token whose DTCG source is not a component token source
   (`tokens/component/*.tokens.json`): primitives, the theme, semantic tokens,
