@@ -188,7 +188,8 @@ describe('the loader over per-component modules', () => {
 
     await realm.kimenLoader.defineCustomElements();
 
-    expect(input.checkValidity()).toBe(false);
+    const control = input as HTMLKiInputElement & { checkValidity(): boolean };
+    expect(control.checkValidity()).toBe(false);
   });
 
   it('S11: re-exports the same KiButton class as the direct subpath', async () => {
