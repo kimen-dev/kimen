@@ -93,6 +93,18 @@
           ],
           "signature": "interface KimenActionTool {\n    readonly name: typeof KIMEN_ACTION_TOOL;\n    readonly description: string;\n    readonly inputSchema: {\n        readonly type: 'object';\n        readonly properties: {\n            readonly action: {\n                readonly type: 'string';\n            };\n            readonly data: {\n                readonly type: 'object';\n                readonly additionalProperties: {\n                    readonly type: readonly string[];\n                };\n            };\n            readonly id: {\n                readonly type: 'string';\n                readonly pattern: string;\n            };\n            readonly revision: {\n                readonly type: 'integer';\n                readonly minimum: 0;\n            };\n        };\n        readonly required: readonly [\n            'action'\n        ];\n        readonly additionalProperties: false;\n    };\n    readonly _meta: {\n        readonly ui: {\n            readonly resourceUri: string;\n            readonly visibility: readonly [\n                'app'\n            ];\n        };\n    };\n}"
         },
+        "KimenSurface": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface KimenSurface {\n    readonly resource: KimenSurfaceResource;\n    readonly toolMeta: {\n        readonly ui: {\n            readonly resourceUri: string;\n        };\n    };\n    readonly actionTool: KimenActionTool;\n    readonly catalog: Catalog;\n    readonly icons: readonly string[];\n    readonly validate: (spec: unknown) => RenderResult;\n}"
+        },
+        "KimenSurfaceOptions": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface KimenSurfaceOptions {\n    readonly name?: string;\n    readonly profile?: SurfaceProfile;\n}"
+        },
         "KimenSurfaceResource": {
           "kinds": [
             "type"
@@ -267,6 +279,12 @@
           ],
           "signature": "interface SurfacePayload {\n    readonly spec: unknown;\n    readonly update?: SurfaceUpdate;\n}"
         },
+        "SurfaceProfile": {
+          "kinds": [
+            "type"
+          ],
+          "signature": "interface SurfaceProfile {\n    readonly name: string;\n    readonly components: readonly string[];\n    readonly document: string;\n    readonly icons: readonly string[];\n}"
+        },
         "SurfaceState": {
           "kinds": [
             "type"
@@ -327,6 +345,12 @@
           ],
           "signature": "export declare function declareToolSurface(name?: string): {\n    readonly ui: {\n        readonly resourceUri: string;\n    };\n};"
         },
+        "defineKimenSurface": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare function defineKimenSurface(options?: KimenSurfaceOptions): KimenSurface;"
+        },
         "isSupportedProtocolVersion": {
           "kinds": [
             "value"
@@ -359,6 +383,30 @@
         }
       },
       "target": "./dist/index.js"
+    },
+    "./profiles/data": {
+      "declaration": "./dist/generated/surface-profile-data.d.ts",
+      "symbols": {
+        "DATA_PROFILE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const DATA_PROFILE: SurfaceProfile;"
+        }
+      },
+      "target": "./dist/generated/surface-profile-data.js"
+    },
+    "./profiles/form": {
+      "declaration": "./dist/generated/surface-profile-form.d.ts",
+      "symbols": {
+        "FORM_PROFILE": {
+          "kinds": [
+            "value"
+          ],
+          "signature": "export declare const FORM_PROFILE: SurfaceProfile;"
+        }
+      },
+      "target": "./dist/generated/surface-profile-form.js"
     }
   },
   "package": "@kimen/adapter-mcp-apps"

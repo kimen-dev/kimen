@@ -27,6 +27,11 @@ inline markup for the label and `description` for supporting text.
 </ki-stepper>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-step`: the light option, only the tokens ki-step needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `description` (string | undefined): Optional supporting text displayed below the label.

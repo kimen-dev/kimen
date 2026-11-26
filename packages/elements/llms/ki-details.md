@@ -29,6 +29,11 @@ The default slot contains the answer.
 Listen for `ki-toggle` on the disclosure to read `event.detail.open`.
 In a catalog surface, bind the action to the individual Details node.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-details`: the light option, only the tokens ki-details needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `disabled` (boolean, default false): Disables summary activation. The page can still set open.

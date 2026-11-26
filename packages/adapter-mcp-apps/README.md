@@ -99,6 +99,23 @@ const result = surfaceToolResult(
 The result is a `CallToolResult`: the spec travels in
 `structuredContent.kimenSurface`, the text in `content`.
 
+A tool that only ever shows one kind of card can serve a smaller document
+instead of the full one: a profile, which carries one subset of the catalog
+(spec 165). `defineKimenSurface` returns the resource, the tool metadata, the
+action tool, the subset's catalog and its preflight together:
+
+```ts
+import { defineKimenSurface } from '@kimen/adapter-mcp-apps';
+import { FORM_PROFILE } from '@kimen/adapter-mcp-apps/profiles/form';
+
+const form = defineKimenSurface({ profile: FORM_PROFILE }); // ui://kimen/form
+const tool = { name: 'signup', _meta: form.toolMeta };
+form.validate(spec); // the «form» document's verdict: any other component is refused
+```
+
+`@kimen/adapter-mcp-apps/profiles/data` serves tables. See the
+[MCP Apps guide](https://github.com/kimen-dev/kimen/blob/main/docs/guides/mcp-apps.md#smaller-documents-profiles).
+
 Every action call names the page revision the person acted on and, when the
 spec gave the bound node an id, that id: `{ action, data, revision, id? }`.
 To change the surface without erasing what the person is typing, answer with

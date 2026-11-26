@@ -30,6 +30,10 @@ async function aPackage(name, files) {
 describe('generated modules published without a source map', () => {
   it('S7 removes the map and its link from each unmapped module, and nothing else', async () => {
     const root = await aPackage('@kimen/catalog', {
+      'dist/generated/catalog-guidance.js': 'export const guidance = {};\n',
+      'dist/generated/catalog-structure.js':
+        'export const structure = {};\n//# sourceMappingURL=catalog-structure.js.map\n',
+      'dist/generated/catalog-structure.js.map': '{}',
       'dist/generated/catalog.js':
         'export const catalog = {};\n//# sourceMappingURL=catalog.js.map\n\n  //# sourceMappingURL=catalog.js.map',
       'dist/generated/catalog.js.map': '{}',
@@ -37,12 +41,20 @@ describe('generated modules published without a source map', () => {
       'dist/index.js.map': '{}',
     });
 
-    await expect(unmapGeneratedModules(root)).resolves.toEqual(['dist/generated/catalog.js']);
+    await expect(unmapGeneratedModules(root)).resolves.toEqual([
+      'dist/generated/catalog-guidance.js',
+      'dist/generated/catalog-structure.js',
+      'dist/generated/catalog.js',
+    ]);
 
     expect(await readFile(join(root, 'dist/generated/catalog.js'), 'utf8')).toBe(
       'export const catalog = {};\n',
     );
     expect(await exists(join(root, 'dist/generated/catalog.js.map'))).toBe(false);
+    expect(await readFile(join(root, 'dist/generated/catalog-structure.js'), 'utf8')).toBe(
+      'export const structure = {};\n',
+    );
+    expect(await exists(join(root, 'dist/generated/catalog-structure.js.map'))).toBe(false);
     expect(await readFile(join(root, 'dist/index.js'), 'utf8')).toBe(
       'export {};\n//# sourceMappingURL=index.js.map\n',
     );
@@ -53,6 +65,8 @@ describe('generated modules published without a source map', () => {
     const root = await aPackage('@kimen/adapter-mcp-apps', {
       'dist/generated/surface-document.js':
         'export const html = "";\n//# sourceMappingURL=other.js.map\n',
+      'dist/generated/surface-profile-data.js': 'export const data = {};\n',
+      'dist/generated/surface-profile-form.js': 'export const form = {};\n',
     });
 
     await unmapGeneratedModules(root);
@@ -81,7 +95,7 @@ describe('generated modules published without a source map', () => {
 
   it('S7 fails when the module was never built or the package has no rules', async () => {
     const unbuilt = await aPackage('@kimen/catalog', {});
-    await expect(unmapGeneratedModules(unbuilt)).rejects.toThrow(/catalog\.js/u);
+    await expect(unmapGeneratedModules(unbuilt)).rejects.toThrow(/catalog-guidance\.js/u);
 
     const unknown = await aPackage('@kimen/unknown', {});
     await expect(unmapGeneratedModules(unknown)).rejects.toThrow(

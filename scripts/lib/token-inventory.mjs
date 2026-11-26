@@ -853,8 +853,12 @@ const sheetsLoadedFromElsewhere = async (directory, tag) => {
     .filter((filePath) => relative(directory, filePath).startsWith('..'));
 };
 
-/** Read component styles and derive the CEM CSS-property contract by tag. */
-export const readConsumedPublicCssProperties = async ({ inventory, componentsRoot }) => {
+/**
+ * Every component's styles by tag: the sheets below its directory and those
+ * it loads from elsewhere. The CEM CSS-property contract and the per-tag
+ * token sheets of @kimen/tokens (spec 166) both read exactly these.
+ */
+export const readComponentCss = async ({ componentsRoot }) => {
   const cssByTag = {};
   const componentEntries = await readdir(componentsRoot, { withFileTypes: true });
   for (const entry of componentEntries.sort((left, right) => compareText(left.name, right.name))) {
@@ -870,5 +874,12 @@ export const readConsumedPublicCssProperties = async ({ inventory, componentsRoo
       await Promise.all(files.map((filePath) => readFile(filePath, 'utf8')))
     ).join('\n');
   }
-  return deriveConsumedPublicCssProperties({ inventory, cssByTag });
+  return cssByTag;
 };
+
+/** Read component styles and derive the CEM CSS-property contract by tag. */
+export const readConsumedPublicCssProperties = async ({ inventory, componentsRoot }) =>
+  deriveConsumedPublicCssProperties({
+    inventory,
+    cssByTag: await readComponentCss({ componentsRoot }),
+  });

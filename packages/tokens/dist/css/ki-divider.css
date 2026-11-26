@@ -1,0 +1,21 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-contrast-more-divider-color:var(--ki-outline-strong);
+  --ki-divider-thickness:var(--ki-size-border-hairline);
+  --ki-divider-color:var(--ki-outline-base-em);
+  --ki-divider-radius:var(--ki-radius-round);
+  --ki-divider-spacing:var(--ki-space-md);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-divider-color:var(--ki-contrast-more-divider-color) !important;
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-divider-color:var(--ki-contrast-more-divider-color) !important;
+}

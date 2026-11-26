@@ -123,9 +123,11 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 772_238, gzip: 172_327, brotli: 135_971 },
-    mcpServer: { raw: 2_580_093, gzip: 483_509, brotli: 378_294 },
+    mcpApps: { raw: 541_336, gzip: 99_026, brotli: 76_054 },
+    mcpServer: { raw: 1_811_324, gzip: 337_323, brotli: 304_294 },
+    genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
+    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
     pages: { button: 32_000, tenComponents: 58_900 },
   });
 });
@@ -148,9 +150,11 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 774_438, gzip: 172_507, brotli: 136_136 },
-    mcpServer: { raw: 2_581_393, gzip: 483_699, brotli: 378_469 },
+    mcpApps: { raw: 543_536, gzip: 99_206, brotli: 76_219 },
+    mcpServer: { raw: 1_812_624, gzip: 337_513, brotli: 304_469 },
+    genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
+    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
     pages: { button: 32_000, tenComponents: 58_940 },
   });
 });
@@ -161,6 +165,23 @@ test('standalone packaging re-enters through the isolated cache environment', as
   assert.match(
     manifest.scripts.packaging,
     /^bash scripts\/gates\/cache-env\.sh -- node scripts\/gates\/check-packaging\.mjs$/u,
+  );
+});
+
+// The budgets gate (nx run-many -t size) weighs a browser GenUI host: the
+// packed catalog bundled for validateUiSpec and renderUiSpec, against the
+// genuiHost base, so neither the guidance prose nor classic zod returns.
+test('the catalog size target weighs a GenUI host built from its packed tarball', async () => {
+  const manifest = JSON.parse(
+    await readFile(`${workspaceRoot}/packages/catalog/package.json`, 'utf8'),
+  );
+  const nx = JSON.parse(await readFile(`${workspaceRoot}/nx.json`, 'utf8'));
+
+  assert.equal(manifest.scripts.size, 'node scripts/host-weight.mjs');
+  assert.deepEqual(manifest.nx.targets.size.inputs, ['default', '^default', 'componentBudget']);
+  assert.deepEqual(nx.targetDefaults.size.dependsOn, ['build']);
+  assert.ok(
+    nx.namedInputs.componentBudget.includes('{workspaceRoot}/scripts/lib/bundle-size-budget.mjs'),
   );
 });
 
@@ -274,13 +295,15 @@ test('each release package has its pinned tarball and unpacked size budget', () 
     ),
     {
       '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
-      '@kimen/tokens': { packed: 220_160, unpacked: 519_168 },
-      '@kimen/mcp-server': { packed: 811_008, unpacked: 4_125_696 },
-      '@kimen/catalog': { packed: 320_512, unpacked: 1_382_400 },
+      // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
+      '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
+      '@kimen/mcp-server': { packed: 659_456, unpacked: 3_331_072 },
+      '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
-      '@kimen/adapter-mcp-apps': { packed: 429_056, unpacked: 1_747_968 },
-      '@kimen/react': { packed: 43_008, unpacked: 381_952 },
+      // Spec 165 profiles, re-measured under the approved ceiling once #634 and #636 landed.
+      '@kimen/adapter-mcp-apps': { packed: 525_312, unpacked: 2_376_704 },
+      '@kimen/react': { packed: 48_128, unpacked: 392_192 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },
     },
@@ -312,11 +335,26 @@ test('each exported generated token stylesheet has one size budget outside the p
   assert.equal(Object.hasOwn(manifest, 'size-limit'), false);
 
   const { default: limits } = await import(new URL('.size-limit.mjs', tokens).href);
+  // A pattern export (spec 166 `./css/ki-*`) is every file it resolves to.
+  const built = await readdir(new URL('dist/css/', tokens));
+  const exported = Object.values(manifest.exports)
+    .filter((target) => target.startsWith('./dist/css/'))
+    .flatMap((target) => {
+      if (!target.includes('*')) return [target];
+      const [prefix, suffix] = target.slice('./dist/css/'.length).split('*');
+      return built
+        .filter((file) => file.startsWith(prefix) && file.endsWith(suffix))
+        .map((file) => `./dist/css/${file}`);
+    });
+  const sheets = limits.filter(({ path }) => typeof path === 'string' && path.startsWith('dist/'));
+  assert.deepEqual(sheets.map(({ path }) => `./${path}`).sort(), exported.sort());
+  // Spec 166's page budgets measure one bundle of the sheets a page loads.
   assert.deepEqual(
-    limits.map(({ path }) => `./${path}`).sort(),
-    Object.values(manifest.exports)
-      .filter((target) => target.startsWith('./dist/css/'))
+    limits
+      .filter((entry) => !sheets.includes(entry))
+      .map(({ path }) => path)
       .sort(),
+    ['size-limit/button-page.css', 'size-limit/ten-component-page.css'],
   );
   for (const { limit } of limits) {
     assert.match(limit, /^[1-9]\d*(?:\.\d+)? (?:B|KB)$/u);

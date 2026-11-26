@@ -47,6 +47,11 @@ and `sources-count-label`. Titles and snippets are plain text. HTTP(S) URLs
 and relative web references work in authored HTML. Guarded specs also follow
 the application's allowed-origin policy.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-sources`: the light option, only the tokens ki-sources needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `open` (boolean, default false): Whether the disclosure is expanded. Set to show the list initially.

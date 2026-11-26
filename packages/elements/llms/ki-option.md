@@ -47,6 +47,11 @@ Never author selection on the option — assign `ki-select.value` and the first 
 </script>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-option`: the light option, only the tokens ki-option needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `description` (string | undefined): Secondary text shown below the label in a combobox choice row.

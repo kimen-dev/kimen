@@ -43,6 +43,11 @@ Malformed declarations never break a page: with no `value` (or one beyond the ~2
 <ki-qr label="Nothing to encode"></ki-qr>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-qr`: the light option, only the tokens ki-qr needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name stating the code's purpose ("Open onmars.dev on your phone"). The component exposes exactly one non-interactive image named by it, falling back to the encoded value when absent (FR-005) — never an unnamed graphic. The label is never rendered visually, and naming the purpose is what tells assistive-technology users to look for the accessible alternative carrying the same payload (documented catalog guidance, FR-013).

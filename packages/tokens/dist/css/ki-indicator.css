@@ -1,0 +1,29 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-contrast-more-indicator-dot-color:var(--ki-outline-strong);
+  --ki-indicator-gap:var(--ki-space-sm);
+  --ki-indicator-dot-inline-size:var(--ki-space-md);
+  --ki-indicator-dot-block-size:var(--ki-space-md);
+  --ki-indicator-dot-radius:var(--ki-radius-round);
+  --ki-indicator-dot-color:var(--ki-inverse-white-alpha-48);
+  --ki-indicator-dot-current-inline-size:var(--ki-space-10xl);
+  --ki-indicator-dot-current-block-size:var(--ki-space-3xl);
+  --ki-indicator-dot-current-radius:var(--ki-radius-round);
+  --ki-indicator-dot-current-color:var(--ki-inverse-white-alpha-48);
+  --ki-indicator-dot-current-hole-block-size:var(--ki-space-sm);
+  --ki-indicator-motion-duration:var(--ki-motion-duration-fast);
+  --ki-indicator-motion-easing:var(--ki-motion-easing-standard);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-indicator-dot-color:var(--ki-contrast-more-indicator-dot-color) !important;
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-indicator-dot-color:var(--ki-contrast-more-indicator-dot-color) !important;
+}

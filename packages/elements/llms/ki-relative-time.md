@@ -22,6 +22,11 @@ Assistive technology and the tooltip expose the absolute timestamp throughout.
 <ki-relative-time date="2026-11-19T08:41:00Z" sync threshold="86400"></ki-relative-time>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-relative-time`: the light option, only the tokens ki-relative-time needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `date` (string | undefined): ISO calendar date or date-time. A timestamp without an offset uses local time.

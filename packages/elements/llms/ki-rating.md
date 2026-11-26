@@ -55,6 +55,11 @@ import '@kimen/elements/icons/heart';
 ></ki-rating>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-rating`: the light option, only the tokens ki-rating needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `disabled` (boolean, default false): Makes an editable rating unavailable and excludes it from form submission.

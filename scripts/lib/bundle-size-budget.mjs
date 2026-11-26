@@ -75,13 +75,34 @@ const BASE_BUDGETS = {
   // (154 B left on that main); the founder approved re-basing that one metric by
   // the 358 B the placeholder costs (2026-11-24, «Sí, sube 358 B»), added on top
   // of the preference-modes base above.
+  // The lean catalog runtime (2026-11-25) re-based both DOWN, measured on macOS:
+  // the catalog parses with zod/mini, imported as a module namespace (the
+  // server's `import { z } from 'zod'` pulled in all of classic zod), and its
+  // validator and renderer read the generated structure without the guidance
+  // prose. Against main b1382831 the document was 1,527,736 / 374,475 /
+  // 283,998 B and kimen-mcp 3,993,653 / 791,451 / 551,735 B; with the change,
+  // merged with main 15af665b (0.3.0, spec 165), they measure 1,296,064 /
+  // 299,593 / 224,886 B and 3,222,799 / 642,510 / 474,809 B. Each limit (base
+  // plus the component allowances) is that size plus about 1 % of gzip and
+  // brotli for Linux CI's output and 0.1 % of raw bytes, which esbuild emits
+  // alike everywhere: 1,297,361 / 302,589 / 227,135 and 3,226,022 / 648,936 /
+  // 479,558 B.
   // The per-component modules' Stencil runtime compiled for Kimen
-  // (externalRuntime: false, 2026-11-25) measured against main 808e6400 on
-  // macOS: -45,957 / 15,089 / 12,894 B for the document and -46,101 / 15,053 /
-  // 12,625 B for kimen-mcp, taken off here exactly so the headroom stays what
+  // (externalRuntime: false, 2026-11-25) measured against main ac20a900 on
+  // macOS: -45,945 / 15,040 / 13,040 B for the document and -46,089 / 14,995 /
+  // 13,015 B for kimen-mcp, taken off here exactly so the headroom stays what
   // it was.
-  mcpApps: { raw: 772_238, gzip: 172_327, brotli: 135_971 },
-  mcpServer: { raw: 2_580_093, gzip: 483_509, brotli: 378_294 },
+  mcpApps: { raw: 541_336, gzip: 99_026, brotli: 76_054 },
+  mcpServer: { raw: 1_811_324, gzip: 337_323, brotli: 304_294 },
+  // A browser host that validates and renders agent specs (validateUiSpec and
+  // renderUiSpec from the packed @kimen/catalog, bundled for production:
+  // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
+  // measured on macOS with the lean runtime above, merged with main 15af665b,
+  // 125,455 / 29,479 / 25,933 B (715,883 / 169,806 / 136,980 B before), with the
+  // same margins. No component declares an allowance here: a component that
+  // joins the catalog grows the host by its structure, so re-base this by the
+  // cost it measures.
+  genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
@@ -92,10 +113,16 @@ const BASE_BUDGETS = {
   // minified and brotlied) and -223 B for material3, which no longer re-asserts
   // its mode values. Pending founder approval.
   tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
+  // Spec 166's split sheets, approved by the founder on 2026-11-25: the core,
+  // a page with ki-button (core and its sheet), the ten-component page of the
+  // weight report (core and its fourteen sheets), and a ceiling for every tag
+  // sheet. Fixed: no component marginal adds to them. Measured on macOS at
+  // 6,812 / 8,075 / 11,187 B and 1,971 B for the largest sheet (ki-prompt-input).
+  tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   // Whole pages, script and token stylesheets, in brotli bytes
   // (packages/elements/scripts/page-weight.mjs): one ki-button, and the ten
-  // components of a typical form page. Measured on 2026-11-25 against main
-  // 808e6400 with the runtime compiled for Kimen (31,028 and 57,134 B), plus
+  // components of a typical form page. Measured on 2026-11-26 against main
+  // ac20a900 with the runtime compiled for Kimen (31,028 and 57,175 B), plus
   // about 3 %.
   pages: { button: 32_000, tenComponents: 58_900 },
 };
@@ -104,7 +131,9 @@ export function deriveBundleSizeBudgets(components) {
   const limits = {
     mcpApps: { ...BASE_BUDGETS.mcpApps },
     mcpServer: { ...BASE_BUDGETS.mcpServer },
+    genuiHost: { ...BASE_BUDGETS.genuiHost },
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },
+    tokenSheets: { ...BASE_BUDGETS.tokenSheets },
     pages: { ...BASE_BUDGETS.pages },
   };
   for (const { tag, metadata } of components) {

@@ -21,10 +21,15 @@
  * content sanitization; a host that renders outside the guarded renderer is
  * outside the guardrail.
  */
-import { z } from 'zod';
+// zod/mini, as a module namespace: a bundler keeps only the parsers a
+// namespace import reaches, while `import { z } from 'zod'` names an object
+// that carries all of zod (every locale, the JSON Schema converters) into
+// every host bundle. The same holds in live.ts and register.ts, and the host
+// weight gate (scripts/host-weight.mjs) fails if either creeps back.
+import * as z from 'zod/mini';
 
 import { DIALOG_TAG, isDialogCommand, isDialogInvoker } from './dialog-commands.js';
-import { catalogData } from './generated/catalog.js';
+import { catalogStructure } from './generated/catalog-structure.js';
 import {
   belowCellViolation,
   contentModelViolation,
@@ -35,6 +40,7 @@ import {
 } from './primitives.js';
 import { sourceTags } from './source-reference.js';
 import { isUrlProp, urlViolation } from './url-policy.js';
+import { useClassicZodDefaults } from './zod-defaults.js';
 
 /** One prop constraint, exactly as narrow as the manifest documents. */
 export interface CatalogPropConstraint {
@@ -115,10 +121,12 @@ export interface Catalog {
   readonly elementsVersion?: string | undefined;
 }
 
-// One structural compile-time check: the generated artifact must satisfy the
-// Catalog value shape (and, through it, the published entry contract), so a
-// generator regression fails the build here.
-const builtInCatalog: Catalog = catalogData;
+// The built-in catalog the boundary checks against: the generated structure,
+// whose annotation holds it to the Catalog value shape (and, through it, the
+// published entry contract), so a generator regression fails the build. Its
+// custom elements' guidance prose is blank: nothing here reads it
+// (guidance.ts).
+const builtInCatalog: Catalog = catalogStructure;
 
 /**
  * What a bound node fires (spec 154): one declared action name, or a map from
@@ -471,22 +479,26 @@ function snapshotPlainData(
   return { data: rootHolder.data, issues };
 }
 
-const uiSpecNodeSchema: z.ZodType<UiSpecNode> = z.lazy(() =>
+useClassicZodDefaults();
+
+const uiSpecNodeSchema: z.ZodMiniType<UiSpecNode> = z.lazy(() =>
   z.strictObject({
-    id: z.string().optional(),
+    id: z.optional(z.string()),
     component: z.string(),
-    props: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])).optional(),
-    action: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
-    collect: z.record(z.string(), z.string()).optional(),
-    slots: z.record(z.string(), z.array(z.union([z.string(), uiSpecNodeSchema]))).optional(),
+    props: z.optional(z.record(z.string(), z.union([z.boolean(), z.number(), z.string()]))),
+    action: z.optional(z.union([z.string(), z.record(z.string(), z.string())])),
+    collect: z.optional(z.record(z.string(), z.string())),
+    slots: z.optional(z.record(z.string(), z.array(z.union([z.string(), uiSpecNodeSchema])))),
   }),
 );
 
 const uiSpecSchema = z.strictObject({
   version: z.literal(1),
-  actions: z.array(z.string().min(1)).optional(),
+  actions: z.optional(z.array(z.string().check(z.minLength(1)))),
   root: uiSpecNodeSchema,
 });
+/** The UI-spec schema, typed loosely for tests/zod-parity.spec.ts alone; the entry does not export it. */
+export const uiSpecShape: { safeParse(data: unknown): unknown } = uiSpecSchema;
 
 /**
  * The declared bounds of a number prop as the message names them, or null

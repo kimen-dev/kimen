@@ -106,6 +106,11 @@ For previously uploaded attachments, set `files` to rows with metadata and
 `status: 'done'`. Only rows carrying an original `File` contribute form
 entries.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-file-upload`: the light option, only the tokens ki-file-upload needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `accept` (string | undefined): Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.

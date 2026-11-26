@@ -8,12 +8,16 @@ specs at the GenUI boundary. The catalog and the `<ki-*>` components are the
 durable assets; protocol adapters (A2UI, MCP Apps) are deliberately
 disposable and live in their own packages.
 
-The catalog artifact (`src/generated/catalog.ts`) derives component contracts
+The catalog artifacts (`src/generated/`) derive component contracts
 from the committed Custom Elements Manifest of `@kimen/elements` (Art. I).
 A component's `component.json` must declare `"catalog": true` to expose its
 contract to agents (Art. VIII). The `catalog-sync` gate fails any drift
-between the committed artifact and a fresh regeneration. It declares its own schema
-version (`catalogSchemaVersion`) and the elements version it derives from.
+between the committed artifacts and a fresh regeneration. The catalog
+declares its own schema version (`catalogSchemaVersion`) and the elements
+version it derives from. Validation and rendering read only its structure;
+the guidance prose a model reads lives in a module of its own, so a page that
+imports `validateUiSpec` and `renderUiSpec` downloads none of it.
+`catalogData` is the whole catalog, prose included.
 
 ## Install
 

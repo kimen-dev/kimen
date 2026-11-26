@@ -387,6 +387,7 @@ it('S7 each wrapper consumer pins its framework to the wrapper development versi
     );
   }
   expect(versions['@kimen/vue']).toEqual([expect.stringMatching(/^vue@\d+\.\d+\.\d+$/u)]);
+  expect(WRAPPER_CONSUMERS[0].absent).toEqual(['@stencil/react-output-target', 'ts-morph']);
   expect(WRAPPER_CONSUMERS[1].absent).toEqual(['vue-router']);
   expect(WRAPPER_CONSUMERS.map(({ nodeImport }) => nodeImport)).toEqual([true, true, false]);
   for (const consumer of WRAPPER_CONSUMERS) {

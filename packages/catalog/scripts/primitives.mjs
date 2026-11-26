@@ -1,10 +1,11 @@
 // The native primitives (spec 037, Art. I): the ONE definition of the closed
 // set of native HTML elements a UI spec may carry next to catalog
-// components. The catalog generator merges these entries into
-// src/generated/catalog.ts, so validation, the guarded renderer, the
-// emitter, llms-full.txt and every catalog consumer read them from the same
-// artifact as the components. Each entry has the exact shape of a generated
-// component entry; none declares an event, and none may bind an action.
+// components. The catalog generator merges these entries, whole, into
+// src/generated/catalog-structure.ts and through it into `catalogData`, so
+// validation, the guarded renderer, the emitter, llms-full.txt and every
+// catalog consumer read them from the same artifacts as the components.
+// Each entry has the exact shape of a generated component entry; none
+// declares an event, and none may bind an action.
 //
 // What the renderer does with them (CSSOM layout, the pinned image
 // attributes, the content model) lives in src/primitives.ts and keys off

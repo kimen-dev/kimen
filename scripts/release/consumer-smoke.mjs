@@ -335,6 +335,9 @@ export const WRAPPER_CONSUMERS = Object.freeze([
   Object.freeze({
     name: '@kimen/react',
     frameworks: Object.freeze(['react', 'react-dom', '@types/react', '@types/react-dom']),
+    // The wrapper ships its output target's runtime: the target and its
+    // build tooling stay out of an application's install.
+    absent: Object.freeze(['@stencil/react-output-target', 'ts-morph']),
     entry: 'consumer.tsx',
     source: `import { KiButton } from '@kimen/react';
 import { KiButton as KiButtonOnly } from '@kimen/react/ki-button';

@@ -41,6 +41,11 @@ accessibility tree.
 <ki-image src="/divider.svg" decorative radius="none"></ki-image>
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-image`: the light option, only the tokens ki-image needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `alt` (string | undefined): Describe what the image shows for the task at hand. Required and nonblank for an informative image. Omit it for a decorative image.

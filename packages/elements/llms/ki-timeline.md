@@ -56,6 +56,11 @@ activity.append(item);
 The list updates its order and announces nearby additions together. The
 message comes from the event's default slot.
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-timeline`: the light option, only the tokens ki-timeline needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name of the ordered list.

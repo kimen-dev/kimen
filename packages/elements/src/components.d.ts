@@ -78,6 +78,7 @@ import { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js"
 import { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 import { KiToolbarOrientation, KiToolbarTone, KiToolbarVariant } from "./components/ki-toolbar/ki-toolbar";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
+import { TopNavScrollBehavior, TopNavTitleAlign, TopNavVariant } from "./components/ki-top-nav/ki-top-nav";
 import { TopNavSize } from "./components/ki-top-nav/ki-top-nav.layout";
 import { KiTreeSelection } from "./components/ki-tree/ki-tree";
 export { KiAiLabelSize } from "./components/ki-ai-label/ki-ai-label";
@@ -153,6 +154,7 @@ export { KiToasterPlacement } from "./components/ki-toaster/ki-toaster.queue.js"
 export { KiToastShowOptions } from "./components/ki-toaster/ki-toaster.show.js";
 export { KiToolbarOrientation, KiToolbarTone, KiToolbarVariant } from "./components/ki-toolbar/ki-toolbar";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
+export { TopNavScrollBehavior, TopNavTitleAlign, TopNavVariant } from "./components/ki-top-nav/ki-top-nav";
 export { TopNavSize } from "./components/ki-top-nav/ki-top-nav.layout";
 export { KiTreeSelection } from "./components/ki-tree/ki-tree";
 export namespace Components {

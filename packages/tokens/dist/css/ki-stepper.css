@@ -1,0 +1,29 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-icon-size-sm:var(--ki-glyph-size-sm);
+  --ki-icon-size-md:var(--ki-glyph-size-md);
+  --ki-icon-size-lg:var(--ki-glyph-size-lg);
+  --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+  --ki-stepper-dot-size:var(--ki-layout-spacing-7xl);
+  --ki-stepper-glyph-size:var(--ki-layout-spacing-2xl);
+  --ki-stepper-stroke:var(--ki-activity-size-stroke);
+  --ki-stepper-done-bg:var(--ki-surface-primary-med-em);
+  --ki-stepper-done-fg:var(--ki-text-primary-on-primary);
+  --ki-stepper-current-bg:var(--ki-surface-transparent);
+  --ki-stepper-current-border:var(--ki-surface-primary-med-em);
+  --ki-stepper-current-fg:var(--ki-text-primary-high-em);
+  --ki-stepper-upcoming-bg:var(--ki-surface-transparent);
+  --ki-stepper-upcoming-border:var(--ki-outline-control);
+  --ki-stepper-upcoming-fg:var(--ki-text-supporting);
+  --ki-stepper-error-bg:var(--ki-surface-transparent);
+  --ki-stepper-error-border:var(--ki-text-danger-high-em);
+  --ki-stepper-error-fg:var(--ki-text-danger-high-em);
+  --ki-stepper-label-bg:var(--ki-surface-transparent);
+  --ki-stepper-label-fg:var(--ki-text-high-em);
+  --ki-stepper-summary-bg:var(--ki-surface-transparent);
+  --ki-stepper-summary-fg:var(--ki-text-high-em);
+  --ki-stepper-connector:var(--ki-outline-low-em);
+  --ki-stepper-connector-done:var(--ki-surface-primary-med-em);
+  --ki-step-description-bg:var(--ki-surface-transparent);
+  --ki-step-description-fg:var(--ki-text-supporting);
+}

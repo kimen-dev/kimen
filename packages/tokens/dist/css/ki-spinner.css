@@ -1,0 +1,26 @@
+:where(:root),
+:where([data-ki-theme]) {
+  --ki-spinner-size:var(--ki-activity-size-ring-md);
+  --ki-spinner-size-sm:var(--ki-activity-size-ring-sm);
+  --ki-spinner-size-lg:var(--ki-activity-size-ring-lg);
+  --ki-spinner-stroke:var(--ki-activity-size-stroke);
+  --ki-spinner-stroke-lg:var(--ki-activity-size-stroke-lg);
+  --ki-spinner-radius:var(--ki-corner-activity-mark);
+  --ki-spinner-track:var(--ki-outline-strong);
+  --ki-spinner-indicator:var(--ki-surface-primary-high-em);
+  --ki-spinner-ring-duration:var(--ki-motion-duration-activity-rotation);
+  --ki-spinner-ring-duration-reduced:var(--ki-motion-duration-activity-rotation-reduced);
+  --ki-spinner-ring-easing:var(--ki-motion-easing-activity-rotation);
+  --ki-spinner-dot-size:var(--ki-activity-size-dot);
+  --ki-spinner-dot-gap:var(--ki-spacing-activity-dot-gap);
+  --ki-spinner-dot-duration:var(--ki-motion-duration-activity-pulse);
+  --ki-spinner-dot-delay:var(--ki-motion-duration-activity-stagger);
+  --ki-spinner-dot-easing:var(--ki-motion-easing-activity-pulse);
+  --ki-spinner-dot-scale-min:var(--ki-motion-scale-activity-pulse-min);
+  --ki-spinner-label-bg:var(--ki-surface-transparent);
+  --ki-spinner-label-fg:var(--ki-text-supporting);
+  --ki-spinner-label-gap:var(--ki-spacing-activity-label-gap);
+  --ki-spinner-label-font-family:var(--ki-typography-family-body);
+  --ki-spinner-label-font-size:var(--ki-typography-size-body-1);
+  --ki-spinner-label-line-height:var(--ki-typography-line-height-body-1);
+}

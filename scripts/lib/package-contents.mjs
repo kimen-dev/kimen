@@ -31,7 +31,10 @@ import { posix } from 'node:path';
 //   agent docs, the custom-elements manifest.
 // - budget, in bytes: the gzip tarball and its unpacked contents. Each base
 //   is the size measured when it was set (2026-11-25) plus about 3 %, and
-//   raising one needs the founder's approval.
+//   raising one needs the founder's approval. The lean catalog runtime
+//   lowered the catalog and mcp-server bases the same day to what they
+//   measured after it, plus the same 3 %. The catalog tarball (315,307 B)
+//   kept its base: 3 % over it would have raised the base.
 export const packageContentRules = Object.freeze({
   '@kimen/elements': Object.freeze({
     mapsEveryModule: false,
@@ -43,19 +46,26 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['fonts/InstrumentSans-OFL.txt', 'fonts/Newsreader-OFL.txt']),
-    budget: Object.freeze({ packed: 220_160, unpacked: 519_168 }),
+    // Spec 166's core and per-tag token sheets measured 268,679 / 1,190,678 B;
+    // the founder approved raising the base to that plus 3 % on 2026-11-25
+    // ("Sí, apruebo"), up from 220,160 / 519,168 B.
+    budget: Object.freeze({ packed: 276_736, unpacked: 1_226_400 }),
   }),
   '@kimen/mcp-server': Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
-    budget: Object.freeze({ packed: 811_008, unpacked: 4_125_696 }),
+    budget: Object.freeze({ packed: 659_456, unpacked: 3_331_072 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,
-    unmappedModules: Object.freeze(['dist/generated/catalog.js']),
+    unmappedModules: Object.freeze([
+      'dist/generated/catalog-guidance.js',
+      'dist/generated/catalog-structure.js',
+      'dist/generated/catalog.js',
+    ]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 320_512, unpacked: 1_382_400 }),
+    budget: Object.freeze({ packed: 320_512, unpacked: 1_376_256 }),
   }),
   '@kimen/emitter': Object.freeze({
     mapsEveryModule: true,
@@ -71,15 +81,25 @@ export const packageContentRules = Object.freeze({
   }),
   '@kimen/adapter-mcp-apps': Object.freeze({
     mapsEveryModule: true,
-    unmappedModules: Object.freeze(['dist/generated/surface-document.js']),
+    unmappedModules: Object.freeze([
+      'dist/generated/surface-document.js',
+      'dist/generated/surface-profile-data.js',
+      'dist/generated/surface-profile-form.js',
+    ]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 429_056, unpacked: 1_747_968 }),
+    // Spec 165 adds the «form» and «data» profile documents. The founder
+    // approved 696,320 / 2,932,736 B as a ceiling on 2026-11-25 ("Sí,
+    // apruebo"), to be re-measured once #634 and #636 landed: 509,550 /
+    // 2,307,112 B on 2026-11-26, plus about 3 %.
+    budget: Object.freeze({ packed: 525_312, unpacked: 2_376_704 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 43_008, unpacked: 381_952 }),
+    // Re-based the same day for the copy of the React output target's
+    // runtime and its MIT notice, which replace the target as a dependency.
+    budget: Object.freeze({ packed: 48_128, unpacked: 392_192 }),
   }),
   '@kimen/vue': Object.freeze({
     mapsEveryModule: true,

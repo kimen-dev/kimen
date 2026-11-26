@@ -83,6 +83,11 @@ A guarded surface can pass the source as a string in the default slot.
 }
 ```
 
+## Token stylesheets
+
+- `@kimen/tokens/css`: every token, once per page. The default.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-markdown`: the light option, only the tokens ki-markdown needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+
 ## Attributes
 
 - `allow-images` (boolean, default false): Render Markdown images that pass the URL policy. Otherwise show their alternative text.

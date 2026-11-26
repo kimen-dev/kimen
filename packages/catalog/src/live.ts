@@ -18,7 +18,7 @@
  * `renderUiSpec` and `createStreamingRenderer` keep their semantics (D1).
  * Nothing here names a protocol or a domain (Art. VIII).
  */
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
 import { createActionGate } from './action-budget.js';
 import {
@@ -29,7 +29,7 @@ import {
   writeDialogId,
 } from './dialog-commands.js';
 import { createFocusRepair, holdsFocus } from './focus-repair.js';
-import { catalogData } from './generated/catalog.js';
+import { catalogStructure } from './generated/catalog-structure.js';
 import { writeNativeLayout } from './primitives.js';
 import {
   ABSOLUTE_MAX_BYTES,
@@ -73,6 +73,7 @@ import {
   toPlainData,
   validatePlainData,
 } from './validate.js';
+import { useClassicZodDefaults } from './zod-defaults.js';
 
 type Scalar = boolean | number | string;
 
@@ -300,43 +301,47 @@ interface ParsedBatch extends Omit<LiveBatch, 'ops'> {
   readonly ops: readonly ParsedOp[];
 }
 
+useClassicZodDefaults();
+
 const idRef = z.string();
 // Annotated against the public types: a public field the schema stops
 // yielding, or yields with another type, fails the build.
-const opSchema: z.ZodType<ParsedOp> = z.discriminatedUnion('op', [
+const opSchema: z.ZodMiniType<ParsedOp> = z.discriminatedUnion('op', [
   z.strictObject({
     op: z.literal('insert'),
-    parent: idRef.optional(),
-    slot: z.string().optional(),
-    before: idRef.optional(),
+    parent: z.optional(idRef),
+    slot: z.optional(z.string()),
+    before: z.optional(idRef),
     node: z.unknown(),
   }),
   z.strictObject({
     op: z.literal('set'),
     id: idRef,
     props: z.record(z.string(), z.union([z.boolean(), z.number(), z.string(), z.null()])),
-    force: z.boolean().optional(),
+    force: z.optional(z.boolean()),
   }),
   z.strictObject({
     op: z.literal('text'),
     id: idRef,
-    slot: z.string().optional(),
+    slot: z.optional(z.string()),
     text: z.string(),
   }),
-  z.strictObject({ op: z.literal('remove'), id: idRef, force: z.boolean().optional() }),
+  z.strictObject({ op: z.literal('remove'), id: idRef, force: z.optional(z.boolean()) }),
   z.strictObject({
     op: z.literal('replace'),
     id: idRef,
     node: z.unknown(),
-    force: z.boolean().optional(),
+    force: z.optional(z.boolean()),
   }),
   z.strictObject({ op: z.literal('reset'), id: idRef }),
 ]);
-const batchSchema: z.ZodType<ParsedBatch> = z.strictObject({
-  focus: idRef.optional(),
-  ifRevision: z.number().int().nonnegative().optional(),
+const batchSchema: z.ZodMiniType<ParsedBatch> = z.strictObject({
+  focus: z.optional(idRef),
+  ifRevision: z.optional(z.number().check(z.int(), z.nonnegative())),
   ops: z.array(opSchema),
 });
+/** The batch schema, typed loosely for tests/zod-parity.spec.ts alone; the entry does not export it. */
+export const batchShape: { safeParse(data: unknown): unknown } = batchSchema;
 
 const BATCH_LABELS = { root: 'batch', surface: 'a live batch' };
 
@@ -1126,7 +1131,7 @@ function applyOps(
  * version leaves a surface that rejects every batch.
  */
 export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
-  const catalog: Catalog = options.catalog ?? catalogData;
+  const catalog: Catalog = options.catalog ?? catalogStructure;
   const components = catalog.components;
   const budgets: RenderBudgets = { ...DEFAULT_RENDER_BUDGETS, ...options.budgets };
   const batchBudgets: LiveBatchBudgets = {

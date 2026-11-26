@@ -289,8 +289,16 @@ describe('package content rules', () => {
           .map(([name, rules]) => [name, [...rules.unmappedModules]]),
       ),
     ).toEqual({
-      '@kimen/catalog': ['dist/generated/catalog.js'],
-      '@kimen/adapter-mcp-apps': ['dist/generated/surface-document.js'],
+      '@kimen/catalog': [
+        'dist/generated/catalog-guidance.js',
+        'dist/generated/catalog-structure.js',
+        'dist/generated/catalog.js',
+      ],
+      '@kimen/adapter-mcp-apps': [
+        'dist/generated/surface-document.js',
+        'dist/generated/surface-profile-data.js',
+        'dist/generated/surface-profile-form.js',
+      ],
     });
   });
 
