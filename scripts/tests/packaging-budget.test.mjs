@@ -123,8 +123,9 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 818_195, gzip: 187_416, brotli: 148_865 },
-    mcpServer: { raw: 2_626_194, gzip: 498_562, brotli: 390_919 },
+    mcpApps: { raw: 587_281, gzip: 114_066, brotli: 89_094 },
+    mcpServer: { raw: 1_857_413, gzip: 352_318, brotli: 317_309 },
+    genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   });
@@ -147,8 +148,9 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 820_395, gzip: 187_596, brotli: 149_030 },
-    mcpServer: { raw: 2_627_494, gzip: 498_752, brotli: 391_094 },
+    mcpApps: { raw: 589_481, gzip: 114_246, brotli: 89_259 },
+    mcpServer: { raw: 1_858_713, gzip: 352_508, brotli: 317_484 },
+    genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   });
@@ -160,6 +162,23 @@ test('standalone packaging re-enters through the isolated cache environment', as
   assert.match(
     manifest.scripts.packaging,
     /^bash scripts\/gates\/cache-env\.sh -- node scripts\/gates\/check-packaging\.mjs$/u,
+  );
+});
+
+// The budgets gate (nx run-many -t size) weighs a browser GenUI host: the
+// packed catalog bundled for validateUiSpec and renderUiSpec, against the
+// genuiHost base, so neither the guidance prose nor classic zod returns.
+test('the catalog size target weighs a GenUI host built from its packed tarball', async () => {
+  const manifest = JSON.parse(
+    await readFile(`${workspaceRoot}/packages/catalog/package.json`, 'utf8'),
+  );
+  const nx = JSON.parse(await readFile(`${workspaceRoot}/nx.json`, 'utf8'));
+
+  assert.equal(manifest.scripts.size, 'node scripts/host-weight.mjs');
+  assert.deepEqual(manifest.nx.targets.size.inputs, ['default', '^default', 'componentBudget']);
+  assert.deepEqual(nx.targetDefaults.size.dependsOn, ['build']);
+  assert.ok(
+    nx.namedInputs.componentBudget.includes('{workspaceRoot}/scripts/lib/bundle-size-budget.mjs'),
   );
 });
 
@@ -275,8 +294,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
       // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
       '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
-      '@kimen/mcp-server': { packed: 827_392, unpacked: 4_172_800 },
-      '@kimen/catalog': { packed: 320_512, unpacked: 1_382_400 },
+      '@kimen/mcp-server': { packed: 674_816, unpacked: 3_379_200 },
+      '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
       // Spec 165 profiles: the ceiling the founder approved on 2026-11-25.

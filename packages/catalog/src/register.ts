@@ -8,15 +8,16 @@
  * explicitly; the built-in generated catalog remains the default path
  * everywhere, unchanged.
  */
-import { z } from 'zod';
+import * as z from 'zod/mini';
 
-import { catalogData } from './generated/catalog.js';
+import { catalogStructure } from './generated/catalog-structure.js';
 import { isNativePrimitive, nativeEntryViolation } from './primitives.js';
 import { propNameViolation } from './prop-names.js';
 import { isCompatibleSchemaVersion } from './schema-version.js';
 import { tagGrammarViolation } from './tag-grammar.js';
 import type { Catalog, CatalogEntry, CatalogPropConstraint, ValidationIssue } from './validate.js';
 import { toPlainData, VALIDATION_MAX_BYTES } from './validate.js';
+import { useClassicZodDefaults } from './zod-defaults.js';
 
 /** Machine-readable registration rejection classes (spec 032 FR-002/FR-004). */
 export type RegistrationIssueCode =
@@ -74,22 +75,24 @@ export type CatalogCreationResult =
 // The definition schema is exactly as strict as the UI-spec schema (spec
 // 027 precedent): unknown keys rejected everywhere, scalar-only constraint
 // grammar, the entry shape shared verbatim with the generated catalog.
+useClassicZodDefaults();
+
 const propConstraintSchema = z.strictObject({
-  allowEmpty: z.boolean().optional(),
-  default: z.union([z.boolean(), z.number(), z.string()]).optional(),
-  deprecatedValues: z.array(z.string()).optional(),
+  allowEmpty: z.optional(z.boolean()),
+  default: z.optional(z.union([z.boolean(), z.number(), z.string()])),
+  deprecatedValues: z.optional(z.array(z.string())),
   description: z.string(),
-  documentedValues: z.array(z.string()).optional(),
-  format: z.enum(['idref', 'text', 'url']).optional(),
-  maximum: z.number().optional(),
-  minimum: z.number().optional(),
-  required: z.boolean().optional(),
+  documentedValues: z.optional(z.array(z.string())),
+  format: z.optional(z.enum(['idref', 'text', 'url'])),
+  maximum: z.optional(z.number()),
+  minimum: z.optional(z.number()),
+  required: z.optional(z.boolean()),
   type: z.enum(['boolean', 'enum', 'number', 'number-or-string', 'string']),
-  values: z.array(z.string()).optional(),
+  values: z.optional(z.array(z.string())),
 });
 
 const entrySchema = z.strictObject({
-  activationEvent: z.string().optional(),
+  activationEvent: z.optional(z.string()),
   description: z.string(),
   events: z.record(z.string(), z.string()),
   props: z.record(z.string(), propConstraintSchema),
@@ -108,8 +111,11 @@ const definitionSchema = z.strictObject({
 const EXTEND_MAX_BYTES = 8 * 1_024 * 1_024;
 
 const baseSchema = z.record(z.string(), entrySchema);
+/** The two registration schemas, typed loosely for tests/zod-parity.spec.ts alone; the entry exports neither. */
+export const definitionShape: { safeParse(data: unknown): unknown } = definitionSchema;
+export const baseShape: { safeParse(data: unknown): unknown } = baseSchema;
 
-function baseSchemaIssues(error: z.ZodError): readonly RegistrationIssue[] {
+function baseSchemaIssues(error: z.core.$ZodError): readonly RegistrationIssue[] {
   return error.issues.map((issue) => ({
     code: 'malformed-definition' as const,
     message: issue.message,
@@ -132,7 +138,7 @@ function toRegistrationIssue(issue: ValidationIssue): RegistrationIssue {
   return { code, message: issue.message, path: issue.path, value: issue.value };
 }
 
-function schemaIssues(error: z.ZodError): readonly RegistrationIssue[] {
+function schemaIssues(error: z.core.$ZodError): readonly RegistrationIssue[] {
   return error.issues.map((issue) => {
     const segments = issue.path.map(String);
     const last = segments.at(-1) ?? '';
@@ -522,11 +528,11 @@ export function createCatalog(
       const baseVersion = baseRecord['catalogSchemaVersion'];
       if (
         typeof baseVersion !== 'string' ||
-        !isCompatibleSchemaVersion(baseVersion, catalogData.catalogSchemaVersion)
+        !isCompatibleSchemaVersion(baseVersion, catalogStructure.catalogSchemaVersion)
       ) {
         issues.push({
           code: 'unsupported-version',
-          message: `extended catalog declares schema version "${String(baseVersion)}"; this registration supports "${catalogData.catalogSchemaVersion}"`,
+          message: `extended catalog declares schema version "${String(baseVersion)}"; this registration supports "${catalogStructure.catalogSchemaVersion}"`,
           path: 'options.extend.catalogSchemaVersion',
           value: typeof baseVersion === 'string' ? baseVersion : undefined,
         });
@@ -570,11 +576,11 @@ export function createCatalog(
   const catalog: Catalog =
     baseElementsVersion === undefined
       ? {
-          catalogSchemaVersion: catalogData.catalogSchemaVersion,
+          catalogSchemaVersion: catalogStructure.catalogSchemaVersion,
           components: sortedRecord(Object.entries(components)),
         }
       : {
-          catalogSchemaVersion: catalogData.catalogSchemaVersion,
+          catalogSchemaVersion: catalogStructure.catalogSchemaVersion,
           components: sortedRecord(Object.entries(components)),
           elementsVersion: baseElementsVersion,
         };

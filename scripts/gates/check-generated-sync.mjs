@@ -26,6 +26,8 @@ const tokens = Object.freeze([
   'packages/tokens/dist/css/tokens.material3.css',
 ]);
 const catalog = Object.freeze([
+  'packages/catalog/src/generated/catalog-guidance.ts',
+  'packages/catalog/src/generated/catalog-structure.ts',
   'packages/catalog/src/generated/catalog.ts',
   'packages/catalog/src/generated/url-scheme.ts',
 ]);

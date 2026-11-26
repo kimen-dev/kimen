@@ -75,8 +75,29 @@ const BASE_BUDGETS = {
   // (154 B left on that main); the founder approved re-basing that one metric by
   // the 358 B the placeholder costs (2026-11-24, «Sí, sube 358 B»), added on top
   // of the preference-modes base above.
-  mcpApps: { raw: 818_195, gzip: 187_416, brotli: 148_865 },
-  mcpServer: { raw: 2_626_194, gzip: 498_562, brotli: 390_919 },
+  // The lean catalog runtime (2026-11-25) re-based both DOWN, measured on macOS:
+  // the catalog parses with zod/mini, imported as a module namespace (the
+  // server's `import { z } from 'zod'` pulled in all of classic zod), and its
+  // validator and renderer read the generated structure without the guidance
+  // prose. Against main b1382831 the document was 1,527,736 / 374,475 /
+  // 283,998 B and kimen-mcp 3,993,653 / 791,451 / 551,735 B; with the change,
+  // merged with main 15af665b (0.3.0, spec 165), they measure 1,296,064 /
+  // 299,593 / 224,886 B and 3,222,799 / 642,510 / 474,809 B. Each limit (base
+  // plus the component allowances) is that size plus about 1 % of gzip and
+  // brotli for Linux CI's output and 0.1 % of raw bytes, which esbuild emits
+  // alike everywhere: 1,297,361 / 302,589 / 227,135 and 3,226,022 / 648,936 /
+  // 479,558 B.
+  mcpApps: { raw: 587_281, gzip: 114_066, brotli: 89_094 },
+  mcpServer: { raw: 1_857_413, gzip: 352_318, brotli: 317_309 },
+  // A browser host that validates and renders agent specs (validateUiSpec and
+  // renderUiSpec from the packed @kimen/catalog, bundled for production:
+  // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
+  // measured on macOS with the lean runtime above, merged with main 15af665b,
+  // 125,455 / 29,479 / 25,933 B (715,883 / 169,806 / 136,980 B before), with the
+  // same margins. No component declares an allowance here: a component that
+  // joins the catalog grows the host by its structure, so re-base this by the
+  // cost it measures.
+  genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
   // #316 and #341 together measured 5.30 kB for Material 3 after regeneration.
   // Document 2's shared semantic tokens (radii, popup, floating-list, feature-tile…) added
   // about 420 B of onmars growth no single component owns; approved 2026-11-20 to publish.
@@ -99,6 +120,7 @@ export function deriveBundleSizeBudgets(components) {
   const limits = {
     mcpApps: { ...BASE_BUDGETS.mcpApps },
     mcpServer: { ...BASE_BUDGETS.mcpServer },
+    genuiHost: { ...BASE_BUDGETS.genuiHost },
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },
     tokenSheets: { ...BASE_BUDGETS.tokenSheets },
   };

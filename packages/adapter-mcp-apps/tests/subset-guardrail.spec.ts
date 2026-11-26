@@ -13,7 +13,22 @@ import { createSurfaceBridge, defineKimenSurface } from '../src/index.js';
 import { FORM_PROFILE } from '../src/generated/surface-profile-form.js';
 import { initializeResult, toolResult } from './spec-messages.js';
 
-// The catalog's internal module, by path, exactly as the generator replaces it.
+// The catalog's internal modules, by path, exactly as the generator replaces
+// them: the structure the validator, the renderer and the live surface read,
+// and the catalogData built from it.
+vi.mock('../../catalog/dist/generated/catalog-structure.js', async (importOriginal) => {
+  const { catalogStructure } = await importOriginal<{ catalogStructure: Catalog.Catalog }>();
+  const { FORM_PROFILE: profile } = await import('../src/generated/surface-profile-form.js');
+  const effective = new Set(profile.components);
+  return {
+    catalogStructure: {
+      ...catalogStructure,
+      components: Object.fromEntries(
+        Object.entries(catalogStructure.components).filter(([tag]) => effective.has(tag)),
+      ),
+    },
+  };
+});
 vi.mock('../../catalog/dist/generated/catalog.js', async (importOriginal) => {
   const { catalogData } = await importOriginal<typeof Catalog>();
   const { FORM_PROFILE: profile } = await import('../src/generated/surface-profile-form.js');

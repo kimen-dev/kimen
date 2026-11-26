@@ -12,6 +12,9 @@ import test from 'node:test';
 const repoRoot = join(dirname(new URL(import.meta.url).pathname), '..', '..');
 const subjectUrl = new URL('../gates/check-generated-sync.mjs', import.meta.url);
 
+// Every module the catalog generator writes (src/generated).
+const GENERATED = ['catalog-guidance.ts', 'catalog-structure.ts', 'catalog.ts', 'url-scheme.ts'];
+
 const git = (root, ...args) =>
   execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: 'pipe' });
 
@@ -25,6 +28,8 @@ test('S9 a hand-edited committed catalog artifact fails the catalog sync gate', 
   const subject = await import(subjectUrl.href);
   const group = subject.generatedGroups.catalog;
   assert.deepEqual(group.required, [
+    'packages/catalog/src/generated/catalog-guidance.ts',
+    'packages/catalog/src/generated/catalog-structure.ts',
     'packages/catalog/src/generated/catalog.ts',
     'packages/catalog/src/generated/url-scheme.ts',
   ]);
@@ -75,7 +80,7 @@ test('S10 catalog regeneration from checkouts at different paths is byte-identic
       [join(checkout, 'packages/catalog/scripts/generate-catalog.mjs'), checkout],
       { encoding: 'utf8', stdio: 'pipe' },
     );
-    const paths = ['catalog.ts', 'url-scheme.ts'];
+    const paths = GENERATED;
     outputs.push(
       await Promise.all(
         paths.map((file) =>
@@ -86,7 +91,7 @@ test('S10 catalog regeneration from checkouts at different paths is byte-identic
   }
   assert.deepEqual(outputs[0], outputs[1]);
   const committed = await Promise.all(
-    ['catalog.ts', 'url-scheme.ts'].map((file) =>
+    GENERATED.map((file) =>
       readFile(join(repoRoot, 'packages/catalog/src/generated', file), 'utf8'),
     ),
   );

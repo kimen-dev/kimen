@@ -16,7 +16,7 @@ import {
 } from '@kimen/adapter-mcp-apps';
 import { NODE_ID_GRAMMAR, VALIDATION_MAX_BYTES } from '@kimen/catalog';
 import { McpServer } from '@modelcontextprotocol/server';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { createDeclaredActions } from './actions.js';
 import {
