@@ -88,17 +88,24 @@ application-owned open or closed shadow roots to `observeRoot(root)`, or
 register tags directly from their subpaths if you need them before insertion.
 Only `exclude` affects registration among the existing loader options.
 
-## Measured weight (to repeat on the final build)
+## Measured weight
 
-Brotli (quality 11) of every JavaScript file the page requests, bundled as
-`scripts/consumer-loader-bundles.mjs` bundles it and served to Chromium; a
-prototype of this design on 0.4.0's per-component modules:
+Brotli quality 11, summed across every JavaScript file Chromium requested.
+Both packed packages were built after #645. Repeat with
+`node scripts/measure-loader.mjs <elements-tarball>`.
 
-| Page | esbuild before | esbuild after | Vite before | Vite after |
+| Page | esbuild main | esbuild branch | Vite main | Vite branch |
 |---|---:|---:|---:|---:|
-| The loader alone | 16,269 B | 8,592 B (about 2 KB without the static runtime import) | 18,617 B | 4,616 B |
-| One `ki-button` | 19,929 B | 12,544 B | 22,304 B | 15,102 B |
-| The ten gate components | 59,844 B | 54,862 B | 62,401 B | 57,434 B |
+| Loader alone | 16,269 B | 1,932 B | 18,617 B | 4,585 B |
+| One `ki-button` | 19,929 B | 12,871 B | 22,304 B | 15,093 B |
+| Ten gate components | 59,844 B | 54,516 B | 62,401 B | 56,417 B |
+| All 107 | 261,253 B | 265,795 B | 264,687 B | 265,878 B |
+
+The all-107 page exceeds main by 4,542 B in esbuild and 1,191 B in Vite.
+The release is blocked by this regression.
+
+The npm tarball shrinks from 2,658,737 to 1,874,953 B. Its unpacked contents
+shrink from 12,331,636 to 7,978,410 B.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 

@@ -20,12 +20,11 @@
     "loader/register",
     "generated/custom-elements.json",
     "llms.txt",
-    "llms-full.txt",
     "llms",
     "NOTICE"
   ],
   "scripts": {
-    "build": "node scripts/build-surfaces.mjs --prepare-package-summary && node scripts/generate-icons.mjs && stencil build && node scripts/write-loader.mjs && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/prune-package-outputs.mjs && node scripts/build-surfaces.mjs",
+    "build": "node scripts/generate-icons.mjs && stencil build && node scripts/write-loader.mjs && node scripts/normalize-react-wrappers.mjs && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/normalize-declaration-specifiers.mjs && node scripts/prune-package-outputs.mjs && node scripts/build-surfaces.mjs",
     "test": "node --test scripts/icon-modules.test.mjs scripts/prune-package-outputs.test.mjs && vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.browser.config.ts",
@@ -49,7 +48,6 @@
           "!{projectRoot}/icons/**",
           "!{projectRoot}/loader/**",
           "!{projectRoot}/llms.txt",
-          "!{projectRoot}/llms-full.txt",
           "!{projectRoot}/llms/**",
           "!{projectRoot}/src/components.d.ts",
           "{workspaceRoot}/docs/genui-surfaces.json",
@@ -70,7 +68,6 @@
           "{projectRoot}/generated",
           "{projectRoot}/loader",
           "{projectRoot}/llms.txt",
-          "{projectRoot}/llms-full.txt",
           "{projectRoot}/llms",
           "{projectRoot}/src/components.d.ts",
           "{workspaceRoot}/llms.txt",
@@ -154,7 +151,7 @@
       "import": "./dist/components/ki-*.js"
     },
     "./icons/*": {
-      "types": "./icons/*.d.ts",
+      "types": "./icons/_glyph.d.ts",
       "import": "./icons/*.js"
     },
     "./components": {

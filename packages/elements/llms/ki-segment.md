@@ -28,7 +28,7 @@ distinct value, and set the selected value on the group.
 Use the `start` slot for a decorative icon. An icon-only option needs
 `aria-label`, which also supplies its hover and focus tooltip when enabled.
 
-The all-elements loader registers `ki-tooltip`. When using direct imports or
+The loader defines `ki-tooltip` when it appears in a segment’s shadow root. When using direct imports or
 framework wrappers, register it separately for icon-only options.
 
 ## Token stylesheets
@@ -38,7 +38,7 @@ framework wrappers, register it separately for icon-only options.
 
 ## Attributes
 
-- `aria-label` (string | undefined): Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.
+- `aria-label` (string | undefined): Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The loader defines the tooltip when the segment draws it. For a text option, use the visible label.
 - `disabled` (boolean, default false): Excludes the option from selection and keyboard navigation.
 - `value` (string, required): Required nonempty option identifier. Each value must be unique in its group.
 

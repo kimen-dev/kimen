@@ -297,7 +297,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
+      // Lowered for the install trims (one glyph declaration, no package llms-full.txt).
+      '@kimen/elements': { packed: 1_931_202, unpacked: 8_217_763 },
       // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
       '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
       '@kimen/mcp-server': { packed: 659_456, unpacked: 3_331_072 },

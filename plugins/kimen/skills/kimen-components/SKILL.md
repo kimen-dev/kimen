@@ -33,7 +33,8 @@ or token name, read it from one of these, in this order of convenience:
    `https://kimen.dev/llms/ki-button.md`. Inside an installed package the
    same files are at `node_modules/@kimen/elements/llms.txt` and
    `node_modules/@kimen/elements/llms/<tag>.md` and match the installed
-   version. Fetch only the components you use; `llms-full.txt` is large.
+   version. Fetch only the components you use; `https://kimen.dev/llms-full.txt`
+   has them all in one large file.
 3. **custom-elements.json** (`@kimen/elements/generated/custom-elements.json`)
    when a tool wants structured data.
 

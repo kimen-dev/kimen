@@ -13,8 +13,6 @@ import { createPublicApiSnapshot } from '../lib/public-api.mjs';
 
 const subjectUrl = new URL('../gates/check-generated-sync.mjs', import.meta.url);
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
-const packageSummary = 'elements summary\n';
-const siteSummary = `${packageSummary}\n## GenUI layer\n\nsite-only guidance\n`;
 
 const git = (root, ...args) =>
   execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: 'pipe' });
@@ -37,11 +35,6 @@ async function aRepository(t, paths) {
   git(root, 'config', 'user.name', 'fixture');
   git(root, 'config', 'user.email', 'fixture@kimen.local');
   await Promise.all(paths.map((path) => put(root, path)));
-  if (paths.includes('llms-full.txt')) {
-    await put(root, '.gitignore', '/packages/elements/llms-full.txt\n');
-    await put(root, 'llms-full.txt', siteSummary);
-    await put(root, 'packages/elements/llms-full.txt', packageSummary);
-  }
   git(root, 'add', '.');
   git(root, 'commit', '--quiet', '--allow-empty', '-m', 'test: generated baseline');
   return root;
@@ -188,13 +181,13 @@ test('S3 the split candidate round-trips and a changed component only rewrites i
   await assert.rejects(readDirectoryPublicApiSnapshot(root), /digest/iu);
 });
 
-test('S3 the untracked package summary must match the committed site summary before packing', async (t) => {
+test('S3 the package ships no complete summary: a stray one in its directory is untracked output', async (t) => {
   const subject = await import(subjectUrl.href);
   const root = await aRepository(t, subject.generatedGroups.surfaces.required);
-  await rm(join(root, 'packages/elements/llms-full.txt'));
-  assert.throws(() => subject.validateGeneratedSync({ root, group: 'surfaces' }), /llms-full/iu);
-  await put(root, 'packages/elements/llms-full.txt', packageSummary);
   assert.doesNotThrow(() => subject.validateGeneratedSync({ root, group: 'surfaces' }));
-  await put(root, 'packages/elements/llms-full.txt', 'stale summary\n');
-  assert.throws(() => subject.validateGeneratedSync({ root, group: 'surfaces' }), /llms-full/iu);
+  await put(root, 'packages/elements/llms/llms-full.txt', 'stale summary\n');
+  assert.throws(
+    () => subject.validateGeneratedSync({ root, group: 'surfaces' }),
+    /untracked outputs: packages\/elements\/llms\/llms-full\.txt/u,
+  );
 });

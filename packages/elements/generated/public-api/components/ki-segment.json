@@ -4,7 +4,7 @@
       "aria-label": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label.",
+        "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nloader defines the tooltip when the segment draws it. For a text option,\nuse the visible label.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -253,7 +253,7 @@
       "accessibleLabel": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nall-elements loader includes it. For a text option, use the visible label.",
+        "description": "Accessible name of an icon-only option. An enabled icon-only option also\nshows this name on focus and hover when ki-tooltip is registered. The\nloader defines the tooltip when the segment draws it. For a text option,\nuse the visible label.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"

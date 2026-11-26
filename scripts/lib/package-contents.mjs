@@ -39,8 +39,10 @@ export const packageContentRules = Object.freeze({
   '@kimen/elements': Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
-    assets: Object.freeze(['generated/custom-elements.json', 'llms-full.txt', 'llms.txt', 'llms/']),
-    budget: Object.freeze({ packed: 2_948_096, unpacked: 13_445_120 }),
+    assets: Object.freeze(['generated/custom-elements.json', 'llms.txt', 'llms/']),
+    // Spec 167 removes dist/esm. The package measured 1,874,953 B packed
+    // and 7,978,410 B unpacked; each limit adds 3% headroom.
+    budget: Object.freeze({ packed: 1_931_202, unpacked: 8_217_763 }),
   }),
   '@kimen/tokens': Object.freeze({
     mapsEveryModule: false,

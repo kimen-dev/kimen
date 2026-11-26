@@ -1771,7 +1771,7 @@ CSS custom properties:
 
 ### ki-checkbox
 
-A form-associated checkbox for selecting independent options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
+A form-associated checkbox for selecting independent options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously on a defined custom element.
 
 When to use: selecting one or more independent options that a form submits
 later, including a "select all" parent that presents partial selection with
@@ -5223,7 +5223,7 @@ CSS custom properties:
 
 ### ki-input
 
-A token-styled single-line text field with native input semantics. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
+A token-styled single-line text field with native input semantics. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously on a defined custom element.
 
 When to use: collect one line of free text from a person, always with a
 visible `label`; choose the `type` and `autocomplete` that match the entry
@@ -5797,7 +5797,7 @@ strikethrough, inline and fenced code, links, opt-in images, ordered and
 unordered lists, task items, blockquotes, tables and hard breaks.
 Use `> [!NOTE]` to display a Kimen Note.
 
-The package loader registers Markdown, Link, CodeBlock and Note. Register the
+The loader defines Markdown and its Link, CodeBlock and Note children as they appear. Register the
 child elements your content uses when using direct imports or framework
 wrappers.
 
@@ -7359,7 +7359,7 @@ CSS custom properties:
 
 ### ki-radio-group
 
-A token-styled radio group that owns selection, keyboard coordination and form participation for slotted `ki-radio` options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
+A token-styled radio group that owns selection, keyboard coordination and form participation for slotted `ki-radio` options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously on a defined custom element.
 
 When to use: a person must choose exactly one of a small set of mutually
 exclusive options that should all be visible at once.
@@ -8023,11 +8023,11 @@ distinct value, and set the selected value on the group.
 Use the `start` slot for a decorative icon. An icon-only option needs
 `aria-label`, which also supplies its hover and focus tooltip when enabled.
 
-The all-elements loader registers `ki-tooltip`. When using direct imports or
+The loader defines `ki-tooltip` when it appears in a segment’s shadow root. When using direct imports or
 framework wrappers, register it separately for icon-only options.
 
 Attributes:
-- `aria-label` (string | undefined): Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The all-elements loader includes it. For a text option, use the visible label.
+- `aria-label` (string | undefined): Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The loader defines the tooltip when the segment draws it. For a text option, use the visible label.
 - `disabled` (boolean, default false): Excludes the option from selection and keyboard navigation.
 - `value` (string, required): Required nonempty option identifier. Each value must be unique in its group.
 
@@ -8117,7 +8117,7 @@ document.querySelector('#range').addEventListener('ki-change', ({ detail }) => {
 </ki-segmented-control>
 ```
 
-The all-elements loader already registers the tooltip. With direct imports
+The loader discovers the tooltip in the segment’s shadow root. With direct imports
 or framework wrappers, register it before mounting an icon-only option.
 
 ```js
@@ -8165,7 +8165,7 @@ CSS custom properties:
 
 ### ki-select
 
-A form-associated select-only combobox for choosing one option from declarative `ki-option` children. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
+A form-associated select-only combobox for choosing one option from declarative `ki-option` children. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously on a defined custom element.
 
 When to use: choose exactly one value from a known closed list, especially
 when there are roughly five or more choices or space is limited.
@@ -9615,7 +9615,7 @@ CSS custom properties:
 
 ### ki-switch
 
-A token-styled switch for immediate on/off settings. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
+A token-styled switch for immediate on/off settings. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously on a defined custom element.
 
 When to use: binary settings whose change takes effect immediately, always
 with a slotted label.
@@ -10018,7 +10018,7 @@ or replacement.
 ```
 
 With individual imports or a framework wrapper, register `ki-checkbox` when
-using `selectable`. The full Kimen loader registers both elements.
+using `selectable`. The loader defines the checkbox when the table draws it.
 
 ```js
 import { defineCustomElement as defineTable } from '@kimen/elements/ki-table';
@@ -10246,7 +10246,7 @@ CSS custom properties:
 
 ### ki-textarea
 
-A token-styled multiline text field with native form semantics. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
+A token-styled multiline text field with native form semantics. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously on a defined custom element.
 
 When to use: free-form text longer than one line, such as comments,
 descriptions, messages, delivery notes, or addresses when paired with a
