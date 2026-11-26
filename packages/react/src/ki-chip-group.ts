@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiChipGroup as KiChipGroupElement, defineCustomElement as defineKiChipGroup } from '@kimen/elements/components/ki-chip-group.js';
 import type { KiChipReorderDetail, KiChipGroupCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiChipGroupEvents = {
   onKiReorder: EventName<KiChipGroupCustomEvent<KiChipReorderDetail>>
@@ -21,8 +20,6 @@ export type KiChipGroupEvents = {
 export const KiChipGroup: StencilReactComponent<KiChipGroupElement, KiChipGroupEvents, Components.KiChipGroup> = /*@__PURE__*/ createComponent<KiChipGroupElement, KiChipGroupEvents, Components.KiChipGroup>({
     tagName: 'ki-chip-group',
     elementClass: KiChipGroupElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiReorder: 'ki-reorder'
     } as KiChipGroupEvents,

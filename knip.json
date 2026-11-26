@@ -13,6 +13,10 @@
     "packages/angular/src/directives/**"
   ],
   "ignoreDependencies": ["husky", "nx", "@kimen/nx-plugin", "@stencil/vitest"],
+  "ignoreIssues": {
+    "scripts/mutation-tests/react-runtime.spec.mjs": ["unlisted"],
+    "scripts/mutation-tests/react-runtime-ssr.spec.mjs": ["unlisted"]
+  },
   "workspaces": {
     ".": {
       "entry": ["scripts/**/*.mjs", "*.config.{ts,mjs}"],

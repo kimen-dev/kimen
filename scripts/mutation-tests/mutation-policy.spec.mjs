@@ -148,6 +148,7 @@ describe('mutation policy classification', () => {
     expect(classifyChangedFiles(generatedGroups.wrappers.handWritten)).toEqual([
       { path: 'packages/angular/src/index.ts', classification: 'core', runner: 'node' },
       { path: 'packages/react/src/index.ts', classification: 'core', runner: 'node' },
+      { path: 'packages/react/src/runtime.ts', classification: 'core', runner: 'node' },
     ]);
   });
 

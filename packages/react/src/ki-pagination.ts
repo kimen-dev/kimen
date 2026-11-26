@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiPagination as KiPaginationElement, defineCustomElement as defineKiPagination } from '@kimen/elements/components/ki-pagination.js';
 import type { KiPaginationCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiPaginationEvents = {
   onKiPageChange: EventName<KiPaginationCustomEvent<{ page: number; }>>,
@@ -22,8 +21,6 @@ export type KiPaginationEvents = {
 export const KiPagination: StencilReactComponent<KiPaginationElement, KiPaginationEvents, Components.KiPagination> = /*@__PURE__*/ createComponent<KiPaginationElement, KiPaginationEvents, Components.KiPagination>({
     tagName: 'ki-pagination',
     elementClass: KiPaginationElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiPageChange: 'ki-page-change',
       onKiLoadMore: 'ki-load-more'

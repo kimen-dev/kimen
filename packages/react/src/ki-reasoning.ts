@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiReasoning as KiReasoningElement, defineCustomElement as defineKiReasoning } from '@kimen/elements/components/ki-reasoning.js';
 import type { KiReasoningToggleDetail, KiReasoningCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiReasoningEvents = {
   onKiToggle: EventName<KiReasoningCustomEvent<KiReasoningToggleDetail>>
@@ -21,8 +20,6 @@ export type KiReasoningEvents = {
 export const KiReasoning: StencilReactComponent<KiReasoningElement, KiReasoningEvents, Components.KiReasoning> = /*@__PURE__*/ createComponent<KiReasoningElement, KiReasoningEvents, Components.KiReasoning>({
     tagName: 'ki-reasoning',
     elementClass: KiReasoningElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiToggle: 'ki-toggle'
     } as KiReasoningEvents,

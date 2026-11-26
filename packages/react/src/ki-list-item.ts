@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiListItem as KiListItemElement, defineCustomElement as defineKiListItem } from '@kimen/elements/components/ki-list-item.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiListItemEvents = NonNullable<unknown>;
 
 export const KiListItem: StencilReactComponent<KiListItemElement, KiListItemEvents, Components.KiListItem> = /*@__PURE__*/ createComponent<KiListItemElement, KiListItemEvents, Components.KiListItem>({
     tagName: 'ki-list-item',
     elementClass: KiListItemElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiListItemEvents,
     defineCustomElement: defineKiListItem,
 });

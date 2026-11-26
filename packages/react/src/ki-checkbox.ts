@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCheckbox as KiCheckboxElement, defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiCheckboxEvents = NonNullable<unknown>;
 
 export const KiCheckbox: StencilReactComponent<KiCheckboxElement, KiCheckboxEvents, Components.KiCheckbox> = /*@__PURE__*/ createComponent<KiCheckboxElement, KiCheckboxEvents, Components.KiCheckbox>({
     tagName: 'ki-checkbox',
     elementClass: KiCheckboxElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiCheckboxEvents,
     defineCustomElement: defineKiCheckbox,
 });

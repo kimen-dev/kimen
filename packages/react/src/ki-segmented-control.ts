@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiSegmentedControl as KiSegmentedControlElement, defineCustomElement as defineKiSegmentedControl } from '@kimen/elements/components/ki-segmented-control.js';
 import type { KiSegmentedControlCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiSegmentedControlEvents = {
   onKiChange: EventName<KiSegmentedControlCustomEvent<{ value: string }>>
@@ -21,8 +20,6 @@ export type KiSegmentedControlEvents = {
 export const KiSegmentedControl: StencilReactComponent<KiSegmentedControlElement, KiSegmentedControlEvents, Components.KiSegmentedControl, 'label'> = /*@__PURE__*/ createComponent<KiSegmentedControlElement, KiSegmentedControlEvents, Components.KiSegmentedControl, 'label'>({
     tagName: 'ki-segmented-control',
     elementClass: KiSegmentedControlElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiChange: 'ki-change'
     } as KiSegmentedControlEvents,

@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiSuggestion as KiSuggestionElement, defineCustomElement as defineKiSuggestion } from '@kimen/elements/components/ki-suggestion.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiSuggestionEvents = NonNullable<unknown>;
 
 export const KiSuggestion: StencilReactComponent<KiSuggestionElement, KiSuggestionEvents, Components.KiSuggestion> = /*@__PURE__*/ createComponent<KiSuggestionElement, KiSuggestionEvents, Components.KiSuggestion>({
     tagName: 'ki-suggestion',
     elementClass: KiSuggestionElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiSuggestionEvents,
     defineCustomElement: defineKiSuggestion,
 });

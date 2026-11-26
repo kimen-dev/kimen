@@ -304,7 +304,7 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
       '@kimen/adapter-mcp-apps': { packed: 504_500, unpacked: 2_307_036 },
-      '@kimen/react': { packed: 48_128, unpacked: 392_192 },
+      '@kimen/react': { packed: 46_952, unpacked: 345_886 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },
     },

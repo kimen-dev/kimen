@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiFab as KiFabElement, defineCustomElement as defineKiFab } from '@kimen/elements/components/ki-fab.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiFabEvents = NonNullable<unknown>;
 
 export const KiFab: StencilReactComponent<KiFabElement, KiFabEvents, Components.KiFab, 'label'> = /*@__PURE__*/ createComponent<KiFabElement, KiFabEvents, Components.KiFab, 'label'>({
     tagName: 'ki-fab',
     elementClass: KiFabElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiFabEvents,
     defineCustomElement: defineKiFab,
 });

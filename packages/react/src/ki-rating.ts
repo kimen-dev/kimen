@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiRating as KiRatingElement, defineCustomElement as defineKiRating } from '@kimen/elements/components/ki-rating.js';
 import type { KiRatingCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiRatingEvents = {
   onKiChange: EventName<KiRatingCustomEvent<{ value: number }>>
@@ -21,8 +20,6 @@ export type KiRatingEvents = {
 export const KiRating: StencilReactComponent<KiRatingElement, KiRatingEvents, Components.KiRating, 'label'> = /*@__PURE__*/ createComponent<KiRatingElement, KiRatingEvents, Components.KiRating, 'label'>({
     tagName: 'ki-rating',
     elementClass: KiRatingElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiChange: 'ki-change'
     } as KiRatingEvents,

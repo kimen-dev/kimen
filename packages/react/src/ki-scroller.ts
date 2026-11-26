@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiScroller as KiScrollerElement, defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiScrollerEvents = NonNullable<unknown>;
 
 export const KiScroller: StencilReactComponent<KiScrollerElement, KiScrollerEvents, Components.KiScroller, 'label'> = /*@__PURE__*/ createComponent<KiScrollerElement, KiScrollerEvents, Components.KiScroller, 'label'>({
     tagName: 'ki-scroller',
     elementClass: KiScrollerElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiScrollerEvents,
     defineCustomElement: defineKiScroller,
 });

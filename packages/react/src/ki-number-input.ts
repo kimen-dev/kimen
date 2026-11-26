@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiNumberInput as KiNumberInputElement, defineCustomElement as defineKiNumberInput } from '@kimen/elements/components/ki-number-input.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiNumberInputEvents = NonNullable<unknown>;
 
 export const KiNumberInput: StencilReactComponent<KiNumberInputElement, KiNumberInputEvents, Components.KiNumberInput, 'label'> = /*@__PURE__*/ createComponent<KiNumberInputElement, KiNumberInputEvents, Components.KiNumberInput, 'label'>({
     tagName: 'ki-number-input',
     elementClass: KiNumberInputElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiNumberInputEvents,
     defineCustomElement: defineKiNumberInput,
 });

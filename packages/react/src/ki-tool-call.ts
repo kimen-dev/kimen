@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiToolCall as KiToolCallElement, defineCustomElement as defineKiToolCall } from '@kimen/elements/components/ki-tool-call.js';
 import type { KiToolCallCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiToolCallEvents = {
   onKiToolStatusChange: EventName<KiToolCallCustomEvent<{ name: string; status: string; label: string }>>,
@@ -22,8 +21,6 @@ export type KiToolCallEvents = {
 export const KiToolCall: StencilReactComponent<KiToolCallElement, KiToolCallEvents, Components.KiToolCall, 'name'> = /*@__PURE__*/ createComponent<KiToolCallElement, KiToolCallEvents, Components.KiToolCall, 'name'>({
     tagName: 'ki-tool-call',
     elementClass: KiToolCallElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiToolStatusChange: 'ki-tool-status-change',
       onKiToolRetry: 'ki-tool-retry'

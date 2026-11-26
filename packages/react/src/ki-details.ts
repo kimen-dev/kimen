@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiDetails as KiDetailsElement, defineCustomElement as defineKiDetails } from '@kimen/elements/components/ki-details.js';
 import type { KiDetailsToggleDetail, KiDetailsCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiDetailsEvents = {
   onKiToggle: EventName<KiDetailsCustomEvent<KiDetailsToggleDetail>>
@@ -21,8 +20,6 @@ export type KiDetailsEvents = {
 export const KiDetails: StencilReactComponent<KiDetailsElement, KiDetailsEvents, Components.KiDetails> = /*@__PURE__*/ createComponent<KiDetailsElement, KiDetailsEvents, Components.KiDetails>({
     tagName: 'ki-details',
     elementClass: KiDetailsElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiToggle: 'ki-toggle'
     } as KiDetailsEvents,

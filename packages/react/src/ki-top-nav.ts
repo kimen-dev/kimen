@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTopNav as KiTopNavElement, defineCustomElement as defineKiTopNav } from '@kimen/elements/components/ki-top-nav.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiTopNavEvents = NonNullable<unknown>;
 
 export const KiTopNav: StencilReactComponent<KiTopNavElement, KiTopNavEvents, Components.KiTopNav> = /*@__PURE__*/ createComponent<KiTopNavElement, KiTopNavEvents, Components.KiTopNav>({
     tagName: 'ki-top-nav',
     elementClass: KiTopNavElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiTopNavEvents,
     defineCustomElement: defineKiTopNav,
 });

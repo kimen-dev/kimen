@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiSwitch as KiSwitchElement, defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiSwitchEvents = NonNullable<unknown>;
 
 export const KiSwitch: StencilReactComponent<KiSwitchElement, KiSwitchEvents, Components.KiSwitch> = /*@__PURE__*/ createComponent<KiSwitchElement, KiSwitchEvents, Components.KiSwitch>({
     tagName: 'ki-switch',
     elementClass: KiSwitchElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiSwitchEvents,
     defineCustomElement: defineKiSwitch,
 });

@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCarouselItem as KiCarouselItemElement, defineCustomElement as defineKiCarouselItem } from '@kimen/elements/components/ki-carousel-item.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiCarouselItemEvents = NonNullable<unknown>;
 
 export const KiCarouselItem: StencilReactComponent<KiCarouselItemElement, KiCarouselItemEvents, Components.KiCarouselItem> = /*@__PURE__*/ createComponent<KiCarouselItemElement, KiCarouselItemEvents, Components.KiCarouselItem>({
     tagName: 'ki-carousel-item',
     elementClass: KiCarouselItemElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiCarouselItemEvents,
     defineCustomElement: defineKiCarouselItem,
 });

@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiSidebarGroup as KiSidebarGroupElement, defineCustomElement as defineKiSidebarGroup } from '@kimen/elements/components/ki-sidebar-group.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiSidebarGroupEvents = NonNullable<unknown>;
 
 export const KiSidebarGroup: StencilReactComponent<KiSidebarGroupElement, KiSidebarGroupEvents, Components.KiSidebarGroup, 'label'> = /*@__PURE__*/ createComponent<KiSidebarGroupElement, KiSidebarGroupEvents, Components.KiSidebarGroup, 'label'>({
     tagName: 'ki-sidebar-group',
     elementClass: KiSidebarGroupElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiSidebarGroupEvents,
     defineCustomElement: defineKiSidebarGroup,
 });

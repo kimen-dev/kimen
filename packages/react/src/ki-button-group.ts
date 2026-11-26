@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiButtonGroup as KiButtonGroupElement, defineCustomElement as defineKiButtonGroup } from '@kimen/elements/components/ki-button-group.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiButtonGroupEvents = NonNullable<unknown>;
 
 export const KiButtonGroup: StencilReactComponent<KiButtonGroupElement, KiButtonGroupEvents, Components.KiButtonGroup, 'label'> = /*@__PURE__*/ createComponent<KiButtonGroupElement, KiButtonGroupEvents, Components.KiButtonGroup, 'label'>({
     tagName: 'ki-button-group',
     elementClass: KiButtonGroupElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiButtonGroupEvents,
     defineCustomElement: defineKiButtonGroup,
 });

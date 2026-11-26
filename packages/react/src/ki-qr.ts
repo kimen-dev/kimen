@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiQr as KiQrElement, defineCustomElement as defineKiQr } from '@kimen/elements/components/ki-qr.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiQrEvents = NonNullable<unknown>;
 
 export const KiQr: StencilReactComponent<KiQrElement, KiQrEvents, Components.KiQr> = /*@__PURE__*/ createComponent<KiQrElement, KiQrEvents, Components.KiQr>({
     tagName: 'ki-qr',
     elementClass: KiQrElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiQrEvents,
     defineCustomElement: defineKiQr,
 });

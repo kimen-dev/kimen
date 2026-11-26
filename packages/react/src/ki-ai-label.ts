@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiAiLabel as KiAiLabelElement, defineCustomElement as defineKiAiLabel } from '@kimen/elements/components/ki-ai-label.js';
 import type { KiAiLabelCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiAiLabelEvents = {
   onKiRevert: EventName<KiAiLabelCustomEvent<void>>
@@ -21,8 +20,6 @@ export type KiAiLabelEvents = {
 export const KiAiLabel: StencilReactComponent<KiAiLabelElement, KiAiLabelEvents, Components.KiAiLabel> = /*@__PURE__*/ createComponent<KiAiLabelElement, KiAiLabelEvents, Components.KiAiLabel>({
     tagName: 'ki-ai-label',
     elementClass: KiAiLabelElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiRevert: 'ki-revert'
     } as KiAiLabelEvents,

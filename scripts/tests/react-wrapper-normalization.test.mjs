@@ -23,3 +23,31 @@ test('React wrapper generation rejects runtime imports from the frozen root', ()
     /ki-example.ts.*runtime import/u,
   );
 });
+
+test('React wrapper generation points value and type imports at the local runtime', () => {
+  const input = [
+    "import React from 'react';",
+    "import { createComponent } from '@stencil/react-output-target/runtime';",
+    'import type { StencilReactComponent, EventName } from "@stencil/react-output-target/runtime";',
+    'export const KiExample = /*@__PURE__*/ createComponent({',
+    "    tagName: 'ki-example',",
+    '    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.',
+    '    react: React,',
+    '    events: {},',
+    '});',
+  ].join('\n');
+
+  const normalized = normalizeReactWrapper(input, 'ki-example.ts');
+  assert.equal(
+    normalized,
+    [
+      "import { createComponent } from './runtime.js';",
+      'import type { StencilReactComponent, EventName } from "./runtime.js";',
+      'export const KiExample = /*@__PURE__*/ createComponent({',
+      "    tagName: 'ki-example',",
+      '    events: {},',
+      '});',
+    ].join('\n'),
+  );
+  assert.equal(normalizeReactWrapper(normalized, 'ki-example.ts'), normalized);
+});

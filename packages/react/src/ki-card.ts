@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCard as KiCardElement, defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import type { KiCardCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiCardEvents = {
   onKiActivate: EventName<KiCardCustomEvent<void>>
@@ -21,8 +20,6 @@ export type KiCardEvents = {
 export const KiCard: StencilReactComponent<KiCardElement, KiCardEvents, Components.KiCard> = /*@__PURE__*/ createComponent<KiCardElement, KiCardEvents, Components.KiCard>({
     tagName: 'ki-card',
     elementClass: KiCardElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiActivate: 'ki-activate'
     } as KiCardEvents,
