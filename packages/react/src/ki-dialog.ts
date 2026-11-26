@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiDialog as KiDialogElement, defineCustomElement as defineKiDialog } from '@kimen/elements/components/ki-dialog.js';
 import type { KiDialogCloseDetail, KiDialogCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiDialogEvents = {
   onKiClose: EventName<KiDialogCustomEvent<KiDialogCloseDetail>>,
@@ -22,8 +21,6 @@ export type KiDialogEvents = {
 export const KiDialog: StencilReactComponent<KiDialogElement, KiDialogEvents, Components.KiDialog, 'heading'> = /*@__PURE__*/ createComponent<KiDialogElement, KiDialogEvents, Components.KiDialog, 'heading'>({
     tagName: 'ki-dialog',
     elementClass: KiDialogElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiClose: 'ki-close',
       onKiConfirm: 'ki-confirm'

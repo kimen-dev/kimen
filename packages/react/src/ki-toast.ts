@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiToast as KiToastElement, defineCustomElement as defineKiToast } from '@kimen/elements/components/ki-toast.js';
 import type { KiToastDismissDetail, KiToastCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiToastEvents = {
   onKiDismiss: EventName<KiToastCustomEvent<KiToastDismissDetail>>
@@ -21,8 +20,6 @@ export type KiToastEvents = {
 export const KiToast: StencilReactComponent<KiToastElement, KiToastEvents, Components.KiToast> = /*@__PURE__*/ createComponent<KiToastElement, KiToastEvents, Components.KiToast>({
     tagName: 'ki-toast',
     elementClass: KiToastElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiDismiss: 'ki-dismiss'
     } as KiToastEvents,

@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCounter as KiCounterElement, defineCustomElement as defineKiCounter } from '@kimen/elements/components/ki-counter.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiCounterEvents = NonNullable<unknown>;
 
 export const KiCounter: StencilReactComponent<KiCounterElement, KiCounterEvents, Components.KiCounter> = /*@__PURE__*/ createComponent<KiCounterElement, KiCounterEvents, Components.KiCounter>({
     tagName: 'ki-counter',
     elementClass: KiCounterElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiCounterEvents,
     defineCustomElement: defineKiCounter,
 });

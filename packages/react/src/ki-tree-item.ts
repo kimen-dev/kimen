@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTreeItem as KiTreeItemElement, defineCustomElement as defineKiTreeItem } from '@kimen/elements/components/ki-tree-item.js';
 import type { KiTreeItemCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiTreeItemEvents = {
   onKiExpand: EventName<KiTreeItemCustomEvent<{ item: HTMLKiTreeItemElement }>>,
@@ -23,8 +22,6 @@ export type KiTreeItemEvents = {
 export const KiTreeItem: StencilReactComponent<KiTreeItemElement, KiTreeItemEvents, Components.KiTreeItem> = /*@__PURE__*/ createComponent<KiTreeItemElement, KiTreeItemEvents, Components.KiTreeItem>({
     tagName: 'ki-tree-item',
     elementClass: KiTreeItemElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiExpand: 'ki-expand',
       onKiCollapse: 'ki-collapse',

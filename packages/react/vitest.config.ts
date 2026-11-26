@@ -5,10 +5,12 @@ import { defineConfig } from 'vitest/config';
 
 const cacheRoot = process.env['KIMEN_WORKTREE_CACHE_ROOT'] ?? process.env['KIMEN_CACHE_ROOT'];
 const cacheDir = cacheRoot ? join(cacheRoot, 'vite/react-wrapper') : undefined;
+const engine = process.env['KIMEN_BROWSER_ENGINE'] ?? 'chromium';
+if (engine !== 'chromium' && engine !== 'firefox' && engine !== 'webkit') {
+  throw new Error(`Unsupported React wrapper browser: ${engine}`);
+}
 
-// Wrapper behavioral scenarios run in REAL Chromium (frontend-qa: happy-dom
-// lies about shadow DOM and custom elements); structural scenarios run in
-// node. Same Playwright channel selection as the elements harness.
+// Run one real browser per invocation and run structural scenarios in Node.
 export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
   optimizeDeps: {
@@ -23,9 +25,11 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: playwright({ launchOptions: { channel: 'chromium' } }),
+            provider: playwright(
+              engine === 'chromium' ? { launchOptions: { channel: engine } } : {},
+            ),
             screenshotFailures: false,
-            instances: [{ browser: 'chromium', fileParallelism: false }],
+            instances: [{ browser: engine, fileParallelism: false }],
           },
         },
       },

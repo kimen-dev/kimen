@@ -32,7 +32,7 @@ function typecheck(project: string): { ok: boolean; output: string } {
 }
 
 describe('react wrapper types', () => {
-  it('S4 fails the type-check on an out-of-union enum prop, naming the prop', {
+  it('S4 rejects an out-of-union prop and an incompatible event handler', {
     timeout: TYPECHECK_TIMEOUT_MS,
   }, () => {
     const good = typecheck('tests/fixtures/tsconfig.good.json');
@@ -41,8 +41,9 @@ describe('react wrapper types', () => {
 
     const bad = typecheck('tests/fixtures/tsconfig.bad.json');
     expect(bad.ok).toBe(false);
-    // tsc names the offending literal and the prop's manifest union type.
     expect(bad.output).toContain('sparkly');
     expect(bad.output).toContain('KiButtonVariant');
+    expect(bad.output).toContain('KiAlertCustomEvent<null>');
+    expect(bad.output).toContain('KeyboardEvent');
   });
 });

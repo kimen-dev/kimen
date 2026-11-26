@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTimeInput as KiTimeInputElement, defineCustomElement as defineKiTimeInput } from '@kimen/elements/components/ki-time-input.js';
 import type { KiTimeInputChangeDetail, KiTimeInputCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiTimeInputEvents = {
   onKiChange: EventName<KiTimeInputCustomEvent<KiTimeInputChangeDetail>>
@@ -21,8 +20,6 @@ export type KiTimeInputEvents = {
 export const KiTimeInput: StencilReactComponent<KiTimeInputElement, KiTimeInputEvents, Components.KiTimeInput, 'label'> = /*@__PURE__*/ createComponent<KiTimeInputElement, KiTimeInputEvents, Components.KiTimeInput, 'label'>({
     tagName: 'ki-time-input',
     elementClass: KiTimeInputElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiChange: 'ki-change'
     } as KiTimeInputEvents,

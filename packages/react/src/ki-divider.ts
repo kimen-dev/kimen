@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiDivider as KiDividerElement, defineCustomElement as defineKiDivider } from '@kimen/elements/components/ki-divider.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiDividerEvents = NonNullable<unknown>;
 
 export const KiDivider: StencilReactComponent<KiDividerElement, KiDividerEvents, Components.KiDivider> = /*@__PURE__*/ createComponent<KiDividerElement, KiDividerEvents, Components.KiDivider>({
     tagName: 'ki-divider',
     elementClass: KiDividerElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiDividerEvents,
     defineCustomElement: defineKiDivider,
 });

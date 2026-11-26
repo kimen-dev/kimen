@@ -4,13 +4,11 @@
 // re-dispatched native input event (S7), and per-component lazy
 // registration (S11 — importing and rendering only ki-button must not
 // define ki-dialog).
-import { StrictMode, useState } from 'react';
+import { type ComponentRef, createRef, StrictMode, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
-import { afterEach, describe, expect, it } from 'vitest';
-// S11 depends on this file importing ONLY these wrapper modules: ki-alert
-// for the event scenario, ki-button and ki-input for rendering, and the
-// select, tabs and radio-group families for composition — never the barrel
-// and never ki-dialog.
+import { afterEach, assert, describe, expect, it, vi } from 'vitest';
+// S11 requires direct imports that leave ki-dialog unregistered.
 import { KiAlert } from '../src/ki-alert';
 import { KiButton } from '../src/ki-button';
 import { KiInput } from '../src/ki-input';
@@ -18,6 +16,7 @@ import { KiOption } from '../src/ki-option';
 import { KiRadio } from '../src/ki-radio';
 import { KiRadioGroup } from '../src/ki-radio-group';
 import { KiSelect } from '../src/ki-select';
+import { KiSuggestions } from '../src/ki-suggestions';
 import { KiTab } from '../src/ki-tab';
 import { KiTabPanel } from '../src/ki-tab-panel';
 import { KiTabs } from '../src/ki-tabs';
@@ -82,6 +81,138 @@ describe('react wrapper', () => {
     alert?.dispatchEvent(new CustomEvent('ki-dismiss', { bubbles: true, detail: null }));
     await flush();
     expect(received).toHaveLength(1);
+  });
+
+  it('replaces and removes mapped event handlers on update', async () => {
+    const first = vi.fn();
+    const next = vi.fn();
+    const element = createRef<ComponentRef<typeof KiAlert>>();
+    mountOnce(<KiAlert ref={element} onKiDismiss={first} />);
+    await expect.poll(() => element.current).not.toBeNull();
+    const alert = element.current;
+    assert.exists(alert);
+    const event = new CustomEvent('ki-dismiss', { detail: null });
+
+    alert.dispatchEvent(event);
+    expect(first).toHaveBeenCalledExactlyOnceWith(event);
+
+    flushSync(() => root?.render(<KiAlert ref={element} onKiDismiss={next} />));
+    alert.dispatchEvent(event);
+    expect(first).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledExactlyOnceWith(event);
+
+    flushSync(() => root?.render(<KiAlert ref={element} />));
+    alert.dispatchEvent(event);
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('binds one listener after StrictMode effect replay and removes it on unmount', async () => {
+    const dismiss = vi.fn();
+    const element = createRef<ComponentRef<typeof KiAlert>>();
+    mount(<KiAlert ref={element} onKiDismiss={dismiss} />);
+    await expect.poll(() => element.current).not.toBeNull();
+    const alert = element.current;
+    assert.exists(alert);
+    const event = new CustomEvent('ki-dismiss');
+
+    alert.dispatchEvent(event);
+    expect(dismiss).toHaveBeenCalledExactlyOnceWith(event);
+
+    root?.unmount();
+    root = undefined;
+    expect(element.current).toBeNull();
+    alert.dispatchEvent(event);
+    expect(dismiss).toHaveBeenCalledTimes(1);
+  });
+
+  it('removes only the listener owned by the wrapper', async () => {
+    const dismiss = vi.fn();
+    const element = createRef<ComponentRef<typeof KiAlert>>();
+    mountOnce(<KiAlert ref={element} onKiDismiss={dismiss} />);
+    await expect.poll(() => element.current).not.toBeNull();
+    const alert = element.current;
+    assert.exists(alert);
+    alert.addEventListener('ki-dismiss', dismiss);
+
+    root?.unmount();
+    root = undefined;
+    alert.dispatchEvent(new CustomEvent('ki-dismiss'));
+
+    expect(dismiss).toHaveBeenCalledTimes(1);
+    alert.removeEventListener('ki-dismiss', dismiss);
+  });
+
+  it('sets, updates and clears an object prop on the host without an attribute', async () => {
+    const initial = { value: 'draft', focus: vi.fn() };
+    const updated = { value: 'revision', focus: vi.fn() };
+    const element = createRef<ComponentRef<typeof KiSuggestions>>();
+    mountOnce(<KiSuggestions label="Prompts" ref={element} composer={initial} />);
+    await expect.poll(() => element.current?.composer).toBe(initial);
+    const suggestions = element.current;
+    assert.exists(suggestions);
+    expect(suggestions.hasAttribute('composer')).toBe(false);
+
+    flushSync(() =>
+      root?.render(<KiSuggestions label="Prompts" ref={element} composer={updated} />),
+    );
+    expect(suggestions.composer).toBe(updated);
+    expect(suggestions.hasAttribute('composer')).toBe(false);
+
+    flushSync(() => root?.render(<KiSuggestions label="Prompts" ref={element} />));
+    expect(suggestions.composer).toBeUndefined();
+  });
+
+  it('forwards the host to callback refs and detaches replaced refs', async () => {
+    const first = vi.fn();
+    const next = vi.fn();
+    const surface = mountOnce(<KiButton ref={first}>Save</KiButton>);
+    await expect.poll(() => surface.querySelector('ki-button')).not.toBeNull();
+    const button = surface.querySelector('ki-button');
+    expect(first).toHaveBeenCalledExactlyOnceWith(button);
+
+    flushSync(() => root?.render(<KiButton ref={next}>Save</KiButton>));
+    expect(first.mock.calls).toEqual([[button], [null]]);
+    expect(next).toHaveBeenCalledExactlyOnceWith(button);
+
+    root?.unmount();
+    root = undefined;
+    expect(next.mock.calls).toEqual([[button], [null]]);
+  });
+
+  it('updates className alongside Stencil and application classes', async () => {
+    const surface = mountOnce(<KiButton className="initial">Save</KiButton>);
+    await expect.poll(() => surface.querySelector('ki-button.hydrated.initial')).not.toBeNull();
+    const button = surface.querySelector('ki-button');
+    assert.exists(button);
+    button.classList.add('external');
+
+    flushSync(() => root?.render(<KiButton className="updated">Save</KiButton>));
+    expect([...button.classList]).toEqual(
+      expect.arrayContaining(['hydrated', 'external', 'updated']),
+    );
+    expect(button.classList.contains('initial')).toBe(false);
+
+    flushSync(() => root?.render(<KiButton>Save</KiButton>));
+    expect([...button.classList]).toEqual(expect.arrayContaining(['hydrated', 'external']));
+    expect(button.classList.contains('updated')).toBe(false);
+  });
+
+  it('hands through HTML attributes and releases deferred hydration at mount', async () => {
+    const surface = mountOnce(
+      <KiButton id="save" data-action="save" {...{ 'defer-hydration': '' }}>
+        Save
+      </KiButton>,
+    );
+    await expect.poll(() => surface.querySelector('ki-button.hydrated')).not.toBeNull();
+    const button = surface.querySelector('ki-button');
+    assert.exists(button);
+    expect(button.id).toBe('save');
+    expect(button.dataset['action']).toBe('save');
+    expect(button.hasAttribute('defer-hydration')).toBe(false);
+
+    flushSync(() => root?.render(<KiButton>Save</KiButton>));
+    expect(button.hasAttribute('id')).toBe(false);
+    expect(button.hasAttribute('data-action')).toBe(false);
   });
 
   it('S7 round-trips a controlled ki-input through the native input event', async () => {

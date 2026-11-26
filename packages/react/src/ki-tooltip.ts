@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTooltip as KiTooltipElement, defineCustomElement as defineKiTooltip } from '@kimen/elements/components/ki-tooltip.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiTooltipEvents = NonNullable<unknown>;
 
 export const KiTooltip: StencilReactComponent<KiTooltipElement, KiTooltipEvents, Components.KiTooltip> = /*@__PURE__*/ createComponent<KiTooltipElement, KiTooltipEvents, Components.KiTooltip>({
     tagName: 'ki-tooltip',
     elementClass: KiTooltipElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiTooltipEvents,
     defineCustomElement: defineKiTooltip,
 });

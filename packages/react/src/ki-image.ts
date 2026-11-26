@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiImage as KiImageElement, defineCustomElement as defineKiImage } from '@kimen/elements/components/ki-image.js';
 import type { KiImageCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiImageEvents = {
   onKiError: EventName<KiImageCustomEvent<void>>
@@ -21,8 +20,6 @@ export type KiImageEvents = {
 export const KiImage: StencilReactComponent<KiImageElement, KiImageEvents, Components.KiImage, 'src'> = /*@__PURE__*/ createComponent<KiImageElement, KiImageEvents, Components.KiImage, 'src'>({
     tagName: 'ki-image',
     elementClass: KiImageElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiError: 'ki-error'
     } as KiImageEvents,

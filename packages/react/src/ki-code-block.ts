@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCodeBlock as KiCodeBlockElement, defineCustomElement as defineKiCodeBlock } from '@kimen/elements/components/ki-code-block.js';
 import type { KiCodeBlockCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiCodeBlockEvents = {
   onKiCopy: EventName<KiCodeBlockCustomEvent<{ value: string }>>,
@@ -22,8 +21,6 @@ export type KiCodeBlockEvents = {
 export const KiCodeBlock: StencilReactComponent<KiCodeBlockElement, KiCodeBlockEvents, Components.KiCodeBlock> = /*@__PURE__*/ createComponent<KiCodeBlockElement, KiCodeBlockEvents, Components.KiCodeBlock>({
     tagName: 'ki-code-block',
     elementClass: KiCodeBlockElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiCopy: 'ki-copy',
       onKiCopyError: 'ki-copy-error'

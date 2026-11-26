@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCitation as KiCitationElement, defineCustomElement as defineKiCitation } from '@kimen/elements/components/ki-citation.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiCitationEvents = NonNullable<unknown>;
 
 export const KiCitation: StencilReactComponent<KiCitationElement, KiCitationEvents, Components.KiCitation, 'citationRef'> = /*@__PURE__*/ createComponent<KiCitationElement, KiCitationEvents, Components.KiCitation, 'citationRef'>({
     tagName: 'ki-citation',
     elementClass: KiCitationElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiCitationEvents,
     defineCustomElement: defineKiCitation,
 });

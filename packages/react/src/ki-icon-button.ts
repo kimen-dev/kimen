@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiIconButton as KiIconButtonElement, defineCustomElement as defineKiIconButton } from '@kimen/elements/components/ki-icon-button.js';
 import type { KiIconButtonCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiIconButtonEvents = {
   onKiChange: EventName<KiIconButtonCustomEvent<{ selected: boolean }>>
@@ -21,8 +20,6 @@ export type KiIconButtonEvents = {
 export const KiIconButton: StencilReactComponent<KiIconButtonElement, KiIconButtonEvents, Components.KiIconButton, 'label'> = /*@__PURE__*/ createComponent<KiIconButtonElement, KiIconButtonEvents, Components.KiIconButton, 'label'>({
     tagName: 'ki-icon-button',
     elementClass: KiIconButtonElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiChange: 'ki-change'
     } as KiIconButtonEvents,

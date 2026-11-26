@@ -93,6 +93,7 @@ const surfaces = Object.freeze([
 const wrapperShells = Object.freeze([
   'packages/angular/src/index.ts',
   'packages/react/src/index.ts',
+  'packages/react/src/runtime.ts',
 ]);
 
 const wrappers = Object.freeze([

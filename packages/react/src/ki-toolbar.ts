@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiToolbar as KiToolbarElement, defineCustomElement as defineKiToolbar } from '@kimen/elements/components/ki-toolbar.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiToolbarEvents = NonNullable<unknown>;
 
 export const KiToolbar: StencilReactComponent<KiToolbarElement, KiToolbarEvents, Components.KiToolbar, 'label'> = /*@__PURE__*/ createComponent<KiToolbarElement, KiToolbarEvents, Components.KiToolbar, 'label'>({
     tagName: 'ki-toolbar',
     elementClass: KiToolbarElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiToolbarEvents,
     defineCustomElement: defineKiToolbar,
 });

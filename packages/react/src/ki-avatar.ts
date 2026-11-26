@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiAvatar as KiAvatarElement, defineCustomElement as defineKiAvatar } from '@kimen/elements/components/ki-avatar.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiAvatarEvents = NonNullable<unknown>;
 
 export const KiAvatar: StencilReactComponent<KiAvatarElement, KiAvatarEvents, Components.KiAvatar> = /*@__PURE__*/ createComponent<KiAvatarElement, KiAvatarEvents, Components.KiAvatar>({
     tagName: 'ki-avatar',
     elementClass: KiAvatarElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiAvatarEvents,
     defineCustomElement: defineKiAvatar,
 });

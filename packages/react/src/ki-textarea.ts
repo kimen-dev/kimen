@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTextarea as KiTextareaElement, defineCustomElement as defineKiTextarea } from '@kimen/elements/components/ki-textarea.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiTextareaEvents = NonNullable<unknown>;
 
 export const KiTextarea: StencilReactComponent<KiTextareaElement, KiTextareaEvents, Components.KiTextarea, 'label'> = /*@__PURE__*/ createComponent<KiTextareaElement, KiTextareaEvents, Components.KiTextarea, 'label'>({
     tagName: 'ki-textarea',
     elementClass: KiTextareaElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiTextareaEvents,
     defineCustomElement: defineKiTextarea,
 });

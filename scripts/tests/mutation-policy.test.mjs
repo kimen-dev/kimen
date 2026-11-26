@@ -157,6 +157,7 @@ test('@spec:018 S3 outputs the generated-sync contract declares are excluded, ha
   assert.deepEqual(classifyChangedFiles(generatedGroups.wrappers.handWritten), [
     { path: 'packages/angular/src/index.ts', classification: 'core', runner: 'node' },
     { path: 'packages/react/src/index.ts', classification: 'core', runner: 'node' },
+    { path: 'packages/react/src/runtime.ts', classification: 'core', runner: 'node' },
   ]);
 });
 

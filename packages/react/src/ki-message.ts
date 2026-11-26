@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiMessage as KiMessageElement, defineCustomElement as defineKiMessage } from '@kimen/elements/components/ki-message.js';
 import type { KiMessageFeedback, KiMessageCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiMessageEvents = {
   onKiBranchChange: EventName<KiMessageCustomEvent<{ index: number }>>,
@@ -23,8 +22,6 @@ export type KiMessageEvents = {
 export const KiMessage: StencilReactComponent<KiMessageElement, KiMessageEvents, Components.KiMessage> = /*@__PURE__*/ createComponent<KiMessageElement, KiMessageEvents, Components.KiMessage>({
     tagName: 'ki-message',
     elementClass: KiMessageElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiBranchChange: 'ki-branch-change',
       onKiFeedback: 'ki-feedback',

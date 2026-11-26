@@ -1,6 +1,5 @@
-// Stencil emits wrapper event type imports from the deprecated package root.
-// Point those imports at Stencil's generated declarations, which grow with
-// the components while the root API remains frozen.
+// Point Stencil's generated wrappers at the current component declarations
+// and at Kimen's runtime before TypeScript emits declarations and source maps.
 import { readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,21 +14,31 @@ export function normalizeReactWrapper(source, file) {
   for (const statement of parsed.statements) {
     if (!ts.isImportDeclaration(statement)) continue;
     const module = statement.moduleSpecifier;
-    if (!ts.isStringLiteral(module) || module.text !== '@kimen/elements') continue;
-    if (!statement.importClause?.isTypeOnly) {
-      throw new Error(`React wrapper ${file} has a runtime import from the frozen package root`);
+    if (!ts.isStringLiteral(module)) continue;
+    if (module.text === '@kimen/elements') {
+      if (!statement.importClause?.isTypeOnly) {
+        throw new Error(`React wrapper ${file} has a runtime import from the frozen package root`);
+      }
+      replacements.push([
+        module.getStart(parsed) + 1,
+        module.end - 1,
+        '@kimen/elements/components',
+      ]);
     }
-    replacements.push(module);
+    if (module.text === '@stencil/react-output-target/runtime') {
+      replacements.push([module.getStart(parsed) + 1, module.end - 1, './runtime.js']);
+    }
   }
   let normalized = source;
-  for (const module of replacements.reverse()) {
-    const start = module.getStart(parsed);
-    normalized =
-      normalized.slice(0, start + 1) +
-      '@kimen/elements/components' +
-      normalized.slice(module.end - 1);
+  for (const [start, end, value] of replacements.reverse()) {
+    normalized = normalized.slice(0, start) + value + normalized.slice(end);
   }
-  return normalized;
+  return normalized
+    .replace(/^import React from 'react';\n/mu, '')
+    .replace(
+      /^ {4}\/\/ @ts-ignore - ignore potential React type mismatches[^\n]*\n {4}react: React,\n/mu,
+      '',
+    );
 }
 
 if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {

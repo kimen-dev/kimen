@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiSlider as KiSliderElement, defineCustomElement as defineKiSlider } from '@kimen/elements/components/ki-slider.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiSliderEvents = NonNullable<unknown>;
 
 export const KiSlider: StencilReactComponent<KiSliderElement, KiSliderEvents, Components.KiSlider> = /*@__PURE__*/ createComponent<KiSliderElement, KiSliderEvents, Components.KiSlider>({
     tagName: 'ki-slider',
     elementClass: KiSliderElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiSliderEvents,
     defineCustomElement: defineKiSlider,
 });

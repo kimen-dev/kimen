@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiProgress as KiProgressElement, defineCustomElement as defineKiProgress } from '@kimen/elements/components/ki-progress.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiProgressEvents = NonNullable<unknown>;
 
 export const KiProgress: StencilReactComponent<KiProgressElement, KiProgressEvents, Components.KiProgress, 'label'> = /*@__PURE__*/ createComponent<KiProgressElement, KiProgressEvents, Components.KiProgress, 'label'>({
     tagName: 'ki-progress',
     elementClass: KiProgressElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiProgressEvents,
     defineCustomElement: defineKiProgress,
 });

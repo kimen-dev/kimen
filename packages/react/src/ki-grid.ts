@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiGrid as KiGridElement, defineCustomElement as defineKiGrid } from '@kimen/elements/components/ki-grid.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiGridEvents = NonNullable<unknown>;
 
 export const KiGrid: StencilReactComponent<KiGridElement, KiGridEvents, Components.KiGrid> = /*@__PURE__*/ createComponent<KiGridElement, KiGridEvents, Components.KiGrid>({
     tagName: 'ki-grid',
     elementClass: KiGridElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiGridEvents,
     defineCustomElement: defineKiGrid,
 });

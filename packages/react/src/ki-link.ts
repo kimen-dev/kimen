@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiLink as KiLinkElement, defineCustomElement as defineKiLink } from '@kimen/elements/components/ki-link.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiLinkEvents = NonNullable<unknown>;
 
 export const KiLink: StencilReactComponent<KiLinkElement, KiLinkEvents, Components.KiLink, 'href'> = /*@__PURE__*/ createComponent<KiLinkElement, KiLinkEvents, Components.KiLink, 'href'>({
     tagName: 'ki-link',
     elementClass: KiLinkElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiLinkEvents,
     defineCustomElement: defineKiLink,
 });

@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiSidebar as KiSidebarElement, defineCustomElement as defineKiSidebar } from '@kimen/elements/components/ki-sidebar.js';
 import type { KiSidebarCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiSidebarEvents = {
   onKiSidebarChange: EventName<KiSidebarCustomEvent<{ collapsed: boolean }>>
@@ -21,8 +20,6 @@ export type KiSidebarEvents = {
 export const KiSidebar: StencilReactComponent<KiSidebarElement, KiSidebarEvents, Components.KiSidebar> = /*@__PURE__*/ createComponent<KiSidebarElement, KiSidebarEvents, Components.KiSidebar>({
     tagName: 'ki-sidebar',
     elementClass: KiSidebarElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiSidebarChange: 'ki-sidebar-change'
     } as KiSidebarEvents,

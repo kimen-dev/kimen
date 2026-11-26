@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiSuggestions as KiSuggestionsElement, defineCustomElement as defineKiSuggestions } from '@kimen/elements/components/ki-suggestions.js';
 import type { KiSuggestionsCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiSuggestionsEvents = {
   onKiSelect: EventName<KiSuggestionsCustomEvent<{ text: string }>>
@@ -21,8 +20,6 @@ export type KiSuggestionsEvents = {
 export const KiSuggestions: StencilReactComponent<KiSuggestionsElement, KiSuggestionsEvents, Components.KiSuggestions, 'label'> = /*@__PURE__*/ createComponent<KiSuggestionsElement, KiSuggestionsEvents, Components.KiSuggestions, 'label'>({
     tagName: 'ki-suggestions',
     elementClass: KiSuggestionsElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiSelect: 'ki-select'
     } as KiSuggestionsEvents,

@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCarousel as KiCarouselElement, defineCustomElement as defineKiCarousel } from '@kimen/elements/components/ki-carousel.js';
 import type { CarouselSlideChangeDetail, KiCarouselCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiCarouselEvents = {
   onKiSlideChange: EventName<KiCarouselCustomEvent<CarouselSlideChangeDetail>>
@@ -21,8 +20,6 @@ export type KiCarouselEvents = {
 export const KiCarousel: StencilReactComponent<KiCarouselElement, KiCarouselEvents, Components.KiCarousel, 'label'> = /*@__PURE__*/ createComponent<KiCarouselElement, KiCarouselEvents, Components.KiCarousel, 'label'>({
     tagName: 'ki-carousel',
     elementClass: KiCarouselElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiSlideChange: 'ki-slide-change'
     } as KiCarouselEvents,

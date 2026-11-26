@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiDatePicker as KiDatePickerElement, defineCustomElement as defineKiDatePicker } from '@kimen/elements/components/ki-date-picker.js';
 import type { DatePickerChangeDetail, KiDatePickerCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiDatePickerEvents = {
   onKiChange: EventName<KiDatePickerCustomEvent<DatePickerChangeDetail>>
@@ -21,8 +20,6 @@ export type KiDatePickerEvents = {
 export const KiDatePicker: StencilReactComponent<KiDatePickerElement, KiDatePickerEvents, Components.KiDatePicker, 'label'> = /*@__PURE__*/ createComponent<KiDatePickerElement, KiDatePickerEvents, Components.KiDatePicker, 'label'>({
     tagName: 'ki-date-picker',
     elementClass: KiDatePickerElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiChange: 'ki-change'
     } as KiDatePickerEvents,

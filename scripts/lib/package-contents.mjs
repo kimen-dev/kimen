@@ -97,9 +97,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
-    // Re-based the same day for the copy of the React output target's
-    // runtime and its MIT notice, which replace the target as a dependency.
-    budget: Object.freeze({ packed: 48_128, unpacked: 392_192 }),
+    // Local runtime: release tarball of 45,588 B and 335,811 B unpacked,
+    // plus 3 % headroom.
+    budget: Object.freeze({ packed: 46_956, unpacked: 345_886 }),
   }),
   '@kimen/vue': Object.freeze({
     mapsEveryModule: true,
