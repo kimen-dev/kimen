@@ -3,8 +3,8 @@
 // builds that ship the keys, the per-component modules and the lazy build;
 // nothing it writes is edited by hand.
 //
-// Stencil's compiler gives every JSX element of a single-return `render()` a
-// `key` unless the source writes one: a 40-character sha1, unconditionally
+// Stencil's compiler gives eligible JSX elements of a single-return `render()`
+// a `key` unless the source writes one: a 40-character sha1
 // (`performAutomaticKeyInsertion` in @stencil/core's compiler, with no option
 // to turn it off). The vDOM only compares the keys of siblings, by tag and
 // key, so a key has to differ from the other keys of its render and nothing
@@ -32,7 +32,10 @@ const COMPILER_KEY = /\bkey:\s*(["'`])([0-9a-f]{40})\1/gu;
 // be left once the module is rewritten.
 const SURVIVING_KEY = /\bkey["'`]?\s*:\s*["'`][0-9a-f]{40}["'`]/u;
 // A string key a module writes that starts with the short keys' prefix.
-const PREFIXED_KEY = /\bkey:\s*["'`]~/u;
+const PREFIXED_KEY = /\bkey["'`]?\s*:\s*["'`](?:~|\\(?:x7[eE]|u007[eE]|u\{0*7[eE]\}))/u;
+// TypeScript decodes numeric entities in JSX attributes when it emits the
+// string. ASCII is sufficient for the hex digits we compare.
+const NUMERIC_ENTITY = /&#(x[0-9a-f]+|[0-9]+);/giu;
 
 const BASE64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -110,8 +113,13 @@ export function shortenVdomKeys(code, id, readSource) {
     return null;
   }
   const source = readSource();
+  const decodedSource = source.replaceAll(NUMERIC_ENTITY, (entity, value) => {
+    const hex = value[0].toLowerCase() === 'x';
+    const point = Number.parseInt(hex ? value.slice(1) : value, hex ? 16 : 10);
+    return point <= 0x7f ? String.fromCodePoint(point) : entity;
+  });
   for (const hash of short.keys()) {
-    if (source.includes(hash)) {
+    if (source.includes(hash) || decodedSource.includes(hash)) {
       throw new Error(
         `short-vdom-keys: ${id} writes the key ${hash} itself, and a key Stencil did not insert cannot be told from one it did`,
       );

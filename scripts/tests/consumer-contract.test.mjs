@@ -266,10 +266,13 @@ test('@spec:018-project-integrity-hardening S8 the committed llms.txt quick star
   const source = executableBrowserSnippets(snippets, contract.tokenCssSpecifiers);
 
   assert.equal(contract.elementSpecifier, '@kimen/elements/ki-button');
-  assert.ok(
-    contract.tokenCssSpecifiers.includes('@kimen/tokens/css'),
-    `the default theme is not among ${JSON.stringify(contract.tokenCssSpecifiers)}`,
-  );
+  // The documented default theme: the core and the button's own sheet (spec 166).
+  for (const specifier of ['@kimen/tokens/css/core', '@kimen/tokens/css/ki-button']) {
+    assert.ok(
+      contract.tokenCssSpecifiers.includes(specifier),
+      `${specifier} is not among ${JSON.stringify(contract.tokenCssSpecifiers)}`,
+    );
+  }
   assert.doesNotMatch(source, /@kimen\/tokens/u);
 });
 

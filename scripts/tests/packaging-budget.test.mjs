@@ -128,7 +128,8 @@ test('S4: a component with no size allowance leaves every shipped limit unchange
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 32_000, tenComponents: 56_991 },
+    pages: { button: 18_566, tenComponents: 47_401 },
+    fullSheetPages: { button: 31_339, tenComponents: 56_991 },
   });
 });
 
@@ -141,6 +142,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
         mcpServer: { raw: 1300, gzip: 190, brotli: 175 },
         tokenStylesheets: { onmars: 100, material3: 50 },
         pages: { tenComponents: 40 },
+        fullSheetPages: { button: 30 },
       },
     },
   };
@@ -155,7 +157,8 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 13_448, material3: 5_650, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 32_000, tenComponents: 57_031 },
+    pages: { button: 18_566, tenComponents: 47_441 },
+    fullSheetPages: { button: 31_369, tenComponents: 56_991 },
   });
 });
 
@@ -294,15 +297,14 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 2_948_096, unpacked: 13_445_120 },
+      '@kimen/elements': { packed: 2_725_235, unpacked: 12_675_417 },
       // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
       '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
-      '@kimen/mcp-server': { packed: 659_456, unpacked: 3_331_072 },
+      '@kimen/mcp-server': { packed: 646_952, unpacked: 3_318_331 },
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
-      // Spec 165 profiles, re-measured under the approved ceiling once #634 and #636 landed.
-      '@kimen/adapter-mcp-apps': { packed: 525_312, unpacked: 2_376_704 },
+      '@kimen/adapter-mcp-apps': { packed: 511_644, unpacked: 2_362_442 },
       '@kimen/react': { packed: 48_128, unpacked: 392_192 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },

@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { angularOutputTarget, type ValueAccessorConfig } from '@stencil/angular-output-target';
 import type { Config } from '@stencil/core';
+import { parseFlags } from '@stencil/core/cli';
 import { reactOutputTarget } from '@stencil/react-output-target';
 import { vueOutputTarget } from '@stencil/vue-output-target';
 
@@ -15,6 +16,11 @@ import { shortVdomKeys } from './scripts/short-vdom-keys.mjs';
 // Form controls re-dispatch native input/change events across the shadow
 // boundary. The component manifest selects the wrapper binding for its prop.
 const formValueBindings = readComponentFormBindings(resolve(__dirname, 'src/components'));
+
+// Stencil's CLI defaults to production and gives --prod precedence over --dev.
+// HMR can diff against the previous build's VNodes, where the same ordinal
+// short key may have belonged to another element.
+const { dev, prod } = parseFlags(process.argv.slice(2));
 
 // Kimen elements build (constitution Art. I, IV).
 // docs-json output feeds the Art. I pipeline: docs-json → CEM → catalog → llms.txt.
@@ -32,7 +38,7 @@ export const config: Config = {
   // Stencil's node resolution. The lazy runtime's fallback import is
   // rewritten as Stencil ships it, before any other transform. After
   // Stencil's transforms, the button palette is compacted and the compiler's
-  // 40-character vDOM keys are shortened, in both builds.
+  // 40-character vDOM keys are shortened in both production builds.
   rollupPlugins: {
     before: [
       // Stencil's runtime reads `attr="false"` as false on every component,
@@ -43,7 +49,7 @@ export const config: Config = {
       glyphChunks(resolve(__dirname, 'icons'), resolve(__dirname, 'src/utils/icon-registry.mjs')),
       lazyFallbackImport,
     ],
-    after: [compactButtonPalette, shortVdomKeys],
+    after: dev && !prod ? [compactButtonPalette] : [compactButtonPalette, shortVdomKeys],
   },
   outputTargets: [
     // No Stencil collection: the package publishes the ESM lazy build behind

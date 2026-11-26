@@ -92,14 +92,10 @@ const BASE_BUDGETS = {
   // macOS: -45,945 / 15,040 / 13,040 B for the document and -46,089 / 14,995 /
   // 13,015 B for kimen-mcp, taken off here exactly so the headroom stays what
   // it was.
-  // Short keys for the elements Stencil's compiler keys
-  // (packages/elements/scripts/short-vdom-keys.mjs, 2026-11-26) re-based both
-  // DOWN, measured against main de03accd on macOS: the document went from
-  // 1,250,119 / 284,547 / 211,781 to 1,237,731 / 273,016 / 204,312 B, and
-  // kimen-mcp from 3,176,710 / 627,508 / 461,902 to 3,164,322 / 615,937 /
-  // 454,028 B. Each limit is now that size plus 0.1 % of raw bytes and 1 % of
-  // gzip and brotli: 1,238,969 / 275,747 / 206,356 and 3,167,487 / 622,097 /
-  // 458,569 B.
+  // Short vDOM keys lowered the generated document to 1,237,731 / 273,016 /
+  // 204,312 B and the binary to 3,164,322 / 615,937 / 454,028 B on macOS
+  // against main 1c07504c. The totals include 0.1 % raw and 1 % compressed
+  // headroom. The bases subtract each artifact's component allowances.
   mcpApps: { raw: 528_889, gzip: 87_224, brotli: 68_315 },
   mcpServer: { raw: 1_798_878, gzip: 325_479, brotli: 296_320 },
   // A browser host that validates and renders agent specs (validateUiSpec and
@@ -129,12 +125,15 @@ const BASE_BUDGETS = {
   tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
   // Whole pages, script and token stylesheets, in brotli bytes
   // (packages/elements/scripts/page-weight.mjs): one ki-button, and the ten
-  // components of a typical form page. Measured on 2026-11-26 against main
-  // ac20a900 with the runtime compiled for Kimen (31,028 and 57,175 B), plus
-  // about 3 %. The short vDOM keys took the ten-component page to 56,426 B
-  // (its script 36,381 -> 35,632 B), and its limit to that plus 1 %; ki-button
-  // carries no compiler key, so its page stays.
-  pages: { button: 32_000, tenComponents: 56_991 },
+  // components of a typical form page. `pages` is the primary figure, the
+  // documented token setup: the core and one sheet per tag the page writes
+  // (spec 166, the default since the founder's approval of 2026-11-26).
+  // `fullSheetPages` loads the full sheet instead, the simple alternative.
+  // Short vDOM keys brought the ten-component page to 46,931 B with split
+  // sheets and 56,426 B with the full sheet on macOS against main 1c07504c.
+  // The button pages measured 18,382 and 31,028 B. Each limit adds 1 %.
+  pages: { button: 18_566, tenComponents: 47_401 },
+  fullSheetPages: { button: 31_339, tenComponents: 56_991 },
 };
 
 export function deriveBundleSizeBudgets(components) {
@@ -145,6 +144,7 @@ export function deriveBundleSizeBudgets(components) {
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },
     tokenSheets: { ...BASE_BUDGETS.tokenSheets },
     pages: { ...BASE_BUDGETS.pages },
+    fullSheetPages: { ...BASE_BUDGETS.fullSheetPages },
   };
   for (const { tag, metadata } of components) {
     for (const [target, allowances] of Object.entries(metadata.sizeBudget ?? {})) {

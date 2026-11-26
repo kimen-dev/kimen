@@ -1,6 +1,6 @@
 // Element identity across renders, whichever key the build ships. Stencil's
-// compiler gives every element of a single-return render() a key of its own,
-// and the elements build shortens those keys (scripts/short-vdom-keys.mjs).
+// compiler inserts keys for eligible elements of a single-return render().
+// The production build shortens those keys (scripts/short-vdom-keys.mjs).
 // The vDOM matches siblings by tag and key, so the short keys must keep two
 // elements of one render apart, and the keys the source writes must keep
 // working as written. These checks fail if the build merges the compiler's
@@ -34,6 +34,7 @@ export async function expectButtonLinkSwap(): Promise<void> {
   host.textContent = 'Save';
   await mounted(host, '[part="button"]');
   const status = host.shadowRoot?.querySelector('.status');
+  expect(status).toBeInstanceOf(HTMLElement);
   const button = part(host, 'button');
   expect(button.localName).toBe('button');
 

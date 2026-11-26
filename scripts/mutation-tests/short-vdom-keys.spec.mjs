@@ -94,6 +94,8 @@ describe('short-vdom-keys', () => {
     ['double quotes', 'key: "~0"'],
     ['single quotes', "key:'~'"],
     ['a template', 'key: `~${n}`'],
+    ['a quoted property', '"key": "~0"'],
+    ['an escaped prefix', String.raw`key: "\x7e0"`],
   ])('refuses a module that writes a short-looking key in %s', (_label, written) => {
     for (const code of [`{ ${written} }`, `{ ${written} } { key: '${A}' }`]) {
       expect(() => shortenVdomKeys(code, 'own.tsx', unread)).toThrowError(
@@ -121,6 +123,13 @@ describe('short-vdom-keys', () => {
       `short-vdom-keys: own.tsx writes the key ${B} itself, and a key Stencil did not insert cannot be told from one it did`,
     );
     expect(reads).toBe(1);
+  });
+
+  it('refuses an authored JSX key the compiler decodes to a hash', () => {
+    const source = () => `<i key="&#x61;${A.slice(1)}" />`;
+    expect(() => shortenVdomKeys(`{ key: "${A}" }`, 'own.tsx', source)).toThrowError(
+      `short-vdom-keys: own.tsx writes the key ${A} itself`,
+    );
   });
 
   it('transforms a module by its source file, without the query, and records its keys', () => {
