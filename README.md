@@ -151,9 +151,10 @@ Kimen treats agent legibility as a deliverable. The repository root and
 to use each component, and a link per component to one Markdown document
 with its attributes, slots, parts, events, methods, CSS custom properties,
 examples and when-to-use / when-not-to-use guidance.
-[`llms-full.txt`](./llms-full.txt) is all of it in one file, and
-`packages/elements/generated/custom-elements.json` is the machine-readable
-Custom Elements Manifest. All of them are generated from component JSDoc and
+[`llms-full.txt`](./llms-full.txt), at the repository root and on the site
+(the package ships the per-component documents instead), is all of it in one
+file, and `packages/elements/generated/custom-elements.json` is the
+machine-readable Custom Elements Manifest. All of them are generated from component JSDoc and
 token sources, never hand-edited, and the code examples of the packaged
 `llms.txt` are executed against packed tarballs during release validation.
 Human-readable docs live at the

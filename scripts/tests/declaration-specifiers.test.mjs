@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path';
 import test from 'node:test';
 
 import {
+  dropGlyphImports,
   extensionlessRelativeSpecifiers,
   normalizeDeclarationDirectories,
   rebaseDeclarationSpecifiers,
@@ -390,4 +391,78 @@ test('re-bases only in the directories given a source root, then names files', a
     normalizeDeclarationDirectories([join(root, 'loader')], { sourceRoots }),
     /'\.\.\/icons\/gone\.js' has no declaration file behind it/u,
   );
+});
+
+// The package types every glyph with one declaration behind its `./icons/*`
+// export. A relative glyph import in a declaration cannot reach it, and it
+// carries no type, so the build drops it.
+const glyphs = { ...mirror, glyphRoot: '/package/icons' };
+
+test('drops each glyph side-effect import and keeps every other line as written', () => {
+  const result = dropGlyphImports(
+    [
+      "import '../../../icons/sparkles.js';",
+      "import { type EventEmitter } from '../../stencil-public-runtime';",
+      'import "../../../icons/x.js";',
+      'export type KiAiLabelSize = "sm" | "md";',
+      '',
+    ].join('\n'),
+    label,
+    glyphs,
+  );
+
+  assert.equal(
+    result.text,
+    [
+      "import { type EventEmitter } from '../../stencil-public-runtime';",
+      'export type KiAiLabelSize = "sm" | "md";',
+      '',
+    ].join('\n'),
+  );
+  assert.equal(result.rewritten, 2);
+});
+
+test('keeps an import with bindings, another side-effect import and a file outside the glyph root', () => {
+  const source = [
+    "import { registerIcon } from '../../../icons/_registry.js';",
+    "import '../../utils/polyfill.js';",
+    "import '../../../icons/nested/x.js';",
+    "import '../../../icons/_registry.mjs';",
+    "import '@kimen/elements/icons/x';",
+    '',
+  ].join('\n');
+
+  assert.deepEqual(dropGlyphImports(source, label, glyphs), { text: source, rewritten: 0 });
+});
+
+test('drops nothing without the output, source and glyph roots', () => {
+  const source = "import '../../../icons/x.js';\n";
+  for (const roots of [mirror, { ...glyphs, sourceRoot: undefined }, {}]) {
+    assert.deepEqual(dropGlyphImports(source, label, roots), { text: source, rewritten: 0 });
+  }
+});
+
+test('drops the glyph imports of the mirrored directory before re-basing, once', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'kimen-declaration-glyphs-'));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  await writeTree(root, {
+    'icons/_glyph.d.ts': 'export {};\n',
+    'dist/types/components/ki-x/ki-x.d.ts':
+      "import '../../../icons/x.js';\nimport type { Y } from '../../y';\n",
+    'dist/types/y.d.ts': 'export type Y = string;\n',
+  });
+  const options = {
+    sourceRoots: { [join(root, 'dist/types')]: join(root, 'src') },
+    glyphRoot: join(root, 'icons'),
+  };
+
+  const report = await normalizeDeclarationDirectories([join(root, 'dist/types')], options);
+  const again = await normalizeDeclarationDirectories([join(root, 'dist/types')], options);
+
+  assert.deepEqual(report, { declarations: 2, rewrittenFiles: 1, rewrittenSpecifiers: 2 });
+  assert.equal(
+    await readFile(join(root, 'dist/types/components/ki-x/ki-x.d.ts'), 'utf8'),
+    "import type { Y } from '../../y.js';\n",
+  );
+  assert.deepEqual(again, { declarations: 2, rewrittenFiles: 0, rewrittenSpecifiers: 0 });
 });

@@ -149,5 +149,4 @@ methods, CSS custom properties and examples.
 
 ## Optional
 
-- [llms-full.txt](llms-full.txt): everything in one file — this guidance and every component contract. Large: fetch it only when the whole library is needed at once.
 - [custom-elements.json](generated/custom-elements.json): the same component contracts as a Custom Elements Manifest (JSON).

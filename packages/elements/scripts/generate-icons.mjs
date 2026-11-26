@@ -5,6 +5,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const source = new URL('../vendor/lucide-1.63.0.json', import.meta.url);
 const registry = new URL('../src/utils/icon-registry.mjs', import.meta.url);
 const iconsDirectory = fileURLToPath(new URL('../icons/', import.meta.url));
+// The declaration of every glyph module (package.json `./icons/*` types). The
+// underscore keeps it apart from the glyph names, which start with a letter.
+const GLYPH_DECLARATION = '_glyph.d.ts';
 const svgTemplate =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{body}</svg>';
 const iconName = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u;
@@ -35,11 +38,12 @@ export async function generateIconModules({ output = iconsDirectory } = {}) {
   await rm(output, { recursive: true, force: true });
   await mkdir(output, { recursive: true });
   await copyFile(registry, join(output, '_registry.mjs'));
+  // Every glyph module has the same empty declaration, so one file types them all.
+  await writeFile(join(output, GLYPH_DECLARATION), 'export {};\n');
   for (const [name, markup] of entries) {
     // An alias is selectable by its own name, just as in the vendored data.
     const module = `import { registerIcon } from './_registry.mjs';\nregisterIcon(${JSON.stringify(name)}, ${JSON.stringify(markup)});\n`;
     await writeFile(join(output, `${name}.js`), module);
-    await writeFile(join(output, `${name}.d.ts`), 'export {};\n');
   }
 }
 

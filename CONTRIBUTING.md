@@ -66,7 +66,7 @@ the Art. I generation pipeline coherent:
   artifacts): JSDoc on every public API member and
   `packages/elements/src/components/*/usage/*.md`. Both flow into
   `generated/docs.json`, the Custom Elements Manifest, the component's
-  `llms/<tag>.md` document and `llms-full.txt` at build time. Release
+  `llms/<tag>.md` document and the root `llms-full.txt` at build time. Release
   validation executes the code fences of the packaged `llms.txt` against
   packed tarballs; since that file became an index it carries the
   installation example only, and usage fences ship in the documents that
@@ -74,7 +74,7 @@ the Art. I generation pipeline coherent:
   still actually run.
 - **Generated artifacts** (never hand-edited): `generated/docs.json`,
   `generated/custom-elements.json`, `generated/public-api.json`, the package
-  and root `llms.txt`, `llms-full.txt` and `llms/*.md`,
+  and root `llms.txt` and `llms/*.md`, the root `llms-full.txt`,
   `packages/catalog/src/generated/catalog.ts`, the
   `kimen:capabilities` status blocks (source: `docs/capabilities.json`) and
   the `tokens-reference.mdx` tables. Edit the sources, rebuild, and the sync
