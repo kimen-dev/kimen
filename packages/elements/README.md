@@ -24,10 +24,13 @@ pnpm add @kimen/elements @kimen/tokens
 ```
 
 `@kimen/tokens` provides the `--ki-*` custom properties every component
-consumes; without its stylesheet the components render unstyled. Its
-`@kimen/tokens/css/base` export is the **page contract**, which pages load
-too: it paints the page itself from the tokens and lays out group items until
-their tags register (see [Theming](#theming)).
+consumes; without its stylesheets the components render unstyled. A page
+loads its core, `@kimen/tokens/css/core`, and one sheet for every `ki-*` tag
+it uses, named like the element import (`@kimen/tokens/css/ki-button` beside
+`@kimen/elements/ki-button`). Its `@kimen/tokens/css/base` export is the
+**page contract**, which pages load too: it paints the page itself from the
+tokens and lays out group items until their tags register (see
+[Theming](#theming)).
 
 ## Register components
 
@@ -36,7 +39,8 @@ what you use and lets bundlers tree-shake the rest:
 
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
 import '@kimen/tokens/css/base';
 
 defineKiButton();
@@ -52,6 +56,8 @@ subsets of the catalog and cannot know the tags in advance:
 
 ```ts
 import { defineCustomElements } from '@kimen/elements/loader';
+import '@kimen/tokens/css'; // every token: the page does not list its tags
+import '@kimen/tokens/css/base';
 
 defineCustomElements();
 ```
@@ -73,7 +79,8 @@ With any bundler that resolves package exports and CSS imports (Vite shown):
 ```ts
 // main.ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css/core';
+import '@kimen/tokens/css/ki-button';
 import '@kimen/tokens/css/base';
 
 defineKiButton();
@@ -86,7 +93,8 @@ document.querySelector('ki-button')?.addEventListener('click', () => {
 ## Theming
 
 ```ts
-import '@kimen/tokens/css'; // onmars default theme + color-scheme, light/dark from the system
+import '@kimen/tokens/css/core'; // onmars default theme + color-scheme, light/dark from the system
+import '@kimen/tokens/css/ki-button'; // the component tokens of each ki-* tag the page uses
 import '@kimen/tokens/css/base'; // page contract: page background, text color, body font, layout before registration
 import '@kimen/tokens/css/material3'; // optional: Material 3 reference theme
 ```
@@ -95,15 +103,24 @@ import '@kimen/tokens/css/material3'; // optional: Material 3 reference theme
 <html data-ki-theme="material3" data-ki-color-scheme="dark">
 ```
 
-`@kimen/tokens/css` is the only requirement: it declares the tokens and the
-`color-scheme` they resolve from, so the browser's canvas and native controls
-follow the same scheme as the components and a page that loads nothing else
-stays legible in light and in dark. The declaration is a zero-specificity
-default: a `color-scheme` your own CSS sets on the page wins.
-Load `@kimen/tokens/css/base`, the page contract, with it: it paints the page
-background, text color and body font from the semantic tokens, declares no
-color scheme, and lays out the items of Kimen groups one per line until
+The core and the tag sheets are the only requirement. The core declares the
+shared tokens and the `color-scheme` they resolve from, so the browser's
+canvas and native controls follow the same scheme as the components and a
+page that loads nothing else stays legible in light and in dark. The
+declaration is a zero-specificity default: a `color-scheme` your own CSS
+sets on the page wins. Each tag's sheet adds the component tokens that tag
+needs, including those of the components it renders; add one for every tag
+your own markup writes, slotted ones included.
+Load `@kimen/tokens/css/base`, the page contract, with them: it paints the
+page background, text color and body font from the semantic tokens, declares
+no color scheme, and lays out the items of Kimen groups one per line until
 their tags register, so their labels do not run together.
+
+The simple alternative is `@kimen/tokens/css` in place of the core and the
+tag sheets: every token in one stylesheet (20.7 KB brotli, against 8.1 KB
+for a page with one `ki-button`). Use it when a page uses most of the
+catalog, or renders tags it cannot list in advance, as with the lazy loader
+above.
 
 Every visual value is a `--ki-*` custom property; themes reassign tokens, not
 component CSS. Details in the

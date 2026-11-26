@@ -92,11 +92,11 @@ const states = decl.cssStates ?? [];
 
   <h3 id={`${tag}-token-stylesheets`}>Token stylesheets</h3>
   <p>
-    Load <code>@kimen/tokens/css</code> once per page for every token: the default. The light
-    option loads <code>@kimen/tokens/css/core</code> once per page and
+    Load <code>@kimen/tokens/css/core</code> once per page and
     <code>{`@kimen/tokens/css/${tag}`}</code> for this component: only the tokens it needs,
     including those of the components it renders. Load the sheet of every <code>ki-*</code> tag
-    the page uses.
+    the page uses. The simple alternative is <code>@kimen/tokens/css</code> once per page instead:
+    every token in one sheet.
   </p>
 
   {

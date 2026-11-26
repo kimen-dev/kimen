@@ -62,8 +62,8 @@ description. Keep the original in application state and restore it on
 
 ## Token stylesheets
 
-- `@kimen/tokens/css`: every token, once per page. The default.
-- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-ai-label`: the light option, only the tokens ki-ai-label needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-ai-label`: the default, only the tokens ki-ai-label needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
 ## Attributes
 

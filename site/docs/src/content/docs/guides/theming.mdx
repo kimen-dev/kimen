@@ -38,13 +38,14 @@ covers each layer in depth):
 
 ## Themes
 
-**Onmars** is the default theme — it is `tokens.css` itself, no attribute
-needed. **Material 3** ships as the reference second theme and proves in CI,
+**Onmars** is the default theme — it is the token core and the tag sheets
+themselves (or the full sheet, `tokens.css`), no attribute needed. **Material 3** ships as the reference second theme and proves in CI,
 on every commit, that reassigning the token layers alone restyles every
 component:
 
 ```html
-<link rel="stylesheet" href="@kimen/tokens/css" />
+<link rel="stylesheet" href="@kimen/tokens/css/core" />
+<link rel="stylesheet" href="@kimen/tokens/css/ki-button" />
 <!-- opt-in second theme -->
 <link rel="stylesheet" href="@kimen/tokens/css/material3" />
 <html data-ki-theme="material3">
@@ -126,7 +127,8 @@ The scheme is one declaration, and the token stylesheet makes it: it sets
 to one side. Every scheme-dependent token is a single `light-dark()` value
 that resolves from that declaration, so the tokens and the browser — page
 canvas, scrollbars, native controls, autofill — always agree. A page that
-loads only `@kimen/tokens/css` is coherent in both schemes.
+loads only the token core and its tag sheets, or only the full sheet, is
+coherent in both schemes.
 
 The root declaration is a default with zero specificity. If your page is
 deliberately single-scheme and already says so in its own CSS
@@ -166,7 +168,8 @@ background from `--ki-surface-base`, text from `--ki-text-high-em`, and the
 body family:
 
 ```html
-<link rel="stylesheet" href="@kimen/tokens/css" />
+<link rel="stylesheet" href="@kimen/tokens/css/core" />
+<link rel="stylesheet" href="@kimen/tokens/css/ki-button" />
 <link rel="stylesheet" href="@kimen/tokens/css/base" />
 ```
 

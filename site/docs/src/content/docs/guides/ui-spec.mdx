@@ -148,7 +148,7 @@ rejected spec never touches the DOM:
 ```ts
 import { renderUiSpec } from '@kimen/catalog';
 import { defineCustomElements } from '@kimen/elements/loader';
-import '@kimen/tokens/css';
+import '@kimen/tokens/css'; // every token: a spec can name any catalog tag
 
 defineCustomElements(); // register the elements once per page
 

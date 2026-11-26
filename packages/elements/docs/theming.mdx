@@ -35,20 +35,26 @@ Who reassigns which layer:
 
 ## Themes
 
-**Onmars** is the default theme (it is `tokens.css`, no attribute needed).
+**Onmars** is the default theme (it is the token core and the tag sheets, or
+the full `tokens.css`, with no attribute needed).
 **Material 3** ships as the reference second theme and proves in CI, on
 every commit, that reassigning the token layers alone restyles every
 component:
 
 ```html
-<link rel="stylesheet" href="@kimen/tokens/css" />
+<link rel="stylesheet" href="@kimen/tokens/css/core" />
+<link rel="stylesheet" href="@kimen/tokens/css/ki-button" />
 <!-- opt-in second theme -->
 <link rel="stylesheet" href="@kimen/tokens/css/material3" />
 <html data-ki-theme="material3">
 ```
 
-A theme stylesheet carries only what it changes over the default theme, so
-it is always loaded **alongside** `@kimen/tokens/css`, never instead of it.
+A page loads the token core once and one sheet for every `ki-*` tag it uses,
+named like the element import; the full sheet, `@kimen/tokens/css`, is the
+simple alternative with every token in one stylesheet. A theme stylesheet
+carries only what it changes over the default theme, so it is always loaded
+**alongside** the core and the tag sheets (or the full sheet), never instead
+of them.
 An unknown `data-ki-theme` value — or a theme whose stylesheet was not loaded
 — simply lands on the default theme. No runtime code involved anywhere.
 
@@ -69,7 +75,8 @@ gets `color-scheme: light dark` as a default, and `data-ki-color-scheme` pins
 it to one side. Every scheme-dependent token is a single `light-dark()` value that
 resolves from that declaration, so the tokens and the browser — page canvas,
 scrollbars, native controls, autofill — always agree. A page that loads only
-`@kimen/tokens/css` is coherent in both schemes.
+the token core and its tag sheets, or only the full sheet, is coherent in
+both schemes.
 
 Consequences worth knowing:
 
@@ -192,7 +199,8 @@ from `--ki-surface-base`, text from `--ki-text-high-em`, and the body
 typeface:
 
 ```html
-<link rel="stylesheet" href="@kimen/tokens/css" />
+<link rel="stylesheet" href="@kimen/tokens/css/core" />
+<link rel="stylesheet" href="@kimen/tokens/css/ki-button" />
 <link rel="stylesheet" href="@kimen/tokens/css/base" />
 ```
 

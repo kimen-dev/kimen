@@ -51,8 +51,8 @@ The group's `size` governs every visible member and the counter, overriding memb
 
 ## Token stylesheets
 
-- `@kimen/tokens/css`: every token, once per page. The default.
-- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-avatar-group`: the light option, only the tokens ki-avatar-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-avatar-group`: the default, only the tokens ki-avatar-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
 ## Attributes
 

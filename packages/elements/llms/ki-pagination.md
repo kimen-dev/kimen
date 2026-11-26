@@ -15,8 +15,9 @@ short lists that fit in one view or the steps of a task.
 
 # Pagination examples
 
-Import `@kimen/tokens/css` and register the element with
-`defineCustomElement` from `@kimen/elements/components/ki-pagination.js`.
+Import `@kimen/tokens/css/core` and `@kimen/tokens/css/ki-pagination`, and
+register the element with `defineCustomElement` from
+`@kimen/elements/components/ki-pagination.js`.
 
 ## Replace a results page
 
@@ -90,8 +91,8 @@ with the named placeholders to translate the generated text.
 
 ## Token stylesheets
 
-- `@kimen/tokens/css`: every token, once per page. The default.
-- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-pagination`: the light option, only the tokens ki-pagination needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-pagination`: the default, only the tokens ki-pagination needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
+- `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
 ## Attributes
 
