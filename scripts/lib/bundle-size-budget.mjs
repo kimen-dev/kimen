@@ -92,8 +92,12 @@ const BASE_BUDGETS = {
   // macOS: -45,945 / 15,040 / 13,040 B for the document and -46,089 / 14,995 /
   // 13,015 B for kimen-mcp, taken off here exactly so the headroom stays what
   // it was.
-  mcpApps: { raw: 541_336, gzip: 99_026, brotli: 76_054 },
-  mcpServer: { raw: 1_811_324, gzip: 337_323, brotli: 304_294 },
+  // Dropping private foundations on 2026-11-26 measured 1,232,198 / 282,366 /
+  // 210,069 B for the document and 3,158,789 / 625,295 / 460,045 B for
+  // kimen-mcp. The bases give those totals 0.1% raw and 1% compressed headroom
+  // after the existing component allowances are added.
+  mcpApps: { raw: 523_351, gzip: 96_667, brotli: 74_129 },
+  mcpServer: { raw: 1_793_339, gzip: 334_930, brotli: 302_397 },
   // A browser host that validates and renders agent specs (validateUiSpec and
   // renderUiSpec from the packed @kimen/catalog, bundled for production:
   // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
@@ -112,7 +116,9 @@ const BASE_BUDGETS = {
   // Preference modes over themes measured +348 B for onmars (20,284 to 20,632 B
   // minified and brotlied) and -223 B for material3, which no longer re-asserts
   // its mode values. Pending founder approval.
-  tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
+  // Dropping private foundations measured 18,868 B for onmars and 5,340 B
+  // for material3. Their limits add 1% after component allowances.
+  tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
   // Spec 166's split sheets, approved by the founder on 2026-11-25: the core,
   // a page with ki-button (core and its sheet), the ten-component page of the
   // weight report (core and its fourteen sheets), and a ceiling for every tag
@@ -125,11 +131,10 @@ const BASE_BUDGETS = {
   // documented token setup: the core and one sheet per tag the page writes
   // (spec 166, the default since the founder's approval of 2026-11-26).
   // `fullSheetPages` loads the full sheet instead, the simple alternative.
-  // Both measured on 2026-11-26 on macOS against main de03accd: 18,382 and
-  // 47,680 B with the split sheets, 31,028 and 57,175 B with the full sheet,
-  // each plus 1 %.
+  // Measured on 2026-11-26 on macOS at 18,382 and 47,680 B with the split
+  // sheets, and 29,261 and 55,408 B with the pruned full sheet, each plus 1%.
   pages: { button: 18_566, tenComponents: 48_157 },
-  fullSheetPages: { button: 31_339, tenComponents: 57_747 },
+  fullSheetPages: { button: 29_554, tenComponents: 55_963 },
 };
 
 export function deriveBundleSizeBudgets(components) {

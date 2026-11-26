@@ -28,6 +28,51 @@ export function isFoundation(name) {
   return name.startsWith('--ki-foundation-');
 }
 
+/**
+ * The foundations the full sheet still declares: the onmars v1 glass images
+ * a page selects to keep the legacy dialog and tooltip colours (spec 062 S4,
+ * docs/migrations/deprecated-tokens.md), until their stops are removed at
+ * 1.0.0. Every other foundation is private: no sheet declares it, and a theme
+ * that reads one carries its expression instead (approved by the founder on
+ * 2026-11-26 with the weight report's step 2).
+ */
+export const PUBLISHED_FOUNDATIONS = Object.freeze([
+  '--ki-foundation-onmars-v1-dialog-bg-image',
+  '--ki-foundation-onmars-v1-tooltip-arrow-end',
+  '--ki-foundation-onmars-v1-tooltip-arrow-start',
+  '--ki-foundation-onmars-v1-tooltip-bg-image',
+]);
+
+/** A foundation no sheet declares: every one but the published ones. */
+export function isPrivateFoundationToken(name) {
+  return isFoundation(name) && !PUBLISHED_FOUNDATIONS.includes(name);
+}
+
+/**
+ * `declarations` with every `var()` of a name `expand` accepts replaced by
+ * that name's expression in `source`, followed through the names it reads in
+ * turn. A theme that must not read a token keeps its value this way, literal
+ * or not. A cycle, or a name `source` lacks, fails.
+ */
+export function expandReferences(declarations, source, expand) {
+  const expanded = new Map();
+  const expansionOf = (name, path) => {
+    if (expanded.has(name)) return expanded.get(name);
+    if (path.includes(name)) throw new Error(`${[...path, name].join(' -> ')} is a cycle`);
+    if (!source.has(name)) throw new Error(`${path.at(-1)} reads ${name}, which is not declared`);
+    const expression = substitute(source.get(name), [...path, name]);
+    expanded.set(name, expression);
+    return expression;
+  };
+  const substitute = (expression, path) =>
+    expression.replaceAll(/var\((--ki-[a-z0-9-]+)\)/gu, (part, name) =>
+      expand(name) ? expansionOf(name, path) : part,
+    );
+  return new Map(
+    [...declarations].map(([name, expression]) => [name, substitute(expression, [name])]),
+  );
+}
+
 const referencesOf = (expression) => [...expression.matchAll(REFERENCE)].map((match) => match[1]);
 
 /**
