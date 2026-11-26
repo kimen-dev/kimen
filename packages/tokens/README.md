@@ -61,16 +61,17 @@ its own: the core and the tag sheets (or the full sheet) must be loaded too.
   a bundler inserts a route's tag sheet after the page's stylesheet. Themes
   (`@kimen/tokens/css/material3`), preference modes and densities apply as
   with the full sheet.
-- **No foundations.** The core leaves out the `--ki-foundation-*` tokens. No
-  onmars token reads them, and material3 carries the values it needs. The
-  full sheet still declares them.
+- **No foundations.** The core and tag sheets omit the `--ki-foundation-*`
+  tokens. material3 inlines the expressions it needs. The full sheet keeps
+  only the four `--ki-foundation-onmars-v1-*` values for the legacy dialog
+  and tooltip appearance until 1.0.0.
 - Script that reads a component token on the root with `getPropertyValue()`
   gets an empty string while that tag's sheet is not loaded.
 
 ### The simple alternative: the full sheet
 
-`@kimen/tokens/css` declares every token in one stylesheet, in place of the
-core and the tag sheets:
+`@kimen/tokens/css` declares every public token in one stylesheet, in place
+of the core and the tag sheets:
 
 ```ts
 import '@kimen/tokens/css';
@@ -82,8 +83,8 @@ shipping the tokens of components the page never shows:
 
 | Page | Core and tag sheets | Full sheet |
 | --- | ---: | ---: |
-| One `ki-button` | 8.1 KB | 20.7 KB |
-| Ten components | 11.2 KB | 20.7 KB |
+| One `ki-button` | 8.1 KB | 18.9 KB |
+| Ten components | 11.2 KB | 18.9 KB |
 
 Sizes are minified and brotli-compressed, as a bundler ships them. Use the
 full sheet when a page uses most of the catalog, where it is the smaller of

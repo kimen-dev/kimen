@@ -54,7 +54,8 @@ async function mountFields(sizes: readonly string[]): Promise<HTMLInputElement[]
   document.body.replaceChildren(region);
   await customElements.whenDefined('ki-input');
   const hosts = [...region.querySelectorAll('ki-input')];
-  // The dist/components build has no componentOnReady: wait for the render.
+  // Defined is not rendered: wait for the native control itself, through the
+  // DOM alone, so the wait holds whatever compiles the component.
   const deadline = Date.now() + SETTLE_DEADLINE_MS;
   while (hosts.some((host) => !host.shadowRoot?.querySelector('input')) && Date.now() < deadline) {
     await nextFrame();
