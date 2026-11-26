@@ -92,12 +92,15 @@ const BASE_BUDGETS = {
   // macOS: -45,945 / 15,040 / 13,040 B for the document and -46,089 / 14,995 /
   // 13,015 B for kimen-mcp, taken off here exactly so the headroom stays what
   // it was.
-  // Short vDOM keys lowered the generated document to 1,237,731 / 273,016 /
-  // 204,312 B and the binary to 3,164,322 / 615,937 / 454,028 B on macOS
-  // against main 1c07504c. The totals include 0.1 % raw and 1 % compressed
-  // headroom. The bases subtract each artifact's component allowances.
-  mcpApps: { raw: 528_889, gzip: 87_224, brotli: 68_315 },
-  mcpServer: { raw: 1_798_878, gzip: 325_479, brotli: 296_320 },
+  // Dropping private foundations on 2026-11-26 measured 1,232,198 / 282,366 /
+  // 210,069 B for the document and 3,158,789 / 625,295 / 460,045 B for
+  // kimen-mcp. The bases give those totals 0.1% raw and 1% compressed headroom
+  // after the existing component allowances are added.
+  // Short vDOM keys reduced those artifacts to 1,219,810 / 270,846 /
+  // 202,532 B and 3,146,401 / 613,611 / 452,333 B against main 955eda0d,
+  // with the same headroom after adding the component allowances.
+  mcpApps: { raw: 510_950, gzip: 85_032, brotli: 66_517 },
+  mcpServer: { raw: 1_780_939, gzip: 323_130, brotli: 294_608 },
   // A browser host that validates and renders agent specs (validateUiSpec and
   // renderUiSpec from the packed @kimen/catalog, bundled for production:
   // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
@@ -116,7 +119,9 @@ const BASE_BUDGETS = {
   // Preference modes over themes measured +348 B for onmars (20,284 to 20,632 B
   // minified and brotlied) and -223 B for material3, which no longer re-asserts
   // its mode values. Pending founder approval.
-  tokenStylesheets: { onmars: 13_278, material3: 5_600, base: 250 },
+  // Dropping private foundations measured 18,868 B for onmars and 5,340 B
+  // for material3. Their limits add 1% after component allowances.
+  tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
   // Spec 166's split sheets, approved by the founder on 2026-11-25: the core,
   // a page with ki-button (core and its sheet), the ten-component page of the
   // weight report (core and its fourteen sheets), and a ceiling for every tag
@@ -129,11 +134,11 @@ const BASE_BUDGETS = {
   // documented token setup: the core and one sheet per tag the page writes
   // (spec 166, the default since the founder's approval of 2026-11-26).
   // `fullSheetPages` loads the full sheet instead, the simple alternative.
-  // Short vDOM keys brought the ten-component page to 46,931 B with split
-  // sheets and 56,426 B with the full sheet on macOS against main 1c07504c.
-  // The button pages measured 18,382 and 31,028 B. Each limit adds 1 %.
+  // On macOS the button pages measured 18,382 and 29,261 B. Short vDOM keys
+  // reduced the ten-component pages to 46,931 B with split sheets and
+  // 54,659 B with the pruned full sheet. The limits add 1 %.
   pages: { button: 18_566, tenComponents: 47_401 },
-  fullSheetPages: { button: 31_339, tenComponents: 56_991 },
+  fullSheetPages: { button: 29_554, tenComponents: 55_206 },
 };
 
 export function deriveBundleSizeBudgets(components) {

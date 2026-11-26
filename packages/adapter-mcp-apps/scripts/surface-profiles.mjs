@@ -11,7 +11,7 @@
 export const SURFACE_PROFILES = Object.freeze({
   data: Object.freeze({
     components: Object.freeze(['ki-badge', 'ki-skeleton', 'ki-stack', 'ki-table']),
-    budget: Object.freeze({ raw: 360_389, gzip: 73_156, brotli: 62_320 }),
+    budget: Object.freeze({ raw: 342_450, gzip: 70_950, brotli: 60_516 }),
   }),
   form: Object.freeze({
     components: Object.freeze([
@@ -24,6 +24,6 @@ export const SURFACE_PROFILES = Object.freeze({
       'ki-stack',
       'ki-textarea',
     ]),
-    budget: Object.freeze({ raw: 452_269, gzip: 88_540, brotli: 73_813 }),
+    budget: Object.freeze({ raw: 434_330, gzip: 86_365, brotli: 72_089 }),
   }),
 });

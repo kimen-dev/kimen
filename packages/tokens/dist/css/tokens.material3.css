@@ -418,11 +418,11 @@
   --ki-button-tertiary-danger-hover-border:var(--ki-outline-none);
   --ki-button-tertiary-danger-active-bg:var(--ki-surface-s2); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-danger-rest-bg */
   --ki-button-tertiary-danger-active-border:var(--ki-outline-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-danger-rest-border */
-  --ki-button-tertiary-rest-shadow:var(--ki-foundation-migrated-component-button-button-tertiary-active-shadow);
+  --ki-button-tertiary-rest-shadow:0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24));
   --ki-button-tertiary-rest-border-bottom:var(--ki-outline-none);
-  --ki-button-tertiary-hover-shadow:var(--ki-foundation-migrated-component-button-button-tertiary-hover-shadow);
+  --ki-button-tertiary-hover-shadow:0px 1px 3px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 4px 8px 3px light-dark(var(--ki-color-black-8),var(--ki-color-black-24));
   --ki-button-tertiary-hover-overlay:var(--ki-transparent-inverse);
-  --ki-button-tertiary-active-shadow:var(--ki-foundation-migrated-component-button-button-tertiary-active-shadow); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-rest-shadow */
+  --ki-button-tertiary-active-shadow:0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24)); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-tertiary-rest-shadow */
   --ki-button-quaternary-neutral-rest-fg:var(--ki-text-primary-high-em);
   --ki-button-quaternary-neutral-rest-border:var(--ki-outline-primary-med-em);
   --ki-button-quaternary-neutral-hover-bg:var(--ki-surface-primary-base-em-alpha);
@@ -766,20 +766,4 @@
   --ki-video-play-fg:var(--ki-text-primary-on-primary);
   --ki-video-play-border-color:var(--ki-outline-none);
   --ki-video-play-shadow:0 0 #0000;
-  --ki-foundation-migrated-themes-onmars-color-brand-50:#f7f4fb;
-  --ki-foundation-migrated-themes-onmars-color-brand-100:#ece4f5;
-  --ki-foundation-migrated-themes-onmars-color-brand-200:#cebee6;
-  --ki-foundation-migrated-themes-onmars-color-brand-300:#b59cd8;
-  --ki-foundation-migrated-themes-onmars-color-brand-400:#9873c9;
-  --ki-foundation-migrated-themes-onmars-color-brand-500:#845abe;
-  --ki-foundation-migrated-themes-onmars-color-brand-600:#5f3993;
-  --ki-foundation-migrated-themes-onmars-color-brand-700:#472b6e;
-  --ki-foundation-migrated-themes-onmars-color-brand-800:#2f1d49;
-  --ki-foundation-migrated-themes-onmars-color-brand-900:#1f1331;
-  --ki-foundation-migrated-themes-onmars-color-brand-950:#170e25;
-  --ki-foundation-migrated-themes-onmars-color-brand-secondary-text-on-primary-light:#7648b7;
-  --ki-foundation-migrated-themes-onmars-font-family-body:Inter,system-ui,sans-serif;
-  --ki-foundation-migrated-themes-onmars-font-family-serif:Merriweather,Georgia,serif;
-  --ki-foundation-migrated-component-button-button-tertiary-active-shadow:0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24));
-  --ki-foundation-migrated-component-button-button-tertiary-hover-shadow:0px 1px 3px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 4px 8px 3px light-dark(var(--ki-color-black-8),var(--ki-color-black-24));
 }

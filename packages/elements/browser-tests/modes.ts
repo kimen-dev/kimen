@@ -12,6 +12,7 @@ import { commands } from 'vitest/browser';
 
 import { defineAllComponents } from './all-components';
 import { parkPointer } from './axe';
+import { whenRendered } from './rendered';
 
 const modeCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
@@ -123,17 +124,7 @@ export async function mount(html: string): Promise<HTMLElement> {
   fixture.style.padding = '48px';
   fixture.innerHTML = html;
   document.body.append(fixture);
-  const hosts = [...fixture.querySelectorAll('*')].filter((element) =>
-    element.localName.startsWith('ki-'),
-  );
-  await Promise.all(hosts.map((host) => customElements.whenDefined(host.localName)));
-  await Promise.all(
-    hosts
-      .filter((host) => 'componentOnReady' in host)
-      .map((host) =>
-        (host as unknown as { componentOnReady: () => Promise<unknown> }).componentOnReady(),
-      ),
-  );
+  await whenRendered(fixture);
   await settleAnimations();
   return fixture;
 }
