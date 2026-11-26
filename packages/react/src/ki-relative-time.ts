@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiRelativeTime as KiRelativeTimeElement, defineCustomElement as defineKiRelativeTime } from '@kimen/elements/components/ki-relative-time.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiRelativeTimeEvents = NonNullable<unknown>;
 
 export const KiRelativeTime: StencilReactComponent<KiRelativeTimeElement, KiRelativeTimeEvents, Components.KiRelativeTime> = /*@__PURE__*/ createComponent<KiRelativeTimeElement, KiRelativeTimeEvents, Components.KiRelativeTime>({
     tagName: 'ki-relative-time',
     elementClass: KiRelativeTimeElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiRelativeTimeEvents,
     defineCustomElement: defineKiRelativeTime,
 });

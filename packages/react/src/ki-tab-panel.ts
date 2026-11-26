@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTabPanel as KiTabPanelElement, defineCustomElement as defineKiTabPanel } from '@kimen/elements/components/ki-tab-panel.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiTabPanelEvents = NonNullable<unknown>;
 
 export const KiTabPanel: StencilReactComponent<KiTabPanelElement, KiTabPanelEvents, Components.KiTabPanel> = /*@__PURE__*/ createComponent<KiTabPanelElement, KiTabPanelEvents, Components.KiTabPanel>({
     tagName: 'ki-tab-panel',
     elementClass: KiTabPanelElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiTabPanelEvents,
     defineCustomElement: defineKiTabPanel,
 });

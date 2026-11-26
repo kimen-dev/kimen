@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiAccordion as KiAccordionElement, defineCustomElement as defineKiAccordion } from '@kimen/elements/components/ki-accordion.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiAccordionEvents = NonNullable<unknown>;
 
 export const KiAccordion: StencilReactComponent<KiAccordionElement, KiAccordionEvents, Components.KiAccordion> = /*@__PURE__*/ createComponent<KiAccordionElement, KiAccordionEvents, Components.KiAccordion>({
     tagName: 'ki-accordion',
     elementClass: KiAccordionElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiAccordionEvents,
     defineCustomElement: defineKiAccordion,
 });

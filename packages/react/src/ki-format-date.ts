@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiFormatDate as KiFormatDateElement, defineCustomElement as defineKiFormatDate } from '@kimen/elements/components/ki-format-date.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiFormatDateEvents = NonNullable<unknown>;
 
 export const KiFormatDate: StencilReactComponent<KiFormatDateElement, KiFormatDateEvents, Components.KiFormatDate> = /*@__PURE__*/ createComponent<KiFormatDateElement, KiFormatDateEvents, Components.KiFormatDate>({
     tagName: 'ki-format-date',
     elementClass: KiFormatDateElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiFormatDateEvents,
     defineCustomElement: defineKiFormatDate,
 });

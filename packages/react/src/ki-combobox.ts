@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCombobox as KiComboboxElement, defineCustomElement as defineKiCombobox } from '@kimen/elements/components/ki-combobox.js';
 import type { KiComboboxCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiComboboxEvents = {
   onKiInput: EventName<KiComboboxCustomEvent<{ value: string }>>
@@ -21,8 +20,6 @@ export type KiComboboxEvents = {
 export const KiCombobox: StencilReactComponent<KiComboboxElement, KiComboboxEvents, Components.KiCombobox, 'label'> = /*@__PURE__*/ createComponent<KiComboboxElement, KiComboboxEvents, Components.KiCombobox, 'label'>({
     tagName: 'ki-combobox',
     elementClass: KiComboboxElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiInput: 'ki-input'
     } as KiComboboxEvents,

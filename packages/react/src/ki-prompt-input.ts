@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiPromptInput as KiPromptInputElement, defineCustomElement as defineKiPromptInput } from '@kimen/elements/components/ki-prompt-input.js';
 import type { KiPromptInputSubmitDetail, KiPromptInputCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiPromptInputEvents = {
   onKiSubmit: EventName<KiPromptInputCustomEvent<KiPromptInputSubmitDetail>>,
@@ -22,8 +21,6 @@ export type KiPromptInputEvents = {
 export const KiPromptInput: StencilReactComponent<KiPromptInputElement, KiPromptInputEvents, Components.KiPromptInput, 'label'> = /*@__PURE__*/ createComponent<KiPromptInputElement, KiPromptInputEvents, Components.KiPromptInput, 'label'>({
     tagName: 'ki-prompt-input',
     elementClass: KiPromptInputElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiSubmit: 'ki-submit',
       onKiStop: 'ki-stop'

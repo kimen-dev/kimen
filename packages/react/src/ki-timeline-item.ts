@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTimelineItem as KiTimelineItemElement, defineCustomElement as defineKiTimelineItem } from '@kimen/elements/components/ki-timeline-item.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiTimelineItemEvents = NonNullable<unknown>;
 
 export const KiTimelineItem: StencilReactComponent<KiTimelineItemElement, KiTimelineItemEvents, Components.KiTimelineItem> = /*@__PURE__*/ createComponent<KiTimelineItemElement, KiTimelineItemEvents, Components.KiTimelineItem>({
     tagName: 'ki-timeline-item',
     elementClass: KiTimelineItemElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiTimelineItemEvents,
     defineCustomElement: defineKiTimelineItem,
 });

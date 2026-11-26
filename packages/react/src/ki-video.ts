@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiVideo as KiVideoElement, defineCustomElement as defineKiVideo } from '@kimen/elements/components/ki-video.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiVideoEvents = NonNullable<unknown>;
 
 export const KiVideo: StencilReactComponent<KiVideoElement, KiVideoEvents, Components.KiVideo, 'label'> = /*@__PURE__*/ createComponent<KiVideoElement, KiVideoEvents, Components.KiVideo, 'label'>({
     tagName: 'ki-video',
     elementClass: KiVideoElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiVideoEvents,
     defineCustomElement: defineKiVideo,
 });

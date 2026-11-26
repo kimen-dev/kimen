@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCodeInput as KiCodeInputElement, defineCustomElement as defineKiCodeInput } from '@kimen/elements/components/ki-code-input.js';
 import type { KiCodeInputDetail, KiCodeInputCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiCodeInputEvents = {
   onKiInput: EventName<KiCodeInputCustomEvent<KiCodeInputDetail>>,
@@ -22,8 +21,6 @@ export type KiCodeInputEvents = {
 export const KiCodeInput: StencilReactComponent<KiCodeInputElement, KiCodeInputEvents, Components.KiCodeInput, 'label'> = /*@__PURE__*/ createComponent<KiCodeInputElement, KiCodeInputEvents, Components.KiCodeInput, 'label'>({
     tagName: 'ki-code-input',
     elementClass: KiCodeInputElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiInput: 'ki-input',
       onKiComplete: 'ki-complete'

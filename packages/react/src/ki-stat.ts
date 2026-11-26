@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiStat as KiStatElement, defineCustomElement as defineKiStat } from '@kimen/elements/components/ki-stat.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiStatEvents = NonNullable<unknown>;
 
 export const KiStat: StencilReactComponent<KiStatElement, KiStatEvents, Components.KiStat, 'label' | 'value'> = /*@__PURE__*/ createComponent<KiStatElement, KiStatEvents, Components.KiStat, 'label' | 'value'>({
     tagName: 'ki-stat',
     elementClass: KiStatElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiStatEvents,
     defineCustomElement: defineKiStat,
 });

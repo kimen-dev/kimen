@@ -27,7 +27,7 @@ it('S1 swaps both onmars v2 faces into the page with CLS below 0.01', async () =
 
   expect(requests.sort()).toEqual([
     '/fonts/InstrumentSansVariable.woff2',
-    '/fonts/NewsreaderVariable.woff2',
+    '/fonts/NewsreaderOnmars.woff2',
   ]);
   for (const family of ['Instrument Sans', 'Newsreader']) {
     expect(before.faces.find((face) => face.family === family)?.status).not.toBe('loaded');

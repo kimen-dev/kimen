@@ -28,20 +28,18 @@
     }
   },
   "scripts": {
-    "build": "tsc -b --pretty false && node scripts/vendor-runtime.mjs",
-    "test": "node --test scripts/vendor-runtime.test.mjs && vitest run --project react-wrapper-node",
+    "build": "tsc -b --pretty false && node scripts/check-runtime-imports.mjs",
+    "test": "vitest run --project react-wrapper-node",
     "test-browser-wrapper": "vitest run --project react-wrapper-browser"
   },
   "dependencies": {
-    "@kimen/elements": "workspace:*",
-    "@lit/react": "1.0.8"
+    "@kimen/elements": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18 || ^19",
     "react-dom": "^18 || ^19"
   },
   "devDependencies": {
-    "@stencil/react-output-target": "1.8.1",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",

@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiConfirmation as KiConfirmationElement, defineCustomElement as defineKiConfirmation } from '@kimen/elements/components/ki-confirmation.js';
 import type { KiConfirmationCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiConfirmationEvents = {
   onKiApprove: EventName<KiConfirmationCustomEvent<{ remember: boolean }>>,
@@ -22,8 +21,6 @@ export type KiConfirmationEvents = {
 export const KiConfirmation: StencilReactComponent<KiConfirmationElement, KiConfirmationEvents, Components.KiConfirmation, 'heading' | 'action' | 'approveLabel' | 'denyLabel'> = /*@__PURE__*/ createComponent<KiConfirmationElement, KiConfirmationEvents, Components.KiConfirmation, 'heading' | 'action' | 'approveLabel' | 'denyLabel'>({
     tagName: 'ki-confirmation',
     elementClass: KiConfirmationElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiApprove: 'ki-approve',
       onKiDeny: 'ki-deny'

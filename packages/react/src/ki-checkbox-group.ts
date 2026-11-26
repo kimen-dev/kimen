@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCheckboxGroup as KiCheckboxGroupElement, defineCustomElement as defineKiCheckboxGroup } from '@kimen/elements/components/ki-checkbox-group.js';
 import type { KiCheckboxGroupChangeDetail, KiCheckboxGroupCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiCheckboxGroupEvents = {
   onKiChange: EventName<KiCheckboxGroupCustomEvent<KiCheckboxGroupChangeDetail>>
@@ -21,8 +20,6 @@ export type KiCheckboxGroupEvents = {
 export const KiCheckboxGroup: StencilReactComponent<KiCheckboxGroupElement, KiCheckboxGroupEvents, Components.KiCheckboxGroup, 'label'> = /*@__PURE__*/ createComponent<KiCheckboxGroupElement, KiCheckboxGroupEvents, Components.KiCheckboxGroup, 'label'>({
     tagName: 'ki-checkbox-group',
     elementClass: KiCheckboxGroupElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiChange: 'ki-change'
     } as KiCheckboxGroupEvents,

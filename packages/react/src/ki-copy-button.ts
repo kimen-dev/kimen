@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiCopyButton as KiCopyButtonElement, defineCustomElement as defineKiCopyButton } from '@kimen/elements/components/ki-copy-button.js';
 import type { KiCopyButtonCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiCopyButtonEvents = {
   onKiCopy: EventName<KiCopyButtonCustomEvent<{ value: string }>>,
@@ -22,8 +21,6 @@ export type KiCopyButtonEvents = {
 export const KiCopyButton: StencilReactComponent<KiCopyButtonElement, KiCopyButtonEvents, Components.KiCopyButton> = /*@__PURE__*/ createComponent<KiCopyButtonElement, KiCopyButtonEvents, Components.KiCopyButton>({
     tagName: 'ki-copy-button',
     elementClass: KiCopyButtonElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiCopy: 'ki-copy',
       onKiCopyError: 'ki-copy-error'

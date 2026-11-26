@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiMobileNavItem as KiMobileNavItemElement, defineCustomElement as defineKiMobileNavItem } from '@kimen/elements/components/ki-mobile-nav-item.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiMobileNavItemEvents = NonNullable<unknown>;
 
 export const KiMobileNavItem: StencilReactComponent<KiMobileNavItemElement, KiMobileNavItemEvents, Components.KiMobileNavItem, 'href' | 'iconName'> = /*@__PURE__*/ createComponent<KiMobileNavItemElement, KiMobileNavItemEvents, Components.KiMobileNavItem, 'href' | 'iconName'>({
     tagName: 'ki-mobile-nav-item',
     elementClass: KiMobileNavItemElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiMobileNavItemEvents,
     defineCustomElement: defineKiMobileNavItem,
 });

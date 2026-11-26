@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiDrawer as KiDrawerElement, defineCustomElement as defineKiDrawer } from '@kimen/elements/components/ki-drawer.js';
 import type { KiDrawerCloseDetail, KiDrawerCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiDrawerEvents = {
   onKiClose: EventName<KiDrawerCustomEvent<KiDrawerCloseDetail>>
@@ -21,8 +20,6 @@ export type KiDrawerEvents = {
 export const KiDrawer: StencilReactComponent<KiDrawerElement, KiDrawerEvents, Components.KiDrawer, 'heading'> = /*@__PURE__*/ createComponent<KiDrawerElement, KiDrawerEvents, Components.KiDrawer, 'heading'>({
     tagName: 'ki-drawer',
     elementClass: KiDrawerElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiClose: 'ki-close'
     } as KiDrawerEvents,

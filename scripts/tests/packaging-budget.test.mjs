@@ -288,9 +288,8 @@ test('elements publishes no collection, CommonJS or CDN build', async () => {
 });
 
 // The release candidate refuses a tarball over its package budget
-// (scripts/lib/package-contents.mjs). The bases are the sizes measured on
-// 2026-11-25 plus about 3 %; raising one needs the founder's approval, so it
-// changes here and there together.
+// (scripts/lib/package-contents.mjs). These limits pin the measured sizes and
+// their package-specific headroom. Any changes go in both files.
 test('each release package has its pinned tarball and unpacked size budget', () => {
   assert.deepEqual(
     Object.fromEntries(
@@ -298,14 +297,14 @@ test('each release package has its pinned tarball and unpacked size budget', () 
     ),
     {
       '@kimen/elements': { packed: 1_919_710, unpacked: 8_205_366 },
-      // Raised for spec 166's split token sheets, approved by the founder on 2026-11-25.
-      '@kimen/tokens': { packed: 276_736, unpacked: 1_226_400 },
+      // Rebased for Newsreader at weight 500.
+      '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
       '@kimen/mcp-server': { packed: 644_422, unpacked: 3_299_872 },
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
       '@kimen/adapter-mcp-apps': { packed: 504_500, unpacked: 2_307_036 },
-      '@kimen/react': { packed: 48_128, unpacked: 392_192 },
+      '@kimen/react': { packed: 46_952, unpacked: 345_886 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },
     },

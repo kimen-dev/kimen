@@ -21,9 +21,8 @@ const SECTION_START = new RegExp(`^${RULE}\\nThird-party notices: (.+)\\n${RULE}
 // - @kimen/catalog, @kimen/emitter and @kimen/adapter-a2ui ship only Kimen's
 //   compiled sources. Their dependencies are installed, not bundled, so
 //   they carry the header alone.
-// - @kimen/react ships a copy of the React output target's runtime in
-//   dist/stencil-runtime, which its wrappers import instead of the target
-//   (packages/react/scripts/vendor-runtime.mjs).
+// - @kimen/react ships wrappers from the React output target and keeps
+//   its compatible prop and event declarations in the local runtime.
 // - @kimen/vue ships the wrappers Stencil's Vue output target generates,
 //   which import the target's runtime as an installed dependency: the
 //   header alone.

@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTable as KiTableElement, defineCustomElement as defineKiTable } from '@kimen/elements/components/ki-table.js';
 import type { KiTableSortDetail, KiTableSelectionDetail, KiTableCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiTableEvents = {
   onKiSort: EventName<KiTableCustomEvent<KiTableSortDetail>>,
@@ -22,8 +21,6 @@ export type KiTableEvents = {
 export const KiTable: StencilReactComponent<KiTableElement, KiTableEvents, Components.KiTable> = /*@__PURE__*/ createComponent<KiTableElement, KiTableEvents, Components.KiTable>({
     tagName: 'ki-table',
     elementClass: KiTableElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiSort: 'ki-sort',
       onKiSelectionChange: 'ki-selection-change'

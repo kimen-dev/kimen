@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiPopover as KiPopoverElement, defineCustomElement as defineKiPopover } from '@kimen/elements/components/ki-popover.js';
 import type { KiPopoverCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiPopoverEvents = {
   onKiOpen: EventName<KiPopoverCustomEvent<void>>,
@@ -22,8 +21,6 @@ export type KiPopoverEvents = {
 export const KiPopover: StencilReactComponent<KiPopoverElement, KiPopoverEvents, Components.KiPopover> = /*@__PURE__*/ createComponent<KiPopoverElement, KiPopoverEvents, Components.KiPopover>({
     tagName: 'ki-popover',
     elementClass: KiPopoverElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiOpen: 'ki-open',
       onKiClose: 'ki-close'

@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiMarkdown as KiMarkdownElement, defineCustomElement as defineKiMarkdown } from '@kimen/elements/components/ki-markdown.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiMarkdownEvents = NonNullable<unknown>;
 
 export const KiMarkdown: StencilReactComponent<KiMarkdownElement, KiMarkdownEvents, Components.KiMarkdown> = /*@__PURE__*/ createComponent<KiMarkdownElement, KiMarkdownEvents, Components.KiMarkdown>({
     tagName: 'ki-markdown',
     elementClass: KiMarkdownElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiMarkdownEvents,
     defineCustomElement: defineKiMarkdown,
 });

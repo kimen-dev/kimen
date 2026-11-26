@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiSearch as KiSearchElement, defineCustomElement as defineKiSearch } from '@kimen/elements/components/ki-search.js';
 import type { KiSearchValueDetail, KiSearchCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiSearchEvents = {
   onKiInput: EventName<KiSearchCustomEvent<KiSearchValueDetail>>,
@@ -24,8 +23,6 @@ export type KiSearchEvents = {
 export const KiSearch: StencilReactComponent<KiSearchElement, KiSearchEvents, Components.KiSearch> = /*@__PURE__*/ createComponent<KiSearchElement, KiSearchEvents, Components.KiSearch>({
     tagName: 'ki-search',
     elementClass: KiSearchElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiInput: 'ki-input',
       onKiSearch: 'ki-search',

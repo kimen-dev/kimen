@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiIndicator as KiIndicatorElement, defineCustomElement as defineKiIndicator } from '@kimen/elements/components/ki-indicator.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiIndicatorEvents = NonNullable<unknown>;
 
 export const KiIndicator: StencilReactComponent<KiIndicatorElement, KiIndicatorEvents, Components.KiIndicator, 'label'> = /*@__PURE__*/ createComponent<KiIndicatorElement, KiIndicatorEvents, Components.KiIndicator, 'label'>({
     tagName: 'ki-indicator',
     elementClass: KiIndicatorElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiIndicatorEvents,
     defineCustomElement: defineKiIndicator,
 });

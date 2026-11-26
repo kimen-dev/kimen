@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiMenu as KiMenuElement, defineCustomElement as defineKiMenu } from '@kimen/elements/components/ki-menu.js';
 import type { KiMenuSelectDetail, KiMenuCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiMenuEvents = {
   onKiSelect: EventName<KiMenuCustomEvent<KiMenuSelectDetail>>
@@ -21,8 +20,6 @@ export type KiMenuEvents = {
 export const KiMenu: StencilReactComponent<KiMenuElement, KiMenuEvents, Components.KiMenu> = /*@__PURE__*/ createComponent<KiMenuElement, KiMenuEvents, Components.KiMenu>({
     tagName: 'ki-menu',
     elementClass: KiMenuElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiSelect: 'ki-select'
     } as KiMenuEvents,

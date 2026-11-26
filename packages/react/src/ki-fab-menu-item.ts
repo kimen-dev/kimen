@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiFabMenuItem as KiFabMenuItemElement, defineCustomElement as defineKiFabMenuItem } from '@kimen/elements/components/ki-fab-menu-item.js';
 import type { KiFabMenuSelectDetail, KiFabMenuItemCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiFabMenuItemEvents = {
   onKiSelect: EventName<KiFabMenuItemCustomEvent<KiFabMenuSelectDetail>>
@@ -21,8 +20,6 @@ export type KiFabMenuItemEvents = {
 export const KiFabMenuItem: StencilReactComponent<KiFabMenuItemElement, KiFabMenuItemEvents, Components.KiFabMenuItem> = /*@__PURE__*/ createComponent<KiFabMenuItemElement, KiFabMenuItemEvents, Components.KiFabMenuItem>({
     tagName: 'ki-fab-menu-item',
     elementClass: KiFabMenuItemElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiSelect: 'ki-select'
     } as KiFabMenuItemEvents,

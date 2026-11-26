@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiFormatNumber as KiFormatNumberElement, defineCustomElement as defineKiFormatNumber } from '@kimen/elements/components/ki-format-number.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiFormatNumberEvents = NonNullable<unknown>;
 
 export const KiFormatNumber: StencilReactComponent<KiFormatNumberElement, KiFormatNumberEvents, Components.KiFormatNumber> = /*@__PURE__*/ createComponent<KiFormatNumberElement, KiFormatNumberEvents, Components.KiFormatNumber>({
     tagName: 'ki-format-number',
     elementClass: KiFormatNumberElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiFormatNumberEvents,
     defineCustomElement: defineKiFormatNumber,
 });

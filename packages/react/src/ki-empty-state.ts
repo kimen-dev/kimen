@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiEmptyState as KiEmptyStateElement, defineCustomElement as defineKiEmptyState } from '@kimen/elements/components/ki-empty-state.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiEmptyStateEvents = NonNullable<unknown>;
 
 export const KiEmptyState: StencilReactComponent<KiEmptyStateElement, KiEmptyStateEvents, Components.KiEmptyState, 'heading'> = /*@__PURE__*/ createComponent<KiEmptyStateElement, KiEmptyStateEvents, Components.KiEmptyState, 'heading'>({
     tagName: 'ki-empty-state',
     elementClass: KiEmptyStateElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiEmptyStateEvents,
     defineCustomElement: defineKiEmptyState,
 });

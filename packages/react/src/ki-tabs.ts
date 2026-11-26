@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiTabs as KiTabsElement, defineCustomElement as defineKiTabs } from '@kimen/elements/components/ki-tabs.js';
 import type { KiTabsCustomEvent } from '@kimen/elements/components';
-import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent, EventName } from './runtime.js';
 
 export type KiTabsEvents = {
   onKiChange: EventName<KiTabsCustomEvent<{ value: string }>>
@@ -21,8 +20,6 @@ export type KiTabsEvents = {
 export const KiTabs: StencilReactComponent<KiTabsElement, KiTabsEvents, Components.KiTabs> = /*@__PURE__*/ createComponent<KiTabsElement, KiTabsEvents, Components.KiTabs>({
     tagName: 'ki-tabs',
     elementClass: KiTabsElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {
       onKiChange: 'ki-change'
     } as KiTabsEvents,

@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiBreadcrumbItem as KiBreadcrumbItemElement, defineCustomElement as defineKiBreadcrumbItem } from '@kimen/elements/components/ki-breadcrumb-item.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiBreadcrumbItemEvents = NonNullable<unknown>;
 
 export const KiBreadcrumbItem: StencilReactComponent<KiBreadcrumbItemElement, KiBreadcrumbItemEvents, Components.KiBreadcrumbItem> = /*@__PURE__*/ createComponent<KiBreadcrumbItemElement, KiBreadcrumbItemEvents, Components.KiBreadcrumbItem>({
     tagName: 'ki-breadcrumb-item',
     elementClass: KiBreadcrumbItemElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiBreadcrumbItemEvents,
     defineCustomElement: defineKiBreadcrumbItem,
 });

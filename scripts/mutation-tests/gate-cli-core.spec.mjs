@@ -211,6 +211,7 @@ it('declares every hand-written entry as a required output of its own group', ()
   expect(generatedGroups.wrappers.handWritten).toEqual([
     'packages/angular/src/index.ts',
     'packages/react/src/index.ts',
+    'packages/react/src/runtime.ts',
   ]);
 });
 
@@ -230,6 +231,7 @@ it('derives generated outputs from every group minus its hand-written shells', (
     ]),
   );
   expect(generatedOutputs).not.toContain('packages/react/src/index.ts');
+  expect(generatedOutputs).not.toContain('packages/react/src/runtime.ts');
   expect(generatedOutputs).not.toContain('packages/angular/src/index.ts');
   expect(Object.isFrozen(generatedOutputs)).toBe(true);
 });

@@ -147,15 +147,12 @@ lazy chunk with no request outside the bundle
 
 Each wrapper's `NOTICE` follows what its build contains. The Vue wrapper
 imports its Stencil output target's runtime as an installed dependency and
-carries the header alone. The React output target's runtime is one module
-over `@lit/react`, but the package that ships it also depends on the
-target's build tooling (`ts-morph` and others, about 19 MB). So
-`@kimen/react` develops against the target as a devDependency and depends
-on `@lit/react` instead: after `tsc`,
-`packages/react/scripts/vendor-runtime.mjs` copies the runtime unchanged
-into `dist/stencil-runtime`, points the compiled wrappers and their source
-maps at the copy, and stops the build if the copy imports a package the
-wrapper does not install. Its `NOTICE` carries the target's MIT notice. The
+carries the header alone. Stencil generates the React wrappers during the
+elements build. That build points the generated sources at Kimen's runtime.
+After `tsc`, `packages/react/scripts/check-runtime-imports.mjs` checks that
+every external import in the published modules and types names a declared
+dependency or peer. The React `NOTICE` carries the output target's MIT notice
+for the generated wrapper code and compatible declarations. The
 Angular bundle compiles in the component helpers and value accessors that
 `@stencil/angular-output-target` copies into its sources, so its `NOTICE`
 carries that MIT notice.

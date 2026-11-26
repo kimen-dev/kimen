@@ -7,19 +7,16 @@
 
 /* eslint-disable */
 
-import React from 'react';
-import { createComponent } from '@stencil/react-output-target/runtime';
+import { createComponent } from './runtime.js';
 import type { Components } from '@kimen/elements/components';
 import { KiRadioGroup as KiRadioGroupElement, defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { StencilReactComponent } from './runtime.js';
 
 export type KiRadioGroupEvents = NonNullable<unknown>;
 
 export const KiRadioGroup: StencilReactComponent<KiRadioGroupElement, KiRadioGroupEvents, Components.KiRadioGroup, 'label'> = /*@__PURE__*/ createComponent<KiRadioGroupElement, KiRadioGroupEvents, Components.KiRadioGroup, 'label'>({
     tagName: 'ki-radio-group',
     elementClass: KiRadioGroupElement,
-    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
-    react: React,
     events: {} as KiRadioGroupEvents,
     defineCustomElement: defineKiRadioGroup,
 });
