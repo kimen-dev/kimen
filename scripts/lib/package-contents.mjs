@@ -40,10 +40,8 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['generated/custom-elements.json', 'llms.txt', 'llms/']),
-    // Lowered on 2026-11-26 to what the package measured once it shipped one
-    // glyph declaration and no complete llms summary (2,658,037 / 12,324,770
-    // B), plus 3 %.
-    budget: Object.freeze({ packed: 2_738_176, unpacked: 12_694_528 }),
+    // Short vDOM keys reduced this to 2,645,859 / 12,306,230 B, plus 3 %.
+    budget: Object.freeze({ packed: 2_725_235, unpacked: 12_675_417 }),
   }),
   '@kimen/tokens': Object.freeze({
     mapsEveryModule: false,
@@ -58,7 +56,8 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
-    budget: Object.freeze({ packed: 659_456, unpacked: 3_331_072 }),
+    // Short vDOM keys reduced this to 625,652 / 3,203,759 B, plus 3 %.
+    budget: Object.freeze({ packed: 644_422, unpacked: 3_299_872 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,
@@ -90,19 +89,16 @@ export const packageContentRules = Object.freeze({
       'dist/generated/surface-profile-form.js',
     ]),
     assets: Object.freeze([]),
-    // Spec 165 adds the «form» and «data» profile documents. The founder
-    // approved 696,320 / 2,932,736 B as a ceiling on 2026-11-25 ("Sí,
-    // apruebo"), to be re-measured once #634 and #636 landed: 509,550 /
-    // 2,307,112 B on 2026-11-26, plus about 3 %.
-    budget: Object.freeze({ packed: 525_312, unpacked: 2_376_704 }),
+    // Short vDOM keys reduced this to 489,805 / 2,239,840 B, plus 3 %.
+    budget: Object.freeze({ packed: 504_500, unpacked: 2_307_036 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
-    // Local runtime: release tarball of 45,588 B and 335,811 B unpacked,
+    // Local runtime: release tarball of 45,584 B and 335,811 B unpacked,
     // plus 3 % headroom.
-    budget: Object.freeze({ packed: 46_956, unpacked: 345_886 }),
+    budget: Object.freeze({ packed: 46_952, unpacked: 345_886 }),
   }),
   '@kimen/vue': Object.freeze({
     mapsEveryModule: true,

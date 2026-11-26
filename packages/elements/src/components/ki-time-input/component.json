@@ -21,9 +21,6 @@
       "gzip": 8081,
       "brotli": 4833
     },
-    "worstCase": {
-      "brotli": 12700
-    },
     "tokenStylesheets": {
       "onmars": 64
     }

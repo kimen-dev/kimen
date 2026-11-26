@@ -48,10 +48,12 @@ export function renderCompositeEntry(group, projectRoot) {
 // The uniform per-component ceilings, in brotli bytes: what a component adds
 // beside the shared Stencil runtime, and what a page that registers it alone
 // downloads. Each is the largest measured on 2026-11-25, with the runtime
-// compiled for Kimen, plus about 3 %. Lowering one needs no approval;
-// raising one needs the founder's.
+// compiled for Kimen, plus about 3 %. The worst case was lowered on
+// 2026-11-26, once the build shortened Stencil's vDOM keys, to the largest
+// without an exception (ki-prompt-input, 12,078 B) plus 1 %. Lowering one
+// needs no approval; raising one needs the founder's.
 export const MARGINAL_CEILING = 8_700;
-export const WORST_CASE_CEILING = 12_600;
+export const WORST_CASE_CEILING = 12_199;
 
 /**
  * The uniform worst-case ceiling, unless a member declares a reviewed exception in its
