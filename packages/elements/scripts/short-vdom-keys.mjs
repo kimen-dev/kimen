@@ -17,15 +17,20 @@
 //
 // The plugin refuses to guess. The build stops if a module writes a key that
 // starts like a short key, if a 40-character key a module carries is written
-// in its source (an authored key cannot be told from a compiler one), or if a
+// in its source (an authored key cannot be told from a compiler one), if a
+// 40-character key survives the rewrite in a shape it does not read, or if a
 // build shortens no key at all (Stencil no longer writes them this way).
 
 import { readFileSync } from 'node:fs';
 
 const NAME = 'kimen-short-vdom-keys';
 const PREFIX = '~';
-// A key as Stencil's transpiler writes it into an element's vnode data.
-const COMPILER_KEY = /\bkey:\s*(["'])([0-9a-f]{40})\1/gu;
+// A key as Stencil writes it into an element's vnode data, in any quotes a
+// printer uses for a plain string: single, double or a template literal.
+const COMPILER_KEY = /\bkey:\s*(["'`])([0-9a-f]{40})\1/gu;
+// A 40-character key in any shape, a quoted property name included: none may
+// be left once the module is rewritten.
+const SURVIVING_KEY = /\bkey["'`]?\s*:\s*["'`][0-9a-f]{40}["'`]/u;
 // A string key a module writes that starts with the short keys' prefix.
 const PREFIXED_KEY = /\bkey:\s*["'`]~/u;
 
@@ -100,7 +105,10 @@ export function shortenVdomKeys(code, id, readSource) {
     const start = match.index + whole.length - 1 - hash.length;
     edits.push([start, start + hash.length, short.get(hash)]);
   }
-  if (edits.length === 0) return null;
+  if (edits.length === 0) {
+    refuseSurvivingKey(code, id);
+    return null;
+  }
   const source = readSource();
   for (const hash of short.keys()) {
     if (source.includes(hash)) {
@@ -116,7 +124,17 @@ export function shortenVdomKeys(code, id, readSource) {
     at = end;
   }
   shortened += code.slice(at);
+  refuseSurvivingKey(shortened, id);
   return { code: shortened, map: sourceMap(code, edits, id), keys: short.size };
+}
+
+function refuseSurvivingKey(code, id) {
+  const survivor = code.match(SURVIVING_KEY);
+  if (survivor !== null) {
+    throw new Error(
+      `short-vdom-keys: ${id} keeps a 40-character key in a shape the plugin does not rewrite: ${survivor[0]}`,
+    );
+  }
 }
 
 /** The Rollup plugin: shortens the compiler keys of every module a build transforms. */

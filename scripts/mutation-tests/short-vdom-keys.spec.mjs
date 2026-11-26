@@ -50,12 +50,25 @@ describe('short-vdom-keys', () => {
     ['a key without a space', `{key:'${A}'}`, `{key:'~0'}`],
     ['a key after spaces', `{ key:   "${A}" }`, `{ key:   "~0" }`],
     ['a key on a new line', `{\n  key:\n  '${A}'\n}`, `{\n  key:\n  '~0'\n}`],
+    ['a key in a template literal', `{ key: \`${A}\` }`, '{ key: `~0` }'],
   ])('reads %s', (_label, code, shortened) => {
     expect(shortenVdomKeys(code, 'k.tsx', noSource)?.code).toBe(shortened);
   });
 
   it.each([
-    ['mismatched quotes', `{ key: '${A}" }`],
+    ['in mismatched quotes', `{ key: '${A}" }`, `key: '${A}"`],
+    ['behind a double-quoted name', `{ "key": '${A}' }`, `key": '${A}'`],
+    ['behind a single-quoted name', `{ 'key':"${A}" }`, `key':"${A}"`],
+    ['after a space before the colon', `{ key : \`${A}\` }`, `key : \`${A}\``],
+  ])('refuses a 40-character key it does not rewrite, %s', (_label, survivor, shown) => {
+    const message = `short-vdom-keys: odd.tsx keeps a 40-character key in a shape the plugin does not rewrite: ${shown}`;
+    expect(() => shortenVdomKeys(survivor, 'odd.tsx', unread)).toThrowError(message);
+    expect(() => shortenVdomKeys(`${survivor} { key: '${B}' }`, 'odd.tsx', noSource)).toThrowError(
+      message,
+    );
+  });
+
+  it.each([
     ['39 characters', `{ key: '${A.slice(1)}' }`],
     ['41 characters', `{ key: '${A}a' }`],
     ['upper-case hex', `{ key: '${A.toUpperCase()}' }`],

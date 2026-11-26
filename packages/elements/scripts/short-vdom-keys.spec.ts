@@ -12,8 +12,9 @@ const packageRoot = fileURLToPath(new URL('..', import.meta.url));
 const drawerPath = join(packageRoot, 'src/components/ki-drawer/ki-drawer.tsx');
 const readDrawer = () => readFileSync(drawerPath, 'utf8');
 
-// Stencil's key as its transpiler writes it, and any string key.
-const COMPILER_KEY = /\bkey:\s*(["'])[0-9a-f]{40}\1/u;
+// A 40-character key in any quotes, minified or not, behind a quoted
+// property name too; and any plain string key.
+const COMPILER_KEY = /\bkey["'`]?\s*:\s*["'`][0-9a-f]{40}["'`]/u;
 const STRING_KEYS = /\bkey:\s*(["'])([^"'\n]*)\1/gu;
 const SHORT_KEY = /^~[0-9a-z]+$/u;
 
@@ -159,6 +160,25 @@ describe('short vDOM keys', () => {
     });
   });
 
+  it('reads a key in single quotes, double quotes or a template literal', () => {
+    const [a, b, c] = ['a', 'b', 'c'].map((digit) => digit.repeat(40));
+    const code = `h("i", { key: '${a ?? ''}' }, h("b", {key:"${b ?? ''}"}), h("p", { key: \`${c ?? ''}\` }));`;
+    expect(shortenVdomKeys(code, 'quotes.tsx', () => '')?.code).toBe(
+      'h("i", { key: \'~0\' }, h("b", {key:"~1"}), h("p", { key: `~2` }));',
+    );
+  });
+
+  it.each([
+    ['behind a quoted property name', `h("a", { "key": '${'f'.repeat(40)}' });`],
+    ['in mismatched quotes', `h("a", { key: '${'f'.repeat(40)}" });`],
+  ])('refuses a 40-character key it cannot rewrite, %s', (_label, survivor) => {
+    for (const code of [survivor, `${survivor} h("b", { key: '${'e'.repeat(40)}' });`]) {
+      expect(() => shortenVdomKeys(code, 'odd.tsx', () => '')).toThrow(
+        /^short-vdom-keys: odd\.tsx keeps a 40-character key in a shape the plugin does not rewrite: /u,
+      );
+    }
+  });
+
   it('leaves a module without compiler keys as it is', () => {
     const code =
       'h("a", { key: "button" }); h("b", { key: this.name }); const x = "' + 'a'.repeat(40) + '";';
@@ -257,13 +277,17 @@ describe('the built modules', () => {
     return keys;
   }
 
-  it('ship no compiler key in either build', async () => {
-    for (const module of [
-      ...(await modules(lazy, /\.js$/u)),
-      ...(await modules(perComponent, /\.js$/u)),
-    ]) {
-      expect(await readFile(module, 'utf8'), module).not.toMatch(COMPILER_KEY);
+  it('ship no compiler key in either build, in any quotes', async () => {
+    // The per-component modules (minified) and every format of the lazy build.
+    const outputs = ['dist/components', 'dist/esm', 'dist/cjs', 'dist/kimen'];
+    let checked = 0;
+    for (const output of outputs) {
+      for (const module of await modules(join(packageRoot, output), /\.js$/u)) {
+        expect(await readFile(module, 'utf8'), module).not.toMatch(COMPILER_KEY);
+        checked += 1;
+      }
     }
+    expect(checked).toBeGreaterThan(400);
   });
 
   it("keep each component's own keys and give each element of its render a distinct short key", async () => {
