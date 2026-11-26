@@ -317,8 +317,9 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
 // count (approved to publish): about six thousand tokens still fit an agent's first read.
 export const LLMS_INDEX_MAX_BYTES = 24_576;
 
-// The names every index links. They are part of the published contract: the
-// package ships them at these paths and the site serves them at these URLs.
+// The names the indexes link. They are part of the published contract: the
+// package ships the documents at these paths and the site serves them, with
+// the complete summary, at these URLs.
 const DOCUMENTS_DIRECTORY = 'llms';
 const FULL_FILE = 'llms-full.txt';
 
@@ -338,6 +339,9 @@ const INDEX_NOTE = [
  * site publishes. `options.genUi` — the validated GenUI source and the
  * packages it names, `{ genUi, packages }` — adds the GenUI guides; the
  * packaged index omits it because those packages are not in the tarball.
+ * `options.fullSummary` links llms-full.txt, which only the site serves: the
+ * package ships the documents the index links, not the same text again in one
+ * file.
  */
 export function buildLlmsIndex(docs, pkg, preamble, options = {}) {
   const base = options.base ?? '';
@@ -378,11 +382,15 @@ export function buildLlmsIndex(docs, pkg, preamble, options = {}) {
       ),
     ),
     linkSection('Optional', [
-      linkEntry(
-        FULL_FILE,
-        `${base}${FULL_FILE}`,
-        'everything in one file — this guidance and every component contract. Large: fetch it only when the whole library is needed at once.',
-      ),
+      ...(options.fullSummary === true
+        ? [
+            linkEntry(
+              FULL_FILE,
+              `${base}${FULL_FILE}`,
+              'everything in one file — this guidance and every component contract. Large: fetch it only when the whole library is needed at once.',
+            ),
+          ]
+        : []),
       ...(options.manifestHref === undefined
         ? []
         : [
@@ -665,18 +673,11 @@ export function buildGenUiSection(genUi, packages) {
 }
 
 /**
- * The root llms-full.txt extends the package one: the full elements summary
- * first (unchanged bytes), then the GenUI layer section separated by a blank
- * line.
+ * The root llms-full.txt: the full elements summary first (unchanged bytes),
+ * then the GenUI layer section separated by a blank line.
  */
 export function buildRootLlmsTxt(llmsTxt, genUiSection) {
   return `${llmsTxt}\n${genUiSection}`;
-}
-
-export function packageSummaryFromSiteSummary(summary) {
-  const genUiStart = summary.lastIndexOf(`\n${GENUI_FULL_HEADING}\n`);
-  if (genUiStart < 0) throw new Error('Site llms-full.txt is missing its GenUI appendix');
-  return summary.slice(0, genUiStart);
 }
 
 function cssPropertiesFor(component, inputs) {
@@ -1004,7 +1005,7 @@ function oneLine(value) {
 // across machines). scripts/consumer-contract.mjs runs the executable (ts/js)
 // fences of the packaged llms.txt on release; since that file became an index
 // it carries the preamble's fences only, and the usage examples here reach
-// the component documents and llms-full.txt, which that contract does not
+// the component documents and the site's llms-full.txt, which that contract does not
 // read (specs/017-agent-surfaces/research.md D13).
 function usageText(component) {
   const entries = Object.entries(component.usage ?? {})

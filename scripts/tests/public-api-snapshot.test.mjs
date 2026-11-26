@@ -28,7 +28,7 @@ const elementsPackage = {
       types: './dist/components/ki-*.d.ts',
       import: './dist/components/ki-*.js',
     },
-    './icons/*': { types: './icons/*.d.ts', import: './icons/*.js' },
+    './icons/*': { types: './icons/_glyph.d.ts', import: './icons/*.js' },
   },
 };
 

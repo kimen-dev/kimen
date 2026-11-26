@@ -1,7 +1,7 @@
 // @spec:017-agent-surfaces
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
@@ -32,27 +32,19 @@ const publishedTags = async () => {
 const genUiDirectories = async () =>
   (await readRepositoryJson('docs/genui-surfaces.json')).packages.map(({ directory }) => directory);
 
-test('a cold elements build prepares the package summary and icon modules before Stencil validates its file list', async (t) => {
-  const { preparePackageSummary } = await import(
-    '../../packages/elements/scripts/build-surfaces.mjs'
-  );
-  const root = await mkdtemp(join(tmpdir(), 'kimen-cold-summary-'));
-  t.after(() => rm(root, { force: true, recursive: true }));
-  const target = join(root, 'packages/elements');
-  await mkdir(target, { recursive: true });
-  await writeFile(join(root, 'llms-full.txt'), 'Elements.\n\n## GenUI layer\n\nSite guidance.\n');
-  await preparePackageSummary({ packageRoot: target, workspaceRoot: root });
-  assert.equal(await readFile(join(target, 'llms-full.txt'), 'utf8'), 'Elements.\n');
-
+// The package ships the documents its index links, which agents read one at
+// a time with line-oriented tools, and no complete summary that would repeat
+// them; the site serves that one. A cold build writes the icon modules before
+// Stencil validates the package file list.
+test('a cold elements build writes the icon modules before Stencil validates its file list, and packs no complete summary', async () => {
   const { files, scripts } = await readRepositoryJson('packages/elements/package.json');
-  assert.ok(files.includes('llms-full.txt'));
-  assert.match(
-    scripts.build,
-    /^node scripts\/build-surfaces\.mjs --prepare-package-summary && node scripts\/generate-icons\.mjs && stencil build\b/u,
-  );
+  assert.ok(files.includes('llms.txt'));
+  assert.ok(files.includes('llms'));
+  assert.ok(!files.includes('llms-full.txt'));
+  assert.match(scripts.build, /^node scripts\/generate-icons\.mjs && stencil build\b/u);
   assert.match(
     await readRepositoryFile('scripts/gates/build-mutation-elements.sh'),
-    /^node packages\/elements\/scripts\/build-surfaces\.mjs --prepare-package-summary\nnode packages\/elements\/scripts\/generate-icons\.mjs\npnpm --filter @kimen\/elements exec stencil build$/mu,
+    /^node packages\/elements\/scripts\/generate-icons\.mjs\npnpm --filter @kimen\/elements exec stencil build$/mu,
   );
 });
 
@@ -75,18 +67,9 @@ test('S5 the surfaces sync gate covers both indexes, the site summary and every 
   );
   // A scope closes a directory: a tracked or untracked file in it that the
   // gate does not require fails the gate, so a stale document cannot linger.
-  for (const scope of [
-    'llms',
-    'llms-full.txt',
-    'packages/elements/llms',
-    'packages/elements/llms-full.txt',
-  ]) {
+  for (const scope of ['llms', 'llms-full.txt', 'packages/elements/llms']) {
     assert.ok(scopes.includes(scope), `${scope} must be a closed surfaces scope`);
   }
-  assert.ok(
-    !required.includes('packages/elements/llms-full.txt'),
-    'the package summary is generated before packing',
-  );
   // Exactly what the generation wrote is what the gate requires, no more.
   const generated = [
     ...(await readdir(join(repositoryRoot, 'llms'))).map((file) => `llms/${file}`),
@@ -119,7 +102,7 @@ test('S11 every link of the packaged llms.txt is a relative path to a file insid
 
   assert.ok(packedFiles.has('llms.txt'), 'the package must ship its index');
   assert.ok(links.includes('llms/ki-button.md'), 'the packaged index must link its documents');
-  assert.ok(links.includes('llms-full.txt'), 'the packaged index must link the complete summary');
+  assert.ok(!packedFiles.has('llms-full.txt'), 'the package ships no complete summary');
   for (const url of links) {
     assert.doesNotMatch(
       url,
@@ -242,7 +225,6 @@ test('the elements build cache is invalidated by every source of the agent surfa
   );
   for (const output of [
     '{projectRoot}/llms.txt',
-    '{projectRoot}/llms-full.txt',
     '{projectRoot}/llms',
     '{workspaceRoot}/llms.txt',
     '{workspaceRoot}/llms-full.txt',
@@ -251,11 +233,7 @@ test('the elements build cache is invalidated by every source of the agent surfa
     assert.ok(outputs.includes(output), `${output} must be restored by an Nx build cache hit`);
   }
   // The build's own outputs must never feed its cache key.
-  for (const excluded of [
-    '!{projectRoot}/llms.txt',
-    '!{projectRoot}/llms-full.txt',
-    '!{projectRoot}/llms/**',
-  ]) {
+  for (const excluded of ['!{projectRoot}/llms.txt', '!{projectRoot}/llms/**']) {
     assert.ok(inputs.includes(excluded), `${excluded} must be excluded from the build inputs`);
   }
 });

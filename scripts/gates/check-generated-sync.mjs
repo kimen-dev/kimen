@@ -4,8 +4,6 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { packageSummaryFromSiteSummary } from '../../packages/elements/scripts/agent-surfaces.mjs';
-
 // The token reference, the exported theme stylesheets, and the split sheets
 // of spec 166: the core and one sheet per component directory, which is what
 // the token build derives them from. The build writes no intermediate
@@ -68,12 +66,11 @@ const genUiGuides = JSON.parse(
   readFileSync(new URL('../../docs/genui-surfaces.json', import.meta.url), 'utf8'),
 ).packages.map(({ directory }) => `llms/${directory.split('/').filter(Boolean).at(-1)}.md`);
 
-const packageFullSummary = 'packages/elements/llms-full.txt';
 const siteFullSummary = 'llms-full.txt';
 const publicApiDirectory = 'packages/elements/generated/public-api';
 
-// Both indexes and their per-topic documents are committed. The package's
-// complete summary is verified against the elements portion of the site copy.
+// Both indexes, their per-topic documents and the site's complete summary
+// are committed. The package ships the documents, not the summary.
 const surfaces = Object.freeze([
   ...genUiGuides,
   siteFullSummary,
@@ -130,7 +127,6 @@ export const generatedGroups = Object.freeze({
       'llms.txt',
       'packages/elements/generated',
       'packages/elements/llms',
-      packageFullSummary,
       'packages/elements/llms.txt',
       'packages/elements/src/components.d.ts',
     ]),
@@ -175,23 +171,6 @@ function git(root, args, { allowFailure = false } = {}) {
 
 const lines = (source) => source.split(/\r?\n/u).filter(Boolean);
 
-function validatePackageSummary(root) {
-  let packageSummary;
-  try {
-    packageSummary = readFileSync(resolve(root, packageFullSummary), 'utf8');
-  } catch (error) {
-    throw new Error(`generated sync surfaces: build must create ${packageFullSummary}`, {
-      cause: error,
-    });
-  }
-  const siteSummary = readFileSync(resolve(root, siteFullSummary), 'utf8');
-  if (packageSummary !== packageSummaryFromSiteSummary(siteSummary)) {
-    throw new Error(
-      `generated sync surfaces: ${packageFullSummary} must match the elements portion of ${siteFullSummary}`,
-    );
-  }
-}
-
 export function validateGeneratedSync({ root, group, executeGit = git }) {
   const contract = generatedGroups[group];
   if (contract === undefined) {
@@ -228,7 +207,6 @@ export function validateGeneratedSync({ root, group, executeGit = git }) {
   if (diff.status !== 0) {
     throw new Error(`generated sync ${group}: generated output drift detected`);
   }
-  if (group === 'surfaces') validatePackageSummary(root);
   return { group, files: contract.required.length };
 }
 

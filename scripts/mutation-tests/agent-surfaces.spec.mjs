@@ -3,7 +3,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { buildLlmsTxt, buildManifest } from '../../packages/elements/scripts/agent-surfaces.mjs';
+import {
+  buildLlmsTxt,
+  buildManifest,
+  normalizeDocs,
+} from '../../packages/elements/scripts/agent-surfaces.mjs';
 import { runBuildSurfaces } from '../../packages/elements/scripts/build-surfaces.mjs';
 
 // @spec:018-project-integrity-hardening
@@ -148,7 +152,7 @@ describe('agent surface mutation boundary', () => {
     expect(output.endsWith('\n')).toBe(true);
   });
 
-  it('@spec:018 S9 writes normalized docs, published CEM and a root llms extending the package summary', async () => {
+  it('@spec:018 S9 writes normalized docs, published CEM and a root llms extending the elements summary', async () => {
     const root = await mkdtemp(join(tmpdir(), 'agent-surfaces-mutation-'));
     try {
       await writeFile(join(root, 'docs.json'), JSON.stringify({ timestamp: 'unstable', ...docs }));
@@ -181,20 +185,29 @@ describe('agent surface mutation boundary', () => {
       expect(await readFile(join(root, 'custom-elements.json'), 'utf8')).toContain(
         '"path": "dist/components/ki-dialog.js"',
       );
-      // Default workspace root: the root summary extends the package one with
-      // the GenUI layer generated from the repository's committed sources.
-      // The named files are the indexes; the complete summaries sit beside
-      // them (package-llms.txt → package-llms-full.txt).
-      const packageLlms = await readFile(join(root, 'package-llms-full.txt'), 'utf8');
+      // Default workspace root: the root summary extends the elements one
+      // with the GenUI layer generated from the repository's committed
+      // sources. The named files are the indexes; the root's complete summary
+      // sits beside it (root-llms.txt → root-llms-full.txt), and the package
+      // has none.
+      const elementsLlms = buildLlmsTxt(
+        normalizeDocs(docs),
+        { name: '@kimen/elements', description: 'Kimen elements.' },
+        'Install from public exports.\n',
+        { cssPropertiesByTag },
+      );
       const rootLlms = await readFile(join(root, 'root-llms-full.txt'), 'utf8');
+      await expect(readFile(join(root, 'package-llms-full.txt'), 'utf8')).rejects.toMatchObject({
+        code: 'ENOENT',
+      });
       expect(await readFile(join(root, 'package-llms.txt'), 'utf8')).toContain(
         '- [ki-dialog](llms/ki-dialog.md): Use for one interrupting decision.',
       );
       expect(await readFile(join(root, 'package-llms/ki-dialog.md'), 'utf8')).toContain(
         '## When not to use\n\nDo not use for passive status.',
       );
-      expect(rootLlms.startsWith(packageLlms)).toBe(true);
-      expect(packageLlms).not.toContain('## GenUI layer');
+      expect(rootLlms.startsWith(elementsLlms)).toBe(true);
+      expect(elementsLlms).not.toContain('## GenUI layer');
       expect(rootLlms).toContain('## GenUI layer');
       expect(rootLlms).toContain('### @kimen/catalog');
       expect(rootLlms).toContain('### @kimen/adapter-a2ui');
