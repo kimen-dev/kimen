@@ -4,8 +4,8 @@ import {
   observeAttributePresence,
 } from '../../utils/boolean-presence';
 
-// Direct entries register one element at a time. The all-elements loader
-// already provides the shared tooltip for applications that use it.
+// The loader discovers the tooltip in the segment’s shadow root.
+// With direct imports, register ki-tooltip explicitly.
 const TOOLTIP_TAG = ['ki', 'tooltip'].join('-');
 
 /**
@@ -43,7 +43,8 @@ export class KiSegment {
   /**
    * Accessible name of an icon-only option. An enabled icon-only option also
    * shows this name on focus and hover when ki-tooltip is registered. The
-   * all-elements loader includes it. For a text option, use the visible label.
+   * loader defines the tooltip when the segment draws it. For a text option,
+   * use the visible label.
    */
   @Prop({ attribute: 'aria-label' }) accessibleLabel?: string;
 

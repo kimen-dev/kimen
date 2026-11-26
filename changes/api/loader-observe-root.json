@@ -1,0 +1,23 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-checkbox/description": "595d1a031c54ad296550ba2ef9ee41edda10392795769676bc6584f0d6d51459",
+    "/packages/@kimen~1elements/components/ki-input/description": "032cf417b85fdd2ed5becba05744828982a9a242de775aadf84ba5a1e02a16a2",
+    "/packages/@kimen~1elements/components/ki-radio-group/description": "1d71e3e9819894a0554cc7bccc244f87dd90b92260fb9adc75c9706126f451a5",
+    "/packages/@kimen~1elements/components/ki-segment/attributes/aria-label": "8cabef6ca38906705fed64e62c05f59455ee6a61f1448989044034c3fe9c411f",
+    "/packages/@kimen~1elements/components/ki-segment/properties/accessibleLabel": "8cabef6ca38906705fed64e62c05f59455ee6a61f1448989044034c3fe9c411f",
+    "/packages/@kimen~1elements/components/ki-select/description": "af58e06a9db55c8f6151c804148eb2007ea60dfeddc976b57854278fb20dd56f",
+    "/packages/@kimen~1elements/components/ki-switch/description": "963daaf28942e0051aae1dd1c7eeaef795c8e13d99a3b4db6cd9c8d9ab565681",
+    "/packages/@kimen~1elements/components/ki-textarea/description": "440c649ecb714195bc6d4d330612b979c5ef8a28e786f30e6803180bf4463b37",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/observeRoot": "8152e9321d139e235396809bbc625d486b74cc9228160b73b182360910d78ab1"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "Expose observeRoot to discover Kimen elements in an application-owned root.",
+  "release": "minor",
+  "schemaVersion": 2
+}

@@ -50,9 +50,8 @@ Each `@kimen/elements/ki-*` subpath is a single-export module: importing it
 has no side effects and nothing registers until you call
 `defineCustomElement()`.
 
-Alternative: the lazy loader registers every `ki-*` tag up front and fetches
-each implementation on first use — convenient when you render arbitrary
-subsets of the catalog and cannot know the tags in advance:
+The lazy loader downloads and defines each `ki-*` tag when it first appears.
+Use it when the page renders tags it cannot list in advance:
 
 ```ts
 import { defineCustomElements } from '@kimen/elements/loader';
@@ -61,6 +60,10 @@ import '@kimen/tokens/css/base';
 
 defineCustomElements();
 ```
+
+Append the element before awaiting `customElements.whenDefined(tag)`. To load
+elements inside a shadow root your application owns, call `observeRoot(root)`
+from the loader. It also accepts an element and keeps watching the supplied root.
 
 Imports from the package root (`import { KiButton } from '@kimen/elements'`)
 are a deprecated compatibility facade; see the

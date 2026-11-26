@@ -57,8 +57,7 @@ The simple alternative is the full sheet, `@kimen/tokens/css`, in place of
 the core and the tag sheets: every token in one stylesheet. A page with one
 `ki-button` loads 8.1 KB of token CSS with the core and its sheet, and
 20.7 KB with the full sheet (brotli). Use the full sheet when a page uses
-most of the catalog, or registers everything with the lazy loader below and
-cannot list its tags in advance.
+most of the catalog, or loads tags it cannot list in advance.
 
 The page contract paints the page itself from the tokens — background from
 `--ki-surface-base`, text from `--ki-text-high-em`, and the body font family.
@@ -72,8 +71,7 @@ contract.
 
 ## Register the elements
 
-Register everything at once with the lazy loader (each component's code
-loads on first use):
+Start the loader to download and define each tag when it first appears:
 
 ```ts
 import { defineCustomElements } from '@kimen/elements/loader';

@@ -296,7 +296,7 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 2_725_235, unpacked: 12_675_417 },
+      '@kimen/elements': { packed: 1_919_710, unpacked: 8_205_366 },
       // Rebased for Newsreader at weight 500.
       '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
       '@kimen/mcp-server': { packed: 644_422, unpacked: 3_299_872 },

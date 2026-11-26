@@ -68,7 +68,7 @@ import '@kimen/tokens/css/base';       // page background, text colour, body fon
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
 defineKiButton();
 
-// …or register everything lazily (each component loads on first use).
+// …or start the loader to define each tag when it first appears.
 import { defineCustomElements } from '@kimen/elements/loader';
 defineCustomElements();
 ```

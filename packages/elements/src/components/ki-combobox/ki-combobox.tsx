@@ -357,7 +357,7 @@ export class KiCombobox {
   /**
    * Answers at once whether the field satisfies `required` and carries no
    * `custom-error`, firing `invalid` when it does not, as a native field
-   * does. Custom-elements build only.
+   * does.
    * When NOT to use: use `reportValidity()` instead when the person should
    * see the problem.
    */
@@ -367,7 +367,7 @@ export class KiCombobox {
 
   /**
    * Like `checkValidity()`, and when the field is invalid it shows its
-   * message and the browser moves focus to it. Custom-elements build only.
+   * message and the browser moves focus to it.
    * When NOT to use: do not call it on every keystroke; it interrupts the
    * person.
    */

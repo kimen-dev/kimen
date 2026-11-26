@@ -19,7 +19,7 @@ strikethrough, inline and fenced code, links, opt-in images, ordered and
 unordered lists, task items, blockquotes, tables and hard breaks.
 Use `> [!NOTE]` to display a Kimen Note.
 
-The package loader registers Markdown, Link, CodeBlock and Note. Register the
+The loader defines Markdown and its Link, CodeBlock and Note children as they appear. Register the
 child elements your content uses when using direct imports or framework
 wrappers.
 

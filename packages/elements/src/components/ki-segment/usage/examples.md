@@ -14,5 +14,5 @@ distinct value, and set the selected value on the group.
 Use the `start` slot for a decorative icon. An icon-only option needs
 `aria-label`, which also supplies its hover and focus tooltip when enabled.
 
-The all-elements loader registers `ki-tooltip`. When using direct imports or
+The loader defines `ki-tooltip` when it appears in a segment’s shadow root. When using direct imports or
 framework wrappers, register it separately for icon-only options.

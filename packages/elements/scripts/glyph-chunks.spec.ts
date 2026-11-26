@@ -50,13 +50,13 @@ describe('glyph chunk names', () => {
     );
   });
 
-  it('is the prefix the package declares for each published bundler-facing build', async () => {
+  it('is the prefix the package declares for the published component modules', async () => {
     const manifest = JSON.parse(
       await readFile(new URL('../package.json', import.meta.url), 'utf8'),
     ) as { sideEffects: string[] };
     expect(manifest.sideEffects).toEqual([
       './icons/*.js',
-      ...['components', 'esm'].map((build) => `./dist/${build}/${GLYPH_CHUNK_PREFIX}*.js`),
+      `./dist/components/${GLYPH_CHUNK_PREFIX}*.js`,
     ]);
   });
 });

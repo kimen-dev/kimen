@@ -20,18 +20,15 @@ running in a real browser.
 
 ## Wait for the first render, not only the tag
 
-- `customElements.whenDefined('ki-alert')` resolves when the tag is
-  registered, not when the component has rendered. With the lazy loader
-  (`defineCustomElements()`), every tag is registered before its code loads,
-  so the shadow root can still be empty after `whenDefined`.
+- Append the element before awaiting `customElements.whenDefined('ki-alert')`.
+  With the loader, the promise resolves when the tag first appears and its
+  module registers it. The first render may follow. For application-owned
+  shadow roots, call `observeRoot(root)` first.
 - Locator assertions and actions retry until they match, so they cover that
   gap: Playwright's `expect(locator)` assertions and actions wait, and so
   does Vitest's `expect.element(locator)`. Prefer them.
 - Before you read the DOM directly (`page.evaluate`, `element.shadowRoot`, a
-  property), wait for the first render. With the lazy loader, await
-  `element.componentOnReady()` (a Stencil method that the per-component
-  `defineCustomElement()` build does not have). Otherwise poll
-  (`expect.poll`) for the part you need.
+  property), poll with `expect.poll` for the part or value you need.
 
 ## Find a `ki-alert` by its text, then check its role
 

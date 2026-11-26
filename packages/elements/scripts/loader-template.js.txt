@@ -1,0 +1,94 @@
+// Generated from the component inventory by scripts/write-loader.mjs.
+const modules = {
+  /* MODULES */
+};
+
+let nonce;
+let runtime;
+let runtimePromise;
+
+function loadRuntime() {
+  runtimePromise ??= import('../dist/components/stencil-client.js').then(
+    (module) => {
+      runtime = module;
+      if (nonce !== undefined) module./* NONCE */(nonce);
+    },
+    (error) => {
+      runtimePromise = undefined;
+      throw error;
+    },
+  );
+  return runtimePromise;
+}
+
+export function setNonce(value) {
+  nonce = value;
+  runtime?./* NONCE */(value);
+}
+
+export async function applyPolyfills() {}
+
+const definitions = new Map();
+let excluded = new Set();
+
+function define(tag) {
+  if (!definitions.has(tag)) {
+    const definition = Promise.all([loadRuntime(), modules[tag]()])
+      .then(([, { default: Component }]) => {
+        if (!excluded.has(tag) && !customElements.get(tag)) {
+          customElements.define(tag, Component);
+        }
+      })
+      .finally(() => definitions.delete(tag));
+    definitions.set(tag, definition);
+  }
+  return definitions.get(tag);
+}
+
+let observer;
+const observed = new WeakSet();
+
+function watch(root) {
+  if (observed.has(root)) return;
+  observer ??= new MutationObserver((records) => {
+    for (const { addedNodes } of records) {
+      for (const node of addedNodes) if (node.nodeType === 1) void scan(node);
+    }
+  });
+  observer.observe(root, { childList: true, subtree: true });
+  observed.add(root);
+}
+
+function watchShadow(host) {
+  const root = host.shadowRoot;
+  if (root && !observed.has(root)) {
+    watch(root);
+    return scan(root);
+  }
+}
+
+async function scan(root) {
+  const definitions = [];
+  const visit = (element) => {
+    const tag = element.localName;
+    if (!Object.hasOwn(modules, tag) || excluded.has(tag)) return;
+
+    if (customElements.get(tag)) definitions.push(watchShadow(element));
+    else definitions.push(define(tag).then(() => watchShadow(element)));
+  };
+  if (root.nodeType === 1) visit(root);
+  for (const element of root.querySelectorAll('*')) visit(element);
+  await Promise.all(definitions);
+}
+
+export async function defineCustomElements(_win, options = {}) {
+  if (typeof document === 'undefined') return;
+  excluded = new Set(options.exclude ?? []);
+  await observeRoot(document);
+}
+
+export async function observeRoot(root) {
+  if (typeof document === 'undefined') return;
+  watch(root);
+  await scan(root);
+}

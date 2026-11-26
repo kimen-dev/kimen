@@ -5,3 +5,4 @@ set -euo pipefail
 pnpm --filter @kimen/tokens build
 node packages/elements/scripts/generate-icons.mjs
 pnpm --filter @kimen/elements exec stencil build
+node packages/elements/scripts/write-loader.mjs

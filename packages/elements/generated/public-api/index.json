@@ -2313,6 +2313,12 @@
                 ],
                 "signature": "export declare function defineCustomElements(win?: Window, opts?: CustomElementsDefineOptions): Promise<void>;"
               },
+              "observeRoot": {
+                "kinds": [
+                  "value"
+                ],
+                "signature": "export declare function observeRoot(root: ShadowRoot | Element): Promise<void>;"
+              },
               "setNonce": {
                 "kinds": [
                   "value"
@@ -101962,5 +101968,5 @@
       }
     }
   },
-  "surfaceSha256": "5cbe06d7399124157fcc59b36448c266a4f8cb3195596fa8cd6db6a251b475b6"
+  "surfaceSha256": "fc34adda1eaffebb8f17fc1f92e92a3c274d27e04a17c8a62aa9081deab0774c"
 }

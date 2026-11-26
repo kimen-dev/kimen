@@ -50,7 +50,7 @@ or replacement.
 ```
 
 With individual imports or a framework wrapper, register `ki-checkbox` when
-using `selectable`. The full Kimen loader registers both elements.
+using `selectable`. The loader defines the checkbox when the table draws it.
 
 ```js
 import { defineCustomElement as defineTable } from '@kimen/elements/ki-table';

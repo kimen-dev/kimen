@@ -37,8 +37,7 @@ type KiRadioElement = HTMLElement & {
  *
  * Like a native field, it answers `checkValidity()`, `reportValidity()`,
  * `setCustomValidity(message)`, `validity`, `validationMessage` and
- * `willValidate` synchronously, on the custom-elements build (not on hosts
- * created by the lazy loader).
+ * `willValidate` synchronously on a defined custom element.
  *
  * @whenToUse a person must choose exactly one of a small set of mutually
  * exclusive options that should all be visible at once.
@@ -226,7 +225,6 @@ export class KiRadioGroup {
    * Validation message for the current group validity state: the error set
    * with `setCustomValidity`, else `error-text`, else the browser's. Empty
    * when the group is valid.
-   * Custom-elements build only.
    * When NOT to use: do not parse or localize the browser's message in
    * application code.
    */
@@ -297,10 +295,7 @@ export class KiRadioGroup {
 
   /**
    * Validity of the control, as on a native form control: which constraint
-   * fails, if any, including an error set with `setCustomValidity`. Present
-   * on the custom-elements build (`@kimen/elements/ki-*`,
-   * `@kimen/elements/components` and the framework wrappers), not on hosts
-   * created by the lazy loader.
+   * fails, if any, including an error set with `setCustomValidity`.
    * When NOT to use: do not read it to style the control; the control shows
    * its own invalid state after a blocked submission.
    */
@@ -310,7 +305,7 @@ export class KiRadioGroup {
 
   /**
    * Whether the control takes part in constraint validation: false while it
-   * is disabled, directly or through a fieldset. Custom-elements build only.
+   * is disabled, directly or through a fieldset.
    * When NOT to use: do not use it to test whether the control is disabled;
    * read `disabled` for that.
    */
@@ -321,7 +316,6 @@ export class KiRadioGroup {
   /**
    * Answers at once whether the control satisfies its constraints, firing
    * `invalid` when it does not, exactly as a native field does.
-   * Custom-elements build only.
    * When NOT to use: use `reportValidity()` instead when the user should see
    * the problem.
    */
@@ -331,7 +325,7 @@ export class KiRadioGroup {
 
   /**
    * Like `checkValidity()`, and when the control is invalid the browser shows
-   * its message and moves focus to the control. Custom-elements build only.
+   * its message and moves focus to the control.
    * When NOT to use: do not call it on every keystroke; it interrupts the user.
    */
   reportValidity(): boolean {
@@ -343,7 +337,6 @@ export class KiRadioGroup {
    * cross-field rule. While `message` is not empty the control is invalid,
    * blocks its form and reports that message, and it keeps doing so through
    * the user's edits until `setCustomValidity('')` clears it.
-   * Custom-elements build only.
    * When NOT to use: do not use it for `required` or other constraints the
    * control already enforces.
    */

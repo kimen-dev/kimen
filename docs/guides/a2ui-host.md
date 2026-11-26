@@ -72,10 +72,11 @@ socket.addEventListener('message', (message) => {
 });
 ```
 
-The lazy loader is the right registration strategy here: an agent may emit any
-subset of the catalog, so the host cannot tree-shake tags in advance. For the
-same reason the host loads the full token sheet, `@kimen/tokens/css`, rather
-than the core and one sheet per tag that an ordinary page loads. It alone
+The loader defines each tag when the adapter adds it to the DOM. If the
+adapter renders inside a shadow root your application owns, pass that root
+to `observeRoot(root)` from `@kimen/elements/loader`. This example uses the
+full token sheet, `@kimen/tokens/css`, because the agent can emit any tag
+in the catalog. The full sheet
 keeps the surface legible in both schemes: it declares the `color-scheme` the
 tokens resolve from, as a default your page's own `color-scheme` overrides. Load `@kimen/tokens/css/base` (the page
 contract) too: it paints the page background, text color and body font from

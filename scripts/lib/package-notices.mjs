@@ -11,8 +11,7 @@ const SECTION_START = new RegExp(`^${RULE}\\nThird-party notices: (.+)\\n${RULE}
 
 // What each tarball contains decides its list:
 // - @kimen/elements ships the QR encoder adapted from Project Nayuki inside
-//   ki-qr, and the Stencil client runtime inside its lazy-loading bundle
-//   (dist/esm) and beside its per-component modules
+//   ki-qr and the Stencil client runtime beside its per-component modules
 //   (dist/components/stencil-client.js). Both are MIT, which requires the
 //   copyright and permission notice in every copy.
 // - @kimen/elements also ships Lucide ISC and Feather MIT icon modules.

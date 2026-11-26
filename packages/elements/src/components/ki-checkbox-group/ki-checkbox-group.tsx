@@ -193,22 +193,22 @@ export class KiCheckboxGroup {
     return this.internals.validationMessage;
   }
 
-  /** Whether the field participates in constraint validation. Custom-elements build only. */
+  /** Whether the field participates in constraint validation. */
   get willValidate(): boolean {
     return this.internals.willValidate;
   }
 
-  /** Returns validity and fires `invalid` when the field fails. Custom-elements build only. */
+  /** Returns validity and fires `invalid` when the field fails. */
   checkValidity(): boolean {
     return this.internals.checkValidity();
   }
 
-  /** Reports validation through the browser. Custom-elements build only. */
+  /** Reports validation through the browser. */
   reportValidity(): boolean {
     return this.internals.reportValidity();
   }
 
-  /** Applies an application error until cleared with an empty string. Custom-elements build only. */
+  /** Applies an application error until cleared with an empty string. */
   setCustomValidity(message: string): void {
     this.customValidity = message;
     this.syncValidity();

@@ -40,8 +40,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['generated/custom-elements.json', 'llms.txt', 'llms/']),
-    // Short vDOM keys reduced this to 2,645,859 / 12,306,230 B, plus 3 %.
-    budget: Object.freeze({ packed: 2_725_235, unpacked: 12_675_417 }),
+    // Spec 167 removes dist/esm. After short vDOM keys the package measures
+    // 1,863,796 B packed and 7,966,374 B unpacked. Both limits add 3 %.
+    budget: Object.freeze({ packed: 1_919_710, unpacked: 8_205_366 }),
   }),
   '@kimen/tokens': Object.freeze({
     mapsEveryModule: false,

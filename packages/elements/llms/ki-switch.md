@@ -1,6 +1,6 @@
 # ki-switch
 
-> A token-styled switch for immediate on/off settings. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
+> A token-styled switch for immediate on/off settings. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously on a defined custom element.
 
 ## When to use
 

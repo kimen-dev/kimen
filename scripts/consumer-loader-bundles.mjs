@@ -1,16 +1,9 @@
 // The lazy loader as an application bundles it, at release (the consumer
 // contract, scripts/consumer-contract.mjs, runs this in every engine).
 //
-// `@kimen/elements/loader` registers every component and fetches each one's
-// code the first time the page uses it. That only works through a bundler if
-// the bundler finds every component bundle and emits it as a chunk of its
-// own: Vite used to emit none, and esbuild to stop at the published source
-// maps (packages/elements/scripts/lazy-fallback-import.mjs). So the installed
-// candidate is bundled here twice, with the workspace's esbuild and Vite, as
-// an application that registers the loader and renders one ki-button. Each
-// bundle is then served alone, from its own output directory, to a browser
-// that may fetch nothing else, and the button must render from the
-// component's chunk.
+// Bundle the installed loader with esbuild and Vite, then serve each build
+// to a browser that can fetch only its own output. A one-button page must
+// render that button from its own chunk and leave other component chunks idle.
 import { mkdir, readFile, realpath, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { extname, join, relative, resolve, sep } from 'node:path';
@@ -39,9 +32,9 @@ export const LOADER_PAGE = [
   '',
 ].join('\n');
 
-// A chunk that holds ki-button's code: Stencil names its bundle
-// `ki-button.entry.js`, and both bundlers keep the name before their hash.
-const COMPONENT_CHUNK = /(?:^|\/)ki-button[.-][^/]*\.js$/u;
+// Both bundlers retain the component name before the hash.
+const COMPONENT_CHUNK = /(?:^|\/)ki-[^/]+\.js$/u;
+const BUTTON_CHUNK = /(?:^|\/)ki-button(?:2)?[.-][^/]*\.js$/u;
 
 function fail(message) {
   throw new Error(`consumer-loader: ${message}`);
@@ -94,13 +87,13 @@ const builders = {
  * bundle was written.
  */
 export async function bundleLoaderApplications(
-  { consumerDirectory },
+  { consumerDirectory, name = 'loader-application', source = LOADER_APPLICATION },
   { bundlers = workspaceBundlers() } = {},
 ) {
-  const application = join(consumerDirectory, 'loader-application');
+  const application = join(consumerDirectory, name);
   await mkdir(application, { recursive: true });
   await Promise.all([
-    writeFile(join(application, 'main.js'), LOADER_APPLICATION),
+    writeFile(join(application, 'main.js'), source),
     writeFile(join(application, 'index.html'), LOADER_PAGE),
   ]);
   const bundles = [];
@@ -151,10 +144,13 @@ export async function bundleFile(directory, url) {
 
 /** The evidence of one bundle; refuses anything short of a rendered button loaded from its chunk. */
 export function loaderBundleEvidence({ bundler, engine, observation, requested, blocked, errors }) {
+  const otherComponentChunks = requested.filter(
+    (path) => COMPONENT_CHUNK.test(path) && !BUTTON_CHUNK.test(path),
+  );
   const evidence = {
     bundler,
     engine,
-    componentChunkLoaded: requested.some((path) => COMPONENT_CHUNK.test(path)),
+    componentChunkLoaded: requested.some((path) => BUTTON_CHUNK.test(path)),
     shadowButtonRendered: observation.shadowButtonRendered === true,
     hydrated: observation.hydrated === true,
     blockedRequests: [...blocked],
@@ -164,17 +160,18 @@ export function loaderBundleEvidence({ bundler, engine, observation, requested, 
     !evidence.componentChunkLoaded ||
     !evidence.shadowButtonRendered ||
     !evidence.hydrated ||
+    otherComponentChunks.length > 0 ||
     evidence.blockedRequests.length > 0 ||
     evidence.pageErrors.length > 0
   ) {
     fail(
-      `the ${bundler} bundle did not render ki-button from its chunk: ${JSON.stringify(evidence)}`,
+      `the ${bundler} bundle did not render ki-button from its chunk: ${JSON.stringify({ ...evidence, otherComponentChunks })}`,
     );
   }
   return evidence;
 }
 
-const loadPlaywright = () =>
+export const loadPlaywright = () =>
   createRequire(join(repositoryRoot, 'packages/elements/package.json'))('playwright');
 
 /**
