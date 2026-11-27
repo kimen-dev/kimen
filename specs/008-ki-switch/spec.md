@@ -388,17 +388,43 @@ Feature: Switch
       | state | shadow                          |
       | off   | none                            |
       | on    | a 2px ring in the theme's color |
+
+  # S28
+  Scenario: A settings row fills its field and rows of supporting text appear beneath it
+    Given a switch in a full-width settings field with a trailing value and help text
+    When the application reports an error
+    Then the switch row spans the field and the value sits at its inline end
+    And the error appears below the row in place of the help text
+
+  # S29
+  Scenario: A trailing value leaves the switch name intact
+    Given a switch labeled "Email notifications" with the trailing value "On"
+    When assistive technology reads the switch
+    Then the switch is named "Email notifications"
+    And the value "On" remains available as separate text
+
+  # S30
+  Scenario Outline: A theme sizes a switch label independently of the surrounding text
+    Given a <size> switch labeled "Email notifications"
+    When the theme sets the label font size and line height for that size
+    Then its label uses both theme values
+
+    Examples:
+      | size |
+      | md   |
+      | lg   |
+      | xl   |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S17, S25, S27 | |
+| Core behavior | S1, S2, S3, S4, S17, S25, S27, S28 | |
 | Keyboard path | S5, S6, S20 | |
-| Assistive-tech outcome | S7, S8, S9 | |
+| Assistive-tech outcome | S7, S8, S9, S29 | |
 | Form participation | S10, S11, S12, S13, S18, S21 | |
-| Theming | S14, S15, S16, S19, S23, S24, S26 | |
+| Theming | S14, S15, S16, S19, S23, S24, S26, S30 | |
 
 ## Requirements *(mandatory)*
 

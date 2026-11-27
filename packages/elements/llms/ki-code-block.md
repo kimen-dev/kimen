@@ -30,11 +30,19 @@ brackets so they remain part of the source.
 <ki-code-block language="html" filename="example.html" wrap copyable="false">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>
 ```
 
-Color a Gherkin contract in English or Spanish with `language="gherkin"`.
-Keywords count only where they open a line.
+Hide the header with `header-hidden`. The language still selects the grammar,
+and the copy button stays above the source unless `copyable="false"` is set.
 
 ```html
-<ki-code-block language="gherkin" filename="pagos.feature"># language: es
+<ki-code-block language="ts" filename="main.ts" header-hidden>const sample = load(3);</ki-code-block>
+```
+
+Color a Gherkin contract in English or Spanish with `language="gherkin"`.
+Keywords count only where they open a line. Set `--ki-code-keyword-weight`
+on the snippet to give keywords a different weight.
+
+```html
+<ki-code-block language="gherkin" filename="pagos.feature" style="--ki-code-keyword-weight: 500"># language: es
 Característica: Pagar el carrito
   Escenario: Pagar con tarjeta
     Dado un carrito con 3 productos y un cupón
@@ -71,10 +79,11 @@ The guarded catalog accepts source strings in the default slot.
 - `copy-label` (string, default 'Copy code'): Accessible name of the copy button.
 - `copyable` (boolean, default true): Show the copy control. Set `copyable="false"` in HTML to hide it.
 - `filename` (string | undefined): File name shown in the header beside the language.
+- `header-hidden` (boolean, default false): Hide the caption. An enabled copy button stays above the source.
 - `highlight` (string | undefined): Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
 - `highlight-label` (string, default 'Highlighted lines'): Localizable prefix for the accessible description of highlighted lines.
 - `label` (string | undefined, default 'Code'): Figure and scroll area label when there is no language or filename.
-- `language` (string | undefined): Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
+- `language` (string | undefined): Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish). Gherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments, `--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells, and `--ki-code-number` for placeholders.
 - `line-numbers` (boolean, default false): Show decorative one-based line numbers.
 - `wrap` (boolean, default false): Soft-wrap long lines within the available width.
 
@@ -118,6 +127,7 @@ None.
 - `--ki-code-highlight-marker`: Inline rule identifying a highlighted line. Default: `var(--ki-outline-primary-high-em)`.
 - `--ki-code-highlight-marker-width`: Width of the highlighted line rule. Default: `var(--ki-focus-ring-width)`.
 - `--ki-code-keyword`: Syntax ink for keywords. Default: `var(--ki-text-primary-high-em)`.
+- `--ki-code-keyword-weight`: Weight of syntax keywords. Defaults to the source weight. Default: `inherit`.
 - `--ki-code-line-height`: Line box height for caption and source. Default: `var(--ki-typography-line-height-caption-2)`.
 - `--ki-code-line-number`: Ink for the decorative line numbers. Default: `var(--ki-text-supporting)`.
 - `--ki-code-number`: Syntax ink for numbers. Default: `var(--ki-text-warning-high-em)`.

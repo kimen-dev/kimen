@@ -110,3 +110,24 @@ Feature: ki-code-block presents a source snippet with syntax and copy controls
     Given a code block with copyable set to "false"
     When the application removes the attribute
     Then the corresponding property reads true
+
+  # S18
+  Scenario: A snippet can hide its header and retain syntax colors
+    Given a TypeScript snippet with a filename and copying turned off
+    When the reader views the snippet with its header hidden
+    Then the code appears without a header
+    And the TypeScript keywords retain their syntax color
+
+  # S19
+  Scenario: A snippet with a hidden header keeps its name and keyboard copy control
+    Given a copyable snippet named "ts · main.ts" with its header hidden
+    When the reader tabs to the snippet
+    Then assistive technology exposes the figure and code area as "ts · main.ts"
+    And the keyboard reaches the Copy code button
+
+  # S20
+  Scenario: A theme sets the keyword weight of a Gherkin snippet
+    Given a Gherkin snippet with a keyword and step text
+    When the theme sets the syntax keyword weight to "500"
+    Then the keyword uses weight "500"
+    And the step text retains its inherited weight

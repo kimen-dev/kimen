@@ -21,6 +21,23 @@ immediately — always with a slotted label.
 <ki-switch disabled>Disabled</ki-switch>`}
 />
 
+### Settings row
+
+Set `display: block` in a block layout or stretch the switch in a grid.
+The optional `end` slot holds a value at the inline end, outside the
+switch's native label. Help and error messages appear below the row.
+
+<Demo
+  layout="block"
+  code={`<ki-switch style="display: block" checked help-text="Get account updates by email.">
+  Email notifications<span slot="end">On</span>
+</ki-switch>`}
+/>
+
+Use `--ki-switch-label-font-size` and `--ki-switch-label-line-height`
+to style the medium label. Insert `sm-`, `lg-`, or `xl-` after
+`--ki-switch-` to target another size.
+
 ### Listening for changes
 
 The composed `change` event fires at the host; read `checked` from the

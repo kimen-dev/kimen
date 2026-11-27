@@ -8780,6 +8780,15 @@
               "description": "File name shown in the header beside the language."
             },
             {
+              "name": "header-hidden",
+              "fieldName": "headerHidden",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hide the caption. An enabled copy button stays above the source."
+            },
+            {
               "name": "highlight",
               "fieldName": "highlight",
               "type": {
@@ -8811,7 +8820,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish)."
+              "description": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders."
             },
             {
               "name": "line-numbers",
@@ -8894,6 +8903,18 @@
             },
             {
               "kind": "field",
+              "name": "headerHidden",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hide the caption. An enabled copy button stays above the source.",
+              "attribute": "header-hidden",
+              "reflects": false
+            },
+            {
+              "kind": "field",
               "name": "highlight",
               "privacy": "public",
               "type": {
@@ -8934,7 +8955,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+              "description": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders.",
               "attribute": "language",
               "reflects": false
             },
@@ -9093,6 +9114,11 @@
               "name": "--ki-code-keyword",
               "description": "Syntax ink for keywords.",
               "default": "var(--ki-text-primary-high-em)"
+            },
+            {
+              "name": "--ki-code-keyword-weight",
+              "description": "Weight of syntax keywords. Defaults to the source weight.",
+              "default": "inherit"
             },
             {
               "name": "--ki-code-line-height",
@@ -21940,6 +21966,10 @@
             {
               "name": "",
               "description": "Descriptive link text. Use phrasing content without nested interactive controls."
+            },
+            {
+              "name": "end",
+              "description": "Trailing icon before the external marker. Use a decorative ki-icon with inherited size."
             }
           ],
           "cssParts": [
@@ -21991,13 +22021,23 @@
               "default": "var(--ki-typography-family-body)"
             },
             {
+              "name": "--ki-link-font-weight",
+              "description": "Link weight. Defaults to the surrounding text weight.",
+              "default": "inherit"
+            },
+            {
+              "name": "--ki-link-hover-fg",
+              "description": "Primary hover ink. Defaults to the resting ink.",
+              "default": "inherit"
+            },
+            {
               "name": "--ki-link-icon-gap",
-              "description": "Space between the label and the external link icon.",
+              "description": "Spacing before each trailing icon.",
               "default": "var(--ki-typography-inline-icon-gap)"
             },
             {
               "name": "--ki-link-icon-size",
-              "description": "External link icon edge relative to the inherited text size.",
+              "description": "Trailing and external icon edge.",
               "default": "var(--ki-typography-inline-icon-size)"
             },
             {
@@ -22009,6 +22049,11 @@
               "name": "--ki-link-neutral-fg",
               "description": "Body ink for neutral links.",
               "default": "var(--ki-text-high-em)"
+            },
+            {
+              "name": "--ki-link-neutral-hover-fg",
+              "description": "Neutral hover ink. Defaults to the resting ink.",
+              "default": "inherit"
             },
             {
               "name": "--ki-link-radius",
@@ -22034,6 +22079,24 @@
               "name": "--ki-typography-visually-hidden-size",
               "description": "Nonzero edge for clipped text available to assistive technology.",
               "default": "var(--ki-size-border-hairline)"
+            }
+          ],
+          "tokenStates": [
+            {
+              "variant": "neutral",
+              "tone": null,
+              "state": "hover",
+              "tokens": [
+                "--ki-link-neutral-hover-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": null,
+              "state": "hover",
+              "tokens": [
+                "--ki-link-hover-fg"
+              ]
             }
           ]
         }
@@ -36408,6 +36471,10 @@
             {
               "name": "",
               "description": "Label content. This is the accessible name source."
+            },
+            {
+              "name": "end",
+              "description": "Trailing value outside the label."
             }
           ],
           "cssParts": [
@@ -36594,6 +36661,16 @@
               "default": "var(--ki-space-md)"
             },
             {
+              "name": "--ki-switch-label-font-size",
+              "description": "Label font size.",
+              "default": "var(--ki-typography-size-body-2)"
+            },
+            {
+              "name": "--ki-switch-label-line-height",
+              "description": "Label line height.",
+              "default": "var(--ki-typography-line-height-body-2)"
+            },
+            {
               "name": "--ki-switch-lg-control-height",
               "description": "dimension used by the switch component for the control footprint height at size lg.",
               "default": "var(--ki-space-10xl)"
@@ -36603,6 +36680,16 @@
               "description": "dimension used by the switch component for the control footprint width at size lg.",
               "default": "var(--ki-space-16xl)",
               "material3Default": "var(--ki-space-15xl)"
+            },
+            {
+              "name": "--ki-switch-lg-label-font-size",
+              "description": "Label font size.",
+              "default": "var(--ki-typography-size-body-2)"
+            },
+            {
+              "name": "--ki-switch-lg-label-line-height",
+              "description": "Label line height.",
+              "default": "var(--ki-typography-line-height-body-2)"
             },
             {
               "name": "--ki-switch-lg-min-target",
@@ -36884,6 +36971,16 @@
               "material3Default": "var(--ki-space-15xl)"
             },
             {
+              "name": "--ki-switch-xl-label-font-size",
+              "description": "Label font size.",
+              "default": "var(--ki-typography-size-body-2)"
+            },
+            {
+              "name": "--ki-switch-xl-label-line-height",
+              "description": "Label line height.",
+              "default": "var(--ki-typography-line-height-body-2)"
+            },
+            {
               "name": "--ki-switch-xl-min-target",
               "description": "dimension used by the switch component for min target at size xl.",
               "default": "var(--ki-space-12xl)",
@@ -36957,19 +37054,9 @@
               "default": "var(--ki-font-family-body)"
             },
             {
-              "name": "--ki-typography-line-height-body-2",
-              "description": "semantic dimension for typography line height body 2.",
-              "default": "var(--ki-font-line-height-body-2)"
-            },
-            {
               "name": "--ki-typography-line-height-caption-2",
               "description": "semantic dimension for typography line height caption 2.",
               "default": "var(--ki-font-line-height-caption-2)"
-            },
-            {
-              "name": "--ki-typography-size-body-2",
-              "description": "semantic dimension for typography size body 2.",
-              "default": "var(--ki-font-size-body-2)"
             },
             {
               "name": "--ki-typography-size-caption-2",

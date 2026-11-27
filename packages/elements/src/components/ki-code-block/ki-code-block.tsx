@@ -26,11 +26,19 @@ const DEFAULT_LABEL = 'Code';
 export class KiCodeBlock {
   @Element() private readonly host!: HTMLElement;
 
-  /** Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish). */
+  /**
+   * Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).
+   * Gherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,
+   * `--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,
+   * and `--ki-code-number` for placeholders.
+   */
   @Prop() language?: string;
 
   /** File name shown in the header beside the language. */
   @Prop() filename?: string;
+
+  /** Hide the caption. An enabled copy button stays above the source. */
+  @Prop() headerHidden = false;
 
   /** Show decorative one-based line numbers. */
   @Prop() lineNumbers = false;
@@ -97,6 +105,7 @@ export class KiCodeBlock {
     const metadata = [this.language?.trim(), this.filename?.trim()].filter(Boolean);
     const fallback = this.label?.trim() ?? '';
     const caption = metadata.join(' · ') || fallback || DEFAULT_LABEL;
+    const Header = this.headerHidden ? 'div' : 'figcaption';
     const lines = tokenizeCode(this.source, this.language);
     const gutterWidth = `${String(String(lines.length).length)}ch`;
     const highlights = resolveHighlights(this.highlight, lines.length);
@@ -111,22 +120,27 @@ export class KiCodeBlock {
     // Direct names avoid Gecko's cached ariaLabelledByElements reflection.
     return (
       <figure key="figure" part="figure" aria-label={caption}>
-        <figcaption key="header" part="header">
-          <bdi key="caption">{caption}</bdi>
-          {this.copyable && (
-            <ki-copy-button
-              key="copy"
-              size="xs"
-              variant="ghost"
-              value={this.source}
-              label={this.copyLabel}
-              copiedLabel={this.copiedLabel}
-              copyErrorLabel={this.copyErrorLabel}
-              onKi-copy={this.handleCopy}
-              onKi-copy-error={this.handleCopyError}
-            />
-          )}
-        </figcaption>
+        {(!this.headerHidden || this.copyable) && (
+          <Header
+            key="header"
+            {...(this.headerHidden ? { class: 'copy-only' } : { part: 'header' })}
+          >
+            {!this.headerHidden && <bdi key="caption">{caption}</bdi>}
+            {this.copyable && (
+              <ki-copy-button
+                key="copy"
+                size="xs"
+                variant="ghost"
+                value={this.source}
+                label={this.copyLabel}
+                copiedLabel={this.copiedLabel}
+                copyErrorLabel={this.copyErrorLabel}
+                onKi-copy={this.handleCopy}
+                onKi-copy-error={this.handleCopyError}
+              />
+            )}
+          </Header>
+        )}
         <pre
           key="scroll"
           part="scroll"

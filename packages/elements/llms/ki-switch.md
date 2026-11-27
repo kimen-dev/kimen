@@ -48,6 +48,18 @@ shows nothing.
 <ki-switch name="two-step" checked custom-error="Add a phone number before turning on two-step sign-in.">Two-step sign-in</ki-switch>
 ```
 
+## Settings row
+
+Stretch the switch in a grid or set `display: block` on the host. Put the
+current value in `slot="end"`. The default slot supplies the switch name and
+the value sits at the inline end. Update the value when the switch changes.
+
+```html
+<ki-switch style="display: block" checked help-text="Get account updates by email.">
+  Email notifications<span slot="end">On</span>
+</ki-switch>
+```
+
 ## Token stylesheets
 
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-switch`: the default, only the tokens ki-switch needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
@@ -68,6 +80,7 @@ shows nothing.
 ## Slots
 
 - (default): Label content. This is the accessible name source.
+- `end`: Trailing value outside the label.
 
 ## Parts
 
@@ -101,8 +114,12 @@ None.
 - `--ki-switch-glyph-height`: dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height). Default: `var(--ki-space-sm)`.
 - `--ki-switch-glyph-unchecked`: Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb. Default: `var(--ki-text-none)`.
 - `--ki-switch-glyph-width`: dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb). Default: `var(--ki-space-md)`.
+- `--ki-switch-label-font-size`: Label font size. Default: `var(--ki-typography-size-body-2)`.
+- `--ki-switch-label-line-height`: Label line height. Default: `var(--ki-typography-line-height-body-2)`.
 - `--ki-switch-lg-control-height`: dimension used by the switch component for the control footprint height at size lg. Default: `var(--ki-space-10xl)`.
 - `--ki-switch-lg-control-width`: dimension used by the switch component for the control footprint width at size lg. Default: onmars `var(--ki-space-16xl)`, material3 `var(--ki-space-15xl)`.
+- `--ki-switch-lg-label-font-size`: Label font size. Default: `var(--ki-typography-size-body-2)`.
+- `--ki-switch-lg-label-line-height`: Label line height. Default: `var(--ki-typography-line-height-body-2)`.
 - `--ki-switch-lg-min-target`: dimension used by the switch component for min target at size lg. Default: onmars `var(--ki-space-10xl)`, material3 `var(--ki-space-9xl)`.
 - `--ki-switch-lg-thumb-inset`: dimension used by the switch component for thumb inset at size lg. Default: onmars `var(--ki-space-xxs)`, material3 `var(--ki-space-xs)`.
 - `--ki-switch-lg-thumb-radius`: dimension used by the switch component for thumb radius at size lg. Default: onmars `var(--ki-radius-component-xs)`, material3 `var(--ki-radius-round)`.
@@ -140,6 +157,8 @@ None.
 - `--ki-switch-well-radius`: dimension used by the switch component for the radius of the well that holds the track at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. Default: `var(--ki-radius-component-md)`.
 - `--ki-switch-xl-control-height`: dimension used by the switch component for the control footprint height at size xl. Default: onmars `var(--ki-space-12xl)`, material3 `var(--ki-space-10xl)`.
 - `--ki-switch-xl-control-width`: dimension used by the switch component for the control footprint width at size xl. Default: onmars `var(--ki-space-18xl)`, material3 `var(--ki-space-15xl)`.
+- `--ki-switch-xl-label-font-size`: Label font size. Default: `var(--ki-typography-size-body-2)`.
+- `--ki-switch-xl-label-line-height`: Label line height. Default: `var(--ki-typography-line-height-body-2)`.
 - `--ki-switch-xl-min-target`: dimension used by the switch component for min target at size xl. Default: onmars `var(--ki-space-12xl)`, material3 `var(--ki-space-9xl)`.
 - `--ki-switch-xl-thumb-inset`: dimension used by the switch component for thumb inset at size xl. Default: `var(--ki-space-xs)`.
 - `--ki-switch-xl-thumb-radius`: dimension used by the switch component for thumb radius at size xl. Default: onmars `var(--ki-radius-component-xs)`, material3 `var(--ki-radius-round)`.
@@ -153,9 +172,7 @@ None.
 - `--ki-text-high-em`: semantic color for text high em. Default: onmars `light-dark(var(--ki-color-gray-950),#edebe7)`, material3 `light-dark(#1d1b20,#e6e0e9)`.
 - `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). Default: `var(--ki-text-med-em)`.
 - `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
-- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2. Default: `var(--ki-font-line-height-body-2)`.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
-- `--ki-typography-size-body-2`: semantic dimension for typography size body 2. Default: `var(--ki-font-size-body-2)`.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal. Default: `var(--ki-font-weight-body-normal)`.
 

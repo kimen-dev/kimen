@@ -14,11 +14,19 @@ brackets so they remain part of the source.
 <ki-code-block language="html" filename="example.html" wrap copyable="false">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>
 ```
 
-Color a Gherkin contract in English or Spanish with `language="gherkin"`.
-Keywords count only where they open a line.
+Hide the header with `header-hidden`. The language still selects the grammar,
+and the copy button stays above the source unless `copyable="false"` is set.
 
 ```html
-<ki-code-block language="gherkin" filename="pagos.feature"># language: es
+<ki-code-block language="ts" filename="main.ts" header-hidden>const sample = load(3);</ki-code-block>
+```
+
+Color a Gherkin contract in English or Spanish with `language="gherkin"`.
+Keywords count only where they open a line. Set `--ki-code-keyword-weight`
+on the snippet to give keywords a different weight.
+
+```html
+<ki-code-block language="gherkin" filename="pagos.feature" style="--ki-code-keyword-weight: 500"># language: es
 Característica: Pagar el carrito
   Escenario: Pagar con tarjeta
     Dado un carrito con 3 productos y un cupón

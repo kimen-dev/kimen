@@ -86,3 +86,21 @@ export const RTL: Story = {
     </div>
   ),
 };
+
+export const SettingsRow: Story = {
+  render: (args) => {
+    const syncValue = (event: Event) => {
+      const toggle = event.currentTarget as HTMLKiSwitchElement | null;
+      const value = toggle?.querySelector('[slot="end"]');
+      if (value) value.textContent = toggle?.checked ? 'On' : 'Off';
+    };
+
+    return (
+      <div style={{ display: 'grid', inlineSize: 'min(26rem, 80vw)' }}>
+        <ki-switch {...args} helpText="Get account updates by email." onChange={syncValue}>
+          Email notifications<span slot="end">{args.checked ? 'On' : 'Off'}</span>
+        </ki-switch>
+      </div>
+    );
+  },
+};

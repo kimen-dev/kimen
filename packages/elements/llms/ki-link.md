@@ -33,6 +33,18 @@ perform an action on the current page. Use ki-button variant="ghost" for that.
 </nav>
 ```
 
+## Add a trailing icon
+
+Register the `arrow-right` glyph with `@kimen/elements/icons/arrow-right` and
+define `ki-icon`. The `end` slot spaces the icon using the link's icon gap
+token. Keep the icon's default inherited size to use the link's icon size.
+
+```html
+<ki-link href="/docs/catalog" variant="neutral" style="--ki-link-font-weight: 500">
+  Catalog contract<ki-icon slot="end" name="arrow-right"></ki-icon>
+</ki-link>
+```
+
 ## Navigate from a guarded surface
 
 Supply `href` and the default text slot. The surface URL policy applies.
@@ -70,6 +82,7 @@ Leave the action binding unset for native navigation.
 ## Slots
 
 - (default): Descriptive link text. Use phrasing content without nested interactive controls.
+- `end`: Trailing icon before the external marker. Use a decorative ki-icon with inherited size.
 
 ## Parts
 
@@ -83,7 +96,7 @@ None.
 
 None.
 
-## CSS custom properties
+## Other CSS custom properties
 
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
 - `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
@@ -93,8 +106,9 @@ None.
 - `--ki-link-bg-image`: Optional image overlay for link backing. Default: `var(--ki-surface-image-none)`.
 - `--ki-link-fg`: Accent ink for primary links. Default: `var(--ki-text-primary-high-em)`.
 - `--ki-link-font-family`: Body typeface used by link text. Default: `var(--ki-typography-family-body)`.
-- `--ki-link-icon-gap`: Space between the label and the external link icon. Default: `var(--ki-typography-inline-icon-gap)`.
-- `--ki-link-icon-size`: External link icon edge relative to the inherited text size. Default: `var(--ki-typography-inline-icon-size)`.
+- `--ki-link-font-weight`: Link weight. Defaults to the surrounding text weight. Default: `inherit`.
+- `--ki-link-icon-gap`: Spacing before each trailing icon. Default: `var(--ki-typography-inline-icon-gap)`.
+- `--ki-link-icon-size`: Trailing and external icon edge. Default: `var(--ki-typography-inline-icon-size)`.
 - `--ki-link-neutral-bg`: Transparent backing for neutral link text. Default: `var(--ki-surface-transparent)`.
 - `--ki-link-neutral-fg`: Body ink for neutral links. Default: `var(--ki-text-high-em)`.
 - `--ki-link-radius`: Corner radius used by the link focus outline. Default: `var(--ki-corner-inline)`.
@@ -102,3 +116,10 @@ None.
 - `--ki-link-underline-thickness`: Resting underline thickness. Default: `var(--ki-typography-underline-thickness)`.
 - `--ki-link-underline-thickness-hover`: Underline thickness under a hover-capable pointer. Default: `var(--ki-typography-underline-thickness-hover)`.
 - `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.
+
+## CSS custom properties by variant and state
+
+| Variant | Tone | State | Token | Default | Description |
+| --- | --- | --- | --- | --- | --- |
+| neutral | — | hover | `--ki-link-neutral-hover-fg` | `inherit` | Neutral hover ink. Defaults to the resting ink. |
+| primary | — | hover | `--ki-link-hover-fg` | `inherit` | Primary hover ink. Defaults to the resting ink. |

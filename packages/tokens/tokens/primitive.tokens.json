@@ -2473,6 +2473,10 @@
         "flex-start": {
           "$type": "other",
           "$value": "flex-start"
+        },
+        "inherit": {
+          "$type": "other",
+          "$value": "inherit"
         }
       },
       "onmars-v2": {

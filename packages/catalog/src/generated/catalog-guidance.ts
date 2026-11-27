@@ -369,10 +369,11 @@ export const catalogGuidance: CatalogGuidance = {
       "copy-label": "Accessible name of the copy button.",
       "copyable": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it.",
       "filename": "File name shown in the header beside the language.",
+      "header-hidden": "Hide the caption. An enabled copy button stays above the source.",
       "highlight": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`.",
       "highlight-label": "Localizable prefix for the accessible description of highlighted lines.",
       "label": "Figure and scroll area label when there is no language or filename.",
-      "language": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+      "language": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders.",
       "line-numbers": "Show decorative one-based line numbers.",
       "wrap": "Soft-wrap long lines within the available width."
     },
@@ -911,7 +912,8 @@ export const catalogGuidance: CatalogGuidance = {
       "variant": "Ink role. Primary uses accent ink and neutral uses body ink."
     },
     "slots": {
-      "": "Descriptive link text. Use phrasing content without nested interactive controls."
+      "": "Descriptive link text. Use phrasing content without nested interactive controls.",
+      "end": "Trailing icon before the external marker. Use a decorative ki-icon with inherited size."
     },
     "whenNotToUse": "perform an action on the current page. Use ki-button variant=\"ghost\" for that.",
     "whenToUse": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation."
@@ -1707,7 +1709,8 @@ export const catalogGuidance: CatalogGuidance = {
       "value": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen to use: submit a domain-specific value instead of the default `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing."
     },
     "slots": {
-      "": "Label content. This is the accessible name source."
+      "": "Label content. This is the accessible name source.",
+      "end": "Trailing value outside the label."
     },
     "whenNotToUse": "selections collected for later form submission; use\nki-checkbox for recorded choices, ki-radio-group for mutually exclusive\nchoices, and ki-button for actions.",
     "whenToUse": "binary settings whose change takes effect immediately, always\nwith a slotted label."

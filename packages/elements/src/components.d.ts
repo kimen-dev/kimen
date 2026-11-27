@@ -987,6 +987,11 @@ export namespace Components {
          */
         "filename"?: string;
         /**
+          * Hide the caption. An enabled copy button stays above the source.
+          * @default false
+         */
+        "headerHidden": boolean;
+        /**
           * Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
          */
         "highlight"?: string;
@@ -1001,7 +1006,7 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
+          * Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish). Gherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments, `--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells, and `--ki-code-number` for placeholders.
          */
         "language"?: string;
         /**
@@ -8202,6 +8207,11 @@ declare namespace LocalJSX {
          */
         "filename"?: string;
         /**
+          * Hide the caption. An enabled copy button stays above the source.
+          * @default false
+         */
+        "headerHidden"?: boolean;
+        /**
           * Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
          */
         "highlight"?: string;
@@ -8216,7 +8226,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
+          * Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish). Gherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments, `--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells, and `--ki-code-number` for placeholders.
          */
         "language"?: string;
         /**
@@ -12566,6 +12576,7 @@ declare namespace LocalJSX {
     interface KiCodeBlockAttributes {
         "language": string;
         "filename": string;
+        "headerHidden": boolean;
         "lineNumbers": boolean;
         "highlight": string;
         "wrap": boolean;

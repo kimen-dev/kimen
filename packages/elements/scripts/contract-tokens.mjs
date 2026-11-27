@@ -67,6 +67,10 @@ const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 export function buildStateTokenTable({ tagName, members, cssProperties }, sources) {
   const variants = propLiterals(members, 'variant');
   const tones = propLiterals(members, 'tone');
+  const defaultVariant = members
+    .find((member) => member.kind === 'field' && member.name === 'variant')
+    ?.default?.replace(/^(['"])(.*)\1$/u, '$2');
+  const propertyNames = new Set(cssProperties.map(({ name }) => name));
   const rows = new Map();
   for (const { name } of cssProperties) {
     const source = sources.get(name);
@@ -75,6 +79,19 @@ export function buildStateTokenTable({ tagName, members, cssProperties }, source
     // Shared sheets can use another element's tokens (e.g. ki-icon-button).
     // A foreign family belongs in the table only if the component exposes its variant.
     if (!parsed || (source.component !== tagName && parsed.variant === null)) continue;
+    // An unprefixed state token can be the default variant's counterpart to a
+    // prefixed override. Leave shared state tokens without an override unqualified.
+    if (parsed.variant === null && defaultVariant && variants.includes(defaultVariant)) {
+      const prefix = `--ki-${source.family}-`;
+      const suffix = name.slice(prefix.length);
+      const variantToken = (variant) => `${prefix}${variant}-${suffix}`;
+      if (
+        !propertyNames.has(variantToken(defaultVariant)) &&
+        variants.some((variant) => propertyNames.has(variantToken(variant)))
+      ) {
+        parsed.variant = defaultVariant;
+      }
+    }
     const key = JSON.stringify(parsed);
     if (!rows.has(key)) rows.set(key, { ...parsed, tokens: [] });
     rows.get(key).tokens.push(name);

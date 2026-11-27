@@ -102,6 +102,15 @@ describe('component contract token tables', () => {
     );
   });
 
+  it('publishes primary and neutral link hover ink under their variants', async () => {
+    const document = await readFile(new URL('llms/ki-link.md', packageRoot), 'utf8');
+    expect(document).toContain('| primary | — | hover | `--ki-link-hover-fg` | `inherit` |');
+    expect(document).toContain(
+      '| neutral | — | hover | `--ki-link-neutral-hover-fg` | `inherit` |',
+    );
+    expect(document).toContain('- `--ki-link-underline-thickness-hover`:');
+  });
+
   it('publishes a default for every listed token and assigns only tokens read by component CSS', async () => {
     const manifest = JSON.parse(
       await readFile(new URL('generated/custom-elements.json', packageRoot), 'utf8'),

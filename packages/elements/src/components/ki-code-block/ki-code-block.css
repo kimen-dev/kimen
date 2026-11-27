@@ -20,17 +20,25 @@ figure {
   line-height: var(--ki-code-line-height);
 }
 
-figcaption {
+figcaption,
+.copy-only {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--ki-code-header-padding);
   padding-block: var(--ki-code-header-padding);
   padding-inline: var(--ki-code-padding);
   min-block-size: var(--ki-density-target-min);
+}
+
+figcaption {
+  justify-content: space-between;
+  gap: var(--ki-code-header-padding);
   border-block-end: var(--ki-code-border-width) solid var(--ki-code-border);
   color: var(--ki-code-header-fg);
   overflow-wrap: anywhere;
+}
+
+.copy-only {
+  justify-content: end;
 }
 
 ki-copy-button {
@@ -96,6 +104,7 @@ code[data-wrap] .line-text {
 
 .syntax-keyword {
   color: var(--ki-code-keyword);
+  font-weight: var(--ki-code-keyword-weight, inherit);
 }
 
 .syntax-string {

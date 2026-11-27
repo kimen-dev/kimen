@@ -41,6 +41,14 @@
         "required": false,
         "type": "string | undefined"
       },
+      "header-hidden": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Hide the caption. An enabled copy button stays above the source.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "highlight": {
         "default": null,
         "deprecatedSince": null,
@@ -68,7 +76,7 @@
       "language": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+        "description": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"
@@ -235,6 +243,14 @@
         "required": false,
         "type": null
       },
+      "--ki-code-keyword-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Weight of syntax keywords. Defaults to the source weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-code-line-height": {
         "default": null,
         "deprecatedSince": null,
@@ -395,6 +411,14 @@
         "required": false,
         "type": "string | undefined"
       },
+      "headerHidden": {
+        "default": "false",
+        "deprecatedSince": null,
+        "description": "Hide the caption. An enabled copy button stays above the source.",
+        "replacement": null,
+        "required": false,
+        "type": "boolean"
+      },
       "highlight": {
         "default": null,
         "deprecatedSince": null,
@@ -422,7 +446,7 @@
       "language": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+        "description": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders.",
         "replacement": null,
         "required": false,
         "type": "string | undefined"

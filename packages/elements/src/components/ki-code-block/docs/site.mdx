@@ -17,9 +17,11 @@ rendered, so highlighting written as HTML shows as literal text.
 
 Set `language="gherkin"`, or `feature`, for Gherkin contracts. Keywords from
 Gherkin's English and Spanish dictionaries are colored when they open a line,
-so `Y` or `E` inside a sentence stays plain. Comments such as
-`# language: es`, tags, quoted text, doc strings, table pipes and cells, and
-outline placeholders such as `<count>` are colored too.
+so `Y` or `E` inside a sentence stays plain. Theme keywords and table pipes
+with `--ki-code-keyword`, comments with `--ki-code-comment`, tags with
+`--ki-code-function`, quoted text, doc strings and table cells with
+`--ki-code-string`, and placeholders with `--ki-code-number`. Set
+`--ki-code-keyword-weight` to change the keyword weight independently.
 
 <Demo code={`<ki-code-block language="gherkin" filename="checkout.feature">@smoke
 Feature: Pay the cart
@@ -38,8 +40,13 @@ code. The language and filename name the figure and scroll area. The scroll
 area describes highlighted lines, and line numbers are hidden from assistive
 technology.
 
-CopyButton copies the original whitespace and reports the outcome. Set
-`copyable="false"` to hide the button. Localize the figure's fallback name
+Set `header-hidden` to hide the caption while preserving syntax highlighting
+and the accessible name. The copy button stays above the source at the inline
+end and copies the original whitespace. Set `copyable="false"` to hide it.
+
+<Demo code={`<ki-code-block language="ts" filename="main.ts" header-hidden>const size = load(3);</ki-code-block>`} />
+
+Localize the figure's fallback name
 with `label`, the description prefix with `highlight-label` and the copy
 control with `copy-label`, `copied-label` and `copy-error-label`.
 
