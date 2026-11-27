@@ -23,6 +23,7 @@ const elementsPackage = {
   version: '0.0.0',
   exports: {
     '.': { types: './dist/types/index.d.ts', import: './dist/index.js' },
+    './components': { types: './dist/types/components.d.ts', import: './dist/components/index.js' },
     './loader': { types: './loader/index.d.ts', import: './loader/index.js' },
     './ki-*': {
       types: './dist/components/ki-*.d.ts',
@@ -72,8 +73,17 @@ const declarationSources = {
         ): void;
       `,
       './dist/types/components.d.ts': `
+        import type { HTMLStencilElement } from './stencil-public-runtime.js';
         export type LoaderOnly = 'loader-public-type';
         export namespace Components { interface KiButton { disabled: boolean } }
+        declare global {
+          interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {}
+        }
+      `,
+      './dist/types/stencil-public-runtime.d.ts': `
+        export interface HTMLStencilElement extends HTMLElement {
+          componentOnReady(): Promise<this>;
+        }
       `,
       './dist/components/ki-button.d.ts': `
         export const KiButton: { prototype: HTMLElement; new (): HTMLElement };
@@ -425,6 +435,14 @@ test('[S10] a CEM method parameter signature change is classified conservatively
 });
 
 for (const [label, mutate] of [
+  [
+    'removed inherited element method',
+    (input) => {
+      const files = input.declarationSources['@kimen/elements'].files;
+      const runtime = './dist/types/stencil-public-runtime.d.ts';
+      files[runtime] = files[runtime].replace('componentOnReady(): Promise<this>;', '');
+    },
+  ],
   [
     'removed symbol',
     (input) => {
