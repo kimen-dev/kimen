@@ -5044,7 +5044,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       readonly props: {
         readonly "collapse-at": {
           readonly type: "string";
-          readonly description: "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.";
+          readonly description: "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them.";
           readonly default: "48rem";
         };
         readonly "heading-level": {

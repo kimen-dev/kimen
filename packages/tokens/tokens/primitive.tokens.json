@@ -2464,6 +2464,10 @@
         "center": {
           "$type": "other",
           "$value": "center"
+        },
+        "flex-start": {
+          "$type": "other",
+          "$value": "flex-start"
         }
       },
       "onmars-v2": {

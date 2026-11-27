@@ -4779,7 +4779,7 @@ export namespace Components {
      */
     interface KiTopNav {
         /**
-          * CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
+          * CSS length below which navigation collapses and single-row app bars can center their title. `none` keeps links visible. If they do not fit beside the brand and actions, they wrap across the full width below them.
           * @default '48rem'
          */
         "collapseAt": string;
@@ -12248,7 +12248,7 @@ declare namespace LocalJSX {
      */
     interface KiTopNav {
         /**
-          * CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
+          * CSS length below which navigation collapses and single-row app bars can center their title. `none` keeps links visible. If they do not fit beside the brand and actions, they wrap across the full width below them.
           * @default '48rem'
          */
         "collapseAt"?: string;

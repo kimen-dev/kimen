@@ -1970,7 +1970,7 @@ export const catalogGuidance: CatalogGuidance = {
     "description": "Application navigation with responsive primary links, or a per-screen app\nbar with a real heading, optional search, and overflow actions.",
     "events": {},
     "props": {
-      "collapse-at": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
+      "collapse-at": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them.",
       "heading-level": "Native heading level for the screen title. Use 1 through 6 to fit the page outline.",
       "label": "Accessible name of the header's primary navigation landmark. Override for localization.",
       "navigation-label": "Accessible name for the compact navigation button and menu. Override for localization.",

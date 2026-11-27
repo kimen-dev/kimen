@@ -3306,6 +3306,8 @@
   --ki-top-nav-backdrop-filter:var(--ki-effect-no-backdrop-filter);
   --ki-top-nav-border:var(--ki-outline-low-em);
   --ki-top-nav-padding-inline:var(--ki-layout-spacing-3xl);
+  --ki-top-nav-links-gap:var(--ki-layout-spacing-zero);
+  --ki-top-nav-links-justify:flex-start;
   --ki-top-nav-item-bg:var(--ki-surface-s0);
   --ki-top-nav-item-fg:var(--ki-text-supporting);
   --ki-top-nav-item-current-bg:var(--ki-surface-s0);

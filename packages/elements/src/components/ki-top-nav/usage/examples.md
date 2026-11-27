@@ -21,17 +21,23 @@ the header. Import `@kimen/elements/icons/bell` for the notification glyph.
 
 ## Links that wrap instead of collapsing
 
-Use `collapse-at="none"` to keep every link in the bar at every width. Links
-that do not fit wrap onto further lines between the brand and the actions,
-and the bar grows to hold them. No navigation button or menu is rendered.
+Use `collapse-at="none"` to keep every link in the bar at every width. When
+space runs out, the brand and actions keep the first row, and the links
+wrap across the full width below. Tab reaches the actions after the links.
+Use `--ki-top-nav-links-gap` for the column gap and
+`--ki-top-nav-links-justify: flex-end` to align the links with the trailing
+edge of their available space.
 
 ```html
-<ki-top-nav label="Documentation" collapse-at="none">
-  <a slot="brand" href="/">Kimen</a>
+<ki-top-nav label="Documentation" collapse-at="none"
+  style="--ki-top-nav-links-gap: var(--ki-layout-spacing-xs); --ki-top-nav-links-justify: flex-end">
+  <a slot="brand" href="/">Kimen Design System</a>
   <a href="/guide" aria-current="page">Guide</a>
   <a href="/components">Components</a>
   <a href="/tokens">Tokens</a>
-  <a href="/changelog">Changelog</a>
+  <ki-icon-button slot="actions" label="Search" variant="ghost">
+    <ki-icon name="search"></ki-icon>
+  </ki-icon-button>
 </ki-top-nav>
 ```
 
