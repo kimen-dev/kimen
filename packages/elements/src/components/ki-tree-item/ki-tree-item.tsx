@@ -56,21 +56,21 @@ export class KiTreeItem {
    * Emitted when an existing branch expands, also when `expanded` is set: it
    * can fire without a gesture.
    */
-  @Event({ eventName: 'ki-expand', bubbles: true, composed: true })
+  @Event({ eventName: 'ki-expand', bubbles: true, composed: true, cancelable: false })
   kiExpand!: EventEmitter<{ item: HTMLKiTreeItemElement }>;
 
   /**
    * Emitted when an existing branch collapses, also when `expanded` is
    * cleared: it can fire without a gesture.
    */
-  @Event({ eventName: 'ki-collapse', bubbles: true, composed: true })
+  @Event({ eventName: 'ki-collapse', bubbles: true, composed: true, cancelable: false })
   kiCollapse!: EventEmitter<{ item: HTMLKiTreeItemElement }>;
 
   /**
    * Emitted once when an empty lazy branch first opens, also one rendered
    * expanded: it can fire without a gesture. The listener supplies the children.
    */
-  @Event({ eventName: 'ki-load', bubbles: true, composed: true })
+  @Event({ eventName: 'ki-load', bubbles: true, composed: true, cancelable: false })
   kiLoad!: EventEmitter<{ item: HTMLKiTreeItemElement }>;
 
   @State() private loading = false;

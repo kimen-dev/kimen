@@ -149,11 +149,12 @@ export class KiPromptInput {
   }
 
   @Watch('value')
+  @Watch('disabled')
   protected syncValue(): void {
     const text = this.value ?? '';
     const textarea = this.textarea;
     if (textarea && textarea.value !== text) textarea.value = text;
-    this.internals.setFormValue(text);
+    this.internals.setFormValue(this.effectiveDisabled ? null : text);
   }
 
   @Watch('accept')
@@ -163,6 +164,7 @@ export class KiPromptInput {
 
   formDisabledCallback(disabled: boolean): void {
     this.formDisabled = disabled;
+    this.syncValue();
   }
 
   formResetCallback(): void {

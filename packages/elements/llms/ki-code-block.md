@@ -89,8 +89,8 @@ The guarded catalog accepts source strings in the default slot.
 
 ## Events
 
-- `ki-copy` (CustomEvent<{ value: string }>): CopyButton reports a successful write with the original source text.
-- `ki-copy-error` (CustomEvent<void>): CopyButton reports an unsuccessful clipboard write.
+- `ki-copy` (CustomEvent<{ value: string }>): Emitted after a successful clipboard write. Detail is `{ value: string }` with the exact copied source.
+- `ki-copy-error` (CustomEvent<void>): Emitted when copying fails. Detail is `null`.
 
 ## Methods
 

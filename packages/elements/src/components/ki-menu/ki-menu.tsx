@@ -72,7 +72,8 @@ export class KiMenu {
   @Prop() filterResultsLabel = 'Matching actions: {count}';
 
   /** Reports the selected action and, for a checkbox or radio, its new checked state. */
-  @Event({ eventName: 'ki-select' }) selectAction!: EventEmitter<KiMenuSelectDetail>;
+  @Event({ eventName: 'ki-select', cancelable: false })
+  selectAction!: EventEmitter<KiMenuSelectDetail>;
 
   @State() matchCount = 0;
 

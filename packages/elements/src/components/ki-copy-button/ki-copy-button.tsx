@@ -162,7 +162,16 @@ export class KiCopyButton {
     if (attempt !== this.attempt) return;
     this.pending = false;
     this.showFeedback(copied === undefined ? 'error' : 'success', attempt);
-    if (copied === undefined) {
+    const root = this.host.getRootNode();
+    if (root instanceof ShadowRoot && root.host.localName === 'ki-code-block') {
+      // A code block reports its own result. Keep its owned button's event
+      // inside the shadow root, including for outside capture listeners.
+      this.host.dispatchEvent(
+        new CustomEvent(copied === undefined ? 'ki-copy-error' : 'ki-copy', {
+          detail: copied === undefined ? null : { value: copied },
+        }),
+      );
+    } else if (copied === undefined) {
       this.kiCopyError.emit();
     } else {
       this.kiCopy.emit({ value: copied });

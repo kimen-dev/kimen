@@ -281,6 +281,7 @@ export class KiSwitch {
 
   @Watch('disabled')
   protected disabledChanged(): void {
+    this.syncFormValue();
     this.syncInput();
     this.syncValidity();
     this.syncUserInvalid();
@@ -375,7 +376,9 @@ export class KiSwitch {
   }
 
   private syncFormValue(): void {
-    this.internals.setFormValue(resolveSubmittedValue(this.checked, this.value));
+    this.internals.setFormValue(
+      this.effectiveDisabled ? null : resolveSubmittedValue(this.checked, this.value),
+    );
   }
 
   // The native `input` event is composed and reaches page listeners BEFORE

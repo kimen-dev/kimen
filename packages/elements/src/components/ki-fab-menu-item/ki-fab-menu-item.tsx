@@ -28,7 +28,7 @@ export class KiFabMenuItem {
   @Prop() value?: string;
 
   /** Local command selection for a direct action binding. Links use native navigation. */
-  @Event({ eventName: 'ki-select', bubbles: false, composed: false })
+  @Event({ eventName: 'ki-select', bubbles: false, composed: false, cancelable: false })
   selected!: EventEmitter<KiFabMenuSelectDetail>;
 
   private readonly onCommandClick = (event: MouseEvent): void => {
