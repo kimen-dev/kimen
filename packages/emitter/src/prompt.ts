@@ -7,7 +7,7 @@
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
 import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS, validateUiSpec } from '@kimen/catalog';
 import type { Derivation, ResolvedEntry } from './issues.js';
-import { invalidOption, resolveEntries, versionStamp } from './issues.js';
+import { invalidOption, resolveEntries, success, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
 
 /** The declared range of a bounded number as the prompt states it (S17). */
@@ -28,14 +28,13 @@ const RULE_PROSE =
   /\b(?:always|must|never|requires?|only|forbids?|do not|should|choose|keep|avoid|supply|provide|match|belongs|invalid|rejected|when|if)\b/iu;
 
 function compactPropDescription(description: string): string {
-  const usage = description.search(/\nWhen (?:NOT )?to use:/u);
-  const summary = usage === -1 ? description : description.slice(0, usage);
-  if (RULE_PROSE.test(summary)) return description;
-  const directive = summary.search(
-    /(?<=^|\.\s)(?:Set|Pass|Pair|Use|Include|Omit|Place|Add|Remove|Give|Declare)\b/u,
+  const usage = /\nWhen (?:NOT )?to use:/u.exec(description);
+  if (RULE_PROSE.test(description.slice(0, usage?.index))) return description;
+  return (
+    /(?:(?<=^|\.\s)(?:Set|Pass|Pair|Use|Include|Omit|Place|Add|Remove|Give|Declare)\b|(?<=\n)When (?:NOT )?to use:).*/su.exec(
+      description,
+    )?.[0] ?? ''
   );
-  if (directive !== -1) return description.slice(directive);
-  return usage === -1 ? '' : description.slice(usage + 1);
 }
 
 function propLine(
@@ -114,13 +113,13 @@ function componentBlock(
       'an action name fires on ki-submit while idle and on ki-stop while streaming, and its data includes status and draft value; local files stay on the DOM event',
   };
   if (eventNames.length > 0) {
+    const activation =
+      entry.activationEvent ?? (eventNames.length === 1 ? eventNames[0] : undefined);
     const named =
       modeEvents[tag] ??
-      (entry.activationEvent !== undefined
-        ? `an action name fires on \`${entry.activationEvent}\``
-        : eventNames.length === 1
-          ? `an action name fires on \`${eventNames[0] ?? ''}\``
-          : 'an action name alone is rejected, so map each event that should act');
+      (activation === undefined
+        ? 'an action name alone is rejected, so map each event that should act'
+        : `an action name fires on \`${activation}\``);
     lines.push(
       `- Events (${named}; {"<event>": "<action>"} fires each listed event's own action):`,
     );
@@ -194,9 +193,7 @@ export function catalogPrompt(
     return invalidOption('options.verbosity', 'verbosity must be compact when provided');
   }
   const resolved = resolveEntries(catalog, options.components, options.icons);
-  if (resolved.issues.length > 0) {
-    return { issues: resolved.issues, ok: false };
-  }
+  if (!resolved.ok) return resolved;
   const lines: string[] = [
     '# Kimen UI-spec emission guide',
     `Catalog: ${versionStamp(catalog)}.`,
@@ -214,23 +211,18 @@ export function catalogPrompt(
     `- "collect" lets a node with an "action" carry the values of other fields, so a form needs one action on its button and none on its fields: each key names an entry of the action data, each value is the "id" of a node of the same spec whose component has a "checked", "selected" or "value" prop. Each bound event fires only when every collected field is valid. At most ${String(COLLECT_MAX_ENTRIES)} entries, and a key may not be one of the node's own props.`,
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',
     '- Styling is not expressible in a spec; appearance belongs to the host theme.',
-    '',
-    '## Components',
   ];
   if (compact) {
-    // Keep the cross-prop rules that are not expressed by the prop types.
-    lines.splice(
-      lines.indexOf('## Components') - 1,
-      0,
-      '- For a dialog command, pair "command" with "commandfor", the id of a ki-dialog in the same spec.',
-      '- A button reports an action with type "button". Keep "href-template" off a ki-pagination that binds actions.',
-      '- To bind a removal action to a ki-chip of type "input", set "removable" to true.',
+    // Dialog pairing is already in the retained command/commandfor guidance.
+    lines.push(
+      '- For bound actions, use type "button" on ki-button, omit "href-template" on ki-pagination, and set "removable" to true on input chips.',
     );
   }
-  for (const [tag, entry] of resolved.entries) {
+  lines.push('', '## Components');
+  for (const [tag, entry] of resolved.artifact) {
     lines.push(...componentBlock(tag, entry, compact, options.icons !== undefined), '');
   }
-  const example = exampleSpec(catalog, resolved.entries);
+  const example = exampleSpec(catalog, resolved.artifact);
   if (example !== undefined) {
     lines.push('## Example (valid)');
     lines.push('```json');
@@ -238,5 +230,5 @@ export function catalogPrompt(
     lines.push('```');
     lines.push('The example validates against this catalog; imitate its structure.');
   }
-  return { artifact: lines.join('\n'), issues: [], ok: true };
+  return success(lines.join('\n'));
 }

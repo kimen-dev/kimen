@@ -7,7 +7,7 @@
 import type { Catalog } from '@kimen/catalog';
 
 import type { Derivation } from './issues.js';
-import { versionStamp } from './issues.js';
+import { success, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
 import { uiSpecJsonSchema } from './schema.js';
 
@@ -32,13 +32,9 @@ export function uiSpecTool(
   if (!schema.ok) {
     return schema;
   }
-  return {
-    artifact: {
-      description: `Emit exactly one Kimen UI spec (${versionStamp(catalog)}): a JSON document composing only cataloged components with their declared props, slots and actions, where a bound node fires one action or one per declared event and may collect other fields' values. The host validates and renders it through the Kimen guardrail; invalid specs are rejected with named issues.`,
-      inputSchema: schema.artifact,
-      name: 'emit_ui',
-    },
-    issues: [],
-    ok: true,
-  };
+  return success({
+    description: `Emit exactly one Kimen UI spec (${versionStamp(catalog)}): a JSON document composing only cataloged components with their declared props, slots and actions, where a bound node fires one action or one per declared event and may collect other fields' values. The host validates and renders it through the Kimen guardrail; invalid specs are rejected with named issues.`,
+    inputSchema: schema.artifact,
+    name: 'emit_ui',
+  });
 }
