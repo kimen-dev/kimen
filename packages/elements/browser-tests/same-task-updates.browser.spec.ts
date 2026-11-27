@@ -188,15 +188,19 @@ describe('form data', () => {
   });
 
   const answered: readonly [Field, string, [string, string][]][] = [
+    ['ki-checkbox', 'checked', [['answer', 'yes']]],
     ['ki-code-input', 'value="1234"', [['answer', '1234']]],
     ['ki-combobox', 'value="b"', [['answer', 'b']]],
     ['ki-date-picker', 'value="2026-11-12"', [['answer', '2026-11-12']]],
     ['ki-input', 'value="ok"', [['answer', 'ok']]],
     ['ki-number-input', 'value="3"', [['answer', '3']]],
+    ['ki-prompt-input', 'value="Hello"', [['answer', 'Hello']]],
     ['ki-radio-group', 'value="b"', [['answer', 'b']]],
     ['ki-rating', 'value="3"', [['answer', '3']]],
     ['ki-select', 'value="b"', [['answer', 'b']]],
     ['ki-slider', '', [['answer', '50']]],
+    ['ki-switch', 'checked', [['answer', 'yes']]],
+    ['ki-textarea', 'value="ok"', [['answer', 'ok']]],
     ['ki-time-input', 'value="09:30"', [['answer', '09:30']]],
   ];
   for (const [tag, attributes, before] of answered) {

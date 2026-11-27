@@ -1,0 +1,17 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-code-block/events/ki-copy": "e63f97ab193ecf4fac289b746011f943d1a76f791dbb836db30eca8aad31fec4",
+    "/packages/@kimen~1elements/components/ki-code-block/events/ki-copy-error": "5ef5e2f03497c404db1d24655e2bfd806da923fa2765eead82a1d481faa3ed19",
+    "/packages/@kimen~1elements/components/ki-dialog/events/ki-close/description": "ac7d8a93292a322d8bfd35277b9bbac72d85b0588524c510640c85024e52a6ba"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "Align dialog close, notification cancelability, disabled form submission and code-block copy event origins with the 0.5.0 contract.",
+  "release": "major",
+  "schemaVersion": 2
+}

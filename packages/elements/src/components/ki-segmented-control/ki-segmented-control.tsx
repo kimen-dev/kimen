@@ -61,7 +61,7 @@ export class KiSegmentedControl {
   @Prop({ reflect: true }) fullWidth = false;
 
   /** Emitted once per changed user choice with the new resolved value. */
-  @Event({ eventName: 'ki-change', bubbles: true, composed: true })
+  @Event({ eventName: 'ki-change', bubbles: true, composed: true, cancelable: false })
   kiChange!: EventEmitter<{ value: string }>;
 
   private segments: HTMLElement[] = [];

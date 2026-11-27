@@ -305,7 +305,7 @@
       "ki-copy": {
         "default": null,
         "deprecatedSince": null,
-        "description": "CopyButton reports a successful write with the original source text.",
+        "description": "Emitted after a successful clipboard write. Detail is `{ value: string }` with the exact copied source.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<{ value: string }>"
@@ -313,7 +313,7 @@
       "ki-copy-error": {
         "default": null,
         "deprecatedSince": null,
-        "description": "CopyButton reports an unsuccessful clipboard write.",
+        "description": "Emitted when copying fails. Detail is `null`.",
         "replacement": null,
         "required": false,
         "type": "CustomEvent<void>"

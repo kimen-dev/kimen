@@ -64,13 +64,14 @@ export class KiFabMenu {
   @Prop() scrim = true;
 
   /** Emitted when the action stack opens. */
-  @Event({ eventName: 'ki-open' }) opened!: EventEmitter<void>;
+  @Event({ eventName: 'ki-open', cancelable: false }) opened!: EventEmitter<void>;
 
   /** Emitted when the action stack closes. */
-  @Event({ eventName: 'ki-close' }) closed!: EventEmitter<void>;
+  @Event({ eventName: 'ki-close', cancelable: false }) closed!: EventEmitter<void>;
 
   /** Emits the selected item's value or its trimmed label. Native links retain their destination. */
-  @Event({ eventName: 'ki-select' }) selected!: EventEmitter<KiFabMenuSelectDetail>;
+  @Event({ eventName: 'ki-select', cancelable: false })
+  selected!: EventEmitter<KiFabMenuSelectDetail>;
 
   @State() private hasActions = false;
 

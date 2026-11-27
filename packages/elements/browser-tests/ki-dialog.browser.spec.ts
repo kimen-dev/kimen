@@ -358,6 +358,9 @@ describe('ki-dialog in a real browser', () => {
       void el.close();
     });
     await openDialog(el);
+    el.addEventListener('ki-close', (event) => {
+      event.preventDefault();
+    });
     const closed = nextClose(el);
 
     await userEvent.click(cancel);
@@ -366,7 +369,7 @@ describe('ki-dialog in a real browser', () => {
     expect(el.open).toBe(false);
     expect(event.bubbles).toBe(true);
     expect(event.composed).toBe(true);
-    expect(event.cancelable).toBe(false);
+    expect(event.cancelable).toBe(true);
     expect(event.detail.reason).toBe('method');
   });
 

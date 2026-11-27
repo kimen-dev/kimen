@@ -152,7 +152,7 @@ export class KiTabs {
    * already current when listeners run. Programmatic `value` writes and
    * first-render fallback are silent.
    */
-  @Event({ eventName: 'ki-change', bubbles: true, composed: true })
+  @Event({ eventName: 'ki-change', bubbles: true, composed: true, cancelable: false })
   kiChange!: EventEmitter<{ value: string }>;
 
   @Watch('value')

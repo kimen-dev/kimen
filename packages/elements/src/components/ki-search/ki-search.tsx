@@ -117,16 +117,18 @@ export class KiSearch {
   @Prop() removeRecentLabel = 'Remove {value}';
 
   /** The current query after 200 ms of inactivity following an edit. */
-  @Event({ eventName: 'ki-input' }) kiInput!: EventEmitter<KiSearchValueDetail>;
+  @Event({ eventName: 'ki-input', cancelable: false }) kiInput!: EventEmitter<KiSearchValueDetail>;
 
   /** The query to run, emitted on Enter or activation of a suggestion or recent search. */
-  @Event({ eventName: 'ki-search' }) kiSearch!: EventEmitter<KiSearchValueDetail>;
+  @Event({ eventName: 'ki-search', cancelable: false })
+  kiSearch!: EventEmitter<KiSearchValueDetail>;
 
   /** The user cleared the query with the clear control or with Escape. */
-  @Event({ eventName: 'ki-clear' }) kiClear!: EventEmitter<void>;
+  @Event({ eventName: 'ki-clear', cancelable: false }) kiClear!: EventEmitter<void>;
 
   /** The removed recent query. Hosts can use this to persist the updated history. */
-  @Event({ eventName: 'ki-remove-recent' }) kiRemoveRecent!: EventEmitter<KiSearchValueDetail>;
+  @Event({ eventName: 'ki-remove-recent', cancelable: false })
+  kiRemoveRecent!: EventEmitter<KiSearchValueDetail>;
 
   @State() private compact = false;
   @State() private formDisabled = false;

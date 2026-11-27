@@ -17,7 +17,7 @@ import { page, userEvent } from 'vitest/browser';
 
 import docs from '../generated/docs.json';
 import { defineAllComponents } from './all-components';
-import { parkPointer, settleEntryMotion } from './axe';
+import { parkPointer } from './axe';
 import { whenRendered } from './rendered';
 
 interface Flags {
@@ -31,7 +31,7 @@ const notice: Flags = { bubbles: true, composed: true, cancelable: false };
 /** Crosses shadow boundaries on its way up; `preventDefault()` is honoured or ignored per component. */
 const cancelableNotice: Flags = { bubbles: true, composed: true, cancelable: true };
 /** Stays on its own element: only a listener on the element itself hears it. */
-const local: Flags = { bubbles: false, composed: false, cancelable: true };
+const local: Flags = { bubbles: false, composed: false, cancelable: false };
 
 interface EventCase {
   readonly tag: string;
@@ -446,7 +446,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-date-picker',
     type: 'ki-change',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount(
         '<ki-date-picker label="Departure" locale="en-GB" value="2026-11-12"></ki-date-picker>',
@@ -467,12 +467,14 @@ const emitters: readonly EventCase[] = [
     },
   },
   {
-    // The post-close notification of every non-fullscreen dismissal path.
+    // A programmatic dismissal reports after close, even in fullscreen.
     tag: 'ki-dialog',
     type: 'ki-close',
-    flags: notice,
+    flags: cancelableNotice,
     trigger: async () => {
-      await mount('<ki-dialog heading="Delete account?"><p>This cannot be undone.</p></ki-dialog>');
+      await mount(
+        '<ki-dialog fullscreen="always" heading="Delete account?"><p>This cannot be undone.</p></ki-dialog>',
+      );
       const dialog = modal('ki-dialog');
       await dialog.show();
       await expect.element(page.getByRole('dialog', { name: 'Delete account?' })).toBeVisible();
@@ -502,13 +504,13 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-fab-menu',
     type: 'ki-open',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: openFabMenu,
   },
   {
     tag: 'ki-fab-menu',
     type: 'ki-close',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await openFabMenu();
       await button('Close menu').click();
@@ -517,7 +519,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-fab-menu',
     type: 'ki-select',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await openFabMenu();
       await page.getByRole('menuitem', { name: 'New message' }).click();
@@ -601,7 +603,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-menu',
     type: 'ki-select',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount(
         '<button id="actions" type="button">Actions</button>' +
@@ -699,7 +701,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-rating',
     type: 'ki-change',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount('<ki-rating label="Usefulness"></ki-rating>');
       await page.getByRole('radio', { name: '3 stars', exact: true }).click();
@@ -717,7 +719,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-search',
     type: 'ki-clear',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount('<ki-search label="Search Kimen" mode="docked" value="dialog"></ki-search>');
       await button('Clear search').click();
@@ -727,7 +729,7 @@ const emitters: readonly EventCase[] = [
     // Reported 200 ms after the last edit.
     tag: 'ki-search',
     type: 'ki-input',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount('<ki-search label="Search Kimen" mode="docked"></ki-search>');
       await page.getByRole('searchbox', { name: 'Search Kimen' }).fill('dialog');
@@ -736,7 +738,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-search',
     type: 'ki-remove-recent',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount(
         '<ki-search label="Search Kimen" mode="docked" open>' +
@@ -749,7 +751,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-search',
     type: 'ki-search',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount('<ki-search label="Search Kimen" mode="docked" value="overlay"></ki-search>');
       await page.getByRole('searchbox', { name: 'Search Kimen' }).click();
@@ -759,7 +761,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-segmented-control',
     type: 'ki-change',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount(
         '<ki-segmented-control label="Range" value="week">' +
@@ -813,7 +815,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-tabs',
     type: 'ki-change',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount(
         '<ki-tabs label="Settings" value="email">' +
@@ -867,7 +869,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-tree',
     type: 'ki-selection-change',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount(
         '<ki-tree label="Files"><ki-tree-item selected>Dialog</ki-tree-item><ki-tree-item>Package</ki-tree-item></ki-tree>',
@@ -878,7 +880,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-tree-item',
     type: 'ki-collapse',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount(tree('expanded'));
       await clickDisclosure('ki-tree-item');
@@ -887,7 +889,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-tree-item',
     type: 'ki-expand',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount(tree(''));
       await clickDisclosure('ki-tree-item');
@@ -896,7 +898,7 @@ const emitters: readonly EventCase[] = [
   {
     tag: 'ki-tree-item',
     type: 'ki-load',
-    flags: cancelableNotice,
+    flags: notice,
     trigger: async () => {
       await mount('<ki-tree label="Files"><ki-tree-item lazy>Tokens</ki-tree-item></ki-tree>');
       await clickDisclosure('ki-tree-item');
@@ -965,6 +967,7 @@ it('pins every event emitter docs-json records, with the flags it records', () =
   const pinned = emitters.map(({ tag, type, flags }) => ({ key: `${tag} ${type}`, flags }));
 
   expect(new Set(pinned.map(({ key }) => key)).size).toBe(pinned.length);
+  expect(documented).toHaveLength(pinned.length);
   expect(Object.fromEntries(pinned.map(({ key, flags }) => [key, flags]))).toEqual(
     Object.fromEntries(documented.map(({ key, flags }) => [key, flags])),
   );
@@ -979,26 +982,3 @@ for (const { tag, type, flags, trigger } of emitters) {
     expect(reachedAncestor).toBe(flags.bubbles);
   });
 }
-
-it('ki-dialog dispatches the fullscreen close request as a cancelable ki-close', async () => {
-  // The prose contract: on a fullscreen dialog, Escape and the header close
-  // button request dismissal with a cancelable ki-close. docs-json records
-  // the emitter's post-close notification only (cancelable: false).
-  const veto = (event: Event): void => {
-    event.preventDefault();
-  };
-  fixture.addEventListener('ki-close', veto);
-  const { event, reachedAncestor } = await firstDispatch('ki-dialog', 'ki-close', async () => {
-    await mount('<ki-dialog heading="New event" fullscreen="always"></ki-dialog>');
-    await modal('ki-dialog').show();
-    await expect.element(page.getByRole('dialog', { name: 'New event' })).toBeVisible();
-    await settleEntryMotion();
-    await button('Close').click();
-  });
-  fixture.removeEventListener('ki-close', veto);
-
-  expect(event).toBeInstanceOf(CustomEvent);
-  expect(flagsOf(event)).toEqual(cancelableNotice);
-  expect(reachedAncestor).toBe(true);
-  expect(modal('ki-dialog').open).toBe(true);
-});

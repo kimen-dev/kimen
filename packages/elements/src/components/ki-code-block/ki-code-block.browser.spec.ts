@@ -134,12 +134,31 @@ it('S2 renders unsupported languages and HTML-like input as literal text', async
   expect(part(host, 'header').textContent).toContain('txt');
 });
 
+function observeCopyAtAncestor(type: 'ki-copy' | 'ki-copy-error') {
+  const captured: (EventTarget | undefined)[] = [];
+  const bubbled: (EventTarget | undefined)[] = [];
+  const capture = (event: Event): void => {
+    captured.push(event.composedPath()[0]);
+  };
+  const bubble = (event: Event): void => {
+    bubbled.push(event.composedPath()[0]);
+  };
+  fixture.addEventListener(type, capture, true);
+  fixture.addEventListener(type, bubble);
+  return {
+    captured,
+    bubbled,
+    stop() {
+      fixture.removeEventListener(type, capture, true);
+      fixture.removeEventListener(type, bubble);
+    },
+  };
+}
+
 it('S3 copies updated source with original whitespace and emits success once', async () => {
   const host = await mount('language="ts" line-numbers highlight="1" copied-label="Code copied"');
   const copied = vi.fn();
-  const captured = vi.fn();
   host.addEventListener('ki-copy', copied);
-  host.addEventListener('ki-copy', captured, { capture: true });
   const updated = "\tconst content = '<tag>';  \r\n\r\n";
   const text = host.firstChild;
   if (!(text instanceof Text)) throw new Error('Missing original text node');
@@ -148,20 +167,26 @@ it('S3 copies updated source with original whitespace and emits success once', a
     .poll(() => part(host, 'code').querySelector('.line-text')?.textContent)
     .toBe("\tconst content = '<tag>';  ");
 
-  await page.getByRole('button', { name: 'Copy code' }).click();
+  const outside = observeCopyAtAncestor('ki-copy');
+  try {
+    await page.getByRole('button', { name: 'Copy code' }).click();
 
-  await expect.poll(() => writeText.mock.calls).toEqual([[updated]]);
-  await expect
-    .poll(() => copied.mock.calls)
-    .toEqual([
-      [
-        expect.objectContaining({
-          detail: { value: updated },
-          target: host,
-        }),
-      ],
-    ]);
-  expect(captured).toHaveBeenCalledTimes(1);
+    await expect.poll(() => writeText.mock.calls).toEqual([[updated]]);
+    await expect
+      .poll(() => copied.mock.calls)
+      .toEqual([
+        [
+          expect.objectContaining({
+            detail: { value: updated },
+            target: host,
+          }),
+        ],
+      ]);
+    expect(outside.captured).toEqual([host]);
+    expect(outside.bubbled).toEqual([host]);
+  } finally {
+    outside.stop();
+  }
   await expect.element(page.getByRole('status')).toHaveTextContent('Code copied');
 });
 
@@ -173,10 +198,19 @@ it('S3 reports clipboard failure once with a localized announcement', async () =
   host.addEventListener('ki-copy', copied);
   writeText.mockRejectedValueOnce(new Error('Clipboard denied'));
 
-  await page.getByRole('button', { name: 'Copy code' }).click();
+  const outside = observeCopyAtAncestor('ki-copy-error');
+  try {
+    await page.getByRole('button', { name: 'Copy code' }).click();
 
-  await expect.poll(() => failed.mock.calls.length).toBe(1);
-  expect(copied).not.toHaveBeenCalled();
+    await expect
+      .poll(() => failed.mock.calls)
+      .toEqual([[expect.objectContaining({ detail: null, target: host })]]);
+    expect(outside.captured).toEqual([host]);
+    expect(outside.bubbled).toEqual([host]);
+    expect(copied).not.toHaveBeenCalled();
+  } finally {
+    outside.stop();
+  }
   await expect.element(page.getByRole('status')).toHaveTextContent('Clipboard unavailable');
 });
 

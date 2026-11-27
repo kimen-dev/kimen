@@ -59,11 +59,11 @@ export class KiCodeBlock {
   /** Polite announcement after a failed clipboard write. */
   @Prop() copyErrorLabel = "Couldn't copy";
 
-  /** CopyButton reports a successful write with the original source text. */
+  /** Emitted after a successful clipboard write. Detail is `{ value: string }` with the exact copied source. */
   @Event({ bubbles: true, cancelable: false, composed: true, eventName: 'ki-copy' })
   kiCopy!: EventEmitter<{ value: string }>;
 
-  /** CopyButton reports an unsuccessful clipboard write. */
+  /** Emitted when copying fails. Detail is `null`. */
   @Event({ bubbles: true, cancelable: false, composed: true, eventName: 'ki-copy-error' })
   kiCopyError!: EventEmitter<void>;
 
@@ -83,6 +83,14 @@ export class KiCodeBlock {
 
   private readonly readSource = (): void => {
     this.source = this.host.textContent || '';
+  };
+
+  private readonly handleCopy = (event: CustomEvent<{ value: string }>): void => {
+    this.kiCopy.emit(event.detail);
+  };
+
+  private readonly handleCopyError = (event: CustomEvent<void>): void => {
+    this.kiCopyError.emit(event.detail);
   };
 
   render() {
@@ -106,7 +114,6 @@ export class KiCodeBlock {
         <figcaption key="header" part="header">
           <bdi key="caption">{caption}</bdi>
           {this.copyable && (
-            // CopyButton's composed events cross the shadow root once.
             <ki-copy-button
               key="copy"
               size="xs"
@@ -115,6 +122,8 @@ export class KiCodeBlock {
               label={this.copyLabel}
               copiedLabel={this.copiedLabel}
               copyErrorLabel={this.copyErrorLabel}
+              onKi-copy={this.handleCopy}
+              onKi-copy-error={this.handleCopyError}
             />
           )}
         </figcaption>

@@ -119,14 +119,13 @@ export class KiDialog {
   @Prop({ reflect: true, attribute: 'close-label' }) closeLabel = 'Close';
 
   /**
-   * Requests dismissal on fullscreen Escape or activation of the header
-   * close button. Prevent the default on that cancelable event to keep the
-   * modal open. The button reports `method` and Escape reports `escape`.
-   * Every other dismissal path, `close()` and a cleared `open` included,
-   * emits a noncancelable notification after close and focus restoration: it
-   * can fire without a gesture. Use `open` to observe the modal's live state.
+   * Call `preventDefault()` to veto fullscreen Escape or the header close
+   * button, which report `escape` and `method` respectively. On every other
+   * path (centered Escape, backdrop, invoker commands, `close()` or clearing
+   * `open`) the event reports after close and focus restoration. A veto has
+   * no effect there, and the event can fire without a gesture.
    */
-  @Event({ eventName: 'ki-close', bubbles: true, composed: true, cancelable: false })
+  @Event({ eventName: 'ki-close', bubbles: true, composed: true, cancelable: true })
   private readonly kiClose!: EventEmitter<KiDialogCloseDetail>;
 
   /**
@@ -371,19 +370,9 @@ export class KiDialog {
       return;
     }
 
-    // The existing Stencil emitter describes the legacy post-close
-    // notification. Only the fullscreen user request is cancelable.
     this.closeRequestInProgress = true;
     try {
-      const accepted = this.host.dispatchEvent(
-        new CustomEvent<KiDialogCloseDetail>('ki-close', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-          detail: { reason },
-        }),
-      );
-      if (accepted) {
+      if (!this.kiClose.emit({ reason }).defaultPrevented) {
         this.closeEventAlreadyEmitted = true;
         this.closeWithReason(reason);
       }
