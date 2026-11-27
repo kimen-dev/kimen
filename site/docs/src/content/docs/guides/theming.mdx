@@ -256,6 +256,20 @@ query, as earlier versions of this guide advised, now loses to the mode:
 move those values to the mode tokens. A theme on `:root` sets them on
 `:root`.
 
+## Check your theme
+
+Run the checker against the CSS that declares your overrides.
+
+```sh
+npx @kimen/tokens check-theme theme.css
+```
+
+It reports unknown or private tokens, definite value mistakes such as a
+bare `0` where CSS math needs `0px`, and overrides that should use a
+preference-mode token. It warns if Kimen never reads a token. Add `--json`
+for machine-readable findings, or pass the stylesheet text to the MCP tool
+`check_theme`.
+
 ## Density
 
 Any element can make its region compact — a data table, a toolbar, a dense

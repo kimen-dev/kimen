@@ -69,7 +69,7 @@ describe('Kimen MCP server: containment (038 S16)', () => {
 
   it('S16: with read access to its own bundle only and no network, every tool and resource answers', async () => {
     const { client } = server;
-    expect((await client.listTools()).tools.length).toBe(5);
+    expect((await client.listTools()).tools.length).toBe(6);
     expect(
       (await client.callTool({ arguments: {}, name: 'kimen_list_components' })).isError,
     ).not.toBe(true);
@@ -120,7 +120,7 @@ describe('Kimen MCP server: the stdio boundary (038 S17)', () => {
     raw.write(oversized);
     raw.write(line({ id: 3, method: 'tools/list' }));
     const next = await raw.response(3);
-    expect((next['result'] as { tools: unknown[] }).tools).toHaveLength(5);
+    expect((next['result'] as { tools: unknown[] }).tools).toHaveLength(6);
     expect(raw.stderr()).toContain('discarded an inbound message');
     expect(raw.stdout()).not.toContain('"id":2');
     expect(await raw.end()).toBe(0);

@@ -1,6 +1,6 @@
 /**
  * The Kimen MCP server (spec 038): one instance per stdio connection, built
- * by the factory `serveStdio` calls. It registers the D2 surface — four
+ * by the factory `serveStdio` calls. It registers the D2 surface — five
  * model-facing tools, the app-only action tool and four resources — and
  * never paints: render answers the MCP Apps surface result of
  * `@kimen/adapter-mcp-apps`, whose predeclared document is the only render
@@ -15,6 +15,7 @@ import {
   surfaceToolResult,
 } from '@kimen/adapter-mcp-apps';
 import { NODE_ID_GRAMMAR, VALIDATION_MAX_BYTES } from '@kimen/catalog';
+import { checkTheme } from '@kimen/tokens/check-theme';
 import { McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod';
 
@@ -150,6 +151,27 @@ export function createKimenServer(): McpServer {
       return {
         content: [{ text: reportText(report), type: 'text' }],
         structuredContent: { ...report, issues: [...report.issues] },
+      };
+    },
+  );
+
+  server.registerTool(
+    'check_theme',
+    {
+      annotations: QUERY_ANNOTATIONS,
+      description:
+        'Check Kimen theme CSS for unknown, private or unread tokens, incompatible values and overrides blocked by a preference mode.',
+      inputSchema: z.object({
+        css: z.string().max(65_536).describe('Stylesheet text.'),
+        file: z.string().max(1_024).optional().describe('Filename label for findings.'),
+      }),
+      title: 'Check a Kimen theme',
+    },
+    ({ css, file }) => {
+      const result = { findings: checkTheme(css, file === undefined ? undefined : { file }) };
+      return {
+        content: [{ text: JSON.stringify(result), type: 'text' }],
+        structuredContent: result,
       };
     },
   );

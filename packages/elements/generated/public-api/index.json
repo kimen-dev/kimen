@@ -2498,6 +2498,11 @@
       },
       "@kimen/tokens": {
         "exports": {
+          "./check-theme": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./theme-checker/check-theme.mjs"
+          },
           "./css": {
             "deprecatedSince": null,
             "replacement": null,
@@ -2535,6 +2540,30 @@
           }
         },
         "modules": {
+          "./check-theme": {
+            "declaration": "./theme-checker/check-theme.d.mts",
+            "symbols": {
+              "ThemeFinding": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface ThemeFinding {\n    readonly code: ThemeFindingCode;\n    readonly severity: 'error' | 'warning';\n    readonly file: string;\n    readonly line: number;\n    readonly column: number;\n    readonly token?: string;\n    readonly fix: string;\n}"
+              },
+              "ThemeFindingCode": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type ThemeFindingCode = 'unknown-token' | 'private-token' | 'unitless-dimension' | 'type-mismatch' | 'unread-token' | 'mode-token' | 'invalid-css' | 'unreadable-file';"
+              },
+              "checkTheme": {
+                "kinds": [
+                  "value"
+                ],
+                "signature": "export function checkTheme(css: string, options?: {\n    readonly file?: string;\n}): ThemeFinding[];"
+              }
+            },
+            "target": "./theme-checker/check-theme.mjs"
+          },
           "./css": {
             "declaration": null,
             "symbols": {},
@@ -101971,5 +102000,5 @@
       }
     }
   },
-  "surfaceSha256": "fd1f085a414abce7f34ea3a90abfcf789332022fc4ddee9cbb7abec25626f210"
+  "surfaceSha256": "71c55906821946a218cc2a8bad050eff4e7988c800ccfcde709334b4f1bbcf44"
 }

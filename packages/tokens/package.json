@@ -3,20 +3,28 @@
   "version": "0.6.0",
   "private": false,
   "license": "Apache-2.0",
-  "description": "Kimen design tokens (DTCG) compiled to CSS custom properties. Primitive \u2192 theme \u2192 semantic layers; onmars is the default theme (light + dark).",
+  "description": "Kimen design tokens (DTCG) compiled to CSS custom properties. Primitive → theme → semantic layers; onmars is the default theme (light + dark).",
   "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kimen-dev/kimen.git",
     "directory": "packages/tokens"
   },
+  "bin": {
+    "tokens": "./theme-checker/cli.mjs"
+  },
   "files": [
     "css",
     "dist",
     "fonts",
+    "theme-checker",
     "NOTICE"
   ],
   "exports": {
+    "./check-theme": {
+      "types": "./theme-checker/check-theme.d.mts",
+      "default": "./theme-checker/check-theme.mjs"
+    },
     "./css": "./dist/css/tokens.css",
     "./css/base": "./dist/css/base.css",
     "./css/core": "./dist/css/core.css",
@@ -51,11 +59,13 @@
       "build": {
         "outputs": [
           "{projectRoot}/dist",
+          "{projectRoot}/generated",
           "{workspaceRoot}/packages/elements/docs/tokens-reference.mdx"
         ],
         "inputs": [
           "default",
           "^default",
+          "!{projectRoot}/generated/**",
           "{workspaceRoot}/packages/elements/src/components/**/*",
           "{workspaceRoot}/packages/elements/src/utils/**/*.css",
           "{workspaceRoot}/scripts/lib/component-token-usage.mjs",
@@ -68,5 +78,8 @@
     "@size-limit/esbuild": "14.3.0",
     "@size-limit/file": "14.3.0",
     "size-limit": "14.3.0"
+  },
+  "dependencies": {
+    "@csstools/css-tokenizer": "4.0.3"
   }
 }

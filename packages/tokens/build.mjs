@@ -38,6 +38,7 @@ import {
   unresolvedReferences,
 } from './scripts/component-sheets.mjs';
 import { assertNoDeprecationDue, collectDeprecations } from './scripts/deprecation.mjs';
+import { writeThemeCheckerData } from './scripts/generate-theme-checker-data.mjs';
 import {
   assertInheritedTokens,
   combineSchemes,
@@ -340,3 +341,11 @@ const pageContractCss = `:root {
 await writeFile(new URL('base.css', dist), pageContractCss);
 
 console.log('✔ dist/css/base.css (page contract — opt-in)');
+
+await writeThemeCheckerData({
+  sharedTokens,
+  usage,
+  baseModes,
+  sheets: [fullCss, material3Css, pageContractCss],
+  material3Css,
+});

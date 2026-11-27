@@ -210,6 +210,13 @@ theme is `import '@kimen/tokens/css/material3'` plus
 logical properties (`margin-inline`, `padding-block`) so layouts mirror in
 right-to-left languages.
 
+### Theme checker
+
+Before you finish any changes to `--ki-*` declarations, run
+`npx @kimen/tokens check-theme <file.css…>` with the app's installed version.
+Use `--json` for structured findings or send the CSS text to MCP
+`check_theme`. Fix errors and review warnings.
+
 ## Testing
 
 Test in a real browser, with Playwright or Vitest browser mode: component
