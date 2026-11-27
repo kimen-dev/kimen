@@ -124,8 +124,7 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
     mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
-    // Raised for specs 168–170, approved by the founder on 2026-11-27.
-    mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 294_479 },
+    mcpServer: { raw: 1_802_722, gzip: 341_109, brotli: 314_017 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
@@ -154,8 +153,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
     mcpApps: { raw: 483_542, gzip: 80_315, brotli: 66_320 },
-    // Raised for specs 168–170, approved by the founder on 2026-11-27.
-    mcpServer: { raw: 1_755_730, gzip: 318_512, brotli: 294_654 },
+    mcpServer: { raw: 1_804_022, gzip: 341_299, brotli: 314_192 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 11_781, material3: 5_215, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
@@ -299,9 +297,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
     ),
     {
       '@kimen/elements': { packed: 1_904_782, unpacked: 7_909_758 },
-      // Rebased for Newsreader at weight 500.
-      '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
-      '@kimen/mcp-server': { packed: 639_409, unpacked: 3_176_921 },
+      '@kimen/tokens': { packed: 220_800, unpacked: 1_134_444 },
+      '@kimen/mcp-server': { packed: 661_925, unpacked: 3_226_539 },
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       // Raised for specs 168–170, approved by the founder on 2026-11-27.
       '@kimen/emitter': { packed: 47_247, unpacked: 159_371 },

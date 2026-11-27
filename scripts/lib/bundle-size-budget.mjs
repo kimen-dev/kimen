@@ -104,7 +104,8 @@ const BASE_BUDGETS = {
   // include component allowances and 0.1% raw and 1% compressed headroom.
   mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
   // Raised for specs 168–170, approved by the founder on 2026-11-27.
-  mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 294_479 },
+  // Spec 171 shared checker: +48,292 raw, +22,787 gzip, +19,538 brotli bytes.
+  mcpServer: { raw: 1_802_722, gzip: 341_109, brotli: 314_017 },
   // A browser host that validates and renders agent specs (validateUiSpec and
   // renderUiSpec from the packed @kimen/catalog, bundled for production:
   // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
