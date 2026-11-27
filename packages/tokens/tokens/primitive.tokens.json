@@ -947,6 +947,11 @@
         }
       },
       "layout": {
+        "fit-content": {
+          "$type": "other",
+          "$value": "fit-content",
+          "$description": "Intrinsic inline size limited by available space."
+        },
         "grid-min": {
           "$value": "15rem",
           "$description": "Default minimum size of an automatic grid track."

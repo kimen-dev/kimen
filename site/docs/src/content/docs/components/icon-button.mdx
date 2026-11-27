@@ -60,6 +60,15 @@ The accessible name stays "Bookmark" in both states. User activation emits
 a bubbling `ki-change` with `{ selected }`. Programmatic updates to
 `selected` are silent.
 
+Enabled outline actions use `--ki-icon-button-outline-hover-bg`,
+`--ki-icon-button-outline-hover-fg` and `--ki-icon-button-outline-hover-border` on hover.
+Unselected filled and quiet toggles use `--ki-icon-button-toggle-unselected-hover-overlay`.
+A selected toggle keeps its fill on hover. Use `--ki-icon-button-outline-selected-border`
+to set the selected outline edge.
+
+The `--ki-icon-button-{size}-icon-size` token sizes a directly slotted
+`ki-icon` glyph in either icon slot, including an icon with an explicit `size`.
+
 ### With a tooltip
 
 Pair with [ki-tooltip](/docs/components/tooltip/) for sighted
