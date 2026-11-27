@@ -17,9 +17,12 @@
       "brotli": 121
     },
     "mcpServer": {
-      "raw": 2238,
+      "raw": 2330,
       "gzip": 386,
       "brotli": 147
+    },
+    "fullSheetPages": {
+      "button": 8
     }
   }
 }

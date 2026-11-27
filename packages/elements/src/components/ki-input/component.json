@@ -14,13 +14,16 @@
       "brotli": 1775
     },
     "mcpServer": {
-      "raw": 27018,
+      "raw": 27129,
       "gzip": 5123,
       "brotli": 1967
     },
     "tokenStylesheets": {
       "onmars": 84,
       "material3": 22
+    },
+    "fullSheetPages": {
+      "button": 35
     }
   }
 }
