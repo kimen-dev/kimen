@@ -5561,9 +5561,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -8570,9 +8570,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -11579,9 +11579,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -14588,9 +14588,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -17597,9 +17597,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -20606,9 +20606,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -23615,9 +23615,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -26624,9 +26624,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -29633,9 +29633,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -32642,9 +32642,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500",
                 "--ki-video-backdrop-blur": "0",
                 "--ki-video-backdrop-filter": "none",
@@ -33235,9 +33235,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "compact/light": {
@@ -33801,9 +33801,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "contrast-more/dark": {
@@ -34367,9 +34367,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "contrast-more/light": {
@@ -34933,9 +34933,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "dark": {
@@ -35499,9 +35499,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "light": {
@@ -36065,9 +36065,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "reduced-transparency/dark": {
@@ -36631,9 +36631,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "reduced-transparency/light": {
@@ -37197,9 +37197,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "touch/dark": {
@@ -37763,9 +37763,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               },
               "touch/light": {
@@ -38329,9 +38329,9 @@
                 "--ki-typography-weight-body-medium": "600",
                 "--ki-typography-weight-body-normal": "500",
                 "--ki-typography-weight-body-semibold": "700",
-                "--ki-typography-weight-display-bold": "700",
+                "--ki-typography-weight-display-bold": "500",
                 "--ki-typography-weight-display-medium": "500",
-                "--ki-typography-weight-display-normal": "400",
+                "--ki-typography-weight-display-normal": "500",
                 "--ki-typography-weight-display-semibold": "500"
               }
             },
@@ -101777,9 +101777,9 @@
             "type": "fontWeight"
           },
           "--ki-typography-weight-display-bold": {
-            "default": 700,
+            "default": 500,
             "deprecatedSince": null,
-            "description": "semantic font weight for typography weight display bold.",
+            "description": "Bold display weight. Onmars uses only 500.",
             "replacement": null,
             "required": false,
             "type": "fontWeight"
@@ -101793,9 +101793,9 @@
             "type": "fontWeight"
           },
           "--ki-typography-weight-display-normal": {
-            "default": 400,
+            "default": 500,
             "deprecatedSince": null,
-            "description": "semantic font weight for typography weight display normal.",
+            "description": "Normal display weight. Onmars uses only 500.",
             "replacement": null,
             "required": false,
             "type": "fontWeight"
@@ -102001,5 +102001,5 @@
       }
     }
   },
-  "surfaceSha256": "16087b10f2806fee01642804b8512a0efce26727b8f9fb29df0d0c11b689bd03"
+  "surfaceSha256": "80d0936f5806e73107b5c04ca0de450e6b082dbf8cff504e0538dfaecfbe6b9b"
 }
