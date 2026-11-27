@@ -221,6 +221,7 @@ None.
 | — | — | focus | `--ki-select-focus-ring-offset` | `var(--ki-focus-ring-offset)` | dimension used by the select component for focus ring offset. |
 | — | — | focus | `--ki-select-focus-ring-shadow` | `var(--ki-focus-primary)` | shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
 | — | — | focus | `--ki-select-focus-ring-width` | `var(--ki-focus-ring-width)` | dimension used by the select component for focus ring width. |
+| — | — | hover | `--ki-select-hover-bg` | onmars `var(--ki-select-rest-bg)`, material3 `var(--ki-surface-s3)` | Trigger fill on hover, beneath the hover wash. |
 | — | — | hover | `--ki-select-hover-border` | `var(--ki-outline-control-hover)` | color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover. |
 | — | — | hover | `--ki-select-hover-fg` | `var(--ki-text-high-em)` | color used by the select component for hover foreground. |
 | — | — | hover | `--ki-select-hover-label-fg` | `var(--ki-text-high-em)` | color used by the select component for hover label foreground. |

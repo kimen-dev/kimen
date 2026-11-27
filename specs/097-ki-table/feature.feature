@@ -153,3 +153,10 @@ Feature: Table
     Given a compact selectable table on a device with a coarse pointer
     When the table appears
     Then its sort buttons and checkboxes have targets at least 44 by 44 pixels
+
+  # Family: theming
+  # S20
+  Scenario: A table themes the background of resting secondary values
+    Given a table with a custom resting background for metadata and numeric cells
+    When the page renders
+    Then the secondary values show their themed background

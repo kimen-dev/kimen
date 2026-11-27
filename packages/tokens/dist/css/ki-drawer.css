@@ -1,7 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-dialog-border:var(--ki-size-border-hairline) var(--ki-border-style-solid) var(--ki-outline-strong);
-  --ki-contrast-more-dialog-divider-color:var(--ki-outline-strong);
   --ki-dialog-fullscreen-bg:var(--ki-surface-s1);
   --ki-dialog-fullscreen-fg:var(--ki-text-high-em);
   --ki-dialog-fullscreen-bg-image:var(--ki-surface-image-none);
@@ -60,6 +58,8 @@
   --ki-icon-size-md:var(--ki-glyph-size-md);
   --ki-icon-size-lg:var(--ki-glyph-size-lg);
   --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+  --ki-contrast-more-dialog-border:var(--ki-size-border-hairline) var(--ki-border-style-solid) var(--ki-outline-strong);
+  --ki-contrast-more-dialog-divider-color:var(--ki-outline-strong);
 }
 
 @media (prefers-contrast: more) {

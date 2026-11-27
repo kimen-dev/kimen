@@ -171,10 +171,26 @@
         "required": false,
         "type": null
       },
+      "--ki-app-bar-scrolled-subtitle-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Scrolled surface behind the app-bar subtitle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-app-bar-scrolled-subtitle-fg": {
         "default": null,
         "deprecatedSince": null,
         "description": "App-bar subtitle ink when its container scrolls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-subtitle-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting surface behind the app-bar subtitle.",
         "replacement": null,
         "required": false,
         "type": null

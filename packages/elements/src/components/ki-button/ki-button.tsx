@@ -53,6 +53,7 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
   tag: 'ki-button',
   styleUrls: [
     'ki-button.surface.css',
+    'ki-button.tones.css',
     'ki-button.surface.legacy.css',
     'ki-button.toggle.css',
     'ki-button.css',

@@ -1,8 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-timeline-dot-fg:var(--ki-text-supporting);
-  --ki-contrast-more-timeline-line:var(--ki-outline-strong);
-  --ki-contrast-more-timeline-time-fg:var(--ki-text-supporting);
   --ki-timeline-dot-size:var(--ki-layout-spacing-9xl);
   --ki-timeline-dot-radius:var(--ki-corner-activity-mark);
   --ki-timeline-dot-icon-size:var(--ki-layout-spacing-2xl);
@@ -24,6 +21,9 @@
   --ki-timeline-time-fg:var(--ki-text-med-em);
   --ki-timeline-gap:var(--ki-layout-spacing-xl);
   --ki-timeline-item-fg:var(--ki-text-high-em);
+  --ki-contrast-more-timeline-dot-fg:var(--ki-text-supporting);
+  --ki-contrast-more-timeline-line:var(--ki-outline-strong);
+  --ki-contrast-more-timeline-time-fg:var(--ki-text-supporting);
 }
 
 @media (prefers-contrast: more) {

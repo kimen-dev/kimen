@@ -762,3 +762,19 @@ it.each([
     }
   },
 );
+
+it('S28 the app bar paints its subtitle background before and after scrolling', async () => {
+  const { scroller, bar } = mountScrollBar('scroll-behavior="collapse" size="lg"');
+  await expect.element(heading()).toBeVisible();
+  try {
+    await media.emulateReducedMotion('reduce');
+    bar.style.setProperty('--ki-app-bar-subtitle-bg', 'rgb(210, 235, 250)');
+    bar.style.setProperty('--ki-app-bar-scrolled-subtitle-bg', 'rgb(220, 240, 230)');
+    const subtitle = part(bar, 'subtitle');
+    expect(getComputedStyle(subtitle).backgroundColor).toBe('rgb(210, 235, 250)');
+    scroller.scrollTop = 120;
+    await expect.poll(() => getComputedStyle(subtitle).backgroundColor).toBe('rgb(220, 240, 230)');
+  } finally {
+    await media.emulateReducedMotion(null);
+  }
+});

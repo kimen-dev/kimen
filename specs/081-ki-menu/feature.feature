@@ -132,3 +132,10 @@ Feature: Menu runs actions from an anchored popup
     Given the Actions trigger is on a right-to-left page
     When the user opens the menu with bottom-start placement
     Then the menu aligns to the trigger's right edge
+
+  # Family: theming
+  # S18
+  Scenario: Menu surfaces can be themed by part and action state
+    Given a menu with custom action, shortcut, filter and group label background tokens
+    When the user navigates to a destructive action
+    Then the menu paints each surface with the background for its part and state

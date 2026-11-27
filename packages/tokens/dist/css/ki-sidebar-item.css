@@ -1,6 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-tooltip-border-color:var(--ki-outline-strong);
   --ki-counter-size:var(--ki-notification-marker-count-size);
   --ki-counter-dot-size:var(--ki-notification-marker-dot-size);
   --ki-counter-bg:var(--ki-surface-danger-high-em);
@@ -109,6 +108,7 @@
   --ki-tooltip-rich-heading-size:var(--ki-typography-size-title-1);
   --ki-tooltip-rich-heading-weight:var(--ki-typography-weight-body-semibold);
   --ki-tooltip-rich-heading-gap:var(--ki-layout-spacing-xxs);
+  --ki-contrast-more-tooltip-border-color:var(--ki-outline-strong);
 }
 
 @media (prefers-contrast: more) {

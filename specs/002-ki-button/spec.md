@@ -440,6 +440,19 @@ Feature: Button
     Given a toggle choice and a button link in separate grid cells with the inline-size token set to "100%"
     When the page renders
     Then each button host and control fill its cell
+
+  # Family: theming
+  # S36
+  Scenario: The pressed palette follows variant and tone tokens
+    Given a button with custom active fill, ink, border and shadow tokens
+    When the user holds the button down
+    Then the button shows its themed pressed palette
+
+  # S37
+  Scenario: A disabled button uses its own tone palette
+    Given a disabled button with a custom tone-specific disabled palette
+    When the page renders
+    Then the button shows the disabled fill, ink and border for its tone
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -450,7 +463,7 @@ Feature: Button
 | Keyboard path | S3, S4, S22 | |
 | Assistive-tech outcome | S5, S6, S14, S23 | |
 | Form participation | S7, S8, S12, S24 | |
-| Theming | S9, S10, S13, S15, S16, S25, S26, S30, S31, S32, S33, S34, S35 | |
+| Theming | S9, S10, S13, S15, S16, S25, S26, S30, S31, S32, S33, S34, S35, S36, S37 | |
 
 ## Requirements *(mandatory)*
 
@@ -483,10 +496,10 @@ Feature: Button
   values. Shape/radius is a token, never an attribute.
 - **FR-009**: Interaction states (hover, focus-visible, active, disabled)
   MUST be styled exclusively through tokens and CSS states; states are never
-  attributes/props. Pressed (`:active`) MUST paint over the resting
-  appearance whatever the input modality (pointer, keyboard, touch): its
-  state layer replaces hover instead of stacking on it, one state layer at a
-  time as in Material 3 (issue #71).
+  attributes/props. A momentary press MUST use the active palette for its
+  variant and tone with pointer, keyboard and touch. A variant's pressed
+  wash, where present, replaces the hover wash (issue #71). A keyboard
+  press retains its visible focus outline.
 - **FR-010**: Unrecognized `variant`, `tone`, `size` or `type` values MUST
   fall back to their documented defaults without breaking rendering.
 - **FR-011**: Focus MUST be clearly visible in every theme; the pointer

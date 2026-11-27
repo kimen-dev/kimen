@@ -1,6 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-tabs-divider-color:var(--ki-outline-strong);
   --ki-tab-min-block-size:var(--ki-space-12xl);
   --ki-tab-padding-block-end:var(--ki-space-md);
   --ki-tab-padding-inline:var(--ki-space-zero);
@@ -63,6 +62,7 @@
   --ki-tabs-secondary-unselected-rest-bg:var(--ki-transparent-inverse);
   --ki-tabs-secondary-selected-rest-fg:var(--ki-text-high-em);
   --ki-tabs-secondary-selected-rest-bg:var(--ki-transparent-inverse);
+  --ki-contrast-more-tabs-divider-color:var(--ki-outline-strong);
 }
 
 @media (prefers-contrast: more) {

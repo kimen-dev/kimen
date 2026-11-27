@@ -133,6 +133,7 @@ None.
 - `--ki-menu-line-height`: Line height for action labels and the filter. Default: `var(--ki-typography-line-height-body-1)`.
 - `--ki-menu-max-block-size`: Maximum popup height, bounded by the viewport. Default: `var(--ki-menu-layout-block-max)`.
 - `--ki-menu-max-inline-size`: Maximum popup width, bounded by the viewport. Default: `var(--ki-menu-layout-inline-max)`.
+- `--ki-menu-meta-bg`: Background behind shortcut hints and the filter placeholder. Default: `var(--ki-surface-raised)`.
 - `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder. Default: `var(--ki-text-supporting)`.
 - `--ki-menu-min-inline-size`: Default minimum popup width, bounded by the viewport. Default: `var(--ki-menu-layout-inline-min)`.
 - `--ki-menu-padding`: Space inside the popup. Default: `var(--ki-menu-layout-surface-padding)`.

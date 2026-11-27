@@ -394,6 +394,19 @@ Feature: Icon button
     Given an enabled outline icon button
     When the pointer rests over the action
     Then the outline action changes its surface
+
+  # Family: theming
+  # S29
+  Scenario: A disabled icon button uses its own tone palette
+    Given a disabled icon button with a custom tone-specific disabled palette
+    When the page renders
+    Then the icon button shows the disabled fill, ink and border for its tone
+
+  # S30
+  Scenario: Holding an icon button uses the shared pressed palette
+    Given an icon button with custom active palette tokens
+    When the user holds the button down with Space
+    Then the icon button shows the themed pressed palette and retains visible focus
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -404,7 +417,7 @@ Feature: Icon button
 | Keyboard path | S4, S5, S14 | |
 | Assistive-tech outcome | S6, S7, S8, S12, S13 | |
 | Form participation | S9 | |
-| Theming | S10, S11, S15, S23, S24, S25, S26, S27 | |
+| Theming | S10, S11, S15, S23, S24, S25, S26, S27, S29, S30 | |
 
 Form participation is covered by a deliberate negative contract (S9):
 ki-icon-button is not form-associated in v1 and MUST NOT submit or reset an

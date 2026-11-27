@@ -234,3 +234,16 @@ Feature: Button
     Given a toggle choice and a button link in separate grid cells with the inline-size token set to "100%"
     When the page renders
     Then each button host and control fill its cell
+
+  # Family: theming
+  # S36
+  Scenario: The pressed palette follows variant and tone tokens
+    Given a button with custom active fill, ink, border and shadow tokens
+    When the user holds the button down
+    Then the button shows its themed pressed palette
+
+  # S37
+  Scenario: A disabled button uses its own tone palette
+    Given a disabled button with a custom tone-specific disabled palette
+    When the page renders
+    Then the button shows the disabled fill, ink and border for its tone

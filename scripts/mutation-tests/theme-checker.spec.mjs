@@ -4,7 +4,7 @@ import { expect, it } from 'vitest';
 
 import { checkTheme } from '../../packages/tokens/theme-checker/check-theme.mjs';
 
-it('reports every kind of finding in source order with a useful location and fix', () => {
+it('reports errors in source order with a useful location and fix', () => {
   const file = 'theme-mistakes.css';
   const css = readFileSync(
     new URL(`../../packages/tokens/scripts/fixtures/${file}`, import.meta.url),
@@ -14,7 +14,6 @@ it('reports every kind of finding in source order with a useful location and fix
   expect(findings.map(({ code, line }) => [code, line])).toEqual([
     ['unknown-token', 3],
     ['unitless-dimension', 4],
-    ['unread-token', 5],
     ['private-token', 6],
     ['type-mismatch', 7],
     ['type-mismatch', 8],
@@ -27,7 +26,6 @@ it('reports every kind of finding in source order with a useful location and fix
     fix: 'Did you mean --ki-switch-track-width?',
     severity: 'error',
   });
-  expect(findings[2].severity).toBe('warning');
   expect(findings.at(-1).fix).toContain('--ki-contrast-more-text-supporting');
 });
 

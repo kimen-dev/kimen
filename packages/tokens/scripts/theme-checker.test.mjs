@@ -6,15 +6,21 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { checkTheme } from '../theme-checker/check-theme.mjs';
+import { packThemeCheckerData } from './generate-theme-checker-data.mjs';
 
 const filePath = (relative) => fileURLToPath(new URL(relative, import.meta.url));
 const fixture = filePath('./fixtures/theme-mistakes.css');
 const findings = () => checkTheme(readFileSync(fixture, 'utf8'), { file: fixture });
 const manifest = JSON.parse(readFileSync(filePath('../package.json'), 'utf8'));
-const cli = (...args) =>
-  spawnSync(process.execPath, [filePath(`../${manifest.bin['kimen-tokens']}`), ...args], {
-    encoding: 'utf8',
-  });
+const runCli = (nodeArgs, args) =>
+  spawnSync(
+    process.execPath,
+    [...nodeArgs, filePath(`../${manifest.bin['kimen-tokens']}`), ...args],
+    {
+      encoding: 'utf8',
+    },
+  );
+const cli = (...args) => runCli([], args);
 
 test('S1: an unknown name gets the unprefixed public token and a source location', () => {
   assert.deepEqual(findings()[0], {
@@ -47,12 +53,32 @@ test('S2: bare zero suggests an explicit length while CSS functions and sizing k
 
 test('S3: only unread component tokens yield warnings and the check succeeds', () => {
   const warningFile = filePath('./fixtures/theme-warning.css');
-  const result = cli('check-theme', '--json', warningFile);
+  const data = packThemeCheckerData({
+    modes: [],
+    tokens: [
+      ['surface-warning-high-em', 1],
+      ['color-gray-800', 1],
+      ['example-bg', 5],
+    ],
+  });
+  // The shipped inventory has no unread tokens. Substitute a fixture inventory
+  // so this test still checks the installed CLI's warnings-only exit status.
+  const inventoryUrl = new URL('../dist/theme-checker-data.mjs', import.meta.url).href;
+  const preload = `import { registerHooks } from 'node:module';
+    registerHooks({
+      load(url, context, nextLoad) {
+        if (url !== ${JSON.stringify(inventoryUrl)}) return nextLoad(url, context);
+        return { format: 'module', source: ${JSON.stringify(`export default '${data}';`)}, shortCircuit: true };
+      },
+    });`;
+  const result = runCli(
+    ['--import', `data:text/javascript,${encodeURIComponent(preload)}`],
+    ['check-theme', '--json', warningFile],
+  );
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(
     JSON.parse(result.stdout).map(({ code, severity, token }) => [code, severity, token]),
-    // The top-nav component layer defines this under the app-bar namespace.
-    [['unread-token', 'warning', '--ki-app-bar-subtitle-bg']],
+    [['unread-token', 'warning', '--ki-example-bg']],
   );
 });
 
@@ -78,27 +104,17 @@ test('S4: active preference overrides suggest the mode-value token that wins', (
   );
 });
 
-test('S5: the shipped Material 3 stylesheet and a commented copy produce the same findings', () => {
+test('S5: Material 3 checks clean, errors and warnings', () => {
   const file = filePath('../dist/css/tokens.material3.css');
   const css = readFileSync(file, 'utf8');
   const result = cli('check-theme', file, '--json');
   assert.equal(result.status, 0, result.stderr);
   const findings = JSON.parse(result.stdout);
-  assert.deepEqual(
-    findings.filter(({ severity }) => severity === 'error'),
-    [],
-  );
-  // Remove entries from material3-unread-tokens.json as components start reading them.
   const unreadTokens = JSON.parse(
     readFileSync(filePath('./fixtures/material3-unread-tokens.json'), 'utf8'),
   );
-  assert.deepEqual(
-    findings
-      .filter(({ severity }) => severity === 'warning')
-      .map(({ code, token }) => [code, token])
-      .sort(),
-    unreadTokens.map((token) => ['unread-token', token]),
-  );
+  assert.deepEqual(unreadTokens, []);
+  assert.deepEqual(findings, unreadTokens);
   assert.deepEqual(checkTheme(`${css}\n/* Theme notes */`, { file }), findings);
 });
 
@@ -128,7 +144,6 @@ test('the CLI reports each mistake and preserves input order across files', () =
     [
       'unknown-token',
       'unitless-dimension',
-      'unread-token',
       'private-token',
       'type-mismatch',
       'type-mismatch',

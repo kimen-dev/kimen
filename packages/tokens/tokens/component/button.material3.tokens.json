@@ -407,6 +407,20 @@
           }
         }
       }
+    },
+    "reduced-transparency": {
+      "button": {
+        "quaternary": {
+          "neutral": {
+            "active": {
+              "bg": {
+                "$type": "color",
+                "$value": "{ki.surface.primary-low-em}"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -497,10 +497,18 @@ const COMPONENT_TOKEN_ROOTS = Object.freeze([':where(:root)', ':where([data-ki-t
  */
 export function renderComponentStylesheet(declarations, { deprecations, modes = [] } = {}) {
   if (declarations.size === 0) return '';
-  return [
-    rule(COMPONENT_TOKEN_ROOTS, [...declarations], deprecations),
-    ...modeRules(modes, deprecations),
-  ]
+  // In small tag sheets, keeping the palettes together improves compression.
+  const modeValues = new Set(
+    modes.flatMap(({ mode, declarations: overrides }) =>
+      [...overrides.keys()].map((name) => modeValueName(mode, name)),
+    ),
+  );
+  const entries = [...declarations];
+  const ordered = [
+    ...entries.filter(([name]) => !modeValues.has(name)),
+    ...entries.filter(([name]) => modeValues.has(name)),
+  ];
+  return [rule(COMPONENT_TOKEN_ROOTS, ordered, deprecations), ...modeRules(modes, deprecations)]
     .filter((block) => block !== '')
     .join('\n');
 }

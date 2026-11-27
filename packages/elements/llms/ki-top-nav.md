@@ -140,7 +140,9 @@ None.
 - `--ki-app-bar-lg-title-size`: Expanded two-row app-bar title size. Default: `var(--ki-typography-size-heading-2)`.
 - `--ki-app-bar-scrolled-bg`: App-bar fill when its container scrolls. Default: `var(--ki-surface-s2)`.
 - `--ki-app-bar-scrolled-fg`: App-bar title and control ink when its container scrolls. Default: `var(--ki-text-high-em)`.
+- `--ki-app-bar-scrolled-subtitle-bg`: Scrolled surface behind the app-bar subtitle. Default: `var(--ki-surface-s2)`.
 - `--ki-app-bar-scrolled-subtitle-fg`: App-bar subtitle ink when its container scrolls. Default: `var(--ki-text-supporting)`.
+- `--ki-app-bar-subtitle-bg`: Resting surface behind the app-bar subtitle. Default: `var(--ki-surface-s0)`.
 - `--ki-app-bar-subtitle-fg`: Resting app-bar subtitle ink. Default: `var(--ki-text-supporting)`.
 - `--ki-app-bar-title-font-family`: Screen heading typeface. Default: `var(--ki-typography-family-heading)`.
 - `--ki-app-bar-title-size`: One-row app-bar title size. Default: `var(--ki-typography-size-title-2)`.

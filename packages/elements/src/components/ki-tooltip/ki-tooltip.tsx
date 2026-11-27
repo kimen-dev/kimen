@@ -389,7 +389,7 @@ export class KiTooltip {
       return;
     }
 
-    const delay = this.readDelay('--ki-tooltip-show-delay');
+    const delay = this.readDelay('--_ki-tooltip-show-delay');
     if (delay === 0) {
       this.showNow();
       return;
@@ -417,7 +417,7 @@ export class KiTooltip {
       return;
     }
 
-    const delay = this.readDelay('--ki-tooltip-hide-delay');
+    const delay = this.readDelay('--_ki-tooltip-hide-delay');
     if (delay === 0) {
       this.hideNow();
       return;

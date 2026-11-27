@@ -1,13 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-alert-border-width:var(--ki-space-xxs);
-  --ki-contrast-more-alert-neutral-border:var(--ki-outline-strong);
-  --ki-contrast-more-alert-success-border:var(--ki-outline-strong);
-  --ki-contrast-more-alert-danger-border:var(--ki-outline-strong);
-  --ki-contrast-more-alert-info-border:var(--ki-outline-strong);
-  --ki-contrast-more-alert-warning-border:var(--ki-outline-strong);
-  --ki-reduced-transparency-alert-shell-bg:var(--ki-surface-s1);
-  --ki-reduced-transparency-alert-neutral-icon-bg:var(--ki-alert-neutral-bg);
   --ki-alert-padding-inline:var(--ki-space-xl);
   --ki-alert-padding-block:var(--ki-space-xl);
   --ki-alert-gap:var(--ki-space-xl);
@@ -72,6 +64,14 @@
   --ki-icon-size-md:var(--ki-glyph-size-md);
   --ki-icon-size-lg:var(--ki-glyph-size-lg);
   --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
+  --ki-contrast-more-alert-border-width:var(--ki-space-xxs);
+  --ki-contrast-more-alert-neutral-border:var(--ki-outline-strong);
+  --ki-contrast-more-alert-success-border:var(--ki-outline-strong);
+  --ki-contrast-more-alert-danger-border:var(--ki-outline-strong);
+  --ki-contrast-more-alert-info-border:var(--ki-outline-strong);
+  --ki-contrast-more-alert-warning-border:var(--ki-outline-strong);
+  --ki-reduced-transparency-alert-shell-bg:var(--ki-surface-s1);
+  --ki-reduced-transparency-alert-neutral-icon-bg:var(--ki-alert-neutral-bg);
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {

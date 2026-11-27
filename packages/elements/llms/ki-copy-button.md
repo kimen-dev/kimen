@@ -93,6 +93,9 @@ None.
 - `--ki-button-ghost-danger-rest-bg`: color used by the button component for ghost danger rest background. Default: `var(--ki-transparent-inverse)`.
 - `--ki-button-ghost-danger-rest-border`: color used by the button component for ghost danger rest border. Default: `var(--ki-outline-none)`.
 - `--ki-button-ghost-danger-rest-fg`: color used by the button component for ghost danger rest foreground. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-button-ghost-neutral-active-bg`: Fill of a pressed ghost neutral button. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-button-ghost-neutral-active-border`: Edge of a pressed ghost neutral button. Default: `var(--ki-outline-none)`.
+- `--ki-button-ghost-neutral-active-fg`: Ink of a pressed ghost neutral button. Default: `var(--ki-text-primary-high-em)`.
 - `--ki-button-ghost-neutral-disabled-bg`: color used by the button component for ghost neutral disabled background. Default: `var(--ki-transparent-inverse)`.
 - `--ki-button-ghost-neutral-disabled-border`: color used by the button component for ghost neutral disabled border. Default: `var(--ki-outline-none)`.
 - `--ki-button-ghost-neutral-disabled-fg`: color used by the button component for ghost neutral disabled foreground. Default: `var(--ki-text-muted)`.
@@ -136,6 +139,9 @@ None.
 - `--ki-button-primary-danger-rest-bg`: color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification). Default: `var(--ki-surface-danger-high-em)`.
 - `--ki-button-primary-danger-rest-border`: color used by the button component for primary danger rest border (MarsUI top/inline edge; none in onmars v2). Default: onmars `var(--ki-outline-primary-button-top)`, material3 `var(--ki-outline-none)`.
 - `--ki-button-primary-danger-rest-fg`: color used by the button component for primary danger rest foreground. Default: `var(--ki-text-primary-on-danger)`.
+- `--ki-button-primary-neutral-active-bg`: Fill of a pressed primary neutral button. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-button-primary-neutral-active-border`: Edge of a pressed primary neutral button. Default: onmars `var(--ki-outline-primary-button-top)`, material3 `var(--ki-outline-none)`.
+- `--ki-button-primary-neutral-active-fg`: Ink of a pressed primary neutral button. Default: `var(--ki-text-primary-on-primary)`.
 - `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification). Default: `var(--ki-surface-disabled-low-em)`.
 - `--ki-button-primary-neutral-disabled-border`: color used by the button component for primary neutral disabled border. Default: `var(--ki-outline-none)`.
 - `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification). Default: `var(--ki-text-muted)`.
@@ -157,6 +163,9 @@ None.
 - `--ki-button-quaternary-danger-rest-bg`: color used by the button component for quaternary danger rest background. Default: `var(--ki-transparent-inverse)`.
 - `--ki-button-quaternary-danger-rest-border`: color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state). Default: onmars `var(--ki-outline-none)`, material3 `var(--ki-outline-danger-med-em)`.
 - `--ki-button-quaternary-danger-rest-fg`: color used by the button component for quaternary danger rest foreground. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-button-quaternary-neutral-active-bg`: Fill of a pressed quaternary neutral button. Default: onmars `var(--ki-surface-pressed-overlay-inverse)`, material3 `var(--ki-surface-primary-low-em)`.
+- `--ki-button-quaternary-neutral-active-border`: Edge of a pressed quaternary neutral button. Default: onmars `var(--ki-outline-none)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-button-quaternary-neutral-active-fg`: Ink of a pressed quaternary neutral button. Default: onmars `var(--ki-text-supporting)`, material3 `var(--ki-text-primary-high-em)`.
 - `--ki-button-quaternary-neutral-disabled-bg`: color used by the button component for quaternary neutral disabled background. Default: `var(--ki-transparent-inverse)`.
 - `--ki-button-quaternary-neutral-disabled-border`: color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state). Default: onmars `var(--ki-outline-none)`, material3 `var(--ki-outline-low-em)`.
 - `--ki-button-quaternary-neutral-disabled-fg`: color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars. Default: onmars `var(--ki-text-base-em)`, material3 `var(--ki-text-muted)`.
@@ -178,6 +187,9 @@ None.
 - `--ki-button-secondary-danger-rest-bg`: color used by the button component for secondary danger rest background. Default: `var(--ki-surface-danger-base-em)`.
 - `--ki-button-secondary-danger-rest-border`: color used by the button component for secondary danger rest border (MarsUI top/inline edge, variant trait). Default: onmars `var(--ki-outline-secondary-button-top)`, material3 `var(--ki-outline-none)`.
 - `--ki-button-secondary-danger-rest-fg`: color used by the button component for secondary danger rest foreground. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-button-secondary-neutral-active-bg`: Fill of a pressed secondary neutral button. Default: `var(--ki-surface-special-secondary-alpha-base)`.
+- `--ki-button-secondary-neutral-active-border`: Edge of a pressed secondary neutral button. Default: onmars `var(--ki-outline-secondary-button-top)`, material3 `var(--ki-outline-none)`.
+- `--ki-button-secondary-neutral-active-fg`: Ink of a pressed secondary neutral button. Default: `var(--ki-text-high-em)`.
 - `--ki-button-secondary-neutral-disabled-bg`: color used by the button component for secondary neutral disabled background. Default: `var(--ki-surface-disabled-low-em)`.
 - `--ki-button-secondary-neutral-disabled-border`: color used by the button component for secondary neutral disabled border. Default: `var(--ki-outline-none)`.
 - `--ki-button-secondary-neutral-disabled-fg`: color used by the button component for secondary neutral disabled foreground. Default: `var(--ki-text-muted)`.
@@ -204,6 +216,7 @@ None.
 - `--ki-button-sm-spinner-size`: dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). Default: `var(--ki-space-3xl)`.
 - `--ki-button-spinner-duration`: duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference. Default: `1600ms`.
 - `--ki-button-spinner-stroke-width`: dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width). Default: `var(--ki-space-xxs)`.
+- `--ki-button-tertiary-active-shadow`: Shadow of a pressed tertiary button. Default: onmars `var(--ki-effect-component-secondary-default-shadow)`, material3 `0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))`.
 - `--ki-button-tertiary-danger-hover-bg`: Tertiary alias of the secondary danger hover background. Default: onmars `var(--ki-surface-danger-low-em)`, material3 `var(--ki-surface-s1)`.
 - `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). Default: onmars `var(--ki-outline-secondary-button-top)`, material3 `var(--ki-outline-none)`.
 - `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground. Default: `var(--ki-text-danger-high-em)`.
@@ -213,6 +226,9 @@ None.
 - `--ki-button-tertiary-disabled-shadow`: value used by the button component for tertiary disabled shadow. Default: `none`.
 - `--ki-button-tertiary-hover-overlay`: Hover overlay for neutral tertiary buttons, shared with secondary by default. Default: onmars `var(--ki-surface-hover-overlay-inverse)`, material3 `var(--ki-transparent-inverse)`.
 - `--ki-button-tertiary-hover-shadow`: shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover). Default: onmars `var(--ki-effect-component-secondary-hover-shadow)`, material3 `0px 1px 3px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 4px 8px 3px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))`.
+- `--ki-button-tertiary-neutral-active-bg`: Fill of a pressed tertiary neutral button. Default: onmars `var(--ki-surface-special-secondary-alpha-base)`, material3 `var(--ki-surface-s2)`.
+- `--ki-button-tertiary-neutral-active-border`: Edge of a pressed tertiary neutral button. Default: onmars `var(--ki-outline-secondary-button-top)`, material3 `var(--ki-outline-none)`.
+- `--ki-button-tertiary-neutral-active-fg`: Ink of a pressed tertiary neutral button. Default: onmars `var(--ki-text-high-em)`, material3 `var(--ki-text-primary-high-em)`.
 - `--ki-button-tertiary-neutral-disabled-bg`: color used by the button component for tertiary neutral disabled background. Default: `var(--ki-surface-disabled-low-em)`.
 - `--ki-button-tertiary-neutral-disabled-border`: color used by the button component for tertiary neutral disabled border. Default: `var(--ki-outline-none)`.
 - `--ki-button-tertiary-neutral-disabled-fg`: color used by the button component for tertiary neutral disabled foreground. Default: `var(--ki-text-muted)`.
@@ -267,6 +283,7 @@ None.
 | — | — | error | `--ki-copy-button-error-bg` | `var(--ki-surface-danger-low-em)` | Contrast ground for the error glyph on filled primary copy buttons. |
 | — | — | error | `--ki-copy-button-error-fg` | `var(--ki-text-danger-high-em)` | Copy failure glyph ink. |
 | ghost | — | rest | `--ki-button-ghost-rest-shadow` | `none` | value used by the button component for ghost rest shadow. |
+| ghost | — | active | `--ki-button-ghost-active-shadow` | `none` | Shadow of a pressed ghost button. |
 | ghost | — | disabled | `--ki-button-ghost-disabled-shadow` | `none` | value used by the button component for ghost disabled shadow. |
 | ghost | — | hover | `--ki-button-ghost-hover-shadow` | `none` | value used by the button component for ghost hover shadow. |
 | ghost | — | selected | `--ki-button-ghost-selected-bg` | onmars `var(--ki-text-primary-high-em)`, material3 `var(--ki-surface-primary-high-em)` | Background of the selected ghost button toggle. |
@@ -283,12 +300,14 @@ None.
 | primary | — | rest | `--ki-button-primary-rest-border-bottom` | onmars `var(--ki-outline-primary-button-bottom)`, material3 `var(--ki-outline-none)` | color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2). |
 | primary | — | rest | `--ki-button-primary-rest-shadow` | `var(--ki-effect-component-primary-default-shadow)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
 | primary | — | active | `--ki-button-primary-active-overlay` | `var(--ki-state-layer-pressed)` | Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
+| primary | — | active | `--ki-button-primary-active-shadow` | `var(--ki-effect-component-primary-default-shadow)` | Shadow of a pressed primary button. |
 | primary | — | disabled | `--ki-button-primary-disabled-shadow` | `none` | value used by the button component for primary disabled shadow. |
 | primary | — | hover | `--ki-button-primary-hover-overlay` | onmars `var(--ki-surface-hover-overlay)`, material3 `var(--ki-state-layer-hover)` | color used by the button component for the primary hover overlay layer (MarsUI hover overlay, White/5). |
 | primary | — | hover | `--ki-button-primary-hover-shadow` | `var(--ki-effect-component-primary-hover-shadow)` | shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover). |
 | primary | — | selected | `--ki-button-primary-selected-bg` | `var(--ki-surface-primary-med-em)` | Background of the selected primary button toggle. |
 | primary | — | selected | `--ki-button-primary-selected-fg` | `var(--ki-text-primary-on-primary)` | Foreground of the selected primary button toggle. |
 | quaternary | — | rest | `--ki-button-quaternary-rest-shadow` | `none` | value used by the button component for quaternary rest shadow. |
+| quaternary | — | active | `--ki-button-quaternary-active-shadow` | `none` | Shadow of a pressed quaternary button. |
 | quaternary | — | disabled | `--ki-button-quaternary-disabled-shadow` | `none` | value used by the button component for quaternary disabled shadow. |
 | quaternary | — | hover | `--ki-button-quaternary-hover-shadow` | `none` | value used by the button component for quaternary hover shadow. |
 | quaternary | — | selected | `--ki-button-quaternary-selected-bg` | `var(--ki-surface-primary-high-em)` | Background of the selected quaternary button toggle. |
@@ -296,6 +315,7 @@ None.
 | secondary | — | rest | `--ki-button-secondary-rest-border-bottom` | onmars `var(--ki-outline-secondary-button-bottom)`, material3 `var(--ki-outline-none)` | color used by the button component for the secondary bottom edge (MarsUI Outline/secondary_button_bottom). |
 | secondary | — | rest | `--ki-button-secondary-rest-shadow` | `var(--ki-effect-component-secondary-default-shadow)` | shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default). |
 | secondary | — | active | `--ki-button-secondary-active-overlay` | onmars `var(--ki-surface-pressed-overlay-inverse)`, material3 `var(--ki-state-layer-pressed)` | Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
+| secondary | — | active | `--ki-button-secondary-active-shadow` | `var(--ki-effect-component-secondary-default-shadow)` | Shadow of a pressed secondary button. |
 | secondary | — | disabled | `--ki-button-secondary-disabled-shadow` | `none` | value used by the button component for secondary disabled shadow. |
 | secondary | — | hover | `--ki-button-secondary-hover-overlay` | onmars `var(--ki-surface-hover-overlay-inverse)`, material3 `var(--ki-state-layer-hover)` | color used by the button component for the secondary hover overlay layer (MarsUI hover overlay inverse, Black/3). |
 | secondary | — | hover | `--ki-button-secondary-hover-shadow` | `var(--ki-effect-component-secondary-hover-shadow)` | shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover). |

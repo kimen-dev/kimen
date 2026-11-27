@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 564 semantic
-and 2466 component tokens. Values are the resolved **onmars light**
+and 2464 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1048,13 +1048,13 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-focus-ring-width` | `0.125rem` | dimension used by the button component for focus ring width. |
 | `--ki-button-font-family` | `'Instrument Sans', system-ui, sans-serif` | font family used by the button component for font family. |
 | `--ki-button-font-weight` | `600` | font weight used by the button component for font weight. |
-| `--ki-button-ghost-active-shadow` | `none` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-rest-shadow. value used by the button component for ghost active shadow. |
-| `--ki-button-ghost-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-danger-rest-bg. color used by the button component for ghost danger active background. |
-| `--ki-button-ghost-danger-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-danger-rest-border. color used by the button component for ghost danger active border. |
-| `--ki-button-ghost-danger-active-fg` | `#c21a45` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-danger-rest-fg. color used by the button component for ghost danger active foreground. |
-| `--ki-button-ghost-danger-disabled-bg` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-disabled-bg. color used by the button component for ghost danger disabled background. |
-| `--ki-button-ghost-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-disabled-border. color used by the button component for ghost danger disabled border. |
-| `--ki-button-ghost-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-disabled-fg. color used by the button component for ghost danger disabled foreground. |
+| `--ki-button-ghost-active-shadow` | `none` | Shadow of a pressed ghost button. |
+| `--ki-button-ghost-danger-active-bg` | `#ffebec` | Fill of a pressed ghost danger button. |
+| `--ki-button-ghost-danger-active-border` | `rgba(255, 255, 255, 0)` | Edge of a pressed ghost danger button. |
+| `--ki-button-ghost-danger-active-fg` | `#c21a45` | Ink of a pressed ghost danger button. |
+| `--ki-button-ghost-danger-disabled-bg` | `rgba(255, 255, 255, 0)` | Fill of a disabled ghost danger button. |
+| `--ki-button-ghost-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled ghost danger button. |
+| `--ki-button-ghost-danger-disabled-fg` | `#5e5953` | Ink of a disabled ghost danger button. |
 | `--ki-button-ghost-danger-hover-bg` | `rgba(239, 78, 105, 0.12)` | color used by the button component for ghost danger hover background. |
 | `--ki-button-ghost-danger-hover-border` | `rgba(255, 255, 255, 0)` | color used by the button component for ghost danger hover border. |
 | `--ki-button-ghost-danger-hover-fg` | `#c21a45` | color used by the button component for ghost danger hover foreground. |
@@ -1063,9 +1063,9 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-ghost-danger-rest-fg` | `#c21a45` | color used by the button component for ghost danger rest foreground. |
 | `--ki-button-ghost-disabled-shadow` | `none` | value used by the button component for ghost disabled shadow. |
 | `--ki-button-ghost-hover-shadow` | `none` | value used by the button component for ghost hover shadow. |
-| `--ki-button-ghost-neutral-active-bg` | `#ffebe5` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-rest-bg. color used by the button component for ghost neutral active background. |
-| `--ki-button-ghost-neutral-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-rest-border. color used by the button component for ghost neutral active border. |
-| `--ki-button-ghost-neutral-active-fg` | `#ad411c` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-rest-fg. color used by the button component for ghost neutral active foreground. |
+| `--ki-button-ghost-neutral-active-bg` | `#ffebe5` | Fill of a pressed ghost neutral button. |
+| `--ki-button-ghost-neutral-active-border` | `rgba(255, 255, 255, 0)` | Edge of a pressed ghost neutral button. |
+| `--ki-button-ghost-neutral-active-fg` | `#ad411c` | Ink of a pressed ghost neutral button. |
 | `--ki-button-ghost-neutral-disabled-bg` | `rgba(255, 255, 255, 0)` | color used by the button component for ghost neutral disabled background. |
 | `--ki-button-ghost-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for ghost neutral disabled border. |
 | `--ki-button-ghost-neutral-disabled-fg` | `#5e5953` | color used by the button component for ghost neutral disabled foreground. |
@@ -1078,12 +1078,12 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-ghost-rest-shadow` | `none` | value used by the button component for ghost rest shadow. |
 | `--ki-button-ghost-selected-bg` | `#ad411c` | Background of the selected ghost button toggle. |
 | `--ki-button-ghost-selected-fg` | `#ffffff` | Foreground of the selected ghost button toggle. |
-| `--ki-button-ghost-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-bg. color used by the button component for ghost success active background. |
-| `--ki-button-ghost-success-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-border. color used by the button component for ghost success active border. |
-| `--ki-button-ghost-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-success-rest-fg. color used by the button component for ghost success active foreground. |
-| `--ki-button-ghost-success-disabled-bg` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-disabled-bg. color used by the button component for ghost success disabled background. |
-| `--ki-button-ghost-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-disabled-border. color used by the button component for ghost success disabled border. |
-| `--ki-button-ghost-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-ghost-neutral-disabled-fg. color used by the button component for ghost success disabled foreground. |
+| `--ki-button-ghost-success-active-bg` | `#e3f6e2` | Fill of a pressed ghost success button. |
+| `--ki-button-ghost-success-active-border` | `rgba(255, 255, 255, 0)` | Edge of a pressed ghost success button. |
+| `--ki-button-ghost-success-active-fg` | `#2c6a2b` | Ink of a pressed ghost success button. |
+| `--ki-button-ghost-success-disabled-bg` | `rgba(255, 255, 255, 0)` | Fill of a disabled ghost success button. |
+| `--ki-button-ghost-success-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled ghost success button. |
+| `--ki-button-ghost-success-disabled-fg` | `#5e5953` | Ink of a disabled ghost success button. |
 | `--ki-button-ghost-success-hover-bg` | `rgba(64, 155, 63, 0.12)` | color used by the button component for ghost success hover background. |
 | `--ki-button-ghost-success-hover-border` | `rgba(255, 255, 255, 0)` | color used by the button component for ghost success hover border. |
 | `--ki-button-ghost-success-hover-fg` | `#2c6a2b` | color used by the button component for ghost success hover foreground. |
@@ -1122,13 +1122,13 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-outline-selected-fg` | `#ffffff` | Foreground of the selected outline button toggle. |
 | `--ki-button-padding-block` | `0.25rem` | dimension used by the button component for padding block (MarsUI: 4px in every size). |
 | `--ki-button-primary-active-overlay` | `rgba(255, 255, 255, 0.08)` | Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
-| `--ki-button-primary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-rest-shadow. shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-button-primary-danger-active-bg` | `#cc1b48` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-danger-rest-bg. color used by the button component for primary danger active background. |
-| `--ki-button-primary-danger-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-danger-rest-border. color used by the button component for primary danger active border (MarsUI top/inline edge; none in onmars v2). |
-| `--ki-button-primary-danger-active-fg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-danger-rest-fg. color used by the button component for primary danger active foreground. |
-| `--ki-button-primary-danger-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-bg. color used by the button component for primary danger disabled background. |
-| `--ki-button-primary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-border. color used by the button component for primary danger disabled border. |
-| `--ki-button-primary-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-fg. color used by the button component for primary danger disabled foreground. |
+| `--ki-button-primary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Shadow of a pressed primary button. |
+| `--ki-button-primary-danger-active-bg` | `#cc1b48` | Fill of a pressed primary danger button. |
+| `--ki-button-primary-danger-active-border` | `rgba(0, 0, 0, 0)` | Edge of a pressed primary danger button. |
+| `--ki-button-primary-danger-active-fg` | `#ffffff` | Ink of a pressed primary danger button. |
+| `--ki-button-primary-danger-disabled-bg` | `#ebe7e1` | Fill of a disabled primary danger button. |
+| `--ki-button-primary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled primary danger button. |
+| `--ki-button-primary-danger-disabled-fg` | `#5e5953` | Ink of a disabled primary danger button. |
 | `--ki-button-primary-danger-hover-bg` | `#cc1b48` | color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay). |
 | `--ki-button-primary-danger-hover-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary danger hover border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-danger-hover-fg` | `#ffffff` | color used by the button component for primary danger hover foreground. |
@@ -1138,9 +1138,9 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-primary-disabled-shadow` | `none` | value used by the button component for primary disabled shadow. |
 | `--ki-button-primary-hover-overlay` | `rgba(255, 255, 255, 0.05)` | color used by the button component for the primary hover overlay layer (MarsUI hover overlay, White/5). |
 | `--ki-button-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover). |
-| `--ki-button-primary-neutral-active-bg` | `#1d1a16` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-rest-bg. color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-button-primary-neutral-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-rest-border. color used by the button component for primary neutral active border (MarsUI top/inline edge; none in onmars v2). |
-| `--ki-button-primary-neutral-active-fg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-rest-fg. color used by the button component for primary neutral active foreground. |
+| `--ki-button-primary-neutral-active-bg` | `#1d1a16` | Fill of a pressed primary neutral button. |
+| `--ki-button-primary-neutral-active-border` | `rgba(0, 0, 0, 0)` | Edge of a pressed primary neutral button. |
+| `--ki-button-primary-neutral-active-fg` | `#ffffff` | Ink of a pressed primary neutral button. |
 | `--ki-button-primary-neutral-disabled-bg` | `#ebe7e1` | color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification). |
 | `--ki-button-primary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for primary neutral disabled border. |
 | `--ki-button-primary-neutral-disabled-fg` | `#5e5953` | color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification). |
@@ -1154,25 +1154,25 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-primary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
 | `--ki-button-primary-selected-bg` | `#1d1a16` | Background of the selected primary button toggle. |
 | `--ki-button-primary-selected-fg` | `#ffffff` | Foreground of the selected primary button toggle. |
-| `--ki-button-primary-success-active-bg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-bg. color used by the button component for primary success active background. |
-| `--ki-button-primary-success-active-border` | `rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-border. color used by the button component for primary success active border (MarsUI top/inline edge; none in onmars v2). |
-| `--ki-button-primary-success-active-fg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-success-rest-fg. color used by the button component for primary success active foreground. |
-| `--ki-button-primary-success-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-bg. color used by the button component for primary success disabled background. |
-| `--ki-button-primary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-border. color used by the button component for primary success disabled border. |
-| `--ki-button-primary-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-neutral-disabled-fg. color used by the button component for primary success disabled foreground. |
+| `--ki-button-primary-success-active-bg` | `#2c6a2b` | Fill of a pressed primary success button. |
+| `--ki-button-primary-success-active-border` | `rgba(0, 0, 0, 0)` | Edge of a pressed primary success button. |
+| `--ki-button-primary-success-active-fg` | `#ffffff` | Ink of a pressed primary success button. |
+| `--ki-button-primary-success-disabled-bg` | `#ebe7e1` | Fill of a disabled primary success button. |
+| `--ki-button-primary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled primary success button. |
+| `--ki-button-primary-success-disabled-fg` | `#5e5953` | Ink of a disabled primary success button. |
 | `--ki-button-primary-success-hover-bg` | `#2c6a2b` | color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay). |
 | `--ki-button-primary-success-hover-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary success hover border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-success-hover-fg` | `#ffffff` | color used by the button component for primary success hover foreground. |
 | `--ki-button-primary-success-rest-bg` | `#2c6a2b` | color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 &lt; AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification). |
 | `--ki-button-primary-success-rest-border` | `rgba(0, 0, 0, 0)` | color used by the button component for primary success rest border (MarsUI top/inline edge; none in onmars v2). |
 | `--ki-button-primary-success-rest-fg` | `#ffffff` | color used by the button component for primary success rest foreground. |
-| `--ki-button-quaternary-active-shadow` | `none` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-rest-shadow. value used by the button component for quaternary active shadow. |
-| `--ki-button-quaternary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-danger-rest-bg. color used by the button component for quaternary danger active background. |
-| `--ki-button-quaternary-danger-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-danger-rest-border. color used by the button component for quaternary danger active border (MarsUI quaternary is borderless in every state). |
-| `--ki-button-quaternary-danger-active-fg` | `#c21a45` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-danger-rest-fg. color used by the button component for quaternary danger active foreground. |
-| `--ki-button-quaternary-danger-disabled-bg` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-disabled-bg. color used by the button component for quaternary danger disabled background. |
-| `--ki-button-quaternary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-disabled-border. color used by the button component for quaternary danger disabled border (MarsUI quaternary is borderless in every state). |
-| `--ki-button-quaternary-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-disabled-fg. color used by the button component for quaternary danger disabled foreground. |
+| `--ki-button-quaternary-active-shadow` | `none` | Shadow of a pressed quaternary button. |
+| `--ki-button-quaternary-danger-active-bg` | `#ffebec` | Fill of a pressed quaternary danger button. |
+| `--ki-button-quaternary-danger-active-border` | `rgba(255, 255, 255, 0)` | Edge of a pressed quaternary danger button. |
+| `--ki-button-quaternary-danger-active-fg` | `#c21a45` | Ink of a pressed quaternary danger button. |
+| `--ki-button-quaternary-danger-disabled-bg` | `rgba(255, 255, 255, 0)` | Fill of a disabled quaternary danger button. |
+| `--ki-button-quaternary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled quaternary danger button. |
+| `--ki-button-quaternary-danger-disabled-fg` | `#cbc7bf` | Ink of a disabled quaternary danger button. |
 | `--ki-button-quaternary-danger-hover-bg` | `rgba(239, 78, 105, 0.12)` | color used by the button component for quaternary danger hover background. |
 | `--ki-button-quaternary-danger-hover-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-danger-hover-fg` | `#c21a45` | color used by the button component for quaternary danger hover foreground. |
@@ -1181,9 +1181,9 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-quaternary-danger-rest-fg` | `#c21a45` | color used by the button component for quaternary danger rest foreground. |
 | `--ki-button-quaternary-disabled-shadow` | `none` | value used by the button component for quaternary disabled shadow. |
 | `--ki-button-quaternary-hover-shadow` | `none` | value used by the button component for quaternary hover shadow. |
-| `--ki-button-quaternary-neutral-active-bg` | `rgba(0, 0, 0, 0.05)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-rest-bg. color used by the button component for quaternary neutral active background (pressed wash one rung beyond hover: Black/5 light, White/5 dark). |
-| `--ki-button-quaternary-neutral-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-rest-border. color used by the button component for quaternary neutral active border (MarsUI quaternary is borderless in every state). |
-| `--ki-button-quaternary-neutral-active-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-rest-fg. color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; never the accent). |
+| `--ki-button-quaternary-neutral-active-bg` | `rgba(0, 0, 0, 0.05)` | Fill of a pressed quaternary neutral button. |
+| `--ki-button-quaternary-neutral-active-border` | `rgba(255, 255, 255, 0)` | Edge of a pressed quaternary neutral button. |
+| `--ki-button-quaternary-neutral-active-fg` | `#5e5953` | Ink of a pressed quaternary neutral button. |
 | `--ki-button-quaternary-neutral-disabled-bg` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral disabled background. |
 | `--ki-button-quaternary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-neutral-disabled-fg` | `#cbc7bf` | color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars. |
@@ -1196,12 +1196,12 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-quaternary-rest-shadow` | `none` | value used by the button component for quaternary rest shadow. |
 | `--ki-button-quaternary-selected-bg` | `#0f0d0a` | Background of the selected quaternary button toggle. |
 | `--ki-button-quaternary-selected-fg` | `#ffffff` | Foreground of the selected quaternary button toggle. |
-| `--ki-button-quaternary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-bg. color used by the button component for quaternary success active background. |
-| `--ki-button-quaternary-success-active-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-border. color used by the button component for quaternary success active border (MarsUI quaternary is borderless in every state). |
-| `--ki-button-quaternary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-success-rest-fg. color used by the button component for quaternary success active foreground. |
-| `--ki-button-quaternary-success-disabled-bg` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-disabled-bg. color used by the button component for quaternary success disabled background. |
-| `--ki-button-quaternary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-disabled-border. color used by the button component for quaternary success disabled border (MarsUI quaternary is borderless in every state). |
-| `--ki-button-quaternary-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-quaternary-neutral-disabled-fg. color used by the button component for quaternary success disabled foreground. |
+| `--ki-button-quaternary-success-active-bg` | `#e3f6e2` | Fill of a pressed quaternary success button. |
+| `--ki-button-quaternary-success-active-border` | `rgba(255, 255, 255, 0)` | Edge of a pressed quaternary success button. |
+| `--ki-button-quaternary-success-active-fg` | `#2c6a2b` | Ink of a pressed quaternary success button. |
+| `--ki-button-quaternary-success-disabled-bg` | `rgba(255, 255, 255, 0)` | Fill of a disabled quaternary success button. |
+| `--ki-button-quaternary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled quaternary success button. |
+| `--ki-button-quaternary-success-disabled-fg` | `#cbc7bf` | Ink of a disabled quaternary success button. |
 | `--ki-button-quaternary-success-hover-bg` | `rgba(64, 155, 63, 0.12)` | color used by the button component for quaternary success hover background. |
 | `--ki-button-quaternary-success-hover-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-success-hover-fg` | `#2c6a2b` | color used by the button component for quaternary success hover foreground. |
@@ -1209,13 +1209,13 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-quaternary-success-rest-border` | `rgba(255, 255, 255, 0)` | color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state). |
 | `--ki-button-quaternary-success-rest-fg` | `#2c6a2b` | color used by the button component for quaternary success rest foreground. |
 | `--ki-button-secondary-active-overlay` | `rgba(0, 0, 0, 0.05)` | Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
-| `--ki-button-secondary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-rest-shadow. shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-button-secondary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-danger-rest-bg. color used by the button component for secondary danger active background. |
-| `--ki-button-secondary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-danger-rest-border. color used by the button component for secondary danger active border (MarsUI top/inline edge, variant trait). |
-| `--ki-button-secondary-danger-active-fg` | `#c21a45` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-danger-rest-fg. color used by the button component for secondary danger active foreground. |
-| `--ki-button-secondary-danger-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-bg. color used by the button component for secondary danger disabled background. |
-| `--ki-button-secondary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-border. color used by the button component for secondary danger disabled border. |
-| `--ki-button-secondary-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-fg. color used by the button component for secondary danger disabled foreground. |
+| `--ki-button-secondary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Shadow of a pressed secondary button. |
+| `--ki-button-secondary-danger-active-bg` | `#ffebec` | Fill of a pressed secondary danger button. |
+| `--ki-button-secondary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Edge of a pressed secondary danger button. |
+| `--ki-button-secondary-danger-active-fg` | `#c21a45` | Ink of a pressed secondary danger button. |
+| `--ki-button-secondary-danger-disabled-bg` | `#ebe7e1` | Fill of a disabled secondary danger button. |
+| `--ki-button-secondary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled secondary danger button. |
+| `--ki-button-secondary-danger-disabled-fg` | `#5e5953` | Ink of a disabled secondary danger button. |
 | `--ki-button-secondary-danger-hover-bg` | `#ffebec` | color used by the button component for secondary danger hover background. |
 | `--ki-button-secondary-danger-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary danger hover border (MarsUI top/inline edge, variant trait). |
 | `--ki-button-secondary-danger-hover-fg` | `#c21a45` | color used by the button component for secondary danger hover foreground. |
@@ -1225,9 +1225,9 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-secondary-disabled-shadow` | `none` | value used by the button component for secondary disabled shadow. |
 | `--ki-button-secondary-hover-overlay` | `rgba(0, 0, 0, 0.03)` | color used by the button component for the secondary hover overlay layer (MarsUI hover overlay inverse, Black/3). |
 | `--ki-button-secondary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover). |
-| `--ki-button-secondary-neutral-active-bg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-rest-bg. color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-button-secondary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-rest-border. color used by the button component for secondary neutral active border (MarsUI top/inline edge). |
-| `--ki-button-secondary-neutral-active-fg` | `#181613` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-rest-fg. color used by the button component for secondary neutral active foreground (MarsUI text/high_em). |
+| `--ki-button-secondary-neutral-active-bg` | `#ffffff` | Fill of a pressed secondary neutral button. |
+| `--ki-button-secondary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Edge of a pressed secondary neutral button. |
+| `--ki-button-secondary-neutral-active-fg` | `#181613` | Ink of a pressed secondary neutral button. |
 | `--ki-button-secondary-neutral-disabled-bg` | `#ebe7e1` | color used by the button component for secondary neutral disabled background. |
 | `--ki-button-secondary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for secondary neutral disabled border. |
 | `--ki-button-secondary-neutral-disabled-fg` | `#5e5953` | color used by the button component for secondary neutral disabled foreground. |
@@ -1241,12 +1241,12 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-secondary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default). |
 | `--ki-button-secondary-selected-bg` | `#1d1a16` | Background of the selected secondary button toggle. |
 | `--ki-button-secondary-selected-fg` | `#ffffff` | Foreground of the selected secondary button toggle. |
-| `--ki-button-secondary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-bg. color used by the button component for secondary success active background. |
-| `--ki-button-secondary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-border. color used by the button component for secondary success active border (MarsUI top/inline edge, variant trait). |
-| `--ki-button-secondary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-success-rest-fg. color used by the button component for secondary success active foreground. |
-| `--ki-button-secondary-success-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-bg. color used by the button component for secondary success disabled background. |
-| `--ki-button-secondary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-border. color used by the button component for secondary success disabled border. |
-| `--ki-button-secondary-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-secondary-neutral-disabled-fg. color used by the button component for secondary success disabled foreground. |
+| `--ki-button-secondary-success-active-bg` | `#e3f6e2` | Fill of a pressed secondary success button. |
+| `--ki-button-secondary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Edge of a pressed secondary success button. |
+| `--ki-button-secondary-success-active-fg` | `#2c6a2b` | Ink of a pressed secondary success button. |
+| `--ki-button-secondary-success-disabled-bg` | `#ebe7e1` | Fill of a disabled secondary success button. |
+| `--ki-button-secondary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled secondary success button. |
+| `--ki-button-secondary-success-disabled-fg` | `#5e5953` | Ink of a disabled secondary success button. |
 | `--ki-button-secondary-success-hover-bg` | `#e3f6e2` | color used by the button component for secondary success hover background. |
 | `--ki-button-secondary-success-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for secondary success hover border (MarsUI top/inline edge, variant trait). |
 | `--ki-button-secondary-success-hover-fg` | `#2c6a2b` | color used by the button component for secondary success hover foreground. |
@@ -1264,13 +1264,13 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-sm-spinner-size` | `1rem` | dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
 | `--ki-button-spinner-duration` | `1600ms` | duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference. |
 | `--ki-button-spinner-stroke-width` | `0.125rem` | dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width). |
-| `--ki-button-tertiary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-rest-shadow. shadow used by the button component for tertiary active shadow (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-button-tertiary-danger-active-bg` | `#ffebec` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-bg. Tertiary alias of the secondary danger active background. |
-| `--ki-button-tertiary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-border. color used by the button component for tertiary danger active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-button-tertiary-danger-active-fg` | `#c21a45` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-fg. color used by the button component for tertiary danger active foreground. |
-| `--ki-button-tertiary-danger-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-bg. color used by the button component for tertiary danger disabled background. |
-| `--ki-button-tertiary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-border. color used by the button component for tertiary danger disabled border. |
-| `--ki-button-tertiary-danger-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-fg. color used by the button component for tertiary danger disabled foreground. |
+| `--ki-button-tertiary-active-shadow` | `0 0 rgba(0, 0, 0, 0)` | Shadow of a pressed tertiary button. |
+| `--ki-button-tertiary-danger-active-bg` | `#ffebec` | Fill of a pressed tertiary danger button. |
+| `--ki-button-tertiary-danger-active-border` | `rgba(24, 22, 19, 0.14)` | Edge of a pressed tertiary danger button. |
+| `--ki-button-tertiary-danger-active-fg` | `#c21a45` | Ink of a pressed tertiary danger button. |
+| `--ki-button-tertiary-danger-disabled-bg` | `#ebe7e1` | Fill of a disabled tertiary danger button. |
+| `--ki-button-tertiary-danger-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled tertiary danger button. |
+| `--ki-button-tertiary-danger-disabled-fg` | `#5e5953` | Ink of a disabled tertiary danger button. |
 | `--ki-button-tertiary-danger-hover-bg` | `#ffebec` | Tertiary alias of the secondary danger hover background. |
 | `--ki-button-tertiary-danger-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary danger hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-danger-hover-fg` | `#c21a45` | color used by the button component for tertiary danger hover foreground. |
@@ -1280,9 +1280,9 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-tertiary-disabled-shadow` | `none` | value used by the button component for tertiary disabled shadow. |
 | `--ki-button-tertiary-hover-overlay` | `rgba(0, 0, 0, 0.03)` | Hover overlay for neutral tertiary buttons, shared with secondary by default. |
 | `--ki-button-tertiary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover). |
-| `--ki-button-tertiary-neutral-active-bg` | `#ffffff` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-bg. Tertiary alias of the secondary neutral active background. |
-| `--ki-button-tertiary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-border. color used by the button component for tertiary neutral active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-button-tertiary-neutral-active-fg` | `#181613` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-rest-fg. Tertiary alias of the secondary neutral active foreground. |
+| `--ki-button-tertiary-neutral-active-bg` | `#ffffff` | Fill of a pressed tertiary neutral button. |
+| `--ki-button-tertiary-neutral-active-border` | `rgba(24, 22, 19, 0.14)` | Edge of a pressed tertiary neutral button. |
+| `--ki-button-tertiary-neutral-active-fg` | `#181613` | Ink of a pressed tertiary neutral button. |
 | `--ki-button-tertiary-neutral-disabled-bg` | `#ebe7e1` | color used by the button component for tertiary neutral disabled background. |
 | `--ki-button-tertiary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the button component for tertiary neutral disabled border. |
 | `--ki-button-tertiary-neutral-disabled-fg` | `#5e5953` | color used by the button component for tertiary neutral disabled foreground. |
@@ -1294,12 +1294,12 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-tertiary-neutral-rest-fg` | `#181613` | Tertiary alias of the secondary neutral rest foreground. |
 | `--ki-button-tertiary-rest-border-bottom` | `rgba(24, 22, 19, 0.14)` | color used by the button component for the tertiary bottom edge (MarsUI Outline/secondary_button_bottom, as secondary). |
 | `--ki-button-tertiary-rest-shadow` | `0 0 rgba(0, 0, 0, 0)` | shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override). |
-| `--ki-button-tertiary-success-active-bg` | `#e3f6e2` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-bg. Tertiary alias of the secondary success active background. |
-| `--ki-button-tertiary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-border. color used by the button component for tertiary success active border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-button-tertiary-success-active-fg` | `#2c6a2b` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-success-rest-fg. color used by the button component for tertiary success active foreground. |
-| `--ki-button-tertiary-success-disabled-bg` | `#ebe7e1` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-bg. color used by the button component for tertiary success disabled background. |
-| `--ki-button-tertiary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-border. color used by the button component for tertiary success disabled border. |
-| `--ki-button-tertiary-success-disabled-fg` | `#5e5953` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-neutral-disabled-fg. color used by the button component for tertiary success disabled foreground. |
+| `--ki-button-tertiary-success-active-bg` | `#e3f6e2` | Fill of a pressed tertiary success button. |
+| `--ki-button-tertiary-success-active-border` | `rgba(24, 22, 19, 0.14)` | Edge of a pressed tertiary success button. |
+| `--ki-button-tertiary-success-active-fg` | `#2c6a2b` | Ink of a pressed tertiary success button. |
+| `--ki-button-tertiary-success-disabled-bg` | `#ebe7e1` | Fill of a disabled tertiary success button. |
+| `--ki-button-tertiary-success-disabled-border` | `rgba(255, 255, 255, 0)` | Edge of a disabled tertiary success button. |
+| `--ki-button-tertiary-success-disabled-fg` | `#5e5953` | Ink of a disabled tertiary success button. |
 | `--ki-button-tertiary-success-hover-bg` | `#e3f6e2` | Tertiary alias of the secondary success hover background. |
 | `--ki-button-tertiary-success-hover-border` | `rgba(24, 22, 19, 0.14)` | color used by the button component for tertiary success hover border (MarsUI secondary top/inline edge — tertiary carries the secondary_button outline pair). |
 | `--ki-button-tertiary-success-hover-fg` | `#2c6a2b` | color used by the button component for tertiary success hover foreground. |
@@ -1332,6 +1332,7 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-button-xs-padding-inline` | `0.375rem` | dimension used by the button component for xs padding inline. |
 | `--ki-button-xs-radius` | `6px` | dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns). |
 | `--ki-button-xs-spinner-size` | `0.875rem` | dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
+| `--ki-reduced-transparency-button-quaternary-neutral-active-bg` | `#f9f7f4` | Opaque quaternary neutral pressed fill under reduced transparency. |
 
 ### `ki-button-group`
 
@@ -2098,7 +2099,6 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-input-filled-placeholder-fg` | `#5e5953` | Placeholder on a filled field. |
 | `--ki-input-filled-radius` | `8px` | Block-start corner radius of a filled text field. |
 | `--ki-input-focus-bg` | `#ffffff` | color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0). |
-| `--ki-input-focus-border` | `#bc4c26` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-input-focus-ring-color. color used by the input component for focus border. |
 | `--ki-input-focus-fg` | `#181613` | color used by the input component for focus foreground. |
 | `--ki-input-focus-label-fg` | `#5e5953` | color used by the input component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint). |
 | `--ki-input-focus-placeholder-fg` | `#5e5953` | color used by the input component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
@@ -2140,7 +2140,7 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-input-lg-radius` | `12px` | dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg). |
 | `--ki-input-lg-text-padding-inline` | `0.25rem` | dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token). |
 | `--ki-input-line-height` | `1.5rem` | dimension used by the input component for line height. |
-| `--ki-input-min-target` | `1.5rem` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-input-height. dimension used by the input component for min target. |
+| `--ki-input-min-target` | `1.5rem` | dimension used by the input component for min target. |
 | `--ki-input-outlined-bg` | `rgba(0, 0, 0, 0)` | Surface of an outlined text field. |
 | `--ki-input-outlined-border` | `#86827b` | Full outline of an enabled outlined text field. |
 | `--ki-input-outlined-fg` | `#181613` | Entered text on an outlined field. |
@@ -2774,7 +2774,7 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-select-font-weight` | `600` | font weight used by the select component for the trigger value (MarsUI UI/Body 1/medium: weight 600). |
 | `--ki-select-gap` | `0.25rem` | dimension used by the select component for gap. |
 | `--ki-select-height` | `2.5rem` | dimension used by the select component for height. |
-| `--ki-select-hover-bg` | `#f3f0eb` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-surface-hover-overlay-inverse. color used by the select component for hover background (MarsUI hover = rest fill + hover overlay inverse; nearest cross-scheme step that keeps the ramp monotonic in dark). |
+| `--ki-select-hover-bg` | `#ffffff` | Trigger fill on hover, beneath the hover wash. |
 | `--ki-select-hover-border` | `rgba(0, 0, 0, 0.56)` | color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover. |
 | `--ki-select-hover-fg` | `#181613` | color used by the select component for hover foreground. |
 | `--ki-select-hover-label-fg` | `#181613` | color used by the select component for hover label foreground. |
@@ -2800,7 +2800,6 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-select-listbox-backdrop-filter` | `none` | Complete backdrop filter behind the select listbox. |
 | `--ki-select-listbox-bg` | `rgba(255, 255, 255, 0.8)` | color used by the select component for listbox background (MarsUI Dropmenu panel Surface/Special/blur_base_light, opaque in onmars v2; pair with --ki-select-listbox-backdrop-filter). |
 | `--ki-select-listbox-bg-image` | `none` | Optional CSS background image layered over the listbox fill. Use none for a solid fill. |
-| `--ki-select-listbox-elevation` | `rgba(0, 0, 0, 0.05)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-select-listbox-shadow. color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal. |
 | `--ki-select-listbox-max-block-size` | `20rem` | dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale). |
 | `--ki-select-listbox-offset` | `0.25rem` | dimension used by the select component for listbox offset. |
 | `--ki-select-listbox-padding` | `0.5rem` | dimension used by the select component for listbox padding (Dropmenu master Body: Space/md 8px on every side). |
@@ -3355,7 +3354,6 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-textarea-disabled-label-fg` | `#cbc7bf` | color used by the textarea component for disabled label foreground. |
 | `--ki-textarea-disabled-placeholder-fg` | `#cbc7bf` | color used by the textarea component for disabled placeholder foreground. |
 | `--ki-textarea-focus-bg` | `#ffffff` | color used by the textarea component for focus background (MarsUI active fill switches to white / dark s2 — modeled with the scheme ladder s0). |
-| `--ki-textarea-focus-border` | `#bc4c26` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-textarea-focus-ring-color. color used by the textarea component for focus border. |
 | `--ki-textarea-focus-fg` | `#181613` | color used by the textarea component for focus foreground. |
 | `--ki-textarea-focus-label-fg` | `#5e5953` | color used by the textarea component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
 | `--ki-textarea-focus-placeholder-fg` | `#5e5953` | color used by the textarea component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
@@ -3718,6 +3716,7 @@ carrying, `[data-ki-transparency='reduce']` or `[data-ki-contrast='more']`.
 | --- | --- | --- |
 | `--ki-alert-neutral-icon-bg` | `--ki-reduced-transparency-alert-neutral-icon-bg` | `var(--ki-alert-neutral-bg)` |
 | `--ki-alert-shell-bg` | `--ki-reduced-transparency-alert-shell-bg` | `var(--ki-surface-s1)` |
+| `--ki-button-quaternary-neutral-active-bg` | `--ki-reduced-transparency-button-quaternary-neutral-active-bg` | `var(--ki-surface-s1)` |
 | `--ki-effect-component-backdrop-filter` | `--ki-reduced-transparency-effect-component-backdrop-filter` | `none` |
 | `--ki-effect-component-listbox-backdrop-filter` | `--ki-reduced-transparency-effect-component-listbox-backdrop-filter` | `none` |
 | `--ki-surface-danger-tint` | `--ki-reduced-transparency-surface-danger-tint` | `var(--ki-surface-danger-base-em)` |
@@ -3772,97 +3771,12 @@ listed for each token (spec 041; see
 | --- | --- | --- | --- | --- |
 | `--ki-alert-shell-backdrop-blur` | `--ki-alert-shell-backdrop-filter` | 0.1.0 | 1.0.0 | Use a complete filter value so a flat theme can turn compositing off. |
 | `--ki-button-backdrop-blur` | `--ki-button-backdrop-filter` | 0.1.0 | 1.0.0 | Use a complete filter value so a flat theme can turn compositing off. |
-| `--ki-button-ghost-active-shadow` | `--ki-button-ghost-rest-shadow` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay. |
-| `--ki-button-ghost-danger-active-bg` | `--ki-button-ghost-danger-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-danger-active-border` | `--ki-button-ghost-danger-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-danger-active-fg` | `--ki-button-ghost-danger-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-danger-disabled-bg` | `--ki-button-ghost-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-ghost-danger-disabled-border` | `--ki-button-ghost-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-ghost-danger-disabled-fg` | `--ki-button-ghost-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-ghost-neutral-active-bg` | `--ki-button-ghost-neutral-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-neutral-active-border` | `--ki-button-ghost-neutral-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-neutral-active-fg` | `--ki-button-ghost-neutral-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-success-active-bg` | `--ki-button-ghost-success-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-success-active-border` | `--ki-button-ghost-success-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-success-active-fg` | `--ki-button-ghost-success-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-ghost-success-disabled-bg` | `--ki-button-ghost-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-ghost-success-disabled-border` | `--ki-button-ghost-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-ghost-success-disabled-fg` | `--ki-button-ghost-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-primary-active-shadow` | `--ki-button-primary-rest-shadow` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay. |
-| `--ki-button-primary-danger-active-bg` | `--ki-button-primary-danger-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-danger-active-border` | `--ki-button-primary-danger-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-danger-active-fg` | `--ki-button-primary-danger-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-danger-disabled-bg` | `--ki-button-primary-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-primary-danger-disabled-border` | `--ki-button-primary-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-primary-danger-disabled-fg` | `--ki-button-primary-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-primary-neutral-active-bg` | `--ki-button-primary-neutral-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-neutral-active-border` | `--ki-button-primary-neutral-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-neutral-active-fg` | `--ki-button-primary-neutral-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-success-active-bg` | `--ki-button-primary-success-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-success-active-border` | `--ki-button-primary-success-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-success-active-fg` | `--ki-button-primary-success-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay). |
-| `--ki-button-primary-success-disabled-bg` | `--ki-button-primary-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-primary-success-disabled-border` | `--ki-button-primary-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-primary-success-disabled-fg` | `--ki-button-primary-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-quaternary-active-shadow` | `--ki-button-quaternary-rest-shadow` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay. |
-| `--ki-button-quaternary-danger-active-bg` | `--ki-button-quaternary-danger-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-danger-active-border` | `--ki-button-quaternary-danger-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-danger-active-fg` | `--ki-button-quaternary-danger-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-danger-disabled-bg` | `--ki-button-quaternary-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-quaternary-danger-disabled-border` | `--ki-button-quaternary-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-quaternary-danger-disabled-fg` | `--ki-button-quaternary-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-quaternary-neutral-active-bg` | `--ki-button-quaternary-neutral-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-neutral-active-border` | `--ki-button-quaternary-neutral-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-neutral-active-fg` | `--ki-button-quaternary-neutral-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-success-active-bg` | `--ki-button-quaternary-success-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-success-active-border` | `--ki-button-quaternary-success-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-success-active-fg` | `--ki-button-quaternary-success-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-quaternary-success-disabled-bg` | `--ki-button-quaternary-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-quaternary-success-disabled-border` | `--ki-button-quaternary-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-quaternary-success-disabled-fg` | `--ki-button-quaternary-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-secondary-active-shadow` | `--ki-button-secondary-rest-shadow` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay. |
-| `--ki-button-secondary-danger-active-bg` | `--ki-button-secondary-danger-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-danger-active-border` | `--ki-button-secondary-danger-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-danger-active-fg` | `--ki-button-secondary-danger-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-danger-disabled-bg` | `--ki-button-secondary-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-secondary-danger-disabled-border` | `--ki-button-secondary-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-secondary-danger-disabled-fg` | `--ki-button-secondary-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-secondary-neutral-active-bg` | `--ki-button-secondary-neutral-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-neutral-active-border` | `--ki-button-secondary-neutral-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-neutral-active-fg` | `--ki-button-secondary-neutral-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-success-active-bg` | `--ki-button-secondary-success-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-success-active-border` | `--ki-button-secondary-success-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-success-active-fg` | `--ki-button-secondary-success-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-secondary-success-disabled-bg` | `--ki-button-secondary-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-secondary-success-disabled-border` | `--ki-button-secondary-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-secondary-success-disabled-fg` | `--ki-button-secondary-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-tertiary-active-shadow` | `--ki-button-tertiary-rest-shadow` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay. |
-| `--ki-button-tertiary-danger-active-bg` | `--ki-button-tertiary-danger-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-danger-active-border` | `--ki-button-tertiary-danger-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-danger-active-fg` | `--ki-button-tertiary-danger-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-danger-disabled-bg` | `--ki-button-tertiary-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-tertiary-danger-disabled-border` | `--ki-button-tertiary-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-tertiary-danger-disabled-fg` | `--ki-button-tertiary-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-tertiary-neutral-active-bg` | `--ki-button-tertiary-neutral-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-neutral-active-border` | `--ki-button-tertiary-neutral-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-neutral-active-fg` | `--ki-button-tertiary-neutral-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-success-active-bg` | `--ki-button-tertiary-success-rest-bg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-success-active-border` | `--ki-button-tertiary-success-rest-border` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-success-active-fg` | `--ki-button-tertiary-success-rest-fg` | 0.1.0 | 1.0.0 | Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay). |
-| `--ki-button-tertiary-success-disabled-bg` | `--ki-button-tertiary-neutral-disabled-bg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-tertiary-success-disabled-border` | `--ki-button-tertiary-neutral-disabled-border` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
-| `--ki-button-tertiary-success-disabled-fg` | `--ki-button-tertiary-neutral-disabled-fg` | 0.1.0 | 1.0.0 | Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell. |
 | `--ki-dialog-backdrop-blur` | `--ki-dialog-backdrop-filter` | 0.1.0 | 1.0.0 | Use a complete filter value so a flat theme can turn compositing off. |
 | `--ki-dialog-bg-end` | `--ki-dialog-bg-image` | 0.1.0 | 1.0.0 | Set the complete background image through the image token. |
 | `--ki-dialog-bg-start` | `--ki-dialog-bg-image` | 0.1.0 | 1.0.0 | Set the complete background image through the image token. |
 | `--ki-effect-component-backdrop-blur` | `--ki-effect-component-backdrop-filter` | 0.1.0 | 1.0.0 | Use a complete filter value so a flat theme can turn compositing off. |
-| `--ki-input-focus-border` | `--ki-input-focus-ring-color` | 0.1.0 | 1.0.0 | Nothing paints it: a focused field keeps its resting border and is marked by its focus ring. |
-| `--ki-input-min-target` | `--ki-input-height` | 0.1.0 | 1.0.0 | Nothing paints it: the field's minimum block size is its height. |
 | `--ki-motion-easing-spring` | `--ki-motion-easing-emphasized-out` | 0.1.0 | 1.0.0 | The onmars curve now eases out without overshoot. |
-| `--ki-select-hover-bg` | `--ki-surface-hover-overlay-inverse` | 0.1.0 | 1.0.0 | Nothing paints it: on hover the trigger keeps its resting fill under the inverse hover overlay. |
 | `--ki-select-listbox-backdrop-blur` | `--ki-select-listbox-backdrop-filter` | 0.1.0 | 1.0.0 | Use a complete filter value so a flat theme can turn compositing off. |
-| `--ki-select-listbox-elevation` | `--ki-select-listbox-shadow` | 0.1.0 | 1.0.0 | Nothing paints it: the listbox shadow replaced the hand-composed elevation. |
-| `--ki-textarea-focus-border` | `--ki-textarea-focus-ring-color` | 0.1.0 | 1.0.0 | Nothing paints it: a focused field keeps its resting border and is marked by its focus ring. |
 | `--ki-tooltip-backdrop-blur` | `--ki-tooltip-backdrop-filter` | 0.1.0 | 1.0.0 | Use a complete filter value so a flat theme can turn compositing off. |
 | `--ki-tooltip-bg-end` | `--ki-tooltip-bg-image` | 0.1.0 | 1.0.0 | Set the complete background image through the image token. |
 | `--ki-tooltip-bg-start` | `--ki-tooltip-bg-image` | 0.1.0 | 1.0.0 | Set the complete background image through the image token. |

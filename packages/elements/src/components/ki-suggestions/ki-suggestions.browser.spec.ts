@@ -293,3 +293,32 @@ it('S12 cancelling selection preserves the draft and the focused suggestion', as
   await expect.element(composer).toHaveValue('Draft');
   expect(option.element().matches(':focus')).toBe(true);
 });
+
+it('S13 the card description paints its rest, hover and pressed backgrounds', async () => {
+  fixture.innerHTML = group('variant="cards"');
+  const action = button(secondText);
+  await expect.element(action).toBeVisible();
+  const details = page.getByText(description, { exact: true }).element();
+  const rest = 'rgb(210, 235, 250)';
+  const hover = 'rgb(220, 240, 230)';
+  const press = 'rgb(200, 230, 215)';
+  try {
+    await media.emulateReducedMotion('reduce');
+    fixture.style.setProperty('--ki-suggestion-card-description-bg', rest);
+    fixture.style.setProperty('--ki-suggestion-card-hover-description-bg', hover);
+    fixture.style.setProperty('--ki-suggestion-card-pressed-description-bg', press);
+    await parkPointer();
+    expect(getComputedStyle(details).backgroundColor).toBe(rest);
+    await action.hover();
+    expect(getComputedStyle(details).backgroundColor).toBe(hover);
+    (action.element() as HTMLElement).focus();
+    await userEvent.keyboard('{ >}');
+    try {
+      expect(getComputedStyle(details).backgroundColor).toBe(press);
+    } finally {
+      await userEvent.keyboard('{/ }');
+    }
+  } finally {
+    await media.emulateReducedMotion(null);
+  }
+});

@@ -195,3 +195,10 @@ Feature: Select
     Given a right-to-left document with a select showing "France"
     When the page renders
     Then the value leads and the dropdown indicator trails the writing direction
+
+  # Family: theming
+  # S29
+  Scenario: The trigger background can be themed on hover
+    Given a select with a custom trigger hover background
+    When the user hovers over the trigger
+    Then the trigger shows the themed hover background

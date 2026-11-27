@@ -408,6 +408,13 @@ Feature: Select
     Given a right-to-left document with a select showing "France"
     When the page renders
     Then the value leads and the dropdown indicator trails the writing direction
+
+  # Family: theming
+  # S29
+  Scenario: The trigger background can be themed on hover
+    Given a select with a custom trigger hover background
+    When the user hovers over the trigger
+    Then the trigger shows the themed hover background
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -418,7 +425,7 @@ Feature: Select
 | Keyboard path | S6, S7, S8, S9, S10, S21, S22, S23, S27 | |
 | Assistive-tech outcome | S11, S12 | |
 | Form participation | S13, S14, S15, S16, S24 | |
-| Theming | S17, S18, S19 | |
+| Theming | S17, S18, S19, S29 | |
 
 ## Requirements *(mandatory)*
 

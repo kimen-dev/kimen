@@ -1,6 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-list-item-divider-color:var(--ki-outline-strong);
   --ki-list-bg:var(--ki-surface-s0);
   --ki-list-padding:var(--ki-space-zero);
   --ki-list-gap:var(--ki-space-zero);
@@ -61,6 +60,7 @@
   --ki-list-item-checkbox-selected-fg:var(--ki-text-primary-on-primary);
   --ki-list-item-checkbox-radius:var(--ki-corner-inline);
   --ki-list-item-radio-radius:var(--ki-corner-activity-mark);
+  --ki-contrast-more-list-item-divider-color:var(--ki-outline-strong);
 }
 
 @media (prefers-contrast: more) {

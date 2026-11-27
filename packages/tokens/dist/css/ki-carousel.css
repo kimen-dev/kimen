@@ -1,6 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-indicator-dot-color:var(--ki-outline-strong);
   --ki-carousel-gap:var(--ki-space-xl);
   --ki-carousel-radius:var(--ki-radius-big-component-xs);
   --ki-carousel-preview-min-inline-size:var(--ki-control-size-sm);
@@ -31,6 +30,7 @@
   --ki-indicator-dot-current-hole-block-size:var(--ki-space-sm);
   --ki-indicator-motion-duration:var(--ki-motion-duration-fast);
   --ki-indicator-motion-easing:var(--ki-motion-easing-standard);
+  --ki-contrast-more-indicator-dot-color:var(--ki-outline-strong);
 }
 
 @media (prefers-contrast: more) {

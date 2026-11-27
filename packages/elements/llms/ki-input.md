@@ -171,6 +171,7 @@ None.
 - `--ki-input-lg-radius`: dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg). Default: onmars `var(--ki-radius-component-lg)`, material3 `var(--ki-radius-component-xs)`.
 - `--ki-input-lg-text-padding-inline`: dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token). Default: `var(--ki-space-xs)`.
 - `--ki-input-line-height`: dimension used by the input component for line height. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-input-min-target`: dimension used by the input component for min target. Default: `var(--ki-space-7xl)`.
 - `--ki-input-outlined-bg`: Surface of an outlined text field. Default: `var(--ki-surface-transparent)`.
 - `--ki-input-outlined-border`: Full outline of an enabled outlined text field. Default: `var(--ki-outline-control)`.
 - `--ki-input-outlined-fg`: Entered text on an outlined field. Default: `var(--ki-text-high-em)`.

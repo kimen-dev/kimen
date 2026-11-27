@@ -18,6 +18,7 @@ const action = (name: string) => page.getByRole('menuitem', { name });
 const checkbox = () => page.getByRole('menuitemcheckbox', { name: 'Pin to sidebar' });
 const filter = () => page.getByRole('searchbox', { name: 'Filter actions' });
 const browserCommands = commands as unknown as {
+  emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
   ariaSnapshot: (selector: string) => Promise<string>;
 };
 
@@ -322,4 +323,45 @@ it('binds a trigger in the same containing shadow root', async () => {
   await button.click();
   await expect.element(page.getByRole('menu', { name: 'More actions' })).toBeVisible();
   await expect.poll(() => action('Rename').query()?.matches(':focus')).toBe(true);
+});
+
+it('S18 the menu themes action, shortcut, filter and group label backgrounds', async () => {
+  const { menu } = mount('filter-label="Filter actions"');
+  const rest = 'rgb(210, 235, 250)';
+  const dangerRest = 'rgb(250, 220, 210)';
+  const dangerFocused = 'rgb(250, 205, 195)';
+  const meta = 'rgb(220, 240, 230)';
+  const metaFocused = 'rgb(200, 230, 215)';
+  const group = 'rgb(235, 225, 250)';
+  try {
+    await browserCommands.emulateReducedMotion('reduce');
+    menu.style.setProperty('--ki-menu-item-bg', rest);
+    menu.style.setProperty('--ki-menu-item-danger-bg', dangerRest);
+    menu.style.setProperty('--ki-menu-item-danger-hover-bg', dangerFocused);
+    menu.style.setProperty('--ki-menu-meta-bg', meta);
+    menu.style.setProperty('--ki-menu-meta-hover-bg', metaFocused);
+    menu.style.setProperty('--ki-menu-group-bg', group);
+    await openMenu();
+    const rename = action('Rename').element() as HTMLElement;
+    const remove = action('Delete').element() as HTMLElement;
+    const shortcut = page.getByText('F2', { exact: true }).element();
+    const groupLabel = page.getByText('Edit', { exact: true }).element();
+    expect(getComputedStyle(rename).backgroundColor).toBe(rest);
+    expect(getComputedStyle(remove).backgroundColor).toBe(dangerRest);
+    expect(getComputedStyle(shortcut).backgroundColor).toBe(meta);
+    expect(getComputedStyle(filter().element()).backgroundColor).toBe(meta);
+    expect(getComputedStyle(groupLabel).backgroundColor).toBe(group);
+
+    // Start in the filter with keyboard modality, then move to the first item.
+    const search = filter().element() as HTMLElement;
+    search.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.poll(() => rename.matches(':focus-visible')).toBe(true);
+    expect(getComputedStyle(shortcut).backgroundColor).toBe(metaFocused);
+    await userEvent.keyboard('{End}');
+    await expect.poll(() => remove.matches(':focus-visible')).toBe(true);
+    expect(getComputedStyle(remove).backgroundColor).toBe(dangerFocused);
+  } finally {
+    await browserCommands.emulateReducedMotion(null);
+  }
 });

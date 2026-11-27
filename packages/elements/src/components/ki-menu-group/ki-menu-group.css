@@ -13,6 +13,7 @@
 [part="label"] {
   padding-block-start: var(--ki-menu-padding);
   padding-inline: var(--ki-menu-inline-padding);
+  background-color: var(--ki-menu-group-bg);
   color: var(--ki-menu-group-fg);
   font-size: var(--ki-menu-meta-font-size);
   font-weight: var(--ki-menu-group-label-weight);

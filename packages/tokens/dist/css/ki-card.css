@@ -1,7 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-card-border-width:var(--ki-size-border-hairline);
-  --ki-contrast-more-card-border-color:var(--ki-outline-strong);
   --ki-card-bg:var(--ki-surface-special-light-s0-dark-s1);
   --ki-card-fg:var(--ki-text-high-em);
   --ki-card-border-color:var(--ki-outline-low-em);
@@ -29,6 +27,8 @@
   --ki-card-hover-shadow:var(--ki-elevation-e2);
   --ki-card-hover-overlay:var(--ki-surface-hover-overlay);
   --ki-card-title-family:var(--ki-typography-family-heading);
+  --ki-contrast-more-card-border-width:var(--ki-size-border-hairline);
+  --ki-contrast-more-card-border-color:var(--ki-outline-strong);
 }
 
 @media (prefers-contrast: more) {

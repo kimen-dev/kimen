@@ -49,6 +49,14 @@
       "scope:tokens"
     ],
     "targets": {
+      "test": {
+        "inputs": [
+          "default",
+          "{workspaceRoot}/packages/elements/src/components/**/*.{css,tsx}",
+          "{workspaceRoot}/packages/elements/src/utils/**/*.css",
+          "{workspaceRoot}/scripts/lib/token-inventory.mjs"
+        ]
+      },
       "size": {
         "inputs": [
           "default",

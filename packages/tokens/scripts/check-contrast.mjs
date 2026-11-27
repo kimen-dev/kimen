@@ -1151,6 +1151,17 @@ const SEPARATOR_SURFACES = ['--ki-surface-s0', '--ki-surface-s1'];
 // cell is a wash only while it stays a tint, never a panel.
 const STATE_WASH = /-(?:hover|active|pressed|highlight|focus)-/u;
 const WASH_MAX_ALPHA = 0.5;
+const BUTTON_ACTIVE_BG = /^--ki-button-[a-z]+-[a-z]+-active-bg$/u;
+
+function pressWash(surface) {
+  if (/^--ki-button-primary-[a-z]+-active-bg$/u.test(surface)) {
+    return '--ki-button-primary-active-overlay';
+  }
+  if (/^--ki-button-(?:secondary|tertiary)-neutral-active-bg$/u.test(surface)) {
+    return '--ki-button-secondary-active-overlay';
+  }
+  return null;
+}
 
 export function chroma({ r, g, b }) {
   return (Math.max(r, g, b) - Math.min(r, g, b)) / 255;
@@ -1172,7 +1183,13 @@ function sweepOpaqueSurfaces(theme, scheme, declarations) {
   const failures = [];
   for (const pair of componentPairs(declarations)) {
     const alpha = parseColor(resolveCustomProperty(pair.surface, declarations)).a;
-    if (STATE_WASH.test(pair.surface) && alpha <= WASH_MAX_ALPHA) continue;
+    if (
+      STATE_WASH.test(pair.surface) &&
+      alpha <= WASH_MAX_ALPHA &&
+      !BUTTON_ACTIVE_BG.test(pair.surface)
+    ) {
+      continue;
+    }
     if (alpha > 0 && alpha < 1) {
       failures.push(
         `${theme}/${scheme} ${pair.surface}: alpha ${alpha} (a content surface must be opaque)`,
@@ -1200,7 +1217,9 @@ function sweepEnhancedContrast(theme, scheme, declarations) {
     ...componentPairs(declarations).filter((pair) => pair.minRatio === MIN_RATIO),
   ];
   for (const pair of textPairs) {
-    const surface = painted(pair.surface);
+    const fill = painted(pair.surface);
+    const wash = pressWash(pair.surface);
+    const surface = wash === null ? fill : painted(wash, fill);
     const text = painted(pair.text, surface);
     if (!isNeutral(surface) || !isNeutral(text)) continue;
     const ratio = contrastRatio(text, surface);
@@ -1335,10 +1354,12 @@ function evaluateContext(theme, scheme, declarations) {
     const min = pair.minRatio ?? MIN_RATIO;
 
     for (const backdrop of backdrops) {
-      const surface =
+      const fill =
         rawSurface.a < 1
           ? compositeOver(rawSurface, parseColor(resolveCustomProperty(backdrop, declarations)))
           : rawSurface;
+      const wash = pressWash(pair.surface);
+      const surface = wash === null ? fill : compositeOver(resolveColour(wash, declarations), fill);
       const ratio = contrastRatio(text, surface);
       if (ratio < min) {
         const suffix = backdrops.length > 1 ? ` over ${backdrop}` : '';

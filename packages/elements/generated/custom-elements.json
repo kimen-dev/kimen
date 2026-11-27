@@ -3612,6 +3612,41 @@
               "default": "var(--ki-typography-weight-body-medium)"
             },
             {
+              "name": "--ki-button-ghost-active-shadow",
+              "description": "Shadow of a pressed ghost button.",
+              "default": "none"
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-bg",
+              "description": "Fill of a pressed ghost danger button.",
+              "default": "var(--ki-surface-danger-low-em)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-border",
+              "description": "Edge of a pressed ghost danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-fg",
+              "description": "Ink of a pressed ghost danger button.",
+              "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-bg",
+              "description": "Fill of a disabled ghost danger button.",
+              "default": "var(--ki-transparent-inverse)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-border",
+              "description": "Edge of a disabled ghost danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-fg",
+              "description": "Ink of a disabled ghost danger button.",
+              "default": "var(--ki-text-muted)"
+            },
+            {
               "name": "--ki-button-ghost-danger-hover-bg",
               "description": "color used by the button component for ghost danger hover background.",
               "default": "var(--ki-surface-danger-base-em-alpha)"
@@ -3650,6 +3685,21 @@
               "name": "--ki-button-ghost-hover-shadow",
               "description": "value used by the button component for ghost hover shadow.",
               "default": "none"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-bg",
+              "description": "Fill of a pressed ghost neutral button.",
+              "default": "var(--ki-surface-primary-low-em)"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-border",
+              "description": "Edge of a pressed ghost neutral button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-fg",
+              "description": "Ink of a pressed ghost neutral button.",
+              "default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-ghost-neutral-disabled-bg",
@@ -3711,6 +3761,36 @@
               "name": "--ki-button-ghost-selected-fg",
               "description": "Foreground of the selected ghost button toggle.",
               "default": "var(--ki-text-primary-on-primary)"
+            },
+            {
+              "name": "--ki-button-ghost-success-active-bg",
+              "description": "Fill of a pressed ghost success button.",
+              "default": "var(--ki-surface-success-low-em)"
+            },
+            {
+              "name": "--ki-button-ghost-success-active-border",
+              "description": "Edge of a pressed ghost success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-success-active-fg",
+              "description": "Ink of a pressed ghost success button.",
+              "default": "var(--ki-text-success-high-em)"
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-bg",
+              "description": "Fill of a disabled ghost success button.",
+              "default": "var(--ki-transparent-inverse)"
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-border",
+              "description": "Edge of a disabled ghost success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-fg",
+              "description": "Ink of a disabled ghost success button.",
+              "default": "var(--ki-text-muted)"
             },
             {
               "name": "--ki-button-ghost-success-hover-bg",
@@ -3906,6 +3986,42 @@
               "default": "var(--ki-state-layer-pressed)"
             },
             {
+              "name": "--ki-button-primary-active-shadow",
+              "description": "Shadow of a pressed primary button.",
+              "default": "var(--ki-effect-component-primary-default-shadow)"
+            },
+            {
+              "name": "--ki-button-primary-danger-active-bg",
+              "description": "Fill of a pressed primary danger button.",
+              "default": "var(--ki-surface-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-primary-danger-active-border",
+              "description": "Edge of a pressed primary danger button.",
+              "default": "var(--ki-outline-primary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-danger-active-fg",
+              "description": "Ink of a pressed primary danger button.",
+              "default": "var(--ki-text-primary-on-danger)"
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-bg",
+              "description": "Fill of a disabled primary danger button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-border",
+              "description": "Edge of a disabled primary danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-fg",
+              "description": "Ink of a disabled primary danger button.",
+              "default": "var(--ki-text-muted)"
+            },
+            {
               "name": "--ki-button-primary-danger-hover-bg",
               "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
               "default": "var(--ki-surface-danger-high-em)"
@@ -3952,6 +4068,22 @@
               "name": "--ki-button-primary-hover-shadow",
               "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).",
               "default": "var(--ki-effect-component-primary-hover-shadow)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-bg",
+              "description": "Fill of a pressed primary neutral button.",
+              "default": "var(--ki-surface-primary-med-em)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-border",
+              "description": "Edge of a pressed primary neutral button.",
+              "default": "var(--ki-outline-primary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-fg",
+              "description": "Ink of a pressed primary neutral button.",
+              "default": "var(--ki-text-primary-on-primary)"
             },
             {
               "name": "--ki-button-primary-neutral-disabled-bg",
@@ -4023,6 +4155,37 @@
               "default": "var(--ki-text-primary-on-primary)"
             },
             {
+              "name": "--ki-button-primary-success-active-bg",
+              "description": "Fill of a pressed primary success button.",
+              "default": "var(--ki-surface-success-high-em)"
+            },
+            {
+              "name": "--ki-button-primary-success-active-border",
+              "description": "Edge of a pressed primary success button.",
+              "default": "var(--ki-outline-primary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-success-active-fg",
+              "description": "Ink of a pressed primary success button.",
+              "default": "var(--ki-text-primary-on-success)"
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-bg",
+              "description": "Fill of a disabled primary success button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-border",
+              "description": "Edge of a disabled primary success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-fg",
+              "description": "Ink of a disabled primary success button.",
+              "default": "var(--ki-text-muted)"
+            },
+            {
               "name": "--ki-button-primary-success-hover-bg",
               "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
               "default": "var(--ki-surface-success-high-em)"
@@ -4053,6 +4216,43 @@
               "name": "--ki-button-primary-success-rest-fg",
               "description": "color used by the button component for primary success rest foreground.",
               "default": "var(--ki-text-primary-on-success)"
+            },
+            {
+              "name": "--ki-button-quaternary-active-shadow",
+              "description": "Shadow of a pressed quaternary button.",
+              "default": "none"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-bg",
+              "description": "Fill of a pressed quaternary danger button.",
+              "default": "var(--ki-surface-danger-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-border",
+              "description": "Edge of a pressed quaternary danger button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-fg",
+              "description": "Ink of a pressed quaternary danger button.",
+              "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-bg",
+              "description": "Fill of a disabled quaternary danger button.",
+              "default": "var(--ki-transparent-inverse)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-border",
+              "description": "Edge of a disabled quaternary danger button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-fg",
+              "description": "Ink of a disabled quaternary danger button.",
+              "default": "var(--ki-button-quaternary-neutral-disabled-fg)"
             },
             {
               "name": "--ki-button-quaternary-danger-hover-bg",
@@ -4095,6 +4295,24 @@
               "name": "--ki-button-quaternary-hover-shadow",
               "description": "value used by the button component for quaternary hover shadow.",
               "default": "none"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-bg",
+              "description": "Fill of a pressed quaternary neutral button.",
+              "default": "var(--ki-surface-pressed-overlay-inverse)",
+              "material3Default": "var(--ki-surface-primary-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-border",
+              "description": "Edge of a pressed quaternary neutral button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-primary-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-fg",
+              "description": "Ink of a pressed quaternary neutral button.",
+              "default": "var(--ki-text-supporting)",
+              "material3Default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-bg",
@@ -4164,6 +4382,38 @@
               "default": "var(--ki-text-primary-on-primary)"
             },
             {
+              "name": "--ki-button-quaternary-success-active-bg",
+              "description": "Fill of a pressed quaternary success button.",
+              "default": "var(--ki-surface-success-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-border",
+              "description": "Edge of a pressed quaternary success button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-success-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-fg",
+              "description": "Ink of a pressed quaternary success button.",
+              "default": "var(--ki-text-success-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-bg",
+              "description": "Fill of a disabled quaternary success button.",
+              "default": "var(--ki-transparent-inverse)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-border",
+              "description": "Edge of a disabled quaternary success button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-fg",
+              "description": "Ink of a disabled quaternary success button.",
+              "default": "var(--ki-button-quaternary-neutral-disabled-fg)"
+            },
+            {
               "name": "--ki-button-quaternary-success-hover-bg",
               "description": "color used by the button component for quaternary success hover background.",
               "default": "var(--ki-surface-success-base-em-alpha)"
@@ -4200,6 +4450,42 @@
               "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
               "default": "var(--ki-surface-pressed-overlay-inverse)",
               "material3Default": "var(--ki-state-layer-pressed)"
+            },
+            {
+              "name": "--ki-button-secondary-active-shadow",
+              "description": "Shadow of a pressed secondary button.",
+              "default": "var(--ki-effect-component-secondary-default-shadow)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-bg",
+              "description": "Fill of a pressed secondary danger button.",
+              "default": "var(--ki-surface-danger-low-em)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-border",
+              "description": "Edge of a pressed secondary danger button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-fg",
+              "description": "Ink of a pressed secondary danger button.",
+              "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-bg",
+              "description": "Fill of a disabled secondary danger button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-border",
+              "description": "Edge of a disabled secondary danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-fg",
+              "description": "Ink of a disabled secondary danger button.",
+              "default": "var(--ki-text-muted)"
             },
             {
               "name": "--ki-button-secondary-danger-hover-bg",
@@ -4248,6 +4534,22 @@
               "name": "--ki-button-secondary-hover-shadow",
               "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
               "default": "var(--ki-effect-component-secondary-hover-shadow)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-bg",
+              "description": "Fill of a pressed secondary neutral button.",
+              "default": "var(--ki-surface-special-secondary-alpha-base)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-border",
+              "description": "Edge of a pressed secondary neutral button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-fg",
+              "description": "Ink of a pressed secondary neutral button.",
+              "default": "var(--ki-text-high-em)"
             },
             {
               "name": "--ki-button-secondary-neutral-disabled-bg",
@@ -4317,6 +4619,37 @@
               "name": "--ki-button-secondary-selected-fg",
               "description": "Foreground of the selected secondary button toggle.",
               "default": "var(--ki-text-primary-on-secondary)"
+            },
+            {
+              "name": "--ki-button-secondary-success-active-bg",
+              "description": "Fill of a pressed secondary success button.",
+              "default": "var(--ki-surface-success-low-em)"
+            },
+            {
+              "name": "--ki-button-secondary-success-active-border",
+              "description": "Edge of a pressed secondary success button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-success-active-fg",
+              "description": "Ink of a pressed secondary success button.",
+              "default": "var(--ki-text-success-high-em)"
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-bg",
+              "description": "Fill of a disabled secondary success button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-border",
+              "description": "Edge of a disabled secondary success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-fg",
+              "description": "Ink of a disabled secondary success button.",
+              "default": "var(--ki-text-muted)"
             },
             {
               "name": "--ki-button-secondary-success-hover-bg",
@@ -4407,6 +4740,44 @@
               "default": "var(--ki-space-xxs)"
             },
             {
+              "name": "--ki-button-tertiary-active-shadow",
+              "description": "Shadow of a pressed tertiary button.",
+              "default": "var(--ki-effect-component-secondary-default-shadow)",
+              "material3Default": "0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-bg",
+              "description": "Fill of a pressed tertiary danger button.",
+              "default": "var(--ki-surface-danger-low-em)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-border",
+              "description": "Edge of a pressed tertiary danger button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-fg",
+              "description": "Ink of a pressed tertiary danger button.",
+              "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-bg",
+              "description": "Fill of a disabled tertiary danger button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-border",
+              "description": "Edge of a disabled tertiary danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-fg",
+              "description": "Ink of a disabled tertiary danger button.",
+              "default": "var(--ki-text-muted)"
+            },
+            {
               "name": "--ki-button-tertiary-danger-hover-bg",
               "description": "Tertiary alias of the secondary danger hover background.",
               "default": "var(--ki-surface-danger-low-em)",
@@ -4456,6 +4827,24 @@
               "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).",
               "default": "var(--ki-effect-component-secondary-hover-shadow)",
               "material3Default": "0px 1px 3px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 4px 8px 3px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-bg",
+              "description": "Fill of a pressed tertiary neutral button.",
+              "default": "var(--ki-surface-special-secondary-alpha-base)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-border",
+              "description": "Edge of a pressed tertiary neutral button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-fg",
+              "description": "Ink of a pressed tertiary neutral button.",
+              "default": "var(--ki-text-high-em)",
+              "material3Default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-tertiary-neutral-disabled-bg",
@@ -4519,6 +4908,38 @@
               "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override).",
               "default": "var(--ki-effect-component-secondary-default-shadow)",
               "material3Default": "0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))"
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-bg",
+              "description": "Fill of a pressed tertiary success button.",
+              "default": "var(--ki-surface-success-low-em)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-border",
+              "description": "Edge of a pressed tertiary success button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-fg",
+              "description": "Ink of a pressed tertiary success button.",
+              "default": "var(--ki-text-success-high-em)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-bg",
+              "description": "Fill of a disabled tertiary success button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-border",
+              "description": "Edge of a disabled tertiary success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-fg",
+              "description": "Ink of a disabled tertiary success button.",
+              "default": "var(--ki-text-muted)"
             },
             {
               "name": "--ki-button-tertiary-success-hover-bg",
@@ -4752,6 +5173,14 @@
             {
               "variant": "ghost",
               "tone": null,
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-active-shadow"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": null,
               "state": "disabled",
               "tokens": [
                 "--ki-button-ghost-disabled-shadow"
@@ -4787,6 +5216,26 @@
             {
               "variant": "ghost",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-danger-active-bg",
+                "--ki-button-ghost-danger-active-border",
+                "--ki-button-ghost-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-ghost-danger-disabled-bg",
+                "--ki-button-ghost-danger-disabled-border",
+                "--ki-button-ghost-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-ghost-danger-hover-bg",
@@ -4802,6 +5251,16 @@
                 "--ki-button-ghost-neutral-rest-bg",
                 "--ki-button-ghost-neutral-rest-border",
                 "--ki-button-ghost-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-neutral-active-bg",
+                "--ki-button-ghost-neutral-active-border",
+                "--ki-button-ghost-neutral-active-fg"
               ]
             },
             {
@@ -4832,6 +5291,26 @@
                 "--ki-button-ghost-success-rest-bg",
                 "--ki-button-ghost-success-rest-border",
                 "--ki-button-ghost-success-rest-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-success-active-bg",
+                "--ki-button-ghost-success-active-border",
+                "--ki-button-ghost-success-active-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-ghost-success-disabled-bg",
+                "--ki-button-ghost-success-disabled-border",
+                "--ki-button-ghost-success-disabled-fg"
               ]
             },
             {
@@ -4888,7 +5367,8 @@
               "tone": null,
               "state": "active",
               "tokens": [
-                "--ki-button-primary-active-overlay"
+                "--ki-button-primary-active-overlay",
+                "--ki-button-primary-active-shadow"
               ]
             },
             {
@@ -4930,6 +5410,26 @@
             {
               "variant": "primary",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-primary-danger-active-bg",
+                "--ki-button-primary-danger-active-border",
+                "--ki-button-primary-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-primary-danger-disabled-bg",
+                "--ki-button-primary-danger-disabled-border",
+                "--ki-button-primary-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-primary-danger-hover-bg",
@@ -4945,6 +5445,16 @@
                 "--ki-button-primary-neutral-rest-bg",
                 "--ki-button-primary-neutral-rest-border",
                 "--ki-button-primary-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-primary-neutral-active-bg",
+                "--ki-button-primary-neutral-active-border",
+                "--ki-button-primary-neutral-active-fg"
               ]
             },
             {
@@ -4980,6 +5490,26 @@
             {
               "variant": "primary",
               "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-primary-success-active-bg",
+                "--ki-button-primary-success-active-border",
+                "--ki-button-primary-success-active-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-primary-success-disabled-bg",
+                "--ki-button-primary-success-disabled-border",
+                "--ki-button-primary-success-disabled-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "success",
               "state": "hover",
               "tokens": [
                 "--ki-button-primary-success-hover-bg",
@@ -4993,6 +5523,14 @@
               "state": "rest",
               "tokens": [
                 "--ki-button-quaternary-rest-shadow"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": null,
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-active-shadow"
               ]
             },
             {
@@ -5033,6 +5571,26 @@
             {
               "variant": "quaternary",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-danger-active-bg",
+                "--ki-button-quaternary-danger-active-border",
+                "--ki-button-quaternary-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-quaternary-danger-disabled-bg",
+                "--ki-button-quaternary-danger-disabled-border",
+                "--ki-button-quaternary-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-quaternary-danger-hover-bg",
@@ -5048,6 +5606,16 @@
                 "--ki-button-quaternary-neutral-rest-bg",
                 "--ki-button-quaternary-neutral-rest-border",
                 "--ki-button-quaternary-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-neutral-active-bg",
+                "--ki-button-quaternary-neutral-active-border",
+                "--ki-button-quaternary-neutral-active-fg"
               ]
             },
             {
@@ -5083,6 +5651,26 @@
             {
               "variant": "quaternary",
               "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-success-active-bg",
+                "--ki-button-quaternary-success-active-border",
+                "--ki-button-quaternary-success-active-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-quaternary-success-disabled-bg",
+                "--ki-button-quaternary-success-disabled-border",
+                "--ki-button-quaternary-success-disabled-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "success",
               "state": "hover",
               "tokens": [
                 "--ki-button-quaternary-success-hover-bg",
@@ -5104,7 +5692,8 @@
               "tone": null,
               "state": "active",
               "tokens": [
-                "--ki-button-secondary-active-overlay"
+                "--ki-button-secondary-active-overlay",
+                "--ki-button-secondary-active-shadow"
               ]
             },
             {
@@ -5146,6 +5735,26 @@
             {
               "variant": "secondary",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-secondary-danger-active-bg",
+                "--ki-button-secondary-danger-active-border",
+                "--ki-button-secondary-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-secondary-danger-disabled-bg",
+                "--ki-button-secondary-danger-disabled-border",
+                "--ki-button-secondary-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-secondary-danger-hover-bg",
@@ -5161,6 +5770,16 @@
                 "--ki-button-secondary-neutral-rest-bg",
                 "--ki-button-secondary-neutral-rest-border",
                 "--ki-button-secondary-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-secondary-neutral-active-bg",
+                "--ki-button-secondary-neutral-active-border",
+                "--ki-button-secondary-neutral-active-fg"
               ]
             },
             {
@@ -5196,6 +5815,26 @@
             {
               "variant": "secondary",
               "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-secondary-success-active-bg",
+                "--ki-button-secondary-success-active-border",
+                "--ki-button-secondary-success-active-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-secondary-success-disabled-bg",
+                "--ki-button-secondary-success-disabled-border",
+                "--ki-button-secondary-success-disabled-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "success",
               "state": "hover",
               "tokens": [
                 "--ki-button-secondary-success-hover-bg",
@@ -5210,6 +5849,14 @@
               "tokens": [
                 "--ki-button-tertiary-rest-border-bottom",
                 "--ki-button-tertiary-rest-shadow"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": null,
+              "state": "active",
+              "tokens": [
+                "--ki-button-tertiary-active-shadow"
               ]
             },
             {
@@ -5242,6 +5889,26 @@
             {
               "variant": "tertiary",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-tertiary-danger-active-bg",
+                "--ki-button-tertiary-danger-active-border",
+                "--ki-button-tertiary-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-tertiary-danger-disabled-bg",
+                "--ki-button-tertiary-danger-disabled-border",
+                "--ki-button-tertiary-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-tertiary-danger-hover-bg",
@@ -5257,6 +5924,16 @@
                 "--ki-button-tertiary-neutral-rest-bg",
                 "--ki-button-tertiary-neutral-rest-border",
                 "--ki-button-tertiary-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-tertiary-neutral-active-bg",
+                "--ki-button-tertiary-neutral-active-border",
+                "--ki-button-tertiary-neutral-active-fg"
               ]
             },
             {
@@ -5287,6 +5964,26 @@
                 "--ki-button-tertiary-success-rest-bg",
                 "--ki-button-tertiary-success-rest-border",
                 "--ki-button-tertiary-success-rest-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-tertiary-success-active-bg",
+                "--ki-button-tertiary-success-active-border",
+                "--ki-button-tertiary-success-active-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-tertiary-success-disabled-bg",
+                "--ki-button-tertiary-success-disabled-border",
+                "--ki-button-tertiary-success-disabled-fg"
               ]
             },
             {
@@ -11324,6 +12021,11 @@
               "default": "var(--ki-typography-weight-body-medium)"
             },
             {
+              "name": "--ki-button-ghost-active-shadow",
+              "description": "Shadow of a pressed ghost button.",
+              "default": "none"
+            },
+            {
               "name": "--ki-button-ghost-danger-hover-bg",
               "description": "color used by the button component for ghost danger hover background.",
               "default": "var(--ki-surface-danger-base-em-alpha)"
@@ -11362,6 +12064,21 @@
               "name": "--ki-button-ghost-hover-shadow",
               "description": "value used by the button component for ghost hover shadow.",
               "default": "none"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-bg",
+              "description": "Fill of a pressed ghost neutral button.",
+              "default": "var(--ki-surface-primary-low-em)"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-border",
+              "description": "Edge of a pressed ghost neutral button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-fg",
+              "description": "Ink of a pressed ghost neutral button.",
+              "default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-ghost-neutral-disabled-bg",
@@ -11618,6 +12335,11 @@
               "default": "var(--ki-state-layer-pressed)"
             },
             {
+              "name": "--ki-button-primary-active-shadow",
+              "description": "Shadow of a pressed primary button.",
+              "default": "var(--ki-effect-component-primary-default-shadow)"
+            },
+            {
               "name": "--ki-button-primary-danger-hover-bg",
               "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
               "default": "var(--ki-surface-danger-high-em)"
@@ -11664,6 +12386,22 @@
               "name": "--ki-button-primary-hover-shadow",
               "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).",
               "default": "var(--ki-effect-component-primary-hover-shadow)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-bg",
+              "description": "Fill of a pressed primary neutral button.",
+              "default": "var(--ki-surface-primary-med-em)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-border",
+              "description": "Edge of a pressed primary neutral button.",
+              "default": "var(--ki-outline-primary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-fg",
+              "description": "Ink of a pressed primary neutral button.",
+              "default": "var(--ki-text-primary-on-primary)"
             },
             {
               "name": "--ki-button-primary-neutral-disabled-bg",
@@ -11767,6 +12505,11 @@
               "default": "var(--ki-text-primary-on-success)"
             },
             {
+              "name": "--ki-button-quaternary-active-shadow",
+              "description": "Shadow of a pressed quaternary button.",
+              "default": "none"
+            },
+            {
               "name": "--ki-button-quaternary-danger-hover-bg",
               "description": "color used by the button component for quaternary danger hover background.",
               "default": "var(--ki-surface-danger-base-em-alpha)"
@@ -11807,6 +12550,24 @@
               "name": "--ki-button-quaternary-hover-shadow",
               "description": "value used by the button component for quaternary hover shadow.",
               "default": "none"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-bg",
+              "description": "Fill of a pressed quaternary neutral button.",
+              "default": "var(--ki-surface-pressed-overlay-inverse)",
+              "material3Default": "var(--ki-surface-primary-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-border",
+              "description": "Edge of a pressed quaternary neutral button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-primary-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-fg",
+              "description": "Ink of a pressed quaternary neutral button.",
+              "default": "var(--ki-text-supporting)",
+              "material3Default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-bg",
@@ -11914,6 +12675,11 @@
               "material3Default": "var(--ki-state-layer-pressed)"
             },
             {
+              "name": "--ki-button-secondary-active-shadow",
+              "description": "Shadow of a pressed secondary button.",
+              "default": "var(--ki-effect-component-secondary-default-shadow)"
+            },
+            {
               "name": "--ki-button-secondary-danger-hover-bg",
               "description": "color used by the button component for secondary danger hover background.",
               "default": "var(--ki-surface-danger-low-em)"
@@ -11960,6 +12726,22 @@
               "name": "--ki-button-secondary-hover-shadow",
               "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
               "default": "var(--ki-effect-component-secondary-hover-shadow)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-bg",
+              "description": "Fill of a pressed secondary neutral button.",
+              "default": "var(--ki-surface-special-secondary-alpha-base)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-border",
+              "description": "Edge of a pressed secondary neutral button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-fg",
+              "description": "Ink of a pressed secondary neutral button.",
+              "default": "var(--ki-text-high-em)"
             },
             {
               "name": "--ki-button-secondary-neutral-disabled-bg",
@@ -12119,6 +12901,12 @@
               "default": "var(--ki-space-xxs)"
             },
             {
+              "name": "--ki-button-tertiary-active-shadow",
+              "description": "Shadow of a pressed tertiary button.",
+              "default": "var(--ki-effect-component-secondary-default-shadow)",
+              "material3Default": "0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))"
+            },
+            {
               "name": "--ki-button-tertiary-danger-hover-bg",
               "description": "Tertiary alias of the secondary danger hover background.",
               "default": "var(--ki-surface-danger-low-em)",
@@ -12168,6 +12956,24 @@
               "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).",
               "default": "var(--ki-effect-component-secondary-hover-shadow)",
               "material3Default": "0px 1px 3px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 4px 8px 3px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-bg",
+              "description": "Fill of a pressed tertiary neutral button.",
+              "default": "var(--ki-surface-special-secondary-alpha-base)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-border",
+              "description": "Edge of a pressed tertiary neutral button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-fg",
+              "description": "Ink of a pressed tertiary neutral button.",
+              "default": "var(--ki-text-high-em)",
+              "material3Default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-tertiary-neutral-disabled-bg",
@@ -12447,6 +13253,14 @@
             {
               "variant": "ghost",
               "tone": null,
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-active-shadow"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": null,
               "state": "disabled",
               "tokens": [
                 "--ki-button-ghost-disabled-shadow"
@@ -12513,7 +13327,8 @@
               "tone": null,
               "state": "active",
               "tokens": [
-                "--ki-button-primary-active-overlay"
+                "--ki-button-primary-active-overlay",
+                "--ki-button-primary-active-shadow"
               ]
             },
             {
@@ -12548,6 +13363,14 @@
               "state": "rest",
               "tokens": [
                 "--ki-button-quaternary-rest-shadow"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": null,
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-active-shadow"
               ]
             },
             {
@@ -12589,7 +13412,8 @@
               "tone": null,
               "state": "active",
               "tokens": [
-                "--ki-button-secondary-active-overlay"
+                "--ki-button-secondary-active-overlay",
+                "--ki-button-secondary-active-shadow"
               ]
             },
             {
@@ -18488,6 +19312,41 @@
               "default": "var(--ki-focus-ring-width)"
             },
             {
+              "name": "--ki-button-ghost-active-shadow",
+              "description": "Shadow of a pressed ghost button.",
+              "default": "none"
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-bg",
+              "description": "Fill of a pressed ghost danger button.",
+              "default": "var(--ki-surface-danger-low-em)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-border",
+              "description": "Edge of a pressed ghost danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-fg",
+              "description": "Ink of a pressed ghost danger button.",
+              "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-bg",
+              "description": "Fill of a disabled ghost danger button.",
+              "default": "var(--ki-transparent-inverse)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-border",
+              "description": "Edge of a disabled ghost danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-fg",
+              "description": "Ink of a disabled ghost danger button.",
+              "default": "var(--ki-text-muted)"
+            },
+            {
               "name": "--ki-button-ghost-danger-hover-bg",
               "description": "color used by the button component for ghost danger hover background.",
               "default": "var(--ki-surface-danger-base-em-alpha)"
@@ -18526,6 +19385,21 @@
               "name": "--ki-button-ghost-hover-shadow",
               "description": "value used by the button component for ghost hover shadow.",
               "default": "none"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-bg",
+              "description": "Fill of a pressed ghost neutral button.",
+              "default": "var(--ki-surface-primary-low-em)"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-border",
+              "description": "Edge of a pressed ghost neutral button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-fg",
+              "description": "Ink of a pressed ghost neutral button.",
+              "default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-ghost-neutral-disabled-bg",
@@ -18578,6 +19452,36 @@
               "default": "none"
             },
             {
+              "name": "--ki-button-ghost-success-active-bg",
+              "description": "Fill of a pressed ghost success button.",
+              "default": "var(--ki-surface-success-low-em)"
+            },
+            {
+              "name": "--ki-button-ghost-success-active-border",
+              "description": "Edge of a pressed ghost success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-success-active-fg",
+              "description": "Ink of a pressed ghost success button.",
+              "default": "var(--ki-text-success-high-em)"
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-bg",
+              "description": "Fill of a disabled ghost success button.",
+              "default": "var(--ki-transparent-inverse)"
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-border",
+              "description": "Edge of a disabled ghost success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-fg",
+              "description": "Ink of a disabled ghost success button.",
+              "default": "var(--ki-text-muted)"
+            },
+            {
               "name": "--ki-button-ghost-success-hover-bg",
               "description": "color used by the button component for ghost success hover background.",
               "default": "var(--ki-surface-success-base-em-alpha)"
@@ -18623,6 +19527,42 @@
               "name": "--ki-button-primary-active-overlay",
               "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
               "default": "var(--ki-state-layer-pressed)"
+            },
+            {
+              "name": "--ki-button-primary-active-shadow",
+              "description": "Shadow of a pressed primary button.",
+              "default": "var(--ki-effect-component-primary-default-shadow)"
+            },
+            {
+              "name": "--ki-button-primary-danger-active-bg",
+              "description": "Fill of a pressed primary danger button.",
+              "default": "var(--ki-surface-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-primary-danger-active-border",
+              "description": "Edge of a pressed primary danger button.",
+              "default": "var(--ki-outline-primary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-danger-active-fg",
+              "description": "Ink of a pressed primary danger button.",
+              "default": "var(--ki-text-primary-on-danger)"
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-bg",
+              "description": "Fill of a disabled primary danger button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-border",
+              "description": "Edge of a disabled primary danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-fg",
+              "description": "Ink of a disabled primary danger button.",
+              "default": "var(--ki-text-muted)"
             },
             {
               "name": "--ki-button-primary-danger-hover-bg",
@@ -18671,6 +19611,22 @@
               "name": "--ki-button-primary-hover-shadow",
               "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).",
               "default": "var(--ki-effect-component-primary-hover-shadow)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-bg",
+              "description": "Fill of a pressed primary neutral button.",
+              "default": "var(--ki-surface-primary-med-em)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-border",
+              "description": "Edge of a pressed primary neutral button.",
+              "default": "var(--ki-outline-primary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-fg",
+              "description": "Ink of a pressed primary neutral button.",
+              "default": "var(--ki-text-primary-on-primary)"
             },
             {
               "name": "--ki-button-primary-neutral-disabled-bg",
@@ -18732,6 +19688,37 @@
               "default": "var(--ki-effect-component-primary-default-shadow)"
             },
             {
+              "name": "--ki-button-primary-success-active-bg",
+              "description": "Fill of a pressed primary success button.",
+              "default": "var(--ki-surface-success-high-em)"
+            },
+            {
+              "name": "--ki-button-primary-success-active-border",
+              "description": "Edge of a pressed primary success button.",
+              "default": "var(--ki-outline-primary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-success-active-fg",
+              "description": "Ink of a pressed primary success button.",
+              "default": "var(--ki-text-primary-on-success)"
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-bg",
+              "description": "Fill of a disabled primary success button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-border",
+              "description": "Edge of a disabled primary success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-fg",
+              "description": "Ink of a disabled primary success button.",
+              "default": "var(--ki-text-muted)"
+            },
+            {
               "name": "--ki-button-primary-success-hover-bg",
               "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
               "default": "var(--ki-surface-success-high-em)"
@@ -18762,6 +19749,43 @@
               "name": "--ki-button-primary-success-rest-fg",
               "description": "color used by the button component for primary success rest foreground.",
               "default": "var(--ki-text-primary-on-success)"
+            },
+            {
+              "name": "--ki-button-quaternary-active-shadow",
+              "description": "Shadow of a pressed quaternary button.",
+              "default": "none"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-bg",
+              "description": "Fill of a pressed quaternary danger button.",
+              "default": "var(--ki-surface-danger-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-border",
+              "description": "Edge of a pressed quaternary danger button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-fg",
+              "description": "Ink of a pressed quaternary danger button.",
+              "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-bg",
+              "description": "Fill of a disabled quaternary danger button.",
+              "default": "var(--ki-transparent-inverse)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-border",
+              "description": "Edge of a disabled quaternary danger button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-fg",
+              "description": "Ink of a disabled quaternary danger button.",
+              "default": "var(--ki-button-quaternary-neutral-disabled-fg)"
             },
             {
               "name": "--ki-button-quaternary-danger-hover-bg",
@@ -18804,6 +19828,24 @@
               "name": "--ki-button-quaternary-hover-shadow",
               "description": "value used by the button component for quaternary hover shadow.",
               "default": "none"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-bg",
+              "description": "Fill of a pressed quaternary neutral button.",
+              "default": "var(--ki-surface-pressed-overlay-inverse)",
+              "material3Default": "var(--ki-surface-primary-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-border",
+              "description": "Edge of a pressed quaternary neutral button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-primary-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-fg",
+              "description": "Ink of a pressed quaternary neutral button.",
+              "default": "var(--ki-text-supporting)",
+              "material3Default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-bg",
@@ -18863,6 +19905,38 @@
               "default": "none"
             },
             {
+              "name": "--ki-button-quaternary-success-active-bg",
+              "description": "Fill of a pressed quaternary success button.",
+              "default": "var(--ki-surface-success-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-border",
+              "description": "Edge of a pressed quaternary success button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-success-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-fg",
+              "description": "Ink of a pressed quaternary success button.",
+              "default": "var(--ki-text-success-high-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-bg",
+              "description": "Fill of a disabled quaternary success button.",
+              "default": "var(--ki-transparent-inverse)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-border",
+              "description": "Edge of a disabled quaternary success button.",
+              "default": "var(--ki-outline-none)",
+              "material3Default": "var(--ki-outline-low-em)"
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-fg",
+              "description": "Ink of a disabled quaternary success button.",
+              "default": "var(--ki-button-quaternary-neutral-disabled-fg)"
+            },
+            {
               "name": "--ki-button-quaternary-success-hover-bg",
               "description": "color used by the button component for quaternary success hover background.",
               "default": "var(--ki-surface-success-base-em-alpha)"
@@ -18899,6 +19973,42 @@
               "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
               "default": "var(--ki-surface-pressed-overlay-inverse)",
               "material3Default": "var(--ki-state-layer-pressed)"
+            },
+            {
+              "name": "--ki-button-secondary-active-shadow",
+              "description": "Shadow of a pressed secondary button.",
+              "default": "var(--ki-effect-component-secondary-default-shadow)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-bg",
+              "description": "Fill of a pressed secondary danger button.",
+              "default": "var(--ki-surface-danger-low-em)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-border",
+              "description": "Edge of a pressed secondary danger button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-fg",
+              "description": "Ink of a pressed secondary danger button.",
+              "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-bg",
+              "description": "Fill of a disabled secondary danger button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-border",
+              "description": "Edge of a disabled secondary danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-fg",
+              "description": "Ink of a disabled secondary danger button.",
+              "default": "var(--ki-text-muted)"
             },
             {
               "name": "--ki-button-secondary-danger-hover-bg",
@@ -18947,6 +20057,22 @@
               "name": "--ki-button-secondary-hover-shadow",
               "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
               "default": "var(--ki-effect-component-secondary-hover-shadow)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-bg",
+              "description": "Fill of a pressed secondary neutral button.",
+              "default": "var(--ki-surface-special-secondary-alpha-base)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-border",
+              "description": "Edge of a pressed secondary neutral button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-fg",
+              "description": "Ink of a pressed secondary neutral button.",
+              "default": "var(--ki-text-high-em)"
             },
             {
               "name": "--ki-button-secondary-neutral-disabled-bg",
@@ -19008,6 +20134,37 @@
               "default": "var(--ki-effect-component-secondary-default-shadow)"
             },
             {
+              "name": "--ki-button-secondary-success-active-bg",
+              "description": "Fill of a pressed secondary success button.",
+              "default": "var(--ki-surface-success-low-em)"
+            },
+            {
+              "name": "--ki-button-secondary-success-active-border",
+              "description": "Edge of a pressed secondary success button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-success-active-fg",
+              "description": "Ink of a pressed secondary success button.",
+              "default": "var(--ki-text-success-high-em)"
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-bg",
+              "description": "Fill of a disabled secondary success button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-border",
+              "description": "Edge of a disabled secondary success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-fg",
+              "description": "Ink of a disabled secondary success button.",
+              "default": "var(--ki-text-muted)"
+            },
+            {
               "name": "--ki-button-secondary-success-hover-bg",
               "description": "color used by the button component for secondary success hover background.",
               "default": "var(--ki-surface-success-low-em)"
@@ -19054,6 +20211,44 @@
               "name": "--ki-button-spinner-stroke-width",
               "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width).",
               "default": "var(--ki-space-xxs)"
+            },
+            {
+              "name": "--ki-button-tertiary-active-shadow",
+              "description": "Shadow of a pressed tertiary button.",
+              "default": "var(--ki-effect-component-secondary-default-shadow)",
+              "material3Default": "0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-bg",
+              "description": "Fill of a pressed tertiary danger button.",
+              "default": "var(--ki-surface-danger-low-em)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-border",
+              "description": "Edge of a pressed tertiary danger button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-fg",
+              "description": "Ink of a pressed tertiary danger button.",
+              "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-bg",
+              "description": "Fill of a disabled tertiary danger button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-border",
+              "description": "Edge of a disabled tertiary danger button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-fg",
+              "description": "Ink of a disabled tertiary danger button.",
+              "default": "var(--ki-text-muted)"
             },
             {
               "name": "--ki-button-tertiary-danger-hover-bg",
@@ -19105,6 +20300,24 @@
               "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).",
               "default": "var(--ki-effect-component-secondary-hover-shadow)",
               "material3Default": "0px 1px 3px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 4px 8px 3px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-bg",
+              "description": "Fill of a pressed tertiary neutral button.",
+              "default": "var(--ki-surface-special-secondary-alpha-base)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-border",
+              "description": "Edge of a pressed tertiary neutral button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-fg",
+              "description": "Ink of a pressed tertiary neutral button.",
+              "default": "var(--ki-text-high-em)",
+              "material3Default": "var(--ki-text-primary-high-em)"
             },
             {
               "name": "--ki-button-tertiary-neutral-disabled-bg",
@@ -19168,6 +20381,38 @@
               "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override).",
               "default": "var(--ki-effect-component-secondary-default-shadow)",
               "material3Default": "0px 1px 2px 0px light-dark(var(--ki-color-black-24),var(--ki-color-black-32)),0px 2px 6px 2px light-dark(var(--ki-color-black-8),var(--ki-color-black-24))"
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-bg",
+              "description": "Fill of a pressed tertiary success button.",
+              "default": "var(--ki-surface-success-low-em)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-border",
+              "description": "Edge of a pressed tertiary success button.",
+              "default": "var(--ki-outline-secondary-button-top)",
+              "material3Default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-fg",
+              "description": "Ink of a pressed tertiary success button.",
+              "default": "var(--ki-text-success-high-em)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-bg",
+              "description": "Fill of a disabled tertiary success button.",
+              "default": "var(--ki-surface-disabled-low-em)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-border",
+              "description": "Edge of a disabled tertiary success button.",
+              "default": "var(--ki-outline-none)"
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-fg",
+              "description": "Ink of a disabled tertiary success button.",
+              "default": "var(--ki-text-muted)"
             },
             {
               "name": "--ki-button-tertiary-success-hover-bg",
@@ -19477,6 +20722,14 @@
             {
               "variant": "ghost",
               "tone": null,
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-active-shadow"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": null,
               "state": "disabled",
               "tokens": [
                 "--ki-button-ghost-disabled-shadow"
@@ -19512,6 +20765,26 @@
             {
               "variant": "ghost",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-danger-active-bg",
+                "--ki-button-ghost-danger-active-border",
+                "--ki-button-ghost-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-ghost-danger-disabled-bg",
+                "--ki-button-ghost-danger-disabled-border",
+                "--ki-button-ghost-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-ghost-danger-hover-bg",
@@ -19527,6 +20800,16 @@
                 "--ki-button-ghost-neutral-rest-bg",
                 "--ki-button-ghost-neutral-rest-border",
                 "--ki-button-ghost-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-neutral-active-bg",
+                "--ki-button-ghost-neutral-active-border",
+                "--ki-button-ghost-neutral-active-fg"
               ]
             },
             {
@@ -19557,6 +20840,26 @@
                 "--ki-button-ghost-success-rest-bg",
                 "--ki-button-ghost-success-rest-border",
                 "--ki-button-ghost-success-rest-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-ghost-success-active-bg",
+                "--ki-button-ghost-success-active-border",
+                "--ki-button-ghost-success-active-fg"
+              ]
+            },
+            {
+              "variant": "ghost",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-ghost-success-disabled-bg",
+                "--ki-button-ghost-success-disabled-border",
+                "--ki-button-ghost-success-disabled-fg"
               ]
             },
             {
@@ -19613,7 +20916,8 @@
               "tone": null,
               "state": "active",
               "tokens": [
-                "--ki-button-primary-active-overlay"
+                "--ki-button-primary-active-overlay",
+                "--ki-button-primary-active-shadow"
               ]
             },
             {
@@ -19655,6 +20959,26 @@
             {
               "variant": "primary",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-primary-danger-active-bg",
+                "--ki-button-primary-danger-active-border",
+                "--ki-button-primary-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-primary-danger-disabled-bg",
+                "--ki-button-primary-danger-disabled-border",
+                "--ki-button-primary-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-primary-danger-hover-bg",
@@ -19670,6 +20994,16 @@
                 "--ki-button-primary-neutral-rest-bg",
                 "--ki-button-primary-neutral-rest-border",
                 "--ki-button-primary-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-primary-neutral-active-bg",
+                "--ki-button-primary-neutral-active-border",
+                "--ki-button-primary-neutral-active-fg"
               ]
             },
             {
@@ -19705,6 +21039,26 @@
             {
               "variant": "primary",
               "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-primary-success-active-bg",
+                "--ki-button-primary-success-active-border",
+                "--ki-button-primary-success-active-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-primary-success-disabled-bg",
+                "--ki-button-primary-success-disabled-border",
+                "--ki-button-primary-success-disabled-fg"
+              ]
+            },
+            {
+              "variant": "primary",
+              "tone": "success",
               "state": "hover",
               "tokens": [
                 "--ki-button-primary-success-hover-bg",
@@ -19718,6 +21072,14 @@
               "state": "rest",
               "tokens": [
                 "--ki-button-quaternary-rest-shadow"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": null,
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-active-shadow"
               ]
             },
             {
@@ -19758,6 +21120,26 @@
             {
               "variant": "quaternary",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-danger-active-bg",
+                "--ki-button-quaternary-danger-active-border",
+                "--ki-button-quaternary-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-quaternary-danger-disabled-bg",
+                "--ki-button-quaternary-danger-disabled-border",
+                "--ki-button-quaternary-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-quaternary-danger-hover-bg",
@@ -19773,6 +21155,16 @@
                 "--ki-button-quaternary-neutral-rest-bg",
                 "--ki-button-quaternary-neutral-rest-border",
                 "--ki-button-quaternary-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-neutral-active-bg",
+                "--ki-button-quaternary-neutral-active-border",
+                "--ki-button-quaternary-neutral-active-fg"
               ]
             },
             {
@@ -19808,6 +21200,26 @@
             {
               "variant": "quaternary",
               "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-quaternary-success-active-bg",
+                "--ki-button-quaternary-success-active-border",
+                "--ki-button-quaternary-success-active-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-quaternary-success-disabled-bg",
+                "--ki-button-quaternary-success-disabled-border",
+                "--ki-button-quaternary-success-disabled-fg"
+              ]
+            },
+            {
+              "variant": "quaternary",
+              "tone": "success",
               "state": "hover",
               "tokens": [
                 "--ki-button-quaternary-success-hover-bg",
@@ -19829,7 +21241,8 @@
               "tone": null,
               "state": "active",
               "tokens": [
-                "--ki-button-secondary-active-overlay"
+                "--ki-button-secondary-active-overlay",
+                "--ki-button-secondary-active-shadow"
               ]
             },
             {
@@ -19871,6 +21284,26 @@
             {
               "variant": "secondary",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-secondary-danger-active-bg",
+                "--ki-button-secondary-danger-active-border",
+                "--ki-button-secondary-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-secondary-danger-disabled-bg",
+                "--ki-button-secondary-danger-disabled-border",
+                "--ki-button-secondary-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-secondary-danger-hover-bg",
@@ -19886,6 +21319,16 @@
                 "--ki-button-secondary-neutral-rest-bg",
                 "--ki-button-secondary-neutral-rest-border",
                 "--ki-button-secondary-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-secondary-neutral-active-bg",
+                "--ki-button-secondary-neutral-active-border",
+                "--ki-button-secondary-neutral-active-fg"
               ]
             },
             {
@@ -19921,6 +21364,26 @@
             {
               "variant": "secondary",
               "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-secondary-success-active-bg",
+                "--ki-button-secondary-success-active-border",
+                "--ki-button-secondary-success-active-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-secondary-success-disabled-bg",
+                "--ki-button-secondary-success-disabled-border",
+                "--ki-button-secondary-success-disabled-fg"
+              ]
+            },
+            {
+              "variant": "secondary",
+              "tone": "success",
               "state": "hover",
               "tokens": [
                 "--ki-button-secondary-success-hover-bg",
@@ -19935,6 +21398,14 @@
               "tokens": [
                 "--ki-button-tertiary-rest-border-bottom",
                 "--ki-button-tertiary-rest-shadow"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": null,
+              "state": "active",
+              "tokens": [
+                "--ki-button-tertiary-active-shadow"
               ]
             },
             {
@@ -19967,6 +21438,26 @@
             {
               "variant": "tertiary",
               "tone": "danger",
+              "state": "active",
+              "tokens": [
+                "--ki-button-tertiary-danger-active-bg",
+                "--ki-button-tertiary-danger-active-border",
+                "--ki-button-tertiary-danger-active-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "danger",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-tertiary-danger-disabled-bg",
+                "--ki-button-tertiary-danger-disabled-border",
+                "--ki-button-tertiary-danger-disabled-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "danger",
               "state": "hover",
               "tokens": [
                 "--ki-button-tertiary-danger-hover-bg",
@@ -19982,6 +21473,16 @@
                 "--ki-button-tertiary-neutral-rest-bg",
                 "--ki-button-tertiary-neutral-rest-border",
                 "--ki-button-tertiary-neutral-rest-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "neutral",
+              "state": "active",
+              "tokens": [
+                "--ki-button-tertiary-neutral-active-bg",
+                "--ki-button-tertiary-neutral-active-border",
+                "--ki-button-tertiary-neutral-active-fg"
               ]
             },
             {
@@ -20012,6 +21513,26 @@
                 "--ki-button-tertiary-success-rest-bg",
                 "--ki-button-tertiary-success-rest-border",
                 "--ki-button-tertiary-success-rest-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "success",
+              "state": "active",
+              "tokens": [
+                "--ki-button-tertiary-success-active-bg",
+                "--ki-button-tertiary-success-active-border",
+                "--ki-button-tertiary-success-active-fg"
+              ]
+            },
+            {
+              "variant": "tertiary",
+              "tone": "success",
+              "state": "disabled",
+              "tokens": [
+                "--ki-button-tertiary-success-disabled-bg",
+                "--ki-button-tertiary-success-disabled-border",
+                "--ki-button-tertiary-success-disabled-fg"
               ]
             },
             {
@@ -21385,6 +22906,11 @@
               "name": "--ki-input-line-height",
               "description": "dimension used by the input component for line height.",
               "default": "var(--ki-typography-line-height-body-1)"
+            },
+            {
+              "name": "--ki-input-min-target",
+              "description": "dimension used by the input component for min target.",
+              "default": "var(--ki-space-7xl)"
             },
             {
               "name": "--ki-input-outlined-bg",
@@ -23448,6 +24974,11 @@
               "default": "var(--ki-menu-layout-inline-max)"
             },
             {
+              "name": "--ki-menu-meta-bg",
+              "description": "Background behind shortcut hints and the filter placeholder.",
+              "default": "var(--ki-surface-raised)"
+            },
+            {
               "name": "--ki-menu-meta-fg",
               "description": "Foreground for shortcut hints and the filter placeholder.",
               "default": "var(--ki-text-supporting)"
@@ -23554,6 +25085,11 @@
               "name": "--ki-menu-font-family",
               "description": "Family for action labels and the filter.",
               "default": "var(--ki-typography-family-body)"
+            },
+            {
+              "name": "--ki-menu-group-bg",
+              "description": "Background behind group labels.",
+              "default": "var(--ki-surface-raised)"
             },
             {
               "name": "--ki-menu-group-fg",
@@ -23811,9 +25347,24 @@
               "default": "var(--ki-menu-layout-inline-space)"
             },
             {
+              "name": "--ki-menu-item-bg",
+              "description": "Background behind resting actions.",
+              "default": "var(--ki-surface-raised)"
+            },
+            {
+              "name": "--ki-menu-item-danger-bg",
+              "description": "Background behind destructive actions.",
+              "default": "var(--ki-surface-raised)"
+            },
+            {
               "name": "--ki-menu-item-danger-fg",
               "description": "Foreground for destructive actions.",
               "default": "var(--ki-text-danger-high-em)"
+            },
+            {
+              "name": "--ki-menu-item-danger-hover-bg",
+              "description": "Background behind hovered or keyboard-focused destructive actions.",
+              "default": "var(--ki-surface-s3)"
             },
             {
               "name": "--ki-menu-item-danger-hover-fg",
@@ -23861,6 +25412,11 @@
               "default": "var(--ki-menu-layout-row-radius)"
             },
             {
+              "name": "--ki-menu-meta-bg",
+              "description": "Background behind shortcut hints and the filter placeholder.",
+              "default": "var(--ki-surface-raised)"
+            },
+            {
               "name": "--ki-menu-meta-fg",
               "description": "Foreground for shortcut hints and the filter placeholder.",
               "default": "var(--ki-text-supporting)"
@@ -23869,6 +25425,11 @@
               "name": "--ki-menu-meta-font-size",
               "description": "Size of metadata and group labels.",
               "default": "var(--ki-typography-size-caption-2)"
+            },
+            {
+              "name": "--ki-menu-meta-hover-bg",
+              "description": "Background behind shortcut hints on a hovered or focused action.",
+              "default": "var(--ki-surface-s3)"
             },
             {
               "name": "--ki-menu-meta-hover-fg",
@@ -31802,6 +33363,12 @@
               "material3Default": "var(--ki-space-14xl)"
             },
             {
+              "name": "--ki-select-hover-bg",
+              "description": "Trigger fill on hover, beneath the hover wash.",
+              "default": "var(--ki-select-rest-bg)",
+              "material3Default": "var(--ki-surface-s3)"
+            },
+            {
               "name": "--ki-select-hover-border",
               "description": "color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover.",
               "default": "var(--ki-outline-control-hover)"
@@ -32218,6 +33785,7 @@
               "tone": null,
               "state": "hover",
               "tokens": [
+                "--ki-select-hover-bg",
                 "--ki-select-hover-border",
                 "--ki-select-hover-fg",
                 "--ki-select-hover-label-fg"
@@ -35979,6 +37547,11 @@
               "default": "var(--ki-control-border-width)"
             },
             {
+              "name": "--ki-suggestion-card-description-bg",
+              "description": "Resting card surface beneath the description.",
+              "default": "var(--ki-surface-s0)"
+            },
+            {
               "name": "--ki-suggestion-card-description-fg",
               "description": "Resting card description.",
               "default": "var(--ki-text-supporting)"
@@ -35989,9 +37562,19 @@
               "default": "var(--ki-control-track-inset)"
             },
             {
+              "name": "--ki-suggestion-card-hover-description-bg",
+              "description": "Hover card surface beneath the description.",
+              "default": "var(--ki-surface-s1)"
+            },
+            {
               "name": "--ki-suggestion-card-hover-description-fg",
               "description": "Description over the card hover surface.",
               "default": "var(--ki-text-supporting)"
+            },
+            {
+              "name": "--ki-suggestion-card-pressed-description-bg",
+              "description": "Pressed card surface beneath the description.",
+              "default": "var(--ki-surface-s2)"
             },
             {
               "name": "--ki-suggestion-card-pressed-description-fg",
@@ -37945,6 +39528,11 @@
               "default": "var(--ki-size-target-min)"
             },
             {
+              "name": "--ki-surface-transparent",
+              "description": "Transparent surface backing for a background image that carries its own opacity.",
+              "default": "var(--ki-color-transparent-black)"
+            },
+            {
               "name": "--ki-table-backdrop-filter",
               "description": "Complete filter applied behind the frame.",
               "default": "var(--ki-effect-component-no-backdrop-filter)"
@@ -38023,6 +39611,11 @@
               "name": "--ki-table-header-height",
               "description": "Column header row height.",
               "default": "var(--ki-layout-spacing-12xl)"
+            },
+            {
+              "name": "--ki-table-meta-bg",
+              "description": "Surface behind secondary and numeric values at rest.",
+              "default": "var(--ki-surface-s0)"
             },
             {
               "name": "--ki-table-meta-fg",
@@ -42505,6 +44098,11 @@
               "default": "var(--ki-font-weight-body-medium)"
             },
             {
+              "name": "--ki-tooltip-hide-delay",
+              "description": "duration used by the tooltip component for tooltip hide delay.",
+              "default": "100ms"
+            },
+            {
               "name": "--ki-tooltip-line-height",
               "description": "dimension used by the tooltip component for line height (MarsUI line_height/para 20px).",
               "default": "var(--ki-font-line-height-para)",
@@ -42639,6 +44237,11 @@
               "description": "shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap).",
               "default": "var(--ki-elevation-e3)",
               "material3Default": "0 0 0 0 var(--ki-color-transparent-black)"
+            },
+            {
+              "name": "--ki-tooltip-show-delay",
+              "description": "duration used by the tooltip component for tooltip show delay.",
+              "default": "500ms"
             },
             {
               "name": "--ki-typography-family-body",
@@ -43055,9 +44658,19 @@
               "default": "var(--ki-text-high-em)"
             },
             {
+              "name": "--ki-app-bar-scrolled-subtitle-bg",
+              "description": "Scrolled surface behind the app-bar subtitle.",
+              "default": "var(--ki-surface-s2)"
+            },
+            {
               "name": "--ki-app-bar-scrolled-subtitle-fg",
               "description": "App-bar subtitle ink when its container scrolls.",
               "default": "var(--ki-text-supporting)"
+            },
+            {
+              "name": "--ki-app-bar-subtitle-bg",
+              "description": "Resting surface behind the app-bar subtitle.",
+              "default": "var(--ki-surface-s0)"
             },
             {
               "name": "--ki-app-bar-subtitle-fg",

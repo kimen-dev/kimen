@@ -105,6 +105,7 @@ None.
 - `--ki-tooltip-fg`: color used by the tooltip component for foreground (MarsUI title row Text/high_em; onmars v2 sets the inverse tooltip ink). Default: onmars `var(--ki-text-tooltip-inverse)`, material3 `var(--ki-text-inverse-black)`.
 - `--ki-tooltip-font-size`: dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px). Default: onmars `var(--ki-typography-size-caption-2)`, material3 `var(--ki-font-size-caption-2)`.
 - `--ki-tooltip-font-weight`: font weight used by the tooltip component for font weight. Default: `var(--ki-font-weight-body-medium)`.
+- `--ki-tooltip-hide-delay`: duration used by the tooltip component for tooltip hide delay. Default: `100ms`.
 - `--ki-tooltip-line-height`: dimension used by the tooltip component for line height (MarsUI line_height/para 20px). Default: onmars `var(--ki-font-line-height-para)`, material3 `var(--ki-font-line-height-caption-2)`.
 - `--ki-tooltip-max-inline-size`: dimension used by the tooltip component for max inline size (288px; the master card is fixed 280px wide in its rich variants — the 8px divergence is a documented text-only reduction). Default: `var(--ki-size-surface-xxs)`.
 - `--ki-tooltip-offset`: dimension used by the tooltip component for offset (MarsUI caret depth 8px with zero extra gap = trigger-to-card distance). Default: onmars `var(--ki-space-md)`, material3 `var(--ki-space-xs)`.
@@ -131,4 +132,5 @@ None.
 - `--ki-tooltip-rich-radius`: Corner radius of the rich surface. Default: `var(--ki-anchored-surface-radius)`.
 - `--ki-tooltip-rich-shadow`: Raised elevation of the rich surface. Default: `var(--ki-elevation-e2)`.
 - `--ki-tooltip-shadow`: shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap). Default: onmars `var(--ki-elevation-e3)`, material3 `0 0 0 0 var(--ki-color-transparent-black)`.
+- `--ki-tooltip-show-delay`: duration used by the tooltip component for tooltip show delay. Default: `500ms`.
 - `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

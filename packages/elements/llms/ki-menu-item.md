@@ -66,7 +66,10 @@ None.
 - `--ki-menu-font-family`: Family for action labels and the filter. Default: `var(--ki-typography-family-body)`.
 - `--ki-menu-gap`: Inline space between the parts of a row. Default: `var(--ki-menu-layout-inline-space)`.
 - `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter. Default: `var(--ki-menu-layout-inline-space)`.
+- `--ki-menu-item-bg`: Background behind resting actions. Default: `var(--ki-surface-raised)`.
+- `--ki-menu-item-danger-bg`: Background behind destructive actions. Default: `var(--ki-surface-raised)`.
 - `--ki-menu-item-danger-fg`: Foreground for destructive actions. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-menu-item-danger-hover-bg`: Background behind hovered or keyboard-focused destructive actions. Default: `var(--ki-surface-s3)`.
 - `--ki-menu-item-danger-hover-fg`: Foreground for hovered or keyboard-focused destructive actions. Default: `var(--ki-text-danger-high-em)`.
 - `--ki-menu-item-disabled-fg`: Muted ink of disabled actions. Default: `var(--ki-text-base-em)`.
 - `--ki-menu-item-fg`: Foreground for resting actions. Default: `var(--ki-text-high-em)`.
@@ -76,7 +79,9 @@ None.
 - `--ki-menu-item-icon-size`: Size of an action glyph and the check indicator. Default: `var(--ki-glyph-size-sm)`.
 - `--ki-menu-item-padding`: Vertical inset used when an action wraps. Default: `var(--ki-menu-layout-row-block-padding)`.
 - `--ki-menu-item-radius`: Action row corner radius. Default: `var(--ki-menu-layout-row-radius)`.
+- `--ki-menu-meta-bg`: Background behind shortcut hints and the filter placeholder. Default: `var(--ki-surface-raised)`.
 - `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder. Default: `var(--ki-text-supporting)`.
 - `--ki-menu-meta-font-size`: Size of metadata and group labels. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-menu-meta-hover-bg`: Background behind shortcut hints on a hovered or focused action. Default: `var(--ki-surface-s3)`.
 - `--ki-menu-meta-hover-fg`: Foreground for shortcut hints on a hovered or focused action. Default: `var(--ki-text-supporting)`.
 - `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers. Default: `var(--ki-menu-layout-touch-row-min)`.

@@ -1,0 +1,18 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/tokens": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-code-block": "84a454942eb16c2d565dc4d5a6e4cff29e69d14c66c2abd1ee9f592264c40bdc",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-markdown": "92d368f14ddf2735de4bd54deb830ae4e02401e319f1620718c1207d76d7c920",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-toast": "441388292ba186ab40938b019d07fec25ba6241aca7753e01528062f2a3270d9",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-toaster": "86a81b8de3d51a86cf1896321ee3647883e207acaee0b12d4ce73f2099e9dfbf"
+  },
+  "packages": [
+    "@kimen/tokens"
+  ],
+  "reason": "Combine the pressed button palette with the existing code block, Markdown, toast and toaster theme overrides in the split stylesheets.",
+  "release": "major",
+  "schemaVersion": 2
+}

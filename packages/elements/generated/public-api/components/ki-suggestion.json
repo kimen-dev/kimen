@@ -83,6 +83,14 @@
         "required": false,
         "type": null
       },
+      "--ki-suggestion-card-description-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting card surface beneath the description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-suggestion-card-description-fg": {
         "default": null,
         "deprecatedSince": null,
@@ -99,10 +107,26 @@
         "required": false,
         "type": null
       },
+      "--ki-suggestion-card-hover-description-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hover card surface beneath the description.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-suggestion-card-hover-description-fg": {
         "default": null,
         "deprecatedSince": null,
         "description": "Description over the card hover surface.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-suggestion-card-pressed-description-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Pressed card surface beneath the description.",
         "replacement": null,
         "required": false,
         "type": null

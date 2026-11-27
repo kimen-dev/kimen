@@ -52,6 +52,7 @@ None.
 ## CSS custom properties
 
 - `--ki-menu-font-family`: Family for action labels and the filter. Default: `var(--ki-typography-family-body)`.
+- `--ki-menu-group-bg`: Background behind group labels. Default: `var(--ki-surface-raised)`.
 - `--ki-menu-group-fg`: Foreground for group labels. Default: `var(--ki-text-supporting)`.
 - `--ki-menu-group-label-weight`: Weight of group labels. Default: `var(--ki-typography-weight-body-medium)`.
 - `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter. Default: `var(--ki-menu-layout-inline-space)`.

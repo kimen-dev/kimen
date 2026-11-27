@@ -68,9 +68,12 @@ None.
 - `--ki-suggestion-bg-image`: Image layered over the chip surface. Default: `var(--ki-surface-image-none)`.
 - `--ki-suggestion-border`: Resting chip boundary. Default: `var(--ki-outline-control)`.
 - `--ki-suggestion-border-width`: Boundary width for either suggestion variant. Default: `var(--ki-control-border-width)`.
+- `--ki-suggestion-card-description-bg`: Resting card surface beneath the description. Default: `var(--ki-surface-s0)`.
 - `--ki-suggestion-card-description-fg`: Resting card description. Default: `var(--ki-text-supporting)`.
 - `--ki-suggestion-card-gap`: Space between the card title and description. Default: `var(--ki-control-track-inset)`.
+- `--ki-suggestion-card-hover-description-bg`: Hover card surface beneath the description. Default: `var(--ki-surface-s1)`.
 - `--ki-suggestion-card-hover-description-fg`: Description over the card hover surface. Default: `var(--ki-text-supporting)`.
+- `--ki-suggestion-card-pressed-description-bg`: Pressed card surface beneath the description. Default: `var(--ki-surface-s2)`.
 - `--ki-suggestion-card-pressed-description-fg`: Description over the pressed card surface. Default: `var(--ki-text-supporting)`.
 - `--ki-suggestion-description-line-height`: Line height of the card description. Default: `var(--ki-typography-line-height-caption-2)`.
 - `--ki-suggestion-description-size`: Type size of the card description. Default: `var(--ki-typography-size-caption-2)`.

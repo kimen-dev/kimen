@@ -1,10 +1,10 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-divider-color:var(--ki-outline-strong);
   --ki-divider-thickness:var(--ki-size-border-hairline);
   --ki-divider-color:var(--ki-outline-base-em);
   --ki-divider-radius:var(--ki-radius-round);
   --ki-divider-spacing:var(--ki-space-md);
+  --ki-contrast-more-divider-color:var(--ki-outline-strong);
 }
 
 @media (prefers-contrast: more) {

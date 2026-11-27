@@ -185,3 +185,9 @@ Feature: TopNav
     When the theme sets --ki-top-nav-links-justify to flex-end
     Then the inline links end next to the actions
     And links on their own row align to that row's trailing edge
+
+  # S28
+  Scenario: An app bar themes its subtitle background as it scrolls
+    Given an app bar with custom rest and scrolled subtitle backgrounds
+    When the user scrolls its content
+    Then the subtitle switches to its scrolled background

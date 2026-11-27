@@ -72,7 +72,7 @@ Feature: Check Kimen theme CSS
   Scenario: Material 3 follows the same rules as any theme
     Given Kimen's built Material 3 stylesheet and a copy with an extra comment
     When the author runs the theme checker
-    Then both versions report zero errors and the same unread component warnings
+    Then neither version reports errors or warnings
 
   # S6
   Scenario: Every interface reports the same findings
