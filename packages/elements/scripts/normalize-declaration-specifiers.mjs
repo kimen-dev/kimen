@@ -13,6 +13,7 @@
 // (scripts/lib/declaration-specifiers.mjs). It is idempotent,
 // and it refuses to guess: a relative specifier with no declaration file
 // behind it aborts the build.
+import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -41,10 +42,23 @@ export async function normalizePackageDeclarations({ packageRoot, workspaceRoot 
   );
 }
 
+async function stripLazyReadiness(packageRoot) {
+  // Both published registration paths use dist-custom-elements, so the
+  // inherited lazy-build method in Stencil's vendored types is absent at runtime.
+  const file = resolve(packageRoot, 'dist/types/stencil-public-runtime.d.ts');
+  const source = await readFile(file, 'utf8');
+  const normalized = source.replace(
+    /^(export interface HTMLStencilElement extends HTMLElement \{\r?\n) {4}componentOnReady\(\): Promise<this>;\r?\n/mu,
+    '$1',
+  );
+  if (normalized !== source) await writeFile(file, normalized, 'utf8');
+}
+
 async function main() {
   const packageRoot = fileURLToPath(new URL('..', import.meta.url));
   const workspaceRoot = fileURLToPath(new URL('../../..', import.meta.url));
   const report = await normalizePackageDeclarations({ packageRoot, workspaceRoot });
+  await stripLazyReadiness(packageRoot);
   process.stdout.write(
     `NORMALIZE declarations: PASS (${String(report.rewrittenSpecifiers)} specifiers named in ${String(report.rewrittenFiles)} of ${String(report.declarations)} files)\n`,
   );
