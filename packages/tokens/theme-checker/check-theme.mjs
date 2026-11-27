@@ -42,7 +42,6 @@ function getInventory() {
     }
     for (const activation of activations) {
       const [, name, value] = /^\[([\w-]+)='([\w-]+)'\]$/u.exec(activation);
-      add(modes.attributes, name, flag);
       add(modes.attributes, `${name}=${value}`, flag);
     }
   }

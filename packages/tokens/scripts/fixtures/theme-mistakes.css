@@ -10,6 +10,10 @@
   --ki-text-supporting: "red";
 }
 
+:root:has([data-ki-contrast="more"]) {
+  --ki-text-supporting: #555;
+}
+
 @media (prefers-contrast: more) {
   :root {
     --ki-text-supporting: white;

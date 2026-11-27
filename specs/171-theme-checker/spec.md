@@ -39,6 +39,10 @@ also override a theme's assignments to their base tokens.
 - Suggest the mode value token that wins in the active preference. Generate
   the token types, reads and mode mappings from the same build that emits the
   installed stylesheets. Checking runs offline.
+- A preference attribute activates a mode when it selects the required setting
+  on the document root or a theme root. The checker carries the mode into
+  descendants of that root. Relational and negating conditions alone do not
+  activate a mode.
 
 ## Gherkin Scenarios
 
@@ -99,13 +103,19 @@ Feature: Check Kimen theme CSS
     Given a theme assigns CSS colors, substitutions, and incompatible literals to a color token
     When the author checks the stylesheet
     Then only the incompatible literals produce type errors
+
+  # S10
+  Scenario: Declared preferences apply from document and theme roots
+    Given a theme checks preference settings on roots, ancestors, and related elements
+    When the author checks the stylesheet
+    Then the checker suggests mode tokens only for preferences applied to the target by a document or theme root
 ```
 
 ### Scenario Family Coverage
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 | |
 | Keyboard path | | This tool has no component interaction. |
 | Assistive-tech outcome | | This tool has no rendered surface. |
 | Form participation | | This tool has no form control. |

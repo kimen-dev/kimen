@@ -86,14 +86,14 @@ test('S4: active preference overrides suggest the mode-value token that wins', (
   assert.equal(findings().at(-1).code, 'mode-token');
   assert.match(findings().at(-1).fix, /--ki-contrast-more-text-supporting/u);
   const css = `@layer theme {
-    [data-ki-contrast] {
+    :root[data-ki-contrast="more"] {
       & .panel {
         --ki-text-supporting: black;
         --ki-contrast-more-text-supporting: black;
       }
     }
-    [data-ki-transparency="reduce"] { --ki-surface-primary-tint: black; }
-    [data-ki-contrast="less"] { --ki-text-supporting: black; }
+    [data-ki-theme][data-ki-transparency="reduce"] { --ki-surface-primary-tint: black; }
+    :root[data-ki-contrast="less"] { --ki-text-supporting: black; }
   }`;
   assert.deepEqual(
     checkTheme(css).map(({ code, fix }) => [code, fix]),
@@ -171,6 +171,55 @@ test('S9: color tokens accept CSS colors and substitutions and reject incompatib
       value,
     );
   }
+});
+
+test('S10: declared preferences apply from a document or theme root to its descendants', () => {
+  for (const selector of [
+    ':root:has([data-ki-contrast="more"])',
+    ':root:not([data-ki-contrast="more"])',
+    ':root:is(:has([data-ki-contrast="more"]), .default)',
+    ':nth-child(1 of [data-ki-theme][data-ki-contrast="more"])',
+    ':root [data-ki-contrast="more"]',
+    ':root[data-ki-contrast]',
+    ':is(:root, [data-ki-contrast="more"])',
+    '[data-ki-theme] + [data-ki-contrast="more"]',
+    '[data-ki-theme][data-ki-contrast="more"] ~ .panel',
+  ]) {
+    assert.deepEqual(checkTheme(`${selector} { --ki-text-supporting: #555; }`), [], selector);
+  }
+
+  for (const selector of [
+    ':root[data-ki-contrast="more"]',
+    ':root/* theme */[data-ki-contrast="more"]',
+    'html[data-ki-contrast="MORE" i]',
+    ':root:where([data-ki-transparency="reduce"], [data-ki-contrast="more"])',
+    ':where([data-ki-theme="onmars"]:is([data-ki-contrast="more"]))',
+    ':where(:is(:root, [data-ki-theme]):is([data-ki-contrast="more"]) [data-ki-theme])',
+    '[data-ki-theme][data-ki-contrast="more"] > .panel',
+    '[data-ki-theme][data-ki-contrast="more"] .heading + .panel',
+    '.panel, [data-ki-theme][data-ki-contrast="more"]:has(.panel)',
+  ]) {
+    assert.deepEqual(
+      checkTheme(`${selector} { --ki-text-supporting: #555; }`).map(({ code, fix }) => [code, fix]),
+      [['mode-token', 'Set --ki-contrast-more-text-supporting instead.']],
+      selector,
+    );
+  }
+
+  const nested = `:root {
+    &[data-ki-contrast="more"] { --ki-text-supporting: #555; }
+  }
+  [data-ki-theme][data-ki-contrast="more"] {
+    & + .panel { --ki-text-supporting: #555; }
+    .panel { --ki-text-supporting: #555; }
+  }`;
+  assert.deepEqual(
+    checkTheme(nested).map(({ code, line }) => [code, line]),
+    [
+      ['mode-token', 2],
+      ['mode-token', 6],
+    ],
+  );
 });
 
 test('the CLI reports each mistake and preserves input order across files', () => {

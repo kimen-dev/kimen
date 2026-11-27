@@ -16,11 +16,7 @@ function closingType(token) {
 
 export const tokenValue = (token) => token?.[4]?.value;
 
-function preferenceModes(head, modes) {
-  const atRule = head[0]?.[0] === T.AtKeyword;
-  const media = atRule && tokenValue(head[0]).toLowerCase() === 'media';
-  if (atRule && !media) return 0;
-
+function mediaModes(head, modes) {
   let mask = 0;
   const groups = [];
   let negateQuery = false;
@@ -29,9 +25,8 @@ function preferenceModes(head, modes) {
     if (kind === T.Comma && groups.length === 0) negateQuery = false;
     const name = tokenValue(token)?.toString().toLowerCase();
     const isNot = name === 'not' && kind === T.Ident;
-    // A media query may negate the whole query or the next parenthesized
-    // condition. Selector :not() scopes are skipped in the same way.
-    if (media && isNot && index > 0 && head[index + 1]?.[0] !== T.OpenParen) {
+    // A media query may negate the whole query or the next parenthesized condition.
+    if (isNot && head[index + 1]?.[0] !== T.OpenParen) {
       negateQuery = true;
     }
     const end = closingType(token);
@@ -41,8 +36,7 @@ function preferenceModes(head, modes) {
         end,
         negated:
           (groups.at(-1)?.negated ?? false) ||
-          (media && previous?.[0] === T.Ident && tokenValue(previous).toLowerCase() === 'not') ||
-          (!media && kind === T.Function && name === 'not'),
+          (previous?.[0] === T.Ident && tokenValue(previous).toLowerCase() === 'not'),
       });
     } else if (kind === groups.at(-1)?.end) {
       groups.pop();
@@ -53,39 +47,144 @@ function preferenceModes(head, modes) {
     const separator = head[index + 2];
     const value = head[index + 3];
     if (key?.[0] !== T.Ident) continue;
-    const attribute = tokenValue(key).toLowerCase();
-    const setting = tokenValue(value);
     if (
-      media &&
       kind === T.OpenParen &&
       separator?.[0] === T.Colon &&
       value?.[0] === T.Ident &&
       head[index + 4]?.[0] === T.CloseParen
     ) {
-      mask |= modes.media.get(`${attribute}:${setting.toLowerCase()}`) ?? 0;
-    }
-    if (!media && kind === T.OpenSquare) {
-      if (separator?.[0] === T.CloseSquare) {
-        mask |= modes.attributes.get(attribute) ?? 0;
-      } else if (
-        separator?.[0] === T.Delim &&
-        separator[1] === '=' &&
-        (value?.[0] === T.Ident || value?.[0] === T.String)
-      ) {
-        const flag = head[index + 4];
-        const insensitive = flag?.[0] === T.Ident && tokenValue(flag).toLowerCase() === 'i';
-        if (
-          flag?.[0] === T.CloseSquare ||
-          (insensitive && head[index + 5]?.[0] === T.CloseSquare)
-        ) {
-          mask |=
-            modes.attributes.get(`${attribute}=${insensitive ? setting.toLowerCase() : setting}`) ??
-            0;
-        }
-      }
+      mask |= modes.get(`${tokenValue(key).toLowerCase()}:${tokenValue(value).toLowerCase()}`) ?? 0;
     }
   }
   return mask;
+}
+
+const selectorMatch = () => ({ root: false, setting: 0, own: 0, ancestor: 0 });
+const selectorScope = () => ({
+  match: selectorMatch(),
+  alternatives: selectorMatch(),
+  start: true,
+});
+
+function mergeMatch(target, source, compound = true) {
+  // A root and a setting combine within a compound. Separate alternatives
+  // keep their own matches from requiring both on the same element.
+  if (compound) {
+    if (target.root) target.own |= source.setting;
+    if (source.root) target.own |= target.setting;
+  }
+  target.root ||= source.root;
+  target.setting |= source.setting;
+  target.own |= source.own;
+  target.ancestor |= source.ancestor;
+}
+
+function attributeMatch(head, index, attributes, match) {
+  const name = head[index + 1];
+  if (name?.[0] !== T.Ident) return;
+  const attribute = tokenValue(name).toLowerCase();
+  if (attribute === 'data-ki-theme') {
+    mergeMatch(match, { ...selectorMatch(), root: true });
+  }
+  const separator = head[index + 2];
+  const value = head[index + 3];
+  if (separator?.[1] !== '=' || (value?.[0] !== T.Ident && value?.[0] !== T.String)) return;
+  const flag = head[index + 4];
+  const modifier = flag?.[0] === T.Ident && tokenValue(flag).toLowerCase();
+  if (
+    flag?.[0] !== T.CloseSquare &&
+    !((modifier === 'i' || modifier === 's') && head[index + 5]?.[0] === T.CloseSquare)
+  )
+    return;
+  const setting = tokenValue(value);
+  const mode = attributes.get(`${attribute}=${modifier === 'i' ? setting.toLowerCase() : setting}`);
+  if (mode) mergeMatch(match, { ...selectorMatch(), setting: mode });
+}
+
+function selectorModes(head, attributes, css, parent) {
+  const outer = selectorScope();
+  const groups = [{ scope: outer }];
+  let usesNesting = false;
+  let leadingCombinator;
+
+  const finishBranch = (scope) => {
+    if (scope === outer && parent && !usesNesting && leadingCombinator !== '||') {
+      scope.match.ancestor |= parent.ancestor;
+      if (leadingCombinator !== '+' && leadingCombinator !== '~')
+        scope.match.ancestor |= parent.own;
+    }
+    mergeMatch(scope.alternatives, scope.match, false);
+    scope.match = selectorMatch();
+    scope.start = true;
+  };
+
+  for (const [index, token] of head.entries()) {
+    const { end, scope } = groups.at(-1);
+    const [kind, raw] = token;
+    if (kind === T.Delim && raw === '&') usesNesting = true;
+    if (kind === end) {
+      groups.pop();
+      if (scope) {
+        finishBranch(scope);
+        mergeMatch(groups.at(-1).scope.match, scope.alternatives);
+      }
+      continue;
+    }
+
+    const close = closingType(token);
+    if (!scope) {
+      if (close) groups.push({ end: close });
+      continue;
+    }
+    if (kind === T.Comma) {
+      finishBranch(scope);
+      if (scope === outer) {
+        usesNesting = false;
+        leadingCombinator = undefined;
+      }
+      continue;
+    }
+
+    const previous = head[index - 1];
+    let combinator;
+    if (kind === T.Delim && /^[>+~]$/u.test(raw)) combinator = raw;
+    if (kind === T.Delim && raw === '|') {
+      if (head[index + 1]?.[1] === '|' && token[3] + 1 === head[index + 1][2]) combinator = '||';
+      else if (previous?.[1] === '|' && previous[3] + 1 === token[2]) continue;
+    }
+    if (scope === outer && scope.start && combinator) leadingCombinator = combinator;
+    // Filtering the tokenizer's whitespace out of declarations is useful,
+    // but selector compounds still need the descendant combinator.
+    const gap = previous && css.slice(previous[3] + 1, token[2]).replace(/\/\*[\s\S]*?\*\//gu, '');
+    if (combinator || (!scope.start && gap)) {
+      const { own, ancestor } = scope.match;
+      scope.match = selectorMatch();
+      if (combinator !== '||') scope.match.ancestor = ancestor;
+      if (!combinator || combinator === '>') scope.match.ancestor |= own;
+      scope.start = true;
+      if (combinator) continue;
+    }
+
+    const name = tokenValue(token)?.toString().toLowerCase();
+    if (
+      kind === T.Ident &&
+      ((scope.start && name === 'html' && head[index + 1]?.[1] !== '|') ||
+        (previous?.[0] === T.Colon && name === 'root' && !gap))
+    ) {
+      mergeMatch(scope.match, { ...selectorMatch(), root: true });
+    }
+    if (parent && kind === T.Delim && raw === '&') mergeMatch(scope.match, parent);
+    if (kind === T.OpenSquare) attributeMatch(head, index, attributes, scope.match);
+    if (close) {
+      // Only these functions match the subject of their selector list.
+      const matchesSubject =
+        kind === T.Function && previous?.[0] === T.Colon && !gap && /^(?:is|where)$/u.test(name);
+      groups.push({ end: close, scope: matchesSubject ? selectorScope() : undefined });
+    }
+    scope.start = false;
+  }
+  finishBranch(outer);
+  return outer.alternatives;
 }
 
 // Each frame is a CSS rule body, or a balanced block inside a prelude/value.
@@ -97,7 +196,7 @@ export function visitDeclarations(css, modes, visit, onSyntaxError) {
     { css },
     { onParseError: (error) => onSyntaxError(error.sourceStart) },
   ).filter(([type]) => type !== T.Comment && type !== T.Whitespace);
-  const contexts = [0];
+  const contexts = [{ media: 0, selector: undefined }];
   const blocks = [];
   let start = 0;
 
@@ -114,8 +213,19 @@ export function visitDeclarations(css, modes, visit, onSyntaxError) {
     const property = first?.[0] === T.Ident ? tokenValue(first) : '';
     const custom =
       contexts.length > 1 && property.startsWith('--') && tokens[start + 1]?.[0] === T.Colon;
+    const context = contexts.at(-1);
     if (type === T.OpenCurly && !custom) {
-      contexts.push(contexts.at(-1) | preferenceModes(tokens.slice(start, index), modes));
+      const head = tokens.slice(start, index);
+      if (first?.[0] === T.AtKeyword) {
+        const media =
+          tokenValue(first).toLowerCase() === 'media' ? mediaModes(head, modes.media) : 0;
+        contexts.push({ ...context, media: context.media | media });
+      } else {
+        contexts.push({
+          ...context,
+          selector: selectorModes(head, modes.attributes, css, context.selector),
+        });
+      }
       start = index + 1;
     } else if (end !== undefined) {
       blocks.push(end);
@@ -130,7 +240,8 @@ export function visitDeclarations(css, modes, visit, onSyntaxError) {
         ) {
           value.length -= 2;
         }
-        visit(property, value, first[2], contexts.at(-1));
+        const { media, selector } = context;
+        visit(property, value, first[2], media | (selector?.own ?? 0) | (selector?.ancestor ?? 0));
       }
       if (type === T.CloseCurly) {
         if (contexts.length > 1) contexts.pop();

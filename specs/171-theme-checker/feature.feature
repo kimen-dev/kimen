@@ -54,3 +54,9 @@ Feature: Check Kimen theme CSS
     Given a theme assigns CSS colors, substitutions, and incompatible literals to a color token
     When the author checks the stylesheet
     Then only the incompatible literals produce type errors
+
+  # S10
+  Scenario: Declared preferences apply from document and theme roots
+    Given a theme checks preference settings on roots, ancestors, and related elements
+    When the author checks the stylesheet
+    Then the checker suggests mode tokens only for preferences applied to the target by a document or theme root
