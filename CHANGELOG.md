@@ -13,11 +13,41 @@ are generated through [the release pull request](./docs/releasing.md).
 
 - **emitter:** Match model glyph choices to the host's `icons` list, shorten catalog prompts with `verbosity: 'compact'`, and declare exact field keys for named button actions in strict schemas and tools (specs 168–170).
 
+## [0.5.0] - 2026-11-27
+
+### Changed
+
+- **elements:** ship one glyph declaration and no duplicate llms summary ([#645](https://github.com/kimen-dev/kimen/pull/645))
+- **elements:** shorten Stencil-generated vDOM keys ([#650](https://github.com/kimen-dev/kimen/pull/650))
+- ⚠️  **elements:** serve ./loader from the per-component modules ([#648](https://github.com/kimen-dev/kimen/pull/648))
+- **elements:** share shadow styles across chunks ([#654](https://github.com/kimen-dev/kimen/pull/654))
+- **react:** slim the generated wrapper runtime ([#649](https://github.com/kimen-dev/kimen/pull/649))
+- **tokens:** make the core and tag sheets the documented default ([#644](https://github.com/kimen-dev/kimen/pull/644))
+- **tokens:** drop the private foundations from the full sheet ([#647](https://github.com/kimen-dev/kimen/pull/647))
+- **tokens:** ship Newsreader at weight 500 ([#651](https://github.com/kimen-dev/kimen/pull/651))
+
+**Breaking changes**
+
+- **elements:** align event and form contracts with behaviour  ([#656](https://github.com/kimen-dev/kimen/pull/656))
+  Dialog close events always set cancelable. Only fullscreen
+  Escape and the header close button accept a veto. Seventeen notification events
+  now have cancelable set to false. Code block copy results originate on the code
+  block. Disabled textarea, checkbox, switch and prompt input values leave form
+  data immediately.
+  * chore: regenerate the public API snapshot after merging main
+- **elements:** drop componentOnReady from the element types  ([#655](https://github.com/kimen-dev/kimen/pull/655))
+- **elements:** serve ./loader from the per-component modules  ([#648](https://github.com/kimen-dev/kimen/pull/648))
+
 ### Removed
 
 - **elements:** **Breaking:** `HTMLKi*Element` types no longer declare
   `componentOnReady()`. Await `customElements.whenDefined(tag)` for
   registration and wait for the component's first render if you need its DOM.
+
+### Fixed
+
+- ⚠️  **elements:** drop componentOnReady from the element types ([#655](https://github.com/kimen-dev/kimen/pull/655))
+- ⚠️  **elements:** align event and form contracts with behaviour ([#656](https://github.com/kimen-dev/kimen/pull/656))
 
 ## [0.4.0] - 2026-11-26
 
