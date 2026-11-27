@@ -2,7 +2,7 @@
 
 Install Kimen from npm. Every `@kimen/*` package is published there, all
 at one version: `pnpm add @kimen/elements @kimen/tokens`, the other packages
-the same way, and the MCP server runs with `npx -y -p @kimen/mcp-server@0.5.0
+the same way, and the MCP server runs with `npx -y -p @kimen/mcp-server@0.6.0
 kimen-mcp`. A repository build is for working on Kimen itself, or for trying
 a change that is merged but not released yet (`npm view @kimen/elements
 version` prints the latest release). An app that depends on a local build
