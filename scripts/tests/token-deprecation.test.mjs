@@ -311,3 +311,38 @@ test('S8 removing a deprecated token after a later minor has shipped it passes',
   assert.equal(result.release, 'major');
   assert.equal(result.decision, 'passed');
 });
+
+test('S8 a published token deprecation supplies history missing from the bootstrap snapshot', () => {
+  const name = '--ki-input-focus-border';
+  const baseline = createPublicApiSnapshot(
+    tokenSurface({ version: '0.0.0', tokens: { [name]: tokenFacet() } }),
+  );
+  const candidate = createPublicApiSnapshot(tokenSurface({ version: '1.0.0', tokens: {} }));
+  const declaration = declarationFor(baseline, candidate, 'major');
+  const tokens = { [name]: deprecatedFacet };
+
+  assert.equal(
+    evaluatePublicApiChange({
+      baseline,
+      candidate,
+      declaration,
+      publishedTokens: {
+        version: '0.1.0',
+        tokens,
+      },
+    }).decision,
+    'blocked',
+  );
+  assert.equal(
+    evaluatePublicApiChange({
+      baseline,
+      candidate,
+      declaration,
+      publishedTokens: {
+        version: '0.6.0',
+        tokens,
+      },
+    }).decision,
+    'passed',
+  );
+});

@@ -23,7 +23,7 @@
   --ki-input-count-over-bg:var(--ki-surface-transparent);
   --ki-input-count-over-fg:var(--ki-text-danger-high-em);
   --ki-input-height:var(--ki-space-12xl);
-  --ki-input-min-target:var(--ki-space-7xl); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-input-height */
+  --ki-input-min-target:var(--ki-space-7xl);
   --ki-input-padding-inline:var(--ki-space-lg);
   --ki-input-gap:var(--ki-space-xs);
   --ki-input-action-gap:var(--ki-space-xs);
@@ -58,7 +58,6 @@
   --ki-input-hover-placeholder-fg:var(--ki-text-supporting);
   --ki-input-focus-bg:var(--ki-surface-s0);
   --ki-input-focus-fg:var(--ki-text-high-em);
-  --ki-input-focus-border:var(--ki-outline-primary-high-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-input-focus-ring-color */
   --ki-input-focus-label-fg:var(--ki-text-supporting);
   --ki-input-focus-placeholder-fg:var(--ki-text-supporting);
   --ki-input-disabled-bg:var(--ki-surface-disabled-base-em);

@@ -171,3 +171,16 @@ Feature: Icon button
     Given an icon toggle with a reassigned icon-size token and an explicit ki-icon size in both slots
     When the page renders the selection states
     Then each visible glyph matches the reassigned button icon-size token
+
+  # Family: theming
+  # S28
+  Scenario: Holding an icon button uses the shared pressed palette
+    Given an icon button with custom active palette tokens
+    When the user holds the button down with Space
+    Then the icon button shows the themed pressed palette and retains visible focus
+
+  # S29
+  Scenario: A disabled icon button uses its own tone palette
+    Given a disabled icon button with a custom tone-specific disabled palette
+    When the page renders
+    Then the icon button shows the disabled fill, ink and border for its tone

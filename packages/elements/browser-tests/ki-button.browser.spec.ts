@@ -922,3 +922,80 @@ describe('ki-button in a real browser', () => {
     },
   );
 });
+
+it('S36 Material 3 paints its active fill on pointer press and a token alone can change it', async () => {
+  cleanup();
+  ensureMaterial3Tokens();
+  document.documentElement.setAttribute('data-ki-theme', 'material3');
+  const el = await mount('Save', { variant: 'tertiary', tone: 'neutral' });
+  const button = requireButton(el);
+  try {
+    await browserCommands.emulateReducedMotion('reduce');
+    await parkPointer();
+    const rest = getComputedStyle(button).backgroundColor;
+    const pressed = await holdWithPointer(el, button);
+    expect(pressed.state.pressed).toBe(true);
+    expect(pressed.ground.background).not.toBe(rest);
+
+    el.style.setProperty('--ki-button-tertiary-neutral-active-bg', 'rgb(210, 235, 250)');
+    expect(getComputedStyle(button).backgroundColor).not.toBe('rgb(210, 235, 250)');
+    expect((await holdWithPointer(el, button)).ground.background).toBe('rgb(210, 235, 250)');
+  } finally {
+    await browserCommands.emulateReducedMotion(null);
+    cleanup();
+  }
+});
+
+it.each(variants.flatMap((variant) => tones.map((tone) => [variant, tone] as const)))(
+  'S36 Space applies the active palette for %s %s and preserves the focus outline',
+  async (variant, tone) => {
+    cleanup();
+    const el = await mount('Save', { variant, tone });
+    const button = requireButton(el);
+    const token = `--ki-button-${variant}-${tone}-active`;
+    try {
+      await browserCommands.emulateReducedMotion('reduce');
+      await parkPointer();
+      el.style.setProperty(`${token}-bg`, 'rgb(210, 235, 250)');
+      el.style.setProperty(`${token}-fg`, 'rgb(8, 25, 45)');
+      el.style.setProperty(`${token}-border`, 'rgb(15, 50, 120)');
+      el.style.setProperty(`--ki-button-${variant}-active-shadow`, 'rgb(0, 0, 0) 0px 2px 3px');
+      const held = await holdWithKeyboard(el, button);
+      expect(held.state).toMatchObject({ pressed: true, focusRing: true });
+      expect(held.ground).toMatchObject({
+        background: 'rgb(210, 235, 250)',
+        color: 'rgb(8, 25, 45)',
+        borderBlockStart: 'rgb(15, 50, 120)',
+      });
+      expect(held.shadow).toContain('0px 2px 3px');
+      expect(getComputedStyle(button).backgroundColor).not.toBe('rgb(210, 235, 250)');
+    } finally {
+      await browserCommands.emulateReducedMotion(null);
+      cleanup();
+    }
+  },
+);
+
+it.each(
+  variants.flatMap((variant) => ['success', 'danger'].map((tone) => [variant, tone] as const)),
+)('S37 a disabled %s %s button paints its tone-specific tokens', async (variant, tone) => {
+  cleanup();
+  const el = await mount('Save', { variant, tone, disabled: true });
+  const button = requireButton(el);
+  const token = `--ki-button-${variant}-${tone}-disabled`;
+  try {
+    await browserCommands.emulateReducedMotion('reduce');
+    el.style.setProperty(`${token}-bg`, 'rgb(210, 235, 250)');
+    el.style.setProperty(`${token}-fg`, 'rgb(8, 25, 45)');
+    el.style.setProperty(`${token}-border`, 'rgb(15, 50, 120)');
+    expect(readPressedGround(el, button).ground).toMatchObject({
+      background: 'rgb(210, 235, 250)',
+      color: 'rgb(8, 25, 45)',
+      borderBlockStart: 'rgb(15, 50, 120)',
+      borderBlockEnd: 'rgb(15, 50, 120)',
+    });
+  } finally {
+    await browserCommands.emulateReducedMotion(null);
+    cleanup();
+  }
+});

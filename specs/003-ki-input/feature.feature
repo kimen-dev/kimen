@@ -180,3 +180,10 @@ Feature: Input
     Given a right-to-left document with icons in the input's start and end slots
     When the page renders
     Then the start content leads and the end content trails the entry area
+
+  # Family: theming
+  # S29
+  Scenario: The input respects a custom minimum target size
+    Given an input with a larger minimum target token
+    When the page renders
+    Then the input field is at least as tall as the requested minimum

@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
-import { canonicalJson } from '../lib/canonical-json.mjs';
+import { canonicalJson, canonicalJsonSha256 } from '../lib/canonical-json.mjs';
 import { readDirectoryPublicApiSnapshot } from '../lib/public-api-storage.mjs';
 import { createAcceptedPublicApiDeclaration, evaluatePublicApiChange } from '../lib/public-api.mjs';
 
@@ -14,6 +14,8 @@ const USAGE =
   'usage: check-public-api.mjs --baseline <snapshot.json|none> --candidate <snapshot.json|directory> --declarations <directory>';
 const MISSING_OPTIONS = `${USAGE}; explicit --baseline, --candidate, and --declarations are required`;
 const PRE_067_SURFACE_SHA256 = '916315c023aa2c2168bcfd27b6e7f8171796000ed786778c293d598804e9264e';
+const PUBLISHED_TOKEN_DEPRECATIONS_SHA256 =
+  '97b9b39bdd074c31f2e2573af11d08ff4ae7b4677c9e52a66fb81947eb0c86a7';
 
 export function parsePublicApiArguments(arguments_) {
   const values = new Map();
@@ -71,6 +73,22 @@ export function readPublicApiCandidate(path, options) {
   return path.endsWith('.json')
     ? readCanonicalJson('candidate', path, options)
     : readDirectoryPublicApiSnapshot(path);
+}
+
+/** Token deprecations extracted from the public API snapshot at tag v0.6.0. */
+export async function readPublishedTokenDeprecations(directory) {
+  const path = resolve(directory, 'accepted/0.6.0-token-deprecations.json');
+  let published;
+  try {
+    published = await readCanonicalJson('published token deprecations', path);
+  } catch (error) {
+    if (error.cause?.code === 'ENOENT') return undefined;
+    throw error;
+  }
+  if (canonicalJsonSha256(published) !== PUBLISHED_TOKEN_DEPRECATIONS_SHA256) {
+    throw new Error('The published v0.6.0 token deprecations are immutable');
+  }
+  return published;
 }
 
 export async function readPublicApiDeclarations(
@@ -134,11 +152,12 @@ export async function checkPublicApi({
     readPublicApiCandidate(options.get('--candidate'), { readText }),
   ]);
   if (options.has('--declarations')) {
-    const declarations = await readPublicApiDeclarations(options.get('--declarations'), {
-      baseline,
-      readText,
-    });
-    return evaluate({ baseline, candidate, declarations });
+    const directory = options.get('--declarations');
+    const [declarations, publishedTokens] = await Promise.all([
+      readPublicApiDeclarations(directory, { baseline, readText }),
+      readPublishedTokenDeprecations(directory),
+    ]);
+    return evaluate({ baseline, candidate, declarations, publishedTokens });
   }
   const declaration = await optionalContract('declaration', options.get('--declaration'), readText);
   return evaluate({ baseline, candidate, declaration });

@@ -156,6 +156,7 @@
      rest surface in the dark scheme. Border keeps the neutral-outline hover
      step (brief §1, matching ki-input/ki-textarea). */
   [part="trigger"]:hover:not(:disabled) {
+    --_ki-select-bg: var(--ki-select-hover-bg);
     --_ki-select-fg: var(--ki-select-hover-fg);
     --_ki-select-border: var(--ki-select-hover-border);
 

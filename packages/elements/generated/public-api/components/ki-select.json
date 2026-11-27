@@ -467,6 +467,14 @@
         "required": false,
         "type": null
       },
+      "--ki-select-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trigger fill on hover, beneath the hover wash.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-select-hover-border": {
         "default": null,
         "deprecatedSince": null,

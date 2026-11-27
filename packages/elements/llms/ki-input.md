@@ -193,6 +193,7 @@ None.
 - `--ki-input-lg-radius`: dimension used by the input component for lg radius (Input-cell 8016:286 lg binds Radius/small-component/lg).
 - `--ki-input-lg-text-padding-inline`: dimension used by the input component for the lg inline padding of the native control (Input-cell 8016:286 lg Text_wrap binds Space/xs, 4px; medium uses the gap token).
 - `--ki-input-line-height`: dimension used by the input component for line height.
+- `--ki-input-min-target`: dimension used by the input component for min target.
 - `--ki-input-outlined-bg`: Surface of an outlined text field.
 - `--ki-input-outlined-border`: Full outline of an enabled outlined text field.
 - `--ki-input-outlined-fg`: Entered text on an outlined field.

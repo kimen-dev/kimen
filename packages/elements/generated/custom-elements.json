@@ -3225,6 +3225,34 @@
               "description": "font weight used by the button component for font weight."
             },
             {
+              "name": "--ki-button-ghost-active-shadow",
+              "description": "Shadow of a pressed ghost button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-bg",
+              "description": "Fill of a pressed ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-border",
+              "description": "Edge of a pressed ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-fg",
+              "description": "Ink of a pressed ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-bg",
+              "description": "Fill of a disabled ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-border",
+              "description": "Edge of a disabled ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-fg",
+              "description": "Ink of a disabled ghost danger button."
+            },
+            {
               "name": "--ki-button-ghost-danger-hover-bg",
               "description": "color used by the button component for ghost danger hover background."
             },
@@ -3255,6 +3283,18 @@
             {
               "name": "--ki-button-ghost-hover-shadow",
               "description": "value used by the button component for ghost hover shadow."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-bg",
+              "description": "Fill of a pressed ghost neutral button."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-border",
+              "description": "Edge of a pressed ghost neutral button."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-fg",
+              "description": "Ink of a pressed ghost neutral button."
             },
             {
               "name": "--ki-button-ghost-neutral-disabled-bg",
@@ -3303,6 +3343,30 @@
             {
               "name": "--ki-button-ghost-selected-fg",
               "description": "Foreground of the selected ghost button toggle."
+            },
+            {
+              "name": "--ki-button-ghost-success-active-bg",
+              "description": "Fill of a pressed ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-active-border",
+              "description": "Edge of a pressed ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-active-fg",
+              "description": "Ink of a pressed ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-bg",
+              "description": "Fill of a disabled ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-border",
+              "description": "Edge of a disabled ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-fg",
+              "description": "Ink of a disabled ghost success button."
             },
             {
               "name": "--ki-button-ghost-success-hover-bg",
@@ -3457,6 +3521,34 @@
               "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
             },
             {
+              "name": "--ki-button-primary-active-shadow",
+              "description": "Shadow of a pressed primary button."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-bg",
+              "description": "Fill of a pressed primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-border",
+              "description": "Edge of a pressed primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-fg",
+              "description": "Ink of a pressed primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-bg",
+              "description": "Fill of a disabled primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-border",
+              "description": "Edge of a disabled primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-fg",
+              "description": "Ink of a disabled primary danger button."
+            },
+            {
               "name": "--ki-button-primary-danger-hover-bg",
               "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
@@ -3491,6 +3583,18 @@
             {
               "name": "--ki-button-primary-hover-shadow",
               "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-bg",
+              "description": "Fill of a pressed primary neutral button."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-border",
+              "description": "Edge of a pressed primary neutral button."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-fg",
+              "description": "Ink of a pressed primary neutral button."
             },
             {
               "name": "--ki-button-primary-neutral-disabled-bg",
@@ -3545,6 +3649,30 @@
               "description": "Foreground of the selected primary button toggle."
             },
             {
+              "name": "--ki-button-primary-success-active-bg",
+              "description": "Fill of a pressed primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-active-border",
+              "description": "Edge of a pressed primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-active-fg",
+              "description": "Ink of a pressed primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-bg",
+              "description": "Fill of a disabled primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-border",
+              "description": "Edge of a disabled primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-fg",
+              "description": "Ink of a disabled primary success button."
+            },
+            {
               "name": "--ki-button-primary-success-hover-bg",
               "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
@@ -3567,6 +3695,34 @@
             {
               "name": "--ki-button-primary-success-rest-fg",
               "description": "color used by the button component for primary success rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-active-shadow",
+              "description": "Shadow of a pressed quaternary button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-bg",
+              "description": "Fill of a pressed quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-border",
+              "description": "Edge of a pressed quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-fg",
+              "description": "Ink of a pressed quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-bg",
+              "description": "Fill of a disabled quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-border",
+              "description": "Edge of a disabled quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-fg",
+              "description": "Ink of a disabled quaternary danger button."
             },
             {
               "name": "--ki-button-quaternary-danger-hover-bg",
@@ -3599,6 +3755,18 @@
             {
               "name": "--ki-button-quaternary-hover-shadow",
               "description": "value used by the button component for quaternary hover shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-bg",
+              "description": "Fill of a pressed quaternary neutral button."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-border",
+              "description": "Edge of a pressed quaternary neutral button."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-fg",
+              "description": "Ink of a pressed quaternary neutral button."
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-bg",
@@ -3649,6 +3817,30 @@
               "description": "Foreground of the selected quaternary button toggle."
             },
             {
+              "name": "--ki-button-quaternary-success-active-bg",
+              "description": "Fill of a pressed quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-border",
+              "description": "Edge of a pressed quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-fg",
+              "description": "Ink of a pressed quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-bg",
+              "description": "Fill of a disabled quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-border",
+              "description": "Edge of a disabled quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-fg",
+              "description": "Ink of a disabled quaternary success button."
+            },
+            {
               "name": "--ki-button-quaternary-success-hover-bg",
               "description": "color used by the button component for quaternary success hover background."
             },
@@ -3675,6 +3867,34 @@
             {
               "name": "--ki-button-secondary-active-overlay",
               "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
+            },
+            {
+              "name": "--ki-button-secondary-active-shadow",
+              "description": "Shadow of a pressed secondary button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-bg",
+              "description": "Fill of a pressed secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-border",
+              "description": "Edge of a pressed secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-fg",
+              "description": "Ink of a pressed secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-bg",
+              "description": "Fill of a disabled secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-border",
+              "description": "Edge of a disabled secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-fg",
+              "description": "Ink of a disabled secondary danger button."
             },
             {
               "name": "--ki-button-secondary-danger-hover-bg",
@@ -3711,6 +3931,18 @@
             {
               "name": "--ki-button-secondary-hover-shadow",
               "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-bg",
+              "description": "Fill of a pressed secondary neutral button."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-border",
+              "description": "Edge of a pressed secondary neutral button."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-fg",
+              "description": "Ink of a pressed secondary neutral button."
             },
             {
               "name": "--ki-button-secondary-neutral-disabled-bg",
@@ -3763,6 +3995,30 @@
             {
               "name": "--ki-button-secondary-selected-fg",
               "description": "Foreground of the selected secondary button toggle."
+            },
+            {
+              "name": "--ki-button-secondary-success-active-bg",
+              "description": "Fill of a pressed secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-active-border",
+              "description": "Edge of a pressed secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-active-fg",
+              "description": "Ink of a pressed secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-bg",
+              "description": "Fill of a disabled secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-border",
+              "description": "Edge of a disabled secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-fg",
+              "description": "Ink of a disabled secondary success button."
             },
             {
               "name": "--ki-button-secondary-success-hover-bg",
@@ -3833,6 +4089,34 @@
               "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
             },
             {
+              "name": "--ki-button-tertiary-active-shadow",
+              "description": "Shadow of a pressed tertiary button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-bg",
+              "description": "Fill of a pressed tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-border",
+              "description": "Edge of a pressed tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-fg",
+              "description": "Ink of a pressed tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-bg",
+              "description": "Fill of a disabled tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-border",
+              "description": "Edge of a disabled tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-fg",
+              "description": "Ink of a disabled tertiary danger button."
+            },
+            {
               "name": "--ki-button-tertiary-danger-hover-bg",
               "description": "Tertiary alias of the secondary danger hover background."
             },
@@ -3867,6 +4151,18 @@
             {
               "name": "--ki-button-tertiary-hover-shadow",
               "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-bg",
+              "description": "Fill of a pressed tertiary neutral button."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-border",
+              "description": "Edge of a pressed tertiary neutral button."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-fg",
+              "description": "Ink of a pressed tertiary neutral button."
             },
             {
               "name": "--ki-button-tertiary-neutral-disabled-bg",
@@ -3911,6 +4207,30 @@
             {
               "name": "--ki-button-tertiary-rest-shadow",
               "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-bg",
+              "description": "Fill of a pressed tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-border",
+              "description": "Edge of a pressed tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-fg",
+              "description": "Ink of a pressed tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-bg",
+              "description": "Fill of a disabled tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-border",
+              "description": "Edge of a disabled tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-fg",
+              "description": "Ink of a disabled tertiary success button."
             },
             {
               "name": "--ki-button-tertiary-success-hover-bg",
@@ -9419,6 +9739,10 @@
               "description": "font weight used by the button component for font weight."
             },
             {
+              "name": "--ki-button-ghost-active-shadow",
+              "description": "Shadow of a pressed ghost button."
+            },
+            {
               "name": "--ki-button-ghost-danger-hover-bg",
               "description": "color used by the button component for ghost danger hover background."
             },
@@ -9449,6 +9773,18 @@
             {
               "name": "--ki-button-ghost-hover-shadow",
               "description": "value used by the button component for ghost hover shadow."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-bg",
+              "description": "Fill of a pressed ghost neutral button."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-border",
+              "description": "Edge of a pressed ghost neutral button."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-fg",
+              "description": "Ink of a pressed ghost neutral button."
             },
             {
               "name": "--ki-button-ghost-neutral-disabled-bg",
@@ -9651,6 +9987,10 @@
               "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
             },
             {
+              "name": "--ki-button-primary-active-shadow",
+              "description": "Shadow of a pressed primary button."
+            },
+            {
               "name": "--ki-button-primary-danger-hover-bg",
               "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
@@ -9685,6 +10025,18 @@
             {
               "name": "--ki-button-primary-hover-shadow",
               "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-bg",
+              "description": "Fill of a pressed primary neutral button."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-border",
+              "description": "Edge of a pressed primary neutral button."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-fg",
+              "description": "Ink of a pressed primary neutral button."
             },
             {
               "name": "--ki-button-primary-neutral-disabled-bg",
@@ -9763,6 +10115,10 @@
               "description": "color used by the button component for primary success rest foreground."
             },
             {
+              "name": "--ki-button-quaternary-active-shadow",
+              "description": "Shadow of a pressed quaternary button."
+            },
+            {
               "name": "--ki-button-quaternary-danger-hover-bg",
               "description": "color used by the button component for quaternary danger hover background."
             },
@@ -9793,6 +10149,18 @@
             {
               "name": "--ki-button-quaternary-hover-shadow",
               "description": "value used by the button component for quaternary hover shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-bg",
+              "description": "Fill of a pressed quaternary neutral button."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-border",
+              "description": "Edge of a pressed quaternary neutral button."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-fg",
+              "description": "Ink of a pressed quaternary neutral button."
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-bg",
@@ -9871,6 +10239,10 @@
               "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
             },
             {
+              "name": "--ki-button-secondary-active-shadow",
+              "description": "Shadow of a pressed secondary button."
+            },
+            {
               "name": "--ki-button-secondary-danger-hover-bg",
               "description": "color used by the button component for secondary danger hover background."
             },
@@ -9905,6 +10277,18 @@
             {
               "name": "--ki-button-secondary-hover-shadow",
               "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-bg",
+              "description": "Fill of a pressed secondary neutral button."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-border",
+              "description": "Edge of a pressed secondary neutral button."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-fg",
+              "description": "Ink of a pressed secondary neutral button."
             },
             {
               "name": "--ki-button-secondary-neutral-disabled-bg",
@@ -10027,6 +10411,10 @@
               "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
             },
             {
+              "name": "--ki-button-tertiary-active-shadow",
+              "description": "Shadow of a pressed tertiary button."
+            },
+            {
               "name": "--ki-button-tertiary-danger-hover-bg",
               "description": "Tertiary alias of the secondary danger hover background."
             },
@@ -10061,6 +10449,18 @@
             {
               "name": "--ki-button-tertiary-hover-shadow",
               "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-bg",
+              "description": "Fill of a pressed tertiary neutral button."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-border",
+              "description": "Edge of a pressed tertiary neutral button."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-fg",
+              "description": "Ink of a pressed tertiary neutral button."
             },
             {
               "name": "--ki-button-tertiary-neutral-disabled-bg",
@@ -15642,6 +16042,34 @@
               "description": "dimension used by the button component for focus ring width."
             },
             {
+              "name": "--ki-button-ghost-active-shadow",
+              "description": "Shadow of a pressed ghost button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-bg",
+              "description": "Fill of a pressed ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-border",
+              "description": "Edge of a pressed ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-fg",
+              "description": "Ink of a pressed ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-bg",
+              "description": "Fill of a disabled ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-border",
+              "description": "Edge of a disabled ghost danger button."
+            },
+            {
+              "name": "--ki-button-ghost-danger-disabled-fg",
+              "description": "Ink of a disabled ghost danger button."
+            },
+            {
               "name": "--ki-button-ghost-danger-hover-bg",
               "description": "color used by the button component for ghost danger hover background."
             },
@@ -15672,6 +16100,18 @@
             {
               "name": "--ki-button-ghost-hover-shadow",
               "description": "value used by the button component for ghost hover shadow."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-bg",
+              "description": "Fill of a pressed ghost neutral button."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-border",
+              "description": "Edge of a pressed ghost neutral button."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-fg",
+              "description": "Ink of a pressed ghost neutral button."
             },
             {
               "name": "--ki-button-ghost-neutral-disabled-bg",
@@ -15714,6 +16154,30 @@
               "description": "value used by the button component for ghost rest shadow."
             },
             {
+              "name": "--ki-button-ghost-success-active-bg",
+              "description": "Fill of a pressed ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-active-border",
+              "description": "Edge of a pressed ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-active-fg",
+              "description": "Ink of a pressed ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-bg",
+              "description": "Fill of a disabled ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-border",
+              "description": "Edge of a disabled ghost success button."
+            },
+            {
+              "name": "--ki-button-ghost-success-disabled-fg",
+              "description": "Ink of a disabled ghost success button."
+            },
+            {
               "name": "--ki-button-ghost-success-hover-bg",
               "description": "color used by the button component for ghost success hover background."
             },
@@ -15750,6 +16214,34 @@
               "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
             },
             {
+              "name": "--ki-button-primary-active-shadow",
+              "description": "Shadow of a pressed primary button."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-bg",
+              "description": "Fill of a pressed primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-border",
+              "description": "Edge of a pressed primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-fg",
+              "description": "Ink of a pressed primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-bg",
+              "description": "Fill of a disabled primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-border",
+              "description": "Edge of a disabled primary danger button."
+            },
+            {
+              "name": "--ki-button-primary-danger-disabled-fg",
+              "description": "Ink of a disabled primary danger button."
+            },
+            {
               "name": "--ki-button-primary-danger-hover-bg",
               "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
@@ -15784,6 +16276,18 @@
             {
               "name": "--ki-button-primary-hover-shadow",
               "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-bg",
+              "description": "Fill of a pressed primary neutral button."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-border",
+              "description": "Edge of a pressed primary neutral button."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-fg",
+              "description": "Ink of a pressed primary neutral button."
             },
             {
               "name": "--ki-button-primary-neutral-disabled-bg",
@@ -15830,6 +16334,30 @@
               "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
             },
             {
+              "name": "--ki-button-primary-success-active-bg",
+              "description": "Fill of a pressed primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-active-border",
+              "description": "Edge of a pressed primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-active-fg",
+              "description": "Ink of a pressed primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-bg",
+              "description": "Fill of a disabled primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-border",
+              "description": "Edge of a disabled primary success button."
+            },
+            {
+              "name": "--ki-button-primary-success-disabled-fg",
+              "description": "Ink of a disabled primary success button."
+            },
+            {
               "name": "--ki-button-primary-success-hover-bg",
               "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
@@ -15852,6 +16380,34 @@
             {
               "name": "--ki-button-primary-success-rest-fg",
               "description": "color used by the button component for primary success rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-active-shadow",
+              "description": "Shadow of a pressed quaternary button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-bg",
+              "description": "Fill of a pressed quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-border",
+              "description": "Edge of a pressed quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-fg",
+              "description": "Ink of a pressed quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-bg",
+              "description": "Fill of a disabled quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-border",
+              "description": "Edge of a disabled quaternary danger button."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-disabled-fg",
+              "description": "Ink of a disabled quaternary danger button."
             },
             {
               "name": "--ki-button-quaternary-danger-hover-bg",
@@ -15884,6 +16440,18 @@
             {
               "name": "--ki-button-quaternary-hover-shadow",
               "description": "value used by the button component for quaternary hover shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-bg",
+              "description": "Fill of a pressed quaternary neutral button."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-border",
+              "description": "Edge of a pressed quaternary neutral button."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-fg",
+              "description": "Ink of a pressed quaternary neutral button."
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-bg",
@@ -15926,6 +16494,30 @@
               "description": "value used by the button component for quaternary rest shadow."
             },
             {
+              "name": "--ki-button-quaternary-success-active-bg",
+              "description": "Fill of a pressed quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-border",
+              "description": "Edge of a pressed quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-fg",
+              "description": "Ink of a pressed quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-bg",
+              "description": "Fill of a disabled quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-border",
+              "description": "Edge of a disabled quaternary success button."
+            },
+            {
+              "name": "--ki-button-quaternary-success-disabled-fg",
+              "description": "Ink of a disabled quaternary success button."
+            },
+            {
               "name": "--ki-button-quaternary-success-hover-bg",
               "description": "color used by the button component for quaternary success hover background."
             },
@@ -15952,6 +16544,34 @@
             {
               "name": "--ki-button-secondary-active-overlay",
               "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
+            },
+            {
+              "name": "--ki-button-secondary-active-shadow",
+              "description": "Shadow of a pressed secondary button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-bg",
+              "description": "Fill of a pressed secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-border",
+              "description": "Edge of a pressed secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-fg",
+              "description": "Ink of a pressed secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-bg",
+              "description": "Fill of a disabled secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-border",
+              "description": "Edge of a disabled secondary danger button."
+            },
+            {
+              "name": "--ki-button-secondary-danger-disabled-fg",
+              "description": "Ink of a disabled secondary danger button."
             },
             {
               "name": "--ki-button-secondary-danger-hover-bg",
@@ -15988,6 +16608,18 @@
             {
               "name": "--ki-button-secondary-hover-shadow",
               "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-bg",
+              "description": "Fill of a pressed secondary neutral button."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-border",
+              "description": "Edge of a pressed secondary neutral button."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-fg",
+              "description": "Ink of a pressed secondary neutral button."
             },
             {
               "name": "--ki-button-secondary-neutral-disabled-bg",
@@ -16034,6 +16666,30 @@
               "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
             },
             {
+              "name": "--ki-button-secondary-success-active-bg",
+              "description": "Fill of a pressed secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-active-border",
+              "description": "Edge of a pressed secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-active-fg",
+              "description": "Ink of a pressed secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-bg",
+              "description": "Fill of a disabled secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-border",
+              "description": "Edge of a disabled secondary success button."
+            },
+            {
+              "name": "--ki-button-secondary-success-disabled-fg",
+              "description": "Ink of a disabled secondary success button."
+            },
+            {
               "name": "--ki-button-secondary-success-hover-bg",
               "description": "color used by the button component for secondary success hover background."
             },
@@ -16070,6 +16726,34 @@
               "description": "dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width)."
             },
             {
+              "name": "--ki-button-tertiary-active-shadow",
+              "description": "Shadow of a pressed tertiary button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-bg",
+              "description": "Fill of a pressed tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-border",
+              "description": "Edge of a pressed tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-fg",
+              "description": "Ink of a pressed tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-bg",
+              "description": "Fill of a disabled tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-border",
+              "description": "Edge of a disabled tertiary danger button."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-disabled-fg",
+              "description": "Ink of a disabled tertiary danger button."
+            },
+            {
               "name": "--ki-button-tertiary-danger-hover-bg",
               "description": "Tertiary alias of the secondary danger hover background."
             },
@@ -16104,6 +16788,18 @@
             {
               "name": "--ki-button-tertiary-hover-shadow",
               "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-bg",
+              "description": "Fill of a pressed tertiary neutral button."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-border",
+              "description": "Edge of a pressed tertiary neutral button."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-fg",
+              "description": "Ink of a pressed tertiary neutral button."
             },
             {
               "name": "--ki-button-tertiary-neutral-disabled-bg",
@@ -16148,6 +16844,30 @@
             {
               "name": "--ki-button-tertiary-rest-shadow",
               "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-bg",
+              "description": "Fill of a pressed tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-border",
+              "description": "Edge of a pressed tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-fg",
+              "description": "Ink of a pressed tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-bg",
+              "description": "Fill of a disabled tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-border",
+              "description": "Edge of a disabled tertiary success button."
+            },
+            {
+              "name": "--ki-button-tertiary-success-disabled-fg",
+              "description": "Ink of a disabled tertiary success button."
             },
             {
               "name": "--ki-button-tertiary-success-hover-bg",
@@ -17611,6 +18331,10 @@
             {
               "name": "--ki-input-line-height",
               "description": "dimension used by the input component for line height."
+            },
+            {
+              "name": "--ki-input-min-target",
+              "description": "dimension used by the input component for min target."
             },
             {
               "name": "--ki-input-outlined-bg",
@@ -19320,6 +20044,10 @@
               "description": "Maximum popup width, bounded by the viewport."
             },
             {
+              "name": "--ki-menu-meta-bg",
+              "description": "Background behind shortcut hints and the filter placeholder."
+            },
+            {
               "name": "--ki-menu-meta-fg",
               "description": "Foreground for shortcut hints and the filter placeholder."
             },
@@ -19419,6 +20147,10 @@
             {
               "name": "--ki-menu-font-family",
               "description": "Family for action labels and the filter."
+            },
+            {
+              "name": "--ki-menu-group-bg",
+              "description": "Background behind group labels."
             },
             {
               "name": "--ki-menu-group-fg",
@@ -19663,8 +20395,20 @@
               "description": "Start and end inset of an action, group label, or filter."
             },
             {
+              "name": "--ki-menu-item-bg",
+              "description": "Background behind resting actions."
+            },
+            {
+              "name": "--ki-menu-item-danger-bg",
+              "description": "Background behind destructive actions."
+            },
+            {
               "name": "--ki-menu-item-danger-fg",
               "description": "Foreground for destructive actions."
+            },
+            {
+              "name": "--ki-menu-item-danger-hover-bg",
+              "description": "Background behind hovered or keyboard-focused destructive actions."
             },
             {
               "name": "--ki-menu-item-danger-hover-fg",
@@ -19703,12 +20447,20 @@
               "description": "Action row corner radius."
             },
             {
+              "name": "--ki-menu-meta-bg",
+              "description": "Background behind shortcut hints and the filter placeholder."
+            },
+            {
               "name": "--ki-menu-meta-fg",
               "description": "Foreground for shortcut hints and the filter placeholder."
             },
             {
               "name": "--ki-menu-meta-font-size",
               "description": "Size of metadata and group labels."
+            },
+            {
+              "name": "--ki-menu-meta-hover-bg",
+              "description": "Background behind shortcut hints on a hovered or focused action."
             },
             {
               "name": "--ki-menu-meta-hover-fg",
@@ -26878,6 +27630,10 @@
               "description": "dimension used by the select component for height."
             },
             {
+              "name": "--ki-select-hover-bg",
+              "description": "Trigger fill on hover, beneath the hover wash."
+            },
+            {
               "name": "--ki-select-hover-border",
               "description": "color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover."
             },
@@ -30639,6 +31395,10 @@
               "description": "Boundary width for either suggestion variant."
             },
             {
+              "name": "--ki-suggestion-card-description-bg",
+              "description": "Resting card surface beneath the description."
+            },
+            {
               "name": "--ki-suggestion-card-description-fg",
               "description": "Resting card description."
             },
@@ -30647,8 +31407,16 @@
               "description": "Space between the card title and description."
             },
             {
+              "name": "--ki-suggestion-card-hover-description-bg",
+              "description": "Hover card surface beneath the description."
+            },
+            {
               "name": "--ki-suggestion-card-hover-description-fg",
               "description": "Description over the card hover surface."
+            },
+            {
+              "name": "--ki-suggestion-card-pressed-description-bg",
+              "description": "Pressed card surface beneath the description."
             },
             {
               "name": "--ki-suggestion-card-pressed-description-fg",
@@ -32135,6 +32903,10 @@
               "description": "The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1)."
             },
             {
+              "name": "--ki-surface-transparent",
+              "description": "Transparent surface backing for a background image that carries its own opacity."
+            },
+            {
               "name": "--ki-table-backdrop-filter",
               "description": "Complete filter applied behind the frame."
             },
@@ -32197,6 +32969,10 @@
             {
               "name": "--ki-table-header-height",
               "description": "Column header row height."
+            },
+            {
+              "name": "--ki-table-meta-bg",
+              "description": "Surface behind secondary and numeric values at rest."
             },
             {
               "name": "--ki-table-meta-fg",
@@ -36103,6 +36879,10 @@
               "description": "font weight used by the tooltip component for font weight."
             },
             {
+              "name": "--ki-tooltip-hide-delay",
+              "description": "duration used by the tooltip component for tooltip hide delay."
+            },
+            {
               "name": "--ki-tooltip-line-height",
               "description": "dimension used by the tooltip component for line height (MarsUI line_height/para 20px)."
             },
@@ -36205,6 +36985,10 @@
             {
               "name": "--ki-tooltip-shadow",
               "description": "shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap)."
+            },
+            {
+              "name": "--ki-tooltip-show-delay",
+              "description": "duration used by the tooltip component for tooltip show delay."
             },
             {
               "name": "--ki-typography-family-body",
@@ -36611,8 +37395,16 @@
               "description": "App-bar title and control ink when its container scrolls."
             },
             {
+              "name": "--ki-app-bar-scrolled-subtitle-bg",
+              "description": "Scrolled surface behind the app-bar subtitle."
+            },
+            {
               "name": "--ki-app-bar-scrolled-subtitle-fg",
               "description": "App-bar subtitle ink when its container scrolls."
+            },
+            {
+              "name": "--ki-app-bar-subtitle-bg",
+              "description": "Resting surface behind the app-bar subtitle."
             },
             {
               "name": "--ki-app-bar-subtitle-fg",

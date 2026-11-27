@@ -8,6 +8,7 @@ import {
   readCanonicalJson,
   readPublicApiCandidate,
   readPublicApiDeclarations,
+  readPublishedTokenDeprecations,
 } from '../gates/check-public-api.mjs';
 import { canonicalJson } from '../lib/canonical-json.mjs';
 import { createPublicApiDeclaration, evaluatePublicApiChange } from '../lib/public-api.mjs';
@@ -79,6 +80,7 @@ async function declare([mode, name, releaseOrRef, reason, ...extra]) {
     baseline,
     candidate,
     declarations: [...declarations, declaration],
+    publishedTokens: await readPublishedTokenDeprecations(directory),
   });
   if (result.decision === 'blocked') throw new Error(result.reasons.join('\n'));
   await writeFile(path, canonicalJson(declaration), { flag: mode === 'create' ? 'wx' : 'w' });

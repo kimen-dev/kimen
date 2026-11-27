@@ -170,6 +170,7 @@
      min-block-size (token-wave handoff) so the field can grow, never clip. */
   min-block-size: max(
     var(--ki-density-target-min),
+    var(--ki-input-min-target),
     calc(var(--_ki-input-height) + var(--ki-density-control-offset))
   );
   padding-inline: var(--_ki-input-padding-inline);

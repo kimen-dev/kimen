@@ -19,6 +19,14 @@
         "required": false,
         "type": null
       },
+      "--ki-menu-group-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind group labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-menu-group-fg": {
         "default": null,
         "deprecatedSince": null,

@@ -62,7 +62,7 @@ Link and action destinations belong to the consuming app.
 | Keyboard path          | S8, S9, S10, S11, S21                   |                                                                          |
 | Assistive-tech outcome | S12, S13, S14, S22                      |                                                                          |
 | Form participation     | N/A                                     | TopNav owns no value. Slotted controls participate on their own terms.    |
-| Theming                | S15, S16, S17, S18, S19                 |                                                                          |
+| Theming                | S15, S16, S17, S18, S19, S23 |                                                                          |
 
 ## Gherkin contract
 
@@ -219,4 +219,11 @@ Feature: TopNav
     Given a narrow header on a page with a coarse pointer
     When the header appears
     Then the navigation trigger has a target of at least 44 by 44 pixels
+
+  # Family: theming
+  # S23
+  Scenario: An app bar themes its subtitle background as it scrolls
+    Given an app bar with custom rest and scrolled subtitle backgrounds
+    When the user scrolls its content
+    Then the subtitle switches to its scrolled background
 ```

@@ -11,11 +11,14 @@
   },
   "sizeBudget": {
     "mcpServer": {
-      "raw": 20067,
+      "raw": 20764,
       "gzip": 4422
     },
     "tokenStylesheets": {
       "onmars": 132
+    },
+    "mcpApps": {
+      "raw": 256
     }
   }
 }

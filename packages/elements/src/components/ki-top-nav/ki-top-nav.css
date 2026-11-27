@@ -272,12 +272,14 @@ nav {
 }
 
 [part="subtitle"] {
+  background-color: var(--ki-app-bar-subtitle-bg);
   color: var(--ki-app-bar-subtitle-fg);
   font-size: var(--ki-typography-size-body-1);
   line-height: var(--ki-typography-line-height-body-1);
 }
 
 .scrolled [part="subtitle"] {
+  background-color: var(--ki-app-bar-scrolled-subtitle-bg);
   color: var(--ki-app-bar-scrolled-subtitle-fg);
 }
 

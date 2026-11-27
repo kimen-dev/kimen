@@ -89,6 +89,7 @@ ki-table > table > thead > tr > :is(th, td) {
 @media (hover: hover) and (pointer: fine) {
   ki-table > table > tbody > tr:hover:not([aria-hidden="true"], [aria-selected="true"]) {
     --_ki-table-meta-fg: var(--ki-table-row-hover-fg);
+    --_ki-table-meta-bg: var(--ki-surface-transparent);
 
     color: var(--ki-table-row-hover-fg);
     background-color: var(--ki-table-row-hover-bg);
@@ -109,6 +110,14 @@ ki-table > table > :is(thead, tbody, tfoot) > tr > [data-numeric] {
 
 ki-table > table > :is(tbody, tfoot) > tr > :is([data-meta], [data-numeric]) {
   color: var(--_ki-table-meta-fg, var(--ki-table-meta-fg));
+}
+
+ki-table
+  > table
+  > :is(tbody, tfoot)
+  > tr:not([aria-selected="true"])
+  > :is([data-meta], [data-numeric]) {
+  background-color: var(--_ki-table-meta-bg, var(--ki-table-meta-bg));
 }
 
 ki-table > table > thead > tr > th[data-sort] > button {

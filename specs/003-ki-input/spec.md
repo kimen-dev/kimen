@@ -371,6 +371,13 @@ Feature: Input
     Given a right-to-left document with icons in the input's start and end slots
     When the page renders
     Then the start content leads and the end content trails the entry area
+
+  # Family: theming
+  # S29
+  Scenario: The input respects a custom minimum target size
+    Given an input with a larger minimum target token
+    When the page renders
+    Then the input field is at least as tall as the requested minimum
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -381,7 +388,7 @@ Feature: Input
 | Keyboard path | S7, S8, S22 | |
 | Assistive-tech outcome | S9, S10, S11, S23, S24, S25 | |
 | Form participation | S12, S13, S14, S15, S26, S27, S28 | |
-| Theming | S16, S17, S18 | |
+| Theming | S16, S17, S18, S29 | |
 
 ## Requirements *(mandatory)*
 

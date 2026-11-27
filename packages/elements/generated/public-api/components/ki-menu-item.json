@@ -107,10 +107,34 @@
         "required": false,
         "type": null
       },
+      "--ki-menu-item-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind resting actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-danger-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind destructive actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-menu-item-danger-fg": {
         "default": null,
         "deprecatedSince": null,
         "description": "Foreground for destructive actions.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-item-danger-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind hovered or keyboard-focused destructive actions.",
         "replacement": null,
         "required": false,
         "type": null
@@ -187,6 +211,14 @@
         "required": false,
         "type": null
       },
+      "--ki-menu-meta-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind shortcut hints and the filter placeholder.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-menu-meta-fg": {
         "default": null,
         "deprecatedSince": null,
@@ -199,6 +231,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Size of metadata and group labels.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-menu-meta-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background behind shortcut hints on a hovered or focused action.",
         "replacement": null,
         "required": false,
         "type": null

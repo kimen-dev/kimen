@@ -41,7 +41,7 @@
   --ki-select-rest-fg:var(--ki-text-high-em);
   --ki-select-rest-border:var(--ki-outline-control);
   --ki-select-rest-label-fg:var(--ki-text-supporting);
-  --ki-select-hover-bg:var(--ki-surface-special-light-s2-dark-s3); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-surface-hover-overlay-inverse */
+  --ki-select-hover-bg:var(--ki-select-rest-bg);
   --ki-select-hover-fg:var(--ki-text-high-em);
   --ki-select-hover-border:var(--ki-outline-control-hover);
   --ki-select-hover-label-fg:var(--ki-text-high-em);
@@ -59,7 +59,6 @@
   --ki-select-listbox-backdrop-blur:var(--ki-blur-48); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-backdrop-filter */
   --ki-select-listbox-backdrop-filter:var(--ki-effect-component-listbox-backdrop-filter);
   --ki-select-listbox-radius:var(--ki-radius-big-component-xs);
-  --ki-select-listbox-elevation:var(--ki-elevation-shadow-med); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-select-listbox-shadow */
   --ki-select-listbox-shadow:var(--ki-elevation-e3);
   --ki-select-listbox-padding:var(--ki-space-md);
   --ki-select-listbox-max-block-size:var(--ki-size-surface-xs);
