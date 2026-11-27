@@ -230,6 +230,8 @@ describe('catalogPrompt', () => {
     expect(blockOf('ki-confirmation')).toContain(
       'an action name alone is rejected, so map each event that should act',
     );
+    expect(blockOf('ki-confirmation')).toContain('`approve-label` (string, required)');
+    expect(blockOf('ki-confirmation')).toContain('`deny-label` (string, required)');
     for (const tag of ['ki-alert', 'ki-chip', 'ki-confirmation', 'ki-dialog']) {
       expect(blockOf(tag)).toContain(perEvent);
     }

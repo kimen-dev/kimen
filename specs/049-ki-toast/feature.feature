@@ -318,3 +318,10 @@ Feature: Toast
     Given a page declaring the touch density with a toast holding the action "Undo"
     When the toast appears
     Then the dismiss button and "Undo" each offer a target of at least 44 by 44 pixels
+
+  # S46
+  Scenario: The onmars toast and alert share neutral dismiss ink
+    Given an onmars page with a dismissible alert and toast in either color scheme
+    When the page changes only the toast's dismiss ink
+    Then before the change both dismiss glyphs use the same ink
+    And after the change only the toast's dismiss glyph uses the new ink

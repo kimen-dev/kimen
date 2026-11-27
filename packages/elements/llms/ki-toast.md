@@ -102,6 +102,7 @@ None.
 - `--ki-toast-border`: color used by the toast component for its hairline edge (issue #353).
 - `--ki-toast-border-width`: dimension used by the toast component for its hairline edge.
 - `--ki-toast-danger-icon`: color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353).
+- `--ki-toast-dismiss-fg`: Foreground of the toast dismiss glyph.
 - `--ki-toast-fg`: color used by the toast component for the heading ink (issue #353).
 - `--ki-toast-gap`: dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px).
 - `--ki-toast-heading-font-family`: Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface.

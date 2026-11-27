@@ -12,7 +12,7 @@
       "approve-label": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+        "description": "Approval text, such as \"Send email\". Required for pending HTML and all generated specs.",
         "replacement": null,
         "required": true,
         "type": "string"
@@ -44,7 +44,7 @@
       "deny-label": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
+        "description": "Refusal text, such as \"Keep draft\". Required for pending HTML and all generated specs.",
         "replacement": null,
         "required": true,
         "type": "string"
@@ -385,7 +385,7 @@
       "approveLabel": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+        "description": "Approval text, such as \"Send email\". Required for pending HTML and all generated specs.",
         "replacement": null,
         "required": true,
         "type": "string"
@@ -417,7 +417,7 @@
       "denyLabel": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
+        "description": "Refusal text, such as \"Keep draft\". Required for pending HTML and all generated specs.",
         "replacement": null,
         "required": true,
         "type": "string"

@@ -173,26 +173,37 @@ describe('contracts when the theme or scheme changes at runtime', () => {
   it.each(componentTags)(
     '%s restyles live exactly like a fresh mount, with nothing left stale',
     async (component) => {
-      const fresh = new Map<string, string[]>();
-      for (const combination of combinations) {
-        applyCombination(combination);
-        fresh.set(nameOf(combination), fingerprint(await mountGallery(component)));
-      }
+      try {
+        await browserCommands.emulateReducedMotion('no-preference');
+        applyCombination(defaultCombination);
+        await mountGallery(component);
+        // Switch the preference with shadow roots present so WebKit re-evaluates
+        // their media queries. Take the references from mounts started after
+        // the change, since the first mount can still show an entrance animation.
+        await browserCommands.emulateReducedMotion('reduce');
+        await nextFrame();
+        expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+        const fresh = new Map<string, string[]>();
+        for (const combination of combinations) {
+          applyCombination(combination);
+          fresh.set(nameOf(combination), fingerprint(await mountGallery(component)));
+        }
 
-      applyCombination(defaultCombination);
-      const wrapper = await mountGallery(component);
-      for (const combination of [...otherCombinations, defaultCombination]) {
-        applyCombination(combination);
-        // Restyling is asynchronous, and two frames are not always enough on a
-        // loaded CI runner. Poll until the live gallery matches the fresh mount,
-        // so a slow restyle is waited out while a stale one still fails.
-        await expect
-          .poll(
-            () =>
-              fingerprintDifferences(fresh.get(nameOf(combination)) ?? [], fingerprint(wrapper)),
-            { message: `after switching live to ${nameOf(combination)}`, timeout: 2000 },
-          )
-          .toEqual([]);
+        applyCombination(defaultCombination);
+        const wrapper = await mountGallery(component);
+        for (const combination of [...otherCombinations, defaultCombination]) {
+          applyCombination(combination);
+          // Poll for the finished restyle on loaded runners.
+          await expect
+            .poll(
+              () =>
+                fingerprintDifferences(fresh.get(nameOf(combination)) ?? [], fingerprint(wrapper)),
+              { message: `after switching live to ${nameOf(combination)}`, timeout: 2000 },
+            )
+            .toEqual([]);
+        }
+      } finally {
+        await browserCommands.emulateReducedMotion('reduce');
       }
     },
   );

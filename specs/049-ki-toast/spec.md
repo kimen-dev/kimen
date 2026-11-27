@@ -526,6 +526,13 @@ Feature: Toast
     Given a page declaring the touch density with a toast holding the action "Undo"
     When the toast appears
     Then the dismiss button and "Undo" each offer a target of at least 44 by 44 pixels
+
+  # S46
+  Scenario: The onmars toast and alert share neutral dismiss ink
+    Given an onmars page with a dismissible alert and toast in either color scheme
+    When the page changes only the toast's dismiss ink
+    Then before the change both dismiss glyphs use the same ink
+    And after the change only the toast's dismiss glyph uses the new ink
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -536,7 +543,7 @@ Feature: Toast
 | Keyboard path | S22, S23, S24, S25, S26, S44, S45 | |
 | Assistive-tech outcome | S27, S28, S29, S30, S31, S32, S33, S34 | |
 | Form participation | N/A | Neither element is a form control: a toast reports an event and holds no value, and its action is the application's own button, which takes part in forms on its own terms. |
-| Theming | S35, S36, S37, S38, S39, S40, S41, S42, S43 | |
+| Theming | S35, S36, S37, S38, S39, S40, S41, S42, S43, S46 | |
 
 ## Requirements *(mandatory)*
 

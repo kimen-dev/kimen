@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 564 semantic
-and 2442 component tokens. Values are the resolved **onmars light**
+and 2443 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -773,9 +773,9 @@ every component at once.
 | `--ki-typography-weight-body-medium` | `600` | semantic font weight for typography weight body medium. |
 | `--ki-typography-weight-body-normal` | `500` | semantic font weight for typography weight body normal. |
 | `--ki-typography-weight-body-semibold` | `700` | semantic font weight for typography weight body semibold. |
-| `--ki-typography-weight-display-bold` | `700` | semantic font weight for typography weight display bold. |
+| `--ki-typography-weight-display-bold` | `500` | Bold display weight. Onmars uses only 500. |
 | `--ki-typography-weight-display-medium` | `500` | semantic font weight for typography weight display medium. |
-| `--ki-typography-weight-display-normal` | `400` | semantic font weight for typography weight display normal. |
+| `--ki-typography-weight-display-normal` | `500` | Normal display weight. Onmars uses only 500. |
 | `--ki-typography-weight-display-semibold` | `500` | semantic font weight for typography weight display semibold. |
 
 ## Component tokens
@@ -3470,6 +3470,7 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-toast-border` | `rgba(24, 22, 19, 0.1)` | color used by the toast component for its hairline edge (issue #353). |
 | `--ki-toast-border-width` | `1px` | dimension used by the toast component for its hairline edge. |
 | `--ki-toast-danger-icon` | `#c21a45` | color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353). |
+| `--ki-toast-dismiss-fg` | `#181613` | Foreground of the toast dismiss glyph. |
 | `--ki-toast-fg` | `#181613` | color used by the toast component for the heading ink (issue #353). |
 | `--ki-toast-gap` | `0.75rem` | dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px). |
 | `--ki-toast-heading-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface. |

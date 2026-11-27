@@ -169,6 +169,8 @@ to its own action instead:
 ```
 
 The person activates **Keep files**, and the host receives `tool.denied`.
+Every generated confirmation requires a nonblank `approve-label` and
+`deny-label`. Plain HTML may omit the labels for a resolved confirmation.
 
 - **Each key is an event the component declares,** as its catalog entry
   lists them (the emitter's prompt and schema list them per component). A

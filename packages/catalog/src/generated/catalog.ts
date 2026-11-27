@@ -1244,7 +1244,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
         };
         readonly "approve-label": {
           readonly type: "string";
-          readonly description: "Verb or short phrase that describes what approval does, such as \"Send email\".";
+          readonly description: "Approval text, such as \"Send email\". Required for pending HTML and all generated specs.";
           readonly required: true;
         };
         readonly "approved-label": {
@@ -1263,7 +1263,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
         };
         readonly "deny-label": {
           readonly type: "string";
-          readonly description: "Verb or short phrase for refusal, such as \"Keep draft\".";
+          readonly description: "Refusal text, such as \"Keep draft\". Required for pending HTML and all generated specs.";
           readonly required: true;
         };
         readonly "expired-label": {

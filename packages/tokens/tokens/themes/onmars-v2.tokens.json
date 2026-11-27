@@ -378,7 +378,13 @@
     "typography": {
       "weight": {
         "display": {
+          "normal": {
+            "$value": "{ki.font.weight.body.normal}"
+          },
           "semibold": {
+            "$value": "{ki.font.weight.body.normal}"
+          },
+          "bold": {
             "$value": "{ki.font.weight.body.normal}"
           }
         }
