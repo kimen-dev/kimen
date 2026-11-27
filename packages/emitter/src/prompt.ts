@@ -7,7 +7,7 @@
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
 import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS, validateUiSpec } from '@kimen/catalog';
 import type { Derivation, ResolvedEntry } from './issues.js';
-import { resolveEntries, versionStamp } from './issues.js';
+import { invalidOption, resolveEntries, success, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
 
 /** The declared range of a bounded number as the prompt states it (S17). */
@@ -22,16 +22,37 @@ function rangeText(constraint: CatalogPropConstraint): string {
   return maximum === undefined ? '' : `, at most ${String(maximum)}`;
 }
 
-function propLine(name: string, constraint: CatalogPropConstraint): string {
+// Usage paragraphs come from the component contract. Keep those and any
+// preceding operational rules while omitting plain property descriptions.
+const RULE_PROSE =
+  /\b(?:always|must|never|requires?|only|forbids?|do not|should|choose|keep|avoid|supply|provide|match|belongs|invalid|rejected|when|if)\b/iu;
+
+function compactPropDescription(description: string): string {
+  const usage = /\nWhen (?:NOT )?to use:/u.exec(description);
+  if (RULE_PROSE.test(description.slice(0, usage?.index))) return description;
+  return (
+    /(?:(?<=^|\.\s)(?:Set|Pass|Pair|Use|Include|Omit|Place|Add|Remove|Give|Declare)\b|(?<=\n)When (?:NOT )?to use:).*/su.exec(
+      description,
+    )?.[0] ?? ''
+  );
+}
+
+function propLine(
+  name: string,
+  constraint: CatalogPropConstraint,
+  compact: boolean,
+  quoteValues: boolean,
+): string {
   const kind =
     constraint.type === 'enum'
-      ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
+      ? `enum: ${(constraint.values ?? []).map((value) => (quoteValues ? JSON.stringify(value) : `"${value}"`)).join(' | ')}`
       : `${constraint.type}${rangeText(constraint)}`;
   const url =
     constraint.format === 'url' ? ', URL' : constraint.format === 'idref' ? ', node id' : '';
   const emptiable = constraint.allowEmpty === true ? ', may be empty' : '';
   const required = constraint.required === true ? `, required${emptiable}` : '';
-  const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
+  const prose = compact ? compactPropDescription(constraint.description) : constraint.description;
+  const description = prose === '' ? '' : ` — ${prose}`;
   const fallback =
     constraint.default === undefined ? '' : ` (default: ${JSON.stringify(constraint.default)})`;
   return `  - \`${name}\` (${kind}${url}${required})${description}${fallback}`;
@@ -55,7 +76,12 @@ function exampleValue(constraint: CatalogPropConstraint): boolean | number | str
   }
 }
 
-function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
+function componentBlock(
+  tag: string,
+  entry: CatalogEntry,
+  compact: boolean,
+  quoteValues: boolean,
+): readonly string[] {
   const lines: string[] = [`### <${tag}>`, entry.description];
   lines.push(`- Use when: ${entry.whenToUse}`, `- Avoid when: ${entry.whenNotToUse}`);
   if (NATIVE_PRIMITIVE_TAGS.includes(tag)) {
@@ -65,7 +91,7 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
   if (propEntries.length > 0) {
     lines.push('- Props:');
     for (const [name, constraint] of propEntries) {
-      lines.push(propLine(name, constraint));
+      lines.push(propLine(name, constraint, compact && tag.startsWith('ki-'), quoteValues));
     }
   }
   const slotNames = Object.keys(entry.slots);
@@ -87,13 +113,13 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
       'an action name fires on ki-submit while idle and on ki-stop while streaming, and its data includes status and draft value; local files stay on the DOM event',
   };
   if (eventNames.length > 0) {
+    const activation =
+      entry.activationEvent ?? (eventNames.length === 1 ? eventNames[0] : undefined);
     const named =
       modeEvents[tag] ??
-      (entry.activationEvent !== undefined
-        ? `an action name fires on \`${entry.activationEvent}\``
-        : eventNames.length === 1
-          ? `an action name fires on \`${eventNames[0] ?? ''}\``
-          : 'an action name alone is rejected, so map each event that should act');
+      (activation === undefined
+        ? 'an action name alone is rejected, so map each event that should act'
+        : `an action name fires on \`${activation}\``);
     lines.push(
       `- Events (${named}; {"<event>": "<action>"} fires each listed event's own action):`,
     );
@@ -162,10 +188,12 @@ export function catalogPrompt(
   catalog: Catalog,
   options: DerivationOptions = {},
 ): Derivation<string> {
-  const resolved = resolveEntries(catalog, options.components);
-  if (resolved.issues.length > 0) {
-    return { issues: resolved.issues, ok: false };
+  const compact = options.verbosity === 'compact';
+  if (options.verbosity !== undefined && !compact) {
+    return invalidOption('options.verbosity', 'verbosity must be compact when provided');
   }
+  const resolved = resolveEntries(catalog, options.components, options.icons);
+  if (!resolved.ok) return resolved;
   const lines: string[] = [
     '# Kimen UI-spec emission guide',
     `Catalog: ${versionStamp(catalog)}.`,
@@ -183,13 +211,18 @@ export function catalogPrompt(
     `- "collect" lets a node with an "action" carry the values of other fields, so a form needs one action on its button and none on its fields: each key names an entry of the action data, each value is the "id" of a node of the same spec whose component has a "checked", "selected" or "value" prop. Each bound event fires only when every collected field is valid. At most ${String(COLLECT_MAX_ENTRIES)} entries, and a key may not be one of the node's own props.`,
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',
     '- Styling is not expressible in a spec; appearance belongs to the host theme.',
-    '',
-    '## Components',
   ];
-  for (const [tag, entry] of resolved.entries) {
-    lines.push(...componentBlock(tag, entry), '');
+  if (compact) {
+    // Dialog pairing is already in the retained command/commandfor guidance.
+    lines.push(
+      '- For bound actions, use type "button" on ki-button, omit "href-template" on ki-pagination, and set "removable" to true on input chips.',
+    );
   }
-  const example = exampleSpec(catalog, resolved.entries);
+  lines.push('', '## Components');
+  for (const [tag, entry] of resolved.artifact) {
+    lines.push(...componentBlock(tag, entry, compact, options.icons !== undefined), '');
+  }
+  const example = exampleSpec(catalog, resolved.artifact);
   if (example !== undefined) {
     lines.push('## Example (valid)');
     lines.push('```json');
@@ -197,5 +230,5 @@ export function catalogPrompt(
     lines.push('```');
     lines.push('The example validates against this catalog; imitate its structure.');
   }
-  return { artifact: lines.join('\n'), issues: [], ok: true };
+  return success(lines.join('\n'));
 }

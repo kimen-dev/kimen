@@ -73,7 +73,7 @@ describe('uiSpecJsonSchema', () => {
   it.each([
     ['ki-button', 'S18'],
     ['ki-icon-button', 'S17'],
-  ] as const)('%s %s only offers recommended variants to agents', (component) => {
+  ] as const)('%s %s only offers recommended variants to agents', (...[component]) => {
     const artifact = deriveOrThrow(catalogData, { components: [component] });
     const defs = artifact['$defs'] as Record<
       string,

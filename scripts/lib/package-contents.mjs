@@ -74,7 +74,8 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: true,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze([]),
-    budget: Object.freeze({ packed: 43_008, unpacked: 151_552 }),
+    // Raised for specs 168–170, approved by the founder on 2026-11-27.
+    budget: Object.freeze({ packed: 47_247, unpacked: 159_371 }),
   }),
   '@kimen/adapter-a2ui': Object.freeze({
     mapsEveryModule: true,

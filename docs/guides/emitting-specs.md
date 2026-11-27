@@ -25,6 +25,49 @@ target's documented provider limits are exceeded, derivation fails naming
 the largest-contributing component — the kit never silently truncates the
 model's world.
 
+## Configure the cart surface
+
+Use the same glyph list in the renderer realm and in every emitter artifact.
+Pass a component subset and `verbosity: 'compact'` to shorten the system
+prompt. Omit `verbosity` for the standard guidance.
+
+```ts
+import { catalogData, selectSpecIcons } from '@kimen/catalog';
+import { catalogPrompt, uiSpecTool } from '@kimen/emitter';
+import '@kimen/elements/icons/shopping-bag';
+import '@kimen/elements/icons/tag';
+import '@kimen/elements/icons/search';
+
+const icons = ['shopping-bag', 'tag', 'search'] as const;
+selectSpecIcons(icons);
+
+const components = [
+  'ki-card', 'ki-icon', 'ki-button', 'ki-input',
+  'ki-select', 'ki-option', 'ki-textarea', 'ki-table',
+];
+const prompt = catalogPrompt(catalogData, { components, icons, verbosity: 'compact' });
+const tool = uiSpecTool(catalogData, {
+  components,
+  icons,
+  target: 'openai-strict',
+  collect: { save: ['customerName', 'region', 'notes'], preview: ['region'] },
+});
+if (!prompt.ok || !tool.ok) throw new Error(JSON.stringify([...prompt.issues, ...tool.issues]));
+```
+
+If the model binds a `ki-button` to `save`, its `collect` is either `null` or
+`{ "customerName": "f-name", "region": "f-region", "notes": "f-notes" }`.
+Give the fields those node IDs and include `save` in the spec's top-level
+`actions`. After normalization and validation, activating the button reports
+the current field values to the host. The host chooses how to authorize
+and handle that report.
+
+The icon list can include custom registered names. An empty list, a blank
+name or a vocabulary incompatible with a catalog prop returns
+`invalid-option`. For a surface with no glyphs, leave `ki-icon` out of
+`components` and omit `icons`. For a custom MCP Apps document, derive
+artifacts from `surface.catalog` with `icons: surface.icons`.
+
 ## Always validate — the loop
 
 ```text

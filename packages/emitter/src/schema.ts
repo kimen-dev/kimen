@@ -11,7 +11,15 @@ import type { Catalog, CatalogEntry, CatalogPropConstraint } from '@kimen/catalo
 import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS, NODE_ID_GRAMMAR } from '@kimen/catalog';
 
 import type { Derivation, EmitterIssue, ResolvedEntry } from './issues.js';
-import { resolveEntries, versionStamp } from './issues.js';
+import {
+  failure,
+  invalidOption,
+  isNonblank,
+  isRecord,
+  resolveEntries,
+  success,
+  versionStamp,
+} from './issues.js';
 
 /**
  * Schema lowering targets (research D2). `draft-2020-12` is the stable
@@ -32,14 +40,15 @@ export type EmitterTarget = 'draft-2020-12' | 'openai-strict';
 export interface DerivationOptions {
   /** Restrict the artifact to these tags; default: the whole catalog. */
   readonly components?: readonly string[];
+  /** Glyph names this host offers. Pass the same list to selectSpecIcons. */
+  readonly icons?: readonly string[];
+  /** Compact catalogPrompt output. Omit for the standard prompt. */
+  readonly verbosity?: 'compact';
+  /** Exact data keys by named button action, for the openai-strict schema and tool. */
+  readonly collect?: Readonly<Record<string, readonly string[]>>;
   /** Schema lowering target; default `draft-2020-12`. */
   readonly target?: EmitterTarget;
 }
-
-// The runtime target allowlist: a JS/config caller can pass a typo'd string
-// despite the EmitterTarget type; an unknown value must fail closed, not slip
-// into the strict branch as ok:true (review finding).
-const KNOWN_TARGETS: ReadonlySet<string> = new Set(['draft-2020-12', 'openai-strict']);
 
 const SCHEMA_ID_BASE = 'https://kimen.dev/schemas/ui-spec';
 
@@ -78,6 +87,8 @@ function fnv1a(input: string): string {
 // (027 S16), and "contains one non-white-space character" is the same rule
 // as a regular expression every target supports.
 const NON_BLANK = '\\S';
+const NODE_ID = { pattern: NODE_ID_GRAMMAR.source, type: 'string' };
+const NULL_SCHEMA = { type: 'null' };
 
 /**
  * An action name: non-empty at the boundary. The default dialect says so
@@ -91,7 +102,14 @@ function actionName(strict: boolean): Record<string, unknown> {
 
 /** `schema` or null, the placeholder of an optional value under a strict target. */
 function nullable(schema: Record<string, unknown>, strict: boolean): Record<string, unknown> {
-  return strict ? { anyOf: [schema, { type: 'null' }] } : schema;
+  return strict ? { anyOf: [schema, NULL_SCHEMA] } : schema;
+}
+
+function closedObject(
+  properties: Record<string, unknown>,
+  required: readonly string[] | undefined,
+) {
+  return { additionalProperties: false, properties, required, type: 'object' };
 }
 
 /**
@@ -102,22 +120,21 @@ function nullable(schema: Record<string, unknown>, strict: boolean): Record<stri
  * null when it fires nothing; `normalizeEmission` drops those placeholders.
  */
 function actionBinding(events: readonly string[], strict: boolean): Record<string, unknown> {
+  const name = actionName(strict);
   if (events.length === 0) {
-    return nullable(actionName(strict), strict);
+    return nullable(name, strict);
   }
   const perEvent: Record<string, unknown> = {
     additionalProperties: false,
-    properties: Object.fromEntries(
-      events.map((event) => [event, nullable(actionName(strict), strict)]),
-    ),
+    properties: Object.fromEntries(events.map((event) => [event, nullable(name, strict)])),
     type: 'object',
   };
   if (strict) {
     perEvent['required'] = [...events];
-    return { anyOf: [actionName(strict), perEvent, { type: 'null' }] };
+    return { anyOf: [name, perEvent, NULL_SCHEMA] };
   }
   perEvent['minProperties'] = 1;
-  return { anyOf: [actionName(strict), perEvent] };
+  return { anyOf: [name, perEvent] };
 }
 
 function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<string, unknown> {
@@ -156,61 +173,46 @@ function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<
   }
   // Strict targets demand every property present; optionality becomes a
   // null union the host strips back out with `normalizeEmission` (S13).
-  return strict ? { anyOf: [base, { type: 'null' }] } : base;
+  return nullable(base, strict);
 }
 
 function componentBranch(
   tag: string,
   entry: CatalogEntry,
   strict: boolean,
-  childReference: string,
+  collections: Collection,
 ): Record<string, unknown> {
   const properties: Record<string, unknown> = { component: { const: tag } };
-  const required = ['component'];
+  const draftRequired = ['component'];
   // The optional stable node id (spec 035), in the boundary's own grammar so
   // a schema-accepted id is a boundary-accepted one (S19). Uniqueness within
   // the document is a cross-node rule only the boundary can state.
-  const id = { pattern: NODE_ID_GRAMMAR.source, type: 'string' };
-  properties['id'] = strict ? { anyOf: [id, { type: 'null' }] } : id;
-  if (strict) {
-    required.push('id');
-  }
+  properties['id'] = nullable(NODE_ID, strict);
   const propEntries = Object.entries(entry.props);
-  const propNames = propEntries.map(([name]) => name);
   // The props the catalog declares required (S16): present in every dialect,
   // and their container with them — an omitted `props` would otherwise skip
   // the requirement altogether.
-  const requiredNames = propEntries
-    .filter(([, constraint]) => constraint.required === true)
-    .map(([name]) => name);
   if (propEntries.length > 0) {
-    properties['props'] = {
-      additionalProperties: false,
-      properties: Object.fromEntries(
+    const requiredNames = propEntries
+      .filter(([, constraint]) => strict || constraint.required === true)
+      .map(([name]) => name);
+    properties['props'] = closedObject(
+      Object.fromEntries(
         propEntries.map(([name, constraint]) => [name, propSchema(constraint, strict)]),
       ),
-      required: strict ? propNames : requiredNames.length > 0 ? requiredNames : undefined,
-      type: 'object',
-    };
-    if (strict || requiredNames.length > 0) {
-      required.push('props');
-    }
+      requiredNames.length > 0 ? requiredNames : undefined,
+    );
+    if (requiredNames.length > 0) draftRequired.push('props');
   }
   // A native primitive never binds an action (spec 037 D7): its branch
   // offers none, so a model is never invited to emit one.
   if (!NATIVE_PRIMITIVE_TAGS.includes(tag)) {
     properties['action'] = actionBinding(Object.keys(entry.events), strict);
-    if (strict) {
-      required.push('action');
-    }
     // The fields a bound action collects (spec 153): data names mapped to
-    // node ids; the prompt states the rules. OpenAI's strict subset closes
-    // every object over listed properties, so a map of free names has no
-    // form there and only the default dialect offers it; the boundary
-    // accepts it from any emitter.
+    // node ids. Only the default dialect offers a map of free names.
     if (!strict) {
       properties['collect'] = {
-        additionalProperties: { pattern: NODE_ID_GRAMMAR.source, type: 'string' },
+        additionalProperties: NODE_ID,
         maxProperties: COLLECT_MAX_ENTRIES,
         type: 'object',
       };
@@ -218,24 +220,84 @@ function componentBranch(
   }
   const slotNames = Object.keys(entry.slots);
   if (slotNames.length > 0) {
-    properties['slots'] = {
-      additionalProperties: false,
-      properties: Object.fromEntries(
-        slotNames.map((name) => [name, { items: { $ref: childReference }, type: 'array' }]),
+    properties['slots'] = closedObject(
+      Object.fromEntries(
+        slotNames.map((name) => [name, { items: { $ref: '#/$defs/child' }, type: 'array' }]),
       ),
-      required: strict ? slotNames : undefined,
-      type: 'object',
-    };
-    if (strict) {
-      required.push('slots');
-    }
+      strict ? slotNames : undefined,
+    );
   }
+  const required = strict ? Object.keys(properties) : draftRequired;
+  // Strict objects need a separate closed branch for each bound key set.
+  const collecting =
+    tag === 'ki-button'
+      ? collections.filter(([, keys]) => keys.every((key) => !Object.hasOwn(entry.props, key)))
+      : [];
+  if (collecting.length === 0) return closedObject(properties, required);
+  required.push('collect');
+  const branch = (action: unknown, collect: Record<string, unknown>) =>
+    closedObject({ ...properties, action, collect }, required);
   return {
-    additionalProperties: false,
-    properties,
-    required,
-    type: 'object',
+    anyOf: [
+      branch(properties['action'], NULL_SCHEMA),
+      ...collecting.map(([action, keys]) =>
+        branch(
+          { const: action },
+          closedObject(Object.fromEntries(keys.map((key) => [key, NODE_ID])), keys),
+        ),
+      ),
+    ],
   };
+}
+
+type Collection = readonly (readonly [action: string, keys: readonly string[]])[];
+// Match the UI-spec data boundary's forbidden own keys without exposing its set.
+const FORBIDDEN_COLLECT_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
+function isCollectionName(value: unknown): value is string {
+  return isNonblank(value) && !FORBIDDEN_COLLECT_KEYS.has(value);
+}
+
+function resolveCollection(value: unknown): Derivation<Collection> {
+  const path = 'options.collect';
+  if (value === undefined) return success([]);
+  if (
+    !isRecord(value) ||
+    ![Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null)
+  ) {
+    return invalidOption(path, 'collect must be a record of named actions and their data keys');
+  }
+  const collections: [string, string[]][] = [];
+  for (const action of Reflect.ownKeys(value)) {
+    if (!isCollectionName(action)) {
+      return invalidOption(
+        path,
+        'collect requires a nonblank, permitted action name',
+        String(action),
+      );
+    }
+    const keys: unknown = Object.getOwnPropertyDescriptor(value, action)?.value;
+    const at = `${path}.${action}`;
+    if (!Array.isArray(keys) || keys.length === 0 || keys.length > COLLECT_MAX_ENTRIES) {
+      return invalidOption(
+        at,
+        `declare 1 to ${String(COLLECT_MAX_ENTRIES)} distinct collection keys`,
+      );
+    }
+    const unique = new Set<string>();
+    for (const key of keys as unknown[]) {
+      if (!isCollectionName(key) || unique.has(key)) {
+        return invalidOption(
+          at,
+          'collection keys must be nonblank, permitted and distinct',
+          typeof key === 'string' ? key : undefined,
+        );
+      }
+      unique.add(key);
+    }
+    collections.push([action, [...unique].sort()]);
+  }
+  return success(collections.sort(([a], [b]) => (a < b ? -1 : 1)));
 }
 
 // JSON.stringify drops `required: undefined`, but determinism (S11) and
@@ -244,16 +306,14 @@ function pruneUndefined(value: unknown): unknown {
   if (Array.isArray(value)) {
     return value.map(pruneUndefined);
   }
-  if (value !== null && typeof value === 'object') {
-    const record: Record<string, unknown> = {};
-    for (const [key, child] of Object.entries(value)) {
-      if (child !== undefined) {
-        record[key] = pruneUndefined(child);
-      }
+  if (!isRecord(value)) return value;
+  const record: Record<string, unknown> = {};
+  for (const [key, child] of Object.entries(value)) {
+    if (child !== undefined) {
+      record[key] = pruneUndefined(child);
     }
-    return record;
   }
-  return value;
+  return record;
 }
 
 interface LimitTally {
@@ -269,122 +329,90 @@ interface LimitTally {
  * `properties` object, every `$defs` name, every `enum` value and every
  * string `const` — the name/enum surface providers meter.
  */
-function tallyDocument(artifact: unknown): LimitTally {
-  const tally: LimitTally = { enumValues: 0, nameAndEnumChars: 0, properties: 0 };
-  const stack: unknown[] = [artifact];
-  while (stack.length > 0) {
-    const value = stack.pop();
-    if (Array.isArray(value)) {
-      for (const child of value) {
-        stack.push(child);
-      }
-      continue;
-    }
-    if (value === null || typeof value !== 'object') {
-      continue;
-    }
-    const record = value as Record<string, unknown>;
-    for (const [key, child] of Object.entries(record)) {
+function tallyDocument(
+  artifact: unknown,
+  tally: LimitTally = { enumValues: 0, nameAndEnumChars: 0, properties: 0 },
+): LimitTally {
+  // The derived schema tree is shallow: recursive nodes point to a $ref.
+  if (artifact !== null && typeof artifact === 'object') {
+    for (const [key, child] of Object.entries(artifact as Record<string, unknown>)) {
       if (
         (key === 'properties' || key === '$defs') &&
         child !== null &&
         typeof child === 'object'
       ) {
-        for (const name of Object.keys(child)) {
-          tally.properties += key === 'properties' ? 1 : 0;
-          tally.nameAndEnumChars += name.length;
-        }
+        const names = Object.keys(child);
+        if (key === 'properties') tally.properties += names.length;
+        for (const name of names) tally.nameAndEnumChars += name.length;
       }
       if (key === 'enum' && Array.isArray(child)) {
+        tally.enumValues += child.length;
         for (const entry of child) {
-          tally.enumValues += 1;
-          tally.nameAndEnumChars += typeof entry === 'string' ? entry.length : 0;
+          if (typeof entry === 'string') tally.nameAndEnumChars += entry.length;
         }
       }
       if (key === 'const' && typeof child === 'string') {
         tally.nameAndEnumChars += child.length;
       }
-      stack.push(child);
+      tallyDocument(child, tally);
     }
   }
   return tally;
 }
 
-/**
- * Per-component tallies over each component's own built branch, using the
- * SAME metric as the document tally (review finding: a single enum-count
- * heuristic named one "largest contributor" for every limit, so a
- * many-short-enums component could be blamed for a nameAndEnumChars overflow
- * actually caused by another component's single very long value).
- */
-function limitContributors(entries: readonly ResolvedEntry[]): ReadonlyMap<string, LimitTally> {
-  const perEntry = new Map<string, LimitTally>();
-  for (const [tag, entry] of entries) {
-    perEntry.set(tag, tallyDocument(componentBranch(tag, entry, true, '#/$defs/child')));
-  }
-  return perEntry;
-}
-
-function worstFor(limit: keyof LimitTally, perEntry: ReadonlyMap<string, LimitTally>): string {
-  let worstTag = '';
-  let worstValue = -1;
-  for (const [tag, tally] of perEntry) {
-    if (tally[limit] > worstValue) {
-      worstValue = tally[limit];
-      worstTag = tag;
-    }
-  }
-  return worstTag;
-}
-
 function openAiLimitIssues(
   artifact: unknown,
   entries: readonly ResolvedEntry[],
+  definitions: Record<string, unknown>,
 ): readonly EmitterIssue[] {
   const tally = tallyDocument(artifact);
-  const perEntry = limitContributors(entries);
+  // Use the same meter per component and metric for the reported contributor.
+  const perEntry = entries.map(([tag]) => ({ tag, ...tallyDocument(definitions[tag]) }));
   const issues: EmitterIssue[] = [];
-  const totals: readonly (readonly [keyof typeof OPENAI_LIMITS, number])[] = [
-    ['enumValues', tally.enumValues],
-    ['nameAndEnumChars', tally.nameAndEnumChars],
-    ['properties', tally.properties],
-  ];
+  const report = (message: string, value: string) =>
+    issues.push({
+      code: 'provider-limit',
+      message: `openai-strict ${message}`,
+      path: 'options.target',
+      value,
+    });
   for (const [tag, entry] of entries) {
     for (const [name, constraint] of Object.entries(entry.props)) {
       const values = constraint.type === 'enum' ? (constraint.values ?? []) : [];
       const chars = values.reduce((sum, value) => sum + value.length, 0);
       if (values.length > OPENAI_LARGE_ENUM.values && chars > OPENAI_LARGE_ENUM.chars) {
-        issues.push({
-          code: 'provider-limit',
-          message: `openai-strict large-enum limit of ${String(OPENAI_LARGE_ENUM.chars)} characters exceeded by "${tag}" prop "${name}" (${String(values.length)} values, ${String(chars)} characters) — shorten the enum or derive a component subset`,
-          path: 'options.target',
-          value: tag,
-        });
+        report(
+          `large-enum limit of ${String(OPENAI_LARGE_ENUM.chars)} characters exceeded by "${tag}" prop "${name}" (${String(values.length)} values, ${String(chars)} characters) — shorten the enum or derive a component subset`,
+          tag,
+        );
       }
     }
   }
-  for (const [limit, total] of totals) {
+  for (const limit of Object.keys(OPENAI_LIMITS) as (keyof LimitTally)[]) {
+    const total = tally[limit];
     if (total > OPENAI_LIMITS[limit]) {
-      // The real largest contributor to THIS metric, not a shared heuristic.
-      const worstTag = worstFor(limit, perEntry);
-      issues.push({
-        code: 'provider-limit',
-        message: `openai-strict ${limit} limit of ${String(OPENAI_LIMITS[limit])} exceeded (${String(total)}); largest contributor is "${worstTag}" — derive a component subset instead`,
-        path: 'options.target',
-        value: worstTag,
-      });
+      const { tag: worstTag } = perEntry.reduce((max, entry) =>
+        entry[limit] > max[limit] ? entry : max,
+      );
+      report(
+        `${limit} limit of ${String(OPENAI_LIMITS[limit])} exceeded (${String(total)}); largest contributor is "${worstTag}" — derive a component subset instead`,
+        worstTag,
+      );
     }
   }
   return issues;
 }
 
-function baseDocument(catalog: Catalog, target: EmitterTarget): Record<string, unknown> {
+function schemaDocument(
+  catalog: Catalog,
+  target: EmitterTarget,
+  definitions: Record<string, unknown>,
+): Record<string, unknown> {
   const strict = target === 'openai-strict';
   return {
     $schema: 'https://json-schema.org/draft/2020-12/schema',
-    // Version + target here; uiSpecJsonSchema appends a content hash of the
-    // built $defs so the $id is unique per catalog, subset and target.
-    $id: `${SCHEMA_ID_BASE}/${catalog.catalogSchemaVersion}/${target}`,
+    // Hash the sorted, JSON-ready definitions to distinguish catalogs and subsets.
+    $id: `${SCHEMA_ID_BASE}/${catalog.catalogSchemaVersion}/${target}/${fnv1a(JSON.stringify(definitions))}`,
     additionalProperties: false,
     description: `UI-spec format for the Kimen catalog (${versionStamp(catalog)}). Advisory shape: the validation boundary and the guarded renderer remain authoritative.`,
     properties: {
@@ -397,19 +425,21 @@ function baseDocument(catalog: Catalog, target: EmitterTarget): Record<string, u
     required: strict ? ['actions', 'root', 'version'] : ['root', 'version'],
     title: 'Kimen UI spec',
     type: 'object',
+    $defs: definitions,
   };
 }
 
 function recursiveDefinitions(
   entries: readonly ResolvedEntry[],
   strict: boolean,
+  collections: Collection,
 ): Record<string, unknown> {
   const defs: Record<string, unknown> = {
     child: { anyOf: [{ type: 'string' }, { $ref: '#/$defs/node' }] },
     node: { anyOf: entries.map(([tag]) => ({ $ref: `#/$defs/${tag}` })) },
   };
   for (const [tag, entry] of entries) {
-    defs[tag] = componentBranch(tag, entry, strict, '#/$defs/child');
+    defs[tag] = componentBranch(tag, entry, strict, collections);
   }
   return defs;
 }
@@ -424,41 +454,28 @@ export function uiSpecJsonSchema(
   catalog: Catalog,
   options: DerivationOptions = {},
 ): Derivation<Record<string, unknown>> {
-  const resolved = resolveEntries(catalog, options.components);
-  if (resolved.issues.length > 0) {
-    return { issues: resolved.issues, ok: false };
-  }
-  const target = options.target ?? 'draft-2020-12';
+  const resolved = resolveEntries(catalog, options.components, options.icons);
+  if (!resolved.ok) return resolved;
+  const target: string = options.target ?? 'draft-2020-12';
+  const strict = target === 'openai-strict';
   // A JS/config caller can pass a typo'd target despite the type; an unknown
   // value must fail closed, not fall through to the strict-recursive branch
   // and return an unchecked artifact as ok:true (review finding).
-  if (!KNOWN_TARGETS.has(target)) {
-    return {
-      issues: [
-        {
-          code: 'invalid-option',
-          message: `unknown schema target "${target}" (expected draft-2020-12 or openai-strict)`,
-          path: 'options.target',
-          value: target,
-        },
-      ],
-      ok: false,
-    };
+  if (!strict && target !== 'draft-2020-12') {
+    return invalidOption(
+      'options.target',
+      `unknown schema target "${target}" (expected draft-2020-12 or openai-strict)`,
+      target,
+    );
   }
-  const strict = target === 'openai-strict';
-  const document = baseDocument(catalog, target);
-  document['$defs'] = recursiveDefinitions(resolved.entries, strict);
-  const artifact = pruneUndefined(document) as Record<string, unknown>;
-  // Finalize the $id with a content hash of the built $defs, so two materially
-  // different derivations (different catalogs, subsets or targets) never share
-  // an identifier in a JSON Schema registry. Deterministic: the $defs are
-  // built in sorted order.
-  artifact['$id'] = `${String(artifact['$id'])}/${fnv1a(JSON.stringify(artifact['$defs']))}`;
-  if (target === 'openai-strict') {
-    const limitIssues = openAiLimitIssues(artifact, resolved.entries);
-    if (limitIssues.length > 0) {
-      return { issues: limitIssues, ok: false };
-    }
-  }
-  return { artifact, issues: [], ok: true };
+  const collection = resolveCollection(strict ? options.collect : undefined);
+  if (!collection.ok) return collection;
+  const definitions = recursiveDefinitions(resolved.artifact, strict, collection.artifact);
+  const artifact = schemaDocument(
+    catalog,
+    target,
+    pruneUndefined(definitions) as Record<string, unknown>,
+  );
+  const limitIssues = strict ? openAiLimitIssues(artifact, resolved.artifact, definitions) : [];
+  return limitIssues.length > 0 ? failure(limitIssues) : success(artifact);
 }

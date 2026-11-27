@@ -5,7 +5,7 @@
  * offenders (FR-009) — and reports failures in the 032 diagnostic idiom.
  */
 import type { Catalog, CatalogEntry } from '@kimen/catalog';
-import { CATALOG_SCHEMA_VERSION } from '@kimen/catalog';
+import { CATALOG_SCHEMA_VERSION, NODE_ID_GRAMMAR } from '@kimen/catalog';
 
 /** Machine-readable derivation rejection classes (spec 033 FR-007/FR-009). */
 export type EmitterIssueCode =
@@ -39,9 +39,20 @@ export type Derivation<T> =
 /** One resolved catalog entry, keyed by its tag, in deterministic order. */
 export type ResolvedEntry = readonly [string, CatalogEntry];
 
-export interface ResolvedEntries {
-  readonly entries: readonly ResolvedEntry[];
-  readonly issues: readonly EmitterIssue[];
+export function success<T>(artifact: T): Derivation<T> {
+  return { ok: true, artifact, issues: [] };
+}
+
+export function failure(issues: readonly EmitterIssue[]): Derivation<never> {
+  return { ok: false, issues };
+}
+
+export function invalidOption(path: string, message: string, value?: string): Derivation<never> {
+  return failure([{ code: 'invalid-option', path, message, value }]);
+}
+
+export function isNonblank(value: unknown): value is string {
+  return typeof value === 'string' && value.trim() !== '';
 }
 
 /**
@@ -51,7 +62,7 @@ export interface ResolvedEntries {
  * returned entries are sorted by tag so every artifact is deterministic
  * (S11).
  */
-const CONSTRAINT_TYPES: ReadonlySet<string> = new Set([
+const CONSTRAINT_TYPES: ReadonlySet<unknown> = new Set([
   'boolean',
   'enum',
   'number',
@@ -62,40 +73,37 @@ const CONSTRAINT_TYPES: ReadonlySet<string> = new Set([
 /** The declared string formats (specs 027, 152 and 154). */
 const FORMATS: ReadonlySet<unknown> = new Set(['idref', 'text', 'url']);
 
-function isPlainRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
 function isStringRecord(value: unknown): boolean {
-  return isPlainRecord(value) && Object.values(value).every((entry) => typeof entry === 'string');
+  return isRecord(value) && Object.values(value).every((entry) => typeof entry === 'string');
 }
 
 function isStringArray(value: unknown): boolean {
   return Array.isArray(value) && value.every((entry) => typeof entry === 'string');
 }
 
-function isOptionalFinite(value: unknown): boolean {
-  return value === undefined || (typeof value === 'number' && Number.isFinite(value));
-}
+const OPTIONAL_CONSTRAINT_CHECKS = Object.entries({
+  default: (value: unknown) => ['boolean', 'number', 'string'].includes(typeof value),
+  documentedValues: isStringArray,
+  format: (value: unknown) => FORMATS.has(value),
+  maximum: Number.isFinite,
+  minimum: Number.isFinite,
+  required: (value: unknown) => typeof value === 'boolean',
+  values: isStringArray,
+});
 
 function isConstraintShaped(value: unknown): boolean {
-  if (!isPlainRecord(value)) {
-    return false;
-  }
-  const scalarDefault =
-    value['default'] === undefined ||
-    ['boolean', 'number', 'string'].includes(typeof value['default']);
   return (
-    typeof value['type'] === 'string' &&
+    isRecord(value) &&
     CONSTRAINT_TYPES.has(value['type']) &&
     typeof value['description'] === 'string' &&
-    (value['values'] === undefined || isStringArray(value['values'])) &&
-    (value['documentedValues'] === undefined || isStringArray(value['documentedValues'])) &&
-    (value['required'] === undefined || typeof value['required'] === 'boolean') &&
-    (value['format'] === undefined || FORMATS.has(value['format'])) &&
-    isOptionalFinite(value['minimum']) &&
-    isOptionalFinite(value['maximum']) &&
-    scalarDefault
+    OPTIONAL_CONSTRAINT_CHECKS.every(([key, check]) => {
+      const field = value[key];
+      return field === undefined || check(field);
+    })
   );
 }
 
@@ -105,57 +113,54 @@ function isConstraintShaped(value: unknown): boolean {
  * never a downstream TypeError (the Derivation no-throw contract).
  */
 function isEntryShaped(value: unknown): value is CatalogEntry {
-  if (!isPlainRecord(value)) {
+  if (!isRecord(value)) {
     return false;
   }
   return (
-    typeof value['tag'] === 'string' &&
-    typeof value['description'] === 'string' &&
-    typeof value['whenToUse'] === 'string' &&
-    typeof value['whenNotToUse'] === 'string' &&
-    isPlainRecord(value['props']) &&
+    ['tag', 'description', 'whenToUse', 'whenNotToUse'].every(
+      (key) => typeof value[key] === 'string',
+    ) &&
+    isRecord(value['props']) &&
     Object.values(value['props']).every(isConstraintShaped) &&
     isStringRecord(value['slots']) &&
     isStringRecord(value['events'])
   );
 }
 
-export function resolveEntries(catalog: Catalog, components?: readonly string[]): ResolvedEntries {
+export function resolveEntries(
+  catalog: Catalog,
+  components?: readonly string[],
+  icons?: readonly string[],
+): Derivation<readonly ResolvedEntry[]> {
   const issues: EmitterIssue[] = [];
   // JS callers can hand over anything despite the Catalog type; the guard
   // inspects the value as unknown so the check is real, not tautological.
   const candidate: unknown = catalog;
   const shaped =
-    isPlainRecord(candidate) &&
+    isRecord(candidate) &&
     typeof candidate['catalogSchemaVersion'] === 'string' &&
-    isPlainRecord(candidate['components']);
+    isRecord(candidate['components']);
   if (!shaped) {
-    return {
-      entries: [],
-      issues: [
-        {
-          code: 'malformed-catalog',
-          message: 'the catalog value does not carry a components record and a schema version',
-          path: 'catalog',
-        },
-      ],
-    };
+    return failure([
+      {
+        code: 'malformed-catalog',
+        message: 'the catalog value does not carry a components record and a schema version',
+        path: 'catalog',
+      },
+    ]);
   }
   // The subset option arrives from untyped/JSON callers too: a non-array (or
   // non-string-array) must fail closed with a named issue, not throw a
   // TypeError when the branch below reads `.length` or iterates it (the
   // Derivation no-throw contract).
   if (components !== undefined && !isStringArray(components)) {
-    return {
-      entries: [],
-      issues: [
-        {
-          code: 'invalid-option',
-          message: 'options.components must be an array of component tag strings when provided',
-          path: 'options.components',
-        },
-      ],
-    };
+    return failure([
+      {
+        code: 'invalid-option',
+        path: 'options.components',
+        message: 'options.components must be an array of component tag strings when provided',
+      },
+    ]);
   }
   const componentsRecord = candidate['components'] as Record<string, unknown>;
   if (catalog.catalogSchemaVersion !== CATALOG_SCHEMA_VERSION) {
@@ -166,39 +171,33 @@ export function resolveEntries(catalog: Catalog, components?: readonly string[])
       value: catalog.catalogSchemaVersion,
     });
   }
-  let tags: readonly string[];
-  if (components === undefined) {
-    tags = Object.keys(componentsRecord);
-    if (tags.length === 0) {
+  const tags = components ?? Object.keys(componentsRecord);
+  if (tags.length === 0) {
+    issues.push(
+      components === undefined
+        ? {
+            code: 'malformed-catalog',
+            message: 'the catalog declares no components',
+            path: 'catalog.components',
+          }
+        : {
+            code: 'empty-subset',
+            message: 'a component subset must name at least one component',
+            path: 'options.components',
+          },
+    );
+  }
+  for (const tag of components ?? []) {
+    if (!Object.hasOwn(componentsRecord, tag)) {
       issues.push({
-        code: 'malformed-catalog',
-        message: 'the catalog declares no components',
-        path: 'catalog.components',
-      });
-    }
-  } else {
-    if (components.length === 0) {
-      issues.push({
-        code: 'empty-subset',
-        message: 'a component subset must name at least one component',
+        code: 'unknown-component',
+        message: `subset component "${tag}" is outside the catalog`,
         path: 'options.components',
+        value: tag,
       });
     }
-    for (const tag of components) {
-      if (!Object.hasOwn(componentsRecord, tag)) {
-        issues.push({
-          code: 'unknown-component',
-          message: `subset component "${tag}" is outside the catalog`,
-          path: 'options.components',
-          value: tag,
-        });
-      }
-    }
-    tags = components;
   }
-  if (issues.length > 0) {
-    return { entries: [], issues };
-  }
+  if (issues.length > 0) return failure(issues);
   // A subset is a selection SET: repeats collapse instead of duplicating
   // guidance blocks, anyOf branches and limit tallies (review finding).
   const sorted = [...new Set(tags)].sort();
@@ -216,10 +215,47 @@ export function resolveEntries(catalog: Catalog, components?: readonly string[])
     }
     entries.push([tag, entry] as const);
   }
-  if (issues.length > 0) {
-    return { entries: [], issues };
+  if (issues.length > 0) return failure(issues);
+  return icons === undefined ? success(entries) : restrictIcons(entries, icons);
+}
+
+/** Close icon props for artifact derivation, leaving the runtime catalog intact. */
+function restrictIcons(
+  entries: readonly ResolvedEntry[],
+  icons: readonly string[],
+): Derivation<readonly ResolvedEntry[]> {
+  const path = 'options.icons';
+  const values = Array.isArray(icons) ? [...new Set<string>(icons)] : [];
+  if (values.length === 0 || !values.every(isNonblank)) {
+    return invalidOption(path, 'icons must be a nonempty list of nonblank glyph names');
   }
-  return { entries, issues: [] };
+  const narrowed: ResolvedEntry[] = [];
+  for (const [tag, entry] of entries) {
+    const props = { ...entry.props };
+    for (const name of tag === 'ki-icon' ? ['name', 'icon-name'] : ['icon-name']) {
+      const prop = props[name];
+      if (prop === undefined) continue;
+      const conflict = values.find((value) => {
+        if (prop.format === 'idref') return !NODE_ID_GRAMMAR.test(value);
+        // A URL prop can be restricted by the host's origin policy; a glyph
+        // selection does not carry enough information to offer URL values.
+        if (prop.format === 'url') return true;
+        if (prop.type === 'enum') return prop.values?.includes(value) !== true;
+        return prop.type !== 'string' && prop.type !== 'number-or-string';
+      });
+      if (conflict !== undefined) {
+        return invalidOption(path, `glyph "${conflict}" conflicts with ${tag}.${name}`, conflict);
+      }
+      // The prop prose can mention built-in glyphs unavailable here.
+      const constraint = { ...prop, description: '', type: 'enum' as const, values };
+      if (typeof constraint.default !== 'string' || !values.includes(constraint.default)) {
+        delete constraint.default;
+      }
+      props[name] = constraint;
+    }
+    narrowed.push([tag, { ...entry, props }]);
+  }
+  return success(narrowed);
 }
 
 /** The human version stamp every artifact carries (S10, FR-012). */

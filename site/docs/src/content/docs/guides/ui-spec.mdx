@@ -257,6 +257,12 @@ the previous content intact. Every rejection is a `RenderDiagnostic` — node
 path, violated rule and offending value — pure data, safe to display because
 a host renders it as text.
 
+With `openai-strict`, the emitter can offer an exact set of collection keys
+for a button bound to one action. `collect: null` means the report has no
+collection. Normalization drops that placeholder before validation.
+Use the same host glyph list in `selectSpecIcons()` and the emitter's
+`icons` option. [See the cart surface recipe](/docs/guides/emitting-specs/#configure-the-cart-surface).
+
 ## Streaming
 
 `createStreamingRenderer` renders a streamed spec progressively: a node

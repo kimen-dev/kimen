@@ -1,4 +1,5 @@
 // @spec:153-action-collect
+// @spec:170-emitter-strict-collection
 // The validity gate of a collecting node (spec 153 FR-003) in a real engine:
 // constraint validation, `:invalid`, the `invalid` event and delegated focus
 // are what happy-dom cannot prove. Test-local form-associated elements keep
@@ -16,6 +17,7 @@ import {
   createCatalog,
   createLiveSurface,
   renderUiSpec,
+  validateUiSpec,
 } from '../src/index.js';
 
 /** A labelled native text input in a shadow root, form-associated, focus delegated. */
@@ -255,6 +257,69 @@ const activateAdd = async (): Promise<void> => {
 };
 
 describe('a collecting node asks every field for validity before its action leaves', () => {
+  it('S5 reports one save action with the live collected values and leaves the host form alone', async () => {
+    const hostForm = document.createElement('form');
+    let submissions = 0;
+    hostForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submissions += 1;
+    });
+    surface.replaceWith(hostForm);
+    hostForm.append(surface);
+    const spec = {
+      actions: ['save'],
+      root: {
+        component: 'acme-stack',
+        slots: {
+          '': [
+            { component: 'acme-text', id: 'f-name', props: { label: 'Name' } },
+            { component: 'acme-choice', id: 'f-region', props: { label: 'Region' } },
+            { component: 'acme-text', id: 'f-notes', props: { label: 'Notes' } },
+            {
+              action: 'save',
+              collect: { customerName: 'f-name', region: 'f-region', notes: 'f-notes' },
+              component: 'acme-button',
+              id: 'save-button',
+              slots: { '': ['Save'] },
+            },
+          ],
+        },
+      },
+      version: 1,
+    };
+    expect(validateUiSpec(spec, { catalog }).ok).toBe(true);
+    const actions: ActionEvent[] = [];
+    expect(
+      renderUiSpec(spec, {
+        budgets: { maxActionBurst: 1 },
+        catalog,
+        onAction: (action) => actions.push(action),
+        surface,
+      }).ok,
+    ).toBe(true);
+    await typeInto('Name', 'Ana');
+    await typeInto('Region', 'Madrid');
+    await typeInto('Notes', 'Pickup after 5');
+
+    const hostButton = surface.querySelector('acme-button');
+    if (hostButton === null) throw new Error('no Save button');
+    const nativeButton = document.createElement('button');
+    nativeButton.type = 'button';
+    nativeButton.textContent = hostButton.textContent;
+    hostButton.replaceChildren(nativeButton);
+    await userEvent.click(nativeButton);
+
+    expect(actions).toEqual([
+      {
+        action: 'save',
+        id: 'save-button',
+        data: { customerName: 'Ana', region: 'Madrid', notes: 'Pickup after 5' },
+        path: 'root.slots.[3]',
+      },
+    ]);
+    expect(submissions).toBe(0);
+  });
+
   it('S1 baseline in Chromium: valid fields deliver their typed values', async () => {
     const actions = mount([
       { component: 'acme-text', id: 'title', label: 'Title', required: true },

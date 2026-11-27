@@ -9,9 +9,7 @@
  */
 import type { ValidationReport } from '@kimen/catalog';
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-}
+import { isRecord } from './issues.js';
 
 /**
  * A null-prototype clone record. Assigning an own `__proto__` (or other
@@ -36,60 +34,27 @@ function cloneRecord(): Record<string, unknown> {
  */
 function normalizeTree(root: unknown): unknown {
   const seen = new WeakSet();
-  const holder: { value?: unknown } = {};
-  const stack: { source: unknown; assign: (clone: unknown) => void }[] = [
-    {
-      assign: (clone) => {
-        holder.value = clone;
-      },
-      source: root,
-    },
-  ];
-  while (stack.length > 0) {
-    const item = stack.pop();
-    if (item === undefined) {
-      break;
-    }
-    const { source, assign } = item;
-    if (!isRecord(source)) {
-      assign(source);
-      continue;
-    }
-    if (seen.has(source)) {
-      assign(source);
-      continue;
-    }
+  const holder = [root];
+  const stack: [siblings: unknown[], index: number][] = [[holder, 0]];
+  for (let item = stack.pop(); item !== undefined; item = stack.pop()) {
+    const [siblings, index] = item;
+    const source = siblings[index];
+    if (!isRecord(source) || seen.has(source)) continue;
     seen.add(source);
-    const clean: Record<string, unknown> = cloneRecord();
-    assign(clean);
+    const clean = cloneRecord();
+    siblings[index] = clean;
     for (const [key, value] of Object.entries(source)) {
-      if (key === 'props' && isRecord(value)) {
-        const props: Record<string, unknown> = cloneRecord();
-        for (const [name, propValue] of Object.entries(value)) {
-          if (propValue !== null) {
-            props[name] = propValue;
-          }
-        }
-        if (Object.keys(props).length > 0) {
-          clean['props'] = props;
-        }
+      if ((key === 'action' || key === 'id' || key === 'collect') && value === null) {
         continue;
       }
-      if ((key === 'action' || key === 'id') && value === null) {
-        continue;
-      }
-      if (key === 'action' && isRecord(value)) {
+      if ((key === 'props' || key === 'action') && isRecord(value)) {
         // A binding per event (spec 154): an event bound to null fires
         // nothing, and a map of such placeholders alone binds nothing. A map
         // the model left empty stays, so validation names it.
-        const bound: Record<string, unknown> = cloneRecord();
-        for (const [event, name] of Object.entries(value)) {
-          if (name !== null) {
-            bound[event] = name;
-          }
-        }
-        if (Object.keys(bound).length > 0 || Object.keys(value).length === 0) {
-          clean['action'] = bound;
+        const fields = Object.entries(value);
+        const present = fields.filter(([, field]) => field !== null);
+        if (present.length > 0 || (key === 'action' && fields.length === 0)) {
+          clean[key] = Object.assign(cloneRecord(), Object.fromEntries(present));
         }
         continue;
       }
@@ -101,12 +66,8 @@ function normalizeTree(root: unknown): unknown {
             const cloned: unknown[] = new Array(children.length);
             slots[name] = cloned;
             children.forEach((child, index) => {
-              stack.push({
-                assign: (childClone) => {
-                  cloned[index] = childClone;
-                },
-                source: child,
-              });
+              cloned[index] = child;
+              stack.push([cloned, index]);
             });
           } else {
             slots[name] = children;
@@ -117,13 +78,13 @@ function normalizeTree(root: unknown): unknown {
       clean[key] = value;
     }
   }
-  return holder.value;
+  return holder[0];
 }
 
 /**
  * Strips strict-mode placeholders from an emission (S13): null-valued
  * props, null action bindings, null events of a binding per event and null
- * node ids disappear, empty props containers are dropped, and a binding per
+ * node ids and null collection maps disappear, empty props containers are dropped, and a binding per
  * event left with no event goes, and everything else — including values a model got WRONG — is
  * preserved untouched, so validation still sees the real mistake.
  * Pure data cleanup over a fresh clone; the input is never mutated and

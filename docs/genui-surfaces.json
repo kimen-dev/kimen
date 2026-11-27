@@ -67,12 +67,12 @@
         {
           "name": "catalogPrompt",
           "signature": "catalogPrompt(catalog, options?) => Derivation<string>",
-          "summary": "Model-facing prompt: format rules, every component's when-to-use and when-NOT-to-use guidance verbatim, props with enums inline, and one example spec that validates against the same catalog. The universal fallback — works with any model, no structured-output support required."
+          "summary": "Model-facing prompt: format rules, usage, prop and composition rules plus a validated example. Use { components, icons, verbosity: 'compact' } for shorter guidance and the host's exact glyph vocabulary. Register the glyphs and pass the same list to selectSpecIcons in the renderer realm. The universal fallback — works with any model, no structured-output support required."
         },
         {
           "name": "uiSpecJsonSchema",
           "signature": "uiSpecJsonSchema(catalog, options?) => Derivation<JsonSchema>",
-          "summary": "The neutral UI-spec format specialized to the catalog as a JSON Schema document: one branch per component, closed props and enums, closed objects everywhere. Targets: draft-2020-12 (default) and openai-strict (all-required closed objects, recursion via $ref, only the keywords the provider documents, its published limits enforced with named offenders). Deterministic and version-stamped; fail-closed on skew, bad subsets and exceeded limits — never a silent truncation."
+          "summary": "The neutral UI-spec format specialized to the catalog as a JSON Schema document: one branch per component, closed props and enums, closed objects everywhere. Targets: draft-2020-12 (default) and openai-strict (all-required closed objects, recursion via $ref, only the keywords the provider documents, its published limits enforced with named offenders). Pass icons to close all glyph props over the host vocabulary. With openai-strict, collect maps named button actions to exact data-key lists; map values are field node IDs. Derivation rejects invalid options and exceeded limits."
         },
         {
           "name": "uiSpecTool",
@@ -82,7 +82,7 @@
         {
           "name": "normalizeEmission",
           "signature": "normalizeEmission(value) => unknown",
-          "summary": "Strips the placeholders strict-mode all-required schemas force a model to emit (null-valued props, null action bindings and null events of a binding per event, null node ids, empty props containers) and touches nothing else. Pure cleanup over a fresh clone; output is untrusted until validateUiSpec passes."
+          "summary": "Strips the placeholders strict-mode all-required schemas force a model to emit (null-valued props, null action bindings and null events of a binding per event, null node ids, null collection maps, empty props containers) and touches nothing else. Pure cleanup over a fresh clone; output is untrusted until validateUiSpec passes."
         },
         {
           "name": "repairPrompt",

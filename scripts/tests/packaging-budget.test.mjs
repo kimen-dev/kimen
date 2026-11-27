@@ -124,7 +124,8 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
     mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
-    mcpServer: { raw: 1_751_052, gzip: 318_322, brotli: 294_479 },
+    // Raised for specs 168–170, approved by the founder on 2026-11-27.
+    mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 294_479 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
@@ -153,7 +154,8 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
     mcpApps: { raw: 483_542, gzip: 80_315, brotli: 66_320 },
-    mcpServer: { raw: 1_752_352, gzip: 318_512, brotli: 294_654 },
+    // Raised for specs 168–170, approved by the founder on 2026-11-27.
+    mcpServer: { raw: 1_755_730, gzip: 318_512, brotli: 294_654 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 11_781, material3: 5_215, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
@@ -301,7 +303,8 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
       '@kimen/mcp-server': { packed: 639_409, unpacked: 3_176_921 },
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
-      '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
+      // Raised for specs 168–170, approved by the founder on 2026-11-27.
+      '@kimen/emitter': { packed: 47_247, unpacked: 159_371 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
       '@kimen/adapter-mcp-apps': { packed: 499_558, unpacked: 2_209_335 },
       '@kimen/react': { packed: 46_952, unpacked: 345_886 },

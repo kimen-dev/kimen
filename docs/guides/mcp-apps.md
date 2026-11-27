@@ -292,6 +292,7 @@ tool metadata, the action tool and the catalog always name the same document:
 ```ts
 import { defineKimenSurface } from '@kimen/adapter-mcp-apps';
 import { FORM_PROFILE } from '@kimen/adapter-mcp-apps/profiles/form';
+import { catalogPrompt } from '@kimen/emitter';
 
 const signup = defineKimenSurface({ profile: FORM_PROFILE });
 signup.resource;   // ui://kimen/form, the «form» document
@@ -300,6 +301,8 @@ signup.actionTool; // kimen_surface_action, naming ui://kimen/form
 signup.catalog;    // the catalog to offer the agent for those tools
 signup.icons;      // the glyph names the document offers (circle-check)
 signup.validate(spec); // the document's verdict, before you return a result
+const prompt = catalogPrompt(signup.catalog, { icons: signup.icons, verbosity: 'compact' });
+if (!prompt.ok) throw new Error(JSON.stringify(prompt.issues));
 ```
 
 Without a profile, `defineKimenSurface()` serves the full document under

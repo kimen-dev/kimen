@@ -7,6 +7,12 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
+## [Unreleased]
+
+### Added
+
+- **emitter:** Match model glyph choices to the host's `icons` list, shorten catalog prompts with `verbosity: 'compact'`, and declare exact field keys for named button actions in strict schemas and tools (specs 168–170).
+
 ## [0.5.0] - 2026-11-27
 
 ### Changed

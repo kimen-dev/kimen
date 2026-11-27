@@ -13,7 +13,7 @@
           "kinds": [
             "type"
           ],
-          "signature": "interface DerivationOptions {\n    readonly components?: readonly string[];\n    readonly target?: EmitterTarget;\n}"
+          "signature": "interface DerivationOptions {\n    readonly components?: readonly string[];\n    readonly icons?: readonly string[];\n    readonly verbosity?: 'compact';\n    readonly collect?: Readonly<Record<string, readonly string[]>>;\n    readonly target?: EmitterTarget;\n}"
         },
         "EmitterIssue": {
           "kinds": [
