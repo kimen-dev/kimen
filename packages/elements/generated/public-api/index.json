@@ -274,6 +274,9 @@
           },
           "./components": {
             "declaration": "./dist/types/components.d.ts",
+            "elementBaseTypes": [
+              "interface HTMLStencilElement extends HTMLElement {\n}"
+            ],
             "symbols": {
               "CarouselLayout": {
                 "kinds": [
@@ -101968,5 +101971,5 @@
       }
     }
   },
-  "surfaceSha256": "fc34adda1eaffebb8f17fc1f92e92a3c274d27e04a17c8a62aa9081deab0774c"
+  "surfaceSha256": "76992693edfe0d81cbd50a5c2fc494f5aace44081f65d0a4b9cf69d6b39ce00c"
 }

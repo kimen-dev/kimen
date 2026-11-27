@@ -1,8 +1,8 @@
 // Waiting for Kimen elements through the platform alone. A spec that waited
 // on a framework's own readiness hook (Stencil's componentOnReady, Lit's
 // updateComplete) would test the framework, not the contract, and break on
-// the day the components change compiler. The per-component modules the
-// suite imports have no componentOnReady anyway: only the lazy loader adds it.
+// the day the components change compiler. Both the per-component modules and
+// Kimen's loader register the same standard custom elements.
 
 const SETTLE_DEADLINE_MS = 2000;
 

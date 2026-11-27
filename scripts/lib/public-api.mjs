@@ -547,7 +547,7 @@ function compareModules(before, after, path, packageName, addChange, removals) {
     }
     const beforeModule = assertRecord(beforeModules[subpath], `${modulePath.join('.')} baseline`);
     const afterModule = assertRecord(afterModules[subpath], `${modulePath.join('.')} candidate`);
-    for (const key of ['target', 'declaration']) {
+    for (const key of ['target', 'declaration', 'elementBaseTypes']) {
       if (!isDeepStrictEqual(beforeModule[key], afterModule[key])) {
         addChange('major', [...modulePath, key], key, packageName);
       }
@@ -571,7 +571,7 @@ function compareModules(before, after, path, packageName, addChange, removals) {
     changedUnknownKeys(
       beforeModule,
       afterModule,
-      new Set(['target', 'declaration', 'symbols']),
+      new Set(['target', 'declaration', 'symbols', 'elementBaseTypes']),
       modulePath,
       addChange,
       packageName,
