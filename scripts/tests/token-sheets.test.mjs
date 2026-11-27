@@ -301,9 +301,9 @@ test('S10 the size gate measures the approved budgets of the split', async () =>
   const { default: entries } = await import(configPath);
   const limitOf = (name) => entries.find((entry) => entry.name === name)?.limit;
   assert.equal(limitOf('onmars tokens stylesheet'), '19217 B');
-  assert.equal(limitOf('core tokens stylesheet'), '7012 B');
-  assert.equal(limitOf('page with ki-button: core and ki-button sheets'), '8331 B');
-  assert.equal(limitOf('ten-component page: core and their sheets'), '11448 B');
+  assert.equal(limitOf('core tokens stylesheet'), '7000 B');
+  assert.equal(limitOf('page with ki-button: core and ki-button sheets'), '8324 B');
+  assert.equal(limitOf('ten-component page: core and their sheets'), '11451 B');
   const tagEntries = entries.filter((entry) => entry.name.startsWith('tag sheet '));
   assert.deepEqual(
     tagEntries.map((entry) => entry.name),

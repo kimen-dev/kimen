@@ -148,17 +148,19 @@ const BASE_BUDGETS = {
   fullSheetPages: { button: 29_936, tenComponents: 55_238 },
 };
 
-// Shared byte deltas from the second 0.6.0 integration pass against ec60e8a8.
-// The component allowances cover the raw MCP Apps growth. These deltas carry
-// the remaining artifact changes, preserving the release's measured headroom.
+// Shared byte deltas for the 0.6.0 integration batch against ec60e8a8.
+// Component allowances cover the earlier raw MCP Apps changes. These deltas
+// include spec 171's bundled checker and the QA changes, preserving v0.6.0 headroom.
 const INTEGRATOR_060_SHARED_DELTAS = {
-  mcpApps: { gzip: 298, brotli: 429 },
-  mcpAppsData: { gzip: 49, brotli: 42 },
-  mcpAppsForm: { gzip: 50, brotli: 165 },
-  mcpServer: { raw: 3_762, gzip: 574, brotli: 505 },
+  mcpApps: { raw: 164, gzip: 327, brotli: 389 },
+  mcpAppsData: { raw: 41, gzip: 46, brotli: 34 },
+  mcpAppsForm: { raw: 41, gzip: 47, brotli: 89 },
+  mcpServer: { raw: 46_348, gzip: 18_749, brotli: 14_995 },
   genuiHost: { raw: 73, gzip: 10, brotli: 35 },
-  tokenStylesheets: { onmars: 24 },
-  fullSheetPages: { button: -10, tenComponents: -10 },
+  tokenStylesheets: { onmars: 24, material3: 27 },
+  tokenSheets: { core: -12, buttonPage: -7, tenComponentPage: 3 },
+  pages: { button: 5, tenComponents: -9 },
+  fullSheetPages: { button: -4, tenComponents: -10 },
 };
 
 export function deriveBundleSizeBudgets(components) {

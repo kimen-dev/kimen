@@ -40,8 +40,8 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['generated/custom-elements.json', 'llms.txt', 'llms/']),
-    // The 0.6.0 batch measures +51,005 B packed and +511,840 B unpacked.
-    budget: Object.freeze({ packed: 1_955_787, unpacked: 8_421_598 }),
+    // The 0.6.0 batch measures +51,234 B packed and +513,262 B unpacked.
+    budget: Object.freeze({ packed: 1_956_016, unpacked: 8_423_020 }),
   }),
   '@kimen/tokens': Object.freeze({
     mapsEveryModule: false,
@@ -49,8 +49,8 @@ export const packageContentRules = Object.freeze({
     assets: Object.freeze(['fonts/InstrumentSans-OFL.txt', 'fonts/Newsreader-OFL.txt']),
     // Newsreader at weight 500 brings the package to 195,198 / 1,100,266 B
     // with 3 % packed and 0.1 % unpacked headroom.
-    // The 0.6.0 batch measures +1,090 B packed and +10,241 B unpacked.
-    budget: Object.freeze({ packed: 202_144, unpacked: 1_111_608 }),
+    // The 0.6.0 batch measures +15,483 B packed and +37,673 B unpacked.
+    budget: Object.freeze({ packed: 216_537, unpacked: 1_139_040 }),
   }),
   '@kimen/mcp-server': Object.freeze({
     mapsEveryModule: false,
@@ -58,9 +58,9 @@ export const packageContentRules = Object.freeze({
     assets: Object.freeze(['COMPAT.md']),
     // Shared shadow styles bring this to 620,785 / 3,173,747 B, with
     // 3% packed and 0.1% unpacked headroom.
-    // The 0.6.0 batch measures +190 B packed and -80,237 B unpacked.
+    // The 0.6.0 batch measures +17,653 B packed and -36,289 B unpacked.
     // The v0.6.0 unpacked package was already above its limit. Use zero headroom.
-    budget: Object.freeze({ packed: 639_599, unpacked: 3_096_885 }),
+    budget: Object.freeze({ packed: 657_062, unpacked: 3_140_833 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,
@@ -70,8 +70,8 @@ export const packageContentRules = Object.freeze({
       'dist/generated/catalog.js',
     ]),
     assets: Object.freeze([]),
-    // The 0.6.0 batch measures +100 B packed and +530 B unpacked.
-    budget: Object.freeze({ packed: 320_612, unpacked: 1_376_786 }),
+    // The 0.6.0 batch measures +91 B packed and +612 B unpacked.
+    budget: Object.freeze({ packed: 320_603, unpacked: 1_376_868 }),
   }),
   '@kimen/emitter': Object.freeze({
     mapsEveryModule: true,
@@ -96,8 +96,8 @@ export const packageContentRules = Object.freeze({
     assets: Object.freeze([]),
     // Shared shadow styles bring this to 485,007 / 2,207,127 B, with
     // 3% packed and 0.1% unpacked headroom.
-    // The 0.6.0 batch measures -224 B packed and +328 B unpacked.
-    budget: Object.freeze({ packed: 499_334, unpacked: 2_209_663 }),
+    // The 0.6.0 batch measures -200 B packed and +574 B unpacked.
+    budget: Object.freeze({ packed: 499_358, unpacked: 2_209_909 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,
