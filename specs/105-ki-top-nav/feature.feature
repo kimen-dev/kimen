@@ -150,3 +150,38 @@ Feature: TopNav
     Given a narrow header on a page with a coarse pointer
     When the header appears
     Then the navigation trigger has a target of at least 44 by 44 pixels
+
+  # Family: core behavior
+  # S23
+  Scenario: A phone-width header keeps its brand and actions above a full-width links row
+    Given a 375 px header set never to collapse with the Gate-Driven Development brand, three primary links and a global action
+    When the links cannot fit beside the brand
+    Then the brand and action share the first row
+    And the links occupy the full width below them
+
+  # S24
+  Scenario: Primary links stay readable as the header gets narrower
+    Given a header set never to collapse with Documentación, Manifiesto and English as links
+    When the header narrows
+    Then each link stays fully visible and clear of the global action
+    And the bar grows to hold the links without horizontal scrolling
+
+  # S25
+  Scenario: A header that never collapses keeps the existing layout when everything fits
+    Given wide headers with the same brand, primary links and global action
+    When one header uses a collapse point and the other never collapses
+    Then the brand, links and action have matching positions and dimensions
+
+  # Family: theming
+  # S26
+  Scenario: A theme can space the inline primary links apart
+    Given a header showing its primary links outside the menu
+    When the theme sets --ki-top-nav-links-gap
+    Then the visible space between adjacent links follows that token
+
+  # S27
+  Scenario: A theme can align the primary links to the trailing edge
+    Given a header showing its primary links outside the menu
+    When the theme sets --ki-top-nav-links-justify to flex-end
+    Then the inline links end next to the actions
+    And links on their own row align to that row's trailing edge

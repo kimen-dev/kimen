@@ -744,7 +744,9 @@ export namespace Components {
      * later, including a "select all" parent that presents partial selection with
      * `indeterminate`. Always provide a visible label in the default slot.
      * @whenNotToUse a single mutually exclusive choice, an immediate on/off
-     * effect, triggering an action, or unlabeled/icon-only usage.
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
      * when listeners run. `click()` from a script, or a page `<label>` for the
@@ -753,7 +755,7 @@ export namespace Components {
      */
     interface KiCheckbox {
         /**
-          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
           * @default false
          */
         "checked": boolean;
@@ -1521,7 +1523,7 @@ export namespace Components {
          */
         "closeLabel": string;
         /**
-          * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
+          * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop": boolean;
@@ -3530,7 +3532,7 @@ export namespace Components {
          */
         "customError"?: string;
         /**
-          * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission.
+          * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
           * @default false
          */
         "disabled": boolean;
@@ -4132,7 +4134,7 @@ export namespace Components {
      */
     interface KiSwitch {
         /**
-          * Live on/off state. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+          * Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
           * @default false
          */
         "checked": boolean;
@@ -4175,7 +4177,7 @@ export namespace Components {
      */
     interface KiTab {
         /**
-          * Prevents selection by every modality and exposes the unavailable state.
+          * Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
           * @default false
          */
         "disabled": boolean;
@@ -4777,7 +4779,7 @@ export namespace Components {
      */
     interface KiTopNav {
         /**
-          * CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
+          * CSS length below which navigation collapses and single-row app bars can center their title. `none` keeps links visible. If they do not fit beside the brand and actions, they wrap across the full width below them.
           * @default '48rem'
          */
         "collapseAt": string;
@@ -5382,7 +5384,9 @@ declare global {
      * later, including a "select all" parent that presents partial selection with
      * `indeterminate`. Always provide a visible label in the default slot.
      * @whenNotToUse a single mutually exclusive choice, an immediate on/off
-     * effect, triggering an action, or unlabeled/icon-only usage.
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
      * when listeners run. `click()` from a script, or a page `<label>` for the
@@ -7927,7 +7931,9 @@ declare namespace LocalJSX {
      * later, including a "select all" parent that presents partial selection with
      * `indeterminate`. Always provide a visible label in the default slot.
      * @whenNotToUse a single mutually exclusive choice, an immediate on/off
-     * effect, triggering an action, or unlabeled/icon-only usage.
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
      * @event change - Fired once after a user toggle (pointer, slotted label or Space)
      * commits, composed across the shadow boundary; `checked` is already current
      * when listeners run. `click()` from a script, or a page `<label>` for the
@@ -7936,7 +7942,7 @@ declare namespace LocalJSX {
      */
     interface KiCheckbox {
         /**
-          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
           * @default false
          */
         "checked"?: boolean;
@@ -8784,7 +8790,7 @@ declare namespace LocalJSX {
          */
         "closeLabel"?: string;
         /**
-          * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
+          * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
           * @default false
          */
         "closeOnBackdrop"?: boolean;
@@ -10943,7 +10949,7 @@ declare namespace LocalJSX {
          */
         "customError"?: string;
         /**
-          * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission.
+          * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
           * @default false
          */
         "disabled"?: boolean;
@@ -11561,7 +11567,7 @@ declare namespace LocalJSX {
      */
     interface KiSwitch {
         /**
-          * Live on/off state. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+          * Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
           * @default false
          */
         "checked"?: boolean;
@@ -11608,7 +11614,7 @@ declare namespace LocalJSX {
      */
     interface KiTab {
         /**
-          * Prevents selection by every modality and exposes the unavailable state.
+          * Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
           * @default false
          */
         "disabled"?: boolean;
@@ -12242,7 +12248,7 @@ declare namespace LocalJSX {
      */
     interface KiTopNav {
         /**
-          * CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
+          * CSS length below which navigation collapses and single-row app bars can center their title. `none` keeps links visible. If they do not fit beside the brand and actions, they wrap across the full width below them.
           * @default '48rem'
          */
         "collapseAt"?: string;
@@ -13623,7 +13629,9 @@ declare module "@stencil/core" {
              * later, including a "select all" parent that presents partial selection with
              * `indeterminate`. Always provide a visible label in the default slot.
              * @whenNotToUse a single mutually exclusive choice, an immediate on/off
-             * effect, triggering an action, or unlabeled/icon-only usage.
+             * effect, triggering an action, unlabeled/icon-only usage, or
+             * `checked="false"` to mean unchecked. Boolean attributes use presence
+             * semantics; omit `checked` to express unchecked.
              * @event change - Fired once after a user toggle (pointer, slotted label or Space)
              * commits, composed across the shadow boundary; `checked` is already current
              * when listeners run. `click()` from a script, or a page `<label>` for the

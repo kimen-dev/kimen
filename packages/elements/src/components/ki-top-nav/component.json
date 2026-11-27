@@ -11,7 +11,7 @@
   "catalog": true,
   "sizeBudget": {
     "mcpApps": {
-      "raw": 24298,
+      "raw": 25918,
       "gzip": 6223,
       "brotli": 5302
     },
@@ -21,7 +21,7 @@
       "brotli": 6096
     },
     "worstCase": {
-      "brotli": 12626
+      "brotli": 12725
     },
     "tokenStylesheets": {
       "onmars": 178

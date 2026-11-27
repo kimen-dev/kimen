@@ -1065,12 +1065,6 @@ Use `toggle` for a persistent action. `selected` sets the starting state and eac
 </script>
 ```
 
-Enabled outline actions use `--ki-button-outline-hover-bg`,
-`--ki-button-outline-hover-fg` and `--ki-button-outline-hover-border` on hover.
-Unselected filled and quiet toggles use `--ki-button-toggle-unselected-hover-overlay`.
-A selected toggle keeps its fill on hover. Use `--ki-button-outline-selected-border`
-to set the selected outline edge.
-
 Programmatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.
 
 Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
@@ -1098,10 +1092,6 @@ saveButton.textContent = 'Save';
 document.body.append(saveButton);
 ```
 
-The leading and trailing slots use `--ki-button-{size}-icon-size` for their
-box and for a directly slotted `ki-icon` glyph. The button token takes
-precedence over an explicit `size` on that icon.
-
 While the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default "Loading") as a polite status message. Clear it when the action ends:
 
 ```html
@@ -1123,16 +1113,17 @@ While the action a button started is in progress, set `loading` on it instead of
 </script>
 ```
 
-A button or link fits its content by default. Set `--ki-button-inline-size`
-to `100%` to fill the containing block. The alignment tokens start-align the
-content and label lines of this two-line choice.
+A wide button that reads like a card, such as a two-line choice, start-aligns its content and its lines through two tokens (both `center` by default):
 
 ```html
 <style>
   .choice {
-    --ki-button-inline-size: 100%;
     --ki-button-justify-content: start;
     --ki-button-text-align: start;
+    display: block;
+  }
+  .choice::part(button) {
+    inline-size: 100%;
   }
 </style>
 <ki-button class="choice" variant="outline" toggle>
@@ -1161,8 +1152,8 @@ Attributes:
 
 Slots:
 - (default): Label content. This is the accessible name source.
-- `end`: Trailing icon or media in writing direction. Uses the start slot's sizing.
-- `start`: Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size.
+- `end`: Trailing icon or media. Follows writing direction.
+- `start`: Leading icon or media. Follows writing direction.
 
 Parts:
 - `button`: Internal native button, or link with `href`.
@@ -1209,7 +1200,6 @@ CSS custom properties:
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
-- `--ki-button-inline-size`: Button and link inline size. Set to 100% to fill the container.
 - `--ki-button-justify-content`: Placement of the button content; start for a card.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
@@ -1230,14 +1220,10 @@ CSS custom properties:
 - `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
 - `--ki-button-md-radius`: dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).
 - `--ki-button-md-spinner-size`: dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
-- `--ki-button-outline-hover-bg`: Background of the hovered outline variant.
-- `--ki-button-outline-hover-border`: Border of the hovered outline variant.
-- `--ki-button-outline-hover-fg`: Ink of the hovered outline variant.
 - `--ki-button-outline-rest-bg`: Background of the outline variant at rest.
 - `--ki-button-outline-rest-border`: Visible outline of the outline variant at rest.
 - `--ki-button-outline-rest-fg`: Foreground of the outline variant at rest.
 - `--ki-button-outline-selected-bg`: Background of the selected outline button toggle.
-- `--ki-button-outline-selected-border`: Border of the selected outline toggle.
 - `--ki-button-outline-selected-fg`: Foreground of the selected outline button toggle.
 - `--ki-button-padding-block`: dimension used by the button component for padding block (MarsUI: 4px in every size).
 - `--ki-button-primary-active-overlay`: Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
@@ -1368,7 +1354,6 @@ CSS custom properties:
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button.
 - `--ki-button-toggle-unselected-bg`: Background of unselected filled toggle buttons.
 - `--ki-button-toggle-unselected-fg`: Foreground of unselected filled toggle buttons.
-- `--ki-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).
 - `--ki-button-xl-height`: dimension used by the button component for xl height.
@@ -3045,7 +3030,6 @@ CSS custom properties:
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
-- `--ki-button-inline-size`: Button and link inline size. Set to 100% to fill the container.
 - `--ki-button-justify-content`: Placement of the button content; start for a card.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
@@ -3066,14 +3050,10 @@ CSS custom properties:
 - `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
 - `--ki-button-md-radius`: dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).
 - `--ki-button-md-spinner-size`: dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
-- `--ki-button-outline-hover-bg`: Background of the hovered outline variant.
-- `--ki-button-outline-hover-border`: Border of the hovered outline variant.
-- `--ki-button-outline-hover-fg`: Ink of the hovered outline variant.
 - `--ki-button-outline-rest-bg`: Background of the outline variant at rest.
 - `--ki-button-outline-rest-border`: Visible outline of the outline variant at rest.
 - `--ki-button-outline-rest-fg`: Foreground of the outline variant at rest.
 - `--ki-button-outline-selected-bg`: Background of the selected outline button toggle.
-- `--ki-button-outline-selected-border`: Border of the selected outline toggle.
 - `--ki-button-outline-selected-fg`: Foreground of the selected outline button toggle.
 - `--ki-button-padding-block`: dimension used by the button component for padding block (MarsUI: 4px in every size).
 - `--ki-button-primary-active-overlay`: Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
@@ -3200,7 +3180,6 @@ CSS custom properties:
 - `--ki-button-text-align`: Alignment of the label lines.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button.
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button.
-- `--ki-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).
 - `--ki-button-xl-height`: dimension used by the button component for xl height.
@@ -4828,18 +4807,9 @@ Add `toggle` for an action such as Bookmark that stays pressed until the next ac
 </ki-icon-button>
 ```
 
-Enabled outline actions use `--ki-icon-button-outline-hover-bg`,
-`--ki-icon-button-outline-hover-fg` and `--ki-icon-button-outline-hover-border` on hover.
-Unselected filled and quiet toggles use `--ki-icon-button-toggle-unselected-hover-overlay`.
-A selected toggle keeps its fill on hover. Use `--ki-icon-button-outline-selected-border`
-to set the selected outline edge.
-
 With an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.
 
-Sizes run `xs` (24px, the WCAG 2.2 pointer-target floor) through `xl`,
-with `md` as the default. The `--ki-icon-button-{size}-icon-size` token
-sizes the box and any directly slotted `ki-icon` glyph in either icon slot,
-including a glyph with an explicit `size`.
+Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:
 
 ```html
 <ki-icon-button size="xs" label="Clear">
@@ -4893,7 +4863,7 @@ Attributes:
 - `variant` ("ghost" | "outline" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, `ghost` for accent icon actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
 Slots:
-- (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name. Supply `label` or use a named trailing list control. Button tokens size ki-icon glyphs in both slots, overriding their size.
+- (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name. Supply `label` or use a named trailing list control.
 - `counter`: Decorative ki-counter in the block-start inline-end corner. Include its meaning in the button label.
 - `selected`: Optional decorative icon shown when the toggle is selected. If omitted, the default icon stays visible and an inline SVG takes a current-colour fill.
 
@@ -5066,14 +5036,10 @@ CSS custom properties:
 - `--ki-icon-button-md-icon-size`: dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3).
 - `--ki-icon-button-md-size`: dimension used by the icon button component for md box (40px square, Figma node 10078:3129).
 - `--ki-icon-button-md-spinner-size`: dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon).
-- `--ki-icon-button-outline-hover-bg`: Background of the hovered outline variant.
-- `--ki-icon-button-outline-hover-border`: Border of the hovered outline variant.
-- `--ki-icon-button-outline-hover-fg`: Ink of the hovered outline variant.
 - `--ki-icon-button-outline-rest-bg`: Background of the outline variant at rest.
 - `--ki-icon-button-outline-rest-border`: Visible outline of the outline variant at rest.
 - `--ki-icon-button-outline-rest-fg`: Foreground of the outline variant at rest.
 - `--ki-icon-button-outline-selected-bg`: Background of the selected outline icon button toggle.
-- `--ki-icon-button-outline-selected-border`: Border of the selected outline toggle.
 - `--ki-icon-button-outline-selected-fg`: Foreground of the selected outline icon button toggle.
 - `--ki-icon-button-primary-selected-bg`: Background of the selected primary icon button toggle.
 - `--ki-icon-button-primary-selected-fg`: Foreground of the selected primary icon button toggle.
@@ -5086,7 +5052,6 @@ CSS custom properties:
 - `--ki-icon-button-sm-spinner-size`: dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon).
 - `--ki-icon-button-toggle-radius`: Round shape for an unselected icon toggle button.
 - `--ki-icon-button-toggle-selected-radius`: Rounded square shape for a selected icon toggle button.
-- `--ki-icon-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles.
 - `--ki-icon-button-xl-icon-size`: dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px).
 - `--ki-icon-button-xl-size`: dimension used by the icon button component for xl box (56px square).
 - `--ki-icon-button-xl-spinner-size`: dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon).
@@ -11399,17 +11364,23 @@ the header. Import `@kimen/elements/icons/bell` for the notification glyph.
 
 ## Links that wrap instead of collapsing
 
-Use `collapse-at="none"` to keep every link in the bar at every width. Links
-that do not fit wrap onto further lines between the brand and the actions,
-and the bar grows to hold them. No navigation button or menu is rendered.
+Use `collapse-at="none"` to keep every link in the bar at every width. When
+space runs out, the brand and actions keep the first row, and the links
+wrap across the full width below. Tab reaches the actions after the links.
+Use `--ki-top-nav-links-gap` for the column gap and
+`--ki-top-nav-links-justify: flex-end` to align the links with the trailing
+edge of their available space.
 
 ```html
-<ki-top-nav label="Documentation" collapse-at="none">
-  <a slot="brand" href="/">Kimen</a>
+<ki-top-nav label="Documentation" collapse-at="none"
+  style="--ki-top-nav-links-gap: var(--ki-layout-spacing-xs); --ki-top-nav-links-justify: flex-end">
+  <a slot="brand" href="/">Kimen Design System</a>
   <a href="/guide" aria-current="page">Guide</a>
   <a href="/components">Components</a>
   <a href="/tokens">Tokens</a>
-  <a href="/changelog">Changelog</a>
+  <ki-icon-button slot="actions" label="Search" variant="ghost">
+    <ki-icon name="search"></ki-icon>
+  </ki-icon-button>
 </ki-top-nav>
 ```
 
@@ -11433,7 +11404,7 @@ handlers in the overflow menu. Keep application-specific account menus and
 navigation destinations in the consuming app.
 
 Attributes:
-- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
+- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` keeps links visible. If they do not fit beside the brand and actions, they wrap across the full width below them.
 - `heading-level` (number, default 1): Native heading level for the screen title. Use 1 through 6 to fit the page outline.
 - `label` (string, default 'Main'): Accessible name of the header's primary navigation landmark. Override for localization.
 - `navigation-label` (string, default 'Open navigation'): Accessible name for the compact navigation button and menu. Override for localization.
@@ -11516,6 +11487,8 @@ CSS custom properties:
 - `--ki-top-nav-item-fg`: Primary navigation item resting ink.
 - `--ki-top-nav-item-hover-bg`: Hovered control or highlighted menu item surface.
 - `--ki-top-nav-item-hover-fg`: Hovered control or highlighted menu item ink.
+- `--ki-top-nav-links-gap`: Column gap between inline primary links.
+- `--ki-top-nav-links-justify`: Inline link alignment. Use flex-end for trailing links.
 - `--ki-top-nav-menu-radius`: Menu and trigger corner radius.
 - `--ki-top-nav-padding-inline`: Padding at the inline edges of both bars.
 - `--ki-typography-family-body`: semantic font family for typography family body.

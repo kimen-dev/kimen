@@ -3170,11 +3170,11 @@
             },
             {
               "name": "end",
-              "description": "Trailing icon or media in writing direction. Uses the start slot's sizing."
+              "description": "Trailing icon or media. Follows writing direction."
             },
             {
               "name": "start",
-              "description": "Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size."
+              "description": "Leading icon or media. Follows writing direction."
             }
           ],
           "cssParts": [
@@ -3329,10 +3329,6 @@
               "description": "color used by the button component for ghost success rest foreground."
             },
             {
-              "name": "--ki-button-inline-size",
-              "description": "Button and link inline size. Set to 100% to fill the container."
-            },
-            {
               "name": "--ki-button-justify-content",
               "description": "Placement of the button content; start for a card."
             },
@@ -3413,18 +3409,6 @@
               "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
             },
             {
-              "name": "--ki-button-outline-hover-bg",
-              "description": "Background of the hovered outline variant."
-            },
-            {
-              "name": "--ki-button-outline-hover-border",
-              "description": "Border of the hovered outline variant."
-            },
-            {
-              "name": "--ki-button-outline-hover-fg",
-              "description": "Ink of the hovered outline variant."
-            },
-            {
               "name": "--ki-button-outline-rest-bg",
               "description": "Background of the outline variant at rest."
             },
@@ -3439,10 +3423,6 @@
             {
               "name": "--ki-button-outline-selected-bg",
               "description": "Background of the selected outline button toggle."
-            },
-            {
-              "name": "--ki-button-outline-selected-border",
-              "description": "Border of the selected outline toggle."
             },
             {
               "name": "--ki-button-outline-selected-fg",
@@ -3963,10 +3943,6 @@
             {
               "name": "--ki-button-toggle-unselected-fg",
               "description": "Foreground of unselected filled toggle buttons."
-            },
-            {
-              "name": "--ki-button-toggle-unselected-hover-overlay",
-              "description": "Hover wash for unselected filled and quiet toggles."
             },
             {
               "name": "--ki-button-xl-font-size",
@@ -9523,10 +9499,6 @@
               "description": "color used by the button component for ghost success rest foreground."
             },
             {
-              "name": "--ki-button-inline-size",
-              "description": "Button and link inline size. Set to 100% to fill the container."
-            },
-            {
               "name": "--ki-button-justify-content",
               "description": "Placement of the button content; start for a card."
             },
@@ -9607,18 +9579,6 @@
               "description": "dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content)."
             },
             {
-              "name": "--ki-button-outline-hover-bg",
-              "description": "Background of the hovered outline variant."
-            },
-            {
-              "name": "--ki-button-outline-hover-border",
-              "description": "Border of the hovered outline variant."
-            },
-            {
-              "name": "--ki-button-outline-hover-fg",
-              "description": "Ink of the hovered outline variant."
-            },
-            {
               "name": "--ki-button-outline-rest-bg",
               "description": "Background of the outline variant at rest."
             },
@@ -9633,10 +9593,6 @@
             {
               "name": "--ki-button-outline-selected-bg",
               "description": "Background of the selected outline button toggle."
-            },
-            {
-              "name": "--ki-button-outline-selected-border",
-              "description": "Border of the selected outline toggle."
             },
             {
               "name": "--ki-button-outline-selected-fg",
@@ -10141,10 +10097,6 @@
             {
               "name": "--ki-button-toggle-selected-radius",
               "description": "Pill shape for a selected text toggle button."
-            },
-            {
-              "name": "--ki-button-toggle-unselected-hover-overlay",
-              "description": "Hover wash for unselected filled and quiet toggles."
             },
             {
               "name": "--ki-button-xl-font-size",
@@ -15591,7 +15543,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.\nButton tokens size ki-icon glyphs in both slots, overriding their size."
+              "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control."
             },
             {
               "name": "counter",
@@ -16250,18 +16202,6 @@
               "description": "dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon)."
             },
             {
-              "name": "--ki-icon-button-outline-hover-bg",
-              "description": "Background of the hovered outline variant."
-            },
-            {
-              "name": "--ki-icon-button-outline-hover-border",
-              "description": "Border of the hovered outline variant."
-            },
-            {
-              "name": "--ki-icon-button-outline-hover-fg",
-              "description": "Ink of the hovered outline variant."
-            },
-            {
               "name": "--ki-icon-button-outline-rest-bg",
               "description": "Background of the outline variant at rest."
             },
@@ -16276,10 +16216,6 @@
             {
               "name": "--ki-icon-button-outline-selected-bg",
               "description": "Background of the selected outline icon button toggle."
-            },
-            {
-              "name": "--ki-icon-button-outline-selected-border",
-              "description": "Border of the selected outline toggle."
             },
             {
               "name": "--ki-icon-button-outline-selected-fg",
@@ -16328,10 +16264,6 @@
             {
               "name": "--ki-icon-button-toggle-selected-radius",
               "description": "Rounded square shape for a selected icon toggle button."
-            },
-            {
-              "name": "--ki-icon-button-toggle-unselected-hover-overlay",
-              "description": "Hover wash for unselected filled and quiet toggles."
             },
             {
               "name": "--ki-icon-button-xl-icon-size",
@@ -36252,7 +36184,7 @@
                 "text": "string"
               },
               "default": "'48rem'",
-              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines."
+              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them."
             },
             {
               "name": "heading-level",
@@ -36363,7 +36295,7 @@
                 "text": "string"
               },
               "default": "'48rem'",
-              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
+              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them.",
               "attribute": "collapse-at",
               "reflects": false
             },
@@ -36749,6 +36681,14 @@
             {
               "name": "--ki-top-nav-item-hover-fg",
               "description": "Hovered control or highlighted menu item ink."
+            },
+            {
+              "name": "--ki-top-nav-links-gap",
+              "description": "Column gap between inline primary links."
+            },
+            {
+              "name": "--ki-top-nav-links-justify",
+              "description": "Inline link alignment. Use flex-end for trailing links."
             },
             {
               "name": "--ki-top-nav-menu-radius",
