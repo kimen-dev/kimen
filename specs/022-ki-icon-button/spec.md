@@ -343,17 +343,68 @@ Feature: Icon button
       | attribute |
       | pressed   |
       | expanded  |
+
+  # Family: core behavior (appended)
+  # S21
+  Scenario: Every unselected icon toggle responds to hover
+    Given an unselected icon toggle in any variant
+    When the pointer rests over the toggle
+    Then the toggle changes its surface
+
+  # S22
+  Scenario: A selected icon toggle keeps its surface on hover
+    Given a selected icon toggle in any variant
+    When the pointer rests over the toggle
+    Then the toggle keeps its selection surface
+
+  # Family: theming (appended)
+  # S23
+  Scenario: Tokens recolor the hovered outline icon button
+    Given an outline icon button with reassigned hover background, foreground and border tokens
+    When the pointer rests over the action
+    Then the surface, icon ink and outline use the reassigned colors
+
+  # S24
+  Scenario: A token recolors the selected outline border
+    Given a selected outline icon toggle with a reassigned selected border token
+    When the page renders
+    Then the selected outline uses the reassigned color
+
+  # S25
+  Scenario: A token recolors the unselected toggle hover wash
+    Given an unselected filled or quiet icon toggle with a reassigned hover overlay token
+    When the pointer rests over the toggle
+    Then the toggle shows the reassigned wash
+
+  # S26
+  Scenario: The icon button size token sizes the glyph
+    Given an icon button of any size with a slotted ki-icon
+    When the page renders
+    Then the glyph matches the default icon-size token
+
+  # S27
+  Scenario: The icon-size token alone resizes the default and selected glyphs
+    Given an icon toggle with a reassigned icon-size token and an explicit ki-icon size in both slots
+    When the page renders the selection states
+    Then each visible glyph matches the reassigned button icon-size token
+
+  # Family: core behavior (appended)
+  # S28
+  Scenario: An outline icon button responds to hover
+    Given an enabled outline icon button
+    When the pointer rests over the action
+    Then the outline action changes its surface
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S16, S17, S19, S20 | |
+| Core behavior | S1, S2, S3, S16, S17, S19, S20, S21, S22, S28 | |
 | Keyboard path | S4, S5, S14 | |
 | Assistive-tech outcome | S6, S7, S8, S12, S13 | |
 | Form participation | S9 | |
-| Theming | S10, S11, S15 | |
+| Theming | S10, S11, S15, S23, S24, S25, S26, S27 | |
 
 Form participation is covered by a deliberate negative contract (S9):
 ki-icon-button is not form-associated in v1 and MUST NOT submit or reset an

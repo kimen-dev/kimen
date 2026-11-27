@@ -30,9 +30,18 @@ Add `toggle` for an action such as Bookmark that stays pressed until the next ac
 </ki-icon-button>
 ```
 
+Enabled outline actions use `--ki-icon-button-outline-hover-bg`,
+`--ki-icon-button-outline-hover-fg` and `--ki-icon-button-outline-hover-border` on hover.
+Unselected filled and quiet toggles use `--ki-icon-button-toggle-unselected-hover-overlay`.
+A selected toggle keeps its fill on hover. Use `--ki-icon-button-outline-selected-border`
+to set the selected outline edge.
+
 With an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.
 
-Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:
+Sizes run `xs` (24px, the WCAG 2.2 pointer-target floor) through `xl`,
+with `md` as the default. The `--ki-icon-button-{size}-icon-size` token
+sizes the box and any directly slotted `ki-icon` glyph in either icon slot,
+including a glyph with an explicit `size`.
 
 ```html
 <ki-icon-button size="xs" label="Clear">

@@ -295,6 +295,7 @@
   --ki-size-surface-md:32rem;
   --ki-size-surface-lg:40rem;
   --ki-size-surface-xl:48rem;
+  --ki-size-layout-fit-content:fit-content;
   --ki-size-layout-grid-min:15rem;
   --ki-size-layout-grid-fixed-breakpoint:30rem;
   --ki-size-sidebar-width:15rem;

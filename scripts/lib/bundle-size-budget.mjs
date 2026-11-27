@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { SURFACE_PROFILES } from '../../packages/adapter-mcp-apps/scripts/surface-profiles.mjs';
 import { readComponentMetadataByTag } from '../../packages/elements/scripts/component-metadata.mjs';
 
 // The pre-discovery ceilings include the headroom already granted to shared
@@ -147,6 +148,8 @@ const BASE_BUDGETS = {
 export function deriveBundleSizeBudgets(components) {
   const limits = {
     mcpApps: { ...BASE_BUDGETS.mcpApps },
+    mcpAppsData: { ...SURFACE_PROFILES.data.budget },
+    mcpAppsForm: { ...SURFACE_PROFILES.form.budget },
     mcpServer: { ...BASE_BUDGETS.mcpServer },
     genuiHost: { ...BASE_BUDGETS.genuiHost },
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },

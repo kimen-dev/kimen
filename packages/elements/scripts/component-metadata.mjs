@@ -13,6 +13,8 @@ const formBindings = {
 
 const budgetFields = {
   mcpApps: ['raw', 'gzip', 'brotli'],
+  mcpAppsData: ['raw', 'gzip', 'brotli'],
+  mcpAppsForm: ['raw', 'gzip', 'brotli'],
   mcpServer: ['raw', 'gzip', 'brotli'],
   tokenStylesheets: ['onmars', 'material3'],
   // Brotli bytes a component adds to a page of the page-weight gate, with the

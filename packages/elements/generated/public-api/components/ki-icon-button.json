@@ -1371,6 +1371,30 @@
         "required": false,
         "type": null
       },
+      "--ki-icon-button-outline-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the hovered outline variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-outline-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border of the hovered outline variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-outline-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the hovered outline variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-icon-button-outline-rest-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -1399,6 +1423,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Background of the selected outline icon button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-outline-selected-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border of the selected outline toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1495,6 +1527,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Rounded square shape for a selected icon toggle button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-icon-button-toggle-unselected-hover-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hover wash for unselected filled and quiet toggles.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1736,7 +1776,7 @@
       "": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.",
+        "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.\nButton tokens size ki-icon glyphs in both slots, overriding their size.",
         "replacement": null,
         "required": false,
         "type": null

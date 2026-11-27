@@ -7,8 +7,8 @@
 // `budget` holds the document's raw, gzip and brotli bytes (Art. IV): the size
 // measured after shortening vDOM keys and sharing shadow styles, plus
 // 0.1 % raw and 1 % compressed.
-// tests/subset-documents.spec.ts enforces it. A change that grows a profile's
-// components re-measures its budget here.
+// tests/subset-documents.spec.ts enforces each base plus the measured
+// component allowances recorded in component.json.
 export const SURFACE_PROFILES = Object.freeze({
   data: Object.freeze({
     components: Object.freeze(['ki-badge', 'ki-skeleton', 'ki-stack', 'ki-table']),

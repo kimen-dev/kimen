@@ -411,6 +411,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-inline-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Button and link inline size. Set to 100% to fill the container.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-justify-content": {
         "default": null,
         "deprecatedSince": null,
@@ -571,6 +579,30 @@
         "required": false,
         "type": null
       },
+      "--ki-button-outline-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Background of the hovered outline variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-outline-hover-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border of the hovered outline variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-outline-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of the hovered outline variant.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-outline-rest-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -599,6 +631,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Background of the selected outline button toggle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-outline-selected-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Border of the selected outline toggle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1643,6 +1683,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-toggle-unselected-hover-overlay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Hover wash for unselected filled and quiet toggles.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-xl-font-size": {
         "default": null,
         "deprecatedSince": null,
@@ -2040,7 +2088,7 @@
       "end": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Trailing icon or media. Follows writing direction.",
+        "description": "Trailing icon or media in writing direction. Uses the start slot's sizing.",
         "replacement": null,
         "required": false,
         "type": null
@@ -2048,7 +2096,7 @@
       "start": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Leading icon or media. Follows writing direction.",
+        "description": "Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size.",
         "replacement": null,
         "required": false,
         "type": null

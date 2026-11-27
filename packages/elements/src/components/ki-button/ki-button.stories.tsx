@@ -84,9 +84,9 @@ export const Disabled: Story = {
   parameters: { slots: { default: 'Unavailable' } },
 };
 
-/** Activate repeatedly to switch the pressed state while keeping the same label. */
+/** Hover to see the outline palette, then activate to see the fixed selected fill. */
 export const Toggle: Story = {
-  args: { toggle: true, selected: true, variant: 'outline' },
+  args: { toggle: true, variant: 'outline' },
   parameters: { slots: { default: 'Pin' } },
 };
 
@@ -97,20 +97,18 @@ export const Link: Story = {
 };
 
 /**
- * The alignment tokens start-align a wide two-line choice; `::part(button)`
- * lets it fill its container.
+ * The inline-size token fills the container. The alignment tokens start-align
+ * the two-line choice.
  */
 export const StartAligned: Story = {
   render: (args) => (
     <div style={{ inlineSize: '20rem' }}>
-      <style>{'.choice::part(button) { inline-size: 100%; }'}</style>
       <ki-button
         {...args}
-        class="choice"
         variant="outline"
         toggle
         style={{
-          display: 'block',
+          '--ki-button-inline-size': '100%',
           '--ki-button-justify-content': 'start',
           '--ki-button-text-align': 'start',
         }}
@@ -145,8 +143,8 @@ export const DialogTrigger: Story = {
 
 /**
  * Leading and trailing media through the `start` and `end` slots. The start
- * media is a directly slotted SVG so the component's slotted-icon box (18px
- * at md) sizes it, matching the Figma Icon/Placeholder exercise.
+ * media is an inline SVG. The per-size icon token sizes both inline SVGs
+ * and the glyph drawn by ki-icon.
  */
 export const WithSlots: Story = {
   parameters: {

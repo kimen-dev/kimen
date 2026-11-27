@@ -178,8 +178,8 @@ export const catalogGuidance: CatalogGuidance = {
     },
     "slots": {
       "": "Label content. This is the accessible name source.",
-      "end": "Trailing icon or media. Follows writing direction.",
-      "start": "Leading icon or media. Follows writing direction."
+      "end": "Trailing icon or media in writing direction. Uses the start slot's sizing.",
+      "start": "Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size."
     },
     "whenNotToUse": "links in text (ki-link), icon-only actions, form values, or\nthe progress of a page or region (use ki-progress).",
     "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone,\npersistent actions such as Bold with `toggle`, or with `href` a call to\naction that navigates.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
@@ -265,7 +265,7 @@ export const catalogGuidance: CatalogGuidance = {
       "change": "Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. `click()` from a script, or a page `<label>` for the\ncheckbox, toggles it like a native checkbox: one `input`, then one `change`. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
     },
     "props": {
-      "checked": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
+      "checked": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
       "custom-error": "An error of the application's own, such as a server-side verdict on the\nsubmitted answer (\"This plan needs a signed contract\"). While it holds\ntext the checkbox is invalid, blocks its form, shows the text in place of\nthe help text at once and is announced as invalid. It stops counting when\nthe person toggles the checkbox, or when the form is reset, so it never\nblocks the corrected answer. It outranks `error-text` and an error set\nwith `setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for a `required` checkbox left unchecked;\n`error-text` words that. Inside a `ki-checkbox-group`, set it on the\ngroup. Setting the same text again while the prop still holds it shows\nnothing: remove it first, then set it again.",
       "disabled": "Prevents activation, removes the checkbox from keyboard reach, exposes the\nunavailable state, and excludes it from form data.\nWhen NOT to use: do not use disabled for validation errors or pending\nstate.",
       "error-text": "Message shown in place of the help text once a `required` checkbox is\nleft unchecked, and its `validationMessage`. Say what checking it means\n(\"Accept the terms to continue\"). Without it the browser's own message\nshows, in the browser's language. An error set with `custom-error` or\n`setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those.",
@@ -280,7 +280,7 @@ export const catalogGuidance: CatalogGuidance = {
     "slots": {
       "": "Visible label content. This is the accessible name source and a\nnative activation surface."
     },
-    "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, or unlabeled/icon-only usage.",
+    "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked.",
     "whenToUse": "selecting one or more independent options that a form submits\nlater, including a \"select all\" parent that presents partial selection with\n`indeterminate`. Always provide a visible label in the default slot."
   },
   "ki-checkbox-group": {
@@ -573,7 +573,7 @@ export const catalogGuidance: CatalogGuidance = {
     },
     "props": {
       "close-label": "Accessible name for the fullscreen close button. Localize it or describe\nthe effect of dismissing, for example \"Discard and close\".",
-      "close-on-backdrop": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+      "close-on-backdrop": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
       "confirm-label": "Label for the optional confirmation button. Use an action verb such as\n\"Save\". The button is in the fullscreen header or the centered footer.",
       "fullscreen": "Layout for the native modal. Use `compact` to fill windows narrower than\n600 CSS pixels, or `always` to fill any window. Use `never` for a centered\ndialog at every width.",
       "heading": "Visible dialog title and accessible-name source. Always provide a heading;\nan empty value intentionally leaves the native dialog unnamed.\nWhen to use: name the interrupting decision, for example \"Delete\naccount?\". When NOT to use: do not omit it for production dialogs; APG\nmodal dialogs require an accessible name.",
@@ -823,7 +823,7 @@ export const catalogGuidance: CatalogGuidance = {
       "variant": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent."
     },
     "slots": {
-      "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.",
+      "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.\nButton tokens size ki-icon glyphs in both slots, overriding their size.",
       "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
       "selected": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
     },
@@ -1436,7 +1436,7 @@ export const catalogGuidance: CatalogGuidance = {
     },
     "props": {
       "custom-error": "An error of the application's own, such as a server-side verdict on the\nsubmitted choice (\"We do not ship there\"). While it holds text the select\nis invalid, blocks its form, shows the text in place of the help text at\nonce and is announced as invalid. It stops counting when the person\nchooses another option, or when the form is reset, so it never blocks the\ncorrected answer. It outranks `error-text` and an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for a `required` select left without a\nchoice; `error-text` words that. Setting the same text again while the\nprop still holds it shows nothing: remove it first, then set it again.",
-      "disabled": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission.",
+      "disabled": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
       "error-text": "Message shown in place of the help text once a `required` select is left\nwithout a choice, and its `validationMessage` (\"Choose a country\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `custom-error` or `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; set\n`custom-error` or call `setCustomValidity` for those.",
       "help-text": "One line of help under the trigger, read with it as the combobox\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
       "label": "Visible label and accessible-name source for the combobox trigger.\nWhen NOT to use: do not omit it; unlabeled selects are invalid usage.",
@@ -1698,7 +1698,7 @@ export const catalogGuidance: CatalogGuidance = {
       "change": "Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. `click()` from a\nscript, or a page `<label>` for the switch, toggles it like a native\ncheckbox: one `input`, then one `change`. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
     },
     "props": {
-      "checked": "Live on/off state.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+      "checked": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
       "custom-error": "An error of the application's own, such as a server-side verdict on the\nsubmitted setting (\"Two-step sign-in needs a phone number\"). While it\nholds text the switch is invalid, blocks its form, shows the text in\nplace of the help text at once and is announced as invalid. It stops\ncounting when the person toggles the switch, or when the form is reset,\nso it never blocks the corrected answer. It outranks an error set with\n`setCustomValidity`.\nWhen to use: report a verdict from a declarative spec, a live update or a\nframework binding. Remove it when a new attempt starts.\nWhen NOT to use: do not use it for help that is not an error; use\n`help-text`. Setting the same text again while the prop still holds it\nshows nothing: remove it first, then set it again.",
       "disabled": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen to use: make a setting temporarily unavailable while preserving its\ncurrent state.\nWhen NOT to use: do not use disabled for pending or loading states.",
       "help-text": "One line of help under the switch, read with it as its description: what\nturning it on changes.\nWhen NOT to use: do not repeat the label. A switch has no constraint of\nits own, so it takes no error text; an error the application sets with\n`custom-error` or `setCustomValidity` shows in this line's place.",
@@ -1716,7 +1716,7 @@ export const catalogGuidance: CatalogGuidance = {
     "description": "One selectable tab inside a `ki-tabs` view switcher.",
     "events": {},
     "props": {
-      "disabled": "Prevents selection by every modality and exposes the unavailable state.",
+      "disabled": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
       "selected": "Output-only selected state written by `ki-tabs`. Set the group's `value`\nto choose an initial tab; author-set `selected` is overwritten.",
       "value": "Pairing identifier shared with a `ki-tab-panel`. The first tab with a\nvalue owns it; later duplicates render but are not selectable."
     },

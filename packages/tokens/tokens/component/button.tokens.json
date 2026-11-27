@@ -2013,6 +2013,23 @@
             "$description": "Visible outline of the outline variant at rest."
           }
         },
+        "hover": {
+          "bg": {
+            "$type": "color",
+            "$value": "{ki.surface.s1}",
+            "$description": "Background of the hovered outline variant."
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{ki.text.high-em}",
+            "$description": "Ink of the hovered outline variant."
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{ki.outline.control-hover}",
+            "$description": "Border of the hovered outline variant."
+          }
+        },
         "selected": {
           "bg": {
             "$value": "{ki.surface.inverse-white}",
@@ -2021,6 +2038,11 @@
           "fg": {
             "$value": "{ki.text.inverse-black}",
             "$description": "Foreground of the selected outline button toggle."
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{ki.outline.none}",
+            "$description": "Border of the selected outline toggle."
           }
         }
       },
@@ -2041,6 +2063,11 @@
           "fg": {
             "$value": "{ki.text.high-em}",
             "$description": "Foreground of unselected filled toggle buttons."
+          },
+          "hover-overlay": {
+            "$type": "color",
+            "$value": "{ki.surface.hover-overlay-inverse}",
+            "$description": "Hover wash for unselected filled and quiet toggles."
           }
         },
         "quiet": {
@@ -2053,6 +2080,11 @@
             "$description": "Foreground of unselected ghost toggle buttons."
           }
         }
+      },
+      "inline-size": {
+        "$type": "other",
+        "$value": "{ki.size.layout.fit-content}",
+        "$description": "Button and link inline size. Set to 100% to fill the container."
       }
     }
   }
