@@ -8,9 +8,17 @@
   "catalog": true,
   "sizeBudget": {
     "mcpApps": {
+      "raw": 783,
       "brotli": 147
     },
+    "mcpAppsData": {
+      "raw": 335
+    },
+    "mcpAppsForm": {
+      "raw": 335
+    },
     "mcpServer": {
+      "raw": 1566,
       "gzip": 1165,
       "brotli": 588
     },
