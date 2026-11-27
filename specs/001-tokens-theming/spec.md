@@ -192,7 +192,8 @@ Feature: Tokens and theming with onmars as the default theme
   Scenario: material3 exposes the identical token contract as onmars
     Given a document that loads the Kimen tokens and material3 stylesheets
     When the document root declares the theme "material3"
-    Then every token name of the onmars contract resolves to a value
+    Then every required token in the onmars contract resolves to a value
+    And tokens with inherited defaults remain available for overrides
     And the material3 stylesheet reassigns no token name outside that contract
 
   # S7

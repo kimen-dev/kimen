@@ -7054,6 +7054,15 @@
               "description": "File name shown in the header beside the language."
             },
             {
+              "name": "header-hidden",
+              "fieldName": "headerHidden",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hide the caption. An enabled copy button stays above the source."
+            },
+            {
               "name": "highlight",
               "fieldName": "highlight",
               "type": {
@@ -7085,7 +7094,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish)."
+              "description": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders."
             },
             {
               "name": "line-numbers",
@@ -7168,6 +7177,18 @@
             },
             {
               "kind": "field",
+              "name": "headerHidden",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hide the caption. An enabled copy button stays above the source.",
+              "attribute": "header-hidden",
+              "reflects": false
+            },
+            {
+              "kind": "field",
               "name": "highlight",
               "privacy": "public",
               "type": {
@@ -7208,7 +7229,7 @@
               "type": {
                 "text": "string | undefined"
               },
-              "description": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+              "description": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders.",
               "attribute": "language",
               "reflects": false
             },
@@ -7349,6 +7370,10 @@
             {
               "name": "--ki-code-keyword",
               "description": "Syntax ink for keywords."
+            },
+            {
+              "name": "--ki-code-keyword-weight",
+              "description": "Weight of syntax keywords. Defaults to the source weight."
             },
             {
               "name": "--ki-code-line-height",

@@ -2464,6 +2464,10 @@
         "center": {
           "$type": "other",
           "$value": "center"
+        },
+        "inherit": {
+          "$type": "other",
+          "$value": "inherit"
         }
       },
       "onmars-v2": {

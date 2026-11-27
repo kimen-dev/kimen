@@ -369,10 +369,11 @@ export const catalogGuidance: CatalogGuidance = {
       "copy-label": "Accessible name of the copy button.",
       "copyable": "Show the copy control. Set `copyable=\"false\"` in HTML to hide it.",
       "filename": "File name shown in the header beside the language.",
+      "header-hidden": "Hide the caption. An enabled copy button stays above the source.",
       "highlight": "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`.",
       "highlight-label": "Localizable prefix for the accessible description of highlighted lines.",
       "label": "Figure and scroll area label when there is no language or filename.",
-      "language": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+      "language": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders.",
       "line-numbers": "Show decorative one-based line numbers.",
       "wrap": "Soft-wrap long lines within the available width."
     },

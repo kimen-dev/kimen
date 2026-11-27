@@ -12,6 +12,10 @@ import { expectAccessible } from './axe';
 const STYLE_ID = 'kimen-tokens-test-style';
 const MATERIAL3_STYLE_ID = 'kimen-material3-tokens-test-style';
 
+// These declarations defer to context. Chromium reports an empty custom
+// property when its root declaration is the CSS-wide keyword inherit.
+const inheritedDefaults = ['--ki-code-keyword-weight'] as const;
+
 function injectStylesheet(_css: string, _id = STYLE_ID): void {
   const style = document.createElement('style');
   style.id = _id;
@@ -72,8 +76,9 @@ function extractTokenNames(css: string): string[] {
   return [...new Set([...css.matchAll(/--ki-[\w-]+(?=\s*:)/gu)].map((match) => match[0]))].sort();
 }
 
-/** Every published name must resolve: declared, and with no dangling reference. */
-function expectEveryTokenResolved(names: readonly string[], absent: readonly string[] = []): void {
+/** Required tokens resolve, and optional defaults remain declared. */
+function expectEveryTokenResolved(names: readonly string[], absent: readonly string[]): void {
+  expect(names).toEqual(expect.arrayContaining([...absent]));
   for (const name of names) {
     const value = readToken(name);
     if (absent.includes(name)) {
@@ -128,11 +133,12 @@ describe('S1 onmars light default tokens', () => {
     expectTokenColor('--ki-surface-s0', '#ffffff');
   });
 
-  it('S1 resolves all required tokens and leaves the optional arrow colors unset', () => {
+  it('S1 resolves all required tokens and leaves optional defaults unset', () => {
     injectStylesheet(onmarsCss);
 
     // In Calma the tooltip arrow takes the bubble color through #343's fallback.
     expectEveryTokenResolved(extractTokenNames(onmarsCss), [
+      ...inheritedDefaults,
       '--ki-surface-image-tooltip-arrow-start',
       '--ki-surface-image-tooltip-arrow-end',
     ]);
@@ -157,14 +163,14 @@ describe('material3 theme and fallback', () => {
     expectTokenColor('--ki-color-brand-500', '#6750a4');
   });
 
-  it('S6 resolves every token name of the onmars contract under material3', () => {
+  it('S6 resolves all required onmars tokens and keeps inherited defaults under material3', () => {
     injectStylesheet(onmarsCss);
     injectStylesheet(material3Css, MATERIAL3_STYLE_ID);
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     const contract = extractTokenNames(onmarsCss);
 
     expect(contract.length).toBeGreaterThan(0);
-    expectEveryTokenResolved(contract);
+    expectEveryTokenResolved(contract, inheritedDefaults);
   });
 
   it('S6 reassigns no token name outside the onmars contract', () => {

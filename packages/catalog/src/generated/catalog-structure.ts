@@ -479,6 +479,7 @@ export const catalogStructure: Catalog = {
         "copy-label": {"type":"string","description":"","default":"Copy code"},
         "copyable": {"type":"boolean","description":"","default":true},
         "filename": {"type":"string","description":""},
+        "header-hidden": {"type":"boolean","description":"","default":false},
         "highlight": {"type":"string","description":""},
         "highlight-label": {"type":"string","description":"","default":"Highlighted lines"},
         "label": {"type":"string","description":"","default":"Code"},

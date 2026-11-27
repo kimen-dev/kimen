@@ -296,6 +296,7 @@
   --ki-code-fg:var(--ki-text-high-em);
   --ki-code-header-fg:var(--ki-text-supporting);
   --ki-code-keyword:var(--ki-text-primary-high-em);
+  --ki-code-keyword-weight:inherit;
   --ki-code-string:var(--ki-text-success-high-em);
   --ki-code-number:var(--ki-text-warning-high-em);
   --ki-code-function:var(--ki-text-info-high-em);
