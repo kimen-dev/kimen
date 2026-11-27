@@ -390,6 +390,12 @@ for a separately hosted Roboto file.
 
 ## Theme authoring
 
+Give dimensions a unit, including zero (`0px`), and use keywords such as
+`auto` where the token allows them. Components use tokens in `calc()`, and
+`calc(8px - 0)` is invalid, so the browser silently drops the declaration
+(`--ki-button-label-padding-inline: 0` drops the label-to-icon gap).
+Catch this with `npx @kimen/tokens check-theme theme.css`.
+
 Who reassigns which layer:
 
 - **A theme** — a complete restyle, such as material3 or a brand's own — may

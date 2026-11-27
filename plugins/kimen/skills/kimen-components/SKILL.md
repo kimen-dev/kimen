@@ -19,28 +19,19 @@ Kimen is a library of standards-based web components (`<ki-button>`,
 design tokens. They are plain custom elements: HTML in, DOM events out, in
 any framework or none.
 
-## Rule zero: read the contract, never guess it
+## Read the installed contracts first
 
-Kimen ships its component contracts in machine-readable form, generated from
-the source, so they cannot drift. Before you write an attribute, slot, event
-or token name, read it from one of these, in this order of convenience:
+Start with `node_modules/@kimen/elements/llms.txt` and read
+`node_modules/@kimen/elements/llms/<tag>.md` for each tag you use. These
+contracts match the installed package version and take precedence over this
+skill, its examples, and remembered APIs. Follow the contract's **When to
+use** and **When not to use** guidance and verify names there.
 
-1. **The Kimen MCP server**, if it is connected (tools named
-   `kimen_list_components` and `kimen_describe_component`). The listing gives
-   every component's when-to-use guidance in one call.
-2. **llms.txt**: `https://kimen.dev/llms.txt` is the index (one line per
-   component); each line links the component's full contract, for example
-   `https://kimen.dev/llms/ki-button.md`. Inside an installed package the
-   same files are at `node_modules/@kimen/elements/llms.txt` and
-   `node_modules/@kimen/elements/llms/<tag>.md` and match the installed
-   version. Fetch only the components you use; `https://kimen.dev/llms-full.txt`
-   has them all in one large file.
-3. **custom-elements.json** (`@kimen/elements/generated/custom-elements.json`)
-   when a tool wants structured data.
-
-Each contract has a **When to use** and a **When not to use** section. Follow
-them: they are the library's design decisions, not suggestions. If the
-"when not to use" names another component, use that one.
+For structured data, read `node_modules/@kimen/elements/generated/custom-elements.json`.
+Before the package is installed, use the Kimen MCP tools
+`kimen_list_components` and `kimen_describe_component` or the
+[online index](https://kimen.dev/llms.txt), and verify against the installed
+contracts before wiring the UI.
 
 ## Install and load
 
@@ -84,21 +75,9 @@ defineCustomElements();
   add one for every `ki-*` tag your own markup uses, slotted ones included
   (`ki-tab` and `ki-tab-panel` inside `ki-tabs`). A tag without its sheet
   paints silently wrong.
-- **The simple alternative: the full sheet.** `@kimen/tokens/css` in place
-  of the core and the tag sheets declares every token in one stylesheet.
-  Use it when the page uses most of the catalog or cannot list its tags in
-  advance. It costs more: a page with one `ki-button` ships about 8.1 KB of
-  token CSS with the core and its sheet, and 20.7 KB with the full sheet
-  (brotli).
-
-  ```ts
-  import '@kimen/tokens/css';
-  import '@kimen/tokens/css/base';
-  ```
-
-- Overrides work the same way with either. Load your own `:root` or
-  theme-root token overrides after the core. A tag sheet never beats them,
-  even when a bundler loads it later.
+- Reserve the full `@kimen/tokens/css` sheet for pages that use most of the
+  catalog or discover tags at runtime. Load root or theme-root overrides
+  after the core.
 - Registration is client-side. In server-rendered pages the tags arrive as
   markup and upgrade when the registration code runs. Until then an
   unregistered tag is an inline box, so the labels of group items run
@@ -120,10 +99,9 @@ defineCustomElements();
   links inside prose, tables of plain text) and Kimen for behaviour and
   consistent styling: buttons, form controls, dialogs, tabs, menus, alerts,
   toasts, cards, layout stacks (`ki-stack`, `ki-grid`).
-- One primary action per view (`<ki-button variant="primary">`); supporting
-  actions take lower variants. A call to action that navigates is the same
-  button with `href` (a native link inside). Use `loading` on the button whose
-  action is in progress instead of disabling it.
+- Use one primary action per view. For navigation, set `href` on
+  `ki-button` (e.g. `<ki-button variant="primary" href="/docs">Read the docs</ki-button>`).
+  Use `loading` while a button's action is in progress.
 - Status and feedback: inline persistent message → `ki-alert`; transient
   confirmation → `ki-toast` in one `ki-toaster` per page; short status text
   on an entity → `ki-badge`; progress of a task → `ki-progress`.
@@ -187,13 +165,10 @@ Customise in this order and stop at the first that works:
 2. **Parts.** `ki-button::part(…)` for the parts a contract lists.
 3. **Slots.** Put your own markup in the slots a contract lists.
 
-The palette (`--ki-color-*` ramps such as `--ki-color-brand-500`) belongs to
-themes. Building a theme, a complete restyle the user asked for, may redefine
-it, on `:root` or on `[data-ki-theme='name']`; the translucent
-`--ki-color-*-500-alpha-*` variants follow their ramp step, and the theme is
-then responsible for contrast. Customising an app on an existing theme
-reassigns semantic tokens and leaves the palette alone. Preference modes
-(more contrast, reduced transparency) apply over any theme on their own. A
+Theme authors can reassign palette ramps such as `--ki-color-brand-500` on
+`:root` or `[data-ki-theme='name']`. Translucent variants follow their ramp
+step. Use semantic and component overrides for routine app styling.
+Preference modes (more contrast, reduced transparency) apply to every theme. A
 theme that wants its own value under a mode sets the mode token,
 `--ki-<mode>-<token>` such as `--ki-contrast-more-outline-control` (the
 *Preference modes* table of the Tokens reference in Kimen's Storybook lists
@@ -210,6 +185,19 @@ theme is `import '@kimen/tokens/css/material3'` plus
 logical properties (`margin-inline`, `padding-block`) so layouts mirror in
 right-to-left languages.
 
+Give dimensions a unit, even zero (`0px`), and use keywords such as `auto`
+where supported. Components do arithmetic with tokens: `calc(8px - 0)` is
+invalid, so the browser silently drops the declaration (`--ki-button-label-padding-inline: 0`
+drops the label-to-icon gap). Check your theme with
+`npx @kimen/tokens check-theme theme.css` or send the CSS to the
+`check_theme` MCP tool.
+
+For choice cards use `--ki-button-inline-size`, `--ki-button-justify-content`,
+`--ki-button-text-align` and the outline state tokens. For a header that
+keeps its links visible on phones, use `collapse-at="none"`.
+See [theming recipes](references/theming-recipes.md) for markup and tokens
+for both patterns, a switch settings row and headerless Gherkin.
+
 ## Testing
 
 Test in a real browser, with Playwright or Vitest browser mode: component
@@ -222,8 +210,7 @@ to render or checks a `ki-alert`, read `references/testing.md`.
 - [ ] Every `ki-*` tag you used is registered (subpath or loader) and every
       icon name is imported.
 - [ ] `@kimen/tokens/css/core` loads once, before first paint, with the
-      sheet of every `ki-*` tag the page's markup uses, or the full
-      `@kimen/tokens/css` in place of both.
+      sheet of every `ki-*` tag the page's markup uses.
 - [ ] Every attribute, slot and event name was read from the contract, not
       guessed; enum values are spelled as listed.
 - [ ] Every control has an accessible name; one primary action per view.

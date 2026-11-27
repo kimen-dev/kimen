@@ -57,6 +57,17 @@ kimen-dev/kimen` and `/plugin install kimen@kimen`. The skills then appear as
 `kimen:kimen-components` and `kimen:kimen-genui`, and the plugin starts
 `kimen-mcp` too, so you can skip step 2.
 
+To update an installed copy, run these from your project:
+
+```sh
+claude plugin marketplace update kimen
+claude plugin update kimen@kimen
+claude plugin list
+```
+
+Check the version under `kimen@kimen`, then restart Claude Code.
+[Claude Code plugin updates](https://code.claude.com/docs/en/plugins/install#keep-plugins-updated)
+
 ### Codex
 
 Codex reads the same marketplace, and the plugin brings `kimen-mcp` with it:
@@ -65,6 +76,18 @@ Codex reads the same marketplace, and the plugin brings `kimen-mcp` with it:
 codex plugin marketplace add kimen-dev/kimen
 codex plugin add kimen@kimen
 ```
+
+To update, refresh the marketplace snapshot and reinstall the plugin:
+
+```sh
+codex plugin marketplace upgrade kimen
+codex plugin remove kimen@kimen
+codex plugin add kimen@kimen
+codex plugin list --marketplace kimen --json
+```
+
+Check `version` for `kimen@kimen` in the `installed` list, then start a new
+Codex session. [Codex CLI plugin commands](https://learn.chatgpt.com/docs/cli/reference#codex-plugin)
 
 Codex also loads any skill folder in `.agents/skills/` (project) or
 `~/.agents/skills/` (all projects), so copying the folders works too (see
