@@ -90,8 +90,6 @@ state. Its native button exposes that state as `aria-expanded`.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-button-group`: the default, only the tokens ki-button-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `attached` (boolean, default false): Joins neighboring actions at their inner edges. Buttons share the first button's variant and use its size when the group has no explicit size. Use for a closely related set of actions or for a split button.
@@ -117,19 +115,19 @@ None.
 
 ## CSS custom properties
 
-- `--ki-button-group-attached-gap`: Gap between joined actions.
-- `--ki-button-group-attached-radius`: Radius of the logical corners along a shared button edge.
-- `--ki-button-group-backdrop-filter`: Complete optional backdrop filter for the toolbar surface.
-- `--ki-button-group-bg`: Toolbar surface colour.
-- `--ki-button-group-bg-image`: Optional decorative image over the toolbar surface.
-- `--ki-button-group-border-color`: Thin toolbar frame colour.
-- `--ki-button-group-border-width`: Thickness of the toolbar frame and divider.
-- `--ki-button-group-divider`: Decorative toolbar separator ink.
-- `--ki-button-group-divider-size`: Block size of a vertical toolbar separator.
-- `--ki-button-group-fg`: Default toolbar foreground on its raised surface.
-- `--ki-button-group-gap`: Gap between actions in a spaced group.
-- `--ki-button-group-padding`: Toolbar frame inset and divider margin.
-- `--ki-button-group-radius`: Logical outside radius of the toolbar frame.
-- `--ki-button-group-seam-overlap`: Shared-edge overlap between adjacent attached actions.
-- `--ki-button-group-toolbar-gap`: Gap between toolbar actions.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-button-group-attached-gap`: Gap between joined actions. Default: `var(--ki-spacing-action-joined-gap)`.
+- `--ki-button-group-attached-radius`: Radius of the logical corners along a shared button edge. Default: `var(--ki-corner-action-seam)`.
+- `--ki-button-group-backdrop-filter`: Complete optional backdrop filter for the toolbar surface. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-button-group-bg`: Toolbar surface colour. Default: `var(--ki-surface-raised)`.
+- `--ki-button-group-bg-image`: Optional decorative image over the toolbar surface. Default: `var(--ki-surface-image-none)`.
+- `--ki-button-group-border-color`: Thin toolbar frame colour. Default: `var(--ki-outline-low-em)`.
+- `--ki-button-group-border-width`: Thickness of the toolbar frame and divider. Default: `var(--ki-spacing-action-hairline)`.
+- `--ki-button-group-divider`: Decorative toolbar separator ink. Default: `var(--ki-outline-low-em)`.
+- `--ki-button-group-divider-size`: Block size of a vertical toolbar separator. Default: `var(--ki-glyph-size-md)`.
+- `--ki-button-group-fg`: Default toolbar foreground on its raised surface. Default: `var(--ki-text-high-em)`.
+- `--ki-button-group-gap`: Gap between actions in a spaced group. Default: `var(--ki-spacing-action-gap)`.
+- `--ki-button-group-padding`: Toolbar frame inset and divider margin. Default: `var(--ki-spacing-action-inset)`.
+- `--ki-button-group-radius`: Logical outside radius of the toolbar frame. Default: `var(--ki-corner-action-frame)`.
+- `--ki-button-group-seam-overlap`: Shared-edge overlap between adjacent attached actions. Default: `var(--ki-spacing-action-hairline)`.
+- `--ki-button-group-toolbar-gap`: Gap between toolbar actions. Default: `var(--ki-spacing-action-compact-gap)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

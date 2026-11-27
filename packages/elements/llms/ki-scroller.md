@@ -59,8 +59,6 @@ Scrolling stays native (wheel, touch, arrows, Page Up/Down, Home/End); the viewp
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-scroller`: the default, only the tokens ki-scroller needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `label` (string, required): Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
@@ -84,18 +82,18 @@ None.
 
 ## CSS custom properties
 
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-scroller-focus-ring-color`: color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim.
-- `--ki-scroller-focus-ring-offset`: dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent).
-- `--ki-scroller-focus-ring-shadow`: shadow used by the scroller component for the viewport focus ring glow (MarsUI Focus/primary 3px 20%-alpha halo, the ki-button double mechanism; completes the theming hook ki-scroller.css already consumes).
-- `--ki-scroller-focus-ring-width`: dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent).
-- `--ki-scroller-gutter`: dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter).
-- `--ki-scroller-surface`: color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007).
-- `--ki-scroller-thumb-color`: color used by the scroller component for the indicator thumb: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_6 (Black/5 light, White/5 dark), which reads 1.12:1 and 1.09:1 against the content surface. The thumb is the only mark that shows the scroll position, so it takes the first step of the same ramp that clears WCAG 1.4.11's 3:1. The scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).
-- `--ki-scroller-thumb-min-length`: dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003).
-- `--ki-scroller-thumb-radius`: dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).
-- `--ki-scroller-thumb-thickness`: dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17).
-- `--ki-scroller-track-color`: color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute.
-- `--ki-scroller-track-inset`: dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-scroller-focus-ring-color`: color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim. Default: `var(--ki-focus-ring-color)`.
+- `--ki-scroller-focus-ring-offset`: dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent). Default: `var(--ki-focus-ring-offset)`.
+- `--ki-scroller-focus-ring-shadow`: shadow used by the scroller component for the viewport focus ring glow (MarsUI Focus/primary 3px 20%-alpha halo, the ki-button double mechanism; completes the theming hook ki-scroller.css already consumes). Default: `var(--ki-focus-primary)`.
+- `--ki-scroller-focus-ring-width`: dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent). Default: `var(--ki-focus-ring-width)`.
+- `--ki-scroller-gutter`: dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter). Default: onmars `var(--ki-space-xxs)`, material3 `var(--ki-space-zero)`.
+- `--ki-scroller-surface`: color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007). Default: `var(--ki-transparent-inverse)`.
+- `--ki-scroller-thumb-color`: color used by the scroller component for the indicator thumb: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_6 (Black/5 light, White/5 dark), which reads 1.12:1 and 1.09:1 against the content surface. The thumb is the only mark that shows the scroll position, so it takes the first step of the same ramp that clears WCAG 1.4.11's 3:1. The scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md). Default: onmars `var(--ki-inverse-white-alpha-48)`, material3 `var(--ki-outline-control)`.
+- `--ki-scroller-thumb-min-length`: dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003). Default: `var(--ki-space-3xl)`.
+- `--ki-scroller-thumb-radius`: dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent). Default: onmars `var(--ki-radius-round)`, material3 `var(--ki-radius-0)`.
+- `--ki-scroller-thumb-thickness`: dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17). Default: onmars `var(--ki-space-xs)`, material3 `var(--ki-space-md)`.
+- `--ki-scroller-track-color`: color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute. Default: `var(--ki-transparent-inverse)`.
+- `--ki-scroller-track-inset`: dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5). Default: onmars `var(--ki-space-xs)`, material3 `var(--ki-space-zero)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

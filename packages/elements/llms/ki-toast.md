@@ -58,8 +58,6 @@ The `action` slot takes one ghost `ki-button size="sm"`. Its own click handler r
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-toast`: the default, only the tokens ki-toast needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `dismiss-label` (string, default 'Dismiss'): Accessible name of the dismiss button. Override for localization; the default English word is the component's only built-in text. When to use: whenever the document language is not English. When NOT to use: do not put the message here; use the default slot.
@@ -94,32 +92,32 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
-- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-toast-backdrop-filter`: filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342).
-- `--ki-toast-bg`: color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself).
-- `--ki-toast-bg-image`: image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6).
-- `--ki-toast-border`: color used by the toast component for its hairline edge (issue #353).
-- `--ki-toast-border-width`: dimension used by the toast component for its hairline edge.
-- `--ki-toast-danger-icon`: color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353).
-- `--ki-toast-fg`: color used by the toast component for the heading ink (issue #353).
-- `--ki-toast-gap`: dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px).
-- `--ki-toast-heading-font-family`: Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface.
-- `--ki-toast-icon-size`: dimension used by the toast component for the tone icon.
-- `--ki-toast-info-icon`: color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353).
-- `--ki-toast-message-fg`: color used by the toast component for the message ink (issue #353).
-- `--ki-toast-neutral-icon`: color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353).
-- `--ki-toast-padding`: dimension used by the toast component for its padding (issue #353: 12px).
-- `--ki-toast-radius`: dimension used by the toast component for its corners (issue #353: 16px).
-- `--ki-toast-shadow`: shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6).
-- `--ki-toast-success-icon`: color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353).
-- `--ki-toast-warning-icon`: color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353).
-- `--ki-toast-width`: dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets. Default: `var(--ki-space-xs)`.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base). Default: onmars `var(--ki-duration-moderate)`, material3 `250ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-toast-backdrop-filter`: filter used by the toast component behind its surface, taken whole: none by default; a theme may blur here (document 2, rule 6; issue #342). Default: `none`.
+- `--ki-toast-bg`: color used by the toast component for its flat raised surface (issue #353: surface-raised, the deprecated alias of surface.s1, so the step itself). Default: onmars `var(--ki-surface-s1)`, material3 `var(--ki-surface-s2)`.
+- `--ki-toast-bg-image`: image used by the toast component over its background color: none by default; a theme may paint a gradient here (document 2, rule 6). Default: `none`.
+- `--ki-toast-border`: color used by the toast component for its hairline edge (issue #353). Default: onmars `var(--ki-outline-low-em)`, material3 `var(--ki-outline-none)`.
+- `--ki-toast-border-width`: dimension used by the toast component for its hairline edge. Default: `var(--ki-size-border-hairline)`.
+- `--ki-toast-danger-icon`: color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353). Default: `var(--ki-text-danger-high-em)`.
+- `--ki-toast-fg`: color used by the toast component for the heading ink (issue #353). Default: `var(--ki-text-high-em)`.
+- `--ki-toast-gap`: dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px). Default: `var(--ki-space-xl)`.
+- `--ki-toast-heading-font-family`: Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface. Default: `var(--ki-typography-family-heading)`.
+- `--ki-toast-icon-size`: dimension used by the toast component for the tone icon. Default: `var(--ki-space-5xl)`.
+- `--ki-toast-info-icon`: color used by the toast component for the info tone icon: the tone lives in the icon alone (issue #353). Default: `var(--ki-text-info-high-em)`.
+- `--ki-toast-message-fg`: color used by the toast component for the message ink (issue #353). Default: `var(--ki-text-med-em)`.
+- `--ki-toast-neutral-icon`: color used by the toast component for the neutral tone icon: the tone lives in the icon alone (issue #353). Default: `var(--ki-text-high-em)`.
+- `--ki-toast-padding`: dimension used by the toast component for its padding (issue #353: 12px). Default: `var(--ki-space-xl)`.
+- `--ki-toast-radius`: dimension used by the toast component for its corners (issue #353: 16px). Default: onmars `var(--ki-radius-big-component-xs)`, material3 `var(--ki-radius-component-xxs)`.
+- `--ki-toast-shadow`: shadow used by the toast component for its elevation (issue #353: e4). The only theme-controlled shadow in the toast's box-shadow (document 2, rule 6). Default: onmars `var(--ki-elevation-e4)`, material3 `var(--ki-elevation-e3)`.
+- `--ki-toast-success-icon`: color used by the toast component for the success tone icon: the tone lives in the icon alone (issue #353). Default: `var(--ki-text-success-high-em)`.
+- `--ki-toast-warning-icon`: color used by the toast component for the warning tone icon: the tone lives in the icon alone (issue #353). Default: `var(--ki-text-warning-high-em)`.
+- `--ki-toast-width`: dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem). Default: `var(--ki-size-toast)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2. Default: `var(--ki-font-line-height-body-2)`.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para. Default: `var(--ki-font-line-height-para)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2. Default: `var(--ki-font-size-body-2)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.

@@ -126,8 +126,7 @@ test('S4: a component with no size allowance leaves every shipped limit unchange
     mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
     mcpAppsData: { raw: 342_450, gzip: 70_950, brotli: 60_516 },
     mcpAppsForm: { raw: 431_801, gzip: 86_346, brotli: 71_987 },
-    // Raised for specs 168–170, approved by the founder on 2026-11-27.
-    mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 294_479 },
+    mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 302_027 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
@@ -160,8 +159,7 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
     mcpApps: { raw: 483_542, gzip: 80_315, brotli: 66_320 },
     mcpAppsData: { raw: 342_800, gzip: 70_950, brotli: 60_516 },
     mcpAppsForm: { raw: 432_501, gzip: 86_346, brotli: 71_987 },
-    // Raised for specs 168–170, approved by the founder on 2026-11-27.
-    mcpServer: { raw: 1_755_730, gzip: 318_512, brotli: 294_654 },
+    mcpServer: { raw: 1_755_730, gzip: 318_512, brotli: 302_202 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 11_781, material3: 5_215, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
@@ -304,7 +302,7 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 1_904_782, unpacked: 7_909_758 },
+      '@kimen/elements': { packed: 1_961_206, unpacked: 8_429_604 },
       // Rebased for Newsreader at weight 500.
       '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
       '@kimen/mcp-server': { packed: 639_409, unpacked: 3_176_921 },

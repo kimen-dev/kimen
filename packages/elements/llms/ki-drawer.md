@@ -63,8 +63,6 @@ Use `modal="false"` when the page behind the drawer should stay interactive.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-drawer`: the default, only the tokens ki-drawer needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `close-label` (string | undefined, default 'Close'): Accessible name for the built-in Close button. Translate this for localized interfaces.
@@ -101,35 +99,35 @@ Use `modal="false"` when the page behind the drawer should stay interactive.
 
 ## CSS custom properties
 
-- `--ki-corner-control`: Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background.
-- `--ki-dialog-divider-width`: dimension used by the dialog component for the dividers under the heading and above the footer (Modal-header and Modal-actions 1px strokes). Zero removes them.
-- `--ki-drawer-backdrop-filter`: Complete backdrop filter applied behind the drawer surface.
-- `--ki-drawer-bg`: Raised surface color of the drawer.
-- `--ki-drawer-bg-image`: Optional image layered over the drawer surface.
-- `--ki-drawer-close-size`: Preferred size of the Close button before the density minimum.
-- `--ki-drawer-fg`: Foreground color on the drawer surface.
-- `--ki-drawer-handle-color`: Color of the bottom-sheet handle.
-- `--ki-drawer-handle-size`: Inline extent of the bottom-sheet handle.
-- `--ki-drawer-handle-thickness`: Thickness of the bottom-sheet handle.
-- `--ki-drawer-heading-font-family`: Typeface of the drawer title.
-- `--ki-drawer-radius`: Radius of the corners on the inner edge of the drawer.
-- `--ki-drawer-shadow`: Resting elevation of the drawer.
-- `--ki-drawer-size`: Default inline size of a side sheet and block-size cap of a bottom sheet.
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-2xl`: The 2xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-outline-low-em`: semantic color for outline low em.
-- `--ki-surface-hover-overlay-inverse`: semantic color for surface hover overlay inverse.
-- `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-title-2`: semantic dimension for typography line height title 2.
-- `--ki-typography-size-title-2`: semantic dimension for typography size title 2.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-corner-control`: Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. Default: `var(--ki-radius-md)`.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background. Default: `var(--ki-overlay-high-em)`.
+- `--ki-dialog-divider-width`: dimension used by the dialog component for the dividers under the heading and above the footer (Modal-header and Modal-actions 1px strokes). Zero removes them. Default: onmars `var(--ki-size-border-hairline)`, material3 `var(--ki-space-zero)`.
+- `--ki-drawer-backdrop-filter`: Complete backdrop filter applied behind the drawer surface. Default: `var(--ki-effect-no-backdrop-filter)`.
+- `--ki-drawer-bg`: Raised surface color of the drawer. Default: `var(--ki-surface-s1)`.
+- `--ki-drawer-bg-image`: Optional image layered over the drawer surface. Default: `var(--ki-surface-image-none)`.
+- `--ki-drawer-close-size`: Preferred size of the Close button before the density minimum. Default: `var(--ki-layout-spacing-10xl)`.
+- `--ki-drawer-fg`: Foreground color on the drawer surface. Default: `var(--ki-text-high-em)`.
+- `--ki-drawer-handle-color`: Color of the bottom-sheet handle. Default: `var(--ki-outline-control)`.
+- `--ki-drawer-handle-size`: Inline extent of the bottom-sheet handle. Default: `var(--ki-layout-spacing-10xl)`.
+- `--ki-drawer-handle-thickness`: Thickness of the bottom-sheet handle. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-drawer-heading-font-family`: Typeface of the drawer title. Default: `var(--ki-typography-family-heading)`.
+- `--ki-drawer-radius`: Radius of the corners on the inner edge of the drawer. Default: `var(--ki-corner-sheet)`.
+- `--ki-drawer-shadow`: Resting elevation of the drawer. Default: `var(--ki-elevation-e4)`.
+- `--ki-drawer-size`: Default inline size of a side sheet and block-size cap of a bottom sheet. Default: `var(--ki-layout-sheet-size)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-layout-spacing-2xl`: The 2xl spacing step for a stack or grid gap. Default: `var(--ki-space-2xl)`.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap. Default: `var(--ki-space-xl)`.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base). Default: onmars `var(--ki-duration-moderate)`, material3 `250ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-outline-low-em`: semantic color for outline low em. Default: onmars `light-dark(rgba(24,22,19,0.1),rgba(255,250,240,0.1))`, material3 `light-dark(#e7e0ec,#36343b)`.
+- `--ki-surface-hover-overlay-inverse`: semantic color for surface hover overlay inverse. Default: onmars `light-dark(var(--ki-color-black-3),var(--ki-color-white-3))`, material3 `light-dark(var(--ki-color-white-8),var(--ki-color-black-8))`.
+- `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity. Default: `var(--ki-color-transparent-black)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-title-2`: semantic dimension for typography line height title 2. Default: `var(--ki-font-line-height-title-2)`.
+- `--ki-typography-size-title-2`: semantic dimension for typography size title 2. Default: `var(--ki-font-size-title-2)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.

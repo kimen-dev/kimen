@@ -54,8 +54,6 @@ Leave the action binding unset for native navigation.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-link`: the default, only the tokens ki-link needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `download` (string | undefined): Native download attribute. Set it to an empty string to let the browser choose the file name, or supply a suggested file name.
@@ -85,20 +83,20 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-link-bg`: Transparent backing for primary link text.
-- `--ki-link-bg-image`: Optional image overlay for link backing.
-- `--ki-link-fg`: Accent ink for primary links.
-- `--ki-link-font-family`: Body typeface used by link text.
-- `--ki-link-icon-gap`: Space between the label and the external link icon.
-- `--ki-link-icon-size`: External link icon edge relative to the inherited text size.
-- `--ki-link-neutral-bg`: Transparent backing for neutral link text.
-- `--ki-link-neutral-fg`: Body ink for neutral links.
-- `--ki-link-radius`: Corner radius used by the link focus outline.
-- `--ki-link-underline-offset`: Space between link text and its underline.
-- `--ki-link-underline-thickness`: Resting underline thickness.
-- `--ki-link-underline-thickness-hover`: Underline thickness under a hover-capable pointer.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-link-bg`: Transparent backing for primary link text. Default: `var(--ki-surface-transparent)`.
+- `--ki-link-bg-image`: Optional image overlay for link backing. Default: `var(--ki-surface-image-none)`.
+- `--ki-link-fg`: Accent ink for primary links. Default: `var(--ki-text-primary-high-em)`.
+- `--ki-link-font-family`: Body typeface used by link text. Default: `var(--ki-typography-family-body)`.
+- `--ki-link-icon-gap`: Space between the label and the external link icon. Default: `var(--ki-typography-inline-icon-gap)`.
+- `--ki-link-icon-size`: External link icon edge relative to the inherited text size. Default: `var(--ki-typography-inline-icon-size)`.
+- `--ki-link-neutral-bg`: Transparent backing for neutral link text. Default: `var(--ki-surface-transparent)`.
+- `--ki-link-neutral-fg`: Body ink for neutral links. Default: `var(--ki-text-high-em)`.
+- `--ki-link-radius`: Corner radius used by the link focus outline. Default: `var(--ki-corner-inline)`.
+- `--ki-link-underline-offset`: Space between link text and its underline. Default: `var(--ki-typography-underline-offset)`.
+- `--ki-link-underline-thickness`: Resting underline thickness. Default: `var(--ki-typography-underline-thickness)`.
+- `--ki-link-underline-thickness-hover`: Underline thickness under a hover-capable pointer. Default: `var(--ki-typography-underline-thickness-hover)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.

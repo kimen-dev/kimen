@@ -69,8 +69,6 @@ opaque profile identifier in the storage key, or omit the key and persist
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-sidebar`: the default, only the tokens ki-sidebar needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `collapse-label` (string, default 'Collapse sidebar'): Accessible toggle name while the sidebar is expanded.
@@ -104,34 +102,34 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-sidebar-backdrop-filter`: Complete backdrop filter for the panel.
-- `--ki-sidebar-bg`: Navigation panel background.
-- `--ki-sidebar-bg-image`: Optional image over the panel background.
-- `--ki-sidebar-border`: Navigation panel outline.
-- `--ki-sidebar-border-width`: Width of the panel outline.
-- `--ki-sidebar-brand-weight`: Weight of the optional brand label.
-- `--ki-sidebar-collapsed-width`: Compact rail inline size.
-- `--ki-sidebar-fg`: Navigation panel text and brand ink.
-- `--ki-sidebar-font-family`: Typeface of sidebar controls and copy.
-- `--ki-sidebar-font-size`: Font size of navigation labels.
-- `--ki-sidebar-gap`: Space between panel regions and between row contents.
-- `--ki-sidebar-icon-size`: Leading and toggle icon edge.
-- `--ki-sidebar-item-backdrop-filter`: Complete backdrop filter for the row or toggle.
-- `--ki-sidebar-item-bg`: Resting row background.
-- `--ki-sidebar-item-bg-image`: Optional image over navigation row and toggle backgrounds.
-- `--ki-sidebar-item-fg`: Resting row ink, with contrast-more support.
-- `--ki-sidebar-item-gap`: Gap between rows.
-- `--ki-sidebar-item-height`: Base row and toggle height before density adjustment.
-- `--ki-sidebar-item-hover-bg`: Hovered navigation row background.
-- `--ki-sidebar-item-hover-fg`: Hovered navigation row ink.
-- `--ki-sidebar-item-radius`: Corner of a row or toggle.
-- `--ki-sidebar-line-height`: Line height of navigation labels.
-- `--ki-sidebar-padding`: Inset between the panel border and its content.
-- `--ki-sidebar-radius`: Navigation panel corner.
-- `--ki-sidebar-width`: Expanded navigation panel inline size.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min. Default: `var(--ki-space-zero)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-sidebar-backdrop-filter`: Complete backdrop filter for the panel. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-sidebar-bg`: Navigation panel background. Default: `var(--ki-surface-s1)`.
+- `--ki-sidebar-bg-image`: Optional image over the panel background. Default: `var(--ki-surface-image-none)`.
+- `--ki-sidebar-border`: Navigation panel outline. Default: `var(--ki-outline-low-em)`.
+- `--ki-sidebar-border-width`: Width of the panel outline. Default: `var(--ki-typography-underline-thickness)`.
+- `--ki-sidebar-brand-weight`: Weight of the optional brand label. Default: `var(--ki-typography-weight-display-semibold)`.
+- `--ki-sidebar-collapsed-width`: Compact rail inline size. Default: `var(--ki-side-navigation-rail-width)`.
+- `--ki-sidebar-fg`: Navigation panel text and brand ink. Default: `var(--ki-text-high-em)`.
+- `--ki-sidebar-font-family`: Typeface of sidebar controls and copy. Default: `var(--ki-typography-family-body)`.
+- `--ki-sidebar-font-size`: Font size of navigation labels. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-sidebar-gap`: Space between panel regions and between row contents. Default: `var(--ki-space-md)`.
+- `--ki-sidebar-icon-size`: Leading and toggle icon edge. Default: `var(--ki-glyph-size-md)`.
+- `--ki-sidebar-item-backdrop-filter`: Complete backdrop filter for the row or toggle. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-sidebar-item-bg`: Resting row background. Default: `var(--ki-surface-s1)`.
+- `--ki-sidebar-item-bg-image`: Optional image over navigation row and toggle backgrounds. Default: `var(--ki-surface-image-none)`.
+- `--ki-sidebar-item-fg`: Resting row ink, with contrast-more support. Default: `var(--ki-text-supporting)`.
+- `--ki-sidebar-item-gap`: Gap between rows. Default: `var(--ki-space-xxs)`.
+- `--ki-sidebar-item-height`: Base row and toggle height before density adjustment. Default: `var(--ki-side-navigation-row-height)`.
+- `--ki-sidebar-item-hover-bg`: Hovered navigation row background. Default: `var(--ki-surface-s3)`.
+- `--ki-sidebar-item-hover-fg`: Hovered navigation row ink. Default: `var(--ki-text-high-em)`.
+- `--ki-sidebar-item-radius`: Corner of a row or toggle. Default: `var(--ki-corner-navigation-row)`.
+- `--ki-sidebar-line-height`: Line height of navigation labels. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-sidebar-padding`: Inset between the panel border and its content. Default: `var(--ki-space-md)`.
+- `--ki-sidebar-radius`: Navigation panel corner. Default: `var(--ki-corner-navigation-panel)`.
+- `--ki-sidebar-width`: Expanded navigation panel inline size. Default: `var(--ki-side-navigation-width)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.

@@ -59,8 +59,6 @@ by name. The icon has no slots or actions.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-icon`: the default, only the tokens ki-icon needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `label` (string | undefined): Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.
@@ -85,8 +83,8 @@ None.
 
 ## CSS custom properties
 
-- `--ki-icon-size-lg`: Large ki-icon with the surrounding text ink.
-- `--ki-icon-size-md`: Medium ki-icon with the surrounding text ink.
-- `--ki-icon-size-sm`: Small ki-icon with the surrounding text ink.
-- `--ki-icon-stroke-width`: Lucide stroke width in viewBox units, scaled with the glyph.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-icon-size-lg`: Large ki-icon with the surrounding text ink. Default: `var(--ki-glyph-size-lg)`.
+- `--ki-icon-size-md`: Medium ki-icon with the surrounding text ink. Default: `var(--ki-glyph-size-md)`.
+- `--ki-icon-size-sm`: Small ki-icon with the surrounding text ink. Default: `var(--ki-glyph-size-sm)`.
+- `--ki-icon-stroke-width`: Lucide stroke width in viewBox units, scaled with the glyph. Default: `var(--ki-glyph-stroke-width)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

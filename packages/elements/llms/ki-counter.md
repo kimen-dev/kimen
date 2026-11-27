@@ -51,8 +51,6 @@ write one localized announcement to the pre-existing status region.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-counter`: the default, only the tokens ki-counter needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `dot` (boolean, default false): Show a dot independently of the count, including when the value is zero.
@@ -79,22 +77,22 @@ None.
 
 ## CSS custom properties
 
-- `--ki-counter-backdrop-filter`: Complete backdrop filter for the indicator.
-- `--ki-counter-bg`: Danger notification indicator fill.
-- `--ki-counter-bg-image`: Optional image over the notification indicator fill.
-- `--ki-counter-dot-size`: Width and height of the presence dot.
-- `--ki-counter-fg`: Danger notification count text.
-- `--ki-counter-font-family`: Font family for the count.
-- `--ki-counter-font-size`: Font size for the count.
-- `--ki-counter-font-weight`: Font weight for the count.
-- `--ki-counter-neutral-bg`: Neutral notification indicator fill.
-- `--ki-counter-neutral-fg`: Neutral notification count text.
-- `--ki-counter-padding-inline`: Horizontal padding of a count pill.
-- `--ki-counter-primary-bg`: Primary notification indicator fill.
-- `--ki-counter-primary-fg`: Primary notification count text.
-- `--ki-counter-radius`: Radius of the painted pill or dot.
-- `--ki-counter-ring`: Surface-colored ring that separates the indicator from the trigger.
-- `--ki-counter-ring-width`: Thickness of the separating ring.
-- `--ki-counter-size`: Minimum width and height of a count pill.
-- `--ki-counter-success-bg`: Success notification indicator fill.
-- `--ki-counter-success-fg`: Success notification count text.
+- `--ki-counter-backdrop-filter`: Complete backdrop filter for the indicator. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-counter-bg`: Danger notification indicator fill. Default: `var(--ki-surface-danger-high-em)`.
+- `--ki-counter-bg-image`: Optional image over the notification indicator fill. Default: `var(--ki-surface-image-none)`.
+- `--ki-counter-dot-size`: Width and height of the presence dot. Default: `var(--ki-notification-marker-dot-size)`.
+- `--ki-counter-fg`: Danger notification count text. Default: `var(--ki-text-primary-on-danger)`.
+- `--ki-counter-font-family`: Font family for the count. Default: `var(--ki-typography-family-body)`.
+- `--ki-counter-font-size`: Font size for the count. Default: `var(--ki-typography-size-overline)`.
+- `--ki-counter-font-weight`: Font weight for the count. Default: `var(--ki-typography-weight-body-semibold)`.
+- `--ki-counter-neutral-bg`: Neutral notification indicator fill. Default: `var(--ki-surface-inverse-white)`.
+- `--ki-counter-neutral-fg`: Neutral notification count text. Default: `var(--ki-text-inverse-black)`.
+- `--ki-counter-padding-inline`: Horizontal padding of a count pill. Default: `var(--ki-notification-marker-padding-inline)`.
+- `--ki-counter-primary-bg`: Primary notification indicator fill. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-counter-primary-fg`: Primary notification count text. Default: `var(--ki-text-primary-on-primary)`.
+- `--ki-counter-radius`: Radius of the painted pill or dot. Default: `var(--ki-notification-marker-radius)`.
+- `--ki-counter-ring`: Surface-colored ring that separates the indicator from the trigger. Default: `var(--ki-surface-s0)`.
+- `--ki-counter-ring-width`: Thickness of the separating ring. Default: `var(--ki-notification-marker-ring-width)`.
+- `--ki-counter-size`: Minimum width and height of a count pill. Default: `var(--ki-notification-marker-count-size)`.
+- `--ki-counter-success-bg`: Success notification indicator fill. Default: `var(--ki-text-success-high-em)`.
+- `--ki-counter-success-fg`: Success notification count text. Default: `var(--ki-surface-s0)`.

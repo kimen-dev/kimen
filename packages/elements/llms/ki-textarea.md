@@ -87,8 +87,6 @@ again while it is still set shows nothing.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-textarea`: the default, only the tokens ki-textarea needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `appearance` ("default" | "filled" | "outlined" | undefined, default 'default'): Field appearance. `default` uses the current theme, `outlined` draws a full border, and `filled` uses a tinted surface and bottom indicator. The visible label stays above the field. When to use: set an explicit appearance when fields must share a shape across themes.
@@ -133,119 +131,124 @@ None.
 
 None.
 
-## CSS custom properties
+## Other CSS custom properties
 
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-input-appearance-border-width`: Resting stroke width of both explicit text field appearances.
-- `--ki-input-count-bg`: Resting character count surface over the surrounding page.
-- `--ki-input-count-fg`: Character count when the value fits the maximum.
-- `--ki-input-count-over-bg`: Over-limit character count surface over the surrounding page.
-- `--ki-input-count-over-fg`: Character count when the value exceeds the maximum.
-- `--ki-input-filled-backdrop-filter`: Optional backdrop filter of a filled field.
-- `--ki-input-filled-bg`: Surface of a filled text field.
-- `--ki-input-filled-bg-image`: Optional background image of a filled field.
-- `--ki-input-filled-fg`: Entered text on a filled field.
-- `--ki-input-filled-focus-width`: Stroke width of the block-end indicator while focused.
-- `--ki-input-filled-indicator`: Continuous block-end edge of an enabled filled text field.
-- `--ki-input-filled-placeholder-fg`: Placeholder on a filled field.
-- `--ki-input-filled-radius`: Block-start corner radius of a filled text field.
-- `--ki-input-label-gap`: dimension used by the input component for label gap.
-- `--ki-input-outlined-bg`: Surface of an outlined text field.
-- `--ki-input-outlined-border`: Full outline of an enabled outlined text field.
-- `--ki-input-outlined-fg`: Entered text on an outlined field.
-- `--ki-input-outlined-placeholder-fg`: Placeholder on an outlined field.
-- `--ki-input-outlined-radius`: Corner radius of an outlined text field.
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-text-danger-high-em`: semantic color for text danger high em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-textarea-border-block-end-width`: dimension used by the textarea component for border block end width.
-- `--ki-textarea-border-block-start-width`: dimension used by the textarea component for border block start width.
-- `--ki-textarea-border-inline-end-width`: dimension used by the textarea component for border inline end width.
-- `--ki-textarea-border-inline-start-width`: dimension used by the textarea component for border inline start width.
-- `--ki-textarea-disabled-bg`: color used by the textarea component for disabled background (MarsUI Surface/disabled_base_em Gray/100; aligned with ki-input).
-- `--ki-textarea-disabled-border`: color used by the textarea component for disabled border.
-- `--ki-textarea-disabled-fg`: color used by the textarea component for disabled foreground.
-- `--ki-textarea-disabled-label-fg`: color used by the textarea component for disabled label foreground.
-- `--ki-textarea-disabled-placeholder-fg`: color used by the textarea component for disabled placeholder foreground.
-- `--ki-textarea-focus-bg`: color used by the textarea component for focus background (MarsUI active fill switches to white / dark s2 — modeled with the scheme ladder s0).
-- `--ki-textarea-focus-fg`: color used by the textarea component for focus foreground.
-- `--ki-textarea-focus-label-fg`: color used by the textarea component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
-- `--ki-textarea-focus-placeholder-fg`: color used by the textarea component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
-- `--ki-textarea-focus-ring-color`: color used by the textarea component for focus ring color.
-- `--ki-textarea-focus-ring-offset`: dimension used by the textarea component for focus ring offset.
-- `--ki-textarea-focus-ring-shadow`: shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
-- `--ki-textarea-focus-ring-width`: dimension used by the textarea component for focus ring width.
-- `--ki-textarea-font-size`: dimension used by the textarea component for font size.
-- `--ki-textarea-font-size-touch`: dimension used by the textarea component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step.
-- `--ki-textarea-font-weight`: font weight used by the textarea component for font weight.
-- `--ki-textarea-hover-bg`: color used by the textarea component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token).
-- `--ki-textarea-hover-border`: color used by the textarea component for hover border.
-- `--ki-textarea-hover-fg`: color used by the textarea component for hover foreground.
-- `--ki-textarea-hover-label-fg`: color used by the textarea component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
-- `--ki-textarea-hover-placeholder-fg`: color used by the textarea component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
-- `--ki-textarea-invalid-bg`: color used by the textarea component for invalid background (MarsUI danger keeps the white active fill — no tinted slab; ring and hint carry the signal).
-- `--ki-textarea-invalid-border`: color used by the textarea component for invalid border.
-- `--ki-textarea-invalid-fg`: color used by the textarea component for invalid foreground.
-- `--ki-textarea-invalid-label-fg`: color used by the textarea component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
-- `--ki-textarea-invalid-placeholder-fg`: color used by the textarea component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
-- `--ki-textarea-invalid-ring`: shadow used by the textarea component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid)).
-- `--ki-textarea-label-font-size`: dimension used by the textarea component for label font size (MarsUI UI/Para/medium: body_1 13px).
-- `--ki-textarea-label-font-weight`: font weight used by the textarea component for label font weight.
-- `--ki-textarea-label-gap`: dimension used by the textarea component for label gap.
-- `--ki-textarea-label-hint-fg`: color used by the textarea component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
-- `--ki-textarea-label-hint-gap`: dimension used by the textarea component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
-- `--ki-textarea-label-line-height`: dimension used by the textarea component for label line height (MarsUI line_height/para 20px).
-- `--ki-textarea-label-padding-inline`: dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input).
-- `--ki-textarea-lg-font-size`: dimension used by the textarea component for lg font size: body-2 (Input-cell 8016:286 Type=textarea lg).
-- `--ki-textarea-lg-label-font-size`: dimension used by the textarea component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
-- `--ki-textarea-lg-label-line-height`: dimension used by the textarea component for the lg label line height (body-2, Input-label lg; spec 050 D4).
-- `--ki-textarea-lg-line-height`: dimension used by the textarea component for lg line height (body-2, Input-cell 8016:286 Type=textarea lg).
-- `--ki-textarea-lg-padding-block`: dimension used by the textarea component for lg padding block (Input-cell 8016:286 Type=textarea lg binds Space/lg, 10px).
-- `--ki-textarea-lg-padding-inline`: dimension used by the textarea component for lg padding inline (Input-cell 8016:286 Type=textarea lg binds Space/xl, 12px).
-- `--ki-textarea-lg-radius`: dimension used by the textarea component for lg radius (Input-cell 8016:286 Type=textarea lg binds Radius/small-component/lg).
-- `--ki-textarea-line-height`: dimension used by the textarea component for line height.
-- `--ki-textarea-min-target`: dimension used by the textarea component for min target.
-- `--ki-textarea-padding-block`: dimension used by the textarea component for padding block (Input-cell textarea md 8018:176: Space/md 8px).
-- `--ki-textarea-padding-inline`: dimension used by the textarea component for padding inline (MarsUI 96px md textarea: 12px ink inset).
-- `--ki-textarea-radius`: dimension used by the textarea component for radius (MarsUI Radius/component/radius_md 10px for the md size; component ramp so personality modes reach it).
-- `--ki-textarea-readonly-bg`: color used by the textarea component for readonly background.
-- `--ki-textarea-readonly-border`: color used by the textarea component for readonly border.
-- `--ki-textarea-readonly-fg`: color used by the textarea component for readonly foreground.
-- `--ki-textarea-readonly-label-fg`: color used by the textarea component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
-- `--ki-textarea-readonly-placeholder-fg`: color used by the textarea component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
-- `--ki-textarea-rest-bg`: color used by the textarea component for rest background (MarsUI textarea fill Surface/s2).
-- `--ki-textarea-rest-border`: color used by the textarea component for rest border.
-- `--ki-textarea-rest-fg`: color used by the textarea component for rest foreground.
-- `--ki-textarea-rest-label-fg`: color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
-- `--ki-textarea-rest-placeholder-fg`: color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).
-- `--ki-textarea-sm-font-size`: dimension used by the textarea component for sm font size: caption-2 (Input-cell 8016:286 Type=textarea sm).
-- `--ki-textarea-sm-label-font-size`: dimension used by the textarea component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
-- `--ki-textarea-sm-label-line-height`: dimension used by the textarea component for the sm label line height (caption-2, Input-label sm; spec 050 D4).
-- `--ki-textarea-sm-line-height`: dimension used by the textarea component for sm line height (caption-2, Input-cell 8016:286 Type=textarea sm).
-- `--ki-textarea-sm-padding-block`: dimension used by the textarea component for sm padding block (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px).
-- `--ki-textarea-sm-padding-inline`: dimension used by the textarea component for sm padding inline (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px).
-- `--ki-textarea-sm-radius`: dimension used by the textarea component for sm radius (Input-cell 8016:286 Type=textarea sm binds Radius/small-component/sm).
-- `--ki-textarea-xl-font-size`: dimension used by the textarea component for xl font size: title-2 (Input-cell 8016:286 Type=textarea xl).
-- `--ki-textarea-xl-label-font-size`: dimension used by the textarea component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4).
-- `--ki-textarea-xl-label-line-height`: dimension used by the textarea component for the xl label line height (body-2, Input-label lg; spec 050 D4).
-- `--ki-textarea-xl-line-height`: dimension used by the textarea component for xl line height (title-2, Input-cell 8016:286 Type=textarea xl).
-- `--ki-textarea-xl-padding-block`: dimension used by the textarea component for xl padding block (Input-cell 8016:286 Type=textarea xl binds Space/xl, 12px).
-- `--ki-textarea-xl-padding-inline`: dimension used by the textarea component for xl padding inline (Input-cell 8016:286 Type=textarea xl binds Space/2xl, 14px).
-- `--ki-textarea-xl-radius`: dimension used by the textarea component for xl radius (Input-cell 8016:286 Type=textarea xl binds Radius/small-component/xl).
-- `--ki-textarea-xs-font-size`: dimension used by the textarea component for xs font size: caption-2 (Input-cell 8016:286 Type=textarea xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
-- `--ki-textarea-xs-label-font-size`: dimension used by the textarea component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4).
-- `--ki-textarea-xs-label-line-height`: dimension used by the textarea component for the xs label line height (caption-2, Input-label sm; spec 050 D4).
-- `--ki-textarea-xs-line-height`: dimension used by the textarea component for xs line height (caption-2, Input-cell 8016:286 Type=textarea xs).
-- `--ki-textarea-xs-padding-block`: dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px).
-- `--ki-textarea-xs-padding-inline`: dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px).
-- `--ki-textarea-xs-radius`: dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
-- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min. Default: `var(--ki-space-zero)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-input-appearance-border-width`: Resting stroke width of both explicit text field appearances. Default: `var(--ki-control-border-width)`.
+- `--ki-input-count-bg`: Resting character count surface over the surrounding page. Default: `var(--ki-surface-transparent)`.
+- `--ki-input-count-fg`: Character count when the value fits the maximum. Default: `var(--ki-text-supporting)`.
+- `--ki-input-count-over-bg`: Over-limit character count surface over the surrounding page. Default: `var(--ki-surface-transparent)`.
+- `--ki-input-count-over-fg`: Character count when the value exceeds the maximum. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-input-filled-backdrop-filter`: Optional backdrop filter of a filled field. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-input-filled-bg`: Surface of a filled text field. Default: `var(--ki-surface-s2)`.
+- `--ki-input-filled-bg-image`: Optional background image of a filled field. Default: `var(--ki-surface-image-none)`.
+- `--ki-input-filled-fg`: Entered text on a filled field. Default: `var(--ki-text-high-em)`.
+- `--ki-input-filled-focus-width`: Stroke width of the block-end indicator while focused. Default: `var(--ki-focus-ring-width)`.
+- `--ki-input-filled-indicator`: Continuous block-end edge of an enabled filled text field. Default: `var(--ki-outline-control)`.
+- `--ki-input-filled-placeholder-fg`: Placeholder on a filled field. Default: `var(--ki-text-supporting)`.
+- `--ki-input-filled-radius`: Block-start corner radius of a filled text field. Default: onmars `var(--ki-radius-component-sm)`, material3 `var(--ki-radius-component-xs)`.
+- `--ki-input-label-gap`: dimension used by the input component for label gap. Default: `var(--ki-space-xs)`.
+- `--ki-input-outlined-bg`: Surface of an outlined text field. Default: `var(--ki-surface-transparent)`.
+- `--ki-input-outlined-border`: Full outline of an enabled outlined text field. Default: `var(--ki-outline-control)`.
+- `--ki-input-outlined-fg`: Entered text on an outlined field. Default: `var(--ki-text-high-em)`.
+- `--ki-input-outlined-placeholder-fg`: Placeholder on an outlined field. Default: `var(--ki-text-supporting)`.
+- `--ki-input-outlined-radius`: Corner radius of an outlined text field. Default: `var(--ki-radius-component-sm)`.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-text-danger-high-em`: semantic color for text danger high em. Default: onmars `light-dark(#c21a45,var(--ki-color-danger-300))`, material3 `light-dark(#8c1d18,#f2b8b5)`.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). Default: `var(--ki-text-med-em)`.
+- `--ki-textarea-border-block-end-width`: dimension used by the textarea component for border block end width. Default: `var(--ki-textarea-border-width)`.
+- `--ki-textarea-border-block-start-width`: dimension used by the textarea component for border block start width. Default: onmars `var(--ki-textarea-border-width)`, material3 `var(--ki-space-zero)`.
+- `--ki-textarea-border-inline-end-width`: dimension used by the textarea component for border inline end width. Default: onmars `var(--ki-textarea-border-width)`, material3 `var(--ki-space-zero)`.
+- `--ki-textarea-border-inline-start-width`: dimension used by the textarea component for border inline start width. Default: onmars `var(--ki-textarea-border-width)`, material3 `var(--ki-space-zero)`.
+- `--ki-textarea-font-size`: dimension used by the textarea component for font size. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-textarea-font-size-touch`: dimension used by the textarea component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step. Default: onmars `var(--ki-space-3xl)`, material3 `var(--ki-typography-size-body-2)`.
+- `--ki-textarea-font-weight`: font weight used by the textarea component for font weight. Default: `var(--ki-typography-weight-body-normal)`.
+- `--ki-textarea-label-font-size`: dimension used by the textarea component for label font size (MarsUI UI/Para/medium: body_1 13px). Default: onmars `var(--ki-typography-size-body-1)`, material3 `var(--ki-typography-size-caption-2)`.
+- `--ki-textarea-label-font-weight`: font weight used by the textarea component for label font weight. Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-textarea-label-gap`: dimension used by the textarea component for label gap. Default: `var(--ki-space-xs)`.
+- `--ki-textarea-label-hint-fg`: color used by the textarea component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). Default: `var(--ki-text-supporting)`.
+- `--ki-textarea-label-hint-gap`: dimension used by the textarea component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). Default: `var(--ki-space-xs)`.
+- `--ki-textarea-label-line-height`: dimension used by the textarea component for label line height (MarsUI line_height/para 20px). Default: onmars `var(--ki-typography-line-height-para)`, material3 `var(--ki-typography-line-height-caption-2)`.
+- `--ki-textarea-label-padding-inline`: dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input). Default: `var(--ki-space-xxs)`.
+- `--ki-textarea-lg-font-size`: dimension used by the textarea component for lg font size: body-2 (Input-cell 8016:286 Type=textarea lg). Default: `var(--ki-typography-size-body-2)`.
+- `--ki-textarea-lg-label-font-size`: dimension used by the textarea component for the lg label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4). Default: `var(--ki-typography-size-body-2)`.
+- `--ki-textarea-lg-label-line-height`: dimension used by the textarea component for the lg label line height (body-2, Input-label lg; spec 050 D4). Default: `var(--ki-typography-line-height-body-2)`.
+- `--ki-textarea-lg-line-height`: dimension used by the textarea component for lg line height (body-2, Input-cell 8016:286 Type=textarea lg). Default: `var(--ki-typography-line-height-body-2)`.
+- `--ki-textarea-lg-padding-block`: dimension used by the textarea component for lg padding block (Input-cell 8016:286 Type=textarea lg binds Space/lg, 10px). Default: `var(--ki-space-lg)`.
+- `--ki-textarea-lg-padding-inline`: dimension used by the textarea component for lg padding inline (Input-cell 8016:286 Type=textarea lg binds Space/xl, 12px). Default: `var(--ki-space-xl)`.
+- `--ki-textarea-lg-radius`: dimension used by the textarea component for lg radius (Input-cell 8016:286 Type=textarea lg binds Radius/small-component/lg). Default: onmars `var(--ki-radius-component-lg)`, material3 `var(--ki-radius-component-xs)`.
+- `--ki-textarea-line-height`: dimension used by the textarea component for line height. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-textarea-min-target`: dimension used by the textarea component for min target. Default: `var(--ki-space-7xl)`.
+- `--ki-textarea-padding-block`: dimension used by the textarea component for padding block (Input-cell textarea md 8018:176: Space/md 8px). Default: onmars `var(--ki-space-md)`, material3 `var(--ki-space-xl)`.
+- `--ki-textarea-padding-inline`: dimension used by the textarea component for padding inline (MarsUI 96px md textarea: 12px ink inset). Default: `var(--ki-space-xl)`.
+- `--ki-textarea-radius`: dimension used by the textarea component for radius (MarsUI Radius/component/radius_md 10px for the md size; component ramp so personality modes reach it). Default: onmars `var(--ki-radius-component-md)`, material3 `var(--ki-radius-component-xs)`.
+- `--ki-textarea-sm-font-size`: dimension used by the textarea component for sm font size: caption-2 (Input-cell 8016:286 Type=textarea sm). Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-textarea-sm-label-font-size`: dimension used by the textarea component for the sm label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4). Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-textarea-sm-label-line-height`: dimension used by the textarea component for the sm label line height (caption-2, Input-label sm; spec 050 D4). Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-textarea-sm-line-height`: dimension used by the textarea component for sm line height (caption-2, Input-cell 8016:286 Type=textarea sm). Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-textarea-sm-padding-block`: dimension used by the textarea component for sm padding block (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px). Default: `var(--ki-space-md)`.
+- `--ki-textarea-sm-padding-inline`: dimension used by the textarea component for sm padding inline (Input-cell 8016:286 Type=textarea sm binds Space/md, 8px). Default: `var(--ki-space-md)`.
+- `--ki-textarea-sm-radius`: dimension used by the textarea component for sm radius (Input-cell 8016:286 Type=textarea sm binds Radius/small-component/sm). Default: onmars `var(--ki-radius-component-sm)`, material3 `var(--ki-radius-component-xs)`.
+- `--ki-textarea-xl-font-size`: dimension used by the textarea component for xl font size: title-2 (Input-cell 8016:286 Type=textarea xl). Default: `var(--ki-typography-size-title-2)`.
+- `--ki-textarea-xl-label-font-size`: dimension used by the textarea component for the xl label font size: the Input-label 12021:6068 lg step, body-2 (spec 050 D4). Default: `var(--ki-typography-size-body-2)`.
+- `--ki-textarea-xl-label-line-height`: dimension used by the textarea component for the xl label line height (body-2, Input-label lg; spec 050 D4). Default: `var(--ki-typography-line-height-body-2)`.
+- `--ki-textarea-xl-line-height`: dimension used by the textarea component for xl line height (title-2, Input-cell 8016:286 Type=textarea xl). Default: `var(--ki-typography-line-height-title-2)`.
+- `--ki-textarea-xl-padding-block`: dimension used by the textarea component for xl padding block (Input-cell 8016:286 Type=textarea xl binds Space/xl, 12px). Default: `var(--ki-space-xl)`.
+- `--ki-textarea-xl-padding-inline`: dimension used by the textarea component for xl padding inline (Input-cell 8016:286 Type=textarea xl binds Space/2xl, 14px). Default: `var(--ki-space-2xl)`.
+- `--ki-textarea-xl-radius`: dimension used by the textarea component for xl radius (Input-cell 8016:286 Type=textarea xl binds Radius/small-component/xl). Default: onmars `var(--ki-radius-component-xl)`, material3 `var(--ki-radius-component-xs)`.
+- `--ki-textarea-xs-font-size`: dimension used by the textarea component for xs font size: caption-2 (Input-cell 8016:286 Type=textarea xs). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7). Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-textarea-xs-label-font-size`: dimension used by the textarea component for the xs label font size: the Input-label 12021:6068 sm step, caption-2 (spec 050 D4). Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-textarea-xs-label-line-height`: dimension used by the textarea component for the xs label line height (caption-2, Input-label sm; spec 050 D4). Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-textarea-xs-line-height`: dimension used by the textarea component for xs line height (caption-2, Input-cell 8016:286 Type=textarea xs). Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-textarea-xs-padding-block`: dimension used by the textarea component for xs padding block (Input-cell 8016:286 Type=textarea xs binds Space/md, 8px). Default: `var(--ki-space-md)`.
+- `--ki-textarea-xs-padding-inline`: dimension used by the textarea component for xs padding inline (Input-cell 8016:286 Type=textarea xs binds Space/sm, 6px). Default: `var(--ki-space-sm)`.
+- `--ki-textarea-xs-radius`: dimension used by the textarea component for xs radius (Input-cell 8016:286 Type=textarea xs binds Radius/small-component/xs). Default: `var(--ki-radius-component-xs)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2. Default: `var(--ki-font-line-height-body-2)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2. Default: `var(--ki-font-size-body-2)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal. Default: `var(--ki-font-weight-body-normal)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.
+
+## CSS custom properties by variant and state
+
+| Variant | Tone | State | Token | Default | Description |
+| --- | --- | --- | --- | --- | --- |
+| — | — | rest | `--ki-textarea-rest-bg` | onmars `var(--ki-surface-special-light-s0-dark-s1)`, material3 `var(--ki-surface-s1)` | color used by the textarea component for rest background (MarsUI textarea fill Surface/s2). |
+| — | — | rest | `--ki-textarea-rest-border` | `var(--ki-outline-control)` | color used by the textarea component for rest border. |
+| — | — | rest | `--ki-textarea-rest-fg` | `var(--ki-text-high-em)` | color used by the textarea component for rest foreground. |
+| — | — | rest | `--ki-textarea-rest-label-fg` | `var(--ki-text-supporting)` | color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
+| — | — | rest | `--ki-textarea-rest-placeholder-fg` | `var(--ki-text-supporting)` | color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
+| — | — | disabled | `--ki-textarea-disabled-bg` | `var(--ki-surface-disabled-base-em)` | color used by the textarea component for disabled background (MarsUI Surface/disabled_base_em Gray/100; aligned with ki-input). |
+| — | — | disabled | `--ki-textarea-disabled-border` | `var(--ki-outline-med-em)` | color used by the textarea component for disabled border. |
+| — | — | disabled | `--ki-textarea-disabled-fg` | `var(--ki-text-base-em)` | color used by the textarea component for disabled foreground. |
+| — | — | disabled | `--ki-textarea-disabled-label-fg` | `var(--ki-text-base-em)` | color used by the textarea component for disabled label foreground. |
+| — | — | disabled | `--ki-textarea-disabled-placeholder-fg` | `var(--ki-text-base-em)` | color used by the textarea component for disabled placeholder foreground. |
+| — | — | focus | `--ki-textarea-focus-bg` | onmars `var(--ki-surface-s0)`, material3 `var(--ki-surface-s1)` | color used by the textarea component for focus background (MarsUI active fill switches to white / dark s2 — modeled with the scheme ladder s0). |
+| — | — | focus | `--ki-textarea-focus-fg` | `var(--ki-text-high-em)` | color used by the textarea component for focus foreground. |
+| — | — | focus | `--ki-textarea-focus-label-fg` | onmars `var(--ki-text-supporting)`, material3 `var(--ki-text-primary-high-em)` | color used by the textarea component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
+| — | — | focus | `--ki-textarea-focus-placeholder-fg` | `var(--ki-text-supporting)` | color used by the textarea component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
+| — | — | focus | `--ki-textarea-focus-ring-color` | `var(--ki-focus-ring-color)` | color used by the textarea component for focus ring color. |
+| — | — | focus | `--ki-textarea-focus-ring-offset` | `var(--ki-focus-ring-offset)` | dimension used by the textarea component for focus ring offset. |
+| — | — | focus | `--ki-textarea-focus-ring-shadow` | `var(--ki-focus-primary)` | shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
+| — | — | focus | `--ki-textarea-focus-ring-width` | `var(--ki-focus-ring-width)` | dimension used by the textarea component for focus ring width. |
+| — | — | hover | `--ki-textarea-hover-bg` | onmars `var(--ki-surface-s3)`, material3 `var(--ki-surface-s2)` | color used by the textarea component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token). |
+| — | — | hover | `--ki-textarea-hover-border` | `var(--ki-outline-control-hover)` | color used by the textarea component for hover border. |
+| — | — | hover | `--ki-textarea-hover-fg` | `var(--ki-text-high-em)` | color used by the textarea component for hover foreground. |
+| — | — | hover | `--ki-textarea-hover-label-fg` | `var(--ki-text-supporting)` | color used by the textarea component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
+| — | — | hover | `--ki-textarea-hover-placeholder-fg` | `var(--ki-text-supporting)` | color used by the textarea component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
+| — | — | invalid | `--ki-textarea-invalid-bg` | onmars `var(--ki-surface-s0)`, material3 `var(--ki-surface-danger-base-em)` | color used by the textarea component for invalid background (MarsUI danger keeps the white active fill — no tinted slab; ring and hint carry the signal). |
+| — | — | invalid | `--ki-textarea-invalid-border` | `var(--ki-outline-danger-high-em)` | color used by the textarea component for invalid border. |
+| — | — | invalid | `--ki-textarea-invalid-fg` | `var(--ki-text-high-em)` | color used by the textarea component for invalid foreground. |
+| — | — | invalid | `--ki-textarea-invalid-label-fg` | onmars `var(--ki-text-supporting)`, material3 `var(--ki-text-danger-high-em)` | color used by the textarea component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
+| — | — | invalid | `--ki-textarea-invalid-placeholder-fg` | `var(--ki-text-supporting)` | color used by the textarea component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
+| — | — | invalid | `--ki-textarea-invalid-ring` | onmars `var(--ki-focus-danger)`, material3 `0 0 0 0 var(--ki-color-transparent-black)` | shadow used by the textarea component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid)). |
+| — | — | readonly | `--ki-textarea-readonly-bg` | `var(--ki-surface-s0)` | color used by the textarea component for readonly background. |
+| — | — | readonly | `--ki-textarea-readonly-border` | `var(--ki-outline-control)` | color used by the textarea component for readonly border. |
+| — | — | readonly | `--ki-textarea-readonly-fg` | `var(--ki-text-high-em)` | color used by the textarea component for readonly foreground. |
+| — | — | readonly | `--ki-textarea-readonly-label-fg` | `var(--ki-text-supporting)` | color used by the textarea component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
+| — | — | readonly | `--ki-textarea-readonly-placeholder-fg` | `var(--ki-text-supporting)` | color used by the textarea component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |

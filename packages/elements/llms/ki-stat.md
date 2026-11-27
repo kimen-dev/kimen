@@ -59,8 +59,6 @@ chart a text equivalent through its own HTML semantics.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-stat`: the default, only the tokens ki-stat needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `delta` (number | undefined): Optional finite change. Its sign determines the trend and its magnitude is displayed.
@@ -96,29 +94,29 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-stat-backdrop-filter`: Complete optional filter behind the metric surface.
-- `--ki-stat-bg`: Raised surface of the metric card.
-- `--ki-stat-bg-image`: Optional image layered over the metric surface.
-- `--ki-stat-border`: Subtle metric card outline.
-- `--ki-stat-border-width`: Width of the metric card outline.
-- `--ki-stat-delta-danger-fg`: Ink of an unfavorable comparison.
-- `--ki-stat-delta-line-height`: Line height of the comparison.
-- `--ki-stat-delta-neutral-fg`: Ink of an unchanged or ungraded comparison.
-- `--ki-stat-delta-size`: Text size of the comparison.
-- `--ki-stat-delta-success-fg`: Ink of a favorable comparison.
-- `--ki-stat-emphasis-weight`: Weight of the main reading and comparison magnitude.
-- `--ki-stat-gap`: Space between the reading and comparison or chart.
-- `--ki-stat-label-fg`: Ink of the metric label and comparison period.
-- `--ki-stat-label-line-height`: Line height of the metric label.
-- `--ki-stat-label-size`: Text size of the metric label.
-- `--ki-stat-padding`: Insets around the metric and chart.
-- `--ki-stat-radius`: Corner radius of the metric card.
-- `--ki-stat-trend-gap`: Space between the trend glyph and comparison magnitude.
-- `--ki-stat-trend-size`: Size of the rising or falling trend glyph.
-- `--ki-stat-value-fg`: Ink of the main reading.
-- `--ki-stat-value-font-family`: Typeface of the main reading.
-- `--ki-stat-value-letter-spacing`: Spacing between digits in the main reading.
-- `--ki-stat-value-line-height`: Line height of the main reading.
-- `--ki-stat-value-size`: Size of the main reading.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-stat-backdrop-filter`: Complete optional filter behind the metric surface. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-stat-bg`: Raised surface of the metric card. Default: `var(--ki-surface-s1)`.
+- `--ki-stat-bg-image`: Optional image layered over the metric surface. Default: `var(--ki-surface-image-none)`.
+- `--ki-stat-border`: Subtle metric card outline. Default: `var(--ki-outline-low-em)`.
+- `--ki-stat-border-width`: Width of the metric card outline. Default: `var(--ki-size-border-hairline)`.
+- `--ki-stat-delta-danger-fg`: Ink of an unfavorable comparison. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-stat-delta-line-height`: Line height of the comparison. Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-stat-delta-neutral-fg`: Ink of an unchanged or ungraded comparison. Default: `var(--ki-text-supporting)`.
+- `--ki-stat-delta-size`: Text size of the comparison. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-stat-delta-success-fg`: Ink of a favorable comparison. Default: `var(--ki-text-success-high-em)`.
+- `--ki-stat-emphasis-weight`: Weight of the main reading and comparison magnitude. Default: `var(--ki-typography-weight-body-semibold)`.
+- `--ki-stat-gap`: Space between the reading and comparison or chart. Default: `var(--ki-space-xs)`.
+- `--ki-stat-label-fg`: Ink of the metric label and comparison period. Default: `var(--ki-text-supporting)`.
+- `--ki-stat-label-line-height`: Line height of the metric label. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-stat-label-size`: Text size of the metric label. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-stat-padding`: Insets around the metric and chart. Default: `var(--ki-space-xl)`.
+- `--ki-stat-radius`: Corner radius of the metric card. Default: onmars `var(--ki-radius-component-lg)`, material3 `var(--ki-radius-component-md)`.
+- `--ki-stat-trend-gap`: Space between the trend glyph and comparison magnitude. Default: `var(--ki-space-xxs)`.
+- `--ki-stat-trend-size`: Size of the rising or falling trend glyph. Default: `var(--ki-glyph-size-sm)`.
+- `--ki-stat-value-fg`: Ink of the main reading. Default: `var(--ki-text-high-em)`.
+- `--ki-stat-value-font-family`: Typeface of the main reading. Default: `var(--ki-typography-family-heading)`.
+- `--ki-stat-value-letter-spacing`: Spacing between digits in the main reading. Default: `var(--ki-typography-letter-spacing-md)`.
+- `--ki-stat-value-line-height`: Line height of the main reading. Default: `var(--ki-typography-line-height-heading-1)`.
+- `--ki-stat-value-size`: Size of the main reading. Default: `var(--ki-typography-size-heading-1)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

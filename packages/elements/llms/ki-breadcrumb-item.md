@@ -29,8 +29,6 @@ label and add `href` to link to an ancestor page. A level without
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-breadcrumb-item`: the default, only the tokens ki-breadcrumb-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `current` (boolean, default false): Explicitly marks the final level as current. The owning breadcrumb treats its final level as current by position, including when this marker is omitted.
@@ -54,4 +52,4 @@ None.
 
 ## CSS custom properties
 
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

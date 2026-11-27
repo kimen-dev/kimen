@@ -60,8 +60,6 @@ import '@kimen/elements/icons/heart';
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-rating`: the default, only the tokens ki-rating needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `disabled` (boolean, default false): Makes an editable rating unavailable and excludes it from form submission.
@@ -99,30 +97,35 @@ None.
 
 None.
 
-## CSS custom properties
+## Other CSS custom properties
 
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-rating-disabled-fg`: Glyph ink while the rating is unavailable.
-- `--ki-rating-gap`: Space between rating glyphs or targets.
-- `--ki-rating-hover-backdrop-filter`: Complete backdrop filter for the hovered choice.
-- `--ki-rating-hover-bg`: Surface of the choice under the pointer.
-- `--ki-rating-hover-bg-image`: Optional image over the hovered choice surface.
-- `--ki-rating-label-bg`: Backdrop of the visible question.
-- `--ki-rating-label-fg`: Ink of the visible question.
-- `--ki-rating-label-gap`: Space between the question and scale.
-- `--ki-rating-off-bg`: Backdrop of an outlined glyph.
-- `--ki-rating-off-fg`: Ink of an outlined glyph.
-- `--ki-rating-on-bg`: Backdrop of a filled glyph.
-- `--ki-rating-on-fg`: Ink of a filled glyph.
-- `--ki-rating-score-bg`: Backdrop of the visible score.
-- `--ki-rating-score-fg`: Ink of the visible score.
-- `--ki-rating-score-gap`: Space between the glyphs and visible score.
-- `--ki-rating-size`: Size of a rating glyph.
-- `--ki-rating-target-radius`: Corners of the interactive target.
-- `--ki-rating-target-size`: Default whole-step target size.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-rating-gap`: Space between rating glyphs or targets. Default: `var(--ki-layout-spacing-xxs)`.
+- `--ki-rating-label-bg`: Backdrop of the visible question. Default: `var(--ki-surface-transparent)`.
+- `--ki-rating-label-fg`: Ink of the visible question. Default: `var(--ki-text-base)`.
+- `--ki-rating-label-gap`: Space between the question and scale. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-rating-off-bg`: Backdrop of an outlined glyph. Default: `var(--ki-surface-transparent)`.
+- `--ki-rating-off-fg`: Ink of an outlined glyph. Default: `var(--ki-outline-control)`.
+- `--ki-rating-on-bg`: Backdrop of a filled glyph. Default: `var(--ki-surface-transparent)`.
+- `--ki-rating-on-fg`: Ink of a filled glyph. Default: `var(--ki-text-warning-high-em)`.
+- `--ki-rating-score-bg`: Backdrop of the visible score. Default: `var(--ki-surface-transparent)`.
+- `--ki-rating-score-fg`: Ink of the visible score. Default: `var(--ki-text-supporting)`.
+- `--ki-rating-score-gap`: Space between the glyphs and visible score. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-rating-size`: Size of a rating glyph. Default: `var(--ki-glyph-size-md)`.
+- `--ki-rating-target-radius`: Corners of the interactive target. Default: `var(--ki-control-radius-item)`.
+- `--ki-rating-target-size`: Default whole-step target size. Default: `var(--ki-control-size-sm)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.
+
+## CSS custom properties by variant and state
+
+| Variant | Tone | State | Token | Default | Description |
+| --- | --- | --- | --- | --- | --- |
+| — | — | disabled | `--ki-rating-disabled-fg` | onmars `var(--ki-text-low-em)`, material3 `var(--ki-outline-strong)` | Glyph ink while the rating is unavailable. |
+| — | — | hover | `--ki-rating-hover-backdrop-filter` | `var(--ki-effect-component-no-backdrop-filter)` | Complete backdrop filter for the hovered choice. |
+| — | — | hover | `--ki-rating-hover-bg` | `var(--ki-surface-s2)` | Surface of the choice under the pointer. |
+| — | — | hover | `--ki-rating-hover-bg-image` | `var(--ki-surface-image-none)` | Optional image over the hovered choice surface. |

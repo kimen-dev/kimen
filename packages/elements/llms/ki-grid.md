@@ -43,8 +43,6 @@ own available inline size drops below 30rem.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-grid`: the default, only the tokens ki-grid needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `columns` (number | undefined, minimum 1): Positive whole track count. Below 30rem of available inline size the fixed grid uses one column. Omit columns for automatic tracks.
@@ -69,9 +67,9 @@ None.
 
 ## CSS custom properties
 
-- `--ki-grid-gap`: Default gap between grid tracks.
-- `--ki-grid-min`: Default minimum size of an automatic grid track.
-- `--ki-layout-grid-fixed-breakpoint`: Minimum available inline size for a fixed grid to use multiple tracks.
-- `--ki-layout-grid-min`: Default minimum inline size of an automatic grid track.
-- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-grid-gap`: Default gap between grid tracks. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-grid-min`: Default minimum size of an automatic grid track. Default: `var(--ki-layout-grid-min)`.
+- `--ki-layout-grid-fixed-breakpoint`: Minimum available inline size for a fixed grid to use multiple tracks. Default: `var(--ki-size-layout-grid-fixed-breakpoint)`.
+- `--ki-layout-grid-min`: Default minimum inline size of an automatic grid track. Default: `var(--ki-size-layout-grid-min)`.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap. Default: `var(--ki-space-xl)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

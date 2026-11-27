@@ -66,8 +66,6 @@ defineMessage();
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-conversation`: the default, only the tokens ki-conversation needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
-[Boolean attributes](boolean-attributes.md).
-
 ## Attributes
 
 - `jump-label` (string, default 'Jump to latest'): Visible and accessible label for the control that resumes following.
@@ -94,9 +92,9 @@ None.
 
 ## CSS custom properties
 
-- `--ki-conversation-gap`: Space between messages in the transcript.
-- `--ki-conversation-max-width`: Maximum inline size of the transcript.
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-conversation-gap`: Space between messages in the transcript. Default: `var(--ki-layout-spacing-3xl)`.
+- `--ki-conversation-max-width`: Maximum inline size of the transcript. Default: `var(--ki-layout-conversation-max-width)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

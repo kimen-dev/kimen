@@ -90,6 +90,12 @@ export async function runBuildSurfaces(options = {}) {
     ).href
   );
   const manifest = completeCemMethodSignatures({ manifest: rawManifest, docs });
+  for (const [index, component] of docs.components.entries()) {
+    const { cssProperties, tokenStates } = manifest.modules[index].declarations[0];
+    component.cssProperties = cssProperties;
+    if (tokenStates === undefined) delete component.tokenStates;
+    else component.tokenStates = tokenStates;
+  }
   // Each index owns the documents it links, in llms/ next to it. The packaged
   // index links them by relative path; the repository index, which the site
   // publishes, by their address on the site, with the complete summary
@@ -264,6 +270,9 @@ async function buildManifestInputs({
   const { darkConfig, lightConfig, material3DarkConfig, material3LightConfig } = await import(
     pathToFileURL(resolve(tokenPackageRoot, 'style-dictionary.config.mjs')).href
   );
+  const { buildThemeTokenDefaults } = await import(
+    pathToFileURL(resolve(workspaceRoot, 'scripts/lib/css-token-surface.mjs')).href
+  );
   const tokenCompositions = await loadOrderedTokenCompositions({
     workspaceRoot,
     tokenPackageRoot,
@@ -289,7 +298,13 @@ async function buildManifestInputs({
     inventory: tokenInventory,
     componentsRoot: resolve(packageRoot, 'src/components'),
   });
-  return { packageExports, cssPropertiesByTag, tokenInventory, tokenCompositions };
+  const [onmars, material3] = await Promise.all(
+    ['tokens.css', 'tokens.material3.css'].map((file) =>
+      readFile(resolve(tokenPackageRoot, 'dist/css', file), 'utf8'),
+    ),
+  );
+  const tokenDefaults = buildThemeTokenDefaults({ onmars, material3 });
+  return { packageExports, cssPropertiesByTag, tokenInventory, tokenCompositions, tokenDefaults };
 }
 
 async function buildPublicApi({
