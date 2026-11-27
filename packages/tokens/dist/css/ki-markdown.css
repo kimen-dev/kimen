@@ -296,6 +296,7 @@
   --ki-code-fg:var(--ki-text-high-em);
   --ki-code-header-fg:var(--ki-text-supporting);
   --ki-code-keyword:var(--ki-text-primary-high-em);
+  --ki-code-keyword-weight:inherit;
   --ki-code-string:var(--ki-text-success-high-em);
   --ki-code-number:var(--ki-text-warning-high-em);
   --ki-code-function:var(--ki-text-info-high-em);
@@ -321,14 +322,17 @@
   --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
   --ki-link-bg:var(--ki-surface-transparent);
   --ki-link-fg:var(--ki-text-primary-high-em);
+  --ki-link-hover-fg:inherit;
   --ki-link-neutral-bg:var(--ki-surface-transparent);
   --ki-link-neutral-fg:var(--ki-text-high-em);
+  --ki-link-neutral-hover-fg:inherit;
   --ki-link-bg-image:var(--ki-surface-image-none);
   --ki-link-underline-thickness:var(--ki-typography-underline-thickness);
   --ki-link-underline-thickness-hover:var(--ki-typography-underline-thickness-hover);
   --ki-link-underline-offset:var(--ki-typography-underline-offset);
   --ki-link-radius:var(--ki-corner-inline);
   --ki-link-font-family:var(--ki-typography-family-body);
+  --ki-link-font-weight:inherit;
   --ki-link-icon-size:var(--ki-typography-inline-icon-size);
   --ki-link-icon-gap:var(--ki-typography-inline-icon-gap);
   --ki-markdown-bg:var(--ki-surface-transparent);

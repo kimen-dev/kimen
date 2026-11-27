@@ -13,6 +13,8 @@ const formBindings = {
 
 const budgetFields = {
   mcpApps: ['raw', 'gzip', 'brotli'],
+  // Raw growth of the shared token stylesheet embedded by every profile.
+  mcpAppsProfileStylesheet: ['raw'],
   mcpServer: ['raw', 'gzip', 'brotli'],
   tokenStylesheets: ['onmars', 'material3'],
   // Brotli bytes a component adds to a page of the page-weight gate, with the

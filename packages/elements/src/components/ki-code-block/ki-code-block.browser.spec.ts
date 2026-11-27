@@ -482,3 +482,53 @@ it('S16 restyles Gherkin keywords through the keyword ink token', async () => {
     expect(getComputedStyle(keyword).color).toBe('rgb(8, 89, 95)');
   }
 });
+
+it('S17 hides the header and preserves the selected syntax grammar', async () => {
+  const host = await mount('language="ts" filename="main.ts" header-hidden copyable="false"');
+  expect(host.shadowRoot?.querySelector('[part="header"]')).toBeNull();
+  expect(part(host, 'code').querySelector('.syntax-keyword')?.textContent).toBe('const');
+  await expect.element(page.getByRole('button', { name: 'Copy code' })).not.toBeInTheDocument();
+});
+
+it.each([
+  { attrs: 'language="ts" filename="main.ts"', name: 'ts · main.ts' },
+  { attrs: 'language="ts"', name: 'ts' },
+  { attrs: 'filename="main.ts"', name: 'main.ts' },
+  { attrs: 'label="Example source"', name: 'Example source' },
+])(
+  'S18 keeps the figure named "$name" and copying reachable with the header hidden',
+  async ({ attrs, name }) => {
+    const start = document.createElement('button');
+    start.textContent = 'Before the code';
+    fixture.append(start);
+    const host = await mount(`${attrs} header-hidden`);
+    expect(host.shadowRoot?.querySelector('[part="header"]')).toBeNull();
+    await expect.element(page.getByRole('figure', { name, exact: true })).toBeVisible();
+    await expect.element(page.getByRole('region', { name, exact: true })).toBeVisible();
+    const copy = page.getByRole('button', { name: 'Copy code' });
+    await expect.element(copy).toBeVisible();
+
+    start.focus();
+    await userEvent.tab();
+    expect(copy.element().matches(':focus-visible')).toBe(true);
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => writeText.mock.calls).toEqual([[source]]);
+  },
+);
+
+it('S19 changes Gherkin keyword weight and keeps the default inherited weight', async () => {
+  await browser.emulateReducedMotion('reduce');
+  try {
+    const host = await mount('language="gherkin"', 'Given a cart');
+    host.style.fontWeight = '700';
+    const keyword = part(host, 'code').querySelector('.syntax-keyword');
+    if (!keyword) throw new Error('Missing Gherkin keyword');
+    expect(getComputedStyle(keyword).fontWeight).toBe('700');
+
+    host.style.setProperty('--ki-code-keyword-weight', '500');
+    expect(getComputedStyle(keyword).fontWeight).toBe('500');
+    expect(getComputedStyle(part(host, 'code')).fontWeight).toBe('700');
+  } finally {
+    await browser.emulateReducedMotion(null);
+  }
+});

@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 564 semantic
-and 2442 component tokens. Values are the resolved **onmars light**
+and 2452 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1552,6 +1552,7 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-code-highlight-marker` | `#bc4c26` | Inline rule identifying a highlighted line. |
 | `--ki-code-highlight-marker-width` | `0.125rem` | Width of the highlighted line rule. |
 | `--ki-code-keyword` | `#ad411c` | Syntax ink for keywords. |
+| `--ki-code-keyword-weight` | `inherit` | Weight of syntax keywords. Defaults to the source weight. |
 | `--ki-code-line-height` | `1rem` | Line box height for caption and source. |
 | `--ki-code-line-number` | `#5e5953` | Ink for the decorative line numbers. |
 | `--ki-code-number` | `#945b05` | Syntax ink for numbers. |
@@ -2190,10 +2191,13 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-link-bg-image` | `none` | Optional image overlay for link backing. |
 | `--ki-link-fg` | `#ad411c` | Accent ink for primary links. |
 | `--ki-link-font-family` | `'Instrument Sans', system-ui, sans-serif` | Body typeface used by link text. |
-| `--ki-link-icon-gap` | `0.25em` | Space between the label and the external link icon. |
-| `--ki-link-icon-size` | `0.9em` | External link icon edge relative to the inherited text size. |
+| `--ki-link-font-weight` | `inherit` | Link weight. Defaults to the surrounding text weight. |
+| `--ki-link-hover-fg` | `inherit` | Primary hover ink. Defaults to the resting ink. |
+| `--ki-link-icon-gap` | `0.25em` | Spacing before each trailing icon. |
+| `--ki-link-icon-size` | `0.9em` | Trailing and external icon edge. |
 | `--ki-link-neutral-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for neutral link text. |
 | `--ki-link-neutral-fg` | `#181613` | Body ink for neutral links. |
+| `--ki-link-neutral-hover-fg` | `inherit` | Neutral hover ink. Defaults to the resting ink. |
 | `--ki-link-radius` | `2px` | Corner radius used by the link focus outline. |
 | `--ki-link-underline-offset` | `0.2em` | Space between link text and its underline. |
 | `--ki-link-underline-thickness` | `1px` | Resting underline thickness. |
@@ -3137,8 +3141,12 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-switch-glyph-height` | `0.375rem` | dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height). |
 | `--ki-switch-glyph-unchecked` | `rgba(255, 255, 255, 0)` | Color of the enabled unchecked switch's thumb dash. Transparent hides it by default. When visible, maintain 3:1 contrast with the thumb. |
 | `--ki-switch-glyph-width` | `0.5rem` | dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb). |
+| `--ki-switch-label-font-size` | `0.9375rem` | Label font size. |
+| `--ki-switch-label-line-height` | `1.5rem` | Label line height. |
 | `--ki-switch-lg-control-height` | `2rem` | dimension used by the switch component for the control footprint height at size lg. |
 | `--ki-switch-lg-control-width` | `3.5rem` | dimension used by the switch component for the control footprint width at size lg. |
+| `--ki-switch-lg-label-font-size` | `0.9375rem` | Label font size. |
+| `--ki-switch-lg-label-line-height` | `1.5rem` | Label line height. |
 | `--ki-switch-lg-min-target` | `2rem` | dimension used by the switch component for min target at size lg. |
 | `--ki-switch-lg-thumb-inset` | `0.125rem` | dimension used by the switch component for thumb inset at size lg. |
 | `--ki-switch-lg-thumb-radius` | `6px` | dimension used by the switch component for thumb radius at size lg. |
@@ -3188,6 +3196,8 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-switch-well-radius` | `10px` | dimension used by the switch component for the radius of the well that holds the track at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes. |
 | `--ki-switch-xl-control-height` | `2.5rem` | dimension used by the switch component for the control footprint height at size xl. |
 | `--ki-switch-xl-control-width` | `4rem` | dimension used by the switch component for the control footprint width at size xl. |
+| `--ki-switch-xl-label-font-size` | `0.9375rem` | Label font size. |
+| `--ki-switch-xl-label-line-height` | `1.5rem` | Label line height. |
 | `--ki-switch-xl-min-target` | `2.5rem` | dimension used by the switch component for min target at size xl. |
 | `--ki-switch-xl-thumb-inset` | `0.25rem` | dimension used by the switch component for thumb inset at size xl. |
 | `--ki-switch-xl-thumb-radius` | `6px` | dimension used by the switch component for thumb radius at size xl. |

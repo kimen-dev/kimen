@@ -1017,6 +1017,11 @@ export const catalogData = /* @__PURE__ */ withGuidance(
           readonly type: "string";
           readonly description: "File name shown in the header beside the language.";
         };
+        readonly "header-hidden": {
+          readonly type: "boolean";
+          readonly description: "Hide the caption. An enabled copy button stays above the source.";
+          readonly default: false;
+        };
         readonly highlight: {
           readonly type: "string";
           readonly description: "Comma-separated lines or inclusive ranges, for example `\"3,5-7\"`.";
@@ -1033,7 +1038,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
         };
         readonly language: {
           readonly type: "string";
-          readonly description: "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).";
+          readonly description: "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders.";
         };
         readonly "line-numbers": {
           readonly type: "boolean";
@@ -2476,6 +2481,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       };
       readonly slots: {
         readonly "": "Descriptive link text. Use phrasing content without nested interactive controls.";
+        readonly end: "Trailing icon before the external marker. Use a decorative ki-icon with inherited size.";
       };
       readonly tag: "ki-link";
       readonly whenNotToUse: "perform an action on the current page. Use ki-button variant=\"ghost\" for that.";
@@ -4411,6 +4417,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       };
       readonly slots: {
         readonly "": "Label content. This is the accessible name source.";
+        readonly end: "Trailing value outside the label.";
       };
       readonly tag: "ki-switch";
       readonly whenNotToUse: "selections collected for later form submission; use\nki-checkbox for recorded choices, ki-radio-group for mutually exclusive\nchoices, and ki-button for actions.";

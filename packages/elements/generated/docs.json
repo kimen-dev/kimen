@@ -5730,7 +5730,7 @@
         }
       ],
       "usage": {
-        "examples": "# ki-code-block examples\n\nDisplay a TypeScript snippet with line numbers and a highlighted line.\n\n```html\n<ki-code-block language=\"ts\" filename=\"main.ts\" line-numbers highlight=\"2\">// Load the current sample.\nconst sample = load(3);</ki-code-block>\n```\n\nUse plain text for unsupported syntax. In HTML, escape literal angle\nbrackets so they remain part of the source.\n\n```html\n<ki-code-block language=\"html\" filename=\"example.html\" wrap copyable=\"false\">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>\n```\n\nColor a Gherkin contract in English or Spanish with `language=\"gherkin\"`.\nKeywords count only where they open a line.\n\n```html\n<ki-code-block language=\"gherkin\" filename=\"pagos.feature\"># language: es\nCaracterística: Pagar el carrito\n  Escenario: Pagar con tarjeta\n    Dado un carrito con 3 productos y un cupón\n    Cuando el cliente paga\n    Entonces el recibo muestra el total</ki-code-block>\n```\n\nThe guarded catalog accepts source strings in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"actions\": [\"sampleCopied\"],\n  \"root\": {\n    \"component\": \"ki-code-block\",\n    \"props\": { \"language\": \"js\", \"filename\": \"index.js\", \"line-numbers\": true },\n    \"slots\": { \"\": [\"const sample = load(3);\"] },\n    \"action\": \"sampleCopied\"\n  }\n}\n```\n"
+        "examples": "# ki-code-block examples\n\nDisplay a TypeScript snippet with line numbers and a highlighted line.\n\n```html\n<ki-code-block language=\"ts\" filename=\"main.ts\" line-numbers highlight=\"2\">// Load the current sample.\nconst sample = load(3);</ki-code-block>\n```\n\nUse plain text for unsupported syntax. In HTML, escape literal angle\nbrackets so they remain part of the source.\n\n```html\n<ki-code-block language=\"html\" filename=\"example.html\" wrap copyable=\"false\">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>\n```\n\nHide the header with `header-hidden`. The language still selects the grammar,\nand the copy button stays above the source unless `copyable=\"false\"` is set.\n\n```html\n<ki-code-block language=\"ts\" filename=\"main.ts\" header-hidden>const sample = load(3);</ki-code-block>\n```\n\nColor a Gherkin contract in English or Spanish with `language=\"gherkin\"`.\nKeywords count only where they open a line. Set `--ki-code-keyword-weight`\non the snippet to give keywords a different weight.\n\n```html\n<ki-code-block language=\"gherkin\" filename=\"pagos.feature\" style=\"--ki-code-keyword-weight: 500\"># language: es\nCaracterística: Pagar el carrito\n  Escenario: Pagar con tarjeta\n    Dado un carrito con 3 productos y un cupón\n    Cuando el cliente paga\n    Entonces el recibo muestra el total</ki-code-block>\n```\n\nThe guarded catalog accepts source strings in the default slot.\n\n```json\n{\n  \"version\": 1,\n  \"actions\": [\"sampleCopied\"],\n  \"root\": {\n    \"component\": \"ki-code-block\",\n    \"props\": { \"language\": \"js\", \"filename\": \"index.js\", \"line-numbers\": true },\n    \"slots\": { \"\": [\"const sample = load(3);\"] },\n    \"action\": \"sampleCopied\"\n  }\n}\n```\n"
       },
       "props": [
         {
@@ -5876,6 +5876,35 @@
           "setter": false
         },
         {
+          "name": "headerHidden",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "header-hidden",
+          "reflectToAttr": false,
+          "docs": "Hide the caption. An enabled copy button stays above the source.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "highlight",
           "type": "string | undefined",
           "complexType": {
@@ -5973,7 +6002,7 @@
           "mutable": false,
           "attr": "language",
           "reflectToAttr": false,
-          "docs": "Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).",
+          "docs": "Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish).\nGherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments,\n`--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells,\nand `--ki-code-number` for placeholders.",
           "docsTags": [],
           "values": [
             {
@@ -15487,12 +15516,16 @@
           "text": "- Descriptive link text. Use phrasing content without nested interactive controls."
         },
         {
+          "name": "slot",
+          "text": "end - Trailing icon before the external marker. Use a decorative ki-icon with inherited size."
+        },
+        {
           "name": "part",
           "text": "link - The native anchor that renders the link and receives focus."
         }
       ],
       "usage": {
-        "examples": "## Read a related page\n\n```html\n<p>Read the <ki-link href=\"/docs/catalog\">catalog contract</ki-link> before adding a component.</p>\n```\n\n## Open an external resource\n\n```html\n<ki-link href=\"https://github.com/kimen-dev/kimen\" external>Source on GitHub</ki-link>\n```\n\n## Link from standalone navigation\n\n```html\n<nav aria-label=\"Resources\">\n  <ki-link href=\"/docs\" underline=\"hover\">Documentation</ki-link>\n  <ki-link href=\"/changelog\" variant=\"neutral\" underline=\"hover\">Changelog</ki-link>\n</nav>\n```\n\n## Navigate from a guarded surface\n\nSupply `href` and the default text slot. The surface URL policy applies.\nLeave the action binding unset for native navigation.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-link\",\n    \"props\": { \"href\": \"/docs/catalog\" },\n    \"slots\": { \"\": [\"Catalog contract\"] }\n  }\n}\n```\n"
+        "examples": "## Read a related page\n\n```html\n<p>Read the <ki-link href=\"/docs/catalog\">catalog contract</ki-link> before adding a component.</p>\n```\n\n## Open an external resource\n\n```html\n<ki-link href=\"https://github.com/kimen-dev/kimen\" external>Source on GitHub</ki-link>\n```\n\n## Link from standalone navigation\n\n```html\n<nav aria-label=\"Resources\">\n  <ki-link href=\"/docs\" underline=\"hover\">Documentation</ki-link>\n  <ki-link href=\"/changelog\" variant=\"neutral\" underline=\"hover\">Changelog</ki-link>\n</nav>\n```\n\n## Add a trailing icon\n\nRegister the `arrow-right` glyph with `@kimen/elements/icons/arrow-right` and\ndefine `ki-icon`. The `end` slot spaces the icon using the link's icon gap\ntoken. Keep the icon's default inherited size to use the link's icon size.\n\n```html\n<ki-link href=\"/docs/catalog\" variant=\"neutral\" style=\"--ki-link-font-weight: 500\">\n  Catalog contract<ki-icon slot=\"end\" name=\"arrow-right\"></ki-icon>\n</ki-link>\n```\n\n## Navigate from a guarded surface\n\nSupply `href` and the default text slot. The surface URL policy applies.\nLeave the action binding unset for native navigation.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-link\",\n    \"props\": { \"href\": \"/docs/catalog\" },\n    \"slots\": { \"\": [\"Catalog contract\"] }\n  }\n}\n```\n"
       },
       "props": [
         {
@@ -15748,6 +15781,10 @@
         {
           "name": "",
           "docs": "Descriptive link text. Use phrasing content without nested interactive controls."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing icon before the external marker. Use a decorative ki-icon with inherited size."
         }
       ],
       "parts": [
@@ -27926,6 +27963,10 @@
           "text": "- Label content. This is the accessible name source."
         },
         {
+          "name": "slot",
+          "text": "end - Trailing value outside the label."
+        },
+        {
           "name": "part",
           "text": "track - On/off channel."
         },
@@ -27951,7 +27992,7 @@
         }
       ],
       "usage": {
-        "examples": "The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:\n\n```html\n<ki-switch checked>Autosave</ki-switch>\n<ki-switch>Desktop notifications</ki-switch>\n```\n\nWhile on, a named switch contributes `name`/`value` to native form data (`on` when `value` is omitted, checkbox parity); while off it contributes nothing:\n\n```html\n<form>\n  <ki-switch name=\"tracking\" value=\"enabled\" checked>Usage analytics</ki-switch>\n</form>\n```\n\nUser toggles dispatch composed `input` and `change` events — apply the setting immediately, a switch never waits for a submit; `disabled` preserves the current state while removing the switch from keyboard reach and form data:\n\n```html\n<ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on a setting it could\nnot apply. The switch is invalid, blocks its form and is announced as\ninvalid at once. Toggling it withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-switch name=\"two-step\" checked custom-error=\"Add a phone number before turning on two-step sign-in.\">Two-step sign-in</ki-switch>\n```\n"
+        "examples": "The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:\n\n```html\n<ki-switch checked>Autosave</ki-switch>\n<ki-switch>Desktop notifications</ki-switch>\n```\n\nWhile on, a named switch contributes `name`/`value` to native form data (`on` when `value` is omitted, checkbox parity); while off it contributes nothing:\n\n```html\n<form>\n  <ki-switch name=\"tracking\" value=\"enabled\" checked>Usage analytics</ki-switch>\n</form>\n```\n\nUser toggles dispatch composed `input` and `change` events — apply the setting immediately, a switch never waits for a submit; `disabled` preserves the current state while removing the switch from keyboard reach and form data:\n\n```html\n<ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on a setting it could\nnot apply. The switch is invalid, blocks its form and is announced as\ninvalid at once. Toggling it withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-switch name=\"two-step\" checked custom-error=\"Add a phone number before turning on two-step sign-in.\">Two-step sign-in</ki-switch>\n```\n\n## Settings row\n\nStretch the switch in a grid or set `display: block` on the host. Put the\ncurrent value in `slot=\"end\"`. The default slot supplies the switch name and\nthe value sits at the inline end. Update the value when the switch changes.\n\n```html\n<ki-switch style=\"display: block\" checked help-text=\"Get account updates by email.\">\n  Email notifications<span slot=\"end\">On</span>\n</ki-switch>\n```\n"
       },
       "props": [
         {
@@ -28189,6 +28230,10 @@
         {
           "name": "",
           "docs": "Label content. This is the accessible name source."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing value outside the label."
         }
       ],
       "parts": [

@@ -570,14 +570,14 @@ export declare interface KiCitation extends Components.KiCitation {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiCodeBlock,
-  inputs: ['copiedLabel', 'copyErrorLabel', 'copyLabel', 'copyable', 'filename', 'highlight', 'highlightLabel', 'label', 'language', 'lineNumbers', 'wrap']
+  inputs: ['copiedLabel', 'copyErrorLabel', 'copyLabel', 'copyable', 'filename', 'headerHidden', 'highlight', 'highlightLabel', 'label', 'language', 'lineNumbers', 'wrap']
 })
 @Component({
   selector: 'ki-code-block',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['copiedLabel', 'copyErrorLabel', 'copyLabel', 'copyable', 'filename', 'highlight', 'highlightLabel', 'label', 'language', 'lineNumbers', 'wrap'],
+  inputs: ['copiedLabel', 'copyErrorLabel', 'copyLabel', 'copyable', 'filename', 'headerHidden', 'highlight', 'highlightLabel', 'label', 'language', 'lineNumbers', 'wrap'],
 })
 export class KiCodeBlock {
   protected el: HTMLKiCodeBlockElement;

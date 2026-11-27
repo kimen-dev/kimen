@@ -30,3 +30,15 @@ shows nothing.
 ```html
 <ki-switch name="two-step" checked custom-error="Add a phone number before turning on two-step sign-in.">Two-step sign-in</ki-switch>
 ```
+
+## Settings row
+
+Stretch the switch in a grid or set `display: block` on the host. Put the
+current value in `slot="end"`. The default slot supplies the switch name and
+the value sits at the inline end. Update the value when the switch changes.
+
+```html
+<ki-switch style="display: block" checked help-text="Get account updates by email.">
+  Email notifications<span slot="end">On</span>
+</ki-switch>
+```

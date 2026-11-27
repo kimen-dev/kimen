@@ -9,6 +9,7 @@ export type KiLinkUnderline = 'always' | 'hover';
  * @whenToUse navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation.
  * @whenNotToUse perform an action on the current page. Use ki-button variant="ghost" for that.
  * @slot - Descriptive link text. Use phrasing content without nested interactive controls.
+ * @slot end - Trailing icon before the external marker. Use a decorative ki-icon with inherited size.
  * @part link - The native anchor that renders the link and receives focus.
  */
 // Shadow DOM keeps the styling private while the native anchor names itself
@@ -85,6 +86,7 @@ export class KiLink {
         {...(rel !== undefined ? { rel } : {})}
       >
         <slot />
+        <slot name="end" />
         {this.external && (
           <svg
             class="external-icon"

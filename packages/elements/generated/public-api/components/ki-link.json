@@ -131,10 +131,26 @@
         "required": false,
         "type": null
       },
+      "--ki-link-font-weight": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Link weight. Defaults to the surrounding text weight.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Primary hover ink. Defaults to the resting ink.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-link-icon-gap": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Space between the label and the external link icon.",
+        "description": "Spacing before each trailing icon.",
         "replacement": null,
         "required": false,
         "type": null
@@ -142,7 +158,7 @@
       "--ki-link-icon-size": {
         "default": null,
         "deprecatedSince": null,
-        "description": "External link icon edge relative to the inherited text size.",
+        "description": "Trailing and external icon edge.",
         "replacement": null,
         "required": false,
         "type": null
@@ -159,6 +175,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Body ink for neutral links.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-link-neutral-hover-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Neutral hover ink. Defaults to the resting ink.",
         "replacement": null,
         "required": false,
         "type": null
@@ -288,6 +312,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Descriptive link text. Use phrasing content without nested interactive controls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing icon before the external marker. Use a decorative ki-icon with inherited size.",
         "replacement": null,
         "required": false,
         "type": null

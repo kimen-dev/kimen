@@ -1,6 +1,14 @@
 {
   "ki": {
     "switch": {
+      "label-font-size": {
+        "$value": "{ki.typography.size.body-2}",
+        "$description": "Label font size."
+      },
+      "label-line-height": {
+        "$value": "{ki.typography.line-height.body-2}",
+        "$description": "Label line height."
+      },
       "track-width": {
         "$value": "{ki.space.12xl}",
         "$description": "dimension used by the switch component for track width at the default md size (unprefixed); sm-, lg- and xl- tokens set the other sizes."
@@ -284,6 +292,14 @@
         }
       },
       "lg": {
+        "label-font-size": {
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "Label font size."
+        },
+        "label-line-height": {
+          "$value": "{ki.typography.line-height.body-2}",
+          "$description": "Label line height."
+        },
         "track-width": {
           "$value": "{ki.space.14xl}",
           "$description": "dimension used by the switch component for track width at size lg."
@@ -330,6 +346,14 @@
         }
       },
       "xl": {
+        "label-font-size": {
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "Label font size."
+        },
+        "label-line-height": {
+          "$value": "{ki.typography.line-height.body-2}",
+          "$description": "Label line height."
+        },
         "track-width": {
           "$value": "{ki.space.16xl}",
           "$description": "dimension used by the switch component for track width at size xl."

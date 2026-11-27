@@ -12,6 +12,7 @@ import { defineCustomElement as defineKiCodeBlock } from '@kimen/elements/compon
 export const KiCodeBlock: StencilVueComponent<JSX.KiCodeBlock> = /*@__PURE__*/ defineContainer<JSX.KiCodeBlock>('ki-code-block', defineKiCodeBlock, [
   'language',
   'filename',
+  'headerHidden',
   'lineNumbers',
   'highlight',
   'wrap',

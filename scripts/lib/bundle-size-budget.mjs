@@ -147,6 +147,7 @@ const BASE_BUDGETS = {
 export function deriveBundleSizeBudgets(components) {
   const limits = {
     mcpApps: { ...BASE_BUDGETS.mcpApps },
+    mcpAppsProfileStylesheet: { raw: 0 },
     mcpServer: { ...BASE_BUDGETS.mcpServer },
     genuiHost: { ...BASE_BUDGETS.genuiHost },
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },
