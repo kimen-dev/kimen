@@ -322,14 +322,17 @@
   --ki-icon-stroke-width:var(--ki-glyph-stroke-width);
   --ki-link-bg:var(--ki-surface-transparent);
   --ki-link-fg:var(--ki-text-primary-high-em);
+  --ki-link-hover-fg:inherit;
   --ki-link-neutral-bg:var(--ki-surface-transparent);
   --ki-link-neutral-fg:var(--ki-text-high-em);
+  --ki-link-neutral-hover-fg:inherit;
   --ki-link-bg-image:var(--ki-surface-image-none);
   --ki-link-underline-thickness:var(--ki-typography-underline-thickness);
   --ki-link-underline-thickness-hover:var(--ki-typography-underline-thickness-hover);
   --ki-link-underline-offset:var(--ki-typography-underline-offset);
   --ki-link-radius:var(--ki-corner-inline);
   --ki-link-font-family:var(--ki-typography-family-body);
+  --ki-link-font-weight:inherit;
   --ki-link-icon-size:var(--ki-typography-inline-icon-size);
   --ki-link-icon-gap:var(--ki-typography-inline-icon-gap);
   --ki-markdown-bg:var(--ki-surface-transparent);

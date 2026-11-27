@@ -14,7 +14,12 @@ const MATERIAL3_STYLE_ID = 'kimen-material3-tokens-test-style';
 
 // These declarations defer to context. Chromium reports an empty custom
 // property when its root declaration is the CSS-wide keyword inherit.
-const inheritedDefaults = ['--ki-code-keyword-weight'] as const;
+const inheritedDefaults = [
+  '--ki-code-keyword-weight',
+  '--ki-link-font-weight',
+  '--ki-link-hover-fg',
+  '--ki-link-neutral-hover-fg',
+] as const;
 
 function injectStylesheet(_css: string, _id = STYLE_ID): void {
   const style = document.createElement('style');

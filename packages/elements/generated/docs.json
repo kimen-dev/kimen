@@ -15516,12 +15516,16 @@
           "text": "- Descriptive link text. Use phrasing content without nested interactive controls."
         },
         {
+          "name": "slot",
+          "text": "end - Trailing icon before the external marker. Use a decorative ki-icon with inherited size."
+        },
+        {
           "name": "part",
           "text": "link - The native anchor that renders the link and receives focus."
         }
       ],
       "usage": {
-        "examples": "## Read a related page\n\n```html\n<p>Read the <ki-link href=\"/docs/catalog\">catalog contract</ki-link> before adding a component.</p>\n```\n\n## Open an external resource\n\n```html\n<ki-link href=\"https://github.com/kimen-dev/kimen\" external>Source on GitHub</ki-link>\n```\n\n## Link from standalone navigation\n\n```html\n<nav aria-label=\"Resources\">\n  <ki-link href=\"/docs\" underline=\"hover\">Documentation</ki-link>\n  <ki-link href=\"/changelog\" variant=\"neutral\" underline=\"hover\">Changelog</ki-link>\n</nav>\n```\n\n## Navigate from a guarded surface\n\nSupply `href` and the default text slot. The surface URL policy applies.\nLeave the action binding unset for native navigation.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-link\",\n    \"props\": { \"href\": \"/docs/catalog\" },\n    \"slots\": { \"\": [\"Catalog contract\"] }\n  }\n}\n```\n"
+        "examples": "## Read a related page\n\n```html\n<p>Read the <ki-link href=\"/docs/catalog\">catalog contract</ki-link> before adding a component.</p>\n```\n\n## Open an external resource\n\n```html\n<ki-link href=\"https://github.com/kimen-dev/kimen\" external>Source on GitHub</ki-link>\n```\n\n## Link from standalone navigation\n\n```html\n<nav aria-label=\"Resources\">\n  <ki-link href=\"/docs\" underline=\"hover\">Documentation</ki-link>\n  <ki-link href=\"/changelog\" variant=\"neutral\" underline=\"hover\">Changelog</ki-link>\n</nav>\n```\n\n## Add a trailing icon\n\nRegister the `arrow-right` glyph with `@kimen/elements/icons/arrow-right` and\ndefine `ki-icon`. The `end` slot spaces the icon using the link's icon gap\ntoken. Keep the icon's default inherited size to use the link's icon size.\n\n```html\n<ki-link href=\"/docs/catalog\" variant=\"neutral\" style=\"--ki-link-font-weight: 500\">\n  Catalog contract<ki-icon slot=\"end\" name=\"arrow-right\"></ki-icon>\n</ki-link>\n```\n\n## Navigate from a guarded surface\n\nSupply `href` and the default text slot. The surface URL policy applies.\nLeave the action binding unset for native navigation.\n\n```json\n{\n  \"version\": 1,\n  \"root\": {\n    \"component\": \"ki-link\",\n    \"props\": { \"href\": \"/docs/catalog\" },\n    \"slots\": { \"\": [\"Catalog contract\"] }\n  }\n}\n```\n"
       },
       "props": [
         {
@@ -15777,6 +15781,10 @@
         {
           "name": "",
           "docs": "Descriptive link text. Use phrasing content without nested interactive controls."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing icon before the external marker. Use a decorative ki-icon with inherited size."
         }
       ],
       "parts": [

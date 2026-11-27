@@ -1049,7 +1049,8 @@ export const catalogStructure: Catalog = {
         "variant": {"type":"enum","values":["neutral","primary"],"description":"","default":"primary"}
       },
       "slots": {
-        "": ""
+        "": "",
+        "end": ""
       },
       "tag": "ki-link",
       "whenNotToUse": "",

@@ -9,6 +9,10 @@
         "$value": "{ki.text.primary-high-em}",
         "$description": "Accent ink for primary links."
       },
+      "hover-fg": {
+        "$value": "{ki.foundation.keyword.inherit}",
+        "$description": "Primary hover ink. Defaults to the resting ink."
+      },
       "neutral-bg": {
         "$value": "{ki.surface.transparent}",
         "$description": "Transparent backing for neutral link text."
@@ -16,6 +20,10 @@
       "neutral-fg": {
         "$value": "{ki.text.high-em}",
         "$description": "Body ink for neutral links."
+      },
+      "neutral-hover-fg": {
+        "$value": "{ki.foundation.keyword.inherit}",
+        "$description": "Neutral hover ink. Defaults to the resting ink."
       },
       "bg-image": {
         "$value": "{ki.surface-image.none}",
@@ -41,13 +49,17 @@
         "$value": "{ki.typography.family.body}",
         "$description": "Body typeface used by link text."
       },
+      "font-weight": {
+        "$value": "{ki.foundation.keyword.inherit}",
+        "$description": "Link weight. Defaults to the surrounding text weight."
+      },
       "icon-size": {
         "$value": "{ki.typography.inline-icon.size}",
-        "$description": "External link icon edge relative to the inherited text size."
+        "$description": "Trailing and external icon edge."
       },
       "icon-gap": {
         "$value": "{ki.typography.inline-icon.gap}",
-        "$description": "Space between the label and the external link icon."
+        "$description": "Spacing before each trailing icon."
       }
     }
   }

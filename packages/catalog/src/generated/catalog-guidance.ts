@@ -912,7 +912,8 @@ export const catalogGuidance: CatalogGuidance = {
       "variant": "Ink role. Primary uses accent ink and neutral uses body ink."
     },
     "slots": {
-      "": "Descriptive link text. Use phrasing content without nested interactive controls."
+      "": "Descriptive link text. Use phrasing content without nested interactive controls.",
+      "end": "Trailing icon before the external marker. Use a decorative ki-icon with inherited size."
     },
     "whenNotToUse": "perform an action on the current page. Use ki-button variant=\"ghost\" for that.",
     "whenToUse": "navigate to a page, section, or resource. Use a descriptive label and keep the default underline in running text. Leave the action binding unset for native navigation."

@@ -5,7 +5,9 @@ import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { commands, page, server, userEvent } from 'vitest/browser';
 
 import { expectAccessible, parkPointer } from '../../../browser-tests/axe';
+import { defineCustomElement as defineIcon } from '../../../dist/components/ki-icon.js';
 import { defineCustomElement } from '../../../dist/components/ki-link.js';
+import '../../../icons/arrow-right.js';
 
 const styles = document.createElement('style');
 const fixture = document.createElement('main');
@@ -15,6 +17,7 @@ const media = commands as unknown as {
 
 beforeAll(() => {
   defineCustomElement();
+  defineIcon();
   // Give the entire text run the same typeface and canvas as a consumer page.
   styles.textContent = `${tokensCss}\n${pageCss}`;
   document.head.append(styles);
@@ -216,3 +219,62 @@ it('S8 resolves both foregrounds from the semantic ink tokens', async () => {
     theme.style.removeProperty('--ki-text-high-em');
   }
 });
+
+it('S11 sizes and spaces the trailing glyph before the external indicator', async () => {
+  await media.emulateReducedMotion('reduce');
+  try {
+    fixture.innerHTML = `<ki-link href="/catalog" external><span>Catalog</span><ki-icon slot="end" name="arrow-right"></ki-icon></ki-link>`;
+    const part = await anchor();
+    const host = fixture.querySelector<HTMLElement>('ki-link');
+    const icon = host?.querySelector('ki-icon');
+    const label = host?.querySelector('span');
+    const external = part.querySelector('svg');
+    if (!host || !icon || !label || !external) throw new Error('Missing link content');
+    host.style.setProperty('--ki-link-icon-gap', '14px');
+    host.style.setProperty('--ki-link-icon-size', '26px');
+    await expect
+      .poll(() => icon.shadowRoot?.querySelector('svg')?.getBoundingClientRect().width)
+      .toBe(26);
+    expect(getComputedStyle(icon).marginInlineStart).toBe('14px');
+    expect(icon.getBoundingClientRect().left - label.getBoundingClientRect().right).toBeCloseTo(14);
+    expect(external.getBoundingClientRect().left - icon.getBoundingClientRect().right).toBeCloseTo(
+      14,
+    );
+    await expect
+      .element(page.getByRole('link', { name: 'Catalog (opens in a new tab)', exact: true }))
+      .toBeVisible();
+  } finally {
+    await media.emulateReducedMotion(null);
+  }
+});
+
+it.each([
+  ['primary', '--ki-link-fg', '--ki-link-hover-fg'],
+  ['neutral', '--ki-link-neutral-fg', '--ki-link-neutral-hover-fg'],
+])(
+  'S12 themes the %s hover ink and weight independently of the resting ink',
+  async (variant, restingToken, hoverToken) => {
+    await media.emulateReducedMotion('reduce');
+    try {
+      fixture.innerHTML = `<p style="font-weight: 700">Read the <ki-link href="/catalog" variant="${variant}">Catalog</ki-link>.</p>`;
+      const part = await anchor();
+      const host = fixture.querySelector<HTMLElement>('ki-link');
+      const link = page.getByRole('link', { name: 'Catalog' });
+      expect(getComputedStyle(part).fontWeight).toBe('700');
+      const rest = 'rgb(31, 74, 53)';
+      host?.style.setProperty(restingToken, rest);
+      await link.hover();
+      expect(getComputedStyle(part).color).toBe(rest);
+
+      host?.style.setProperty('--ki-link-font-weight', '500');
+      host?.style.setProperty(hoverToken, 'rgb(11, 70, 120)');
+      expect(getComputedStyle(part).fontWeight).toBe('500');
+      expect(getComputedStyle(part).color).toBe('rgb(11, 70, 120)');
+
+      await parkPointer();
+      expect(getComputedStyle(part).color).toBe(rest);
+    } finally {
+      await media.emulateReducedMotion(null);
+    }
+  },
+);

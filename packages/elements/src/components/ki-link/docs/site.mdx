@@ -27,6 +27,20 @@ announcement. Override `external-label` to localize the announcement.
 `download`, `target`, and `rel` follow native anchor behavior, with
 `external` taking precedence over `target`.
 
+## Trailing icon
+
+Use `slot="end"` for a decorative `ki-icon` with its default inherited
+size. It uses `--ki-link-icon-size` and `--ki-link-icon-gap`. When
+`external` is set, the external marker follows the custom icon.
+
+<Demo code={`<ki-link href="#api-reference" variant="neutral">API reference<ki-icon slot="end" name="info"></ki-icon></ki-link>`} />
+
+## Theming
+
+Set `--ki-link-hover-fg` for primary links or `--ki-link-neutral-hover-fg`
+for neutral links. Both default to the resting ink. Set `--ki-link-font-weight`
+to override the inherited weight.
+
 ## API reference
 
 <CemApi tag="ki-link" />

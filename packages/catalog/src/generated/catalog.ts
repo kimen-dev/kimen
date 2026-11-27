@@ -2481,6 +2481,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       };
       readonly slots: {
         readonly "": "Descriptive link text. Use phrasing content without nested interactive controls.";
+        readonly end: "Trailing icon before the external marker. Use a decorative ki-icon with inherited size.";
       };
       readonly tag: "ki-link";
       readonly whenNotToUse: "perform an action on the current page. Use ki-button variant=\"ghost\" for that.";

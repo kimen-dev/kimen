@@ -33,6 +33,18 @@ perform an action on the current page. Use ki-button variant="ghost" for that.
 </nav>
 ```
 
+## Add a trailing icon
+
+Register the `arrow-right` glyph with `@kimen/elements/icons/arrow-right` and
+define `ki-icon`. The `end` slot spaces the icon using the link's icon gap
+token. Keep the icon's default inherited size to use the link's icon size.
+
+```html
+<ki-link href="/docs/catalog" variant="neutral" style="--ki-link-font-weight: 500">
+  Catalog contract<ki-icon slot="end" name="arrow-right"></ki-icon>
+</ki-link>
+```
+
 ## Navigate from a guarded surface
 
 Supply `href` and the default text slot. The surface URL policy applies.
@@ -68,6 +80,7 @@ Leave the action binding unset for native navigation.
 ## Slots
 
 - (default): Descriptive link text. Use phrasing content without nested interactive controls.
+- `end`: Trailing icon before the external marker. Use a decorative ki-icon with inherited size.
 
 ## Parts
 
@@ -91,10 +104,13 @@ None.
 - `--ki-link-bg-image`: Optional image overlay for link backing.
 - `--ki-link-fg`: Accent ink for primary links.
 - `--ki-link-font-family`: Body typeface used by link text.
-- `--ki-link-icon-gap`: Space between the label and the external link icon.
-- `--ki-link-icon-size`: External link icon edge relative to the inherited text size.
+- `--ki-link-font-weight`: Link weight. Defaults to the surrounding text weight.
+- `--ki-link-hover-fg`: Primary hover ink. Defaults to the resting ink.
+- `--ki-link-icon-gap`: Spacing before each trailing icon.
+- `--ki-link-icon-size`: Trailing and external icon edge.
 - `--ki-link-neutral-bg`: Transparent backing for neutral link text.
 - `--ki-link-neutral-fg`: Body ink for neutral links.
+- `--ki-link-neutral-hover-fg`: Neutral hover ink. Defaults to the resting ink.
 - `--ki-link-radius`: Corner radius used by the link focus outline.
 - `--ki-link-underline-offset`: Space between link text and its underline.
 - `--ki-link-underline-thickness`: Resting underline thickness.

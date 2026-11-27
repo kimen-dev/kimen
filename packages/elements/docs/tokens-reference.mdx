@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 564 semantic
-and 2449 component tokens. Values are the resolved **onmars light**
+and 2452 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -2191,10 +2191,13 @@ aliases is recomputed only on the root and on theme roots.
 | `--ki-link-bg-image` | `none` | Optional image overlay for link backing. |
 | `--ki-link-fg` | `#ad411c` | Accent ink for primary links. |
 | `--ki-link-font-family` | `'Instrument Sans', system-ui, sans-serif` | Body typeface used by link text. |
-| `--ki-link-icon-gap` | `0.25em` | Space between the label and the external link icon. |
-| `--ki-link-icon-size` | `0.9em` | External link icon edge relative to the inherited text size. |
+| `--ki-link-font-weight` | `inherit` | Link weight. Defaults to the surrounding text weight. |
+| `--ki-link-hover-fg` | `inherit` | Primary hover ink. Defaults to the resting ink. |
+| `--ki-link-icon-gap` | `0.25em` | Spacing before each trailing icon. |
+| `--ki-link-icon-size` | `0.9em` | Trailing and external icon edge. |
 | `--ki-link-neutral-bg` | `rgba(0, 0, 0, 0)` | Transparent backing for neutral link text. |
 | `--ki-link-neutral-fg` | `#181613` | Body ink for neutral links. |
+| `--ki-link-neutral-hover-fg` | `inherit` | Neutral hover ink. Defaults to the resting ink. |
 | `--ki-link-radius` | `2px` | Corner radius used by the link focus outline. |
 | `--ki-link-underline-offset` | `0.2em` | Space between link text and its underline. |
 | `--ki-link-underline-thickness` | `1px` | Resting underline thickness. |
