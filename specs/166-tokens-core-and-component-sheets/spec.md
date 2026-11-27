@@ -429,7 +429,7 @@ Feature: A page loads only the token CSS its components need
     Scenario Outline: The token CSS of a page stays within its budget
       Given the published sheets of <page>, minified and brotli-compressed as a bundler ships them
       When the token budgets are measured
-      Then they weigh at most <budget> bytes, against the full sheet's budget of 20,724
+      Then they weigh at most <budget> bytes, against the full sheet's budget of 19,057
 
       Examples:
         | page                                | budget |

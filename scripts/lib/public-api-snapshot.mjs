@@ -429,6 +429,34 @@ const publicModuleSymbols = ({ checker, sourceFile, label }) => {
   );
 };
 
+// The global HTMLKi*Element interfaces inherit a host type alongside
+// Components.Ki*, which is already snapshotted through the Components export.
+// Follow those host bases so changes to inherited members reach the API gate.
+function elementBaseTypes(program, checker, sourceFile) {
+  const globalTypes = sourceFile.statements.find(
+    (statement) =>
+      ts.isModuleDeclaration(statement) && statement.flags & ts.NodeFlags.GlobalAugmentation,
+  );
+  if (!globalTypes?.body || !ts.isModuleBlock(globalTypes.body)) return [];
+
+  const declarations = new Set();
+  for (const statement of globalTypes.body.statements) {
+    if (!ts.isInterfaceDeclaration(statement) || !/^HTMLKi\w+Element$/u.test(statement.name.text)) {
+      continue;
+    }
+    for (const base of statement.heritageClauses?.flatMap((clause) => clause.types) ?? []) {
+      if (!ts.isIdentifier(base.expression)) continue;
+      const symbol = checker.getTypeAtLocation(base).getSymbol();
+      for (const declaration of symbol?.getDeclarations() ?? []) {
+        if (!program.isSourceFileDefaultLibrary(declaration.getSourceFile())) {
+          declarations.add(declaration);
+        }
+      }
+    }
+  }
+  return [...new Set([...declarations].map(printSignature))].sort();
+}
+
 const packageModules = ({ packageName, definitions, sources }) => {
   const entries = Object.entries(definitions);
   const declarationTargets = entries
@@ -488,6 +516,9 @@ const packageModules = ({ packageName, definitions, sources }) => {
             sourceFile,
             label: `${packageName} module ${subpath}`,
           }),
+          ...(packageName === ELEMENTS_PACKAGE && subpath === './components'
+            ? { elementBaseTypes: elementBaseTypes(program, checker, sourceFile) }
+            : {}),
         },
       ];
     }),

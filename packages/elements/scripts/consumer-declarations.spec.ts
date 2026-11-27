@@ -55,9 +55,17 @@ beforeAll(async () => {
   const imports = entries.map(
     (specifier, index) => `import type * as module${String(index)} from '${specifier}';`,
   );
+  const readinessAssertions = `
+type KimenTag = Extract<keyof HTMLElementTagNameMap, \`ki-\${string}\`>;
+type TagsWithReadiness = {
+  [Tag in KimenTag]: 'componentOnReady' extends keyof HTMLElementTagNameMap[Tag] ? Tag : never;
+}[KimenTag];
+type AssertNever<T extends never> = T;
+export type NoElementReadiness = AssertNever<TagsWithReadiness>;
+`;
   await writeFile(
     join(consumer, 'consumer.ts'),
-    `${imports.join('\n')}\n\nexport type Modules = [${imports.map((_, index) => `typeof module${String(index)}`).join(', ')}];\n`,
+    `${imports.join('\n')}\n\nexport type Modules = [${imports.map((_, index) => `typeof module${String(index)}`).join(', ')}];\n${readinessAssertions}`,
   );
 }, 120_000);
 

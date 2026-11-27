@@ -7,11 +7,17 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Release entries
 are generated through [the release pull request](./docs/releasing.md).
 
-## [Unreleased] (0.5.0)
+## [Unreleased]
 
 ### Added
 
 - **emitter:** Match model glyph choices to the host's `icons` list, shorten catalog prompts with `verbosity: 'compact'`, and declare exact field keys for named button actions in strict schemas and tools (specs 168–170).
+
+### Removed
+
+- **elements:** **Breaking:** `HTMLKi*Element` types no longer declare
+  `componentOnReady()`. Await `customElements.whenDefined(tag)` for
+  registration and wait for the component's first render if you need its DOM.
 
 ## [0.4.0] - 2026-11-26
 
