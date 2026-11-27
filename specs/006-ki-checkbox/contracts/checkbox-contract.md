@@ -1,5 +1,7 @@
 # Public contract: `<ki-checkbox>`
 
+Boolean attributes follow the [2026-11-27 founder decision](../spec.md).
+
 The behavior contract is `specs/006-ki-checkbox/feature.feature` (S1–S21).
 This document freezes the public API surface the scenarios observe. Any
 deviation discovered during implementation re-enters through the spec, not
@@ -22,7 +24,7 @@ state.
 
 | Attribute | Type | Default | Contract |
 |---|---|---|---|
-| `checked` | `boolean` | `false` | Live binary selection state. User activation (pointer on control or label, Space) toggles it with native parity and fires composed `input` then `change` (S1, S6, S20). Boolean PRESENCE semantics: any present value renders checked — `checked="false"` renders checked (S4, FR-010); unchecked is expressed only by omitting the attribute. Because the attribute reflects live state, it is NOT a `defaultChecked`: the reset baseline is captured when the control becomes form-associated (S13, FR-006). Programmatic assignment is silent (no events). |
+| `checked` | `boolean` | `false` | Live binary selection state. User activation (pointer on control or label, Space) toggles it with native parity and fires composed `input` then `change` (S1, S6, S20). Because the attribute reflects live state, it is NOT a `defaultChecked`: the reset baseline is captured when the control becomes form-associated (S13, FR-006). Programmatic assignment is silent (no events). |
 | `indeterminate` | `boolean` | `false` | Presentation-only mixed state: renders the dash mark (winning visually over `checked`) and is exposed to assistive technology as "mixed" (S8). The submitted value follows `checked` alone (S12). Any user toggle clears it, removes the attribute and inverts `checked` (S3 → checked, S19 → unchecked). Form reset never touches it. |
 | `disabled` | `boolean` | `false` | No state change (S2), out of tab order, exposed as unavailable to AT (S9), excluded from form data; `fieldset[disabled]` honored (S15). |
 | `required` | `boolean` | `false` | An unchecked required checkbox is invalid (`valueMissing`, platform-computed) and blocks form submission (S14); the invalid appearance surfaces only after a blocked submission attempt or an invalidating user toggle, never on first render. |
@@ -90,7 +92,7 @@ Guarantees:
   ki-radio-group), an immediate on/off effect (future ki-switch),
   triggering an action (ki-button), unlabeled/icon-only usage (no
   accessible name), and writing `checked="false"` to mean unchecked —
-  boolean attributes follow presence semantics; omit the attribute to
+  boolean attributes follow omit the attribute to
   express unchecked.
 
 ## Compatibility

@@ -1,5 +1,7 @@
 # Feature Specification: ki-tabs
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
@@ -227,17 +229,21 @@ Feature: Tabs
     When the page renders
     Then no tab is selected and no panel is visible
 
-  # S19
-  Scenario Outline: A disabled attribute written as "false" keeps a tab unselectable
-    Given tabs "Settings" with "Email" selected and a "Billing" tab
-    When the attribute disabled="false" is written on the "Billing" tab <moment>
-    Then neither pointer nor keyboard selects "Billing" and it is exposed unavailable
-    And the attribute stays present on the "Billing" tab with an empty value
+  # S20
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a tab within a tab group
+    When an attribute (disabled) is <write> <moment>
+    Then the corresponding property reads <state>
 
     Examples:
-      | moment                 |
-      | in the initial markup  |
-      | after the first render |
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S4
@@ -330,7 +336,7 @@ Feature: Tabs
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S12, S18, S19 | |
+| Core behavior | S1, S2, S3, S12, S18, S20 | |
 | Keyboard path | S4, S5, S6, S13, S14, S15, S16 | |
 | Assistive-tech outcome | S7, S8 | |
 | Form participation | | Tabs switch content views and never contribute form data; ki-tabs is not form-associated (the charter's form-associated set is input, textarea, select, checkbox, radio-group, switch) |

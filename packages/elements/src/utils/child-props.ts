@@ -13,7 +13,6 @@
  */
 interface ChildElement {
   getAttribute(name: string): string | null;
-  hasAttribute(name: string): boolean;
 }
 
 /** The child's `value`, or `null` when it declares none. */
@@ -22,11 +21,10 @@ export function childValue(child: ChildElement): string | null {
   return typeof value === 'string' ? value : child.getAttribute('value');
 }
 
-/**
- * Whether the child is disabled. A present attribute disables whatever the
- * property says (boolean presence, see `boolean-presence.ts`): before the
- * child loads, an authored `disabled="false"` has been parsed to `false`.
- */
+/** Whether the child is disabled, including before its definition is registered. */
 export function childDisabled(child: ChildElement): boolean {
-  return (child as { disabled?: unknown }).disabled === true || child.hasAttribute('disabled');
+  const disabled = (child as { disabled?: unknown }).disabled;
+  if (typeof disabled === 'boolean') return disabled;
+  const attribute = child.getAttribute('disabled');
+  return attribute !== null && attribute !== 'false';
 }

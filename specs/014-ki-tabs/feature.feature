@@ -35,17 +35,21 @@ Feature: Tabs
     When the page renders
     Then no tab is selected and no panel is visible
 
-  # S19
-  Scenario Outline: A disabled attribute written as "false" keeps a tab unselectable
-    Given tabs "Settings" with "Email" selected and a "Billing" tab
-    When the attribute disabled="false" is written on the "Billing" tab <moment>
-    Then neither pointer nor keyboard selects "Billing" and it is exposed unavailable
-    And the attribute stays present on the "Billing" tab with an empty value
+  # S20
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a tab within a tab group
+    When an attribute (disabled) is <write> <moment>
+    Then the corresponding property reads <state>
 
     Examples:
-      | moment                 |
-      | in the initial markup  |
-      | after the first render |
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S4

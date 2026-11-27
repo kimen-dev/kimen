@@ -1,5 +1,7 @@
 # Feature specification: Sources
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 **Issue** #396
 
 **Branch** `feat/396-ki-sources`
@@ -14,7 +16,7 @@ title, domain, and optional snippet.
 
 | Family | Scenario IDs | Coverage |
 | --- | --- | --- |
-| Core behavior | S1–S6, S15 | Citation order, disclosure, previews, URL policy, streaming and isolated lists. |
+| Core behavior | S1–S6, S15, S16 | Citation order, disclosure, previews, URL policy, streaming and isolated lists. |
 | Keyboard path | S7, S8 | Focus opens the preview, Escape dismisses it, Enter opens the list and focuses the source. |
 | Assistive-tech outcome | S9 | Link names, ordered list and axe. |
 | Form participation | N/A | The elements display and navigate references. They have no value to submit, validate or reset. |
@@ -120,6 +122,22 @@ Feature: Sources
     When they are rendered with different permitted source origins
     Then each citation resolves to the source in its own answer
     And a reference without a source on its surface remains unavailable
+
+  # S16
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a sources disclosure
+    When an attribute (open) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S7

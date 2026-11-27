@@ -1,5 +1,7 @@
 # Feature Specification: ki-dialog
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
@@ -179,9 +181,7 @@ documented defaults (closed, default appearance).
   dialog; the dialog itself never exceeds the viewport.
 - No focusable content inside the dialog: focus lands on the dialog surface
   itself, so Escape still works.
-- Boolean attribute semantics: `close-on-backdrop="false"` still enables
-  backdrop dismissal (HTML boolean attributes); catalog guidance tells agents
-  to omit the attribute entirely instead.
+- `close-on-backdrop="false"` keeps backdrop dismissal off.
 - A second dialog opened from inside an open dialog stacks above it and
   Escape closes the topmost first; stacking is platform behavior, not an
   advertised v1 pattern.
@@ -237,17 +237,21 @@ Feature: Dialog
     When the application closes it programmatically
     Then the dialog closes and exactly one ki-close event reports a programmatic dismissal
 
-  # S16
-  Scenario Outline: An open attribute written as "false" opens the dialog
-    Given a dialog headed "Delete account?"
-    When the attribute open="false" is written on the dialog <moment>
-    Then the dialog is presented modally above an inert page
-    And the attribute stays present on the dialog with an empty value
+  # S17
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a dialog
+    When an attribute (open and close-on-backdrop) is <write> <moment>
+    Then the corresponding property reads <state>
 
     Examples:
-      | moment                 |
-      | in the initial markup  |
-      | after the first render |
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S6
@@ -311,7 +315,7 @@ Feature: Dialog
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S15, S16 | |
+| Core behavior | S1, S2, S3, S4, S5, S15, S17 | |
 | Keyboard path | S6, S7, S8 | |
 | Assistive-tech outcome | S9, S10 | |
 | Form participation | | N/A — ki-dialog is not a form control and carries no name/value; the charter's form-associated set for this batch is input, textarea, select, checkbox, radio-group and switch. Forms compose inside the dialog's slots and keep their native behavior untouched. |
@@ -364,7 +368,7 @@ Feature: Dialog
 - **FR-012**: Unrecognized attributes or attribute values MUST NOT break
   rendering: the dialog ignores them and keeps its documented defaults
   (agent-generated markup is not trusted to be valid). Boolean attributes
-  follow platform semantics: presence means true.
+  follow the common rule for markup and later writes (S17).
 - **FR-013**: The component MUST expose `dialog`, `heading`, `body` and
   `footer` parts for the customization ladder (tokens first, then parts,
   then slots).

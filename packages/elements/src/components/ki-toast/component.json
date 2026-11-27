@@ -11,6 +11,9 @@
       "raw": 22451,
       "gzip": 6363,
       "brotli": 4680
+    },
+    "worstCase": {
+      "brotli": 12386
     }
   }
 }

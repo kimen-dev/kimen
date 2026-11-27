@@ -101,3 +101,19 @@ Feature: ki-checkbox-group collects independent choices
     Given a heading "Where do you ship?" and a checkbox group labeled "Pick all that apply" that references the heading
     When the page renders
     Then the accessibility tree exposes a group named "Where do you ship? Pick all that apply"
+
+  # S16
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a checkbox group
+    When an attribute (disabled and label-hidden) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |

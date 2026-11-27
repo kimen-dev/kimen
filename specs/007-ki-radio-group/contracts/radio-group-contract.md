@@ -1,5 +1,7 @@
 # Public contract: `<ki-radio-group>` + `<ki-radio>`
 
+Boolean attributes follow the [2026-11-27 founder decision](../spec.md).
+
 The behavior contract is `specs/007-ki-radio-group/feature.feature`
 (S1–S25). This document freezes the public API surface the scenarios
 observe — for BOTH elements of the composite (the sub-component belongs to
@@ -30,15 +32,15 @@ an undocumented member is a build failure).
 | `name` | `string` | — | Form-data key for the selected option's value (S12). Omitted → no entry. |
 | `value` | `string` | `""` | PROJECTION of the selection: always equals the selected option's value, or `""` when none is selected (FR-002). The attribute declares the initial selection (first option whose value matches; a value matching no option leaves the group unselected and operable — S4). Assigning the property selects the first matching option, or none, SILENTLY (no `input`/`change`; FR-003). Not reflected: serialized markup keeps the initial declaration; live state is read from the property. With duplicate option values, user selection is tracked by option identity; programmatic assignment is first-match (spec edge case). |
 | `label` | `string` | — | The group's visible label and accessible-name source (S10, FR-009). Rendered as text in `part="label"`, wired to the internal `role="radiogroup"` via `aria-labelledby`. A11y-required: an unlabeled group is misuse and fails the a11y gate. |
-| `required` | `boolean` | `false` | While no selection exists, the group is `valueMissing` (platform-computed and platform-localized — research D7), blocks form submission and is reported invalid (S13); exposed as required to AT (S22); invalid exposure appears only after a blocked submission attempt, never on first render (S23). A selection preserved on a disabled option still satisfies `required` (S24). Boolean presence semantics. |
-| `disabled` | `boolean` | `false` | Every option inert and unfocusable, the group skipped by Tab (S20) and exposed as unavailable (S19); excluded from form data; `fieldset[disabled]` honored identically (S15). Boolean presence semantics. |
+| `required` | `boolean` | `false` | While no selection exists, the group is `valueMissing` (platform-computed and platform-localized — research D7), blocks form submission and is reported invalid (S13); exposed as required to AT (S22); invalid exposure appears only after a blocked submission attempt, never on first render (S23). A selection preserved on a disabled option still satisfies `required` (S24). |
+| `disabled` | `boolean` | `false` | Every option inert and unfocusable, the group skipped by Tab (S20) and exposed as unavailable (S19); excluded from form data; `fieldset[disabled]` honored identically (S15). |
 
 ## Attributes / properties — `ki-radio`
 
 | Attribute | Type | Default | Contract |
 |---|---|---|---|
 | `value` | `string` | `"on"` | The submission value the GROUP projects when this option is selected (S1, S12). Defaults to `"on"` for native parity. |
-| `disabled` | `boolean` | `false` | Not selectable (S3), not focusable, skipped by arrow navigation (S7), exposed as unavailable (S11). Disabling the SELECTED option preserves the selection and the group's value but withholds the form entry and moves the group's tab stop, dispatching no events (S24, FR-006). Boolean presence semantics; reflected (the group observes this attribute). |
+| `disabled` | `boolean` | `false` | Not selectable (S3), not focusable, skipped by arrow navigation (S7), exposed as unavailable (S11). Disabling the SELECTED option preserves the selection and the group's value but withholds the form entry and moves the group's tab stop, dispatching no events (S24, FR-006). Reflected (the group observes this attribute). |
 
 `ki-radio` has NO checked/selected member. Selection is owned by the
 group and is never authored on an option (FR-002) — an agent or app that

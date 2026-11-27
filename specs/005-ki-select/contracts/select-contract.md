@@ -1,5 +1,7 @@
 # Public contract: `<ki-select>` + `<ki-option>`
 
+Boolean attributes follow the [2026-11-27 founder decision](../spec.md).
+
 The behavior contract is `specs/005-ki-select/feature.feature` (S1–S25).
 This document freezes the public API surface the scenarios observe — for
 BOTH elements of the composite (the sub-component belongs to the parent's
@@ -36,15 +38,15 @@ an undocumented member is a build failure).
 | `placeholder` | `string` | — | Rendered in `part="value"` while no selection exists (S2, S5, FR-003). Application-provided — no hardcoded user-visible strings. |
 | `name` | `string` | — | Form-data key for the selected option's value (S13). Omitted → no entry. |
 | `value` | `string` | `""` | PROJECTION of the selection: always equals the selected option's value, or `""` when none is selected (FR-004). The attribute declares the initial selection (first option whose value matches). Assigning the property selects the first matching option, or none, SILENTLY (no `input`/`change`; FR-005). A value matching no option — declared, assigned, or left dangling after `ki-option` children change — falls back to no selection and the placeholder (S5, S25); reading then returns `""`. Not reflected: serialized markup keeps the initial declaration; live state is read from the property. With duplicate option values, user selection is tracked by option identity; value resolution is first-match (spec edge case). |
-| `disabled` | `boolean` | `false` | The select never opens, is unreachable in the tab order and is exposed as unavailable (S3); excluded from form data; `fieldset[disabled]` honored identically (S16). Disabling while the popup is open closes it without committing (edge). Boolean presence semantics. |
-| `required` | `boolean` | `false` | The select is invalid exactly when the value it would submit is `""` — no selection, or a selected option carrying an empty-string value (native placeholder-option parity, FR-009). Blocks form submission via constraint validation with a platform-computed, platform-localized message (research D7); reported invalid (`aria-invalid` on the trigger) only after a blocked submission attempt, never on first render (S14). Boolean presence semantics. |
+| `disabled` | `boolean` | `false` | The select never opens, is unreachable in the tab order and is exposed as unavailable (S3); excluded from form data; `fieldset[disabled]` honored identically (S16). Disabling while the popup is open closes it without committing (edge). |
+| `required` | `boolean` | `false` | The select is invalid exactly when the value it would submit is `""` — no selection, or a selected option carrying an empty-string value (native placeholder-option parity, FR-009). Blocks form submission via constraint validation with a platform-computed, platform-localized message (research D7); reported invalid (`aria-invalid` on the trigger) only after a blocked submission attempt, never on first render (S14). |
 
 ## Attributes / properties — `ki-option`
 
 | Attribute | Type | Default | Contract |
 |---|---|---|---|
 | `value` | `string` | the option's trimmed label text (native `<option>` parity, FR-002) | The submission/selection value the SELECT projects when this option is selected (S1, S13). |
-| `disabled` | `boolean` | `false` | Not selectable (S4), skipped by the keyboard highlight (S22), exposed as unavailable in the popup (FR-008). Boolean presence semantics; reflected (the select's roster observer watches it). |
+| `disabled` | `boolean` | `false` | Not selectable (S4), skipped by the keyboard highlight (S22), exposed as unavailable in the popup (FR-008). Reflected (the select's roster observer watches it). |
 
 `ki-option` has NO selected/checked member. Selection is owned by the
 select and is never authored on an option (spec assumption) — an agent or

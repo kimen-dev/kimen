@@ -154,6 +154,12 @@ Feature: Toast
     When the user clicks "Help"
     Then the "Help" button is activated
 
+  # S46
+  Scenario: Removing a boolean override restores its default on state
+    Given a toast with dismissible set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true
+
   # Family: keyboard path
   # S22
   Scenario: Tab reaches the action and then the dismiss button, with visible focus

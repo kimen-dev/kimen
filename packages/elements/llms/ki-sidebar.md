@@ -69,6 +69,8 @@ opaque profile identifier in the storage key, or omit the key and persist
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-sidebar`: the default, only the tokens ki-sidebar needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `collapse-label` (string, default 'Collapse sidebar'): Accessible toggle name while the sidebar is expanded.

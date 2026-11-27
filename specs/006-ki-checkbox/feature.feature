@@ -37,31 +37,28 @@ Feature: Checkbox
     When the user activates the label
     Then the checkbox is checked
 
-  # S4
-  Scenario: Non-canonical boolean values never break rendering
-    Given a checkbox declared with checked="false"
-    When the page renders
-    Then the checkbox renders checked
-
-  # S22
-  Scenario Outline: A boolean attribute written as "false" keeps presence semantics
-    Given a checkbox labeled "Email notifications"
-    When the attribute <attribute>="false" is written on the checkbox <moment>
-    Then the checkbox behaves as <state>
-    And the attribute stays present on the checkbox with an empty value
-
-    Examples:
-      | attribute | moment                 | state    |
-      | disabled  | in the initial markup  | disabled |
-      | disabled  | after the first render | disabled |
-      | required  | after the first render | required |
-
   # S23
   Scenario: A script click checks the checkbox as it checks a native checkbox
     Given an unchecked checkbox labeled "Email notifications"
     When a script clicks the checkbox
     Then the checkbox is checked
     And the page observes exactly one input event followed by exactly one change event
+
+  # S24
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a checkbox
+    When an attribute (checked, indeterminate, disabled, and required) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S5

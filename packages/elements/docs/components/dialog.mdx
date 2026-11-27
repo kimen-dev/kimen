@@ -28,9 +28,8 @@ When open, the native dialog enters the top layer and the page behind is inert.
 </ki-dialog>
 ```
 
-Low-risk dialogs may opt into backdrop light-dismiss. Boolean presence
-semantics apply: `close-on-backdrop="false"` still enables it — omit the
-attribute entirely for critical confirmations:
+Low-risk dialogs may opt into backdrop light-dismiss. Critical confirmations
+keep backdrop dismissal off by default.
 
 ```html
 <ki-dialog id="shortcuts" heading="Keyboard shortcuts" close-on-backdrop>

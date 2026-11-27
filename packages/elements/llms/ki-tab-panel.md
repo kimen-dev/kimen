@@ -53,6 +53,8 @@ The first panel with a given `value` owns it — duplicate or orphan panels stay
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-tab-panel`: the default, only the tokens ki-tab-panel needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `value` (string, default ''): Pairing identifier shared with a `ki-tab`. The first panel with a value owns it; duplicate or orphan panels stay hidden.

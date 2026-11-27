@@ -1,5 +1,7 @@
 # Feature Specification: ki-switch
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
@@ -161,14 +163,12 @@ observe well-defined rendering.
 **Acceptance Scenarios**:
 
 1. **Given** a switch declared with `checked="maybe"`, **When** the page
-   renders, **Then** the switch renders on (boolean attribute presence
-   semantics) and remains operable.
+   renders, **Then** the switch renders on and remains operable.
 
 ### Edge Cases
 
-- Boolean attribute semantics: any `checked` attribute value — including
-  nonsense written by an agent — counts as presence and renders the switch
-  on; malformed markup never breaks rendering.
+- `checked="false"` keeps the switch off. Other present values, including
+  `checked="maybe"`, turn it on.
 - A switch with no slotted label has no accessible name; the catalog
   documents the label as required content (invalid usage, flagged by audits).
 - Disabled applied while the switch has focus: focus moves on, no toggle
@@ -228,24 +228,28 @@ Feature: Switch
     Then the switch is on
     And the page observes exactly one change event
 
-  # S22
-  Scenario Outline: A disabled attribute written as "false" keeps the switch disabled
-    Given a switch labeled "Email notifications" that is off
-    When the attribute disabled="false" is written on the switch <moment>
-    Then the user cannot toggle the switch and no change event is observed
-    And the attribute stays present on the switch with an empty value
-
-    Examples:
-      | moment                 |
-      | in the initial markup  |
-      | after the first render |
-
   # S25
   Scenario: A script click toggles the switch as it toggles a native checkbox
     Given a switch labeled "Newsletter" that is off
     When a script clicks the switch
     Then the switch is on
     And the page observes exactly one input event followed by exactly one change event
+
+  # S27
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a switch
+    When an attribute (checked and disabled) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S5
@@ -390,7 +394,7 @@ Feature: Switch
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S17, S22, S25 | |
+| Core behavior | S1, S2, S3, S4, S17, S25, S27 | |
 | Keyboard path | S5, S6, S20 | |
 | Assistive-tech outcome | S7, S8, S9 | |
 | Form participation | S10, S11, S12, S13, S18, S21 | |
@@ -400,10 +404,8 @@ Feature: Switch
 
 ### Functional Requirements
 
-- **FR-001**: The switch MUST expose a `checked` boolean attribute,
-  reflected, defaulting to off. Attribute presence — with any value,
-  including malformed ones — means on, per native boolean-attribute
-  semantics; malformed markup never breaks rendering.
+- **FR-001**: The switch MUST expose a reflected `checked` boolean attribute
+  defaulting to off and follow the common boolean attribute rule (S27).
 - **FR-002**: Toggling — pointer activation on the control or its slotted
   label, or keyboard activation — MUST flip the state immediately and
   dispatch composed `input` and `change` events, exactly one of each per
@@ -424,8 +426,8 @@ Feature: Switch
   it contributes `name`/`value` (default value "on", native checkbox parity;
   a custom `value` attribute replaces the default) to the submitted data;
   when off it contributes nothing; form reset restores the reset default —
-  captured once, from the presence of the `checked` attribute at the moment
-  the switch is associated with the form, and never updated afterwards by
+  captured from the parsed `checked` state when the switch is associated
+  with the form, and never updated afterwards by
   user toggles or programmatic `checked` mutations (both reflect to the
   attribute; the default is re-captured only when the switch is associated
   with a form again); a disabled ancestor fieldset or form disables it
@@ -552,8 +554,7 @@ Feature: Switch
   existing muted colors are retained to preserve the visual defaults.
 - ki-switch exposes no enum attributes, so the mandatory unknown-value
   fallback scenario (002 S11 pattern) is adapted to boolean-attribute
-  robustness (S4): any `checked` value counts as presence and rendering
-  never breaks.
+  robustness (S4): `checked="maybe"` renders on and remains operable.
 - The label is required content: the default slot is the accessible-name
   source and usage without it is documented as invalid in the catalog.
 - MarsUI verification, corrected 2026-07-25: the `Toggle` component set

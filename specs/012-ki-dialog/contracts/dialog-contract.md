@@ -1,5 +1,7 @@
 # Public contract: `<ki-dialog>`
 
+Boolean attributes follow the [2026-11-27 founder decision](../spec.md).
+
 The behavior contract is `specs/012-ki-dialog/feature.feature` (S1–S15).
 This document freezes the public API surface the scenarios observe. Any
 deviation discovered during implementation re-enters through the spec, not
@@ -23,9 +25,9 @@ undocumented member is a build failure). All reflect.
 
 | Attribute | Type | Default | Contract |
 |---|---|---|---|
-| `open` | `boolean` | `false` | Reflected live state (FR-001): present shows the dialog modally (page behind inert — S1), absent hides it; every close path removes it. May be declared in initial markup (opens on load; close then falls back to the body — Edge Cases). Setting/removing it is observably identical to `show()`/`close()`. |
+| `open` | `boolean` | `false` | Reflected live state (FR-001): true opens the dialog modally (page behind inert — S1), false hides it; every close path removes it. May be declared in initial markup (opens on load; close then falls back to the body — Edge Cases). Setting/removing it is observably identical to `show()`/`close()`. |
 | `heading` | `string` | — | The dialog title, rendered as an `<h2>` in the `heading` part and wired as the accessible name via same-root `aria-labelledby` (S9, FR-008). A heading is expected on every dialog; absent/empty renders no title and leaves the dialog UNNAMED — documented invalid usage (APG requires a name), never a crash. No `heading-level` attribute in v1 (recorded additive candidate). |
-| `close-on-backdrop` | `boolean` | `false` | Opt-in backdrop dismissal (FR-007). Absent: backdrop clicks never close (S3 — a stray click must not destroy a critical confirmation). Present: a completed click on the backdrop closes with reason `backdrop` (S4). HTML boolean semantics: `close-on-backdrop="false"` still opts in — omit the attribute instead (Edge Cases; catalog guidance for agents). |
+| `close-on-backdrop` | `boolean` | `false` | Opt-in backdrop dismissal (FR-007). When true, a completed backdrop click closes with reason `backdrop` (S4). A false value keeps the dialog open (S17). |
 
 No `variant`, `tone`, `size`, full-screen mode, built-in close ("X")
 button, default user-visible strings, auto-close timer or dialog–form
@@ -139,8 +141,7 @@ Guarantees:
   supplementary hints (ki-tooltip), long forms or multi-step flows
   (navigate, or the future full-screen variant), menus and pickers (future
   components). Robustness notes: unrecognized attributes leave the dialog
-  closed with defaults (S5); omit `close-on-backdrop` entirely rather than
-  setting it to `"false"`.
+  closed with defaults (S5).
 
 ## Compatibility
 

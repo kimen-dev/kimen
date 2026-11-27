@@ -45,6 +45,8 @@ write. Use a button or link for those actions.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-copy-button`: the default, only the tokens ki-copy-button needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `copied-label` (string, default 'Copied'): Polite announcement after a successful write. Override for localized interfaces.

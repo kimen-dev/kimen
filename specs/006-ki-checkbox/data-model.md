@@ -1,5 +1,7 @@
 # Phase 1 Data Model: ki-checkbox
 
+Boolean attributes follow the [2026-11-27 founder decision](spec.md).
+
 No persistent data. The model is the component's public state surface and
 its token vocabulary. The normative API contract lives in
 [contracts/checkbox-contract.md](./contracts/checkbox-contract.md); this
@@ -9,10 +11,10 @@ file models values, defaults and transitions.
 
 | Attribute | Values | Default | Reflected | Invalid/absent behavior |
 |---|---|---|---|---|
-| `checked` | boolean | `false` | **yes — live state** (charter style-driving rule; the attribute always agrees with the visual state and cannot play the native `defaultChecked` role, FR-006) | presence semantics: ANY present value renders checked, including `checked="false"` (S4, FR-010); unchecked = attribute omitted |
-| `indeterminate` | boolean | `false` | yes — property and attribute stay in sync in both directions (FR-002) | presentation-only; presence semantics as above; any user toggle clears it and removes the attribute |
-| `disabled` | boolean | `false` | yes (forwarded to the internal input) | presence semantics; not focusable, no state change, excluded from form data (S2, S9) |
-| `required` | boolean | `false` | yes (forwarded) | presence semantics; unchecked + required = `valueMissing` (S14) |
+| `checked` | boolean | `false` | **yes — live state** (charter style-driving rule; the attribute always agrees with the visual state and cannot play the native `defaultChecked` role, FR-006) | `checked="false"` starts unchecked (S24, FR-010) |
+| `indeterminate` | boolean | `false` | yes — property and attribute stay in sync in both directions (FR-002) | presentation-only; any user toggle clears it and removes the attribute |
+| `disabled` | boolean | `false` | yes (forwarded to the internal input) | not focusable, no state change, excluded from form data (S2, S9) |
+| `required` | boolean | `false` | yes (forwarded) | unchecked + required = `valueMissing` (S14) |
 | `name` | string | — | yes (host-level, FACE) | omitted → the checkbox contributes no form entry |
 | `value` | string | `"on"` (effective — the prop may be unset; the submitted value falls back to `"on"`) | yes | read only when checked (S10); never submitted when unchecked (S11) |
 
@@ -22,8 +24,8 @@ file models values, defaults and transitions.
                         reset baseline = checked state captured at
                         formAssociatedCallback (FR-006)
                                  │
-  first render ──────────────────┘  checked from attribute PRESENCE (S4)
-       │                             indeterminate from attribute presence
+  first render ──────────────────┘  checked from parsed markup (S24)
+       │                             indeterminate from parsed markup
        │
        ├─ user toggle (pointer on control or label, Space)
        │      → native input activation: input.checked inverts,

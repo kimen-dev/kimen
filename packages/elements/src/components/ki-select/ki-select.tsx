@@ -10,10 +10,6 @@ import {
   Watch,
 } from '@stencil/core';
 import { isOutsideOverlay, setOverlayOpen } from '../../utils/anchored-overlay';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 import { childDisabled, childValue } from '../../utils/child-props';
 import {
   FieldMessage,
@@ -25,7 +21,6 @@ import {
 import { LabelHint } from '../../utils/label-hint';
 import { extendTypeahead, typeaheadIndex } from '../../utils/typeahead';
 import {
-  normalizeBooleanPresence,
   optionLabelText,
   optionValue,
   resolveSelection,
@@ -141,7 +136,7 @@ export class KiSelect {
 
   /**
    * Prevents opening, removes the trigger from keyboard reach, and excludes
-   * the select from form submission. Boolean presence semantics apply.
+   * the select from form submission.
    *
    * @default false
    */
@@ -203,7 +198,6 @@ export class KiSelect {
   private readonly triggerId = 'trigger';
   private readonly listboxId = 'listbox';
   private mutationObserver: MutationObserver | undefined;
-  private presenceObserver: MutationObserver | undefined;
   private triggerElement?: HTMLButtonElement;
   private listboxElement?: HTMLElement;
   private donorElement?: HTMLSelectElement;
@@ -228,10 +222,7 @@ export class KiSelect {
   private typedAt = 0;
 
   private get effectiveDisabled(): boolean {
-    return (
-      normalizeBooleanPresence(this.host.getAttribute('disabled') ?? this.disabled) ||
-      this.formDisabled
-    );
+    return this.disabled || this.formDisabled;
   }
 
   private get selectedOption(): RosterOption | null {
@@ -310,17 +301,8 @@ export class KiSelect {
 
   connectedCallback(): void {
     this.host.addEventListener('focusout', this.handleFocusOut);
-    // Presence semantics for attributes written after hydration: Stencil parses
-    // `disabled="false"` to `false` and would remove the attribute on reflect.
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      ['disabled', 'required'],
-      this.handlePresentAttribute,
-    );
     // Removal from the document hides a popover; a select moved while open
-    // shows its list again where it lands.
-    // Only an explicit opening arms outside-pointer dismiss.
+    // shows its list again where it lands. Only an explicit opening arms outside-pointer dismiss.
     setOverlayOpen(this.listboxElement, this.open);
     // disconnectedCallback released the options observer, and the options may
     // have changed while the select was out of the document: a select that is
@@ -328,11 +310,6 @@ export class KiSelect {
     // loading again. On the first connection the slot is not rendered yet:
     // componentDidLoad reads the options.
     this.reconcileRoster();
-  }
-
-  componentWillLoad(): void {
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
-    this.required = booleanFromAttributePresence(this.required, this.host.hasAttribute('required'));
   }
 
   componentDidLoad(): void {
@@ -344,17 +321,7 @@ export class KiSelect {
     this.host.removeEventListener('focusout', this.handleFocusOut);
     document.removeEventListener('pointerdown', this.handleOutsidePointerDown);
     this.mutationObserver?.disconnect();
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = undefined;
   }
-
-  private readonly handlePresentAttribute = (attribute: string): void => {
-    if (attribute === 'disabled' && !this.disabled) {
-      this.disabled = true;
-    } else if (attribute === 'required' && !this.required) {
-      this.required = true;
-    }
-  };
 
   @Watch('value')
   protected valueChanged(nextValue: string): void {
@@ -685,8 +652,6 @@ export class KiSelect {
     // Stencil un-reflects a cleared property only at the next render, so the
     // attribute is still present when the watch calls this and would keep a
     // select whose `required` was just set to `false` blocking its form.
-    // Presence semantics already reached the property (componentWillLoad and
-    // the attribute observer).
     const valueMissing = selectValueMissing(this.required, submittedValue);
     const customError = this.customErrorWithdrawn ? '' : fieldText(this.customError);
     const applicationError = customError || this.customValidity;

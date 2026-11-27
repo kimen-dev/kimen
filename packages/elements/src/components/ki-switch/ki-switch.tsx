@@ -9,13 +9,9 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 import { FieldMessage, fieldDescribedBy, fieldInvalid, fieldText } from '../../utils/field-message';
 import { forwardHostClick } from '../../utils/host-click';
-import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
+import { resolveSubmittedValue } from './ki-switch.form';
 
 export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -58,9 +54,7 @@ export class KiSwitch {
   @AttachInternals() private readonly internals!: ElementInternals;
 
   /**
-   * Live on/off state. Boolean presence semantics apply: any present
-   * `checked` attribute value, including `checked="false"` or malformed
-   * agent output, means on. Omit the attribute to express off.
+   * Live on/off state.
    * When to use: set the initial on state for a setting that applies
    * immediately.
    * When NOT to use: do not use a switch for choices saved only on submit;
@@ -149,7 +143,6 @@ export class KiSwitch {
 
   private input: HTMLInputElement | undefined;
   private resetChecked = false;
-  private presenceObserver: MutationObserver | undefined;
   private releaseHostClick: (() => void) | undefined;
 
   private get effectiveDisabled(): boolean {
@@ -227,27 +220,10 @@ export class KiSwitch {
   }
 
   connectedCallback(): void {
-    // Boolean presence semantics must survive hydration. Stencil natively adopts
-    // `checked=""`/removal, but parses a present-but-falsy `checked="false"` set
-    // after load to `false`; restore presence semantics for that case. Armed on
-    // every connection: disconnectedCallback releases the observer, and a
-    // switch that is moved in the document connects again without loading
-    // again.
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      ['checked', 'disabled'],
-      this.handlePresentAttribute,
-    );
     // `host.click()` and a page <label> for the switch toggle it, as on a
     // native checkbox (S25).
     this.releaseHostClick?.();
     this.releaseHostClick = forwardHostClick(this.host, () => this.input);
-  }
-
-  componentWillLoad(): void {
-    this.checked = checkedFromMarkup(this.host.hasAttribute('checked'), this.checked);
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
   }
 
   componentDidLoad(): void {
@@ -256,22 +232,9 @@ export class KiSwitch {
   }
 
   disconnectedCallback(): void {
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = undefined;
     this.releaseHostClick?.();
     this.releaseHostClick = undefined;
   }
-
-  // Correct ONLY the case Stencil gets wrong: a present-but-falsy attribute set
-  // after hydration. Absence and Stencil's own reflect writes already agree with
-  // the prop, so skipping them avoids fighting the reflection on every toggle.
-  private readonly handlePresentAttribute = (attribute: string): void => {
-    if (attribute === 'checked' && !this.checked) {
-      this.checked = true;
-    } else if (attribute === 'disabled' && !this.disabled) {
-      this.disabled = true;
-    }
-  };
 
   @Watch('checked')
   protected checkedChanged(): void {
@@ -299,7 +262,7 @@ export class KiSwitch {
   }
 
   formAssociatedCallback(): void {
-    this.resetChecked = checkedFromMarkup(this.host.hasAttribute('checked'), this.checked);
+    this.resetChecked = this.checked;
     this.syncFormValue();
   }
 

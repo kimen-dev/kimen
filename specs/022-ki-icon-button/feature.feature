@@ -121,3 +121,14 @@ Feature: Icon button
     When the person activates it
     Then the icon button becomes selected and reports the new pressed state
     And the icon button emits a change carrying the new state
+
+  # S20
+  Scenario Outline: Removing an optional state returns the icon button to an ordinary action
+    Given an icon button with the <attribute> attribute set to "false"
+    When the application removes the attribute
+    Then the button no longer exposes the corresponding accessibility state
+
+    Examples:
+      | attribute |
+      | pressed   |
+      | expanded  |

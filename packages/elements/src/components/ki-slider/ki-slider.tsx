@@ -1,9 +1,5 @@
 import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
 import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
-import {
   formatSlider,
   moveBySteps,
   normalizeScale,
@@ -137,7 +133,6 @@ export class KiSlider {
   ];
   private initialValue: string | number | undefined;
   private drag: Drag | undefined;
-  private presenceObserver?: MutationObserver;
 
   private get scale() {
     return normalizeScale(this.min, this.max, this.step);
@@ -151,20 +146,12 @@ export class KiSlider {
     return this.orientation === 'vertical';
   }
 
-  connectedCallback(): void {
-    this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
-      this.disabled = true;
-    });
-  }
-
   componentWillLoad(): void {
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
     this.initialValue = this.value;
     this.syncSelection();
   }
 
   disconnectedCallback(): void {
-    this.presenceObserver?.disconnect();
     this.endDrag();
   }
 

@@ -49,6 +49,8 @@ Use `open` to drive visibility and listen for `ki-open` and `ki-close` to observ
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-popover`: the default, only the tokens ki-popover needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `appearance` ("default" | "rich" | undefined, default 'default'): Rich shares the tooltip's raised surface, body and heading styles. With `kind="toggletip"` it enables actions and moves focus inside on open.

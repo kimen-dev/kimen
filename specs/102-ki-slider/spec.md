@@ -1,5 +1,7 @@
 # Slider
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 **Feature branch** `feat/387-ki-slider`  
 **Issue** #387  
 **Design source** Kimen design system, Components → Proposed → Slider
@@ -59,7 +61,7 @@ list of choices.
 
 | Family | Scenarios | Justification when N/A |
 | --- | --- | --- |
-| Core behavior | S1, S2, S11 | |
+| Core behavior | S1, S2, S11, S13 | |
 | Keyboard path | S2, S3, S9 | |
 | Assistive-tech outcome | S4, S9 | |
 | Form participation | S5, S6, S12 | |
@@ -159,4 +161,20 @@ Feature: ki-slider selects one value or an interval
     When the fieldset is disabled
     Then the slider is skipped in the keyboard sequence
     And form data omits Volume
+
+  # S13
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a slider
+    When an attribute (disabled) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 ```

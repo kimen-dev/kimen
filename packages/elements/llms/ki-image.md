@@ -46,6 +46,8 @@ accessibility tree.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-image`: the default, only the tokens ki-image needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `alt` (string | undefined): Describe what the image shows for the task at hand. Required and nonblank for an informative image. Omit it for a decorative image.

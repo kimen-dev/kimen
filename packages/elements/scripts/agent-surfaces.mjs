@@ -412,15 +412,14 @@ export function buildLlmsIndex(docs, pkg, preamble, options = {}) {
  * the preamble template (the guides, FR-015).
  */
 export function buildLlmsDocuments(docs, preamble, inputs = {}) {
+  const { sections } = splitPreamble(preamble);
+  const booleanGuide = sections.find(({ file }) => file === 'boolean-attributes.md');
   return [
     ...(docs.components ?? []).map((component) => [
       componentDocumentFile(component),
-      buildComponentDocument(component, inputs),
+      buildComponentDocument(component, inputs, booleanGuide),
     ]),
-    ...splitPreamble(preamble).sections.map((section) => [
-      section.file,
-      `# ${section.title}\n\n${section.text}\n`,
-    ]),
+    ...sections.map((section) => [section.file, `# ${section.title}\n\n${section.text}\n`]),
   ];
 }
 
@@ -446,7 +445,7 @@ export function buildGenUiDocuments(genUi, packages) {
   });
 }
 
-function buildComponentDocument(component, inputs) {
+function buildComponentDocument(component, inputs, booleanGuide) {
   const usage = usageText(component);
 
   return `${[
@@ -456,6 +455,7 @@ function buildComponentDocument(component, inputs) {
     `## When not to use\n\n${getDocsTag(component, 'whenNotToUse')}`,
     ...(usage === null ? [] : [`## Examples\n\n${usage}`]),
     documentSection('Token stylesheets', tokenStylesheetsFor(component.tag)),
+    ...(booleanGuide ? [`[${booleanGuide.title}](${booleanGuide.file}).`] : []),
     ...componentFacets(component, inputs).map(([label, entries]) =>
       documentSection(label, entries),
     ),

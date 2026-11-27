@@ -75,6 +75,8 @@ navigation destinations in the consuming app.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-top-nav`: the default, only the tokens ki-top-nav needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.

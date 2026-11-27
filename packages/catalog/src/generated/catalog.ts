@@ -759,7 +759,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       readonly props: {
         readonly checked: {
           readonly type: "boolean";
-          readonly description: "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.";
+          readonly description: "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.";
           readonly default: false;
         };
         readonly "custom-error": {
@@ -812,7 +812,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
         readonly "": "Visible label content. This is the accessible name source and a\nnative activation surface.";
       };
       readonly tag: "ki-checkbox";
-      readonly whenNotToUse: "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked.";
+      readonly whenNotToUse: "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, or unlabeled/icon-only usage.";
       readonly whenToUse: "selecting one or more independent options that a form submits\nlater, including a \"select all\" parent that presents partial selection with\n`indeterminate`. Always provide a visible label in the default slot.";
     };
     readonly "ki-checkbox-group": {
@@ -1591,7 +1591,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
         };
         readonly "close-on-backdrop": {
           readonly type: "boolean";
-          readonly description: "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.";
+          readonly description: "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.";
           readonly default: false;
         };
         readonly "confirm-label": {
@@ -3759,7 +3759,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
         };
         readonly disabled: {
           readonly type: "boolean";
-          readonly description: "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.";
+          readonly description: "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission.";
           readonly default: false;
         };
         readonly "error-text": {
@@ -4378,7 +4378,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       readonly props: {
         readonly checked: {
           readonly type: "boolean";
-          readonly description: "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.";
+          readonly description: "Live on/off state.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.";
           readonly default: false;
         };
         readonly "custom-error": {
@@ -4422,7 +4422,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       readonly props: {
         readonly disabled: {
           readonly type: "boolean";
-          readonly description: "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.";
+          readonly description: "Prevents selection by every modality and exposes the unavailable state.";
           readonly default: false;
         };
         readonly selected: {

@@ -50,6 +50,22 @@ Feature: Sources
     Then each citation resolves to the source in its own answer
     And a reference without a source on its surface remains unavailable
 
+  # S16
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a sources disclosure
+    When an attribute (open) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
+
   # Family: keyboard path
   # S7
   Scenario: Keyboard focus shows and dismisses the citation preview

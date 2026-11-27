@@ -1,5 +1,7 @@
 # Feature specification for `ki-checkbox-group`
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 **Branch** `feat/367-ki-checkbox-group`
 
 **Issue** #367
@@ -13,7 +15,7 @@ option and the shared field-message presentation for help and errors.
 
 | Family | Scenarios | N/A justification |
 | --- | --- | --- |
-| Core behavior | S1, S11, S12 | |
+| Core behavior | S1, S11, S12, S16 | |
 | Keyboard path | S2, S3, S9 | |
 | Assistive-tech outcome | S4, S6, S7, S13, S14, S15 | |
 | Form participation | S5, S6, S7, S8, S9, S11 | |
@@ -152,4 +154,20 @@ Feature: ki-checkbox-group collects independent choices
     Given a heading "Where do you ship?" and a checkbox group labeled "Pick all that apply" that references the heading
     When the page renders
     Then the accessibility tree exposes a group named "Where do you ship? Pick all that apply"
+
+  # S16
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a checkbox group
+    When an attribute (disabled and label-hidden) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 ```

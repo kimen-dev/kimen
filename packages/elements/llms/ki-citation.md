@@ -33,6 +33,8 @@ preview, and Enter opens the list and moves focus to the source link.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-citation`: the default, only the tokens ki-citation needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `ref` (string, required): ID or source-id of the source. Use the `ref` attribute in HTML and `citationRef` in JSX so framework refs remain available.

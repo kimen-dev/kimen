@@ -1,5 +1,8 @@
 # Phase 0 Research: ki-switch
 
+> The boolean parsing details below describe the original implementation.
+> The [2026-11-27 founder decision](spec.md) supersedes them (F4).
+
 Decisions that resolve every open technical question in the plan. Sources:
 the spec (M3 inventory note; onmars styles from the 001 token vocabulary —
 see the correction note below on the MarsUI reading), the WAI-ARIA APG

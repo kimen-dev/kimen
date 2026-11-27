@@ -43,6 +43,8 @@ use one app breakpoint to hide this bar and show the wider navigation.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-mobile-nav`: the default, only the tokens ki-mobile-nav needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string, default 'Main'): Accessible name of the landmark. Supply a distinct name when the page has more than one navigation landmark.

@@ -1,5 +1,8 @@
 # Implementation Plan: ki-checkbox
 
+> The boolean parsing details below describe the original implementation.
+> The [2026-11-27 founder decision](spec.md) supersedes them (F4).
+
 <!-- KIMEN OVERRIDE of plan-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Articles I-XI (Constitution
      Check below enumerates all of them) and Art. III's definition of done. -->

@@ -49,6 +49,8 @@ A typical placement — trailing status on a list entry:
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-badge`: the default, only the tokens ki-badge needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `size` ("md" | "sm" | "xs", default 'md'): Metric scale (`--ki-badge-{size}-*` tokens): 20, 24 or 28px tall in onmars, with 12px text at every size. An unrecognized value falls back to the `md` metrics the same way.
