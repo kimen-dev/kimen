@@ -133,6 +133,46 @@ test('S8: kimen-tokens is the only installed command', () => {
   assert.deepEqual(Object.keys(manifest.bin), ['kimen-tokens']);
 });
 
+test('S9: color tokens accept CSS colors and substitutions and reject incompatible literals', () => {
+  for (const value of [
+    'red',
+    'transparent',
+    'currentColor',
+    'CanvasText',
+    '#1234',
+    'rgb(0 0 0 / 50%)',
+    'hsl(60 100% 50%)',
+    'hwb(60 0% 0%)',
+    'lab(50% 20 30)',
+    'lch(50% 20 30)',
+    'oklab(.5 .1 .1)',
+    'oklch(.5 .1 30)',
+    'color(display-p3 1 0 0)',
+    'color-mix(in oklab, red, blue)',
+    'light-dark(black, white)',
+    'rgb(from red r g b)',
+    'var(--brand, red)',
+    'env(--brand, red)',
+    'attr(data-brand type(<color>), red)',
+    'inherit',
+    'initial',
+    'unset',
+    'revert',
+    'revert-layer',
+  ]) {
+    assert.deepEqual(checkTheme(`:root { --ki-text-supporting: ${value}; }`), [], value);
+  }
+
+  for (const value of ['"red"', '0', '1px', '50%', 'url(red)', 'URL("red")', 'src("red")', '']) {
+    const findings = checkTheme(`:root { --ki-text-supporting: ${value}; }`);
+    assert.deepEqual(
+      findings.map(({ code, severity, token }) => [code, severity, token]),
+      [['type-mismatch', 'error', '--ki-text-supporting']],
+      value,
+    );
+  }
+});
+
 test('the CLI reports each mistake and preserves input order across files', () => {
   const clean = filePath('../dist/css/base.css');
   const result = cli('check-theme', fixture, clean, '--json');
@@ -145,6 +185,7 @@ test('the CLI reports each mistake and preserves input order across files', () =
       'unknown-token',
       'unitless-dimension',
       'private-token',
+      'type-mismatch',
       'type-mismatch',
       'type-mismatch',
       'type-mismatch',

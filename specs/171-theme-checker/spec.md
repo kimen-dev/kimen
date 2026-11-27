@@ -27,6 +27,8 @@ also override a theme's assignments to their base tokens.
   mismatches and preference overrides of mode-controlled base tokens are
   errors. Give nearby public names where possible, and prefer the unprefixed
   name when a guessed `md-` infix is the only difference.
+- Color tokens accept the shapes of CSS color values and substitutions.
+  Clearly incompatible literals, such as strings, numbers and URLs, are errors.
 - Accept CSS keywords used for sizing, including `auto`, and leave the
   arithmetic and substitution inside CSS functions to the browser. Issue an
   `unread-token` warning only for a token in the inventory's component layer
@@ -91,13 +93,19 @@ Feature: Check Kimen theme CSS
     Given the @kimen/tokens package is installed
     When the author looks up its executable
     Then kimen-tokens is the package's only command
+
+  # S9
+  Scenario: Clearly incompatible color values get a type error
+    Given a theme assigns CSS colors, substitutions, and incompatible literals to a color token
+    When the author checks the stylesheet
+    Then only the incompatible literals produce type errors
 ```
 
 ### Scenario Family Coverage
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9 | |
 | Keyboard path | | This tool has no component interaction. |
 | Assistive-tech outcome | | This tool has no rendered surface. |
 | Form participation | | This tool has no form control. |

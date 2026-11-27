@@ -48,3 +48,9 @@ Feature: Check Kimen theme CSS
     Given the @kimen/tokens package is installed
     When the author looks up its executable
     Then kimen-tokens is the package's only command
+
+  # S9
+  Scenario: Clearly incompatible color values get a type error
+    Given a theme assigns CSS colors, substitutions, and incompatible literals to a color token
+    When the author checks the stylesheet
+    Then only the incompatible literals produce type errors

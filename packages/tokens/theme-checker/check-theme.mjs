@@ -128,10 +128,13 @@ function checkValue(type, value, report) {
       if (mismatch) report('type-mismatch', 'Use a CSS length, percentage or sizing keyword.');
     }
   }
+  // Color keywords and functions can grow with CSS. Reject incompatible
+  // token shapes, including the function form of a quoted URL.
   if (
     type === 'color' &&
-    single &&
-    (kind === T.Dimension || kind === T.Number || kind === T.Percentage)
+    kind !== T.Ident &&
+    kind !== T.Hash &&
+    (kind !== T.Function || /^(?:url|src)$/iu.test(identifier))
   ) {
     report('type-mismatch', 'Use a CSS color.');
   }
