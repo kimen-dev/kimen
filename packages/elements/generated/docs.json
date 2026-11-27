@@ -7367,7 +7367,7 @@
           "mutable": false,
           "attr": "approve-label",
           "reflectToAttr": false,
-          "docs": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+          "docs": "Approval text, such as \"Send email\". Required for pending HTML and all generated specs.",
           "docsTags": [],
           "values": [
             {
@@ -7474,7 +7474,7 @@
           "mutable": false,
           "attr": "deny-label",
           "reflectToAttr": false,
-          "docs": "Verb or short phrase for refusal, such as \"Keep draft\".",
+          "docs": "Refusal text, such as \"Keep draft\". Required for pending HTML and all generated specs.",
           "docsTags": [],
           "values": [
             {

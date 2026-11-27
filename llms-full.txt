@@ -2795,11 +2795,11 @@ element if another request for the same tool replaces a pending one.
 
 Attributes:
 - `action` (string, required): Tool identifier shown to the person and available for reporting by the host.
-- `approve-label` (string, required): Verb or short phrase that describes what approval does, such as "Send email".
+- `approve-label` (string, required): Approval text, such as "Send email". Required for pending HTML and all generated specs.
 - `approved-label` (string, default 'Approved'): Localized outcome text when the host marks the request approved.
 - `consequence` (string | undefined): Cost or irreversible effect to read before deciding, displayed as a warning note.
 - `denied-label` (string, default 'Denied'): Localized outcome text when the host marks the request denied.
-- `deny-label` (string, required): Verb or short phrase for refusal, such as "Keep draft".
+- `deny-label` (string, required): Refusal text, such as "Keep draft". Required for pending HTML and all generated specs.
 - `expired-label` (string, default 'Expired'): Localized outcome text when the host marks the request expired.
 - `heading` (string, required): Question naming the proposed action. Provide it before asking for a decision.
 - `remember` (boolean, default false): Offers an unchecked preference limited to this action in the current conversation.

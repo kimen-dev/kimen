@@ -8545,7 +8545,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+              "description": "Approval text, such as \"Send email\". Required for pending HTML and all generated specs.",
               "required": true
             },
             {
@@ -8580,7 +8580,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
+              "description": "Refusal text, such as \"Keep draft\". Required for pending HTML and all generated specs.",
               "required": true
             },
             {
@@ -8675,7 +8675,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+              "description": "Approval text, such as \"Send email\". Required for pending HTML and all generated specs.",
               "attribute": "approve-label",
               "reflects": false,
               "required": true
@@ -8722,7 +8722,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Verb or short phrase for refusal, such as \"Keep draft\".",
+              "description": "Refusal text, such as \"Keep draft\". Required for pending HTML and all generated specs.",
               "attribute": "deny-label",
               "reflects": false,
               "required": true
