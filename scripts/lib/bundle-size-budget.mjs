@@ -148,6 +148,19 @@ const BASE_BUDGETS = {
   fullSheetPages: { button: 29_936, tenComponents: 55_238 },
 };
 
+// Shared byte deltas from the second 0.6.0 integration pass against ec60e8a8.
+// The component allowances cover the raw MCP Apps growth. These deltas carry
+// the remaining artifact changes, preserving the release's measured headroom.
+const INTEGRATOR_060_SHARED_DELTAS = {
+  mcpApps: { gzip: 298, brotli: 429 },
+  mcpAppsData: { gzip: 49, brotli: 42 },
+  mcpAppsForm: { gzip: 50, brotli: 165 },
+  mcpServer: { raw: 3_762, gzip: 574, brotli: 505 },
+  genuiHost: { raw: 73, gzip: 10, brotli: 35 },
+  tokenStylesheets: { onmars: 24 },
+  fullSheetPages: { button: -10, tenComponents: -10 },
+};
+
 export function deriveBundleSizeBudgets(components) {
   const limits = {
     mcpApps: { ...BASE_BUDGETS.mcpApps },
@@ -160,6 +173,11 @@ export function deriveBundleSizeBudgets(components) {
     pages: { ...BASE_BUDGETS.pages },
     fullSheetPages: { ...BASE_BUDGETS.fullSheetPages },
   };
+  for (const [target, deltas] of Object.entries(INTEGRATOR_060_SHARED_DELTAS)) {
+    for (const [metric, bytes] of Object.entries(deltas)) {
+      limits[target][metric] += bytes;
+    }
+  }
   for (const { tag, metadata } of components) {
     for (const [target, allowances] of Object.entries(metadata.sizeBudget ?? {})) {
       // worstCase is a per-component ceiling (run-size-limit.mjs), not an aggregate allowance.
@@ -176,7 +194,7 @@ export function deriveBundleSizeBudgets(components) {
   return limits;
 }
 
-/** The shipped limits: the bases above plus every component's declared allowances. */
+/** The shipped limits: the bases, shared deltas, and each component's allowances. */
 export function readBundleSizeBudgets() {
   const componentsRoot = fileURLToPath(
     new URL('../../packages/elements/src/components/', import.meta.url),

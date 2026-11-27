@@ -10,7 +10,7 @@
   "catalogAction": "ki-copy",
   "sizeBudget": {
     "mcpApps": {
-      "raw": 10073,
+      "raw": 10446,
       "gzip": 3046,
       "brotli": 2542
     },
@@ -20,10 +20,16 @@
       "brotli": 2774
     },
     "worstCase": {
-      "brotli": 13151
+      "brotli": 13210
     },
     "tokenStylesheets": {
       "onmars": 164
+    },
+    "mcpAppsData": {
+      "raw": 33
+    },
+    "mcpAppsForm": {
+      "raw": 33
     }
   }
 }

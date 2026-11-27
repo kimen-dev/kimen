@@ -9,7 +9,7 @@
   "formBinding": "boolean",
   "sizeBudget": {
     "mcpApps": {
-      "raw": 1857,
+      "raw": 2642,
       "gzip": 453,
       "brotli": 220
     },
@@ -17,6 +17,12 @@
       "raw": 2949,
       "gzip": 678,
       "brotli": 248
+    },
+    "mcpAppsData": {
+      "raw": 405
+    },
+    "mcpAppsForm": {
+      "raw": 405
     }
   }
 }

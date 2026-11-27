@@ -11,7 +11,7 @@
   "catalog": true,
   "sizeBudget": {
     "mcpApps": {
-      "raw": 5966,
+      "raw": 6466,
       "gzip": 1707,
       "brotli": 1224
     },
@@ -22,6 +22,12 @@
     },
     "tokenStylesheets": {
       "onmars": 169
+    },
+    "mcpAppsData": {
+      "raw": 92
+    },
+    "mcpAppsForm": {
+      "raw": 92
     }
   }
 }
