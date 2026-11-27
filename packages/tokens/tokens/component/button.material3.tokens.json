@@ -399,6 +399,13 @@
             "$description": "Background of the selected ghost button toggle in Material 3."
           }
         }
+      },
+      "outline": {
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.s2}"
+          }
+        }
       }
     }
   }

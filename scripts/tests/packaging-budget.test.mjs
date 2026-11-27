@@ -124,6 +124,8 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
     mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
+    mcpAppsData: { raw: 342_450, gzip: 70_950, brotli: 60_516 },
+    mcpAppsForm: { raw: 431_801, gzip: 86_346, brotli: 71_987 },
     // Raised for specs 168–170, approved by the founder on 2026-11-27.
     mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 294_479 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
@@ -140,6 +142,8 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
     metadata: {
       sizeBudget: {
         mcpApps: { raw: 1200, gzip: 180, brotli: 165 },
+        mcpAppsData: { raw: 350 },
+        mcpAppsForm: { raw: 700 },
         mcpServer: { raw: 1300, gzip: 190, brotli: 175 },
         tokenStylesheets: { onmars: 100, material3: 50 },
         pages: { tenComponents: 40 },
@@ -154,6 +158,8 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
     mcpApps: { raw: 483_542, gzip: 80_315, brotli: 66_320 },
+    mcpAppsData: { raw: 342_800, gzip: 70_950, brotli: 60_516 },
+    mcpAppsForm: { raw: 432_501, gzip: 86_346, brotli: 71_987 },
     // Raised for specs 168–170, approved by the founder on 2026-11-27.
     mcpServer: { raw: 1_755_730, gzip: 318_512, brotli: 294_654 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },

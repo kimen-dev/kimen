@@ -178,8 +178,8 @@ export const catalogGuidance: CatalogGuidance = {
     },
     "slots": {
       "": "Label content. This is the accessible name source.",
-      "end": "Trailing icon or media. Follows writing direction.",
-      "start": "Leading icon or media. Follows writing direction."
+      "end": "Trailing icon or media in writing direction. Uses the start slot's sizing.",
+      "start": "Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size."
     },
     "whenNotToUse": "links in text (ki-link), icon-only actions, form values, or\nthe progress of a page or region (use ki-progress).",
     "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, confirming/destructive actions through tone,\npersistent actions such as Bold with `toggle`, or with `href` a call to\naction that navigates.\nWhile the action a button started is in progress, set `loading` on that\nbutton instead of disabling it."
@@ -823,7 +823,7 @@ export const catalogGuidance: CatalogGuidance = {
       "variant": "Visual hierarchy for the action. Use filled `primary` for the single main\naction, outlined `secondary` for supporting actions, `quaternary` for\nneutral icon actions, `ghost` for accent icon actions and `outline` for\nan unfilled action with a visible boundary.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent."
     },
     "slots": {
-      "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.",
+      "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.\nButton tokens size ki-icon glyphs in both slots, overriding their size.",
       "counter": "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.",
       "selected": "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill."
     },

@@ -445,8 +445,7 @@ describe('ki-button content alignment tokens', () => {
 
   it('S26 reassigning the alignment tokens alone left-aligns a wide two-line button', async () => {
     const wide = document.createElement('style');
-    wide.textContent =
-      'ki-button.wide { display: block; inline-size: 30rem; } ki-button.wide::part(button) { inline-size: 100%; }';
+    wide.textContent = 'ki-button.wide { --ki-button-inline-size: 30rem; }';
     document.head.append(wide);
     try {
       const el = await mount({ variant: 'outline', toggle: true }, twoLineLabel());

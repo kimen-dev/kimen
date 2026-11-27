@@ -563,8 +563,8 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       };
       readonly slots: {
         readonly "": "Label content. This is the accessible name source.";
-        readonly end: "Trailing icon or media. Follows writing direction.";
-        readonly start: "Leading icon or media. Follows writing direction.";
+        readonly end: "Trailing icon or media in writing direction. Uses the start slot's sizing.";
+        readonly start: "Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size.";
       };
       readonly tag: "ki-button";
       readonly whenNotToUse: "links in text (ki-link), icon-only actions, form values, or\nthe progress of a page or region (use ki-progress).";
@@ -2227,7 +2227,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
         };
       };
       readonly slots: {
-        readonly "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.";
+        readonly "": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.\nButton tokens size ki-icon glyphs in both slots, overriding their size.";
         readonly counter: "Decorative ki-counter in the block-start inline-end corner.\nInclude its meaning in the button label.";
         readonly selected: "Optional decorative icon shown when the toggle is selected.\nIf omitted, the default icon stays visible and an inline SVG takes a current-colour fill.";
       };

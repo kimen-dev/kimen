@@ -8,6 +8,7 @@
   --_ki-button-selected-fg: var(--ki-button-secondary-selected-fg);
   --_ki-button-toggle-radius: var(--ki-button-toggle-radius);
   --_ki-button-selected-radius: var(--ki-button-toggle-selected-radius);
+  --_ki-button-toggle-hover-overlay: var(--ki-button-toggle-unselected-hover-overlay);
   --_ki-button-height: var(--ki-button-md-height);
   --_ki-button-padding-inline: var(--ki-button-md-padding-inline);
   --_ki-button-gap: var(--ki-button-md-gap);
@@ -19,6 +20,7 @@
   --_ki-button-spinner-size: var(--ki-button-md-spinner-size);
 
   font-family: var(--ki-button-font-family);
+  inline-size: var(--ki-button-inline-size);
 }
 
 :host([size="xs"]) {
@@ -90,6 +92,10 @@
   --_ki-button-selected-bg: var(--ki-button-outline-selected-bg);
   --_ki-button-selected-fg: var(--ki-button-outline-selected-fg);
   --_ki-button-outline-border: var(--ki-button-outline-rest-border);
+  --_ki-button-hover-bg: var(--ki-button-outline-hover-bg);
+  --_ki-button-hover-fg: var(--ki-button-outline-hover-fg);
+  --_ki-button-hover-border: var(--ki-button-outline-hover-border);
+  --_ki-button-outline-selected-border: var(--ki-button-outline-selected-border);
 }
 
 :is(button, a) {
@@ -104,6 +110,7 @@
      label now carries the Text_wrap Space/xs padding itself, so the flex gap
      compensates to keep icon-to-text exactly at the composite. */
   gap: calc(var(--_ki-button-gap) - var(--ki-button-label-padding-inline));
+  inline-size: 100%;
 
   /* Content alignment is a token (integrator feedback 0.1.3, item 3): a wide
      button, such as a choice card, can start-align its content, and
@@ -146,6 +153,11 @@ slot[name="start"]::slotted(*),
 slot[name="end"]::slotted(*) {
   block-size: var(--_ki-button-icon-size);
   inline-size: var(--_ki-button-icon-size);
+}
+
+slot[name="start"]::slotted(ki-icon),
+slot[name="end"]::slotted(ki-icon) {
+  --_ki-icon-size: var(--_ki-button-icon-size);
 }
 
 /* Loading (specs/046-button-loading D4): the label and the slotted icons stay

@@ -443,6 +443,7 @@
   --ki-button-quaternary-danger-disabled-border:var(--ki-outline-low-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-neutral-disabled-border */
   --ki-button-ghost-selected-bg:var(--ki-surface-primary-high-em);
   --ki-button-border-width:0.0625rem;
+  --ki-button-outline-hover-bg:var(--ki-surface-s2);
   --ki-card-bg:var(--ki-surface-s1);
   --ki-card-border-color:var(--ki-outline-none);
   --ki-card-border-width:var(--ki-space-zero);
@@ -497,6 +498,7 @@
   --ki-fab-menu-item-border-color:var(--ki-outline-none);
   --ki-fab-menu-trigger-bg:var(--ki-surface-primary-low-em);
   --ki-fab-menu-trigger-fg:var(--ki-text-primary-on-primary-light);
+  --ki-icon-button-outline-hover-bg:var(--ki-surface-s2);
   --ki-icon-button-ghost-selected-bg:var(--ki-surface-primary-high-em);
   --ki-indicator-gap:var(--ki-space-md);
   --ki-indicator-dot-color:var(--ki-outline-control);
