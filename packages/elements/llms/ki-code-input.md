@@ -113,39 +113,44 @@ None.
 
 None.
 
-## CSS custom properties
+## Other CSS custom properties
 
-- `--ki-code-input-active-border`: Focus outline around the active or selected cells.
-- `--ki-code-input-backdrop-filter`: Optional compositing filter behind a code cell.
-- `--ki-code-input-bg`: Resting code cell fill.
-- `--ki-code-input-bg-image`: Optional image painted over the code cell fill.
-- `--ki-code-input-blink-duration`: Duration of one code caret blink.
-- `--ki-code-input-border`: Resting code cell boundary.
-- `--ki-code-input-cell-size`: Default code cell edge before applying control density.
-- `--ki-code-input-cell-size-sm`: Small code cell edge before applying control density.
-- `--ki-code-input-disabled-fg`: Code character ink while the field is disabled.
-- `--ki-code-input-error-border`: Code cell boundary after failed validation.
-- `--ki-code-input-fg`: Resting code character ink.
-- `--ki-code-input-font-size`: Code character size.
-- `--ki-code-input-gap`: Inline space between code cells.
-- `--ki-code-input-radius`: Code cell corner radius.
-- `--ki-code-input-selection-bg`: Background of a selected code character.
-- `--ki-code-input-selection-fg`: Ink of a selected code character.
-- `--ki-code-input-touch-font-size`: Minimum native input text size on a coarse pointer.
-- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-text-danger-high-em`: semantic color for text danger high em.
-- `--ki-text-high-em`: semantic color for text high em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-family-mono`: semantic font family for typography family mono.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-code-input-backdrop-filter`: Optional compositing filter behind a code cell. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-code-input-bg`: Resting code cell fill. Default: `var(--ki-surface-s0)`.
+- `--ki-code-input-bg-image`: Optional image painted over the code cell fill. Default: `var(--ki-surface-image-none)`.
+- `--ki-code-input-blink-duration`: Duration of one code caret blink. Default: `var(--ki-motion-duration-activity-pulse)`.
+- `--ki-code-input-border`: Resting code cell boundary. Default: `var(--ki-outline-control)`.
+- `--ki-code-input-cell-size`: Default code cell edge before applying control density. Default: `var(--ki-layout-spacing-14xl)`.
+- `--ki-code-input-cell-size-sm`: Small code cell edge before applying control density. Default: `var(--ki-control-size-md)`.
+- `--ki-code-input-fg`: Resting code character ink. Default: `var(--ki-text-high-em)`.
+- `--ki-code-input-font-size`: Code character size. Default: `var(--ki-typography-size-title-2)`.
+- `--ki-code-input-gap`: Inline space between code cells. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-code-input-radius`: Code cell corner radius. Default: `var(--ki-radius-component-md)`.
+- `--ki-code-input-selection-bg`: Background of a selected code character. Default: `var(--ki-surface-s2)`.
+- `--ki-code-input-selection-fg`: Ink of a selected code character. Default: `var(--ki-text-high-em)`.
+- `--ki-code-input-touch-font-size`: Minimum native input text size on a coarse pointer. Default: `var(--ki-layout-spacing-3xl)`.
+- `--ki-control-border-width`: Stroke width of the boundary of a compact control. Default: `var(--ki-size-border-hairline)`.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min. Default: `var(--ki-space-zero)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap. Default: `var(--ki-space-xs)`.
+- `--ki-text-danger-high-em`: semantic color for text danger high em. Default: onmars `light-dark(#c21a45,var(--ki-color-danger-300))`, material3 `light-dark(#8c1d18,#f2b8b5)`.
+- `--ki-text-high-em`: semantic color for text high em. Default: onmars `light-dark(var(--ki-color-gray-950),#edebe7)`, material3 `light-dark(#1d1b20,#e6e0e9)`.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). Default: `var(--ki-text-med-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-family-mono`: semantic font family for typography family mono. Default: `var(--ki-font-family-mono)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal. Default: `var(--ki-font-weight-body-normal)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.
+
+## CSS custom properties by variant and state
+
+| Variant | Tone | State | Token | Default | Description |
+| --- | --- | --- | --- | --- | --- |
+| — | — | active | `--ki-code-input-active-border` | `var(--ki-focus-ring-color)` | Focus outline around the active or selected cells. |
+| — | — | disabled | `--ki-code-input-disabled-fg` | `var(--ki-text-med-em)` | Code character ink while the field is disabled. |
+| — | — | error | `--ki-code-input-error-border` | `var(--ki-outline-danger-high-em)` | Code cell boundary after failed validation. |

@@ -74,35 +74,35 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap.
-- `--ki-timeline-dot-backdrop-filter`: Complete backdrop filter behind a timeline marker, off by default.
-- `--ki-timeline-dot-bg`: Fill of the neutral timeline marker.
-- `--ki-timeline-dot-bg-image`: Optional decorative image over the timeline marker fill.
-- `--ki-timeline-dot-danger-bg`: Fill of the danger timeline marker.
-- `--ki-timeline-dot-danger-fg`: Glyph color on the danger timeline marker.
-- `--ki-timeline-dot-fg`: Glyph color on the neutral timeline marker.
-- `--ki-timeline-dot-icon-size`: Size of the decorative glyph inside the timeline marker.
-- `--ki-timeline-dot-primary-bg`: Fill of the primary timeline marker.
-- `--ki-timeline-dot-primary-fg`: Glyph color on the primary timeline marker.
-- `--ki-timeline-dot-radius`: Round corners of the timeline marker.
-- `--ki-timeline-dot-size`: Diameter of the timeline marker.
-- `--ki-timeline-dot-success-bg`: Fill of the success timeline marker.
-- `--ki-timeline-dot-success-fg`: Glyph color on the success timeline marker.
-- `--ki-timeline-dot-warning-bg`: Fill of the warning timeline marker.
-- `--ki-timeline-dot-warning-fg`: Glyph color on the warning timeline marker.
-- `--ki-timeline-gap`: Space between marker and text and between timeline entries.
-- `--ki-timeline-item-fg`: Text color of the event summary and details.
-- `--ki-timeline-line-width`: Hairline width of the timeline connector.
-- `--ki-timeline-time-bg`: The timestamp shows the surrounding surface through its transparent background.
-- `--ki-timeline-time-fg`: Text color of the timeline timestamp.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap. Default: `var(--ki-space-xs)`.
+- `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap. Default: `var(--ki-space-xxs)`.
+- `--ki-timeline-dot-backdrop-filter`: Complete backdrop filter behind a timeline marker, off by default. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-timeline-dot-bg`: Fill of the neutral timeline marker. Default: `var(--ki-surface-s2)`.
+- `--ki-timeline-dot-bg-image`: Optional decorative image over the timeline marker fill. Default: `var(--ki-surface-image-none)`.
+- `--ki-timeline-dot-danger-bg`: Fill of the danger timeline marker. Default: onmars `var(--ki-surface-danger-tint)`, material3 `var(--ki-surface-danger-base-em)`.
+- `--ki-timeline-dot-danger-fg`: Glyph color on the danger timeline marker. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-timeline-dot-fg`: Glyph color on the neutral timeline marker. Default: `var(--ki-text-med-em)`.
+- `--ki-timeline-dot-icon-size`: Size of the decorative glyph inside the timeline marker. Default: `var(--ki-layout-spacing-2xl)`.
+- `--ki-timeline-dot-primary-bg`: Fill of the primary timeline marker. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-timeline-dot-primary-fg`: Glyph color on the primary timeline marker. Default: `var(--ki-text-primary-on-primary-light)`.
+- `--ki-timeline-dot-radius`: Round corners of the timeline marker. Default: `var(--ki-corner-activity-mark)`.
+- `--ki-timeline-dot-size`: Diameter of the timeline marker. Default: `var(--ki-layout-spacing-9xl)`.
+- `--ki-timeline-dot-success-bg`: Fill of the success timeline marker. Default: onmars `var(--ki-surface-success-tint)`, material3 `var(--ki-surface-success-base-em)`.
+- `--ki-timeline-dot-success-fg`: Glyph color on the success timeline marker. Default: `var(--ki-text-success-high-em)`.
+- `--ki-timeline-dot-warning-bg`: Fill of the warning timeline marker. Default: onmars `var(--ki-surface-warning-tint)`, material3 `var(--ki-surface-warning-base-em)`.
+- `--ki-timeline-dot-warning-fg`: Glyph color on the warning timeline marker. Default: `var(--ki-text-warning-high-em)`.
+- `--ki-timeline-gap`: Space between marker and text and between timeline entries. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-timeline-item-fg`: Text color of the event summary and details. Default: `var(--ki-text-high-em)`.
+- `--ki-timeline-line-width`: Hairline width of the timeline connector. Default: `var(--ki-control-border-width)`.
+- `--ki-timeline-time-bg`: The timestamp shows the surrounding surface through its transparent background. Default: `var(--ki-surface-transparent)`.
+- `--ki-timeline-time-fg`: Text color of the timeline timestamp. Default: `var(--ki-text-med-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para. Default: `var(--ki-font-line-height-para)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.

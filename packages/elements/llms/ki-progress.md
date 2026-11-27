@@ -76,15 +76,15 @@ None.
 
 ## CSS custom properties
 
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-duration-medium-2`: M3 md.sys.motion.duration.medium2 (300ms). onmars: MarsUI moderate step (240ms).
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
-- `--ki-progress-circular-size`: dimension used by the progress component for circular size.
-- `--ki-progress-circular-track-width`: dimension used by the progress component for circular track width.
-- `--ki-progress-indeterminate-duration`: duration used by the progress component for progress indeterminate duration.
-- `--ki-progress-indicator-color`: MarsUI fills components with the med-em (500) tone of the ramp (marsui-design-dna.md §1; specs/002-ki-button/design-extraction.md §§2.1-2.4 delta 500-vs-high-em): progress indicator uses surface.primary-med-em.
-- `--ki-progress-linear-radius`: dimension used by the progress component for linear radius.
-- `--ki-progress-linear-thickness`: dimension used by the progress component for linear thickness.
-- `--ki-progress-track-color`: color used by the progress component for track color.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-duration-medium-2`: M3 md.sys.motion.duration.medium2 (300ms). onmars: MarsUI moderate step (240ms). Default: onmars `var(--ki-duration-moderate)`, material3 `300ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve. Default: onmars `var(--ki-easing-standard)`, material3 `cubic-bezier(0.2,0,0,1)`.
+- `--ki-progress-circular-size`: dimension used by the progress component for circular size. Default: onmars `var(--ki-space-12xl)`, material3 `var(--ki-space-14xl)`.
+- `--ki-progress-circular-track-width`: dimension used by the progress component for circular track width. Default: `var(--ki-space-xs)`.
+- `--ki-progress-indeterminate-duration`: duration used by the progress component for progress indeterminate duration. Default: `1600ms`.
+- `--ki-progress-indicator-color`: MarsUI fills components with the med-em (500) tone of the ramp (marsui-design-dna.md §1; specs/002-ki-button/design-extraction.md §§2.1-2.4 delta 500-vs-high-em): progress indicator uses surface.primary-med-em. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-progress-linear-radius`: dimension used by the progress component for linear radius. Default: `var(--ki-radius-round)`.
+- `--ki-progress-linear-thickness`: dimension used by the progress component for linear thickness. Default: `var(--ki-space-xs)`.
+- `--ki-progress-track-color`: color used by the progress component for track color. Default: `var(--ki-surface-s3)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

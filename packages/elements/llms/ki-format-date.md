@@ -60,4 +60,4 @@ None.
 
 ## CSS custom properties
 
-- `--ki-format-date-font-family`: Default body font family for ki-format-date on a bare page.
+- `--ki-format-date-font-family`: Default body font family for ki-format-date on a bare page. Default: `var(--ki-typography-family-body)`.

@@ -83,8 +83,8 @@ None.
 
 ## CSS custom properties
 
-- `--ki-icon-size-lg`: Large ki-icon with the surrounding text ink.
-- `--ki-icon-size-md`: Medium ki-icon with the surrounding text ink.
-- `--ki-icon-size-sm`: Small ki-icon with the surrounding text ink.
-- `--ki-icon-stroke-width`: Lucide stroke width in viewBox units, scaled with the glyph.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-icon-size-lg`: Large ki-icon with the surrounding text ink. Default: `var(--ki-glyph-size-lg)`.
+- `--ki-icon-size-md`: Medium ki-icon with the surrounding text ink. Default: `var(--ki-glyph-size-md)`.
+- `--ki-icon-size-sm`: Small ki-icon with the surrounding text ink. Default: `var(--ki-glyph-size-sm)`.
+- `--ki-icon-stroke-width`: Lucide stroke width in viewBox units, scaled with the glyph. Default: `var(--ki-glyph-stroke-width)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

@@ -40,9 +40,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['generated/custom-elements.json', 'llms.txt', 'llms/']),
-    // Shared shadow styles bring the package to 1,849,302 B packed and
-    // 7,901,856 B unpacked, with 3% and 0.1% headroom respectively.
-    budget: Object.freeze({ packed: 1_904_782, unpacked: 7_909_758 }),
+    // Integrator feedback A1: generated contracts add 56,424 B packed and
+    // 519,846 B unpacked. Add the measured deltas. Pending founder approval.
+    budget: Object.freeze({ packed: 1_961_206, unpacked: 8_429_604 }),
   }),
   '@kimen/tokens': Object.freeze({
     mapsEveryModule: false,

@@ -109,73 +109,73 @@ None.
 
 ## CSS custom properties
 
-- `--ki-alert-actions-gap`: dimension used by the alert component for the gap between slotted actions (MarsUI Alert master CTAs gap Space/xl 12px).
-- `--ki-alert-border-width`: dimension used by the alert component for the card border width (the MarsUI Alert master card stroke is fully transparent). onmars v2 draws a hairline (spec 011 A2); material3 keeps its 2px border via its override.
-- `--ki-alert-card-shadow`: shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5). An inline alert does not float, so onmars v2 and material3 lay the card flat.
-- `--ki-alert-danger-bg`: color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.danger-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too.
-- `--ki-alert-danger-border`: color used by the alert component for the danger card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.danger-low-em hairline around the tinted card (spec 011 A2).
-- `--ki-alert-danger-fg`: color used by the alert component for the danger card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).
-- `--ki-alert-danger-icon-bg`: color used by the alert component for the danger icon frame (MarsUI Alert master Feature-icon Surface/danger-base-em-alpha at 12%).
-- `--ki-alert-danger-icon-fg`: color used by the alert component for the danger icon glyph (MarsUI Alert master Feature-icon glyph Text/danger-high-em).
-- `--ki-alert-dismiss-active-fg`: color used by the alert component for dismiss active foreground.
-- `--ki-alert-dismiss-backdrop-filter`: Complete backdrop filter behind the alert dismiss button.
-- `--ki-alert-dismiss-border-width`: dimension used by the alert component for the dismiss chip outline (MarsUI 24px circle: 1px Outline/secondary_button_top hairline).
-- `--ki-alert-dismiss-hover-bg`: color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash).
-- `--ki-alert-dismiss-hover-fg`: color used by the alert component for dismiss hover foreground.
-- `--ki-alert-dismiss-icon-size`: dimension used by the alert component for dismiss icon size (Figma close glyph box 16px inside the 24px raised circle; repointed from 18px per the fidelity audit).
-- `--ki-alert-dismiss-radius`: dimension used by the alert component for the dismiss chip shape (MarsUI Radius/radius_round full circle).
-- `--ki-alert-dismiss-rest-fg`: color used by the alert component for dismiss rest foreground.
-- `--ki-alert-dismiss-size`: dimension used by the alert component for dismiss size.
-- `--ki-alert-focus-ring-color`: color used by the alert component for focus ring color.
-- `--ki-alert-focus-ring-offset`: dimension used by the alert component for focus ring offset.
-- `--ki-alert-focus-ring-shadow`: shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
-- `--ki-alert-focus-ring-width`: dimension used by the alert component for focus ring width.
-- `--ki-alert-font-size`: dimension used by the alert component for font size.
-- `--ki-alert-gap`: dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px).
-- `--ki-alert-heading-font-family`: Font family for the alert heading. Override it to give alerts their own heading typeface.
-- `--ki-alert-heading-font-size`: dimension used by the alert component for heading font size.
-- `--ki-alert-heading-font-weight`: font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading).
-- `--ki-alert-icon-glyph-size`: dimension used by the alert component for the icon glyph inside the frame (MarsUI Alert master Feature-icon glyph 20px).
-- `--ki-alert-icon-radius`: dimension used by the alert component for the icon frame radius (MarsUI Alert master Feature-icon: a circle).
-- `--ki-alert-icon-size`: dimension used by the alert component for the icon frame (MarsUI Alert master Feature-icon size xs: 32px).
-- `--ki-alert-info-bg`: color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.info-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too.
-- `--ki-alert-info-border`: color used by the alert component for the info card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.info-low-em hairline around the tinted card (spec 011 A2).
-- `--ki-alert-info-fg`: color used by the alert component for the info card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).
-- `--ki-alert-info-icon-bg`: color used by the alert component for the info icon frame (MarsUI Alert master Feature-icon Surface/info-base-em-alpha at 12%).
-- `--ki-alert-info-icon-fg`: color used by the alert component for the info icon glyph (MarsUI Alert master Feature-icon glyph Text/info-high-em).
-- `--ki-alert-line-height`: dimension used by the alert component for line height.
-- `--ki-alert-message-line-height`: dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24).
-- `--ki-alert-neutral-bg`: color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 keeps that card for the neutral tone and edges it with a hairline (spec 011 A2).
-- `--ki-alert-neutral-border`: color used by the alert component for the neutral card edge. onmars v2 draws it as the outline.low-em hairline of any flat card (spec 011 A2).
-- `--ki-alert-neutral-fg`: color used by the alert component for the neutral card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).
-- `--ki-alert-neutral-icon-bg`: color used by the alert component for the neutral icon frame (MarsUI Alert master Feature-icon Surface/primary-base-em-alpha at 12%: the master variable itself, not the heavier primary-tint content fill, so the primary glyph clears 4.5:1 in dark). onmars v2 keeps the accent off it: the frame takes the neutral card surface.
-- `--ki-alert-neutral-icon-fg`: color used by the alert component for the neutral icon glyph (MarsUI Alert master Feature-icon glyph Text/primary-high-em). onmars v2 draws it in the neutral text.high-em ink.
-- `--ki-alert-padding-block`: dimension used by the alert component for the card padding block (MarsUI Alert master List_wrap card: 12px on all four sides).
-- `--ki-alert-padding-inline`: dimension used by the alert component for the card padding inline (MarsUI Alert master List_wrap card: 12px on all four sides).
-- `--ki-alert-radius`: dimension used by the alert component for the card radius (MarsUI Alert master List_wrap big_component/radius_xs 16px; the shell around it has its own radius).
-- `--ki-alert-shell-backdrop-filter`: Complete backdrop filter behind the alert shell.
-- `--ki-alert-shell-bg`: color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark). onmars v2 and material3 paint no shell: it is transparent.
-- `--ki-alert-shell-padding`: dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides). onmars v2 and material3 set it to zero, so the alert paints as one flat card (spec 011 A2, S31).
-- `--ki-alert-shell-radius`: dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px). A flat theme gives the shell the card radius.
-- `--ki-alert-success-bg`: color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.success-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too.
-- `--ki-alert-success-border`: color used by the alert component for the success card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.success-low-em hairline around the tinted card (spec 011 A2).
-- `--ki-alert-success-fg`: color used by the alert component for the success card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).
-- `--ki-alert-success-icon-bg`: color used by the alert component for the success icon frame (MarsUI Alert master Feature-icon Surface/success-base-em-alpha at 12%).
-- `--ki-alert-success-icon-fg`: color used by the alert component for the success icon glyph (MarsUI Alert master Feature-icon glyph Text/success-high-em).
-- `--ki-alert-text-gap`: dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap).
-- `--ki-alert-warning-bg`: color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.warning-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too.
-- `--ki-alert-warning-border`: color used by the alert component for the warning card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.warning-low-em hairline around the tinted card (spec 011 A2).
-- `--ki-alert-warning-fg`: color used by the alert component for the warning card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8).
-- `--ki-alert-warning-icon-bg`: color used by the alert component for the warning icon frame (MarsUI Alert master Feature-icon Surface/warning-base-em-alpha at 12%).
-- `--ki-alert-warning-icon-fg`: color used by the alert component for the warning icon glyph (MarsUI Alert master Feature-icon glyph Text/warning-high-em).
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter.
-- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
-- `--ki-outline-secondary-button-top`: semantic color for outline secondary button top.
-- `--ki-surface-special-light-s0-dark-s2`: semantic color for surface special light s0 dark s2.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-alert-actions-gap`: dimension used by the alert component for the gap between slotted actions (MarsUI Alert master CTAs gap Space/xl 12px). Default: `var(--ki-space-xl)`.
+- `--ki-alert-border-width`: dimension used by the alert component for the card border width (the MarsUI Alert master card stroke is fully transparent). onmars v2 draws a hairline (spec 011 A2); material3 keeps its 2px border via its override. Default: onmars `var(--ki-size-border-hairline)`, material3 `var(--ki-space-xxs)`.
+- `--ki-alert-card-shadow`: shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5). An inline alert does not float, so onmars v2 and material3 lay the card flat. Default: onmars `0 0 rgba(0,0,0,0)`, material3 `0 0 0 0 var(--ki-color-transparent-black)`.
+- `--ki-alert-danger-bg`: color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.danger-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too. Default: onmars `var(--ki-surface-danger-tint)`, material3 `var(--ki-surface-danger-low-em)`.
+- `--ki-alert-danger-border`: color used by the alert component for the danger card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.danger-low-em hairline around the tinted card (spec 011 A2). Default: onmars `var(--ki-outline-danger-low-em)`, material3 `var(--ki-outline-danger-high-em)`.
+- `--ki-alert-danger-fg`: color used by the alert component for the danger card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). Default: onmars `var(--ki-text-high-em)`, material3 `var(--ki-text-danger-high-em)`.
+- `--ki-alert-danger-icon-bg`: color used by the alert component for the danger icon frame (MarsUI Alert master Feature-icon Surface/danger-base-em-alpha at 12%). Default: `var(--ki-surface-danger-tint)`.
+- `--ki-alert-danger-icon-fg`: color used by the alert component for the danger icon glyph (MarsUI Alert master Feature-icon glyph Text/danger-high-em). Default: `var(--ki-text-danger-high-em)`.
+- `--ki-alert-dismiss-active-fg`: color used by the alert component for dismiss active foreground. Default: `var(--ki-text-high-em)`.
+- `--ki-alert-dismiss-backdrop-filter`: Complete backdrop filter behind the alert dismiss button. Default: `var(--ki-effect-component-backdrop-filter)`.
+- `--ki-alert-dismiss-border-width`: dimension used by the alert component for the dismiss chip outline (MarsUI 24px circle: 1px Outline/secondary_button_top hairline). Default: `var(--ki-size-border-hairline)`.
+- `--ki-alert-dismiss-hover-bg`: color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash). Default: `var(--ki-surface-hover-overlay-inverse)`.
+- `--ki-alert-dismiss-hover-fg`: color used by the alert component for dismiss hover foreground. Default: `var(--ki-text-high-em)`.
+- `--ki-alert-dismiss-icon-size`: dimension used by the alert component for dismiss icon size (Figma close glyph box 16px inside the 24px raised circle; repointed from 18px per the fidelity audit). Default: `var(--ki-space-3xl)`.
+- `--ki-alert-dismiss-radius`: dimension used by the alert component for the dismiss chip shape (MarsUI Radius/radius_round full circle). Default: `var(--ki-radius-round)`.
+- `--ki-alert-dismiss-rest-fg`: color used by the alert component for dismiss rest foreground. Default: `var(--ki-text-high-em)`.
+- `--ki-alert-dismiss-size`: dimension used by the alert component for dismiss size. Default: `var(--ki-space-7xl)`.
+- `--ki-alert-focus-ring-color`: color used by the alert component for focus ring color. Default: `var(--ki-focus-ring-color)`.
+- `--ki-alert-focus-ring-offset`: dimension used by the alert component for focus ring offset. Default: `var(--ki-focus-ring-offset)`.
+- `--ki-alert-focus-ring-shadow`: shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). Default: `var(--ki-focus-primary)`.
+- `--ki-alert-focus-ring-width`: dimension used by the alert component for focus ring width. Default: `var(--ki-focus-ring-width)`.
+- `--ki-alert-font-size`: dimension used by the alert component for font size. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-alert-gap`: dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px). Default: `var(--ki-space-xl)`.
+- `--ki-alert-heading-font-family`: Font family for the alert heading. Override it to give alerts their own heading typeface. Default: `var(--ki-typography-family-heading)`.
+- `--ki-alert-heading-font-size`: dimension used by the alert component for heading font size. Default: `var(--ki-typography-size-body-2)`.
+- `--ki-alert-heading-font-weight`: font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading). Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-alert-icon-glyph-size`: dimension used by the alert component for the icon glyph inside the frame (MarsUI Alert master Feature-icon glyph 20px). Default: `var(--ki-space-5xl)`.
+- `--ki-alert-icon-radius`: dimension used by the alert component for the icon frame radius (MarsUI Alert master Feature-icon: a circle). Default: `var(--ki-radius-round)`.
+- `--ki-alert-icon-size`: dimension used by the alert component for the icon frame (MarsUI Alert master Feature-icon size xs: 32px). Default: `var(--ki-space-10xl)`.
+- `--ki-alert-info-bg`: color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.info-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too. Default: onmars `var(--ki-surface-info-tint)`, material3 `var(--ki-surface-s3)`.
+- `--ki-alert-info-border`: color used by the alert component for the info card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.info-low-em hairline around the tinted card (spec 011 A2). Default: onmars `var(--ki-outline-info-low-em)`, material3 `var(--ki-outline-med-em)`.
+- `--ki-alert-info-fg`: color used by the alert component for the info card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). Default: `var(--ki-text-high-em)`.
+- `--ki-alert-info-icon-bg`: color used by the alert component for the info icon frame (MarsUI Alert master Feature-icon Surface/info-base-em-alpha at 12%). Default: `var(--ki-surface-info-tint)`.
+- `--ki-alert-info-icon-fg`: color used by the alert component for the info icon glyph (MarsUI Alert master Feature-icon glyph Text/info-high-em). Default: `var(--ki-text-info-high-em)`.
+- `--ki-alert-line-height`: dimension used by the alert component for line height. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-alert-message-line-height`: dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24). Default: `var(--ki-typography-line-height-para)`.
+- `--ki-alert-neutral-bg`: color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 keeps that card for the neutral tone and edges it with a hairline (spec 011 A2). Default: onmars `var(--ki-surface-special-light-s0-dark-s2)`, material3 `var(--ki-surface-s2)`.
+- `--ki-alert-neutral-border`: color used by the alert component for the neutral card edge. onmars v2 draws it as the outline.low-em hairline of any flat card (spec 011 A2). Default: onmars `var(--ki-outline-low-em)`, material3 `var(--ki-outline-med-em)`.
+- `--ki-alert-neutral-fg`: color used by the alert component for the neutral card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). Default: `var(--ki-text-high-em)`.
+- `--ki-alert-neutral-icon-bg`: color used by the alert component for the neutral icon frame (MarsUI Alert master Feature-icon Surface/primary-base-em-alpha at 12%: the master variable itself, not the heavier primary-tint content fill, so the primary glyph clears 4.5:1 in dark). onmars v2 keeps the accent off it: the frame takes the neutral card surface. Default: onmars `var(--ki-alert-neutral-bg)`, material3 `var(--ki-surface-primary-base-em-alpha)`.
+- `--ki-alert-neutral-icon-fg`: color used by the alert component for the neutral icon glyph (MarsUI Alert master Feature-icon glyph Text/primary-high-em). onmars v2 draws it in the neutral text.high-em ink. Default: onmars `var(--ki-text-high-em)`, material3 `var(--ki-text-primary-high-em)`.
+- `--ki-alert-padding-block`: dimension used by the alert component for the card padding block (MarsUI Alert master List_wrap card: 12px on all four sides). Default: `var(--ki-space-xl)`.
+- `--ki-alert-padding-inline`: dimension used by the alert component for the card padding inline (MarsUI Alert master List_wrap card: 12px on all four sides). Default: `var(--ki-space-xl)`.
+- `--ki-alert-radius`: dimension used by the alert component for the card radius (MarsUI Alert master List_wrap big_component/radius_xs 16px; the shell around it has its own radius). Default: `var(--ki-radius-component-lg)`.
+- `--ki-alert-shell-backdrop-filter`: Complete backdrop filter behind the alert shell. Default: `var(--ki-effect-component-backdrop-filter)`.
+- `--ki-alert-shell-bg`: color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark). onmars v2 and material3 paint no shell: it is transparent. Default: `var(--ki-color-transparent-black)`.
+- `--ki-alert-shell-padding`: dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides). onmars v2 and material3 set it to zero, so the alert paints as one flat card (spec 011 A2, S31). Default: `var(--ki-space-zero)`.
+- `--ki-alert-shell-radius`: dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px). A flat theme gives the shell the card radius. Default: `var(--ki-radius-component-lg)`.
+- `--ki-alert-success-bg`: color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.success-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too. Default: onmars `var(--ki-surface-success-tint)`, material3 `var(--ki-surface-s1)`.
+- `--ki-alert-success-border`: color used by the alert component for the success card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.success-low-em hairline around the tinted card (spec 011 A2). Default: onmars `var(--ki-outline-success-low-em)`, material3 `var(--ki-outline-med-em)`.
+- `--ki-alert-success-fg`: color used by the alert component for the success card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). Default: `var(--ki-text-high-em)`.
+- `--ki-alert-success-icon-bg`: color used by the alert component for the success icon frame (MarsUI Alert master Feature-icon Surface/success-base-em-alpha at 12%). Default: `var(--ki-surface-success-tint)`.
+- `--ki-alert-success-icon-fg`: color used by the alert component for the success icon glyph (MarsUI Alert master Feature-icon glyph Text/success-high-em). Default: `var(--ki-text-success-high-em)`.
+- `--ki-alert-text-gap`: dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap). Default: `var(--ki-space-xs)`.
+- `--ki-alert-warning-bg`: color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone). onmars v2 tints the card with surface.warning-tint so the tone reads on the whole card (spec 011 A2); other themes may tint it per tone here too. Default: onmars `var(--ki-surface-warning-tint)`, material3 `var(--ki-surface-s4)`.
+- `--ki-alert-warning-border`: color used by the alert component for the warning card edge (MarsUI draws no tone border on any alert/note/toast surface). onmars v2 draws the outline.warning-low-em hairline around the tinted card (spec 011 A2). Default: onmars `var(--ki-outline-warning-low-em)`, material3 `var(--ki-outline-high-em)`.
+- `--ki-alert-warning-fg`: color used by the alert component for the warning card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). Default: `var(--ki-text-high-em)`.
+- `--ki-alert-warning-icon-bg`: color used by the alert component for the warning icon frame (MarsUI Alert master Feature-icon Surface/warning-base-em-alpha at 12%). Default: `var(--ki-surface-warning-tint)`.
+- `--ki-alert-warning-icon-fg`: color used by the alert component for the warning icon glyph (MarsUI Alert master Feature-icon glyph Text/warning-high-em). Default: `var(--ki-text-warning-high-em)`.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter. Default: onmars `0 0 rgba(0,0,0,0)`, material3 `0px 1px 2px 0px rgba(0,0,0,0.3),0px 1px 3px 1px rgba(0,0,0,0.15)`.
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets. Default: `var(--ki-space-xs)`.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base). Default: onmars `var(--ki-duration-moderate)`, material3 `250ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve. Default: onmars `var(--ki-easing-standard)`, material3 `cubic-bezier(0.2,0,0,1)`.
+- `--ki-outline-secondary-button-top`: semantic color for outline secondary button top. Default: onmars `light-dark(rgba(24,22,19,0.14),rgba(255,250,240,0.14))`, material3 `light-dark(var(--ki-color-black-5),var(--ki-color-white-8))`.
+- `--ki-surface-special-light-s0-dark-s2`: semantic color for surface special light s0 dark s2. Default: `light-dark(var(--ki-surface-s0),var(--ki-surface-s2))`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

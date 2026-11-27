@@ -54,4 +54,4 @@ None.
 
 ## CSS custom properties
 
-- `--ki-search-suggestion-font-family`: Inherited body typeface on the declarative suggestion host.
+- `--ki-search-suggestion-font-family`: Inherited body typeface on the declarative suggestion host. Default: `var(--ki-typography-family-body)`.

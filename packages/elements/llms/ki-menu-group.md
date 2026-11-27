@@ -49,10 +49,10 @@ None.
 
 ## CSS custom properties
 
-- `--ki-menu-font-family`: Family for action labels and the filter.
-- `--ki-menu-group-fg`: Foreground for group labels.
-- `--ki-menu-group-label-weight`: Weight of group labels.
-- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
-- `--ki-menu-meta-font-size`: Size of metadata and group labels.
-- `--ki-menu-meta-line-height`: Line height of metadata and group labels.
-- `--ki-menu-padding`: Space inside the popup.
+- `--ki-menu-font-family`: Family for action labels and the filter. Default: `var(--ki-typography-family-body)`.
+- `--ki-menu-group-fg`: Foreground for group labels. Default: `var(--ki-text-supporting)`.
+- `--ki-menu-group-label-weight`: Weight of group labels. Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter. Default: `var(--ki-menu-layout-inline-space)`.
+- `--ki-menu-meta-font-size`: Size of metadata and group labels. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-menu-meta-line-height`: Line height of metadata and group labels. Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-menu-padding`: Space inside the popup. Default: `var(--ki-menu-layout-surface-padding)`.

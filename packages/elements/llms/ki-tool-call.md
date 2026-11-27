@@ -107,29 +107,29 @@ None.
 
 ## CSS custom properties
 
-- `--ki-badge-sm-height`: dimension used by the badge component for sm height.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-tool-call-backdrop-filter`: Whole filter behind the call.
-- `--ki-tool-call-bg`: Solid background of the call disclosure.
-- `--ki-tool-call-bg-image`: Optional image over the solid background.
-- `--ki-tool-call-border`: Border ink around the call.
-- `--ki-tool-call-border-width`: Width of the disclosure frame.
-- `--ki-tool-call-caption-size`: Size of captions and the tool identifier.
-- `--ki-tool-call-code-bg`: Background for input and output payloads.
-- `--ki-tool-call-code-fg`: Plain text ink on the payload surface.
-- `--ki-tool-call-code-radius`: Corners of the plain payload surface.
-- `--ki-tool-call-fg`: Text ink on the call surface.
-- `--ki-tool-call-font-size`: Body text size.
-- `--ki-tool-call-gap`: Gap between summary items and body sections.
-- `--ki-tool-call-icon`: Ink of the decorative icons.
-- `--ki-tool-call-icon-size`: Size of the wrench and chevron.
-- `--ki-tool-call-inline-gap`: Gap between status items and after each caption.
-- `--ki-tool-call-line-height`: Body text line height.
-- `--ki-tool-call-mono-family`: Typeface of the tool identifier.
-- `--ki-tool-call-padding`: Horizontal inset and space after the body.
-- `--ki-tool-call-radius`: Corners of the disclosure surface.
-- `--ki-tool-call-transition-duration`: Duration of the disclosure chevron rotation.
-- `--ki-tool-call-transition-easing`: Easing of the disclosure chevron rotation.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-badge-sm-height`: dimension used by the badge component for sm height. Default: `var(--ki-space-7xl)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-tool-call-backdrop-filter`: Whole filter behind the call. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-tool-call-bg`: Solid background of the call disclosure. Default: `var(--ki-surface-raised)`.
+- `--ki-tool-call-bg-image`: Optional image over the solid background. Default: `var(--ki-surface-image-none)`.
+- `--ki-tool-call-border`: Border ink around the call. Default: `var(--ki-outline-low-em)`.
+- `--ki-tool-call-border-width`: Width of the disclosure frame. Default: `var(--ki-spacing-action-hairline)`.
+- `--ki-tool-call-caption-size`: Size of captions and the tool identifier. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-tool-call-code-bg`: Background for input and output payloads. Default: `var(--ki-surface-s2)`.
+- `--ki-tool-call-code-fg`: Plain text ink on the payload surface. Default: `var(--ki-text-high-em)`.
+- `--ki-tool-call-code-radius`: Corners of the plain payload surface. Default: `var(--ki-radius-component-sm)`.
+- `--ki-tool-call-fg`: Text ink on the call surface. Default: `var(--ki-text-high-em)`.
+- `--ki-tool-call-font-size`: Body text size. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-tool-call-gap`: Gap between summary items and body sections. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-tool-call-icon`: Ink of the decorative icons. Default: `var(--ki-text-med-em)`.
+- `--ki-tool-call-icon-size`: Size of the wrench and chevron. Default: `var(--ki-layout-spacing-lg)`.
+- `--ki-tool-call-inline-gap`: Gap between status items and after each caption. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-tool-call-line-height`: Body text line height. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-tool-call-mono-family`: Typeface of the tool identifier. Default: `var(--ki-typography-family-mono)`.
+- `--ki-tool-call-padding`: Horizontal inset and space after the body. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-tool-call-radius`: Corners of the disclosure surface. Default: `var(--ki-radius-component-lg)`.
+- `--ki-tool-call-transition-duration`: Duration of the disclosure chevron rotation. Default: `var(--ki-motion-duration-fast)`.
+- `--ki-tool-call-transition-easing`: Easing of the disclosure chevron rotation. Default: `var(--ki-motion-easing-standard)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

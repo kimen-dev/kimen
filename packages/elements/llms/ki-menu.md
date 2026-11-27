@@ -111,29 +111,29 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-menu-backdrop-filter`: Complete backdrop filter applied to the popup.
-- `--ki-menu-bg`: Base fill of the popup surface.
-- `--ki-menu-bg-image`: Optional image composited over the popup fill.
-- `--ki-menu-border`: Popup edge and the filter divider.
-- `--ki-menu-border-width`: Thickness of menu border and dividers.
-- `--ki-menu-fg`: Text over the popup surface.
-- `--ki-menu-filter-icon-size`: Size of the search icon.
-- `--ki-menu-focus-color`: Color of a visible keyboard focus outline.
-- `--ki-menu-focus-width`: Width of a visible keyboard focus outline.
-- `--ki-menu-font-family`: Family for action labels and the filter.
-- `--ki-menu-font-size`: Text size for action labels and the filter.
-- `--ki-menu-gap`: Inline space between the parts of a row.
-- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
-- `--ki-menu-item-height`: Default action row minimum height.
-- `--ki-menu-item-radius`: Action row corner radius.
-- `--ki-menu-line-height`: Line height for action labels and the filter.
-- `--ki-menu-max-block-size`: Maximum popup height, bounded by the viewport.
-- `--ki-menu-max-inline-size`: Maximum popup width, bounded by the viewport.
-- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
-- `--ki-menu-min-inline-size`: Default minimum popup width, bounded by the viewport.
-- `--ki-menu-padding`: Space inside the popup.
-- `--ki-menu-radius`: Popup corner radius.
-- `--ki-menu-shadow`: Popup elevation shadow.
-- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min. Default: `var(--ki-space-zero)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-menu-backdrop-filter`: Complete backdrop filter applied to the popup. Default: `var(--ki-effect-component-menu-backdrop-filter)`.
+- `--ki-menu-bg`: Base fill of the popup surface. Default: `var(--ki-surface-raised)`.
+- `--ki-menu-bg-image`: Optional image composited over the popup fill. Default: `var(--ki-surface-image-menu)`.
+- `--ki-menu-border`: Popup edge and the filter divider. Default: `var(--ki-outline-low-em)`.
+- `--ki-menu-border-width`: Thickness of menu border and dividers. Default: `var(--ki-menu-layout-edge-width)`.
+- `--ki-menu-fg`: Text over the popup surface. Default: `var(--ki-text-high-em)`.
+- `--ki-menu-filter-icon-size`: Size of the search icon. Default: `var(--ki-glyph-size-md)`.
+- `--ki-menu-focus-color`: Color of a visible keyboard focus outline. Default: `var(--ki-focus-ring-color)`.
+- `--ki-menu-focus-width`: Width of a visible keyboard focus outline. Default: `var(--ki-focus-ring-width)`.
+- `--ki-menu-font-family`: Family for action labels and the filter. Default: `var(--ki-typography-family-body)`.
+- `--ki-menu-font-size`: Text size for action labels and the filter. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-menu-gap`: Inline space between the parts of a row. Default: `var(--ki-menu-layout-inline-space)`.
+- `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter. Default: `var(--ki-menu-layout-inline-space)`.
+- `--ki-menu-item-height`: Default action row minimum height. Default: `var(--ki-menu-layout-row-min)`.
+- `--ki-menu-item-radius`: Action row corner radius. Default: `var(--ki-menu-layout-row-radius)`.
+- `--ki-menu-line-height`: Line height for action labels and the filter. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-menu-max-block-size`: Maximum popup height, bounded by the viewport. Default: `var(--ki-menu-layout-block-max)`.
+- `--ki-menu-max-inline-size`: Maximum popup width, bounded by the viewport. Default: `var(--ki-menu-layout-inline-max)`.
+- `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder. Default: `var(--ki-text-supporting)`.
+- `--ki-menu-min-inline-size`: Default minimum popup width, bounded by the viewport. Default: `var(--ki-menu-layout-inline-min)`.
+- `--ki-menu-padding`: Space inside the popup. Default: `var(--ki-menu-layout-surface-padding)`.
+- `--ki-menu-radius`: Popup corner radius. Default: `var(--ki-menu-layout-surface-radius)`.
+- `--ki-menu-shadow`: Popup elevation shadow. Default: `var(--ki-elevation-e3)`.
+- `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers. Default: `var(--ki-menu-layout-touch-row-min)`.

@@ -60,4 +60,4 @@ None.
 
 ## CSS custom properties
 
-- `--ki-format-number-font-family`: Default body font family for ki-format-number on a bare page.
+- `--ki-format-number-font-family`: Default body font family for ki-format-number on a bare page. Default: `var(--ki-typography-family-body)`.

@@ -13,6 +13,8 @@ import { type Connection, connect, textOf } from './harness.js';
 interface ManifestEntry {
   readonly name: string;
   readonly description?: string;
+  readonly default?: string;
+  readonly material3Default?: string;
 }
 
 const manifest = JSON.parse(
@@ -42,11 +44,9 @@ function manifestEntry(tag: string): {
   throw new Error(`no manifest entry for ${tag}`);
 }
 
-const pairs = (
-  entries: readonly ManifestEntry[] | undefined,
-): { name: string; description: string }[] =>
+const pairs = (entries: readonly ManifestEntry[] | undefined): ManifestEntry[] =>
   (entries ?? [])
-    .map((entry) => ({ description: entry.description ?? '', name: entry.name }))
+    .map((entry) => ({ ...entry, description: entry.description ?? '' }))
     .sort((a, b) => (a.name < b.name ? -1 : 1));
 
 let server: Connection;
@@ -125,7 +125,10 @@ describe('Kimen MCP server: the catalog (038 S1-S4)', () => {
     expect(block.ok).toBe(true);
     const text = textOf(result);
     expect(text.startsWith(block.ok ? block.artifact : '')).toBe(true);
-    expect(text).toContain('--ki-button-');
+    expect(text).toMatch(
+      /`--ki-button-outline-rest-border`[^\n]*Default: `var\(--ki-outline-control\)`/u,
+    );
+    expect(text).toContain('https://kimen.dev/llms/ki-button.md');
   });
 
   it.each(['ki-unlisted', '__proto__', 'constructor'])(

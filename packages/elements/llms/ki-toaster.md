@@ -86,8 +86,8 @@ None.
 
 ## CSS custom properties
 
-- `--ki-toast-width`: dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).
-- `--ki-toaster-gap`: dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014).
-- `--ki-toaster-inset-block`: dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014).
-- `--ki-toaster-inset-inline`: dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014).
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-toast-width`: dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem). Default: `var(--ki-size-toast)`.
+- `--ki-toaster-gap`: dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014). Default: `var(--ki-space-xl)`.
+- `--ki-toaster-inset-block`: dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014). Default: `var(--ki-space-3xl)`.
+- `--ki-toaster-inset-inline`: dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014). Default: `var(--ki-space-3xl)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

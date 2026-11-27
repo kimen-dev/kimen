@@ -117,46 +117,46 @@ None.
 
 ## CSS custom properties
 
-- `--ki-combobox-field-bg`: Fill for the editable field.
-- `--ki-combobox-field-border`: Outline around the editable field.
-- `--ki-combobox-field-fg`: Text on the editable field.
-- `--ki-combobox-field-height`: Resting minimum block size of the field.
-- `--ki-combobox-icon-size`: Size of search, selection and remove glyphs.
-- `--ki-combobox-input-basis`: Preferred text-entry width before a row of tags wraps.
-- `--ki-combobox-input-touch-font-size`: Minimum editable text size for coarse-pointer input.
-- `--ki-combobox-listbox-backdrop-filter`: Complete backdrop filter for the floating listbox.
-- `--ki-combobox-listbox-bg`: Fill for the floating listbox.
-- `--ki-combobox-listbox-bg-image`: Optional image layered over the floating listbox.
-- `--ki-combobox-listbox-border`: Outline around the floating listbox.
-- `--ki-combobox-listbox-fg`: Text on the floating listbox.
-- `--ki-combobox-listbox-max-block-size`: Maximum listbox block size before options scroll.
-- `--ki-combobox-listbox-shadow`: Elevation of the floating listbox.
-- `--ki-combobox-match-fg`: Foreground of the first bolded query match.
-- `--ki-combobox-option-active-bg`: Fill for the active option.
-- `--ki-combobox-option-active-fg`: Text on the active option.
-- `--ki-combobox-tag-bg`: Fill for the selected tag.
-- `--ki-combobox-tag-fg`: Text on the selected tag.
-- `--ki-corner-field-item`: Corner radius for choices and tokens inside an editable field.
-- `--ki-corner-field-surface`: Corner radius for an editable field and its floating choice surface.
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap.
-- `--ki-outline-danger-high-em`: semantic color for outline danger high em.
-- `--ki-outline-hairline-width`: Width of a hairline component surface edge.
-- `--ki-text-danger-high-em`: semantic color for text danger high em.
-- `--ki-text-high-em`: semantic color for text high em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
-- `--ki-typography-weight-body-bold`: semantic font weight for typography weight body bold.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-combobox-field-bg`: Fill for the editable field. Default: `var(--ki-surface-raised)`.
+- `--ki-combobox-field-border`: Outline around the editable field. Default: `var(--ki-outline-control)`.
+- `--ki-combobox-field-fg`: Text on the editable field. Default: `var(--ki-text-high-em)`.
+- `--ki-combobox-field-height`: Resting minimum block size of the field. Default: `var(--ki-layout-spacing-12xl)`.
+- `--ki-combobox-icon-size`: Size of search, selection and remove glyphs. Default: `var(--ki-glyph-size-sm)`.
+- `--ki-combobox-input-basis`: Preferred text-entry width before a row of tags wraps. Default: `var(--ki-layout-spacing-16xl)`.
+- `--ki-combobox-input-touch-font-size`: Minimum editable text size for coarse-pointer input. Default: `var(--ki-layout-spacing-3xl)`.
+- `--ki-combobox-listbox-backdrop-filter`: Complete backdrop filter for the floating listbox. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-combobox-listbox-bg`: Fill for the floating listbox. Default: `var(--ki-surface-raised)`.
+- `--ki-combobox-listbox-bg-image`: Optional image layered over the floating listbox. Default: `var(--ki-surface-image-none)`.
+- `--ki-combobox-listbox-border`: Outline around the floating listbox. Default: `var(--ki-outline-low-em)`.
+- `--ki-combobox-listbox-fg`: Text on the floating listbox. Default: `var(--ki-text-high-em)`.
+- `--ki-combobox-listbox-max-block-size`: Maximum listbox block size before options scroll. Default: `var(--ki-spacing-floating-surface-max-block)`.
+- `--ki-combobox-listbox-shadow`: Elevation of the floating listbox. Default: onmars `var(--ki-elevation-e3)`, material3 `var(--ki-elevation-e2)`.
+- `--ki-combobox-match-fg`: Foreground of the first bolded query match. Default: `var(--ki-text-high-em)`.
+- `--ki-combobox-option-active-bg`: Fill for the active option. Default: `var(--ki-surface-s2)`.
+- `--ki-combobox-option-active-fg`: Text on the active option. Default: `var(--ki-text-high-em)`.
+- `--ki-combobox-tag-bg`: Fill for the selected tag. Default: `var(--ki-surface-s2)`.
+- `--ki-combobox-tag-fg`: Text on the selected tag. Default: `var(--ki-text-high-em)`.
+- `--ki-corner-field-item`: Corner radius for choices and tokens inside an editable field. Default: `var(--ki-radius-component-sm)`.
+- `--ki-corner-field-surface`: Corner radius for an editable field and its floating choice surface. Default: `var(--ki-radius-component-md)`.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min. Default: `var(--ki-space-zero)`.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap. Default: `var(--ki-space-xs)`.
+- `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap. Default: `var(--ki-space-xxs)`.
+- `--ki-outline-danger-high-em`: semantic color for outline danger high em. Default: onmars `light-dark(var(--ki-color-danger-500),var(--ki-color-danger-300))`, material3 `light-dark(#b3261e,#f2b8b5)`.
+- `--ki-outline-hairline-width`: Width of a hairline component surface edge. Default: `var(--ki-size-border-hairline)`.
+- `--ki-text-danger-high-em`: semantic color for text danger high em. Default: onmars `light-dark(#c21a45,var(--ki-color-danger-300))`, material3 `light-dark(#8c1d18,#f2b8b5)`.
+- `--ki-text-high-em`: semantic color for text high em. Default: onmars `light-dark(var(--ki-color-gray-950),#edebe7)`, material3 `light-dark(#1d1b20,#e6e0e9)`.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). Default: `var(--ki-text-med-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.
+- `--ki-typography-weight-body-bold`: semantic font weight for typography weight body bold. Default: `var(--ki-font-weight-body-bold)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.

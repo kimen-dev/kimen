@@ -25,6 +25,18 @@ interface CemMember {
   signature?: string;
   return?: { type?: CemType };
 }
+interface CssProperty {
+  name: string;
+  description?: string;
+  default?: string;
+  material3Default?: string;
+}
+interface TokenState {
+  variant: string | null;
+  tone: string | null;
+  state: string;
+  tokens: string[];
+}
 interface CemDeclaration {
   tagName?: string;
   description?: string;
@@ -41,7 +53,8 @@ interface CemDeclaration {
   events?: Array<{ name: string; type?: CemType; description?: string }>;
   slots?: Array<{ name: string; description?: string }>;
   cssParts?: Array<{ name: string; description?: string }>;
-  cssProperties?: Array<{ name: string; description?: string; default?: string }>;
+  cssProperties?: CssProperty[];
+  tokenStates?: TokenState[];
   cssStates?: Array<{ name: string; description?: string }>;
 }
 
@@ -71,6 +84,36 @@ const events = decl.events ?? [];
 const slots = decl.slots ?? [];
 const parts = decl.cssParts ?? [];
 const cssProperties = decl.cssProperties ?? [];
+const tokenByName = new Map(cssProperties.map((property) => [property.name, property]));
+const tokenGroups = decl.tokenStates ?? [];
+const groupedTokens = new Set(tokenGroups.flatMap(({ tokens }) => tokens));
+const tokenTables = [
+  {
+    id: `${tag}-state-tokens`,
+    title: 'CSS custom properties by variant and state',
+    grouped: true,
+    rows: tokenGroups.flatMap(({ variant, tone, state, tokens }) =>
+      tokens.map((name) => {
+        const property = tokenByName.get(name);
+        if (!property) throw new Error(`CemApi: ${tag} has no CSS property ${name}`);
+        return { property, variant, tone, state };
+      }),
+    ),
+  },
+  {
+    id: `${tag}-css-properties`,
+    title: tokenGroups.length > 0 ? 'Other CSS custom properties' : 'CSS custom properties',
+    grouped: false,
+    rows: cssProperties
+      .filter(({ name }) => !groupedTokens.has(name))
+      .map((property) => ({
+        property,
+        variant: null,
+        tone: null,
+        state: null,
+      })),
+  },
+];
 const states = decl.cssStates ?? [];
 ---
 
@@ -271,41 +314,57 @@ const states = decl.cssStates ?? [];
   }
 
   {
-    cssProperties.length > 0 && (
-      <>
-        <h3 id={`${tag}-css-properties`}>CSS custom properties</h3>
-        <p>
-          The public styling contract of <code>{tag}</code>: reassign these
-          tokens at <code>:root</code> or on a subtree — never override
-          internals.
-        </p>
-        <div
-          class="cem-table"
-          role="region"
-          aria-labelledby={`${tag}-css-properties`}
-          tabindex="0"
-        >
-          <table>
-            <thead>
-              <tr>
-                <th>Token</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cssProperties.map((p) => (
-                <tr>
-                  <td>
-                    <code>{p.name}</code>
-                  </td>
-                  <td set:html={md(p.description)} />
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </>
-    )
+    tokenTables
+      .filter(({ rows }) => rows.length > 0)
+      .map(({ id, title, grouped, rows }) => (
+          <>
+            <h3 id={id}>{title}</h3>
+            <div class="cem-table" role="region" aria-labelledby={id} tabindex="0">
+              <table>
+                <thead>
+                  <tr>
+                    {grouped && (
+                      <>
+                        <th scope="col">Variant</th>
+                        <th scope="col">Tone</th>
+                        <th scope="col">State</th>
+                      </>
+                    )}
+                    <th scope="col">Token</th>
+                    <th scope="col">Default</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map(({ property, variant, tone, state }) => (
+                    <tr>
+                      {grouped && (
+                        <>
+                          <td>{variant ?? '—'}</td>
+                          <td>{tone ?? '—'}</td>
+                          <td>{state}</td>
+                        </>
+                      )}
+                      <td><code>{property.name}</code></td>
+                      <td>
+                        {property.material3Default !== undefined ? (
+                          <>
+                            onmars <code>{property.default}</code>
+                            <br />
+                            material3 <code>{property.material3Default}</code>
+                          </>
+                        ) : (
+                          <code>{property.default}</code>
+                        )}
+                      </td>
+                      <td set:html={md(property.description)} />
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+      ))
   }
 
   {

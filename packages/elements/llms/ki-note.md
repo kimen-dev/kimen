@@ -73,39 +73,39 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-note-backdrop-filter`: Complete filter behind the note.
-- `--ki-note-bg`: Background of a neutral note.
-- `--ki-note-bg-image`: Optional image over the note's solid background.
-- `--ki-note-danger-bg`: Background of a danger note.
-- `--ki-note-danger-fg`: Text ink of a danger note.
-- `--ki-note-danger-icon`: Decorative icon ink of a danger note.
-- `--ki-note-fg`: Text ink of a neutral note.
-- `--ki-note-font-family`: Note text font family.
-- `--ki-note-font-size`: Medium note text size.
-- `--ki-note-gap`: Space between the icon and the text.
-- `--ki-note-icon`: Decorative icon ink of a neutral note.
-- `--ki-note-icon-offset`: Medium icon offset from the first line's block start.
-- `--ki-note-icon-size`: Medium note icon size.
-- `--ki-note-info-bg`: Background of an info note.
-- `--ki-note-info-fg`: Text ink of an info note.
-- `--ki-note-info-icon`: Decorative icon ink of an info note.
-- `--ki-note-line-height`: Medium note text line height.
-- `--ki-note-padding-block`: Medium note block padding.
-- `--ki-note-padding-inline`: Medium note inline padding.
-- `--ki-note-primary-bg`: Background of a primary note.
-- `--ki-note-primary-fg`: Text ink of a primary note.
-- `--ki-note-primary-icon`: Decorative icon ink of a primary note.
-- `--ki-note-radius`: Note surface corner radius.
-- `--ki-note-sm-font-size`: Small note caption size.
-- `--ki-note-sm-icon-offset`: Small icon offset from the first line's block start.
-- `--ki-note-sm-icon-size`: Small note icon size.
-- `--ki-note-sm-line-height`: Small note caption line height.
-- `--ki-note-sm-padding-block`: Small note block padding.
-- `--ki-note-sm-padding-inline`: Small note inline padding.
-- `--ki-note-success-bg`: Background of a success note.
-- `--ki-note-success-fg`: Text ink of a success note.
-- `--ki-note-success-icon`: Decorative icon ink of a success note.
-- `--ki-note-warning-bg`: Background of a warning note.
-- `--ki-note-warning-fg`: Text ink of a warning note.
-- `--ki-note-warning-icon`: Decorative icon ink of a warning note.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-note-backdrop-filter`: Complete filter behind the note. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-note-bg`: Background of a neutral note. Default: `var(--ki-surface-s2)`.
+- `--ki-note-bg-image`: Optional image over the note's solid background. Default: `var(--ki-surface-image-none)`.
+- `--ki-note-danger-bg`: Background of a danger note. Default: `var(--ki-surface-danger-tint)`.
+- `--ki-note-danger-fg`: Text ink of a danger note. Default: `var(--ki-text-high-em)`.
+- `--ki-note-danger-icon`: Decorative icon ink of a danger note. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-note-fg`: Text ink of a neutral note. Default: `var(--ki-text-high-em)`.
+- `--ki-note-font-family`: Note text font family. Default: `var(--ki-typography-family-body)`.
+- `--ki-note-font-size`: Medium note text size. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-note-gap`: Space between the icon and the text. Default: `var(--ki-space-md)`.
+- `--ki-note-icon`: Decorative icon ink of a neutral note. Default: `var(--ki-text-med-em)`.
+- `--ki-note-icon-offset`: Medium icon offset from the first line's block start. Default: `var(--ki-space-xxs)`.
+- `--ki-note-icon-size`: Medium note icon size. Default: `var(--ki-space-3xl)`.
+- `--ki-note-info-bg`: Background of an info note. Default: `var(--ki-surface-info-tint)`.
+- `--ki-note-info-fg`: Text ink of an info note. Default: `var(--ki-text-high-em)`.
+- `--ki-note-info-icon`: Decorative icon ink of an info note. Default: `var(--ki-text-info-high-em)`.
+- `--ki-note-line-height`: Medium note text line height. Default: `var(--ki-typography-line-height-para)`.
+- `--ki-note-padding-block`: Medium note block padding. Default: `var(--ki-space-md)`.
+- `--ki-note-padding-inline`: Medium note inline padding. Default: `var(--ki-space-xl)`.
+- `--ki-note-primary-bg`: Background of a primary note. Default: `var(--ki-surface-primary-tint)`.
+- `--ki-note-primary-fg`: Text ink of a primary note. Default: `var(--ki-text-high-em)`.
+- `--ki-note-primary-icon`: Decorative icon ink of a primary note. Default: `var(--ki-text-primary-high-em)`.
+- `--ki-note-radius`: Note surface corner radius. Default: `var(--ki-radius-component-md)`.
+- `--ki-note-sm-font-size`: Small note caption size. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-note-sm-icon-offset`: Small icon offset from the first line's block start. Default: `var(--ki-size-border-hairline)`.
+- `--ki-note-sm-icon-size`: Small note icon size. Default: `var(--ki-space-2xl)`.
+- `--ki-note-sm-line-height`: Small note caption line height. Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-note-sm-padding-block`: Small note block padding. Default: `var(--ki-space-xs)`.
+- `--ki-note-sm-padding-inline`: Small note inline padding. Default: `var(--ki-space-md)`.
+- `--ki-note-success-bg`: Background of a success note. Default: `var(--ki-surface-success-tint)`.
+- `--ki-note-success-fg`: Text ink of a success note. Default: `var(--ki-text-high-em)`.
+- `--ki-note-success-icon`: Decorative icon ink of a success note. Default: `var(--ki-text-success-high-em)`.
+- `--ki-note-warning-bg`: Background of a warning note. Default: `var(--ki-surface-warning-tint)`.
+- `--ki-note-warning-fg`: Text ink of a warning note. Default: `var(--ki-text-high-em)`.
+- `--ki-note-warning-icon`: Decorative icon ink of a warning note. Default: `var(--ki-text-warning-high-em)`.

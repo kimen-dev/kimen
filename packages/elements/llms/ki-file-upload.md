@@ -167,45 +167,50 @@ entries.
 
 None.
 
-## CSS custom properties
+## Other CSS custom properties
 
-- `--ki-corner-inline`: Small radius for an outline around inline content.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-file-upload-active-bg`: Drop zone background while files are dragged over it.
-- `--ki-file-upload-active-border`: Drop zone boundary while files are dragged over it.
-- `--ki-file-upload-active-fg`: Main drop zone text while files are dragged over it.
-- `--ki-file-upload-backdrop-filter`: Complete backdrop filter applied behind the drop zone.
-- `--ki-file-upload-bg`: Drop zone background at rest.
-- `--ki-file-upload-bg-image`: Optional image over the drop zone background.
-- `--ki-file-upload-border`: Dashed boundary of the drop zone.
-- `--ki-file-upload-border-width`: Outline stroke width for the drop zone and file rows.
-- `--ki-file-upload-error-bg`: Background of a file row with an error.
-- `--ki-file-upload-error-border`: Boundary of a file row with an error.
-- `--ki-file-upload-error-fg`: Text of a file error or field error.
-- `--ki-file-upload-fg`: Main drop zone text at rest.
-- `--ki-file-upload-radius`: Drop zone corner radius.
-- `--ki-file-upload-row-backdrop-filter`: Complete backdrop filter applied behind a file row.
-- `--ki-file-upload-row-bg`: Background of a file row and the field label.
-- `--ki-file-upload-row-bg-image`: Optional image over the file row background.
-- `--ki-file-upload-row-border`: Boundary of a file row without an error.
-- `--ki-file-upload-row-fg`: File names, row action icons and the field label.
-- `--ki-file-upload-row-radius`: File row corner radius.
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-3xl`: The 3xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-text-primary-high-em`: semantic color for text primary high em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-underline-offset`: Gap between text and its underline.
-- `--ki-typography-underline-thickness`: Stroke width of a resting text underline.
-- `--ki-typography-underline-thickness-hover`: Stroke width of an emphasized underline on hover.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-corner-inline`: Small radius for an outline around inline content. Default: `var(--ki-radius-xxs)`.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-file-upload-backdrop-filter`: Complete backdrop filter applied behind the drop zone. Default: `var(--ki-effect-no-backdrop-filter)`.
+- `--ki-file-upload-bg`: Drop zone background at rest. Default: `var(--ki-surface-s1)`.
+- `--ki-file-upload-bg-image`: Optional image over the drop zone background. Default: `var(--ki-surface-image-none)`.
+- `--ki-file-upload-border`: Dashed boundary of the drop zone. Default: `var(--ki-outline-control)`.
+- `--ki-file-upload-border-width`: Outline stroke width for the drop zone and file rows. Default: `var(--ki-outline-hairline-width)`.
+- `--ki-file-upload-fg`: Main drop zone text at rest. Default: `var(--ki-text-high-em)`.
+- `--ki-file-upload-radius`: Drop zone corner radius. Default: `var(--ki-radius-component-lg)`.
+- `--ki-file-upload-row-backdrop-filter`: Complete backdrop filter applied behind a file row. Default: `var(--ki-effect-no-backdrop-filter)`.
+- `--ki-file-upload-row-bg`: Background of a file row and the field label. Default: `var(--ki-surface-s0)`.
+- `--ki-file-upload-row-bg-image`: Optional image over the file row background. Default: `var(--ki-surface-image-none)`.
+- `--ki-file-upload-row-border`: Boundary of a file row without an error. Default: `var(--ki-outline-low-em)`.
+- `--ki-file-upload-row-fg`: File names, row action icons and the field label. Default: `var(--ki-text-high-em)`.
+- `--ki-file-upload-row-radius`: File row corner radius. Default: `var(--ki-radius-component-md)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-layout-spacing-3xl`: The 3xl spacing step for a stack or grid gap. Default: `var(--ki-space-3xl)`.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap. Default: `var(--ki-space-xs)`.
+- `--ki-text-primary-high-em`: semantic color for text primary high em. Default: onmars `light-dark(#ad411c,#dd9781)`, material3 `light-dark(#4f378b,#eaddff)`.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). Default: `var(--ki-text-med-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-underline-offset`: Gap between text and its underline. Default: `var(--ki-size-text-decoration-offset)`.
+- `--ki-typography-underline-thickness`: Stroke width of a resting text underline. Default: `var(--ki-size-border-hairline)`.
+- `--ki-typography-underline-thickness-hover`: Stroke width of an emphasized underline on hover. Default: `var(--ki-size-text-decoration-thickness-hover)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal. Default: `var(--ki-font-weight-body-normal)`.
+
+## CSS custom properties by variant and state
+
+| Variant | Tone | State | Token | Default | Description |
+| --- | --- | --- | --- | --- | --- |
+| — | — | active | `--ki-file-upload-active-bg` | `var(--ki-surface-primary-tint)` | Drop zone background while files are dragged over it. |
+| — | — | active | `--ki-file-upload-active-border` | `var(--ki-focus-ring-color)` | Drop zone boundary while files are dragged over it. |
+| — | — | active | `--ki-file-upload-active-fg` | `var(--ki-text-high-em)` | Main drop zone text while files are dragged over it. |
+| — | — | error | `--ki-file-upload-error-bg` | `var(--ki-surface-s0)` | Background of a file row with an error. |
+| — | — | error | `--ki-file-upload-error-border` | `var(--ki-outline-danger-med-em)` | Boundary of a file row with an error. |
+| — | — | error | `--ki-file-upload-error-fg` | `var(--ki-text-danger-high-em)` | Text of a file error or field error. |

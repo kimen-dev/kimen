@@ -60,28 +60,28 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-details-backdrop-filter`: Complete filter for the backdrop behind the disclosure surface.
-- `--ki-details-bg`: Color of the disclosure surface.
-- `--ki-details-bg-image`: Optional image painted over the disclosure surface.
-- `--ki-details-body-bg`: Surface color of the disclosure body.
-- `--ki-details-body-fg`: Supporting text color of the disclosure body.
-- `--ki-details-border`: Color of the disclosure frame and accordion separators.
-- `--ki-details-border-width`: Width of the disclosure or accordion frame.
-- `--ki-details-disabled-fg`: Text and icon color of a disabled summary.
-- `--ki-details-fg`: Text color on the disclosure surface.
-- `--ki-details-motion-duration`: Duration of the chevron rotation.
-- `--ki-details-motion-easing`: Easing of the chevron rotation.
-- `--ki-details-padding`: Inline inset of the summary and inset of the panel body.
-- `--ki-details-radius`: Corners of a standalone disclosure or the accordion frame.
-- `--ki-details-summary-hover-bg`: Surface color of a hovered summary.
-- `--ki-details-summary-hover-fg`: Text and icon color of a hovered summary.
-- `--ki-details-summary-padding-block`: Block inset of the summary.
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-details-backdrop-filter`: Complete filter for the backdrop behind the disclosure surface. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-details-bg`: Color of the disclosure surface. Default: `var(--ki-surface-s0)`.
+- `--ki-details-bg-image`: Optional image painted over the disclosure surface. Default: `var(--ki-surface-image-none)`.
+- `--ki-details-body-bg`: Surface color of the disclosure body. Default: `var(--ki-surface-s0)`.
+- `--ki-details-body-fg`: Supporting text color of the disclosure body. Default: `var(--ki-text-supporting)`.
+- `--ki-details-border`: Color of the disclosure frame and accordion separators. Default: `var(--ki-outline-low-em)`.
+- `--ki-details-border-width`: Width of the disclosure or accordion frame. Default: `var(--ki-outline-hairline-width)`.
+- `--ki-details-disabled-fg`: Text and icon color of a disabled summary. Default: `var(--ki-text-med-em)`.
+- `--ki-details-fg`: Text color on the disclosure surface. Default: `var(--ki-text-high-em)`.
+- `--ki-details-motion-duration`: Duration of the chevron rotation. Default: `var(--ki-motion-duration-fast)`.
+- `--ki-details-motion-easing`: Easing of the chevron rotation. Default: `var(--ki-motion-easing-standard)`.
+- `--ki-details-padding`: Inline inset of the summary and inset of the panel body. Default: `var(--ki-spacing-standard-inset)`.
+- `--ki-details-radius`: Corners of a standalone disclosure or the accordion frame. Default: `var(--ki-corner-panel)`.
+- `--ki-details-summary-hover-bg`: Surface color of a hovered summary. Default: `var(--ki-surface-s1)`.
+- `--ki-details-summary-hover-fg`: Text and icon color of a hovered summary. Default: `var(--ki-text-high-em)`.
+- `--ki-details-summary-padding-block`: Block inset of the summary. Default: `var(--ki-spacing-compact-inset)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para. Default: `var(--ki-font-line-height-para)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.

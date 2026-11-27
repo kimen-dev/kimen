@@ -90,22 +90,22 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-toolbar-backdrop-filter`: Complete backdrop filter behind the surface.
-- `--ki-toolbar-bg`: Background of the standard toolbar.
-- `--ki-toolbar-bg-image`: Optional image above the solid surface color.
-- `--ki-toolbar-docked-padding-inline`: Inline insets for docked actions.
-- `--ki-toolbar-docked-radius`: Corner radius of the docked toolbar.
-- `--ki-toolbar-fab-gap`: Gap between a floating pill and its companion FAB.
-- `--ki-toolbar-fg`: Foreground of the standard toolbar.
-- `--ki-toolbar-gap`: Gap between toolbar actions.
-- `--ki-toolbar-height`: Minimum height of the docked toolbar before its safe area.
-- `--ki-toolbar-padding`: Toolbar surface padding.
-- `--ki-toolbar-radius`: Radius of the floating pill.
-- `--ki-toolbar-scroll-duration`: Duration of the scroll visibility transition.
-- `--ki-toolbar-scroll-easing`: Easing of the scroll visibility transition.
-- `--ki-toolbar-shadow`: Resting elevation of the floating pill.
-- `--ki-toolbar-vibrant-bg`: Accent background of the vibrant toolbar.
-- `--ki-toolbar-vibrant-fg`: Foreground on the vibrant toolbar.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-toolbar-backdrop-filter`: Complete backdrop filter behind the surface. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-toolbar-bg`: Background of the standard toolbar. Default: `var(--ki-surface-s2)`.
+- `--ki-toolbar-bg-image`: Optional image above the solid surface color. Default: `var(--ki-surface-image-none)`.
+- `--ki-toolbar-docked-padding-inline`: Inline insets for docked actions. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-toolbar-docked-radius`: Corner radius of the docked toolbar. Default: `var(--ki-layout-spacing-zero)`.
+- `--ki-toolbar-fab-gap`: Gap between a floating pill and its companion FAB. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-toolbar-fg`: Foreground of the standard toolbar. Default: `var(--ki-text-high-em)`.
+- `--ki-toolbar-gap`: Gap between toolbar actions. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-toolbar-height`: Minimum height of the docked toolbar before its safe area. Default: `var(--ki-layout-spacing-18xl)`.
+- `--ki-toolbar-padding`: Toolbar surface padding. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-toolbar-radius`: Radius of the floating pill. Default: `var(--ki-radius-round)`.
+- `--ki-toolbar-scroll-duration`: Duration of the scroll visibility transition. Default: `var(--ki-motion-duration-medium-1)`.
+- `--ki-toolbar-scroll-easing`: Easing of the scroll visibility transition. Default: `var(--ki-motion-easing-standard)`.
+- `--ki-toolbar-shadow`: Resting elevation of the floating pill. Default: `var(--ki-elevation-e3)`.
+- `--ki-toolbar-vibrant-bg`: Accent background of the vibrant toolbar. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-toolbar-vibrant-fg`: Foreground on the vibrant toolbar. Default: `var(--ki-text-primary-on-primary-light)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

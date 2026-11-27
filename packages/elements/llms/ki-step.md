@@ -56,4 +56,4 @@ None.
 
 ## CSS custom properties
 
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

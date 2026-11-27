@@ -51,15 +51,15 @@ None.
 
 ## CSS custom properties
 
-- `--ki-sidebar-font-family`: Typeface of sidebar controls and copy.
-- `--ki-sidebar-group-backdrop-filter`: Complete backdrop filter behind the group heading.
-- `--ki-sidebar-group-bg`: Group heading background.
-- `--ki-sidebar-group-bg-image`: Optional image over the heading background.
-- `--ki-sidebar-group-fg`: Group heading ink, with contrast-more support.
-- `--ki-sidebar-group-font-family`: Group heading typeface.
-- `--ki-sidebar-group-font-size`: Group heading font size.
-- `--ki-sidebar-group-gap`: Space before a group of routes.
-- `--ki-sidebar-group-line-height`: Group heading line height.
-- `--ki-sidebar-item-gap`: Gap between rows.
-- `--ki-sidebar-item-padding`: Inline inset of an expanded row.
-- `--ki-sidebar-item-weight`: Weight of the navigation label.
+- `--ki-sidebar-font-family`: Typeface of sidebar controls and copy. Default: `var(--ki-typography-family-body)`.
+- `--ki-sidebar-group-backdrop-filter`: Complete backdrop filter behind the group heading. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-sidebar-group-bg`: Group heading background. Default: `var(--ki-surface-s1)`.
+- `--ki-sidebar-group-bg-image`: Optional image over the heading background. Default: `var(--ki-surface-image-none)`.
+- `--ki-sidebar-group-fg`: Group heading ink, with contrast-more support. Default: `var(--ki-text-supporting)`.
+- `--ki-sidebar-group-font-family`: Group heading typeface. Default: `var(--ki-typography-family-heading)`.
+- `--ki-sidebar-group-font-size`: Group heading font size. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-sidebar-group-gap`: Space before a group of routes. Default: `var(--ki-space-sm)`.
+- `--ki-sidebar-group-line-height`: Group heading line height. Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-sidebar-item-gap`: Gap between rows. Default: `var(--ki-space-xxs)`.
+- `--ki-sidebar-item-padding`: Inline inset of an expanded row. Default: `var(--ki-space-md)`.
+- `--ki-sidebar-item-weight`: Weight of the navigation label. Default: `var(--ki-typography-weight-body-medium)`.

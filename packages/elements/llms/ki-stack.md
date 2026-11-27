@@ -68,6 +68,6 @@ None.
 
 ## CSS custom properties
 
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-stack-gap`: Default gap of a stack.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-stack-gap`: Default gap of a stack. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

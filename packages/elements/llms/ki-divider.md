@@ -71,10 +71,10 @@ None.
 
 ## CSS custom properties
 
-- `--ki-divider-color`: color used by the divider component for the rule: Outline/base_em (Black/3 light, White/3 dark), the exact variable bound to every Figma divider variant and the same semantic role ki-list uses for item dividers.
-- `--ki-divider-radius`: dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps).
-- `--ki-divider-spacing`: dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007).
-- `--ki-divider-thickness`: dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md).
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-divider-color`: color used by the divider component for the rule: Outline/base_em (Black/3 light, White/3 dark), the exact variable bound to every Figma divider variant and the same semantic role ki-list uses for item dividers. Default: onmars `var(--ki-outline-base-em)`, material3 `var(--ki-outline-med-em)`.
+- `--ki-divider-radius`: dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps). Default: onmars `var(--ki-radius-round)`, material3 `var(--ki-radius-0)`.
+- `--ki-divider-spacing`: dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). Default: onmars `var(--ki-space-md)`, material3 `var(--ki-space-zero)`.
+- `--ki-divider-thickness`: dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). Default: `var(--ki-size-border-hairline)`.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out). Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

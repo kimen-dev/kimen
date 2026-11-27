@@ -56,8 +56,8 @@ None.
 
 ## CSS custom properties
 
-- `--ki-accordion-divider-width`: Width of the separator between accordion rows.
-- `--ki-details-border`: Color of the disclosure frame and accordion separators.
-- `--ki-details-border-width`: Width of the disclosure or accordion frame.
-- `--ki-details-radius`: Corners of a standalone disclosure or the accordion frame.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-accordion-divider-width`: Width of the separator between accordion rows. Default: `var(--ki-outline-hairline-width)`.
+- `--ki-details-border`: Color of the disclosure frame and accordion separators. Default: `var(--ki-outline-low-em)`.
+- `--ki-details-border-width`: Width of the disclosure or accordion frame. Default: `var(--ki-outline-hairline-width)`.
+- `--ki-details-radius`: Corners of a standalone disclosure or the accordion frame. Default: `var(--ki-corner-panel)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
