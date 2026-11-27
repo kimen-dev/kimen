@@ -14,10 +14,10 @@ Feature: Check Kimen theme CSS
     Then the checker reports an error and suggests "0px"
 
   # S3
-  Scenario: Unread semantic and component tokens yield advisories
-    Given a stylesheet that overrides unread semantic and component tokens
+  Scenario: Only unread component tokens yield advisories
+    Given a theme overrides semantic, primitive and component tokens that Kimen does not read
     When the author runs the theme checker
-    Then the checker warns about both overrides and exits successfully
+    Then the checker warns about the component override and exits successfully
 
   # S4
   Scenario: A more-contrast override gets the mode token as a fix
@@ -29,7 +29,7 @@ Feature: Check Kimen theme CSS
   Scenario: Material 3 follows the same rules as any theme
     Given Kimen's built Material 3 stylesheet and a copy with an extra comment
     When the author runs the theme checker
-    Then both versions exit successfully with the same findings
+    Then both versions report zero errors and the same unread component warnings
 
   # S6
   Scenario: Every interface reports the same findings
@@ -39,7 +39,7 @@ Feature: Check Kimen theme CSS
 
   # S7
   Scenario: Palette, primitive and aliased tokens pass their unread checks
-    Given a theme overrides unused palette and primitive tokens and a token read through an alias
+    Given a theme overrides unused palette and primitive tokens and a component token read through an alias
     When the author checks the stylesheet
     Then the checker returns no findings
 

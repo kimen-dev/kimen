@@ -57,10 +57,7 @@ export async function writeThemeCheckerData({ sharedTokens, usage, baseModes, sh
       .sort()
       .map((name) => {
         const token = byName.get(name);
-        const source = token?.filePath;
-        const warn =
-          !reads.has(name) &&
-          (source === 'tokens/semantic.tokens.json' || componentSourceOf(source) !== null);
+        const warn = componentSourceOf(token?.filePath) !== null && !reads.has(name);
         // Bits 0–1: checked type. Bit 2: unread advisory. Bits 3+: modes.
         const modes = baseModes.reduce((mask, { declarations }, index) => {
           return declarations.has(name) ? mask | (1 << (index + 3)) : mask;

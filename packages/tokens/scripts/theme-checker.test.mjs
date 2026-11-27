@@ -45,16 +45,14 @@ test('S2: bare zero suggests an explicit length while CSS functions and sizing k
   );
 });
 
-test('S3: unread semantic and component tokens yield warnings and a successful exit', () => {
+test('S3: only unread component tokens yield warnings and the check succeeds', () => {
   const warningFile = filePath('./fixtures/theme-warning.css');
   const result = cli('check-theme', '--json', warningFile);
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(
     JSON.parse(result.stdout).map(({ code, severity, token }) => [code, severity, token]),
-    [
-      ['unread-token', 'warning', '--ki-surface-warning-high-em'],
-      ['unread-token', 'warning', '--ki-select-hover-bg'],
-    ],
+    // The top-nav component layer defines this under the app-bar namespace.
+    [['unread-token', 'warning', '--ki-app-bar-subtitle-bg']],
   );
 });
 
@@ -86,18 +84,30 @@ test('S5: the shipped Material 3 stylesheet and a commented copy produce the sam
   const result = cli('check-theme', file, '--json');
   assert.equal(result.status, 0, result.stderr);
   const findings = JSON.parse(result.stdout);
-  assert.ok(
-    findings.every(({ code, severity }) => code === 'unread-token' && severity === 'warning'),
+  assert.deepEqual(
+    findings.filter(({ severity }) => severity === 'error'),
+    [],
+  );
+  // Remove entries from material3-unread-tokens.json as components start reading them.
+  const unreadTokens = JSON.parse(
+    readFileSync(filePath('./fixtures/material3-unread-tokens.json'), 'utf8'),
+  );
+  assert.deepEqual(
+    findings
+      .filter(({ severity }) => severity === 'warning')
+      .map(({ code, token }) => [code, token])
+      .sort(),
+    unreadTokens.map((token) => ['unread-token', token]),
   );
   assert.deepEqual(checkTheme(`${css}\n/* Theme notes */`, { file }), findings);
 });
 
-test('S7: unused palette and primitive overrides and an alias target produce no warnings', () => {
+test('S7: unused palette and primitive overrides and a component alias target produce no warnings', () => {
   assert.deepEqual(
     checkTheme(`:root {
       --ki-color-brand-400: #333;
       --ki-color-gray-800: #333;
-      --ki-surface-special-light-s2-dark-s3: #333;
+      --ki-dialog-bg-start: #333;
     }`),
     [],
   );
