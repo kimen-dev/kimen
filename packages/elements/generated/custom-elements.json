@@ -31029,6 +31029,10 @@
             {
               "name": "",
               "description": "Label content. This is the accessible name source."
+            },
+            {
+              "name": "end",
+              "description": "Trailing value outside the label."
             }
           ],
           "cssParts": [
@@ -31175,12 +31179,28 @@
               "description": "dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb)."
             },
             {
+              "name": "--ki-switch-label-font-size",
+              "description": "Label font size."
+            },
+            {
+              "name": "--ki-switch-label-line-height",
+              "description": "Label line height."
+            },
+            {
               "name": "--ki-switch-lg-control-height",
               "description": "dimension used by the switch component for the control footprint height at size lg."
             },
             {
               "name": "--ki-switch-lg-control-width",
               "description": "dimension used by the switch component for the control footprint width at size lg."
+            },
+            {
+              "name": "--ki-switch-lg-label-font-size",
+              "description": "Label font size."
+            },
+            {
+              "name": "--ki-switch-lg-label-line-height",
+              "description": "Label line height."
             },
             {
               "name": "--ki-switch-lg-min-target",
@@ -31379,6 +31399,14 @@
               "description": "dimension used by the switch component for the control footprint width at size xl."
             },
             {
+              "name": "--ki-switch-xl-label-font-size",
+              "description": "Label font size."
+            },
+            {
+              "name": "--ki-switch-xl-label-line-height",
+              "description": "Label line height."
+            },
+            {
               "name": "--ki-switch-xl-min-target",
               "description": "dimension used by the switch component for min target at size xl."
             },
@@ -31431,16 +31459,8 @@
               "description": "semantic font family for typography family body."
             },
             {
-              "name": "--ki-typography-line-height-body-2",
-              "description": "semantic dimension for typography line height body 2."
-            },
-            {
               "name": "--ki-typography-line-height-caption-2",
               "description": "semantic dimension for typography line height caption 2."
-            },
-            {
-              "name": "--ki-typography-size-body-2",
-              "description": "semantic dimension for typography size body 2."
             },
             {
               "name": "--ki-typography-size-caption-2",

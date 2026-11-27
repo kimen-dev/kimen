@@ -27926,6 +27926,10 @@
           "text": "- Label content. This is the accessible name source."
         },
         {
+          "name": "slot",
+          "text": "end - Trailing value outside the label."
+        },
+        {
           "name": "part",
           "text": "track - On/off channel."
         },
@@ -27951,7 +27955,7 @@
         }
       ],
       "usage": {
-        "examples": "The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:\n\n```html\n<ki-switch checked>Autosave</ki-switch>\n<ki-switch>Desktop notifications</ki-switch>\n```\n\nWhile on, a named switch contributes `name`/`value` to native form data (`on` when `value` is omitted, checkbox parity); while off it contributes nothing:\n\n```html\n<form>\n  <ki-switch name=\"tracking\" value=\"enabled\" checked>Usage analytics</ki-switch>\n</form>\n```\n\nUser toggles dispatch composed `input` and `change` events — apply the setting immediately, a switch never waits for a submit; `disabled` preserves the current state while removing the switch from keyboard reach and form data:\n\n```html\n<ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on a setting it could\nnot apply. The switch is invalid, blocks its form and is announced as\ninvalid at once. Toggling it withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-switch name=\"two-step\" checked custom-error=\"Add a phone number before turning on two-step sign-in.\">Two-step sign-in</ki-switch>\n```\n"
+        "examples": "The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:\n\n```html\n<ki-switch checked>Autosave</ki-switch>\n<ki-switch>Desktop notifications</ki-switch>\n```\n\nWhile on, a named switch contributes `name`/`value` to native form data (`on` when `value` is omitted, checkbox parity); while off it contributes nothing:\n\n```html\n<form>\n  <ki-switch name=\"tracking\" value=\"enabled\" checked>Usage analytics</ki-switch>\n</form>\n```\n\nUser toggles dispatch composed `input` and `change` events — apply the setting immediately, a switch never waits for a submit; `disabled` preserves the current state while removing the switch from keyboard reach and form data:\n\n```html\n<ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on a setting it could\nnot apply. The switch is invalid, blocks its form and is announced as\ninvalid at once. Toggling it withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-switch name=\"two-step\" checked custom-error=\"Add a phone number before turning on two-step sign-in.\">Two-step sign-in</ki-switch>\n```\n\n## Settings row\n\nStretch the switch in a grid or set `display: block` on the host. Put the\ncurrent value in `slot=\"end\"`. The default slot supplies the switch name and\nthe value sits at the inline end. Update the value when the switch changes.\n\n```html\n<ki-switch style=\"display: block\" checked help-text=\"Get account updates by email.\">\n  Email notifications<span slot=\"end\">On</span>\n</ki-switch>\n```\n"
       },
       "props": [
         {
@@ -28189,6 +28193,10 @@
         {
           "name": "",
           "docs": "Label content. This is the accessible name source."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing value outside the label."
         }
       ],
       "parts": [

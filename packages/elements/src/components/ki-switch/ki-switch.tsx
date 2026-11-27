@@ -33,6 +33,7 @@ export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';
  * choices, and ki-button for actions.
  *
  * @slot - Label content. This is the accessible name source.
+ * @slot end - Trailing value outside the label.
  * @part track - On/off channel.
  * @part thumb - Traveling handle.
  * @part label - Label wrapper around the default slot.
@@ -412,42 +413,45 @@ export class KiSwitch {
       error: this.userInvalid && !this.effectiveDisabled ? this.message : '',
     };
     return [
-      <label class="base">
-        <input
-          ref={this.setInput}
-          type="checkbox"
-          role="switch"
-          aria-label={this.host.getAttribute('aria-label') ?? undefined}
-          tabIndex={this.effectiveDisabled ? -1 : 0}
-          checked={this.checked}
-          disabled={this.effectiveDisabled}
-          name={this.name ?? ''}
-          value={this.value ?? 'on'}
-          aria-describedby={fieldDescribedBy(messages)}
-          aria-invalid={fieldInvalid(messages)}
-          onInput={this.handleInput}
-          onChange={this.handleChange}
-        />
-        <span part="track">
-          <span part="thumb">
-            {/* State glyphs (MarsUI Toggle master): ON check, OFF dash.
-                Filled rounded vectors adapted from the Figma pointer
-                exports; ink comes from currentColor via CSS. */}
-            <svg class="glyph glyph-check" viewBox="0 0 9.2 7.5" aria-hidden="true">
-              <path
-                d="M8.84 1.71 3.98 6.82c-.17.18-.4.28-.63.28-.24 0-.47-.1-.63-.28L.36 4.34c-.35-.37-.35-.97 0-1.33.35-.37.92-.37 1.27 0l1.72 1.82L7.57.38c.35-.37.92-.37 1.27 0 .35.37.35.96 0 1.33Z"
-                fill="currentColor"
-              />
-            </svg>
-            <svg class="glyph glyph-dash" viewBox="0 0 8 2" aria-hidden="true">
-              <path d="M1 0h6a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2Z" fill="currentColor" />
-            </svg>
+      <div class="base">
+        <label>
+          <input
+            ref={this.setInput}
+            type="checkbox"
+            role="switch"
+            aria-label={this.host.getAttribute('aria-label') ?? undefined}
+            tabIndex={this.effectiveDisabled ? -1 : 0}
+            checked={this.checked}
+            disabled={this.effectiveDisabled}
+            name={this.name ?? ''}
+            value={this.value ?? 'on'}
+            aria-describedby={fieldDescribedBy(messages)}
+            aria-invalid={fieldInvalid(messages)}
+            onInput={this.handleInput}
+            onChange={this.handleChange}
+          />
+          <span part="track">
+            <span part="thumb">
+              {/* State glyphs (MarsUI Toggle master): ON check, OFF dash.
+                  Filled rounded vectors adapted from the Figma pointer
+                  exports; ink comes from currentColor via CSS. */}
+              <svg class="glyph glyph-check" viewBox="0 0 9.2 7.5" aria-hidden="true">
+                <path
+                  d="M8.84 1.71 3.98 6.82c-.17.18-.4.28-.63.28-.24 0-.47-.1-.63-.28L.36 4.34c-.35-.37-.35-.97 0-1.33.35-.37.92-.37 1.27 0l1.72 1.82L7.57.38c.35-.37.92-.37 1.27 0 .35.37.35.96 0 1.33Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <svg class="glyph glyph-dash" viewBox="0 0 8 2" aria-hidden="true">
+                <path d="M1 0h6a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2Z" fill="currentColor" />
+              </svg>
+            </span>
           </span>
-        </span>
-        <span part="label">
-          <slot />
-        </span>
-      </label>,
+          <span part="label">
+            <slot />
+          </span>
+        </label>
+        <slot name="end" />
+      </div>,
       <FieldMessage {...messages} />,
     ];
   }

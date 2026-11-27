@@ -4411,6 +4411,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       };
       readonly slots: {
         readonly "": "Label content. This is the accessible name source.";
+        readonly end: "Trailing value outside the label.";
       };
       readonly tag: "ki-switch";
       readonly whenNotToUse: "selections collected for later form submission; use\nki-checkbox for recorded choices, ki-radio-group for mutually exclusive\nchoices, and ki-button for actions.";

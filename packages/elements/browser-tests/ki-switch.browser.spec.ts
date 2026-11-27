@@ -1,7 +1,7 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 
 // @spec:008-ki-switch
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -505,13 +505,13 @@ describe('ki-switch in a real browser', () => {
   // control before the fix).
   it('S13 a fieldset-disabled switch adopts the disabled affordance', async () => {
     const enabled = await mount('name="newsletter"');
-    const enabledCursor = getComputedStyle(baseOf(enabled)).cursor;
+    const enabledCursor = getComputedStyle(internalInput(enabled)).cursor;
 
     const directly = await mount('name="newsletter" disabled');
-    const directlyCursor = getComputedStyle(baseOf(directly)).cursor;
+    const directlyCursor = getComputedStyle(internalInput(directly)).cursor;
 
     const { el } = await mountInForm('name="newsletter"', true);
-    const fieldsetCursor = getComputedStyle(baseOf(el)).cursor;
+    const fieldsetCursor = getComputedStyle(internalInput(el)).cursor;
 
     expect(enabledCursor).toBe('pointer');
     expect(directlyCursor).toBe('default');
@@ -820,4 +820,108 @@ describe('ki-switch boolean presence in a real browser', () => {
     expect(el.hasAttribute('checked')).toBe(false);
     expect(el.disabled).toBe(true);
   });
+});
+
+const switchBrowser = commands as unknown as {
+  ariaSnapshot: (selector: string) => Promise<string>;
+  emulateReducedMotion: (mode: 'reduce' | null) => Promise<void>;
+};
+
+it('S27 keeps the base at full width and its empty error line below the row', async () => {
+  const el = await mount();
+  el.style.display = 'block';
+  el.style.inlineSize = '559px';
+  const row = baseOf(el).getBoundingClientRect();
+  const field = el.getBoundingClientRect();
+  const error = el.shadowRoot?.querySelector('[part="error"]')?.getBoundingClientRect();
+
+  expect(row.width).toBeCloseTo(field.width);
+  expect(error?.top).toBeGreaterThanOrEqual(row.bottom);
+});
+
+it.each(['ltr', 'rtl'] as const)(
+  'S27 aligns the value at the inline end and stacks messages (%s)',
+  async (dir) => {
+    const el = await mount();
+    document.documentElement.dir = dir;
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display: grid; inline-size: 559px';
+    el.before(grid);
+    grid.append(el);
+    const value = document.createElement('span');
+    value.slot = 'end';
+    value.textContent = 'On';
+    el.append(value);
+    el.setAttribute('help-text', 'Get receipts and account updates');
+
+    try {
+      const help = page.getByText('Get receipts and account updates');
+      await expect.element(help).toBeVisible();
+      const row = baseOf(el).getBoundingClientRect();
+      const field = el.getBoundingClientRect();
+      const end = dir === 'rtl' ? 'left' : 'right';
+      expect(row.width).toBeCloseTo(field.width);
+      expect(value.getBoundingClientRect()[end]).toBeCloseTo(field[end]);
+      const helpPart = el.shadowRoot?.querySelector('[part="help"]');
+      expect(helpPart?.getBoundingClientRect().top).toBeGreaterThanOrEqual(row.bottom);
+
+      el.setAttribute('custom-error', 'Enter an email address first');
+      await expect.element(page.getByText('Enter an email address first')).toBeVisible();
+      await expect.element(help).not.toBeInTheDocument();
+      const errorPart = el.shadowRoot?.querySelector('[part="error"]');
+      expect(errorPart?.getBoundingClientRect().top).toBeGreaterThanOrEqual(row.bottom);
+    } finally {
+      cleanup();
+    }
+  },
+);
+
+it('S27 keeps an inline switch at its intrinsic width', async () => {
+  const el = await mount();
+  document.body.style.inlineSize = '559px';
+  try {
+    const row = baseOf(el).getBoundingClientRect();
+    expect(row.width).toBeCloseTo(el.getBoundingClientRect().width);
+    expect(row.width).toBeLessThan(document.body.getBoundingClientRect().width);
+  } finally {
+    document.body.style.removeProperty('inline-size');
+  }
+});
+
+it('S28 exposes the label as the switch name and the value as separate content', async () => {
+  const el = await mount();
+  const value = document.createElement('span');
+  value.slot = 'end';
+  value.textContent = 'On';
+  el.append(value);
+
+  await expect
+    .element(page.getByRole('switch', { name: 'Email notifications', exact: true }))
+    .toBeVisible();
+  await expect.element(page.getByText('On', { exact: true })).toBeVisible();
+  expect(await switchBrowser.ariaSnapshot('ki-switch')).toMatch(/(?:text|generic): [^\n]*\bOn\b/u);
+  await userEvent.click(value);
+  expect(el.checked).toBe(false);
+  const label = page.getByText('Email notifications', { exact: true });
+  await label.click();
+  expect(el.checked).toBe(true);
+});
+
+it.each([
+  ['md', '--ki-switch-label-'],
+  ['lg', '--ki-switch-lg-label-'],
+  ['xl', '--ki-switch-xl-label-'],
+])('S29 sizes the %s label independently', async (size, prefix) => {
+  await switchBrowser.emulateReducedMotion('reduce');
+  try {
+    const el = await mount(`size="${size}"`);
+    el.style.setProperty(`${prefix}font-size`, '19px');
+    el.style.setProperty(`${prefix}line-height`, '31px');
+
+    const paint = getComputedStyle(labelPart(el));
+    expect(paint.fontSize).toBe('19px');
+    expect(paint.lineHeight).toBe('31px');
+  } finally {
+    await switchBrowser.emulateReducedMotion(null);
+  }
 });

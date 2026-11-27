@@ -1707,7 +1707,8 @@ export const catalogGuidance: CatalogGuidance = {
       "value": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen to use: submit a domain-specific value instead of the default `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing."
     },
     "slots": {
-      "": "Label content. This is the accessible name source."
+      "": "Label content. This is the accessible name source.",
+      "end": "Trailing value outside the label."
     },
     "whenNotToUse": "selections collected for later form submission; use\nki-checkbox for recorded choices, ki-radio-group for mutually exclusive\nchoices, and ki-button for actions.",
     "whenToUse": "binary settings whose change takes effect immediately, always\nwith a slotted label."

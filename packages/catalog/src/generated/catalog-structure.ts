@@ -1889,7 +1889,8 @@ export const catalogStructure: Catalog = {
         "value": {"type":"string","description":""}
       },
       "slots": {
-        "": ""
+        "": "",
+        "end": ""
       },
       "tag": "ki-switch",
       "whenNotToUse": "",
