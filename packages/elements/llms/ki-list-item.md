@@ -61,6 +61,8 @@ Valid only as a child of `ki-list`; the default slot is the primary text line:
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-list-item`: the default, only the tokens ki-list-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `disabled` (boolean, default false): Excludes this option from focus, selection by the user, and form data.

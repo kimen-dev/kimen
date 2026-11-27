@@ -1,5 +1,7 @@
 # Feature specification for Carousel
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`.
+
 - **Branch** `feat/413-ki-carousel`
 - **Issue** #413
 - **Design source** Kimen design system, Components → Proposed → Carousel
@@ -57,7 +59,7 @@ position. Rotation requires an explicit interval.
 
 | Family | Scenarios | Justification when N/A |
 | --- | --- | --- |
-| Core behavior | S1–S4, S9–S12, S18, S20, S21–S24 | |
+| Core behavior | S1–S4, S9–S12, S18, S20, S21–S24, S25 | |
 | Keyboard path | S5, S19 | |
 | Assistive-tech outcome | S6–S8, S12 | |
 | Form participation | | N/A. The carousel presents content and has no form value. |
@@ -402,4 +404,10 @@ Feature: ki-carousel presents a sequence of slides
     When a surface renders the spec
     Then the carousel appears with no validation issue
     And its Pause control is available
+
+  # S25
+  Scenario: Removing a boolean override restores its default on state
+    Given a carousel with navigation or pagination set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true
 ```

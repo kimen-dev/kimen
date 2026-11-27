@@ -58,6 +58,8 @@ The `action` slot takes one ghost `ki-button size="sm"`. Its own click handler r
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-toast`: the default, only the tokens ki-toast needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `dismiss-label` (string, default 'Dismiss'): Accessible name of the dismiss button. Override for localization; the default English word is the component's only built-in text. When to use: whenever the document language is not English. When NOT to use: do not put the message here; use the default slot.

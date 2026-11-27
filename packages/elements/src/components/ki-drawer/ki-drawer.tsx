@@ -1,15 +1,5 @@
 import '../../../icons/x.js';
-import {
-  AttrDeserialize,
-  Component,
-  Element,
-  Event,
-  h,
-  Method,
-  Prop,
-  State,
-  Watch,
-} from '@stencil/core';
+import { Component, Element, Event, h, Method, Prop, State, Watch } from '@stencil/core';
 import { focusThroughShadow, shadowFocusTarget } from '../../utils/shadow-focus';
 import { isNativePlayer, resolveFocusableTargets } from '../ki-dialog/ki-dialog.focus';
 import { isDownwardSwipe } from './ki-drawer.gesture';
@@ -91,19 +81,8 @@ export class KiDrawer {
   private requestingClose = false;
   private swipeStart: { pointerId: number; x: number; y: number } | undefined;
 
-  @AttrDeserialize('modal')
-  protected deserializeModal(value: string | null): boolean {
-    return value !== 'false';
-  }
-
   componentWillLoad(): void {
     this.hasFooter = this.host.querySelector(':scope > [slot="footer"]') !== null;
-    // The standalone custom-element runtime parses removal of a boolean
-    // attribute as false without consulting the deserializer.
-    const host = this.host;
-    new MutationObserver(() => {
-      if (!host.hasAttribute('modal')) this.modal = true;
-    }).observe(host, { attributeFilter: ['modal'] });
   }
 
   componentDidLoad(): void {

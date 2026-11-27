@@ -120,14 +120,14 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiCheckbox {\n    checked: boolean;\n    indeterminate: boolean;\n    size: KiCheckboxSize;\n    disabled: boolean;\n    required: boolean;\n    name?: string;\n    value?: string;\n    labelHint?: string;\n    helpText?: string;\n    errorText?: string;\n    customError?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected checkedChanged(): void;\n    protected indeterminateChanged(): void;\n    protected inputConstraintChanged(): void;\n    protected valueChanged(): void;\n    protected errorTextChanged(): void;\n    protected customErrorChanged(): void;\n    formAssociatedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    formResetCallback(): void;\n    protected hostInvalid(): void;\n    render(): any[];\n}"
+                "signature": "export declare class KiCheckbox {\n    checked: boolean;\n    indeterminate: boolean;\n    size: KiCheckboxSize;\n    disabled: boolean;\n    required: boolean;\n    name?: string;\n    value?: string;\n    labelHint?: string;\n    helpText?: string;\n    errorText?: string;\n    customError?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    connectedCallback(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected checkedChanged(): void;\n    protected indeterminateChanged(): void;\n    protected inputConstraintChanged(): void;\n    protected valueChanged(): void;\n    protected errorTextChanged(): void;\n    protected customErrorChanged(): void;\n    formAssociatedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    formResetCallback(): void;\n    protected hostInvalid(): void;\n    render(): any[];\n}"
               },
               "KiDialog": {
                 "kinds": [
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiDialog {\n    open: boolean;\n    heading: string;\n    closeOnBackdrop: boolean;\n    fullscreen: 'never' | 'compact' | 'always';\n    confirmLabel?: string;\n    closeLabel: string;\n    protected handleOpenChange(): void;\n    protected watchFullscreen(): void;\n    componentWillLoad(): void;\n    connectedCallback(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    show(): Promise<void>;\n    close(): Promise<void>;\n    protected handleCommand(event: DialogCommandEvent): void;\n    render(): any;\n}"
+                "signature": "export declare class KiDialog {\n    open: boolean;\n    heading: string;\n    closeOnBackdrop: boolean;\n    fullscreen: 'never' | 'compact' | 'always';\n    confirmLabel?: string;\n    closeLabel: string;\n    protected handleOpenChange(): void;\n    protected watchFullscreen(): void;\n    connectedCallback(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    show(): Promise<void>;\n    close(): Promise<void>;\n    protected handleCommand(event: DialogCommandEvent): void;\n    render(): any;\n}"
               },
               "KiDialogCloseDetail": {
                 "kinds": [
@@ -179,7 +179,7 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiOption {\n    value?: string;\n    disabled: boolean;\n    description?: string;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    disconnectedCallback(): void;\n    render(): any[];\n}"
+                "signature": "export declare class KiOption {\n    value?: string;\n    disabled: boolean;\n    description?: string;\n    render(): any[];\n}"
               },
               "KiProgress": {
                 "kinds": [
@@ -199,7 +199,7 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiRadio {\n    value: string;\n    disabled: boolean;\n    protected normalizeDisabled(): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    disconnectedCallback(): void;\n    render(): any;\n}"
+                "signature": "export declare class KiRadio {\n    value: string;\n    disabled: boolean;\n    connectedCallback(): void;\n    disconnectedCallback(): void;\n    render(): any;\n}"
               },
               "KiRadioGroup": {
                 "kinds": [
@@ -213,21 +213,21 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiSelect {\n    label: string;\n    labelHint?: string;\n    placeholder: string;\n    size: KiSelectSize;\n    name?: string;\n    value: string;\n    disabled: boolean;\n    required: boolean;\n    helpText?: string;\n    errorText?: string;\n    customError?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected valueChanged(nextValue: string): void;\n    protected errorTextChanged(): void;\n    protected customErrorChanged(): void;\n    protected stateAttributeChanged(): void;\n    protected handleInvalid(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any;\n}"
+                "signature": "export declare class KiSelect {\n    label: string;\n    labelHint?: string;\n    placeholder: string;\n    size: KiSelectSize;\n    name?: string;\n    value: string;\n    disabled: boolean;\n    required: boolean;\n    helpText?: string;\n    errorText?: string;\n    customError?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    connectedCallback(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected valueChanged(nextValue: string): void;\n    protected errorTextChanged(): void;\n    protected customErrorChanged(): void;\n    protected stateAttributeChanged(): void;\n    protected handleInvalid(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any;\n}"
               },
               "KiSwitch": {
                 "kinds": [
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiSwitch {\n    checked: boolean;\n    size: KiSwitchSize;\n    disabled: boolean;\n    name?: string;\n    value?: string;\n    helpText?: string;\n    customError?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected checkedChanged(): void;\n    protected disabledChanged(): void;\n    protected valueChanged(): void;\n    protected customErrorChanged(): void;\n    formAssociatedCallback(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    protected handleInvalid(): void;\n    render(): any[];\n}"
+                "signature": "export declare class KiSwitch {\n    checked: boolean;\n    size: KiSwitchSize;\n    disabled: boolean;\n    name?: string;\n    value?: string;\n    helpText?: string;\n    customError?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    connectedCallback(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected checkedChanged(): void;\n    protected disabledChanged(): void;\n    protected valueChanged(): void;\n    protected customErrorChanged(): void;\n    formAssociatedCallback(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    protected handleInvalid(): void;\n    render(): any[];\n}"
               },
               "KiTab": {
                 "kinds": [
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiTab {\n    value: string;\n    disabled: boolean;\n    selected: boolean;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    disconnectedCallback(): void;\n    render(): any;\n}"
+                "signature": "export declare class KiTab {\n    value: string;\n    disabled: boolean;\n    selected: boolean;\n    render(): any;\n}"
               },
               "KiTabPanel": {
                 "kinds": [
@@ -101971,5 +101971,5 @@
       }
     }
   },
-  "surfaceSha256": "fd1f085a414abce7f34ea3a90abfcf789332022fc4ddee9cbb7abec25626f210"
+  "surfaceSha256": "be7bc6f181edd79b0bdc5e6442a2ff951441105dd41ef43caf49d8a8d5b13993"
 }

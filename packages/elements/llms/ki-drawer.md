@@ -63,6 +63,8 @@ Use `modal="false"` when the page behind the drawer should stay interactive.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-drawer`: the default, only the tokens ki-drawer needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `close-label` (string | undefined, default 'Close'): Accessible name for the built-in Close button. Translate this for localized interfaces.

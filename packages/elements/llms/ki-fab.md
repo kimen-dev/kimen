@@ -79,6 +79,8 @@ control retains its accessible name and focus.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-fab`: the default, only the tokens ki-fab needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `collapse-on-scroll` (boolean, default false): Compact an extended FAB on viewport scroll down and restore on scroll up.

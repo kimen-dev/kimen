@@ -96,3 +96,19 @@ Feature: Segmented control applies one in-place choice
     When the control is displayed
     Then every label shows its full text on at most two lines
     And the options keep one height
+
+  # S16
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a segment within a segmented control
+    When an attribute (disabled) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |

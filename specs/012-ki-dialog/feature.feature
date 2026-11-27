@@ -39,17 +39,21 @@ Feature: Dialog
     When the application closes it programmatically
     Then the dialog closes and exactly one ki-close event reports a programmatic dismissal
 
-  # S16
-  Scenario Outline: An open attribute written as "false" opens the dialog
-    Given a dialog headed "Delete account?"
-    When the attribute open="false" is written on the dialog <moment>
-    Then the dialog is presented modally above an inert page
-    And the attribute stays present on the dialog with an empty value
+  # S17
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a dialog
+    When an attribute (open and close-on-backdrop) is <write> <moment>
+    Then the corresponding property reads <state>
 
     Examples:
-      | moment                 |
-      | in the initial markup  |
-      | after the first render |
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S6

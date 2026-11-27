@@ -38,24 +38,28 @@ Feature: Switch
     Then the switch is on
     And the page observes exactly one change event
 
-  # S22
-  Scenario Outline: A disabled attribute written as "false" keeps the switch disabled
-    Given a switch labeled "Email notifications" that is off
-    When the attribute disabled="false" is written on the switch <moment>
-    Then the user cannot toggle the switch and no change event is observed
-    And the attribute stays present on the switch with an empty value
-
-    Examples:
-      | moment                 |
-      | in the initial markup  |
-      | after the first render |
-
   # S25
   Scenario: A script click toggles the switch as it toggles a native checkbox
     Given a switch labeled "Newsletter" that is off
     When a script clicks the switch
     Then the switch is on
     And the page observes exactly one input event followed by exactly one change event
+
+  # S27
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a switch
+    When an attribute (checked and disabled) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S5

@@ -12,10 +12,6 @@ import {
   Watch,
 } from '@stencil/core';
 import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
-import {
   type CheckboxGroupContext,
   checkboxGroupFor,
   checkboxGroupOptions,
@@ -160,7 +156,6 @@ export class KiCheckboxGroup {
   private initialValue?: string[];
   private readonly initialOptions = new WeakSet<Element>();
   private readonly initialChecked = new WeakSet<CheckboxOption>();
-  private presenceObserver?: MutationObserver;
   private fieldset: HTMLElement | undefined;
   private legend: HTMLElement | undefined;
   private customValidity = '';
@@ -216,23 +211,10 @@ export class KiCheckboxGroup {
 
   connectedCallback(): void {
     checkboxGroups.set(this.host, this.group);
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      ['disabled', 'label-hidden'],
-      (attribute) => {
-        if (attribute === 'label-hidden') this.labelHidden = true;
-        else this.disabled = true;
-      },
-    );
     if (this.ready) this.syncOptions();
   }
 
   componentWillLoad(): void {
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
-    this.labelHidden = booleanFromAttributePresence(
-      this.labelHidden,
-      this.host.hasAttribute('label-hidden'),
-    );
     this.syncDisabled();
   }
 
@@ -297,10 +279,6 @@ export class KiCheckboxGroup {
       this.initialValue = initial;
       this.selectValues(initial);
     }
-  }
-
-  disconnectedCallback(): void {
-    this.presenceObserver?.disconnect();
   }
 
   formDisabledCallback(disabled: boolean): void {

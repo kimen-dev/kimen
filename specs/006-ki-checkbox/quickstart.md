@@ -50,7 +50,7 @@ bash scripts/gates/check-traceability.sh specs/006-ki-checkbox
    Tab to it: visible focus ring on the control (S5); Space toggles (S6);
    Enter does nothing (native parity). A disabled checkbox never changes
    and is skipped by Tab (S2). Declare `checked="false"` in markup: it
-   renders CHECKED — presence semantics (S4). Set `el.checked = true` from
+   renders unchecked (S24). Set `el.checked = true` from
    the console: display updates, no change event.
 2. **Forms (US2)** — a form with
    `<ki-checkbox name="newsletter" checked>Newsletter</ki-checkbox>` and a

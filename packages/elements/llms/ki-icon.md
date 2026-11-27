@@ -59,6 +59,8 @@ by name. The icon has no slots or actions.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-icon`: the default, only the tokens ki-icon needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name for a meaningful glyph. Omit it when nearby text already conveys the meaning.

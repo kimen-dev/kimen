@@ -54,6 +54,8 @@ Leave the action binding unset for native navigation.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-link`: the default, only the tokens ki-link needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `download` (string | undefined): Native download attribute. Set it to an empty string to let the browser choose the file name, or supply a suggested file name.

@@ -1,5 +1,7 @@
 # Feature Specification: ki-checkbox
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
@@ -184,9 +186,7 @@ observe predictable rendering.
 **Acceptance Scenarios**:
 
 1. **Given** a checkbox declared with `checked="false"`, **When** the page
-   renders, **Then** the checkbox renders checked — boolean attributes
-   follow presence semantics; unchecked is expressed by omitting the
-   attribute.
+   renders, **Then** the checkbox renders unchecked.
 
 ### Edge Cases
 
@@ -204,12 +204,8 @@ observe predictable rendering.
 - Disabled applied while the checkbox has focus: focus moves on; no change
   event fires afterwards.
 - `value` attribute absent: a checked checkbox submits "on" (native parity).
-- Non-canonical boolean markup from agents (`checked="true"`,
-  `checked="yes"`, and the misleading `checked="false"`): boolean-attribute
-  presence semantics — any present value renders checked, never breaks;
-  unchecked is expressed only by omitting the attribute (ki-checkbox has no
-  enum attributes in v1, so the 002 S11 fallback contract maps to boolean
-  robustness; see Assumptions).
+- The exact value `checked="false"` starts unchecked. Values such as
+  `checked="true"` or `checked="yes"` start checked.
 - RTL documents: control/label order and gap follow the writing direction
   (logical properties only, Art. IV).
 - A theme that omits a component token must still render: component tokens
@@ -266,31 +262,28 @@ Feature: Checkbox
     When the user activates the label
     Then the checkbox is checked
 
-  # S4
-  Scenario: Non-canonical boolean values never break rendering
-    Given a checkbox declared with checked="false"
-    When the page renders
-    Then the checkbox renders checked
-
-  # S22
-  Scenario Outline: A boolean attribute written as "false" keeps presence semantics
-    Given a checkbox labeled "Email notifications"
-    When the attribute <attribute>="false" is written on the checkbox <moment>
-    Then the checkbox behaves as <state>
-    And the attribute stays present on the checkbox with an empty value
-
-    Examples:
-      | attribute | moment                 | state    |
-      | disabled  | in the initial markup  | disabled |
-      | disabled  | after the first render | disabled |
-      | required  | after the first render | required |
-
   # S23
   Scenario: A script click checks the checkbox as it checks a native checkbox
     Given an unchecked checkbox labeled "Email notifications"
     When a script clicks the checkbox
     Then the checkbox is checked
     And the page observes exactly one input event followed by exactly one change event
+
+  # S24
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a checkbox
+    When an attribute (checked, indeterminate, disabled, and required) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S5
@@ -392,7 +385,7 @@ Feature: Checkbox
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S19, S20, S4, S22, S23 | |
+| Core behavior | S1, S2, S3, S19, S20, S23, S24 | |
 | Keyboard path | S5, S6 | |
 | Assistive-tech outcome | S7, S8, S9 | |
 | Form participation | S10, S11, S12, S13, S14, S15 | |
@@ -446,12 +439,9 @@ Feature: Checkbox
 - **FR-009**: Interaction and validity states (hover, focus-visible,
   active, disabled, invalid) MUST be styled exclusively through tokens and
   CSS states; states are never attributes/props.
-- **FR-010**: Boolean attributes MUST follow presence semantics: any
-  present value renders as set and never breaks rendering — including the
-  misleading `checked="false"`, which still renders checked; unchecked is
-  expressed only by omitting the attribute (the 002 S11 robustness
-  contract; ki-checkbox carries no enum attributes in v1). The catalog
-  documents this explicitly for agents.
+- **FR-010**: An absent boolean attribute MUST use its property default. A
+  present attribute MUST read true unless the value is exactly `"false"`,
+  in markup and after hydration (S24).
 - **FR-011**: Focus MUST be clearly visible in every theme; the pointer
   target MUST be at least 24×24 px in every theme.
 - **FR-012**: The component MUST expose `control` and `label` parts for the
@@ -497,53 +487,7 @@ Feature: Checkbox
   reflects partial selection through the indeterminate presentation. When
   NOT to use — a single mutually exclusive choice (ki-radio-group), an
   immediate on/off effect (ki-switch), triggering an action (ki-button),
-  unlabeled/icon-only usage (no accessible name), and writing
-  `checked="false"` to mean unchecked. Usage note for agents: boolean
-  attributes follow presence semantics — `checked="false"` still renders
-  checked; omit the attribute to express unchecked.
-- **Guardrail/security boundary** (Art. VIII): none — no spec rendering,
-  declared actions or adapter surface touched.
-
-## Success Criteria *(mandatory)*
-
-### Measurable Outcomes
-
-- **SC-001**: a person can toggle the checkbox via pointer and keyboard,
-  each attempt flipping the state exactly once, in 100% of selection and
-  validity states.
-- **SC-002**: switching the document theme (onmars ↔ material3) restyles
-  every selection × interaction × validity state with zero markup or
-  component changes — only the theme declaration differs.
-- **SC-003**: zero accessibility violations across the full state matrix in
-  automated auditing, with the partial selection exposed as "mixed" to
-  assistive technology.
-- **SC-004**: submitted form data matches the native checkbox in every
-  form scenario: present with its value when checked, absent when
-  unchecked, restored by reset, blocked when required and unchecked.
-- **SC-005**: the component's marginal cost stays in single-digit KB
-  (gzipped) and within the declared budget gate.
-- **SC-006**: keyboard-only operation covers 100% of the behavior available
-  to pointer users.
-
-## Assumptions
-
-- No `variant`, `tone` or `size` attributes in v1: the Material 3 checkbox
-  is a single fixed-size control with no emphasis or intent axis, and
-  MarsUI verification 2026-07-08 found no checkbox frame at all; metrics
-  are per-theme component tokens. A size axis, should a design source ever
-  demand one, would be an additive MINOR (charter allows a subset with
-  justification). **[premise refuted — re-derive]** the MarsUI half of this
-  justification is void (Correction 2026-07-25): `Checkbox` (node
-  10030:982) ships `Size` = sm | md | lg and `Checkbox_label` (node
-  10095:3846) ships `Size` = sm | md, so a design source does demand one.
-  The v1 decision stands as written pending founder re-derivation against a
-  real extraction; only the reasoning is retracted here.
-- Because ki-checkbox carries no enum attributes, the charter-mandated
-  unknown-value fallback scenario (002 S11 pattern) maps to
-  boolean-attribute robustness: any present `checked` value — including
-  the misleading `checked="false"` — renders as checked via presence
-  semantics and never breaks rendering (S4); unchecked is expressed only
-  by omitting the attribute.
+  and unlabeled/icon-only usage (no accessible name).
 - `value` defaults to "on" for native-checkbox parity (Art. IV, least
   surprise).
 - `indeterminate` is a declarative attribute (unlike the native input,

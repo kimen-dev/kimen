@@ -12,7 +12,7 @@
       "close-on-backdrop": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+        "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -651,7 +651,7 @@
       "closeOnBackdrop": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+        "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
         "replacement": null,
         "required": false,
         "type": "boolean"

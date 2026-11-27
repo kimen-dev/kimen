@@ -1,8 +1,4 @@
 import { Component, Element, forceUpdate, Host, h, Prop, Watch } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 
 /**
  * One selectable tab inside a `ki-tabs` view switcher.
@@ -38,7 +34,6 @@ export class KiTab {
 
   /**
    * Prevents selection by every modality and exposes the unavailable state.
-   * Boolean presence semantics apply: `disabled="false"` is still disabled.
    *
    * @default false
    */
@@ -51,28 +46,6 @@ export class KiTab {
    * @default false
    */
   @Prop({ reflect: true }) selected = false;
-
-  private presenceObserver: MutationObserver | undefined;
-
-  connectedCallback(): void {
-    // `ki-tabs` reads `disabled` from the host attribute, so presence must
-    // survive Stencil's reflection of a parsed `disabled="false"`.
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
-      if (!this.disabled) {
-        this.disabled = true;
-      }
-    });
-  }
-
-  componentWillLoad(): void {
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
-  }
-
-  disconnectedCallback(): void {
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = undefined;
-  }
 
   @Watch('data-ki-tab-with-icon')
   private updateIcon(): void {

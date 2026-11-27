@@ -35,27 +35,28 @@ Feature: Radio group
     When the user attempts to select "SMS"
     Then no selection change is observed and the group is exposed as unavailable
 
-  # S26
-  Scenario Outline: A boolean attribute written as "false" keeps presence semantics
-    Given a radio group "Contact preference" offering "Email", "SMS" and "Phone"
-    When the attribute <attribute>="false" is written on <target> <moment>
-    Then <target> behaves as <state>
-    And the attribute stays present on <target> with an empty value
-
-    Examples:
-      | attribute | target           | moment                 | state       |
-      | disabled  | the group        | in the initial markup  | disabled    |
-      | disabled  | the group        | after the first render | disabled    |
-      | required  | the group        | in the initial markup  | required    |
-      | disabled  | the option "SMS" | in the initial markup  | unavailable |
-      | disabled  | the option "SMS" | after the first render | unavailable |
-
   # S27
   Scenario: A script click on an option selects it as it selects a native radio
     Given the "Contact preference" group with no option selected
     When a script clicks the "SMS" option
     Then "SMS" is the selected option and the group's value reads "sms"
     And the page observes exactly one input event followed by exactly one change event
+
+  # S31
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a radio group with options
+    When an attribute (disabled, required, label-hidden, and option disabled) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S5

@@ -1,5 +1,7 @@
 # Feature Specification for ki-code-block
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`.
+
 **Branch** `feat/369-ki-code-block`
 
 **Source** Issue #369 and the CodeBlock design-system preview.
@@ -8,7 +10,7 @@
 
 | Family | Scenarios | Notes |
 | --- | --- | --- |
-| Core behavior | S1, S2, S3, S4, S12, S13, S14 | Code, copy, presentation, guarded action and the Gherkin grammar |
+| Core behavior | S1, S2, S3, S4, S12, S13, S14, S17 | Code, copy, presentation, guarded action and the Gherkin grammar |
 | Keyboard path | S5, S6 | Native scrolling and copy activation |
 | Assistive-tech outcome | S7, S15 | Named figure, highlighted lines, hidden numbers and unchanged colored source |
 | Form participation | N/A | The figure displays text and its copy button is a non-submit action. There is no field value or validity. |
@@ -132,4 +134,10 @@ Feature: ki-code-block presents a source snippet with syntax and copy controls
     Given a theme with a custom syntax keyword ink
     When the reader views a Gherkin snippet
     Then its Gherkin keywords use that ink
+
+  # S17
+  Scenario: Removing a boolean override restores its default on state
+    Given a code block with copyable set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true
 ```

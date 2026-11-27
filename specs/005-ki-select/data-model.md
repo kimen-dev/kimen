@@ -1,5 +1,7 @@
 # Phase 1 Data Model: ki-select
 
+Boolean attributes follow the [2026-11-27 founder decision](spec.md).
+
 No persistent data. The model is the composite's public state surface and
 its token vocabulary. The normative API contract lives in
 [contracts/select-contract.md](./contracts/select-contract.md); this file
@@ -13,15 +15,15 @@ models values, defaults and transitions for BOTH elements.
 | `placeholder` | string | — | yes | rendered in the trigger's `value` part while no selection exists (S2, FR-003); no hardcoded strings — absent placeholder renders an empty value area |
 | `name` | string | — | yes (host-level, FACE) | omitted → the select contributes no form entry |
 | `value` | string | `""` (projection of "no selection") | **no** — the attribute is the initial declaration; the live property is a projection of the selection (FR-004; research D6) | a value matching no option — declared, assigned, or left dangling by roster mutation — falls back to no selection: placeholder shown, property reads `""` (S5, S25); with duplicates, resolution selects the FIRST match |
-| `disabled` | boolean | `false` | yes | presence semantics (006 D2 normalizer); never opens, unreachable by Tab, exposed unavailable, no form entry; ancestor `fieldset[disabled]` identical via FACE (S3, S16); disabling while open closes without committing (edge) |
-| `required` | boolean | `false` | yes | presence semantics; invalid exactly when the value it would submit is `""` — no selection OR selected empty-valued option (FR-009); message platform-sourced via the validity donor (research D7); `aria-invalid` appears only after a blocked submission (S14) |
+| `disabled` | boolean | `false` | yes | never opens, unreachable by Tab, exposed unavailable, no form entry; ancestor `fieldset[disabled]` identical via FACE (S3, S16); disabling while open closes without committing (edge) |
+| `required` | boolean | `false` | yes | invalid exactly when the value it would submit is `""` — no selection OR selected empty-valued option (FR-009); message platform-sourced via the validity donor (research D7); `aria-invalid` appears only after a blocked submission (S14) |
 
 ## Attribute model — `ki-option`
 
 | Attribute | Values | Default | Reflected | Invalid/absent behavior |
 |---|---|---|---|---|
 | `value` | string | its trimmed label text (native `<option>` parity, FR-002) | yes — the select's roster observer watches it (research D3) | duplicate values: first match wins on value→selection resolution; user commits are identity-tracked (007 D4) |
-| `disabled` | boolean | `false` | **yes — the select's roster observer watches it** (research D3) | presence semantics; not selectable (S4), skipped by the keyboard highlight (S22), mirror row exposed `aria-disabled` (FR-008) |
+| `disabled` | boolean | `false` | **yes — the select's roster observer watches it** (research D3) | not selectable (S4), skipped by the keyboard highlight (S22), mirror row exposed `aria-disabled` (FR-008) |
 
 `ki-option` has NO `selected` member of any kind (spec assumption — the
 selection's single source of truth is ki-select's `value`) and NO

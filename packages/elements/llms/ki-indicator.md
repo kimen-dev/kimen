@@ -53,6 +53,8 @@ Drive it from the composing carousel by updating `current` (1-based); the highli
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-indicator`: the default, only the tokens ki-indicator needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `count` (number | undefined, minimum 0, maximum 20): Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent). At most 20 positions render, and the catalog accepts no more: the indicator serves a short sequence of peer views, 20 dots are the longest row that fits a 320 CSS px viewport (the WCAG reflow width) in both shipped themes, and one dot renders per position, so the bound also caps the work a single node can demand. A larger value renders 20.

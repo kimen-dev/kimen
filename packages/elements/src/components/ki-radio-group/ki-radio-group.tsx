@@ -9,10 +9,6 @@ import {
   Watch,
 } from '@stencil/core';
 import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
-import {
   FieldMessage,
   fieldDescribedBy,
   fieldInvalid,
@@ -81,7 +77,6 @@ export class KiRadioGroup {
   // (review 007 minor; matches the 003 call).
   private readonly labelId = 'group-label';
   private rosterObserver?: MutationObserver;
-  private presenceObserver: MutationObserver | undefined;
   private resetValue = '';
   private group: HTMLElement | undefined;
   private labelElement: HTMLElement | undefined;
@@ -269,18 +264,6 @@ export class KiRadioGroup {
     forceUpdate(this.host);
   }
 
-  // Presence semantics: a present attribute means `true` whatever its value
-  // (`disabled="false"` still disables). Runs before the first render, while
-  // the authored attributes are the only state there is.
-  private applyAttributePresence(): void {
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
-    this.required = booleanFromAttributePresence(this.required, this.host.hasAttribute('required'));
-    this.labelHidden = booleanFromAttributePresence(
-      this.labelHidden,
-      this.host.hasAttribute('label-hidden'),
-    );
-  }
-
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
   }
@@ -346,19 +329,6 @@ export class KiRadioGroup {
   }
 
   connectedCallback(): void {
-    // Presence semantics for attributes written after hydration: Stencil parses
-    // `disabled="false"`/`required="false"` to `false` and would remove the
-    // attribute on reflect. Only the attribute that was written is set: the
-    // other one may still be on the host after its property was cleared.
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      ['disabled', 'required', 'label-hidden'],
-      (attribute) => {
-        if (attribute === 'label-hidden') this.labelHidden = true;
-        else this[attribute] = true;
-      },
-    );
     // Added on every connection, as disconnectedCallback removes them: a group
     // that is moved in the document (a keyed reorder, a drag between lists)
     // connects again without loading again, and without these it would no
@@ -374,7 +344,6 @@ export class KiRadioGroup {
   }
 
   componentWillLoad(): void {
-    this.applyAttributePresence();
     this.pendingValue = this.value;
     this.syncInputs();
   }
@@ -393,8 +362,6 @@ export class KiRadioGroup {
     this.host.removeEventListener('focusin', this.handleFocusIn);
     this.host.removeEventListener('invalid', this.handleInvalid);
     this.rosterObserver?.disconnect();
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = undefined;
   }
 
   formAssociatedCallback(): void {
@@ -550,13 +517,12 @@ export class KiRadioGroup {
     // radios to their host) rather than reading a now-stale activeElement, and
     // move focus to the group's new single tab stop so a keyboard user keeps
     // their place.
-    // Capture intent from the attribute (synchronous with setAttribute) BEFORE
+    // Capture the option's disabled state BEFORE
     // syncInputs disables the native input. The browser then blurs that input
     // to <body> ASYNCHRONOUSLY, so the focus restore is deferred to the next
     // frame (FR-006: keep the keyboard user on the group's new tab stop).
     const focusedWillDisable =
-      this.lastFocusedRadio !== null &&
-      (this.effectiveDisabled || this.lastFocusedRadio.hasAttribute('disabled'));
+      this.lastFocusedRadio !== null && (this.effectiveDisabled || this.lastFocusedRadio.disabled);
 
     if (this.selectedRadio && !this.roster.includes(this.selectedRadio)) {
       this.setSelectedRadio(null);

@@ -1,5 +1,8 @@
 # Phase 0 Research: ki-checkbox
 
+> The boolean parsing details below describe the original implementation.
+> The [2026-11-27 founder decision](spec.md) supersedes them (F4).
+
 Decisions that resolve every open technical question in the plan. Sources:
 the spec (M3 checkbox inventory; MarsUI checkbox masters — see the
 Correction below, which retracts the "no checkbox frame exists" premise

@@ -76,6 +76,8 @@ Use this script in a module after the section is mounted. Change the simulated r
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-skeleton`: the default, only the tokens ki-skeleton needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `animated` (boolean, default true): Sweep a highlight while the user permits motion. Set false to use a static placeholder. Shimmer also stops under reduced motion and forced colours.

@@ -9,10 +9,6 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 import { checkboxGroupFor, checkboxGroupOptions } from '../../utils/checkbox-group-context';
 import {
   FieldMessage,
@@ -38,9 +34,7 @@ export type KiCheckboxSize = 'sm' | 'md' | 'lg';
  * later, including a "select all" parent that presents partial selection with
  * `indeterminate`. Always provide a visible label in the default slot.
  * @whenNotToUse a single mutually exclusive choice, an immediate on/off
- * effect, triggering an action, unlabeled/icon-only usage, or
- * `checked="false"` to mean unchecked. Boolean attributes use presence
- * semantics; omit `checked` to express unchecked.
+ * effect, triggering an action, or unlabeled/icon-only usage.
  *
  * @slot - Visible label content. This is the accessible name source and a
  * native activation surface.
@@ -72,9 +66,7 @@ export class KiCheckbox {
   /**
    * Live binary selection state. User activation by pointer, slotted label or
    * Space toggles it with native checkbox parity and emits composed `input`
-   * before composed `change`. Boolean presence semantics apply:
-   * `checked="false"` still renders checked; omit the attribute to express
-   * unchecked. Programmatic assignment is silent.
+   * before composed `change`. Programmatic assignment is silent.
    * When NOT to use: do not treat this reflected attribute as a native
    * `defaultChecked`; reset uses the baseline captured at form association.
    *
@@ -198,7 +190,6 @@ export class KiCheckbox {
 
   private input: HTMLInputElement | undefined;
   private resetBaseline = false;
-  private presenceObserver: MutationObserver | undefined;
   private releaseHostClick: (() => void) | undefined;
 
   private get effectiveDisabled(): boolean {
@@ -276,33 +267,11 @@ export class KiCheckbox {
   }
 
   connectedCallback(): void {
-    // Boolean presence semantics must survive hydration, not just apply once in
-    // componentWillLoad. Stencil natively adopts `checked=""`/removal via its
-    // own attribute observation, but parses a present-but-falsy `checked="false"`
-    // to `false`; watch for that and restore presence semantics. Armed on every
-    // connection: disconnectedCallback releases the observer, and a checkbox
-    // that is moved in the document connects again without loading again.
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      ['checked', 'indeterminate', 'disabled', 'required'],
-      this.handlePresentAttribute,
-    );
     // `host.click()` and a page <label> for the checkbox toggle it, as on a
     // native checkbox (S23).
     this.releaseHostClick?.();
     this.releaseHostClick = forwardHostClick(this.host, () => this.input);
     if (this.input) this.syncGroupState();
-  }
-
-  componentWillLoad(): void {
-    this.checked = booleanFromAttributePresence(this.checked, this.host.hasAttribute('checked'));
-    this.indeterminate = booleanFromAttributePresence(
-      this.indeterminate,
-      this.host.hasAttribute('indeterminate'),
-    );
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
-    this.required = booleanFromAttributePresence(this.required, this.host.hasAttribute('required'));
   }
 
   componentDidLoad(): void {
@@ -320,27 +289,9 @@ export class KiCheckbox {
   };
 
   disconnectedCallback(): void {
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = undefined;
     this.releaseHostClick?.();
     this.releaseHostClick = undefined;
   }
-
-  // Correct ONLY the case Stencil gets wrong: a present-but-falsy attribute the
-  // author set after hydration. Absence and Stencil's own reflect writes already
-  // agree with the prop, so skipping them avoids fighting the reflection that
-  // fires on every normal toggle (a naive `prop = hasAttribute` would).
-  private readonly handlePresentAttribute = (attribute: string): void => {
-    if (attribute === 'checked' && !this.checked) {
-      this.checked = true;
-    } else if (attribute === 'indeterminate' && !this.indeterminate) {
-      this.indeterminate = true;
-    } else if (attribute === 'disabled' && !this.disabled) {
-      this.disabled = true;
-    } else if (attribute === 'required' && !this.required) {
-      this.required = true;
-    }
-  };
 
   @Watch('checked')
   protected checkedChanged(): void {

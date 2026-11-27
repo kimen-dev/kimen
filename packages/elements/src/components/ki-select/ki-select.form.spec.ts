@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-  normalizeBooleanPresence,
   optionValue,
   resolveSelection,
   type SelectOptionRecord,
@@ -25,6 +24,5 @@ describe('ki-select form helpers', () => {
     expect(selectValueMissing(true, null)).toBe(true);
     expect(selectValueMissing(true, '')).toBe(true);
     expect(selectValueMissing(true, 'fr')).toBe(false);
-    expect(normalizeBooleanPresence('false')).toBe(true);
   });
 });

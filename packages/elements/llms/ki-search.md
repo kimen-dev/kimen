@@ -48,6 +48,8 @@ with an accessible name in the trailing slot and handle its activation.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-search`: the default, only the tokens ki-search needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `back-label` (string, default 'Back'): Accessible name of the full-screen Back button.

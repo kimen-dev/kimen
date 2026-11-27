@@ -33,6 +33,8 @@ disclosure displays the hostname from the resolved URL.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-source`: the default, only the tokens ki-source needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `href` (string, required, URL): Source destination. Accepts HTTP(S) URLs and relative web references. The source list shows the resolved hostname.

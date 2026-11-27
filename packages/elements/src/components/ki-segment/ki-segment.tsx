@@ -1,8 +1,4 @@
 import { Component, Element, Prop, State, Watch, forceUpdate, h, type VNode } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 
 // The loader discovers the tooltip in the segment’s shadow root.
 // With direct imports, register ki-tooltip explicitly.
@@ -51,14 +47,8 @@ export class KiSegment {
   @State() private hasText = false;
 
   private contentObserver?: MutationObserver;
-  private disabledObserver?: MutationObserver;
 
   connectedCallback(): void {
-    this.disabledObserver = observeAttributePresence(
-      this.host,
-      ['disabled'],
-      this.normalizeDisabled,
-    );
     this.contentObserver = new MutationObserver(this.readLabel);
     this.contentObserver.observe(this.host, {
       childList: true,
@@ -69,13 +59,8 @@ export class KiSegment {
     this.readLabel();
   }
 
-  componentWillLoad(): void {
-    this.normalizeDisabled();
-  }
-
   disconnectedCallback(): void {
     this.contentObserver?.disconnect();
-    this.disabledObserver?.disconnect();
   }
 
   @Watch('data-ki-segment-state')
@@ -84,10 +69,6 @@ export class KiSegment {
     // two elements without exposing a writable selected prop on the segment.
     forceUpdate(this.host);
   }
-
-  private readonly normalizeDisabled = (): void => {
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
-  };
 
   private readonly readLabel = (): void => {
     this.hasText = [...this.host.childNodes].some(

@@ -6,8 +6,10 @@ import { afterEach, beforeAll, expect, it } from 'vitest';
 import { defineCustomElements } from '../loader/index.js';
 import {
   booleanAttributesByTag,
-  expectBooleanAttributes,
-  unknownExceptions,
+  booleanContractCases,
+  expectBooleanContract,
+  expectFalseAttributes,
+  expectUncheckedReset,
 } from './boolean-attributes';
 
 beforeAll(async () => {
@@ -20,12 +22,18 @@ afterEach(() => {
 
 it('covers the boolean properties of every component that declares one', () => {
   expect(booleanAttributesByTag.size).toBeGreaterThan(60);
-  expect(unknownExceptions()).toEqual([]);
 });
 
 it.each([...booleanAttributesByTag])(
-  '%s reads "false" and a missing attribute as false',
-  async (tag, attributes) => {
-    await expectBooleanAttributes(tag, attributes);
-  },
+  '%s reads attr="false" as false and restores defaults on removal',
+  expectFalseAttributes,
+);
+
+it.each(booleanContractCases)('%s applies the boolean attribute rule', async (tag, names) => {
+  await expectBooleanContract(tag, names);
+});
+
+it.each(['ki-checkbox', 'ki-switch'] as const)(
+  '%s resets checked="false" to unchecked',
+  expectUncheckedReset,
 );

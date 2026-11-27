@@ -20,8 +20,10 @@ describe('boolean attributes in the Stencil runtime', () => {
     expect(rewritten).not.toMatch(/formAssociated && isFormAssociated && typeof propValue/u);
     expect(rewritten).not.toContain('newValue === "false" && !isFormAssociated');
     expect(rewritten).toContain(
-      'newValue = newValue === null || newValue === "false" ? false : true;',
+      'newValue = newValue === null ? defaultValue : newValue !== "false";',
     );
+    expect(rewritten).toContain('isFormAssociated && attrName === "disabled"');
+    expect(rewritten).toContain('"ki-toast/dismissible":1');
     expect(rewritten.split('\n')).toHaveLength(source.split('\n').length);
   });
 
