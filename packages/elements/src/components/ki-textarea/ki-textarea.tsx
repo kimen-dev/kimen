@@ -289,6 +289,7 @@ export class KiTextarea {
   @Watch('readonly')
   @Watch('disabled')
   protected validityChanged(): void {
+    this.syncFormValue();
     this.applyTextareaConstraints();
     this.syncDisabledFocus();
     this.syncValidity();
@@ -392,6 +393,7 @@ export class KiTextarea {
 
   formDisabledCallback(disabled: boolean): void {
     this.formDisabled = disabled;
+    this.syncFormValue();
     this.applyTextareaConstraints();
     this.syncDisabledFocus();
     this.syncValidity();
@@ -446,7 +448,7 @@ export class KiTextarea {
   }
 
   private syncFormValue(): void {
-    this.internals.setFormValue(this.value);
+    this.internals.setFormValue(this.effectiveDisabled ? null : this.value);
   }
 
   private syncValidity(): void {

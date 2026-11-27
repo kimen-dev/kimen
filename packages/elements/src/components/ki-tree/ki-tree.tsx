@@ -52,7 +52,7 @@ export class KiTree {
   @Prop() selection: KiTreeSelection = 'single';
 
   /** Emitted after a user selection changes. Selected items are in tree order. */
-  @Event({ eventName: 'ki-selection-change', bubbles: true, composed: true })
+  @Event({ eventName: 'ki-selection-change', bubbles: true, composed: true, cancelable: false })
   kiSelectionChange!: EventEmitter<{ selectedItems: HTMLKiTreeItemElement[] }>;
 
   private observer?: MutationObserver;

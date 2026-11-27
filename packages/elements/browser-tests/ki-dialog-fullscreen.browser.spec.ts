@@ -125,6 +125,7 @@ it('S3 keeps the default dialog centered at 360px and reports its legacy close',
   const dialog = mount();
   const observed: { cancelable: boolean; open: boolean }[] = [];
   dialog.addEventListener('ki-close', (event) => {
+    event.preventDefault();
     observed.push({ cancelable: event.cancelable, open: dialog.open });
   });
   await openDialog();
@@ -136,7 +137,7 @@ it('S3 keeps the default dialog centered at 360px and reports its legacy close',
   await expect
     .poll(() => observed[0])
     .toEqual({
-      cancelable: false,
+      cancelable: true,
       open: false,
     });
 });
@@ -190,14 +191,26 @@ it.each([
     const veto = vi.fn((event: Event) => {
       const close = event as CustomEvent<{ reason: string }>;
       close.preventDefault();
-      return { cancelable: close.cancelable, open: dialog.open, reason: close.detail.reason };
+      return {
+        bubbles: close.bubbles,
+        composed: close.composed,
+        cancelable: close.cancelable,
+        open: dialog.open,
+        reason: close.detail.reason,
+      };
     });
     dialog.addEventListener('ki-close', veto);
     await openDialog();
     await activate();
 
     expect(veto).toHaveBeenCalledTimes(1);
-    expect(veto.mock.results[0]?.value).toEqual({ cancelable: true, open: true, reason });
+    expect(veto.mock.results[0]?.value).toEqual({
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+      open: true,
+      reason,
+    });
     await expect.element(modal()).toBeVisible();
   },
 );

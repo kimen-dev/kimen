@@ -361,7 +361,7 @@ export const catalogGuidance: CatalogGuidance = {
   "ki-code-block": {
     "description": "Presents source code with a named header, syntax colors, line controls and\nclipboard feedback.",
     "events": {
-      "ki-copy": "CopyButton reports a successful write with the original source text."
+      "ki-copy": "Emitted after a successful clipboard write. Detail is `{ value: string }` with the exact copied source."
     },
     "props": {
       "copied-label": "Polite announcement after a successful clipboard write.",
@@ -568,7 +568,7 @@ export const catalogGuidance: CatalogGuidance = {
   "ki-dialog": {
     "description": "A modal dialog for an interrupting decision or a focused task.",
     "events": {
-      "ki-close": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path, `close()` and a cleared `open` included,\nemits a noncancelable notification after close and focus restoration: it\ncan fire without a gesture. Use `open` to observe the modal's live state.",
+      "ki-close": "Call `preventDefault()` to veto fullscreen Escape or the header close\nbutton, which report `escape` and `method` respectively. On every other\npath (centered Escape, backdrop, invoker commands, `close()` or clearing\n`open`) the event reports after close and focus restoration. A veto has\nno effect there, and the event can fire without a gesture.",
       "ki-confirm": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application."
     },
     "props": {

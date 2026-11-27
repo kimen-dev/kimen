@@ -85,7 +85,7 @@ export class KiRating {
   @Prop() requiredMessage = 'Select a rating.';
 
   /** Fires once when a person changes the selection. The detail contains the numeric value. */
-  @Event({ eventName: 'ki-change', bubbles: true, composed: true })
+  @Event({ eventName: 'ki-change', bubbles: true, composed: true, cancelable: false })
   kiChange!: EventEmitter<{ value: number }>;
 
   componentWillLoad(): void {

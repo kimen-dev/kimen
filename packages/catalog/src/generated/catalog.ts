@@ -990,7 +990,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
     readonly "ki-code-block": {
       readonly description: "Presents source code with a named header, syntax colors, line controls and\nclipboard feedback.";
       readonly events: {
-        readonly "ki-copy": "CopyButton reports a successful write with the original source text.";
+        readonly "ki-copy": "Emitted after a successful clipboard write. Detail is `{ value: string }` with the exact copied source.";
       };
       readonly props: {
         readonly "copied-label": {
@@ -1580,7 +1580,7 @@ export const catalogData = /* @__PURE__ */ withGuidance(
     readonly "ki-dialog": {
       readonly description: "A modal dialog for an interrupting decision or a focused task.";
       readonly events: {
-        readonly "ki-close": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path, `close()` and a cleared `open` included,\nemits a noncancelable notification after close and focus restoration: it\ncan fire without a gesture. Use `open` to observe the modal's live state.";
+        readonly "ki-close": "Call `preventDefault()` to veto fullscreen Escape or the header close\nbutton, which report `escape` and `method` respectively. On every other\npath (centered Escape, backdrop, invoker commands, `close()` or clearing\n`open`) the event reports after close and focus restoration. A veto has\nno effect there, and the event can fire without a gesture.";
         readonly "ki-confirm": "The user activated the confirmation button. Handle validation, submission\nand dismissal in the application.";
       };
       readonly props: {

@@ -147,7 +147,8 @@ export class KiDatePicker {
   @Prop() invalidDateLabel = 'Enter a valid date within the allowed range.';
 
   /** Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes. */
-  @Event({ eventName: 'ki-change' }) kiChange!: EventEmitter<DatePickerChangeDetail>;
+  @Event({ eventName: 'ki-change', cancelable: false })
+  kiChange!: EventEmitter<DatePickerChangeDetail>;
 
   get #open(): boolean {
     return this.draft !== undefined;

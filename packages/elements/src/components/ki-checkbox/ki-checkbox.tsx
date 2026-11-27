@@ -363,6 +363,7 @@ export class KiCheckbox {
   @Watch('disabled')
   @Watch('required')
   protected inputConstraintChanged(): void {
+    this.syncFormValue();
     this.syncInputState();
     this.syncValidity();
     // Relaxing a constraint (e.g. required -> false) that makes the control
@@ -464,9 +465,10 @@ export class KiCheckbox {
   }
 
   private syncFormValue(): void {
-    const formValue = checkboxGroupFor(this.host)
-      ? null
-      : checkboxFormValue(this.checked, this.value);
+    const formValue =
+      this.effectiveDisabled || checkboxGroupFor(this.host)
+        ? null
+        : checkboxFormValue(this.checked, this.value);
     this.internals.setFormValue(formValue);
   }
 

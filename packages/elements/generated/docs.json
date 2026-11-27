@@ -6060,7 +6060,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "CopyButton reports a successful write with the original source text.",
+          "docs": "Emitted after a successful clipboard write. Detail is `{ value: string }` with the exact copied source.",
           "docsTags": []
         },
         {
@@ -6074,7 +6074,7 @@
           },
           "cancelable": false,
           "composed": true,
-          "docs": "CopyButton reports an unsuccessful clipboard write.",
+          "docs": "Emitted when copying fails. Detail is `null`.",
           "docsTags": []
         }
       ],
@@ -9278,7 +9278,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Reports a changed, committed value in canonical ISO form. Use this for calendar and typed changes.",
           "docsTags": []
@@ -9820,9 +9820,9 @@
               }
             }
           },
-          "cancelable": false,
+          "cancelable": true,
           "composed": true,
-          "docs": "Requests dismissal on fullscreen Escape or activation of the header\nclose button. Prevent the default on that cancelable event to keep the\nmodal open. The button reports `method` and Escape reports `escape`.\nEvery other dismissal path, `close()` and a cleared `open` included,\nemits a noncancelable notification after close and focus restoration: it\ncan fire without a gesture. Use `open` to observe the modal's live state.",
+          "docs": "Call `preventDefault()` to veto fullscreen Escape or the header close\nbutton, which report `escape` and `method` respectively. On every other\npath (centered Escape, backdrop, invoker commands, `close()` or clearing\n`open`) the event reports after close and focus restoration. A veto has\nno effect there, and the event can fire without a gesture.",
           "docsTags": []
         },
         {
@@ -11260,7 +11260,7 @@
             "resolved": "void",
             "references": {}
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Emitted when the action stack closes.",
           "docsTags": []
@@ -11274,7 +11274,7 @@
             "resolved": "void",
             "references": {}
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Emitted when the action stack opens.",
           "docsTags": []
@@ -11294,7 +11294,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Emits the selected item's value or its trimmed label. Native links retain their destination.",
           "docsTags": []
@@ -11466,7 +11466,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": false,
           "docs": "Local command selection for a direct action binding. Links use native navigation.",
           "docsTags": []
@@ -16719,7 +16719,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Reports the selected action and, for a checkbox or radio, its new checked state.",
           "docsTags": []
@@ -21951,7 +21951,7 @@
             "resolved": "{ value: number; }",
             "references": {}
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Fires once when a person changes the selection. The detail contains the numeric value.",
           "docsTags": []
@@ -23106,7 +23106,7 @@
             "resolved": "void",
             "references": {}
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "The user cleared the query with the clear control or with Escape.",
           "docsTags": []
@@ -23126,7 +23126,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "The current query after 200 ms of inactivity following an edit.",
           "docsTags": []
@@ -23146,7 +23146,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "The removed recent query. Hosts can use this to persist the updated history.",
           "docsTags": []
@@ -23166,7 +23166,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "The query to run, emitted on Enter or activation of a suggestion or recent search.",
           "docsTags": []
@@ -23671,7 +23671,7 @@
             "resolved": "{ value: string; }",
             "references": {}
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Emitted once per changed user choice with the new resolved value.",
           "docsTags": []
@@ -28984,7 +28984,7 @@
             "resolved": "{ value: string; }",
             "references": {}
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Fired once after a user-driven selection change from pointer or keyboard\nnavigation. `detail.value` is the resolved selected value and `value` is\nalready current when listeners run. Programmatic `value` writes and\nfirst-render fallback are silent.",
           "docsTags": []
@@ -32980,7 +32980,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Emitted after a user selection changes. Selected items are in tree order.",
           "docsTags": []
@@ -33271,7 +33271,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Emitted when an existing branch collapses, also when `expanded` is\ncleared: it can fire without a gesture.",
           "docsTags": []
@@ -33290,7 +33290,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Emitted when an existing branch expands, also when `expanded` is set: it\ncan fire without a gesture.",
           "docsTags": []
@@ -33309,7 +33309,7 @@
               }
             }
           },
-          "cancelable": true,
+          "cancelable": false,
           "composed": true,
           "docs": "Emitted once when an empty lazy branch first opens, also one rendered\nexpanded: it can fire without a gesture. The listener supplies the children.",
           "docsTags": []
