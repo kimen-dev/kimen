@@ -104,12 +104,14 @@ const tokenTables = [
     id: `${tag}-css-properties`,
     title: tokenGroups.length > 0 ? 'Other CSS custom properties' : 'CSS custom properties',
     grouped: false,
-    rows: cssProperties.filter(({ name }) => !groupedTokens.has(name)).map((property) => ({
-      property,
-      variant: null,
-      tone: null,
-      state: null,
-    })),
+    rows: cssProperties
+      .filter(({ name }) => !groupedTokens.has(name))
+      .map((property) => ({
+        property,
+        variant: null,
+        tone: null,
+        state: null,
+      })),
   },
 ];
 const states = decl.cssStates ?? [];
