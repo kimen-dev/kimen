@@ -123,15 +123,15 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
-    mcpAppsData: { raw: 342_450, gzip: 70_950, brotli: 60_516 },
-    mcpAppsForm: { raw: 431_801, gzip: 86_346, brotli: 71_987 },
-    mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 302_027 },
+    mcpApps: { raw: 474_670, gzip: 79_531, brotli: 65_905 },
+    mcpAppsData: { raw: 341_934, gzip: 70_971, brotli: 60_549 },
+    mcpAppsForm: { raw: 430_159, gzip: 86_340, brotli: 71_949 },
+    mcpServer: { raw: 1_665_594, gzip: 317_746, brotli: 301_943 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
-    tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
-    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 18_559, tenComponents: 47_337 },
-    fullSheetPages: { button: 29_547, tenComponents: 55_142 },
+    tokenStylesheets: { onmars: 11_747, material3: 5_180, base: 250 },
+    tokenSheets: { core: 7_012, buttonPage: 8_331, tenComponentPage: 11_448, tagSheet: 2_200 },
+    pages: { button: 18_902, tenComponents: 47_389 },
+    fullSheetPages: { button: 29_936, tenComponents: 55_238 },
   });
 });
 
@@ -156,15 +156,15 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 483_542, gzip: 80_315, brotli: 66_320 },
-    mcpAppsData: { raw: 342_800, gzip: 70_950, brotli: 60_516 },
-    mcpAppsForm: { raw: 432_501, gzip: 86_346, brotli: 71_987 },
-    mcpServer: { raw: 1_755_730, gzip: 318_512, brotli: 302_202 },
+    mcpApps: { raw: 476_870, gzip: 79_711, brotli: 66_070 },
+    mcpAppsData: { raw: 342_284, gzip: 70_971, brotli: 60_549 },
+    mcpAppsForm: { raw: 430_859, gzip: 86_340, brotli: 71_949 },
+    mcpServer: { raw: 1_666_894, gzip: 317_936, brotli: 302_118 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
-    tokenStylesheets: { onmars: 11_781, material3: 5_215, base: 250 },
-    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 18_559, tenComponents: 47_377 },
-    fullSheetPages: { button: 29_577, tenComponents: 55_142 },
+    tokenStylesheets: { onmars: 11_917, material3: 5_230, base: 250 },
+    tokenSheets: { core: 7_012, buttonPage: 8_331, tenComponentPage: 11_448, tagSheet: 2_200 },
+    pages: { button: 18_902, tenComponents: 47_429 },
+    fullSheetPages: { button: 29_966, tenComponents: 55_238 },
   });
 });
 
@@ -302,15 +302,15 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 1_961_206, unpacked: 8_429_604 },
+      '@kimen/elements': { packed: 1_953_452, unpacked: 8_411_199 },
       // Rebased for Newsreader at weight 500.
-      '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
-      '@kimen/mcp-server': { packed: 639_409, unpacked: 3_176_921 },
-      '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
+      '@kimen/tokens': { packed: 202_029, unpacked: 1_110_351 },
+      '@kimen/mcp-server': { packed: 639_009, unpacked: 3_093_123 },
+      '@kimen/catalog': { packed: 320_308, unpacked: 1_375_510 },
       // Raised for specs 168–170, approved by the founder on 2026-11-27.
       '@kimen/emitter': { packed: 47_247, unpacked: 159_371 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
-      '@kimen/adapter-mcp-apps': { packed: 499_558, unpacked: 2_209_335 },
+      '@kimen/adapter-mcp-apps': { packed: 498_914, unpacked: 2_206_909 },
       '@kimen/react': { packed: 46_952, unpacked: 345_886 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },

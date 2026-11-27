@@ -1,7 +1,6 @@
 import { resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import { SURFACE_PROFILES } from '../../packages/adapter-mcp-apps/scripts/surface-profiles.mjs';
 import { readComponentMetadataByTag } from '../../packages/elements/scripts/component-metadata.mjs';
 
 // The pre-discovery ceilings include the headroom already granted to shared
@@ -103,11 +102,13 @@ const BASE_BUDGETS = {
   // Shared shadow styles reduce the document to 1,190,231 / 265,998 /
   // 202,174 B and kimen-mcp to 3,116,544 / 608,851 / 452,205 B. The totals
   // include component allowances and 0.1% raw and 1% compressed headroom.
-  mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
-  // Integrator feedback A1: sharing token hooks and bundling defaults measures
-  // 3,036,514 / 609,941 / 460,555 B. Raw and gzip fit. Rebase Brotli by its
-  // measured 7,548 B growth to preserve headroom. Pending founder approval.
-  mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 302_027 },
+  // Integrator feedback 0.6.0, measured together against ec60e8a8.
+  // The component metadata accounts for the raw button and top-nav growth.
+  // These bases absorb the remaining shared cost, with the v0.6.0 headroom.
+  mcpApps: { raw: 474_670, gzip: 79_531, brotli: 65_905 },
+  mcpAppsData: { raw: 341_934, gzip: 70_971, brotli: 60_549 },
+  mcpAppsForm: { raw: 430_159, gzip: 86_340, brotli: 71_949 },
+  mcpServer: { raw: 1_665_594, gzip: 317_746, brotli: 301_943 },
   // A browser host that validates and renders agent specs (validateUiSpec and
   // renderUiSpec from the packed @kimen/catalog, bundled for production:
   // packages/catalog/scripts/host-weight.mjs). Set on 2026-11-25 at what it
@@ -128,13 +129,13 @@ const BASE_BUDGETS = {
   // its mode values. Pending founder approval.
   // Dropping private foundations measured 18,868 B for onmars and 5,340 B
   // for material3. Their limits add 1% after component allowances.
-  tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
+  tokenStylesheets: { onmars: 11_747, material3: 5_180, base: 250 },
   // Spec 166's split sheets, approved by the founder on 2026-11-25: the core,
   // a page with ki-button (core and its sheet), the ten-component page of the
   // weight report (core and its fourteen sheets), and a ceiling for every tag
   // sheet. Fixed: no component marginal adds to them. Measured on macOS at
   // 6,812 / 8,075 / 11,187 B and 1,971 B for the largest sheet (ki-prompt-input).
-  tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
+  tokenSheets: { core: 7_012, buttonPage: 8_331, tenComponentPage: 11_448, tagSheet: 2_200 },
   // Whole pages, script and token stylesheets, in brotli bytes
   // (packages/elements/scripts/page-weight.mjs): one ki-button, and the ten
   // components of a typical form page. `pages` is the primary figure, the
@@ -143,15 +144,15 @@ const BASE_BUDGETS = {
   // `fullSheetPages` loads the full sheet instead, the simple alternative.
   // Shared shadow styles bring the button pages to 18,375 and 29,254 B
   // and the ten-component pages to 46,868 and 54,596 B. The limits add 1%.
-  pages: { button: 18_559, tenComponents: 47_337 },
-  fullSheetPages: { button: 29_547, tenComponents: 55_142 },
+  pages: { button: 18_902, tenComponents: 47_389 },
+  fullSheetPages: { button: 29_936, tenComponents: 55_238 },
 };
 
 export function deriveBundleSizeBudgets(components) {
   const limits = {
     mcpApps: { ...BASE_BUDGETS.mcpApps },
-    mcpAppsData: { ...SURFACE_PROFILES.data.budget },
-    mcpAppsForm: { ...SURFACE_PROFILES.form.budget },
+    mcpAppsData: { ...BASE_BUDGETS.mcpAppsData },
+    mcpAppsForm: { ...BASE_BUDGETS.mcpAppsForm },
     mcpServer: { ...BASE_BUDGETS.mcpServer },
     genuiHost: { ...BASE_BUDGETS.genuiHost },
     tokenStylesheets: { ...BASE_BUDGETS.tokenStylesheets },

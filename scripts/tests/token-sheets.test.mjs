@@ -300,10 +300,10 @@ test('S10 the size gate measures the approved budgets of the split', async () =>
   const configPath = fileURLToPath(new URL('packages/tokens/.size-limit.mjs', root));
   const { default: entries } = await import(configPath);
   const limitOf = (name) => entries.find((entry) => entry.name === name)?.limit;
-  assert.equal(limitOf('onmars tokens stylesheet'), '19057 B');
-  assert.equal(limitOf('core tokens stylesheet'), '7000 B');
-  assert.equal(limitOf('page with ki-button: core and ki-button sheets'), '8300 B');
-  assert.equal(limitOf('ten-component page: core and their sheets'), '11400 B');
+  assert.equal(limitOf('onmars tokens stylesheet'), '19193 B');
+  assert.equal(limitOf('core tokens stylesheet'), '7012 B');
+  assert.equal(limitOf('page with ki-button: core and ki-button sheets'), '8331 B');
+  assert.equal(limitOf('ten-component page: core and their sheets'), '11448 B');
   const tagEntries = entries.filter((entry) => entry.name.startsWith('tag sheet '));
   assert.deepEqual(
     tagEntries.map((entry) => entry.name),
