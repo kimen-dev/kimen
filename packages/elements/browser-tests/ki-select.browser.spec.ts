@@ -1348,10 +1348,10 @@ describe('ki-select boolean attributes', () => {
   }
 
   it('S28 disabled="false" and required="false" leave the select operable and optional', async () => {
-    const el = await mountSelect('disabled="false" required="false"');
+    const { form, el } = await mountForm('disabled="false" required="false"');
     expect(trigger(el).disabled).toBe(false);
     expect(trigger(el).getAttribute('aria-required')).toBeNull();
-    expect(el.checkValidity()).toBe(true);
+    expect(form.checkValidity()).toBe(true);
 
     trigger(el).click();
     await frames();

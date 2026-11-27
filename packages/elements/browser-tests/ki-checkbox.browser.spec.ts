@@ -599,14 +599,16 @@ describe('ki-checkbox in a real browser', () => {
 describe('ki-checkbox boolean attributes', () => {
   it('S24 disabled="false" and required="false" leave the checkbox operable and optional', async () => {
     cleanup();
-    const el = await mount('Email notifications', { disabled: true, required: true });
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount('Email notifications', { disabled: true, required: true }, form);
     el.setAttribute('disabled', 'false');
     el.setAttribute('required', 'false');
     await waitForStyles();
 
     expect(inputOf(el).disabled).toBe(false);
     expect(inputOf(el).required).toBe(false);
-    expect(el.checkValidity()).toBe(true);
+    expect(form.checkValidity()).toBe(true);
     await userEvent.click(inputOf(el));
     expect(el.checked).toBe(true);
   });
