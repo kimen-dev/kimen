@@ -36184,7 +36184,7 @@
                 "text": "string"
               },
               "default": "'48rem'",
-              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines."
+              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them."
             },
             {
               "name": "heading-level",
@@ -36295,7 +36295,7 @@
                 "text": "string"
               },
               "default": "'48rem'",
-              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
+              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them.",
               "attribute": "collapse-at",
               "reflects": false
             },
@@ -36681,6 +36681,14 @@
             {
               "name": "--ki-top-nav-item-hover-fg",
               "description": "Hovered control or highlighted menu item ink."
+            },
+            {
+              "name": "--ki-top-nav-links-gap",
+              "description": "Column gap between inline primary links."
+            },
+            {
+              "name": "--ki-top-nav-links-justify",
+              "description": "Inline link alignment. Use flex-end for trailing links."
             },
             {
               "name": "--ki-top-nav-menu-radius",

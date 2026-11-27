@@ -80,15 +80,20 @@
   block-size: var(--ki-top-nav-height-compact);
 }
 
-/* Never collapsed: the links wrap between the brand and the actions, and the
- * bar grows from its token height to hold their lines. */
+/* Let flexbox decide whether all three groups fit on one line. */
 .header.wrap {
+  flex-wrap: wrap;
   block-size: auto;
   min-block-size: var(--ki-top-nav-height);
+  row-gap: var(--ki-layout-spacing-xs);
 }
 
 .header.wrap.small-bar {
   min-block-size: var(--ki-top-nav-height-compact);
+}
+
+.wrap > * {
+  align-self: stretch;
 }
 
 .brand {
@@ -103,6 +108,16 @@
   font-size: var(--ki-typography-size-title-2);
   font-weight: var(--ki-typography-weight-display-semibold);
   text-decoration: none;
+}
+
+.wrap .brand {
+  align-content: center;
+  max-inline-size: calc(
+    100% -
+    var(--_ki-top-nav-actions-width, 0px) -
+    var(--ki-layout-spacing-7xl)
+  );
+  overflow-wrap: anywhere;
 }
 
 nav {
@@ -120,28 +135,41 @@ nav {
   color: var(--ki-top-nav-item-fg);
 }
 
+.wrap nav {
+  flex: 1 0 max-content;
+  max-inline-size: 100%;
+}
+
 /* Collapsed, the landmark holds only the trigger: it never shrinks below it
  * (44px on a coarse pointer), and a long brand gives way instead. */
 .header.compact nav {
   flex-shrink: 0;
 }
 
+.header:not(.compact) nav {
+  flex-grow: 1;
+  justify-content: var(--ki-top-nav-links-justify);
+}
+
 .links:not(.nav-menu) {
   display: flex;
   align-self: stretch;
   min-inline-size: 0;
+  column-gap: var(--ki-top-nav-links-gap);
 }
 
 .nav-menu:not(:popover-open) {
   display: none;
 }
 
-.header.wrap nav {
-  flex: 1;
+.wrap.stacked nav {
+  order: 1;
 }
 
 .wrap .links {
   flex-wrap: wrap;
+  max-inline-size: 100%;
+  justify-content: inherit;
   row-gap: var(--ki-layout-spacing-xs);
 }
 
@@ -159,6 +187,11 @@ nav {
   text-decoration: none;
 }
 
+:where(.wrap) .links ::slotted(a[href]) {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
 .links ::slotted(a[href][aria-current="page"]) {
   padding-block-start: var(--ki-layout-indicator-width);
   border-block-end: var(--ki-layout-indicator-width) solid var(--ki-top-nav-indicator);
@@ -174,6 +207,15 @@ nav {
 
 .header .actions {
   margin-inline-start: auto;
+}
+
+.wrap .actions {
+  flex: none;
+  box-sizing: border-box;
+}
+
+.wrap.stacked .actions {
+  min-block-size: inherit;
 }
 
 .app-bar {

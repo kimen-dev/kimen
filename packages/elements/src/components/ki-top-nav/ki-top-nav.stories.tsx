@@ -60,7 +60,7 @@ export const WrappingHeader: Story = {
     <div style={{ maxInlineSize: '22rem' }}>
       <ki-top-nav label="Documentation" collapseAt="none">
         <a slot="brand" href="#home">
-          Kimen
+          Kimen Design System
         </a>
         <a href="#guide" aria-current="page">
           Guide
@@ -68,8 +68,35 @@ export const WrappingHeader: Story = {
         <a href="#components">Components</a>
         <a href="#tokens">Tokens</a>
         <a href="#changelog">Changelog</a>
+        <ki-icon-button slot="actions" label="Search" variant="ghost">
+          <ki-icon name="search" />
+        </ki-icon-button>
       </ki-top-nav>
     </div>
+  ),
+};
+
+export const AlignedHeader: Story = {
+  args: { collapseAt: 'none', label: 'Documentation' },
+  render: (args) => (
+    <ki-top-nav
+      {...args}
+      style={{
+        '--ki-top-nav-links-gap': 'var(--ki-layout-spacing-xs)',
+        '--ki-top-nav-links-justify': 'flex-end',
+      }}
+    >
+      <a slot="brand" href="#home">
+        Kimen
+      </a>
+      <a href="#guide" aria-current="page">
+        Guide
+      </a>
+      <a href="#components">Components</a>
+      <ki-icon-button slot="actions" label="Search" variant="ghost">
+        <ki-icon name="search" />
+      </ki-icon-button>
+    </ki-top-nav>
   ),
 };
 
