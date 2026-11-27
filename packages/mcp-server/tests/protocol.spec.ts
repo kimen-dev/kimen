@@ -49,6 +49,7 @@ describe('Kimen MCP server: protocol eras (038 S18, S19)', () => {
         expect(server.client.getProtocolEra()).toBe(era);
         const { tools } = await server.client.listTools();
         expect(tools.map((tool) => tool.name).sort()).toEqual([
+          'check_theme',
           'kimen_describe_component',
           'kimen_list_components',
           'kimen_render_spec',

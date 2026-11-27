@@ -50,6 +50,7 @@
       "!packages/vue/src/ki-*.ts",
       "!packages/angular/src/directives/**",
       "!packages/tokens/dist/**",
+      "!packages/tokens/generated/theme-checker-data.json",
       "!changes/api/**/*.json",
       "!nx.json"
     ]

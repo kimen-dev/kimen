@@ -22,6 +22,7 @@ const tokens = Object.freeze([
   ...componentTags.map((tag) => `packages/tokens/dist/css/${tag}.css`),
   'packages/tokens/dist/css/tokens.css',
   'packages/tokens/dist/css/tokens.material3.css',
+  'packages/tokens/generated/theme-checker-data.json',
 ]);
 const catalog = Object.freeze([
   'packages/catalog/src/generated/catalog-guidance.ts',
@@ -115,6 +116,7 @@ export const generatedGroups = Object.freeze({
     handWritten: Object.freeze([]),
     scopes: Object.freeze([
       'packages/tokens/dist/css',
+      'packages/tokens/generated',
       'packages/elements/docs/tokens-reference.mdx',
     ]),
   }),

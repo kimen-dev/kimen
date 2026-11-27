@@ -8,6 +8,9 @@ export default defineConfig({
     // Stryker copies source but omits package dist output.
     alias: {
       '@kimen/catalog': fileURLToPath(new URL('./packages/catalog/src/index.ts', import.meta.url)),
+      '../dist/theme-checker-data.mjs': fileURLToPath(
+        new URL('./scripts/mutation-tests/fixtures/theme-checker-data.mjs', import.meta.url),
+      ),
     },
   },
   test: {

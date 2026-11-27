@@ -105,6 +105,7 @@ test('the package notices include the third-party works shipped in each tarball'
   }
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/mcp-server'], [
     ...elementNotices,
+    '@csstools/css-tokenizer (MIT)',
     '@modelcontextprotocol/core (Apache-2.0)',
     '@modelcontextprotocol/server (Apache-2.0)',
     'zod (MIT)',

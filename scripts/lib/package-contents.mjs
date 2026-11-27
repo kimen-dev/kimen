@@ -48,17 +48,17 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['fonts/InstrumentSans-OFL.txt', 'fonts/Newsreader-OFL.txt']),
-    // Newsreader at weight 500 brings the package to 195,198 / 1,100,266 B
-    // with 3 % packed and 0.1 % unpacked headroom.
-    budget: Object.freeze({ packed: 201_054, unpacked: 1_101_367 }),
+    // Spec 171: the theme checker and inventory bring this to
+    // 214,944 B packed and 1,133,343 B unpacked.
+    budget: Object.freeze({ packed: 220_800, unpacked: 1_134_444 }),
   }),
   '@kimen/mcp-server': Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
-    // Shared shadow styles bring this to 620,785 / 3,173,747 B, with
-    // 3% packed and 0.1% unpacked headroom.
-    budget: Object.freeze({ packed: 639_409, unpacked: 3_176_921 }),
+    // Spec 171: the bundled theme checker brings this to
+    // 644,473 B packed and 3,226,406 B unpacked.
+    budget: Object.freeze({ packed: 661_925, unpacked: 3_226_539 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,

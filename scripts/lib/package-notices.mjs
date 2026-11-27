@@ -44,6 +44,7 @@ export const PACKAGE_NOTICE_SECTIONS = Object.freeze({
   '@kimen/adapter-mcp-apps': ELEMENT_BUNDLE_NOTICES,
   '@kimen/mcp-server': Object.freeze([
     ...ELEMENT_BUNDLE_NOTICES,
+    '@csstools/css-tokenizer (MIT)',
     '@modelcontextprotocol/core (Apache-2.0)',
     '@modelcontextprotocol/server (Apache-2.0)',
     'zod (MIT)',
