@@ -11,9 +11,7 @@ later, including a "select all" parent that presents partial selection with
 ## When not to use
 
 a single mutually exclusive choice, an immediate on/off
-effect, triggering an action, unlabeled/icon-only usage, or
-`checked="false"` to mean unchecked. Boolean attributes use presence
-semantics; omit `checked` to express unchecked.
+effect, triggering an action, or unlabeled/icon-only usage.
 
 ## Examples
 
@@ -27,7 +25,7 @@ The default slot is the visible label — the accessible name and a native activ
 </form>
 ```
 
-Boolean attributes use presence semantics — omit `checked` to express unchecked, never write `checked="false"`; without `value` a checked box submits `on`, and unchecked boxes contribute no form entry:
+Without `value` a checked box submits `on`. Unchecked boxes contribute no form entry.
 
 ```html
 <ki-checkbox name="newsletter" checked>Send me the weekly digest</ki-checkbox>
@@ -66,9 +64,11 @@ nothing. Inside a `ki-checkbox-group`, set it on the group.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-checkbox`: the default, only the tokens ki-checkbox needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
-- `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+- `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted answer ("This plan needs a signed contract"). While it holds text the checkbox is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the checkbox, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` checkbox left unchecked; `error-text` words that. Inside a `ki-checkbox-group`, set it on the group. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.

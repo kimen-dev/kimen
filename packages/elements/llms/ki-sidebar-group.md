@@ -28,6 +28,8 @@ as a destination or outside ki-sidebar.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-sidebar-group`: the default, only the tokens ki-sidebar-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string, required): Visible group heading and accessible name of the nested list.

@@ -63,6 +63,8 @@ guide includes the complete Message actions recipe.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-message`: the default, only the tokens ki-message needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `actions-label` (string | undefined): Names and enables the assistant toolbar.

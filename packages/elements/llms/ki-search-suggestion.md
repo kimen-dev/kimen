@@ -30,6 +30,8 @@ query. Use `recent` for a removable history item.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-search-suggestion`: the default, only the tokens ki-search-suggestion needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `description` (string | undefined): Optional supporting text displayed below the title.

@@ -45,6 +45,8 @@ write. Use a button or link for those actions.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-copy-button`: the default, only the tokens ki-copy-button needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `copied-label` (string, default 'Copied'): Polite announcement after a successful write. Override for localized interfaces.
@@ -106,6 +108,7 @@ None.
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background. Default: `var(--ki-transparent-inverse)`.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border. Default: `var(--ki-outline-none)`.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground. Default: `var(--ki-text-success-high-em)`.
+- `--ki-button-inline-size`: Button and link inline size. Set to 100% to fill the container. Default: `var(--ki-size-layout-fit-content)`.
 - `--ki-button-justify-content`: Placement of the button content; start for a card. Default: `center`.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance). Default: `var(--ki-space-xs)`.
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size. Default: `var(--ki-typography-size-body-2)`.
@@ -230,6 +233,7 @@ None.
 - `--ki-button-text-align`: Alignment of the label lines. Default: `center`.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button. Default: `var(--ki-radius-component-md)`.
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button. Default: `var(--ki-radius-round)`.
+- `--ki-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles. Default: `var(--ki-surface-hover-overlay-inverse)`.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size. Default: `var(--ki-typography-size-title-2)`.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px). Default: `var(--ki-space-md)`.
 - `--ki-button-xl-height`: dimension used by the button component for xl height. Default: `var(--ki-space-16xl)`.
@@ -270,7 +274,11 @@ None.
 | outline | — | rest | `--ki-button-outline-rest-bg` | `var(--ki-surface-transparent)` | Background of the outline variant at rest. |
 | outline | — | rest | `--ki-button-outline-rest-border` | `var(--ki-outline-control)` | Visible outline of the outline variant at rest. |
 | outline | — | rest | `--ki-button-outline-rest-fg` | `var(--ki-text-high-em)` | Foreground of the outline variant at rest. |
+| outline | — | hover | `--ki-button-outline-hover-bg` | onmars `var(--ki-surface-s1)`, material3 `var(--ki-surface-s2)` | Background of the hovered outline variant. |
+| outline | — | hover | `--ki-button-outline-hover-border` | `var(--ki-outline-control-hover)` | Border of the hovered outline variant. |
+| outline | — | hover | `--ki-button-outline-hover-fg` | `var(--ki-text-high-em)` | Ink of the hovered outline variant. |
 | outline | — | selected | `--ki-button-outline-selected-bg` | `var(--ki-surface-inverse-white)` | Background of the selected outline button toggle. |
+| outline | — | selected | `--ki-button-outline-selected-border` | `var(--ki-outline-none)` | Border of the selected outline toggle. |
 | outline | — | selected | `--ki-button-outline-selected-fg` | `var(--ki-text-inverse-black)` | Foreground of the selected outline button toggle. |
 | primary | — | rest | `--ki-button-primary-rest-border-bottom` | onmars `var(--ki-outline-primary-button-bottom)`, material3 `var(--ki-outline-none)` | color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2). |
 | primary | — | rest | `--ki-button-primary-rest-shadow` | `var(--ki-effect-component-primary-default-shadow)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |

@@ -81,6 +81,8 @@ the event detail.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-menu`: the default, only the tokens ki-menu needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `anchor` (string, default '', ID of another element of the same spec): Literal ID of the menu button in the same document or containing shadow root.

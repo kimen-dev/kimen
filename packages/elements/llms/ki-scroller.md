@@ -59,6 +59,8 @@ Scrolling stays native (wheel, touch, arrows, Page Up/Down, Home/End); the viewp
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-scroller`: the default, only the tokens ki-scroller needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string, required): Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.

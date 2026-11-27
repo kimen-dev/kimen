@@ -75,6 +75,8 @@ The `icon` slot takes a decorative glyph, drawn in the tone's colors in a round 
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-alert`: the default, only the tokens ki-alert needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `dismiss-label` (string, default 'Dismiss'): Accessible name for the dismiss button. Override for localization; the default English string is the component's only built-in user-visible text. When to use: provide a localized action name whenever the document language is not English. When NOT to use: do not put the alert message here; use the default slot.

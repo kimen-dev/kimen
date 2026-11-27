@@ -111,6 +111,8 @@ entries.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-file-upload`: the default, only the tokens ki-file-upload needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `accept` (string | undefined): Comma-separated extensions, MIME types and MIME wildcards allowed in new selections.

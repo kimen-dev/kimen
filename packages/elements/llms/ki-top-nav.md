@@ -37,17 +37,23 @@ the header. Import `@kimen/elements/icons/bell` for the notification glyph.
 
 ## Links that wrap instead of collapsing
 
-Use `collapse-at="none"` to keep every link in the bar at every width. Links
-that do not fit wrap onto further lines between the brand and the actions,
-and the bar grows to hold them. No navigation button or menu is rendered.
+Use `collapse-at="none"` to keep every link in the bar at every width. When
+space runs out, the brand and actions keep the first row, and the links
+wrap across the full width below. Tab reaches the actions after the links.
+Use `--ki-top-nav-links-gap` for the column gap and
+`--ki-top-nav-links-justify: flex-end` to align the links with the trailing
+edge of their available space.
 
 ```html
-<ki-top-nav label="Documentation" collapse-at="none">
-  <a slot="brand" href="/">Kimen</a>
+<ki-top-nav label="Documentation" collapse-at="none"
+  style="--ki-top-nav-links-gap: var(--ki-layout-spacing-xs); --ki-top-nav-links-justify: flex-end">
+  <a slot="brand" href="/">Kimen Design System</a>
   <a href="/guide" aria-current="page">Guide</a>
   <a href="/components">Components</a>
   <a href="/tokens">Tokens</a>
-  <a href="/changelog">Changelog</a>
+  <ki-icon-button slot="actions" label="Search" variant="ghost">
+    <ki-icon name="search"></ki-icon>
+  </ki-icon-button>
 </ki-top-nav>
 ```
 
@@ -75,9 +81,11 @@ navigation destinations in the consuming app.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-top-nav`: the default, only the tokens ki-top-nav needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
-- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
+- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` keeps links visible. If they do not fit beside the brand and actions, they wrap across the full width below them.
 - `heading-level` (number, default 1): Native heading level for the screen title. Use 1 through 6 to fit the page outline.
 - `label` (string, default 'Main'): Accessible name of the header's primary navigation landmark. Override for localization.
 - `navigation-label` (string, default 'Open navigation'): Accessible name for the compact navigation button and menu. Override for localization.
@@ -167,6 +175,8 @@ None.
 - `--ki-top-nav-item-fg`: Primary navigation item resting ink. Default: `var(--ki-text-supporting)`.
 - `--ki-top-nav-item-hover-bg`: Hovered control or highlighted menu item surface. Default: `var(--ki-surface-s2)`.
 - `--ki-top-nav-item-hover-fg`: Hovered control or highlighted menu item ink. Default: `var(--ki-text-high-em)`.
+- `--ki-top-nav-links-gap`: Column gap between inline primary links. Default: `var(--ki-layout-spacing-zero)`.
+- `--ki-top-nav-links-justify`: Inline link alignment. Use flex-end for trailing links. Default: `flex-start`.
 - `--ki-top-nav-menu-radius`: Menu and trigger corner radius. Default: onmars `var(--ki-layout-menu-radius)`, material3 `var(--ki-layout-menu-radius-sm)`.
 - `--ki-top-nav-padding-inline`: Padding at the inline edges of both bars. Default: `var(--ki-layout-spacing-3xl)`.
 - `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

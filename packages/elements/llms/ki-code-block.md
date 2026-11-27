@@ -62,6 +62,8 @@ The guarded catalog accepts source strings in the default slot.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-code-block`: the default, only the tokens ki-code-block needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `copied-label` (string, default 'Copied'): Polite announcement after a successful clipboard write.

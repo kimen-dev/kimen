@@ -40,6 +40,12 @@ their labels do not run together.
 
 Human-readable documentation: https://kimen.dev/docs/
 
+## Boolean attributes
+
+An absent boolean attribute uses the property's default. A present one is true
+unless its exact value is `"false"`. This applies to markup and to later
+`setAttribute` and `removeAttribute` calls in both builds.
+
 ## Theming
 
 All themes reassign the same `--ki-*` custom properties, so switching themes
@@ -1065,6 +1071,12 @@ Use `toggle` for a persistent action. `selected` sets the starting state and eac
 </script>
 ```
 
+Enabled outline actions use `--ki-button-outline-hover-bg`,
+`--ki-button-outline-hover-fg` and `--ki-button-outline-hover-border` on hover.
+Unselected filled and quiet toggles use `--ki-button-toggle-unselected-hover-overlay`.
+A selected toggle keeps its fill on hover. Use `--ki-button-outline-selected-border`
+to set the selected outline edge.
+
 Programmatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.
 
 Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
@@ -1092,6 +1104,10 @@ saveButton.textContent = 'Save';
 document.body.append(saveButton);
 ```
 
+The leading and trailing slots use `--ki-button-{size}-icon-size` for their
+box and for a directly slotted `ki-icon` glyph. The button token takes
+precedence over an explicit `size` on that icon.
+
 While the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default "Loading") as a polite status message. Clear it when the action ends:
 
 ```html
@@ -1113,17 +1129,16 @@ While the action a button started is in progress, set `loading` on it instead of
 </script>
 ```
 
-A wide button that reads like a card, such as a two-line choice, start-aligns its content and its lines through two tokens (both `center` by default):
+A button or link fits its content by default. Set `--ki-button-inline-size`
+to `100%` to fill the containing block. The alignment tokens start-align the
+content and label lines of this two-line choice.
 
 ```html
 <style>
   .choice {
+    --ki-button-inline-size: 100%;
     --ki-button-justify-content: start;
     --ki-button-text-align: start;
-    display: block;
-  }
-  .choice::part(button) {
-    inline-size: 100%;
   }
 </style>
 <ki-button class="choice" variant="outline" toggle>
@@ -1152,8 +1167,8 @@ Attributes:
 
 Slots:
 - (default): Label content. This is the accessible name source.
-- `end`: Trailing icon or media. Follows writing direction.
-- `start`: Leading icon or media. Follows writing direction.
+- `end`: Trailing icon or media in writing direction. Uses the start slot's sizing.
+- `start`: Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size.
 
 Parts:
 - `button`: Internal native button, or link with `href`.
@@ -1170,6 +1185,7 @@ Other CSS custom properties:
 - `--ki-button-border-width`: dimension used by the button component for border width (MarsUI outline stroke: 1px). Default: onmars `var(--ki-size-border-hairline)`, material3 `0.0625rem`.
 - `--ki-button-font-family`: font family used by the button component for font family. Default: `var(--ki-typography-family-body)`.
 - `--ki-button-font-weight`: font weight used by the button component for font weight. Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-button-inline-size`: Button and link inline size. Set to 100% to fill the container. Default: `var(--ki-size-layout-fit-content)`.
 - `--ki-button-justify-content`: Placement of the button content; start for a card. Default: `center`.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance). Default: `var(--ki-space-xs)`.
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size. Default: `var(--ki-typography-size-body-2)`.
@@ -1209,6 +1225,7 @@ Other CSS custom properties:
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button. Default: `var(--ki-radius-round)`.
 - `--ki-button-toggle-unselected-bg`: Background of unselected filled toggle buttons. Default: `var(--ki-surface-s2)`.
 - `--ki-button-toggle-unselected-fg`: Foreground of unselected filled toggle buttons. Default: `var(--ki-text-high-em)`.
+- `--ki-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles. Default: `var(--ki-surface-hover-overlay-inverse)`.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size. Default: `var(--ki-typography-size-title-2)`.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px). Default: `var(--ki-space-md)`.
 - `--ki-button-xl-height`: dimension used by the button component for xl height. Default: `var(--ki-space-16xl)`.
@@ -1272,7 +1289,11 @@ Other CSS custom properties:
 | outline | — | rest | `--ki-button-outline-rest-bg` | `var(--ki-surface-transparent)` | Background of the outline variant at rest. |
 | outline | — | rest | `--ki-button-outline-rest-border` | `var(--ki-outline-control)` | Visible outline of the outline variant at rest. |
 | outline | — | rest | `--ki-button-outline-rest-fg` | `var(--ki-text-high-em)` | Foreground of the outline variant at rest. |
+| outline | — | hover | `--ki-button-outline-hover-bg` | onmars `var(--ki-surface-s1)`, material3 `var(--ki-surface-s2)` | Background of the hovered outline variant. |
+| outline | — | hover | `--ki-button-outline-hover-border` | `var(--ki-outline-control-hover)` | Border of the hovered outline variant. |
+| outline | — | hover | `--ki-button-outline-hover-fg` | `var(--ki-text-high-em)` | Ink of the hovered outline variant. |
 | outline | — | selected | `--ki-button-outline-selected-bg` | `var(--ki-surface-inverse-white)` | Background of the selected outline button toggle. |
+| outline | — | selected | `--ki-button-outline-selected-border` | `var(--ki-outline-none)` | Border of the selected outline toggle. |
 | outline | — | selected | `--ki-button-outline-selected-fg` | `var(--ki-text-inverse-black)` | Foreground of the selected outline button toggle. |
 | primary | — | rest | `--ki-button-primary-rest-border-bottom` | onmars `var(--ki-outline-primary-button-bottom)`, material3 `var(--ki-outline-none)` | color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2). |
 | primary | — | rest | `--ki-button-primary-rest-shadow` | `var(--ki-effect-component-primary-default-shadow)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
@@ -1781,9 +1802,7 @@ When to use: selecting one or more independent options that a form submits
 later, including a "select all" parent that presents partial selection with
 `indeterminate`. Always provide a visible label in the default slot.
 When NOT to use: a single mutually exclusive choice, an immediate on/off
-effect, triggering an action, unlabeled/icon-only usage, or
-`checked="false"` to mean unchecked. Boolean attributes use presence
-semantics; omit `checked` to express unchecked.
+effect, triggering an action, or unlabeled/icon-only usage.
 
 Examples:
 
@@ -1797,7 +1816,7 @@ The default slot is the visible label — the accessible name and a native activ
 </form>
 ```
 
-Boolean attributes use presence semantics — omit `checked` to express unchecked, never write `checked="false"`; without `value` a checked box submits `on`, and unchecked boxes contribute no form entry:
+Without `value` a checked box submits `on`. Unchecked boxes contribute no form entry.
 
 ```html
 <ki-checkbox name="newsletter" checked>Send me the weekly digest</ki-checkbox>
@@ -1832,7 +1851,7 @@ nothing. Inside a `ki-checkbox-group`, set it on the group.
 ```
 
 Attributes:
-- `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+- `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted answer ("This plan needs a signed contract"). While it holds text the checkbox is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the checkbox, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` checkbox left unchecked; `error-text` words that. Inside a `ki-checkbox-group`, set it on the group. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
@@ -3041,6 +3060,7 @@ Other CSS custom properties:
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background. Default: `var(--ki-transparent-inverse)`.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border. Default: `var(--ki-outline-none)`.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground. Default: `var(--ki-text-success-high-em)`.
+- `--ki-button-inline-size`: Button and link inline size. Set to 100% to fill the container. Default: `var(--ki-size-layout-fit-content)`.
 - `--ki-button-justify-content`: Placement of the button content; start for a card. Default: `center`.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance). Default: `var(--ki-space-xs)`.
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size. Default: `var(--ki-typography-size-body-2)`.
@@ -3165,6 +3185,7 @@ Other CSS custom properties:
 - `--ki-button-text-align`: Alignment of the label lines. Default: `center`.
 - `--ki-button-toggle-radius`: Rounded rectangle shape for an unselected text toggle button. Default: `var(--ki-radius-component-md)`.
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button. Default: `var(--ki-radius-round)`.
+- `--ki-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles. Default: `var(--ki-surface-hover-overlay-inverse)`.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size. Default: `var(--ki-typography-size-title-2)`.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px). Default: `var(--ki-space-md)`.
 - `--ki-button-xl-height`: dimension used by the button component for xl height. Default: `var(--ki-space-16xl)`.
@@ -3204,7 +3225,11 @@ Other CSS custom properties:
 | outline | — | rest | `--ki-button-outline-rest-bg` | `var(--ki-surface-transparent)` | Background of the outline variant at rest. |
 | outline | — | rest | `--ki-button-outline-rest-border` | `var(--ki-outline-control)` | Visible outline of the outline variant at rest. |
 | outline | — | rest | `--ki-button-outline-rest-fg` | `var(--ki-text-high-em)` | Foreground of the outline variant at rest. |
+| outline | — | hover | `--ki-button-outline-hover-bg` | onmars `var(--ki-surface-s1)`, material3 `var(--ki-surface-s2)` | Background of the hovered outline variant. |
+| outline | — | hover | `--ki-button-outline-hover-border` | `var(--ki-outline-control-hover)` | Border of the hovered outline variant. |
+| outline | — | hover | `--ki-button-outline-hover-fg` | `var(--ki-text-high-em)` | Ink of the hovered outline variant. |
 | outline | — | selected | `--ki-button-outline-selected-bg` | `var(--ki-surface-inverse-white)` | Background of the selected outline button toggle. |
+| outline | — | selected | `--ki-button-outline-selected-border` | `var(--ki-outline-none)` | Border of the selected outline toggle. |
 | outline | — | selected | `--ki-button-outline-selected-fg` | `var(--ki-text-inverse-black)` | Foreground of the selected outline button toggle. |
 | primary | — | rest | `--ki-button-primary-rest-border-bottom` | onmars `var(--ki-outline-primary-button-bottom)`, material3 `var(--ki-outline-none)` | color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2). |
 | primary | — | rest | `--ki-button-primary-rest-shadow` | `var(--ki-effect-component-primary-default-shadow)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
@@ -3587,7 +3612,7 @@ confirmation button with the same label and event.
 
 Attributes:
 - `close-label` (string, default 'Close'): Accessible name for the fullscreen close button. Localize it or describe the effect of dismissing, for example "Discard and close".
-- `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
+- `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
 - `confirm-label` (string | undefined): Label for the optional confirmation button. Use an action verb such as "Save". The button is in the fullscreen header or the centered footer.
 - `fullscreen` ("always" | "compact" | "never", default 'never'): Layout for the native modal. Use `compact` to fill windows narrower than 600 CSS pixels, or `always` to fill any window. Use `never` for a centered dialog at every width.
 - `heading` (string, required): Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
@@ -4831,9 +4856,18 @@ Add `toggle` for an action such as Bookmark that stays pressed until the next ac
 </ki-icon-button>
 ```
 
+Enabled outline actions use `--ki-icon-button-outline-hover-bg`,
+`--ki-icon-button-outline-hover-fg` and `--ki-icon-button-outline-hover-border` on hover.
+Unselected filled and quiet toggles use `--ki-icon-button-toggle-unselected-hover-overlay`.
+A selected toggle keeps its fill on hover. Use `--ki-icon-button-outline-selected-border`
+to set the selected outline edge.
+
 With an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.
 
-Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:
+Sizes run `xs` (24px, the WCAG 2.2 pointer-target floor) through `xl`,
+with `md` as the default. The `--ki-icon-button-{size}-icon-size` token
+sizes the box and any directly slotted `ki-icon` glyph in either icon slot,
+including a glyph with an explicit `size`.
 
 ```html
 <ki-icon-button size="xs" label="Clear">
@@ -4887,7 +4921,7 @@ Attributes:
 - `variant` ("ghost" | "outline" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, `ghost` for accent icon actions and `outline` for an unfilled action with a visible boundary. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
 Slots:
-- (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name. Supply `label` or use a named trailing list control.
+- (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name. Supply `label` or use a named trailing list control. Button tokens size ki-icon glyphs in both slots, overriding their size.
 - `counter`: Decorative ki-counter in the block-start inline-end corner. Include its meaning in the button label.
 - `selected`: Optional decorative icon shown when the toggle is selected. If omitted, the default icon stays visible and an inline SVG takes a current-colour fill.
 
@@ -4935,6 +4969,7 @@ Other CSS custom properties:
 - `--ki-icon-button-sm-spinner-size`: dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon). Default: `var(--ki-space-4xl)`.
 - `--ki-icon-button-toggle-radius`: Round shape for an unselected icon toggle button. Default: `var(--ki-radius-round)`.
 - `--ki-icon-button-toggle-selected-radius`: Rounded square shape for a selected icon toggle button. Default: `var(--ki-radius-component-md)`.
+- `--ki-icon-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles. Default: `var(--ki-surface-hover-overlay-inverse)`.
 - `--ki-icon-button-xl-icon-size`: dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px). Default: `var(--ki-space-9xl)`.
 - `--ki-icon-button-xl-size`: dimension used by the icon button component for xl box (56px square). Default: `var(--ki-space-16xl)`.
 - `--ki-icon-button-xl-spinner-size`: dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon). Default: `var(--ki-space-9xl)`.
@@ -4979,7 +5014,11 @@ Other CSS custom properties:
 | outline | — | rest | `--ki-icon-button-outline-rest-bg` | `var(--ki-surface-transparent)` | Background of the outline variant at rest. |
 | outline | — | rest | `--ki-icon-button-outline-rest-border` | `var(--ki-outline-control)` | Visible outline of the outline variant at rest. |
 | outline | — | rest | `--ki-icon-button-outline-rest-fg` | `var(--ki-text-high-em)` | Foreground of the outline variant at rest. |
+| outline | — | hover | `--ki-icon-button-outline-hover-bg` | onmars `var(--ki-surface-s1)`, material3 `var(--ki-surface-s2)` | Background of the hovered outline variant. |
+| outline | — | hover | `--ki-icon-button-outline-hover-border` | `var(--ki-outline-control-hover)` | Border of the hovered outline variant. |
+| outline | — | hover | `--ki-icon-button-outline-hover-fg` | `var(--ki-text-high-em)` | Ink of the hovered outline variant. |
 | outline | — | selected | `--ki-icon-button-outline-selected-bg` | `var(--ki-surface-inverse-white)` | Background of the selected outline icon button toggle. |
+| outline | — | selected | `--ki-icon-button-outline-selected-border` | `var(--ki-outline-none)` | Border of the selected outline toggle. |
 | outline | — | selected | `--ki-icon-button-outline-selected-fg` | `var(--ki-text-inverse-black)` | Foreground of the selected outline icon button toggle. |
 | primary | — | rest | `--ki-button-primary-rest-border-bottom` | onmars `var(--ki-outline-primary-button-bottom)`, material3 `var(--ki-outline-none)` | color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2). |
 | primary | — | rest | `--ki-button-primary-rest-shadow` | `var(--ki-effect-component-primary-default-shadow)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
@@ -8255,7 +8294,7 @@ again while it is still set shows nothing.
 
 Attributes:
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted choice ("We do not ship there"). While it holds text the select is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` select left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
-- `disabled` (boolean, default false): Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
+- `disabled` (boolean, default false): Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission.
 - `error-text` (string | undefined): Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `custom-error` or `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; set `custom-error` or call `setCustomValidity` for those.
 - `help-text` (string | undefined): One line of help under the trigger, read with it as the combobox description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
@@ -9669,7 +9708,7 @@ choices, and ki-button for actions.
 
 Examples:
 
-The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:
+The slotted label provides the accessible name.
 
 ```html
 <ki-switch checked>Autosave</ki-switch>
@@ -9703,7 +9742,7 @@ shows nothing.
 ```
 
 Attributes:
-- `checked` (boolean, default false): Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+- `checked` (boolean, default false): Live on/off state. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted setting ("Two-step sign-in needs a phone number"). While it holds text the switch is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the switch, or when the form is reset, so it never blocks the corrected answer. It outranks an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for help that is not an error; use `help-text`. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
 - `help-text` (string | undefined): One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `custom-error` or `setCustomValidity` shows in this line's place.
@@ -9885,7 +9924,7 @@ The group's `icon-layout` controls whether the icon is above the label or
 inline with it.
 
 Attributes:
-- `disabled` (boolean, default false): Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
+- `disabled` (boolean, default false): Prevents selection by every modality and exposes the unavailable state.
 - `selected` (boolean, default false): Output-only selected state written by `ki-tabs`. Set the group's `value` to choose an initial tab; author-set `selected` is overwritten.
 - `value` (string, default ''): Pairing identifier shared with a `ki-tab-panel`. The first tab with a value owns it; later duplicates render but are not selectable.
 
@@ -11424,17 +11463,23 @@ the header. Import `@kimen/elements/icons/bell` for the notification glyph.
 
 ## Links that wrap instead of collapsing
 
-Use `collapse-at="none"` to keep every link in the bar at every width. Links
-that do not fit wrap onto further lines between the brand and the actions,
-and the bar grows to hold them. No navigation button or menu is rendered.
+Use `collapse-at="none"` to keep every link in the bar at every width. When
+space runs out, the brand and actions keep the first row, and the links
+wrap across the full width below. Tab reaches the actions after the links.
+Use `--ki-top-nav-links-gap` for the column gap and
+`--ki-top-nav-links-justify: flex-end` to align the links with the trailing
+edge of their available space.
 
 ```html
-<ki-top-nav label="Documentation" collapse-at="none">
-  <a slot="brand" href="/">Kimen</a>
+<ki-top-nav label="Documentation" collapse-at="none"
+  style="--ki-top-nav-links-gap: var(--ki-layout-spacing-xs); --ki-top-nav-links-justify: flex-end">
+  <a slot="brand" href="/">Kimen Design System</a>
   <a href="/guide" aria-current="page">Guide</a>
   <a href="/components">Components</a>
   <a href="/tokens">Tokens</a>
-  <a href="/changelog">Changelog</a>
+  <ki-icon-button slot="actions" label="Search" variant="ghost">
+    <ki-icon name="search"></ki-icon>
+  </ki-icon-button>
 </ki-top-nav>
 ```
 
@@ -11458,7 +11503,7 @@ handlers in the overflow menu. Keep application-specific account menus and
 navigation destinations in the consuming app.
 
 Attributes:
-- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` never collapses: links that do not fit wrap onto more lines.
+- `collapse-at` (string, default '48rem'): CSS length below which navigation collapses and single-row app bars can center their title. `none` keeps links visible. If they do not fit beside the brand and actions, they wrap across the full width below them.
 - `heading-level` (number, default 1): Native heading level for the screen title. Use 1 through 6 to fit the page outline.
 - `label` (string, default 'Main'): Accessible name of the header's primary navigation landmark. Override for localization.
 - `navigation-label` (string, default 'Open navigation'): Accessible name for the compact navigation button and menu. Override for localization.
@@ -11541,6 +11586,8 @@ CSS custom properties:
 - `--ki-top-nav-item-fg`: Primary navigation item resting ink. Default: `var(--ki-text-supporting)`.
 - `--ki-top-nav-item-hover-bg`: Hovered control or highlighted menu item surface. Default: `var(--ki-surface-s2)`.
 - `--ki-top-nav-item-hover-fg`: Hovered control or highlighted menu item ink. Default: `var(--ki-text-high-em)`.
+- `--ki-top-nav-links-gap`: Column gap between inline primary links. Default: `var(--ki-layout-spacing-zero)`.
+- `--ki-top-nav-links-justify`: Inline link alignment. Use flex-end for trailing links. Default: `flex-start`.
 - `--ki-top-nav-menu-radius`: Menu and trigger corner radius. Default: onmars `var(--ki-layout-menu-radius)`, material3 `var(--ki-layout-menu-radius-sm)`.
 - `--ki-top-nav-padding-inline`: Padding at the inline edges of both bars. Default: `var(--ki-layout-spacing-3xl)`.
 - `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

@@ -48,6 +48,8 @@ Selection is never authored on the option — the parent group's `value` selects
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-radio`: the default, only the tokens ki-radio needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `disabled` (boolean, default false): Prevents this option from being selected or focused. Disabled options are skipped by group arrow navigation and omitted from form submission when selected before becoming disabled. When NOT to use: do not use disabled as a temporary loading state.

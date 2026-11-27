@@ -118,6 +118,8 @@ and `row-selection-label="Sélectionner {row}"` on a French page.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-table`: the default, only the tokens ki-table needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `density` ("compact" | "default", default 'default'): Row density. Default measures 48px and compact measures 40px at a 16px root on desktop.

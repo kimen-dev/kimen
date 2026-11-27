@@ -94,6 +94,8 @@ with the named placeholders to translate the generated text.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-pagination`: the default, only the tokens ki-pagination needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `boundaries` (number, default 1, minimum 0, maximum 10): Number of pages to display at each end of the numbered list.

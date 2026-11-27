@@ -28,6 +28,8 @@ Load `@kimen/elements/icons/inbox` to use the named icon.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-sidebar-item`: the default, only the tokens ki-sidebar-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `count` (number | undefined): Positive unread count. Fractional values round down.

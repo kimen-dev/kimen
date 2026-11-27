@@ -51,6 +51,8 @@ write one localized announcement to the pre-existing status region.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-counter`: the default, only the tokens ki-counter needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `dot` (boolean, default false): Show a dot independently of the count, including when the value is zero.

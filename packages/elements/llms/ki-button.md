@@ -51,6 +51,12 @@ Use `toggle` for a persistent action. `selected` sets the starting state and eac
 </script>
 ```
 
+Enabled outline actions use `--ki-button-outline-hover-bg`,
+`--ki-button-outline-hover-fg` and `--ki-button-outline-hover-border` on hover.
+Unselected filled and quiet toggles use `--ki-button-toggle-unselected-hover-overlay`.
+A selected toggle keeps its fill on hover. Use `--ki-button-outline-selected-border`
+to set the selected outline edge.
+
 Programmatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.
 
 Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
@@ -78,6 +84,10 @@ saveButton.textContent = 'Save';
 document.body.append(saveButton);
 ```
 
+The leading and trailing slots use `--ki-button-{size}-icon-size` for their
+box and for a directly slotted `ki-icon` glyph. The button token takes
+precedence over an explicit `size` on that icon.
+
 While the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default "Loading") as a polite status message. Clear it when the action ends:
 
 ```html
@@ -99,17 +109,16 @@ While the action a button started is in progress, set `loading` on it instead of
 </script>
 ```
 
-A wide button that reads like a card, such as a two-line choice, start-aligns its content and its lines through two tokens (both `center` by default):
+A button or link fits its content by default. Set `--ki-button-inline-size`
+to `100%` to fill the containing block. The alignment tokens start-align the
+content and label lines of this two-line choice.
 
 ```html
 <style>
   .choice {
+    --ki-button-inline-size: 100%;
     --ki-button-justify-content: start;
     --ki-button-text-align: start;
-    display: block;
-  }
-  .choice::part(button) {
-    inline-size: 100%;
   }
 </style>
 <ki-button class="choice" variant="outline" toggle>
@@ -121,6 +130,8 @@ A wide button that reads like a card, such as a two-line choice, start-aligns it
 
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-button`: the default, only the tokens ki-button needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
+
+[Boolean attributes](boolean-attributes.md).
 
 ## Attributes
 
@@ -145,8 +156,8 @@ A wide button that reads like a card, such as a two-line choice, start-aligns it
 ## Slots
 
 - (default): Label content. This is the accessible name source.
-- `end`: Trailing icon or media. Follows writing direction.
-- `start`: Leading icon or media. Follows writing direction.
+- `end`: Trailing icon or media in writing direction. Uses the start slot's sizing.
+- `start`: Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size.
 
 ## Parts
 
@@ -168,6 +179,7 @@ None.
 - `--ki-button-border-width`: dimension used by the button component for border width (MarsUI outline stroke: 1px). Default: onmars `var(--ki-size-border-hairline)`, material3 `0.0625rem`.
 - `--ki-button-font-family`: font family used by the button component for font family. Default: `var(--ki-typography-family-body)`.
 - `--ki-button-font-weight`: font weight used by the button component for font weight. Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-button-inline-size`: Button and link inline size. Set to 100% to fill the container. Default: `var(--ki-size-layout-fit-content)`.
 - `--ki-button-justify-content`: Placement of the button content; start for a card. Default: `center`.
 - `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance). Default: `var(--ki-space-xs)`.
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size. Default: `var(--ki-typography-size-body-2)`.
@@ -207,6 +219,7 @@ None.
 - `--ki-button-toggle-selected-radius`: Pill shape for a selected text toggle button. Default: `var(--ki-radius-round)`.
 - `--ki-button-toggle-unselected-bg`: Background of unselected filled toggle buttons. Default: `var(--ki-surface-s2)`.
 - `--ki-button-toggle-unselected-fg`: Foreground of unselected filled toggle buttons. Default: `var(--ki-text-high-em)`.
+- `--ki-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles. Default: `var(--ki-surface-hover-overlay-inverse)`.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size. Default: `var(--ki-typography-size-title-2)`.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px). Default: `var(--ki-space-md)`.
 - `--ki-button-xl-height`: dimension used by the button component for xl height. Default: `var(--ki-space-16xl)`.
@@ -271,7 +284,11 @@ None.
 | outline | — | rest | `--ki-button-outline-rest-bg` | `var(--ki-surface-transparent)` | Background of the outline variant at rest. |
 | outline | — | rest | `--ki-button-outline-rest-border` | `var(--ki-outline-control)` | Visible outline of the outline variant at rest. |
 | outline | — | rest | `--ki-button-outline-rest-fg` | `var(--ki-text-high-em)` | Foreground of the outline variant at rest. |
+| outline | — | hover | `--ki-button-outline-hover-bg` | onmars `var(--ki-surface-s1)`, material3 `var(--ki-surface-s2)` | Background of the hovered outline variant. |
+| outline | — | hover | `--ki-button-outline-hover-border` | `var(--ki-outline-control-hover)` | Border of the hovered outline variant. |
+| outline | — | hover | `--ki-button-outline-hover-fg` | `var(--ki-text-high-em)` | Ink of the hovered outline variant. |
 | outline | — | selected | `--ki-button-outline-selected-bg` | `var(--ki-surface-inverse-white)` | Background of the selected outline button toggle. |
+| outline | — | selected | `--ki-button-outline-selected-border` | `var(--ki-outline-none)` | Border of the selected outline toggle. |
 | outline | — | selected | `--ki-button-outline-selected-fg` | `var(--ki-text-inverse-black)` | Foreground of the selected outline button toggle. |
 | primary | — | rest | `--ki-button-primary-rest-border-bottom` | onmars `var(--ki-outline-primary-button-bottom)`, material3 `var(--ki-outline-none)` | color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2). |
 | primary | — | rest | `--ki-button-primary-rest-shadow` | `var(--ki-effect-component-primary-default-shadow)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |

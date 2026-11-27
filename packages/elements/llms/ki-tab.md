@@ -61,9 +61,11 @@ inline with it.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-tab`: the default, only the tokens ki-tab needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
-- `disabled` (boolean, default false): Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
+- `disabled` (boolean, default false): Prevents selection by every modality and exposes the unavailable state.
 - `selected` (boolean, default false): Output-only selected state written by `ki-tabs`. Set the group's `value` to choose an initial tab; author-set `selected` is overwritten.
 - `value` (string, default ''): Pairing identifier shared with a `ki-tab-panel`. The first tab with a value owns it; later duplicates render but are not selectable.
 

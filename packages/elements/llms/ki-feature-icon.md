@@ -75,6 +75,8 @@ default slot. The host imports the glyph before rendering the surface.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-feature-icon`: the default, only the tokens ki-feature-icon needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `shape` ("circle" | "square", default 'square'): Rounded square or circle. Unknown values use square.

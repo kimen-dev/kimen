@@ -27,6 +27,8 @@ Provide a group label and place menu items or dividers in its default slot. A gr
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-menu-group`: the default, only the tokens ki-menu-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string, default ''): Visible and accessible group name.

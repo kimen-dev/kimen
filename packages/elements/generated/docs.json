@@ -3880,11 +3880,11 @@
         },
         {
           "name": "slot",
-          "text": "start - Leading icon or media. Follows writing direction."
+          "text": "start - Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size."
         },
         {
           "name": "slot",
-          "text": "end - Trailing icon or media. Follows writing direction."
+          "text": "end - Trailing icon or media in writing direction. Uses the start slot's sizing."
         },
         {
           "name": "part",
@@ -3900,7 +3900,7 @@
         }
       ],
       "usage": {
-        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\nIn momentary mode `type` defaults to `submit`. Use `type=\"button\"` for an independent action inside a form.\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nA call to action that navigates takes `href`: the button renders a native link with the same look. Enter follows it, it never submits its form, and `target=\"_blank\"` without `rel` gets `rel=\"noreferrer noopener\"`.\n\n```html\n<ki-button variant=\"primary\" href=\"/start\">Get started</ki-button>\n```\n\nUse `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.\n\n```html\n<ki-button id=\"pin\" variant=\"outline\" toggle selected>Pin</ki-button>\n<script type=\"module\">\n  const button = document.getElementById('pin');\n  button.addEventListener('ki-change', ({ detail: { selected } }) => {\n    console.log('Pinned', selected);\n  });\n</script>\n```\n\nProgrammatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n\nA wide button that reads like a card, such as a two-line choice, start-aligns its content and its lines through two tokens (both `center` by default):\n\n```html\n<style>\n  .choice {\n    --ki-button-justify-content: start;\n    --ki-button-text-align: start;\n    display: block;\n  }\n  .choice::part(button) {\n    inline-size: 100%;\n  }\n</style>\n<ki-button class=\"choice\" variant=\"outline\" toggle>\n  <strong>Starter</strong><br />One agent, one repository\n</ki-button>\n```\n"
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\nIn momentary mode `type` defaults to `submit`. Use `type=\"button\"` for an independent action inside a form.\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nA call to action that navigates takes `href`: the button renders a native link with the same look. Enter follows it, it never submits its form, and `target=\"_blank\"` without `rel` gets `rel=\"noreferrer noopener\"`.\n\n```html\n<ki-button variant=\"primary\" href=\"/start\">Get started</ki-button>\n```\n\nUse `toggle` for a persistent action. `selected` sets the starting state and each activation changes `aria-pressed` while keeping the label. Toggle mode acts independently of form submission and reset, regardless of `type`.\n\n```html\n<ki-button id=\"pin\" variant=\"outline\" toggle selected>Pin</ki-button>\n<script type=\"module\">\n  const button = document.getElementById('pin');\n  button.addEventListener('ki-change', ({ detail: { selected } }) => {\n    console.log('Pinned', selected);\n  });\n</script>\n```\n\nEnabled outline actions use `--ki-button-outline-hover-bg`,\n`--ki-button-outline-hover-fg` and `--ki-button-outline-hover-border` on hover.\nUnselected filled and quiet toggles use `--ki-button-toggle-unselected-hover-overlay`.\nA selected toggle keeps its fill on hover. Use `--ki-button-outline-selected-border`\nto set the selected outline edge.\n\nProgrammatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.\n\nOpen a dialog with `command=\"show-modal\"` and its ID in `commandfor`. The\ndialog and invoker share a document or shadow root. The command takes\nprecedence over form submission or reset.\n\n```html\n<ki-button commandfor=\"draft-preview\" command=\"show-modal\">Preview draft</ki-button>\n<ki-dialog id=\"draft-preview\" heading=\"Draft preview\">\n  This draft is visible only to you.\n  <ki-button slot=\"footer\" commandfor=\"draft-preview\" command=\"close\">Done</ki-button>\n</ki-dialog>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n\nThe leading and trailing slots use `--ki-button-{size}-icon-size` for their\nbox and for a directly slotted `ki-icon` glyph. The button token takes\nprecedence over an explicit `size` on that icon.\n\nWhile the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default \"Loading\") as a polite status message. Clear it when the action ends:\n\n```html\n<form id=\"profile\">\n  <ki-button variant=\"primary\" loading-label=\"Saving\">Save changes</ki-button>\n</form>\n<script type=\"module\">\n  const form = document.getElementById('profile');\n  const save = form.querySelector('ki-button');\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    save.loading = true;\n    try {\n      await fetch('/profile', { method: 'POST', body: new FormData(form) });\n    } finally {\n      save.loading = false;\n    }\n  });\n</script>\n```\n\nA button or link fits its content by default. Set `--ki-button-inline-size`\nto `100%` to fill the containing block. The alignment tokens start-align the\ncontent and label lines of this two-line choice.\n\n```html\n<style>\n  .choice {\n    --ki-button-inline-size: 100%;\n    --ki-button-justify-content: start;\n    --ki-button-text-align: start;\n  }\n</style>\n<ki-button class=\"choice\" variant=\"outline\" toggle>\n  <strong>Starter</strong><br />One agent, one repository\n</ki-button>\n```\n"
       },
       "props": [
         {
@@ -4514,11 +4514,11 @@
         },
         {
           "name": "end",
-          "docs": "Trailing icon or media. Follows writing direction."
+          "docs": "Trailing icon or media in writing direction. Uses the start slot's sizing."
         },
         {
           "name": "start",
-          "docs": "Leading icon or media. Follows writing direction."
+          "docs": "Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size."
         }
       ],
       "parts": [
@@ -4727,6 +4727,11 @@
           "default": "var(--ki-text-success-high-em)"
         },
         {
+          "name": "--ki-button-inline-size",
+          "description": "Button and link inline size. Set to 100% to fill the container.",
+          "default": "var(--ki-size-layout-fit-content)"
+        },
+        {
           "name": "--ki-button-justify-content",
           "description": "Placement of the button content; start for a card.",
           "default": "center"
@@ -4829,6 +4834,22 @@
           "default": "var(--ki-space-4xl)"
         },
         {
+          "name": "--ki-button-outline-hover-bg",
+          "description": "Background of the hovered outline variant.",
+          "default": "var(--ki-surface-s1)",
+          "material3Default": "var(--ki-surface-s2)"
+        },
+        {
+          "name": "--ki-button-outline-hover-border",
+          "description": "Border of the hovered outline variant.",
+          "default": "var(--ki-outline-control-hover)"
+        },
+        {
+          "name": "--ki-button-outline-hover-fg",
+          "description": "Ink of the hovered outline variant.",
+          "default": "var(--ki-text-high-em)"
+        },
+        {
           "name": "--ki-button-outline-rest-bg",
           "description": "Background of the outline variant at rest.",
           "default": "var(--ki-surface-transparent)"
@@ -4847,6 +4868,11 @@
           "name": "--ki-button-outline-selected-bg",
           "description": "Background of the selected outline button toggle.",
           "default": "var(--ki-surface-inverse-white)"
+        },
+        {
+          "name": "--ki-button-outline-selected-border",
+          "description": "Border of the selected outline toggle.",
+          "default": "var(--ki-outline-none)"
         },
         {
           "name": "--ki-button-outline-selected-fg",
@@ -5548,6 +5574,11 @@
           "default": "var(--ki-text-high-em)"
         },
         {
+          "name": "--ki-button-toggle-unselected-hover-overlay",
+          "description": "Hover wash for unselected filled and quiet toggles.",
+          "default": "var(--ki-surface-hover-overlay-inverse)"
+        },
+        {
           "name": "--ki-button-xl-font-size",
           "description": "dimension used by the button component for xl font size.",
           "default": "var(--ki-typography-size-title-2)"
@@ -5810,9 +5841,20 @@
         {
           "variant": "outline",
           "tone": null,
+          "state": "hover",
+          "tokens": [
+            "--ki-button-outline-hover-bg",
+            "--ki-button-outline-hover-border",
+            "--ki-button-outline-hover-fg"
+          ]
+        },
+        {
+          "variant": "outline",
+          "tone": null,
           "state": "selected",
           "tokens": [
             "--ki-button-outline-selected-bg",
+            "--ki-button-outline-selected-border",
             "--ki-button-outline-selected-fg"
           ]
         },
@@ -7935,7 +7977,7 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked."
+          "text": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, or unlabeled/icon-only usage."
         },
         {
           "name": "slot",
@@ -7967,7 +8009,7 @@
         }
       ],
       "usage": {
-        "examples": "The default slot is the visible label — the accessible name and a native activation surface; when checked, `name` and `value` pair into the submitted form data:\n\n```html\n<form>\n  <ki-checkbox name=\"channels\" value=\"email\" checked>Email</ki-checkbox>\n  <ki-checkbox name=\"channels\" value=\"sms\">SMS</ki-checkbox>\n  <ki-button variant=\"primary\">Save preferences</ki-button>\n</form>\n```\n\nBoolean attributes use presence semantics — omit `checked` to express unchecked, never write `checked=\"false\"`; without `value` a checked box submits `on`, and unchecked boxes contribute no form entry:\n\n```html\n<ki-checkbox name=\"newsletter\" checked>Send me the weekly digest</ki-checkbox>\n```\n\n`required` blocks submission while unchecked (the invalid appearance appears only after a blocked attempt or an invalidating toggle, never on initial render), and `disabled` removes the checkbox from keyboard reach and form data:\n\n```html\n<form>\n  <ki-checkbox name=\"terms\" required>I accept the terms of service</ki-checkbox>\n  <ki-checkbox name=\"fax\" disabled>Notify me by fax</ki-checkbox>\n  <ki-button variant=\"primary\">Create account</ki-button>\n</form>\n```\n\n`indeterminate` presents the mixed state of a \"select all\" parent — presentation-only, exposed to assistive technology as mixed, cleared by any user toggle, and never submitted (model data stays binary through `checked`):\n\n```html\n<ki-checkbox indeterminate>Select all rows</ki-checkbox>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on the submitted\nanswer. The checkbox is invalid, blocks its form and is announced as invalid\nat once. Toggling it withdraws the error. Remove the attribute when a new\nattempt starts: setting the same text again while it is still set shows\nnothing. Inside a `ki-checkbox-group`, set it on the group.\n\n```html\n<ki-checkbox name=\"newsletter\" checked custom-error=\"Confirm your email address before subscribing.\">Send me the newsletter</ki-checkbox>\n```\n"
+        "examples": "The default slot is the visible label — the accessible name and a native activation surface; when checked, `name` and `value` pair into the submitted form data:\n\n```html\n<form>\n  <ki-checkbox name=\"channels\" value=\"email\" checked>Email</ki-checkbox>\n  <ki-checkbox name=\"channels\" value=\"sms\">SMS</ki-checkbox>\n  <ki-button variant=\"primary\">Save preferences</ki-button>\n</form>\n```\n\nWithout `value` a checked box submits `on`. Unchecked boxes contribute no form entry.\n\n```html\n<ki-checkbox name=\"newsletter\" checked>Send me the weekly digest</ki-checkbox>\n```\n\n`required` blocks submission while unchecked (the invalid appearance appears only after a blocked attempt or an invalidating toggle, never on initial render), and `disabled` removes the checkbox from keyboard reach and form data:\n\n```html\n<form>\n  <ki-checkbox name=\"terms\" required>I accept the terms of service</ki-checkbox>\n  <ki-checkbox name=\"fax\" disabled>Notify me by fax</ki-checkbox>\n  <ki-button variant=\"primary\">Create account</ki-button>\n</form>\n```\n\n`indeterminate` presents the mixed state of a \"select all\" parent — presentation-only, exposed to assistive technology as mixed, cleared by any user toggle, and never submitted (model data stays binary through `checked`):\n\n```html\n<ki-checkbox indeterminate>Select all rows</ki-checkbox>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on the submitted\nanswer. The checkbox is invalid, blocks its form and is announced as invalid\nat once. Toggling it withdraws the error. Remove the attribute when a new\nattempt starts: setting the same text again while it is still set shows\nnothing. Inside a `ki-checkbox-group`, set it on the group.\n\n```html\n<ki-checkbox name=\"newsletter\" checked custom-error=\"Confirm your email address before subscribing.\">Send me the newsletter</ki-checkbox>\n```\n"
       },
       "props": [
         {
@@ -7981,7 +8023,7 @@
           "mutable": true,
           "attr": "checked",
           "reflectToAttr": true,
-          "docs": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
+          "docs": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
           "docsTags": [
             {
               "name": "default",
@@ -14088,6 +14130,11 @@
           "default": "var(--ki-text-success-high-em)"
         },
         {
+          "name": "--ki-button-inline-size",
+          "description": "Button and link inline size. Set to 100% to fill the container.",
+          "default": "var(--ki-size-layout-fit-content)"
+        },
+        {
           "name": "--ki-button-justify-content",
           "description": "Placement of the button content; start for a card.",
           "default": "center"
@@ -14190,6 +14237,22 @@
           "default": "var(--ki-space-4xl)"
         },
         {
+          "name": "--ki-button-outline-hover-bg",
+          "description": "Background of the hovered outline variant.",
+          "default": "var(--ki-surface-s1)",
+          "material3Default": "var(--ki-surface-s2)"
+        },
+        {
+          "name": "--ki-button-outline-hover-border",
+          "description": "Border of the hovered outline variant.",
+          "default": "var(--ki-outline-control-hover)"
+        },
+        {
+          "name": "--ki-button-outline-hover-fg",
+          "description": "Ink of the hovered outline variant.",
+          "default": "var(--ki-text-high-em)"
+        },
+        {
           "name": "--ki-button-outline-rest-bg",
           "description": "Background of the outline variant at rest.",
           "default": "var(--ki-surface-transparent)"
@@ -14208,6 +14271,11 @@
           "name": "--ki-button-outline-selected-bg",
           "description": "Background of the selected outline button toggle.",
           "default": "var(--ki-surface-inverse-white)"
+        },
+        {
+          "name": "--ki-button-outline-selected-border",
+          "description": "Border of the selected outline toggle.",
+          "default": "var(--ki-outline-none)"
         },
         {
           "name": "--ki-button-outline-selected-fg",
@@ -14889,6 +14957,11 @@
           "default": "var(--ki-radius-round)"
         },
         {
+          "name": "--ki-button-toggle-unselected-hover-overlay",
+          "description": "Hover wash for unselected filled and quiet toggles.",
+          "default": "var(--ki-surface-hover-overlay-inverse)"
+        },
+        {
           "name": "--ki-button-xl-font-size",
           "description": "dimension used by the button component for xl font size.",
           "default": "var(--ki-typography-size-title-2)"
@@ -15084,9 +15157,20 @@
         {
           "variant": "outline",
           "tone": null,
+          "state": "hover",
+          "tokens": [
+            "--ki-button-outline-hover-bg",
+            "--ki-button-outline-hover-border",
+            "--ki-button-outline-hover-fg"
+          ]
+        },
+        {
+          "variant": "outline",
+          "tone": null,
           "state": "selected",
           "tokens": [
             "--ki-button-outline-selected-bg",
+            "--ki-button-outline-selected-border",
             "--ki-button-outline-selected-fg"
           ]
         },
@@ -16938,7 +17022,7 @@
           "mutable": true,
           "attr": "close-on-backdrop",
           "reflectToAttr": true,
-          "docs": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+          "docs": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
           "docsTags": [
             {
               "name": "default",
@@ -22587,7 +22671,7 @@
         },
         {
           "name": "slot",
-          "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control."
+          "text": "- Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.\nButton tokens size ki-icon glyphs in both slots, overriding their size."
         },
         {
           "name": "slot",
@@ -22611,7 +22695,7 @@
         }
       ],
       "usage": {
-        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`). In the original momentary variants, `tone` (default `neutral`) carries semantic intent such as success or danger.\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nAdd `toggle` for an action such as Bookmark that stays pressed until the next activation. `variant=\"outline\"` uses an outline at rest and a fill when selected. Give the pressed version a decorative icon in the `selected` slot.\n\n```html\n<ki-icon-button toggle variant=\"outline\" label=\"Bookmark\">\n  <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" stroke=\"currentColor\" stroke-width=\"2\" />\n  </svg>\n  <svg slot=\"selected\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" />\n  </svg>\n</ki-icon-button>\n```\n\nWith an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
+        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`). In the original momentary variants, `tone` (default `neutral`) carries semantic intent such as success or danger.\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nAdd `toggle` for an action such as Bookmark that stays pressed until the next activation. `variant=\"outline\"` uses an outline at rest and a fill when selected. Give the pressed version a decorative icon in the `selected` slot.\n\n```html\n<ki-icon-button toggle variant=\"outline\" label=\"Bookmark\">\n  <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" stroke=\"currentColor\" stroke-width=\"2\" />\n  </svg>\n  <svg slot=\"selected\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\">\n    <path d=\"M6 3h12v18l-6-4-6 4z\" />\n  </svg>\n</ki-icon-button>\n```\n\nEnabled outline actions use `--ki-icon-button-outline-hover-bg`,\n`--ki-icon-button-outline-hover-fg` and `--ki-icon-button-outline-hover-border` on hover.\nUnselected filled and quiet toggles use `--ki-icon-button-toggle-unselected-hover-overlay`.\nA selected toggle keeps its fill on hover. Use `--ki-icon-button-outline-selected-border`\nto set the selected outline edge.\n\nWith an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.\n\nSizes run `xs` (24px, the WCAG 2.2 pointer-target floor) through `xl`,\nwith `md` as the default. The `--ki-icon-button-{size}-icon-size` token\nsizes the box and any directly slotted `ki-icon` glyph in either icon slot,\nincluding a glyph with an explicit `size`.\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n\nAn icon button in the dialog footer can dismiss it by ID. The dialog must be\nin the same document or shadow root as the icon button.\n\n```html\n<ki-icon-button slot=\"footer\" label=\"Close details\" commandfor=\"details\" command=\"close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nWhile the action it started is in progress, set `loading` instead of `disabled`: the icon button keeps its size, its focus and its `label`, ignores further activation, draws a spinner in place of the icon and announces `loading-label` (default \"Loading\") as a polite status message:\n\n```html\n<ki-icon-button label=\"Refresh\" loading loading-label=\"Refreshing\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n"
       },
       "props": [
         {
@@ -23091,7 +23175,7 @@
       "slots": [
         {
           "name": "",
-          "docs": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control."
+          "docs": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.\nButton tokens size ki-icon glyphs in both slots, overriding their size."
         },
         {
           "name": "counter",
@@ -23977,6 +24061,22 @@
           "default": "var(--ki-space-5xl)"
         },
         {
+          "name": "--ki-icon-button-outline-hover-bg",
+          "description": "Background of the hovered outline variant.",
+          "default": "var(--ki-surface-s1)",
+          "material3Default": "var(--ki-surface-s2)"
+        },
+        {
+          "name": "--ki-icon-button-outline-hover-border",
+          "description": "Border of the hovered outline variant.",
+          "default": "var(--ki-outline-control-hover)"
+        },
+        {
+          "name": "--ki-icon-button-outline-hover-fg",
+          "description": "Ink of the hovered outline variant.",
+          "default": "var(--ki-text-high-em)"
+        },
+        {
           "name": "--ki-icon-button-outline-rest-bg",
           "description": "Background of the outline variant at rest.",
           "default": "var(--ki-surface-transparent)"
@@ -23995,6 +24095,11 @@
           "name": "--ki-icon-button-outline-selected-bg",
           "description": "Background of the selected outline icon button toggle.",
           "default": "var(--ki-surface-inverse-white)"
+        },
+        {
+          "name": "--ki-icon-button-outline-selected-border",
+          "description": "Border of the selected outline toggle.",
+          "default": "var(--ki-outline-none)"
         },
         {
           "name": "--ki-icon-button-outline-selected-fg",
@@ -24055,6 +24160,11 @@
           "name": "--ki-icon-button-toggle-selected-radius",
           "description": "Rounded square shape for a selected icon toggle button.",
           "default": "var(--ki-radius-component-md)"
+        },
+        {
+          "name": "--ki-icon-button-toggle-unselected-hover-overlay",
+          "description": "Hover wash for unselected filled and quiet toggles.",
+          "default": "var(--ki-surface-hover-overlay-inverse)"
         },
         {
           "name": "--ki-icon-button-xl-icon-size",
@@ -24231,9 +24341,20 @@
         {
           "variant": "outline",
           "tone": null,
+          "state": "hover",
+          "tokens": [
+            "--ki-icon-button-outline-hover-bg",
+            "--ki-icon-button-outline-hover-border",
+            "--ki-icon-button-outline-hover-fg"
+          ]
+        },
+        {
+          "variant": "outline",
+          "tone": null,
           "state": "selected",
           "tokens": [
             "--ki-icon-button-outline-selected-bg",
+            "--ki-icon-button-outline-selected-border",
             "--ki-icon-button-outline-selected-fg"
           ]
         },
@@ -38846,7 +38967,7 @@
           "mutable": false,
           "attr": "disabled",
           "reflectToAttr": true,
-          "docs": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
+          "docs": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission.",
           "docsTags": [
             {
               "name": "default",
@@ -45242,7 +45363,7 @@
         }
       ],
       "usage": {
-        "examples": "The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:\n\n```html\n<ki-switch checked>Autosave</ki-switch>\n<ki-switch>Desktop notifications</ki-switch>\n```\n\nWhile on, a named switch contributes `name`/`value` to native form data (`on` when `value` is omitted, checkbox parity); while off it contributes nothing:\n\n```html\n<form>\n  <ki-switch name=\"tracking\" value=\"enabled\" checked>Usage analytics</ki-switch>\n</form>\n```\n\nUser toggles dispatch composed `input` and `change` events — apply the setting immediately, a switch never waits for a submit; `disabled` preserves the current state while removing the switch from keyboard reach and form data:\n\n```html\n<ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on a setting it could\nnot apply. The switch is invalid, blocks its form and is announced as\ninvalid at once. Toggling it withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-switch name=\"two-step\" checked custom-error=\"Add a phone number before turning on two-step sign-in.\">Two-step sign-in</ki-switch>\n```\n"
+        "examples": "The slotted label provides the accessible name.\n\n```html\n<ki-switch checked>Autosave</ki-switch>\n<ki-switch>Desktop notifications</ki-switch>\n```\n\nWhile on, a named switch contributes `name`/`value` to native form data (`on` when `value` is omitted, checkbox parity); while off it contributes nothing:\n\n```html\n<form>\n  <ki-switch name=\"tracking\" value=\"enabled\" checked>Usage analytics</ki-switch>\n</form>\n```\n\nUser toggles dispatch composed `input` and `change` events — apply the setting immediately, a switch never waits for a submit; `disabled` preserves the current state while removing the switch from keyboard reach and form data:\n\n```html\n<ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>\n```\n\n## An error from the application\n\nSet `custom-error` to show the application's verdict on a setting it could\nnot apply. The switch is invalid, blocks its form and is announced as\ninvalid at once. Toggling it withdraws the error. Remove the attribute when\na new attempt starts: setting the same text again while it is still set\nshows nothing.\n\n```html\n<ki-switch name=\"two-step\" checked custom-error=\"Add a phone number before turning on two-step sign-in.\">Two-step sign-in</ki-switch>\n```\n"
       },
       "props": [
         {
@@ -45256,7 +45377,7 @@
           "mutable": true,
           "attr": "checked",
           "reflectToAttr": true,
-          "docs": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+          "docs": "Live on/off state.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
           "docsTags": [
             {
               "name": "default",
@@ -46206,7 +46327,7 @@
           "mutable": false,
           "attr": "disabled",
           "reflectToAttr": true,
-          "docs": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
+          "docs": "Prevents selection by every modality and exposes the unavailable state.",
           "docsTags": [
             {
               "name": "default",
@@ -53025,7 +53146,7 @@
         }
       ],
       "usage": {
-        "examples": "# Using TopNav\n\n## Application header\n\nUse direct anchors for primary sections and keep the page's skip link before\nthe header. Import `@kimen/elements/icons/bell` for the notification glyph.\n\n```html\n<a href=\"#content\" class=\"skip-link\">Skip to content</a>\n<ki-top-nav label=\"Primary\" collapse-at=\"48rem\" sticky>\n  <a slot=\"brand\" href=\"/\">Kimen</a>\n  <a href=\"/overview\" aria-current=\"page\">Overview</a>\n  <a href=\"/projects\">Projects</a>\n  <ki-icon-button slot=\"actions\" variant=\"ghost\" label=\"Notifications, 3 unread\">\n    <ki-icon name=\"bell\"></ki-icon>\n    <ki-counter slot=\"counter\" value=\"3\"></ki-counter>\n  </ki-icon-button>\n</ki-top-nav>\n<main id=\"content\" tabindex=\"-1\">Workspace</main>\n```\n\n## Links that wrap instead of collapsing\n\nUse `collapse-at=\"none\"` to keep every link in the bar at every width. Links\nthat do not fit wrap onto further lines between the brand and the actions,\nand the bar grows to hold them. No navigation button or menu is rendered.\n\n```html\n<ki-top-nav label=\"Documentation\" collapse-at=\"none\">\n  <a slot=\"brand\" href=\"/\">Kimen</a>\n  <a href=\"/guide\" aria-current=\"page\">Guide</a>\n  <a href=\"/components\">Components</a>\n  <a href=\"/tokens\">Tokens</a>\n  <a href=\"/changelog\">Changelog</a>\n</ki-top-nav>\n```\n\n## Per-screen bar with search\n\nUse the native `title` attribute in HTML and `screenTitle` for the framework\nprop. The leading button and search control keep their names and behavior.\nThe screen heading remains accessible when search occupies its visual space.\n\n```html\n<ki-top-nav variant=\"app-bar\" title=\"Projects\" heading-level=\"2\">\n  <button type=\"button\" slot=\"leading\">Back</button>\n  <input slot=\"search\" type=\"search\" aria-label=\"Search projects\">\n  <button type=\"button\" slot=\"actions\">Filters</button>\n</ki-top-nav>\n```\n\nWhen an app bar has more than three actions, slot the named controls directly.\nAttach handlers to those controls. TopNav uses their existing activation\nhandlers in the overflow menu. Keep application-specific account menus and\nnavigation destinations in the consuming app.\n"
+        "examples": "# Using TopNav\n\n## Application header\n\nUse direct anchors for primary sections and keep the page's skip link before\nthe header. Import `@kimen/elements/icons/bell` for the notification glyph.\n\n```html\n<a href=\"#content\" class=\"skip-link\">Skip to content</a>\n<ki-top-nav label=\"Primary\" collapse-at=\"48rem\" sticky>\n  <a slot=\"brand\" href=\"/\">Kimen</a>\n  <a href=\"/overview\" aria-current=\"page\">Overview</a>\n  <a href=\"/projects\">Projects</a>\n  <ki-icon-button slot=\"actions\" variant=\"ghost\" label=\"Notifications, 3 unread\">\n    <ki-icon name=\"bell\"></ki-icon>\n    <ki-counter slot=\"counter\" value=\"3\"></ki-counter>\n  </ki-icon-button>\n</ki-top-nav>\n<main id=\"content\" tabindex=\"-1\">Workspace</main>\n```\n\n## Links that wrap instead of collapsing\n\nUse `collapse-at=\"none\"` to keep every link in the bar at every width. When\nspace runs out, the brand and actions keep the first row, and the links\nwrap across the full width below. Tab reaches the actions after the links.\nUse `--ki-top-nav-links-gap` for the column gap and\n`--ki-top-nav-links-justify: flex-end` to align the links with the trailing\nedge of their available space.\n\n```html\n<ki-top-nav label=\"Documentation\" collapse-at=\"none\"\n  style=\"--ki-top-nav-links-gap: var(--ki-layout-spacing-xs); --ki-top-nav-links-justify: flex-end\">\n  <a slot=\"brand\" href=\"/\">Kimen Design System</a>\n  <a href=\"/guide\" aria-current=\"page\">Guide</a>\n  <a href=\"/components\">Components</a>\n  <a href=\"/tokens\">Tokens</a>\n  <ki-icon-button slot=\"actions\" label=\"Search\" variant=\"ghost\">\n    <ki-icon name=\"search\"></ki-icon>\n  </ki-icon-button>\n</ki-top-nav>\n```\n\n## Per-screen bar with search\n\nUse the native `title` attribute in HTML and `screenTitle` for the framework\nprop. The leading button and search control keep their names and behavior.\nThe screen heading remains accessible when search occupies its visual space.\n\n```html\n<ki-top-nav variant=\"app-bar\" title=\"Projects\" heading-level=\"2\">\n  <button type=\"button\" slot=\"leading\">Back</button>\n  <input slot=\"search\" type=\"search\" aria-label=\"Search projects\">\n  <button type=\"button\" slot=\"actions\">Filters</button>\n</ki-top-nav>\n```\n\nWhen an app bar has more than three actions, slot the named controls directly.\nAttach handlers to those controls. TopNav uses their existing activation\nhandlers in the overflow menu. Keep application-specific account menus and\nnavigation destinations in the consuming app.\n"
       },
       "props": [
         {
@@ -53039,7 +53160,7 @@
           "mutable": false,
           "attr": "collapse-at",
           "reflectToAttr": false,
-          "docs": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
+          "docs": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them.",
           "docsTags": [
             {
               "name": "default",
@@ -53746,6 +53867,16 @@
           "name": "--ki-top-nav-item-hover-fg",
           "description": "Hovered control or highlighted menu item ink.",
           "default": "var(--ki-text-high-em)"
+        },
+        {
+          "name": "--ki-top-nav-links-gap",
+          "description": "Column gap between inline primary links.",
+          "default": "var(--ki-layout-spacing-zero)"
+        },
+        {
+          "name": "--ki-top-nav-links-justify",
+          "description": "Inline link alignment. Use flex-end for trailing links.",
+          "default": "flex-start"
         },
         {
           "name": "--ki-top-nav-menu-radius",

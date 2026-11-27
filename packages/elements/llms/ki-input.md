@@ -77,6 +77,8 @@ again while it is still set shows nothing.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-input`: the default, only the tokens ki-input needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `ai-suggestion-text` (string, default 'Suggested by AI'): Localized provenance description read alongside help or an error when the end slot contains an AI label. Use this to translate the description.

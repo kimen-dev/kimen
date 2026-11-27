@@ -43,6 +43,8 @@ visible while details are collapsed.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-timeline-item`: the default, only the tokens ki-timeline-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `datetime` (string | undefined): ISO date or date-time. Invalid or missing dates have no time label.

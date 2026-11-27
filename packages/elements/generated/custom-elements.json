@@ -3548,11 +3548,11 @@
             },
             {
               "name": "end",
-              "description": "Trailing icon or media. Follows writing direction."
+              "description": "Trailing icon or media in writing direction. Uses the start slot's sizing."
             },
             {
               "name": "start",
-              "description": "Leading icon or media. Follows writing direction."
+              "description": "Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size."
             }
           ],
           "cssParts": [
@@ -3743,6 +3743,11 @@
               "default": "var(--ki-text-success-high-em)"
             },
             {
+              "name": "--ki-button-inline-size",
+              "description": "Button and link inline size. Set to 100% to fill the container.",
+              "default": "var(--ki-size-layout-fit-content)"
+            },
+            {
               "name": "--ki-button-justify-content",
               "description": "Placement of the button content; start for a card.",
               "default": "center"
@@ -3845,6 +3850,22 @@
               "default": "var(--ki-space-4xl)"
             },
             {
+              "name": "--ki-button-outline-hover-bg",
+              "description": "Background of the hovered outline variant.",
+              "default": "var(--ki-surface-s1)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-outline-hover-border",
+              "description": "Border of the hovered outline variant.",
+              "default": "var(--ki-outline-control-hover)"
+            },
+            {
+              "name": "--ki-button-outline-hover-fg",
+              "description": "Ink of the hovered outline variant.",
+              "default": "var(--ki-text-high-em)"
+            },
+            {
               "name": "--ki-button-outline-rest-bg",
               "description": "Background of the outline variant at rest.",
               "default": "var(--ki-surface-transparent)"
@@ -3863,6 +3884,11 @@
               "name": "--ki-button-outline-selected-bg",
               "description": "Background of the selected outline button toggle.",
               "default": "var(--ki-surface-inverse-white)"
+            },
+            {
+              "name": "--ki-button-outline-selected-border",
+              "description": "Border of the selected outline toggle.",
+              "default": "var(--ki-outline-none)"
             },
             {
               "name": "--ki-button-outline-selected-fg",
@@ -4564,6 +4590,11 @@
               "default": "var(--ki-text-high-em)"
             },
             {
+              "name": "--ki-button-toggle-unselected-hover-overlay",
+              "description": "Hover wash for unselected filled and quiet toggles.",
+              "default": "var(--ki-surface-hover-overlay-inverse)"
+            },
+            {
               "name": "--ki-button-xl-font-size",
               "description": "dimension used by the button component for xl font size.",
               "default": "var(--ki-typography-size-title-2)"
@@ -4826,9 +4857,20 @@
             {
               "variant": "outline",
               "tone": null,
+              "state": "hover",
+              "tokens": [
+                "--ki-button-outline-hover-bg",
+                "--ki-button-outline-hover-border",
+                "--ki-button-outline-hover-fg"
+              ]
+            },
+            {
+              "variant": "outline",
+              "tone": null,
               "state": "selected",
               "tokens": [
                 "--ki-button-outline-selected-bg",
+                "--ki-button-outline-selected-border",
                 "--ki-button-outline-selected-fg"
               ]
             },
@@ -6594,7 +6636,7 @@
           "tagName": "ki-checkbox",
           "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously on a defined custom element.",
           "whenToUse": "selecting one or more independent options that a form submits\nlater, including a \"select all\" parent that presents partial selection with\n`indeterminate`. Always provide a visible label in the default slot.",
-          "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked.",
+          "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, or unlabeled/icon-only usage.",
           "attributes": [
             {
               "name": "checked",
@@ -6603,7 +6645,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association."
+              "description": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association."
             },
             {
               "name": "custom-error",
@@ -6699,7 +6741,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
+              "description": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association.",
               "attribute": "checked",
               "reflects": true
             },
@@ -11387,6 +11429,11 @@
               "default": "var(--ki-text-success-high-em)"
             },
             {
+              "name": "--ki-button-inline-size",
+              "description": "Button and link inline size. Set to 100% to fill the container.",
+              "default": "var(--ki-size-layout-fit-content)"
+            },
+            {
               "name": "--ki-button-justify-content",
               "description": "Placement of the button content; start for a card.",
               "default": "center"
@@ -11489,6 +11536,22 @@
               "default": "var(--ki-space-4xl)"
             },
             {
+              "name": "--ki-button-outline-hover-bg",
+              "description": "Background of the hovered outline variant.",
+              "default": "var(--ki-surface-s1)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-button-outline-hover-border",
+              "description": "Border of the hovered outline variant.",
+              "default": "var(--ki-outline-control-hover)"
+            },
+            {
+              "name": "--ki-button-outline-hover-fg",
+              "description": "Ink of the hovered outline variant.",
+              "default": "var(--ki-text-high-em)"
+            },
+            {
               "name": "--ki-button-outline-rest-bg",
               "description": "Background of the outline variant at rest.",
               "default": "var(--ki-surface-transparent)"
@@ -11507,6 +11570,11 @@
               "name": "--ki-button-outline-selected-bg",
               "description": "Background of the selected outline button toggle.",
               "default": "var(--ki-surface-inverse-white)"
+            },
+            {
+              "name": "--ki-button-outline-selected-border",
+              "description": "Border of the selected outline toggle.",
+              "default": "var(--ki-outline-none)"
             },
             {
               "name": "--ki-button-outline-selected-fg",
@@ -12188,6 +12256,11 @@
               "default": "var(--ki-radius-round)"
             },
             {
+              "name": "--ki-button-toggle-unselected-hover-overlay",
+              "description": "Hover wash for unselected filled and quiet toggles.",
+              "default": "var(--ki-surface-hover-overlay-inverse)"
+            },
+            {
               "name": "--ki-button-xl-font-size",
               "description": "dimension used by the button component for xl font size.",
               "default": "var(--ki-typography-size-title-2)"
@@ -12383,9 +12456,20 @@
             {
               "variant": "outline",
               "tone": null,
+              "state": "hover",
+              "tokens": [
+                "--ki-button-outline-hover-bg",
+                "--ki-button-outline-hover-border",
+                "--ki-button-outline-hover-fg"
+              ]
+            },
+            {
+              "variant": "outline",
+              "tone": null,
               "state": "selected",
               "tokens": [
                 "--ki-button-outline-selected-bg",
+                "--ki-button-outline-selected-border",
                 "--ki-button-outline-selected-fg"
               ]
             },
@@ -13845,7 +13929,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`."
+              "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`."
             },
             {
               "name": "confirm-label",
@@ -13904,7 +13988,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+              "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
               "attribute": "close-on-backdrop",
               "reflects": true
             },
@@ -18320,7 +18404,7 @@
           "slots": [
             {
               "name": "",
-              "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control."
+              "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name. Supply `label` or use a named trailing list control.\nButton tokens size ki-icon glyphs in both slots, overriding their size."
             },
             {
               "name": "counter",
@@ -19192,6 +19276,22 @@
               "default": "var(--ki-space-5xl)"
             },
             {
+              "name": "--ki-icon-button-outline-hover-bg",
+              "description": "Background of the hovered outline variant.",
+              "default": "var(--ki-surface-s1)",
+              "material3Default": "var(--ki-surface-s2)"
+            },
+            {
+              "name": "--ki-icon-button-outline-hover-border",
+              "description": "Border of the hovered outline variant.",
+              "default": "var(--ki-outline-control-hover)"
+            },
+            {
+              "name": "--ki-icon-button-outline-hover-fg",
+              "description": "Ink of the hovered outline variant.",
+              "default": "var(--ki-text-high-em)"
+            },
+            {
               "name": "--ki-icon-button-outline-rest-bg",
               "description": "Background of the outline variant at rest.",
               "default": "var(--ki-surface-transparent)"
@@ -19210,6 +19310,11 @@
               "name": "--ki-icon-button-outline-selected-bg",
               "description": "Background of the selected outline icon button toggle.",
               "default": "var(--ki-surface-inverse-white)"
+            },
+            {
+              "name": "--ki-icon-button-outline-selected-border",
+              "description": "Border of the selected outline toggle.",
+              "default": "var(--ki-outline-none)"
             },
             {
               "name": "--ki-icon-button-outline-selected-fg",
@@ -19270,6 +19375,11 @@
               "name": "--ki-icon-button-toggle-selected-radius",
               "description": "Rounded square shape for a selected icon toggle button.",
               "default": "var(--ki-radius-component-md)"
+            },
+            {
+              "name": "--ki-icon-button-toggle-unselected-hover-overlay",
+              "description": "Hover wash for unselected filled and quiet toggles.",
+              "default": "var(--ki-surface-hover-overlay-inverse)"
             },
             {
               "name": "--ki-icon-button-xl-icon-size",
@@ -19446,9 +19556,20 @@
             {
               "variant": "outline",
               "tone": null,
+              "state": "hover",
+              "tokens": [
+                "--ki-icon-button-outline-hover-bg",
+                "--ki-icon-button-outline-hover-border",
+                "--ki-icon-button-outline-hover-fg"
+              ]
+            },
+            {
+              "variant": "outline",
+              "tone": null,
               "state": "selected",
               "tokens": [
                 "--ki-icon-button-outline-selected-bg",
+                "--ki-icon-button-outline-selected-border",
                 "--ki-icon-button-outline-selected-fg"
               ]
             },
@@ -31095,7 +31216,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply."
+              "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission."
             },
             {
               "name": "error-text",
@@ -31195,7 +31316,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
+              "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission.",
               "attribute": "disabled",
               "reflects": true
             },
@@ -36139,7 +36260,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern."
+              "description": "Live on/off state.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern."
             },
             {
               "name": "custom-error",
@@ -36201,7 +36322,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+              "description": "Live on/off state.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
               "attribute": "checked",
               "reflects": true
             },
@@ -36995,7 +37116,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled."
+              "description": "Prevents selection by every modality and exposes the unavailable state."
             },
             {
               "name": "selected",
@@ -37025,7 +37146,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
+              "description": "Prevents selection by every modality and exposes the unavailable state.",
               "attribute": "disabled",
               "reflects": true
             },
@@ -42473,7 +42594,7 @@
                 "text": "string"
               },
               "default": "'48rem'",
-              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines."
+              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them."
             },
             {
               "name": "heading-level",
@@ -42584,7 +42705,7 @@
                 "text": "string"
               },
               "default": "'48rem'",
-              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
+              "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them.",
               "attribute": "collapse-at",
               "reflects": false
             },
@@ -43020,6 +43141,16 @@
               "name": "--ki-top-nav-item-hover-fg",
               "description": "Hovered control or highlighted menu item ink.",
               "default": "var(--ki-text-high-em)"
+            },
+            {
+              "name": "--ki-top-nav-links-gap",
+              "description": "Column gap between inline primary links.",
+              "default": "var(--ki-layout-spacing-zero)"
+            },
+            {
+              "name": "--ki-top-nav-links-justify",
+              "description": "Inline link alignment. Use flex-end for trailing links.",
+              "default": "flex-start"
             },
             {
               "name": "--ki-top-nav-menu-radius",

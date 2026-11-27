@@ -46,6 +46,8 @@ Beside a visible name the avatar is decorative — omit `label` so assistive tec
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-avatar`: the default, only the tokens ki-avatar needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `initials` (string | undefined): Initials rendered verbatim as the second fallback step — never derived from the label, never truncated (FR-003). Catalog guidance: one to two characters. With a label present the initials are presentational; assistive technology receives the label alone.

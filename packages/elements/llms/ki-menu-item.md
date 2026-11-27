@@ -27,6 +27,8 @@ Give each item a value and a visible label. Use `type="checkbox"` for independen
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-menu-item`: the default, only the tokens ki-menu-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `checked` (boolean, default false): Checked state for checkbox and radio actions.

@@ -36,6 +36,8 @@ framework wrappers, register it separately for icon-only options.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-segment`: the default, only the tokens ki-segment needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `aria-label` (string | undefined): Accessible name of an icon-only option. An enabled icon-only option also shows this name on focus and hover when ki-tooltip is registered. The loader defines the tooltip when the segment draws it. For a text option, use the visible label.

@@ -51,9 +51,18 @@ Add `toggle` for an action such as Bookmark that stays pressed until the next ac
 </ki-icon-button>
 ```
 
+Enabled outline actions use `--ki-icon-button-outline-hover-bg`,
+`--ki-icon-button-outline-hover-fg` and `--ki-icon-button-outline-hover-border` on hover.
+Unselected filled and quiet toggles use `--ki-icon-button-toggle-unselected-hover-overlay`.
+A selected toggle keeps its fill on hover. Use `--ki-icon-button-outline-selected-border`
+to set the selected outline edge.
+
 With an empty `selected` slot, the default inline SVG takes a `currentColor` fill while pressed. Let its paths inherit `fill`. Keep `label` the same in both states. Activating the control emits `ki-change` with `{ selected }`. Set the `selected` attribute for the initial state or write the property to update it silently.
 
-Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:
+Sizes run `xs` (24px, the WCAG 2.2 pointer-target floor) through `xl`,
+with `md` as the default. The `--ki-icon-button-{size}-icon-size` token
+sizes the box and any directly slotted `ki-icon` glyph in either icon slot,
+including a glyph with an explicit `size`.
 
 ```html
 <ki-icon-button size="xs" label="Clear">
@@ -96,6 +105,8 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-icon-button`: the default, only the tokens ki-icon-button needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.
@@ -114,7 +125,7 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 
 ## Slots
 
-- (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name. Supply `label` or use a named trailing list control.
+- (default): Exactly one decorative icon. The slot is presentational: its content is hidden from assistive technology and never contributes to the accessible name. Supply `label` or use a named trailing list control. Button tokens size ki-icon glyphs in both slots, overriding their size.
 - `counter`: Decorative ki-counter in the block-start inline-end corner. Include its meaning in the button label.
 - `selected`: Optional decorative icon shown when the toggle is selected. If omitted, the default icon stays visible and an inline SVG takes a current-colour fill.
 
@@ -167,6 +178,7 @@ None.
 - `--ki-icon-button-sm-spinner-size`: dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon). Default: `var(--ki-space-4xl)`.
 - `--ki-icon-button-toggle-radius`: Round shape for an unselected icon toggle button. Default: `var(--ki-radius-round)`.
 - `--ki-icon-button-toggle-selected-radius`: Rounded square shape for a selected icon toggle button. Default: `var(--ki-radius-component-md)`.
+- `--ki-icon-button-toggle-unselected-hover-overlay`: Hover wash for unselected filled and quiet toggles. Default: `var(--ki-surface-hover-overlay-inverse)`.
 - `--ki-icon-button-xl-icon-size`: dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px). Default: `var(--ki-space-9xl)`.
 - `--ki-icon-button-xl-size`: dimension used by the icon button component for xl box (56px square). Default: `var(--ki-space-16xl)`.
 - `--ki-icon-button-xl-spinner-size`: dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon). Default: `var(--ki-space-9xl)`.
@@ -212,7 +224,11 @@ None.
 | outline | — | rest | `--ki-icon-button-outline-rest-bg` | `var(--ki-surface-transparent)` | Background of the outline variant at rest. |
 | outline | — | rest | `--ki-icon-button-outline-rest-border` | `var(--ki-outline-control)` | Visible outline of the outline variant at rest. |
 | outline | — | rest | `--ki-icon-button-outline-rest-fg` | `var(--ki-text-high-em)` | Foreground of the outline variant at rest. |
+| outline | — | hover | `--ki-icon-button-outline-hover-bg` | onmars `var(--ki-surface-s1)`, material3 `var(--ki-surface-s2)` | Background of the hovered outline variant. |
+| outline | — | hover | `--ki-icon-button-outline-hover-border` | `var(--ki-outline-control-hover)` | Border of the hovered outline variant. |
+| outline | — | hover | `--ki-icon-button-outline-hover-fg` | `var(--ki-text-high-em)` | Ink of the hovered outline variant. |
 | outline | — | selected | `--ki-icon-button-outline-selected-bg` | `var(--ki-surface-inverse-white)` | Background of the selected outline icon button toggle. |
+| outline | — | selected | `--ki-icon-button-outline-selected-border` | `var(--ki-outline-none)` | Border of the selected outline toggle. |
 | outline | — | selected | `--ki-icon-button-outline-selected-fg` | `var(--ki-text-inverse-black)` | Foreground of the selected outline icon button toggle. |
 | primary | — | rest | `--ki-button-primary-rest-border-bottom` | onmars `var(--ki-outline-primary-button-bottom)`, material3 `var(--ki-outline-none)` | color used by the button component for the primary bottom edge (MarsUI Outline/primary_button_bottom; none in onmars v2). |
 | primary | — | rest | `--ki-button-primary-rest-shadow` | `var(--ki-effect-component-primary-default-shadow)` | shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default). |
