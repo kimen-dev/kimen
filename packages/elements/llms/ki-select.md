@@ -145,6 +145,7 @@ None.
 - `--ki-select-font-weight`: font weight used by the select component for the trigger value (MarsUI UI/Body 1/medium: weight 600).
 - `--ki-select-gap`: dimension used by the select component for gap.
 - `--ki-select-height`: dimension used by the select component for height.
+- `--ki-select-hover-bg`: Trigger fill on hover, beneath the hover wash.
 - `--ki-select-hover-border`: color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover.
 - `--ki-select-hover-fg`: color used by the select component for hover foreground.
 - `--ki-select-hover-label-fg`: color used by the select component for hover label foreground.

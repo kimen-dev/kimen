@@ -148,6 +148,7 @@ None.
 
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity.
 - `--ki-table-backdrop-filter`: Complete filter applied behind the frame.
 - `--ki-table-bg`: Table frame and caption surface.
 - `--ki-table-bg-image`: Optional image layered over the table frame.
@@ -164,6 +165,7 @@ None.
 - `--ki-table-header-bg-image`: Optional image layered over the column header.
 - `--ki-table-header-fg`: Column header ink.
 - `--ki-table-header-height`: Column header row height.
+- `--ki-table-meta-bg`: Surface behind secondary and numeric values at rest.
 - `--ki-table-meta-fg`: Secondary and numeric value ink.
 - `--ki-table-radius`: Outer frame corner radius.
 - `--ki-table-row-height`: Default data row height.

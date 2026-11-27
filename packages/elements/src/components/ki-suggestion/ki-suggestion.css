@@ -82,6 +82,7 @@ button::after {
 [part="description"] {
   display: var(--_ki-suggestion-description-display, none);
   padding-inline: var(--ki-suggestion-inset);
+  background-color: var(--_ki-suggestion-description-bg, var(--ki-suggestion-card-description-bg));
   color: var(--_ki-suggestion-description-fg, var(--ki-suggestion-card-description-fg));
   font-size: var(--ki-suggestion-description-size);
   font-weight: var(--ki-suggestion-weight);
@@ -94,6 +95,7 @@ button::after {
   :host(:hover) :where(.surface) {
     --_ki-suggestion-state-bg: var(--_ki-suggestion-hover-bg, var(--ki-suggestion-hover-bg));
     --_ki-suggestion-state-fg: var(--_ki-suggestion-hover-fg, var(--ki-suggestion-hover-fg));
+    --_ki-suggestion-description-bg: var(--ki-suggestion-card-hover-description-bg);
     --_ki-suggestion-description-fg: var(--ki-suggestion-card-hover-description-fg);
   }
 }
@@ -101,6 +103,7 @@ button::after {
 .surface:has(> button:is(:active, [data-ki-pressed])) {
   --_ki-suggestion-state-bg: var(--_ki-suggestion-pressed-bg, var(--ki-suggestion-pressed-bg));
   --_ki-suggestion-state-fg: var(--_ki-suggestion-pressed-fg, var(--ki-suggestion-pressed-fg));
+  --_ki-suggestion-description-bg: var(--ki-suggestion-card-pressed-description-bg);
   --_ki-suggestion-description-fg: var(--ki-suggestion-card-pressed-description-fg);
 }
 

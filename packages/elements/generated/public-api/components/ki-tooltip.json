@@ -187,6 +187,14 @@
         "required": false,
         "type": null
       },
+      "--ki-tooltip-hide-delay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "duration used by the tooltip component for tooltip hide delay.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-tooltip-line-height": {
         "default": null,
         "deprecatedSince": null,
@@ -391,6 +399,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-tooltip-show-delay": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "duration used by the tooltip component for tooltip show delay.",
         "replacement": null,
         "required": false,
         "type": null

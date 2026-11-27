@@ -131,6 +131,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-ghost-active-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Shadow of a pressed ghost button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-ghost-danger-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -191,6 +199,30 @@
         "default": null,
         "deprecatedSince": null,
         "description": "value used by the button component for ghost hover shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a pressed ghost neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge of a pressed ghost neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-ghost-neutral-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a pressed ghost neutral button.",
         "replacement": null,
         "required": false,
         "type": null
@@ -595,6 +627,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-primary-active-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Shadow of a pressed primary button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-primary-danger-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -663,6 +703,30 @@
         "default": null,
         "deprecatedSince": null,
         "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a pressed primary neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge of a pressed primary neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-primary-neutral-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a pressed primary neutral button.",
         "replacement": null,
         "required": false,
         "type": null
@@ -819,6 +883,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-quaternary-active-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Shadow of a pressed quaternary button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-quaternary-danger-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -879,6 +951,30 @@
         "default": null,
         "deprecatedSince": null,
         "description": "value used by the button component for quaternary hover shadow.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a pressed quaternary neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge of a pressed quaternary neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-quaternary-neutral-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a pressed quaternary neutral button.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1035,6 +1131,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-secondary-active-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Shadow of a pressed secondary button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-secondary-danger-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -1103,6 +1207,30 @@
         "default": null,
         "deprecatedSince": null,
         "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a pressed secondary neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge of a pressed secondary neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-secondary-neutral-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a pressed secondary neutral button.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1347,6 +1475,14 @@
         "required": false,
         "type": null
       },
+      "--ki-button-tertiary-active-shadow": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Shadow of a pressed tertiary button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-button-tertiary-danger-hover-bg": {
         "default": null,
         "deprecatedSince": null,
@@ -1415,6 +1551,30 @@
         "default": null,
         "deprecatedSince": null,
         "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-active-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Fill of a pressed tertiary neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-active-border": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Edge of a pressed tertiary neutral button.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-button-tertiary-neutral-active-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Ink of a pressed tertiary neutral button.",
         "replacement": null,
         "required": false,
         "type": null

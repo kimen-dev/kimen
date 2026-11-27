@@ -67,6 +67,14 @@
         "required": false,
         "type": null
       },
+      "--ki-surface-transparent": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Transparent surface backing for a background image that carries its own opacity.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-table-backdrop-filter": {
         "default": null,
         "deprecatedSince": null,
@@ -191,6 +199,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Column header row height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-table-meta-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Surface behind secondary and numeric values at rest.",
         "replacement": null,
         "required": false,
         "type": null

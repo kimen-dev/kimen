@@ -65,7 +65,7 @@
   padding: 0;
   border: 0;
   border-radius: var(--ki-menu-item-radius);
-  background-color: transparent;
+  background-color: var(--ki-menu-meta-bg);
   color: var(--ki-menu-fg);
   font: inherit;
 }

@@ -634,6 +634,36 @@ test('S5 the built stylesheets pass every sweep in every context', () => {
   );
 });
 
+test('the pressed text sweep includes the wash painted above the active fill', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root { --ki-button-primary-active-overlay: rgba(255, 255, 255, 0.95); }`,
+  );
+  assert.ok(
+    failures.some((failure) =>
+      failure.startsWith(
+        'onmars/light --ki-button-primary-neutral-active-fg on --ki-button-primary-neutral-active-bg:',
+      ),
+    ),
+  );
+});
+
+test('reduced transparency requires an opaque fill even for a pressed button wash', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root {
+      --ki-reduced-transparency-button-quaternary-neutral-active-bg: rgba(0, 0, 0, 0.05);
+    }`,
+  );
+  assert.ok(
+    failures.some((failure) =>
+      failure.startsWith(
+        'onmars+reduced-transparency/light --ki-button-quaternary-neutral-active-bg: alpha 0.05',
+      ),
+    ),
+  );
+});
+
 test('dark onmars requires the inverse neutral primary button in every mode', () => {
   const failures = evaluateCss(
     'onmars',

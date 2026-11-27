@@ -36,17 +36,13 @@ reaches the removal version while still shipping the token.
 
 ## What to change
 
-Use the replacement in the *Deprecated tokens* table wherever you set or read a
-deprecated token. In the table below, `{variant}` is `primary`, `secondary`,
-`tertiary`, `quaternary` or `ghost`.
+Use the replacements below wherever you set or read a deprecated or removed
+token. The button active and toned disabled palettes, the input minimum target
+and the select hover fill are supported theme hooks.
 
 | Deprecated | Use instead | Why |
 | --- | --- | --- |
-| `--ki-button-{variant}-{tone}-active-{bg,border,fg}` and `--ki-button-{variant}-active-shadow` | the same cell with `rest`: `--ki-button-{variant}-{tone}-rest-{bg,border,fg}`, `--ki-button-{variant}-rest-shadow` | A pressed button shows its resting cell under the pressed overlay (`--ki-button-primary-active-overlay`, `--ki-button-secondary-active-overlay`). Restyle the press through the overlay. |
-| `--ki-button-{variant}-{danger,success}-disabled-{bg,border,fg}` | `--ki-button-{variant}-neutral-disabled-{bg,border,fg}` | Disabled does not depend on the tone. |
 | `--ki-input-focus-border`, `--ki-textarea-focus-border` | `--ki-input-focus-ring-color`, `--ki-textarea-focus-ring-color` | A focused field keeps its resting border and is marked by its focus ring. |
-| `--ki-input-min-target` | `--ki-input-height` | The field's minimum block size is its height. |
-| `--ki-select-hover-bg` | `--ki-surface-hover-overlay-inverse` | On hover the trigger keeps its resting fill under the inverse hover overlay. |
 | `--ki-select-listbox-elevation` | `--ki-select-listbox-shadow` | The listbox shadow replaced the hand-composed elevation. |
 | `--ki-motion-easing-spring` | `--ki-motion-easing-emphasized-out` | Onmars now eases out without overshoot. Both names resolve to the theme's same curve until removal. |
 

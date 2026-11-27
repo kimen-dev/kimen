@@ -7,25 +7,29 @@ import { compactButtonPalette } from './compact-button-palette';
 const surface = new URL('../src/components/ki-button/ki-button.surface.css', import.meta.url);
 
 describe('shared button palette compaction', () => {
-  it('reconstructs the compiled stylesheet byte for byte', async () => {
-    const filePath = fileURLToPath(surface);
-    const input = await readFile(surface, 'utf8');
-    const { output, diagnostics } = await optimizeCss({ input, filePath, minify: true });
-    expect(diagnostics).toEqual([]);
+  it.each(['ki-button.surface.css', 'ki-button.tones.css'])(
+    'reconstructs the compiled %s byte for byte',
+    async (filename) => {
+      const stylesheet = new URL(filename, surface);
+      const filePath = fileURLToPath(stylesheet);
+      const input = await readFile(stylesheet, 'utf8');
+      const { output, diagnostics } = await optimizeCss({ input, filePath, minify: true });
+      expect(diagnostics).toEqual([]);
 
-    const compacted = compactButtonPalette.transform(
-      `export default () => \`${output}\`;`,
-      filePath,
-    );
-    expect(compacted).not.toBeNull();
-    if (!compacted) throw new Error('Shared button palette was not compacted');
+      const compacted = compactButtonPalette.transform(
+        `export default () => \`${output}\`;`,
+        filePath,
+      );
+      expect(compacted).not.toBeNull();
+      if (!compacted) throw new Error('Shared button palette was not compacted');
 
-    const moduleUrl = `data:text/javascript,${encodeURIComponent(compacted.code)}`;
-    const { default: renderCss } = (await import(/* @vite-ignore */ moduleUrl)) as {
-      default: () => string;
-    };
-    expect(renderCss()).toBe(output);
-  });
+      const moduleUrl = `data:text/javascript,${encodeURIComponent(compacted.code)}`;
+      const { default: renderCss } = (await import(/* @vite-ignore */ moduleUrl)) as {
+        default: () => string;
+      };
+      expect(renderCss()).toBe(output);
+    },
+  );
 
   it('skips stylesheets without the exact palette declarations', () => {
     expect(

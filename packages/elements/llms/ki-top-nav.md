@@ -132,7 +132,9 @@ None.
 - `--ki-app-bar-lg-title-size`: Expanded two-row app-bar title size.
 - `--ki-app-bar-scrolled-bg`: App-bar fill when its container scrolls.
 - `--ki-app-bar-scrolled-fg`: App-bar title and control ink when its container scrolls.
+- `--ki-app-bar-scrolled-subtitle-bg`: Scrolled surface behind the app-bar subtitle.
 - `--ki-app-bar-scrolled-subtitle-fg`: App-bar subtitle ink when its container scrolls.
+- `--ki-app-bar-subtitle-bg`: Resting surface behind the app-bar subtitle.
 - `--ki-app-bar-subtitle-fg`: Resting app-bar subtitle ink.
 - `--ki-app-bar-title-font-family`: Screen heading typeface.
 - `--ki-app-bar-title-size`: One-row app-bar title size.

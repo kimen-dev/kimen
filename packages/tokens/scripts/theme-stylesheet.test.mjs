@@ -432,11 +432,11 @@ test('S1 the published stylesheet annotates exactly the deprecated tokens', asyn
   }).getPlatformTokens('css');
   const deprecations = collectDeprecations(dictionary.allTokens);
 
-  const { reason, since, removal, replacement } = deprecations.get('--ki-input-focus-border') ?? {};
-  assert.match(reason ?? '', /focus ring/u);
+  const { reason, since, removal, replacement } = deprecations.get('--ki-tooltip-bg-start') ?? {};
+  assert.match(reason ?? '', /background image/u);
   assert.deepEqual(
     { since, removal, replacement },
-    { since: '0.1.0', removal: '1.0.0', replacement: '--ki-input-focus-ring-color' },
+    { since: '0.1.0', removal: '1.0.0', replacement: '--ki-tooltip-bg-image' },
   );
   for (const deprecation of deprecations.values()) {
     assert.equal(deprecation.since, '0.1.0');
@@ -445,7 +445,7 @@ test('S1 the published stylesheet annotates exactly the deprecated tokens', asyn
   const css = renderBaseStylesheet(compositionDeclarationsOf(dictionary), { deprecations });
   assert.match(
     css,
-    new RegExp(`^  --ki-input-focus-border: [^;]+; ${ANNOTATION.replaceAll('*', '\\*')}$`, 'mu'),
+    /^ {2}--ki-tooltip-bg-start: [^;]+; \/\* deprecated since 0\.1\.0, removed in 1\.0\.0: use --ki-tooltip-bg-image \*\/$/mu,
   );
   const annotated = [...css.matchAll(/^ {2}(--ki-[\w-]+): [^;]+; \/\* deprecated since /gmu)];
   assert.deepEqual(annotated.map((match) => match[1]).sort(), [...deprecations.keys()].sort());

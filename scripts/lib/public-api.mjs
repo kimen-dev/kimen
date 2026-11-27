@@ -1075,8 +1075,16 @@ function deprecationIsAtLeastOneMinorOld(deprecatedSince, baselineVersion) {
   );
 }
 
-function removalReason(removal, baseline) {
-  const entry = removal.entry;
+function removalReason(removal, baseline, publishedTokens) {
+  // The bootstrap snapshot predates later token deprecations. Use the
+  // frozen published evidence for the same token when it exists.
+  const prefix = 'packages.@kimen/tokens.tokens.';
+  const comparisonVersion = baseline.surface.packages[removal.packageName]?.version;
+  const published =
+    comparisonVersion === '0.0.0' && removal.path.startsWith(prefix)
+      ? publishedTokens?.tokens[removal.path.slice(prefix.length)]
+      : undefined;
+  const entry = published ?? removal.entry;
   if (entry === null || typeof entry !== 'object' || Array.isArray(entry)) {
     return `${removal.path} was removed without deprecation and replacement metadata`;
   }
@@ -1086,7 +1094,7 @@ function removalReason(removal, baseline) {
   if (typeof entry.replacement !== 'string' || entry.replacement.trim() === '') {
     return `${removal.path} was removed without replacement metadata`;
   }
-  const baselineVersion = baseline.surface.packages[removal.packageName]?.version;
+  const baselineVersion = published ? publishedTokens.version : comparisonVersion;
   if (
     !baselineVersion ||
     !deprecationIsAtLeastOneMinorOld(entry.deprecatedSince, baselineVersion)
@@ -1180,7 +1188,13 @@ export function createAcceptedPublicApiDeclaration({ baseline, candidate, declar
 }
 
 /** Decide whether every public API delta has a matching declaration and release class. */
-export function evaluatePublicApiChange({ baseline, candidate, declaration, declarations }) {
+export function evaluatePublicApiChange({
+  baseline,
+  candidate,
+  declaration,
+  declarations,
+  publishedTokens,
+}) {
   if (declaration !== undefined && declarations !== undefined) {
     throw new TypeError('Pass either a fixture declaration or active declarations');
   }
@@ -1233,7 +1247,7 @@ export function evaluatePublicApiChange({ baseline, candidate, declaration, decl
   }
   if (declarations !== undefined || validDeclaration?.release === 'major') {
     for (const removal of classification.removals) {
-      const reason = removalReason(removal, validBaseline);
+      const reason = removalReason(removal, validBaseline, publishedTokens);
       if (reason) reasons.push(reason);
     }
   }

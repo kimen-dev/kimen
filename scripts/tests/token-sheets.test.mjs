@@ -10,6 +10,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { MODES, modeValueName } from '../../packages/tokens/scripts/theme-stylesheet.mjs';
 import { buildPublicStylesheetSurface } from '../lib/css-token-surface.mjs';
 
 const root = new URL('../../', import.meta.url);
@@ -109,8 +110,11 @@ test('S1 the ki-button sheet declares the button tokens and no other component t
   const button = [...fullNames].filter(
     (name) => name.startsWith('--ki-button-') && !name.startsWith('--ki-button-group-'),
   );
+  const buttonModeValues = button
+    .flatMap((name) => MODES.map((mode) => modeValueName(mode, name)))
+    .filter((name) => fullNames.has(name));
   assert.ok(button.length > 100);
-  assert.deepEqual([...names].sort(), button.sort());
+  assert.deepEqual([...names].sort(), [...button, ...buttonModeValues].sort());
 });
 
 test('S1 the core declares no component token and no foundation', () => {

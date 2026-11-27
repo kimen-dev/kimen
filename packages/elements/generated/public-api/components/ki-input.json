@@ -699,6 +699,14 @@
         "required": false,
         "type": null
       },
+      "--ki-input-min-target": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "dimension used by the input component for min target.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-input-outlined-bg": {
         "default": null,
         "deprecatedSince": null,

@@ -131,6 +131,7 @@ None.
 - `--ki-menu-line-height`: Line height for action labels and the filter.
 - `--ki-menu-max-block-size`: Maximum popup height, bounded by the viewport.
 - `--ki-menu-max-inline-size`: Maximum popup width, bounded by the viewport.
+- `--ki-menu-meta-bg`: Background behind shortcut hints and the filter placeholder.
 - `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
 - `--ki-menu-min-inline-size`: Default minimum popup width, bounded by the viewport.
 - `--ki-menu-padding`: Space inside the popup.

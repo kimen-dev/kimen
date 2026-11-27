@@ -24,6 +24,7 @@ type KiSelectElement = HTMLElement & {
 };
 
 const browserCommands = commands as unknown as {
+  emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
   installClock: () => Promise<void>;
   pauseClock: () => Promise<void>;
   fastForwardClock: (milliseconds: number) => Promise<void>;
@@ -1416,4 +1417,19 @@ describe('ki-select boolean presence in a real browser', () => {
     expect(el.matches(':invalid')).toBe(false);
     expect(trigger(el).hasAttribute('aria-required')).toBe(false);
   });
+});
+
+it('S28 changing the select hover token repaints the hovered trigger alone', async () => {
+  const el = await mountSelect();
+  const control = trigger(el);
+  try {
+    await browserCommands.emulateReducedMotion('reduce');
+    el.style.setProperty('--ki-select-hover-bg', 'rgb(210, 235, 250)');
+    expect(getComputedStyle(control).backgroundColor).not.toBe('rgb(210, 235, 250)');
+    await userEvent.hover(control);
+    await expect.poll(() => getComputedStyle(control).backgroundColor).toBe('rgb(210, 235, 250)');
+  } finally {
+    await browserCommands.emulateReducedMotion(null);
+    cleanup();
+  }
 });

@@ -25,7 +25,7 @@ button {
   padding-inline: var(--ki-menu-inline-padding);
   border: 0;
   border-radius: var(--ki-menu-item-radius);
-  background-color: transparent;
+  background-color: var(--ki-menu-item-bg);
   color: var(--ki-menu-item-fg);
   font: inherit;
   text-align: start;
@@ -52,6 +52,7 @@ button {
 
 [part="shortcut"] {
   flex: none;
+  background-color: var(--_ki-menu-meta-bg, var(--ki-menu-meta-bg));
   color: var(--_ki-menu-meta-fg);
   font: inherit;
   font-size: var(--ki-menu-meta-font-size);
@@ -70,6 +71,10 @@ button:focus-visible {
   outline-offset: calc(-1 * var(--ki-menu-focus-width));
 }
 
+:host([tone="danger"]) button {
+  background-color: var(--ki-menu-item-danger-bg);
+}
+
 :host([tone="danger"]) button,
 :host([tone="danger"]) .start {
   color: var(--ki-menu-item-danger-fg);
@@ -83,6 +88,7 @@ button:focus-visible {
 }
 
 :host(:not([disabled])) button:focus-visible {
+  --_ki-menu-meta-bg: var(--ki-menu-meta-hover-bg);
   --_ki-menu-meta-fg: var(--ki-menu-meta-hover-fg);
 
   background-color: var(--ki-menu-item-hover-bg);
@@ -90,11 +96,13 @@ button:focus-visible {
 }
 
 :host([tone="danger"]:not([disabled])) button:focus-visible {
+  background-color: var(--ki-menu-item-danger-hover-bg);
   color: var(--ki-menu-item-danger-hover-fg);
 }
 
 @media (hover: hover) {
   :host(:not([disabled])) button:hover {
+    --_ki-menu-meta-bg: var(--ki-menu-meta-hover-bg);
     --_ki-menu-meta-fg: var(--ki-menu-meta-hover-fg);
 
     background-color: var(--ki-menu-item-hover-bg);
@@ -102,6 +110,7 @@ button:focus-visible {
   }
 
   :host([tone="danger"]:not([disabled])) button:hover {
+    background-color: var(--ki-menu-item-danger-hover-bg);
     color: var(--ki-menu-item-danger-hover-fg);
   }
 }

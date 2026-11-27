@@ -380,6 +380,19 @@ Feature: Icon button
     Given an icon toggle with a reassigned icon-size token and an explicit ki-icon size in both slots
     When the page renders the selection states
     Then each visible glyph matches the reassigned button icon-size token
+
+  # Family: theming
+  # S28
+  Scenario: Holding an icon button uses the shared pressed palette
+    Given an icon button with custom active palette tokens
+    When the user holds the button down with Space
+    Then the icon button shows the themed pressed palette and retains visible focus
+
+  # S29
+  Scenario: A disabled icon button uses its own tone palette
+    Given a disabled icon button with a custom tone-specific disabled palette
+    When the page renders
+    Then the icon button shows the disabled fill, ink and border for its tone
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -390,7 +403,7 @@ Feature: Icon button
 | Keyboard path | S4, S5, S14 | |
 | Assistive-tech outcome | S6, S7, S8, S12, S13 | |
 | Form participation | S9 | |
-| Theming | S10, S11, S15, S23, S24, S25, S26, S27 | |
+| Theming | S10, S11, S15, S23, S24, S25, S26, S27, S28, S29 | |
 
 Form participation is covered by a deliberate negative contract (S9):
 ki-icon-button is not form-associated in v1 and MUST NOT submit or reset an
@@ -442,8 +455,8 @@ founder decision it batches.
   are tokens, never attributes.
 - **FR-010**: Interaction states (hover, focus-visible, active, disabled)
   MUST be styled exclusively through tokens and CSS states; states are never
-  attributes/props. Pressed (`:active`) MUST paint over the resting
-  appearance whatever the input modality, as in 002 FR-009 (issue #71).
+  attributes/props. A momentary press MUST use the shared active palette
+  for its variant and tone across input modalities, as in 002 FR-009.
 - **FR-011**: Unrecognized `variant`, `tone` or `size` values MUST fall back
   to their documented defaults without breaking rendering.
 - **FR-012**: Focus MUST be clearly visible in every theme; the pointer

@@ -5,7 +5,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-input.js';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
@@ -869,4 +869,18 @@ describe('narrow form columns (#348)', () => {
       expect(field.getBoundingClientRect().width).toBeCloseTo(preferredWidth);
     });
   });
+});
+
+it('S29 the input field honors a larger minimum target token', async () => {
+  const el = await mount();
+  const motion = commands as unknown as {
+    emulateReducedMotion: (value: 'reduce' | null) => Promise<void>;
+  };
+  try {
+    await motion.emulateReducedMotion('reduce');
+    el.style.setProperty('--ki-input-min-target', '64px');
+    expect(fieldOf(el)?.getBoundingClientRect().height).toBeGreaterThanOrEqual(64);
+  } finally {
+    await motion.emulateReducedMotion(null);
+  }
 });

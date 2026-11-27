@@ -66,9 +66,12 @@ None.
 - `--ki-suggestion-bg-image`: Image layered over the chip surface.
 - `--ki-suggestion-border`: Resting chip boundary.
 - `--ki-suggestion-border-width`: Boundary width for either suggestion variant.
+- `--ki-suggestion-card-description-bg`: Resting card surface beneath the description.
 - `--ki-suggestion-card-description-fg`: Resting card description.
 - `--ki-suggestion-card-gap`: Space between the card title and description.
+- `--ki-suggestion-card-hover-description-bg`: Hover card surface beneath the description.
 - `--ki-suggestion-card-hover-description-fg`: Description over the card hover surface.
+- `--ki-suggestion-card-pressed-description-bg`: Pressed card surface beneath the description.
 - `--ki-suggestion-card-pressed-description-fg`: Description over the pressed card surface.
 - `--ki-suggestion-description-line-height`: Line height of the card description.
 - `--ki-suggestion-description-size`: Type size of the card description.

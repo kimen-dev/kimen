@@ -4,6 +4,7 @@ export function shareShadowStyles(srcDir: string) {
   const sheets = new Map<string, string>([
     [resolve(srcDir, 'components/ki-button/ki-button.surface.css'), 'button-aria'],
     [resolve(srcDir, 'components/ki-button/ki-button.surface.legacy.css'), 'button-aria'],
+    [resolve(srcDir, 'components/ki-button/ki-button.tones.css'), 'button-tones'],
     [resolve(srcDir, 'components/ki-button/ki-button.toggle.css'), 'button-aria'],
     [resolve(srcDir, 'components/ki-button/ki-button.css'), 'button-aria'],
     [resolve(srcDir, 'utils/field-message.css'), 'field-message'],

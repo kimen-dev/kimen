@@ -64,7 +64,10 @@ None.
 - `--ki-menu-font-family`: Family for action labels and the filter.
 - `--ki-menu-gap`: Inline space between the parts of a row.
 - `--ki-menu-inline-padding`: Start and end inset of an action, group label, or filter.
+- `--ki-menu-item-bg`: Background behind resting actions.
+- `--ki-menu-item-danger-bg`: Background behind destructive actions.
 - `--ki-menu-item-danger-fg`: Foreground for destructive actions.
+- `--ki-menu-item-danger-hover-bg`: Background behind hovered or keyboard-focused destructive actions.
 - `--ki-menu-item-danger-hover-fg`: Foreground for hovered or keyboard-focused destructive actions.
 - `--ki-menu-item-disabled-fg`: Muted ink of disabled actions.
 - `--ki-menu-item-fg`: Foreground for resting actions.
@@ -74,7 +77,9 @@ None.
 - `--ki-menu-item-icon-size`: Size of an action glyph and the check indicator.
 - `--ki-menu-item-padding`: Vertical inset used when an action wraps.
 - `--ki-menu-item-radius`: Action row corner radius.
+- `--ki-menu-meta-bg`: Background behind shortcut hints and the filter placeholder.
 - `--ki-menu-meta-fg`: Foreground for shortcut hints and the filter placeholder.
 - `--ki-menu-meta-font-size`: Size of metadata and group labels.
+- `--ki-menu-meta-hover-bg`: Background behind shortcut hints on a hovered or focused action.
 - `--ki-menu-meta-hover-fg`: Foreground for shortcut hints on a hovered or focused action.
 - `--ki-menu-touch-target`: Minimum action and filter height for coarse pointers.
