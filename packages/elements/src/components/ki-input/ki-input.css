@@ -272,6 +272,10 @@ slot:is([name="start"], [name="end"])::slotted(img) {
   block-size: var(--_ki-input-icon-size);
 }
 
+slot:is([name="start"], [name="end"])::slotted(ki-icon) {
+  --_ki-icon-size: var(--_ki-input-icon-size);
+}
+
 /* Replace the row gap and end padding only at the action's edges. A flex
    host centers the painted button without an inline text baseline. */
 slot[name="action"]::slotted(:not([hidden])) {

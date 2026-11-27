@@ -116,6 +116,8 @@ button {
 }
 
 button ki-icon {
+  --_ki-icon-size: var(--ki-icon-button-sm-icon-size);
+
   inline-size: var(--ki-icon-button-sm-icon-size);
   block-size: var(--ki-icon-button-sm-icon-size);
 }

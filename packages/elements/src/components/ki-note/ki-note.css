@@ -90,6 +90,10 @@
   block-size: 100%;
 }
 
+[part="icon"] ::slotted(ki-icon) {
+  --_ki-icon-size: var(--_ki-note-icon-size);
+}
+
 [part="message"] {
   min-inline-size: 0;
   overflow-wrap: anywhere;

@@ -1145,13 +1145,14 @@ describe('ki-alert default tone glyph', () => {
       await expect
         .poll(() => glyph?.shadowRoot?.querySelector('svg')?.childElementCount ?? 0)
         .toBeGreaterThan(0);
-      if (!glyph) {
+      const svg = glyph?.shadowRoot?.querySelector('svg');
+      if (!glyph || !svg) {
         throw new Error('missing default glyph');
       }
-      // The frame shows, sized like a slotted icon, with the heading 12px below it.
+      // The frame shows the 20px glyph with the heading 12px below the frame.
       expect(box(frame).width).toBeCloseTo(32, 0);
       expect(box(part(el, 'heading')).top - box(frame).bottom).toBeCloseTo(12, 0);
-      expect(box(glyph).width).toBeCloseTo(Number.parseFloat(getComputedStyle(glyph).fontSize), 0);
+      expect(box(svg)).toMatchObject({ width: 20, height: 20 });
       // The glyph is drawn in the frame's tone ink, and stays out of the announcement.
       expect(getComputedStyle(glyph).color).toBe(getComputedStyle(frame).color);
       expect(frame.getAttribute('aria-hidden')).toBe('true');
