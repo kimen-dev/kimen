@@ -130,10 +130,9 @@
   block-size: var(--ki-alert-icon-glyph-size);
 }
 
-/* The tone's default glyph (Amendment A2) takes the slotted glyph's size;
- * ki-icon draws at 1em, in the frame's ink. */
-[part="icon"] ki-icon {
-  font-size: var(--ki-alert-icon-glyph-size);
+[part="icon"] ki-icon,
+[part="icon"] ::slotted(ki-icon) {
+  --_ki-icon-size: var(--ki-alert-icon-glyph-size);
 }
 
 /* Responses to the message, in source order from the inline start; long

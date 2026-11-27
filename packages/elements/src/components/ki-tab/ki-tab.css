@@ -137,6 +137,10 @@
   block-size: 100%;
 }
 
+slot[name="icon"]::slotted(ki-icon) {
+  --_ki-icon-size: var(--ki-tab-icon-size);
+}
+
 [part="indicator"] {
   position: absolute;
   inset-inline: var(--_ki-tab-indicator-inset, var(--ki-tab-padding-inline));

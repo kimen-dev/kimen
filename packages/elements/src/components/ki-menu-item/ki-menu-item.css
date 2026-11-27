@@ -50,6 +50,12 @@ button {
   block-size: var(--ki-menu-item-icon-size);
 }
 
+slot[name="start"]::slotted(ki-icon) {
+  --_ki-icon-size: var(--ki-menu-item-icon-size);
+
+  flex: none;
+}
+
 [part="shortcut"] {
   flex: none;
   color: var(--_ki-menu-meta-fg);
