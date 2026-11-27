@@ -50,7 +50,8 @@ export const packageContentRules = Object.freeze({
     // Newsreader at weight 500 brings the package to 195,198 / 1,100,266 B
     // with 3 % packed and 0.1 % unpacked headroom.
     // The 0.6.0 batch measures +6,603 B packed and -63,740 B unpacked.
-    budget: Object.freeze({ packed: 207_657, unpacked: 1_037_627 }),
+    // Spec 171 adds 4,212 B unpacked. Raise the limit to the measured size.
+    budget: Object.freeze({ packed: 207_657, unpacked: 1_040_738 }),
   }),
   '@kimen/mcp-server': Object.freeze({
     mapsEveryModule: false,

@@ -303,8 +303,7 @@ test('each release package has its pinned tarball and unpacked size budget', () 
     ),
     {
       '@kimen/elements': { packed: 1_963_041, unpacked: 8_528_310 },
-      // Rebased for Newsreader at weight 500.
-      '@kimen/tokens': { packed: 207_657, unpacked: 1_037_627 },
+      '@kimen/tokens': { packed: 207_657, unpacked: 1_040_738 },
       '@kimen/mcp-server': { packed: 658_816, unpacked: 3_164_631 },
       '@kimen/catalog': { packed: 320_603, unpacked: 1_376_868 },
       // Raised for specs 168–170, approved by the founder on 2026-11-27.

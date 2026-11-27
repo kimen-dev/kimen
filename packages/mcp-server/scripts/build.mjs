@@ -156,6 +156,7 @@ async function bundle() {
     legalComments: 'eof',
     logLevel: 'warning',
     metafile: true,
+    minifySyntax: true,
     outfile: outFile,
     platform: 'node',
     plugins: [tsExtensionPlugin, stockSurfaceIconSelectionPlugin(packageRoot)],
