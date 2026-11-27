@@ -1,7 +1,7 @@
 {
   "name": "@kimen/mcp-server",
   "mcpName": "io.github.kimen-dev/kimen",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": false,
   "license": "Apache-2.0",
   "description": "Kimen MCP server (spec 038): an agent queries the Kimen catalog, validates UI specs with correctable issues, and renders accepted specs as an MCP Apps surface painted only by the guarded renderer. One bundled stdio binary with no runtime dependencies, no network and no file access beyond itself. Supported protocol versions live in COMPAT.md.",

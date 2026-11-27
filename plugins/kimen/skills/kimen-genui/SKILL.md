@@ -178,7 +178,7 @@ receiving every intermediate event.
   that negotiates another revision the surface stays empty, and only the
   tool's text result reaches the model.
 - Packages are pre-1.0: a minor release may break the API. `kimen-mcp` runs
-  from npm (`npx -y -p @kimen/mcp-server@0.4.0 kimen-mcp`). To try a change
+  from npm (`npx -y -p @kimen/mcp-server@0.5.0 kimen-mcp`). To try a change
   that is not released yet, link a repository build
   (`references/install-from-source.md` in the `kimen-components` skill).
 - **Content-Security-Policy**: the renderer lays out `div` and sizes `img`
