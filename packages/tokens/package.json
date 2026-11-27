@@ -11,7 +11,7 @@
     "directory": "packages/tokens"
   },
   "bin": {
-    "tokens": "./theme-checker/cli.mjs"
+    "kimen-tokens": "./theme-checker/cli.mjs"
   },
   "files": [
     "css",

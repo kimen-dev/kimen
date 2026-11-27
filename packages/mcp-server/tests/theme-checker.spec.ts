@@ -3,24 +3,26 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
+import { checkTheme } from '@kimen/tokens/check-theme';
 import { expect, it } from 'vitest';
 
 import { CONTAINED_FLAGS, connect, textOf } from './harness.js';
 
-it('S6: check_theme returns the same findings as the CLI under Node permissions', async () => {
+it('S6: the MCP tool, CLI and export return the same findings', async () => {
   const tokenRoot = new URL('../../tokens/', import.meta.url);
   const file = fileURLToPath(new URL('scripts/fixtures/theme-mistakes.css', tokenRoot));
   const css = readFileSync(file, 'utf8');
   const { bin } = JSON.parse(readFileSync(new URL('package.json', tokenRoot), 'utf8')) as {
-    bin: { tokens: string };
+    bin: { 'kimen-tokens': string };
   };
   const cli = spawnSync(
     process.execPath,
-    [fileURLToPath(new URL(bin.tokens, tokenRoot)), 'check-theme', file, '--json'],
+    [fileURLToPath(new URL(bin['kimen-tokens'], tokenRoot)), 'check-theme', file, '--json'],
     { encoding: 'utf8' },
   );
   expect(cli.status).toBe(1);
-  const findings: unknown = JSON.parse(cli.stdout);
+  const findings = checkTheme(css, { file });
+  expect(JSON.parse(cli.stdout)).toEqual(findings);
   const connection = await connect({ nodeFlags: CONTAINED_FLAGS });
   try {
     const result = await connection.client.callTool({

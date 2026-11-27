@@ -1,5 +1,4 @@
 import { Buffer } from 'node:buffer';
-import { createHash } from 'node:crypto';
 import { brotliDecompressSync } from 'node:zlib';
 import { TokenType as T } from '@csstools/css-tokenizer';
 
@@ -13,16 +12,30 @@ const SIZE_KEYWORD =
 const GLOBAL_KEYWORD = /^(?:inherit|initial|revert(?:-layer|-rule)?|unset)$/iu;
 const COLOR_FUNCTION =
   /^(?:color(?:-mix)?|contrast-color|device-cmyk|hsla?|hwb|lab|lch|light-dark|oklab|oklch|rgba?)$/iu;
+const TOKEN_TYPES = ['', 'color', 'dimension', 'duration'];
 
 let inventory;
 
+function tokenEntries(branches, flags, prefix) {
+  return branches.flatMap((branch) => {
+    if (typeof branch === 'string') return [[`${prefix}${branch ? `-${branch}` : ''}`, flags]];
+    const [part, children] = branch;
+    return tokenEntries(children, flags, `${prefix}-${part}`);
+  });
+}
+
 function getInventory() {
   if (inventory !== undefined) return inventory;
-  const data = JSON.parse(brotliDecompressSync(Buffer.from(packedData, 'base64')).toString());
-  const tokens = new Map(data.tokens.map(([name, ...traits]) => [`--ki-${name}`, traits]));
+  const [modeData, groups] = JSON.parse(
+    brotliDecompressSync(Buffer.from(packedData, 'base64')).toString(),
+  );
+  // Suggestions with the same edit distance keep their alphabetical order.
+  const entries = groups.flatMap(([flags, branches]) => tokenEntries(branches, flags, '--ki'));
+  entries.sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0));
+  const tokens = new Map(entries);
   const modes = { media: new Map(), attributes: new Map() };
   const add = (map, key, flag) => map.set(key, (map.get(key) ?? 0) | flag);
-  for (const [index, { activations, media }] of data.modes.entries()) {
+  for (const [index, { activations, media }] of modeData.entries()) {
     const flag = 1 << index;
     for (const [, name, value] of media.matchAll(/\(([\w-]+):\s*([\w-]+)\)/gu)) {
       add(modes.media, `${name}:${value}`, flag);
@@ -33,7 +46,7 @@ function getInventory() {
       add(modes.attributes, `${name}=${value}`, flag);
     }
   }
-  inventory = { ...data, tokens, modes, modeNames: data.modes.map(({ name }) => name) };
+  inventory = { tokens, modes, modeNames: modeData.map(({ name }) => name) };
   return inventory;
 }
 
@@ -151,10 +164,7 @@ function sourceLocations(css) {
 
 /** Check Kimen custom property declarations in CSS from this package version. */
 export function checkTheme(css, { file = '<css>' } = {}) {
-  const { tokens, modes, modeNames, referenceTheme } = getInventory();
-  // The reference theme defines the full palette, including values only used
-  // by applications. A consumer copy with changes is checked as an override.
-  const reference = createHash('sha256').update(css).digest('hex') === referenceTheme;
+  const { tokens, modes, modeNames } = getInventory();
   const suggestions = new Map();
   const findings = [];
   const position = sourceLocations(css);
@@ -176,14 +186,13 @@ export function checkTheme(css, { file = '<css>' } = {}) {
         report('unknown-token', suggestions.get(token));
         return;
       }
-      const [type, read, reassignedModes] = traits;
-      checkValue(type, value, report);
-      const overridden = activeModes & reassignedModes;
+      checkValue(TOKEN_TYPES[traits & 3], value, report);
+      const overridden = activeModes & (traits >>> 3);
       if (overridden !== 0) {
         const mode = modeNames.findLast((_, index) => overridden & (1 << index));
         report('mode-token', `Set --ki-${mode}-${token.slice(5)} instead.`);
       }
-      if (!read && !reference) {
+      if (traits & 4) {
         report(
           'unread-token',
           'Remove this override if your application does not read it.',

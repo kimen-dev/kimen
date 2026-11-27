@@ -14,10 +14,10 @@ Feature: Check Kimen theme CSS
     Then the checker reports an error and suggests "0px"
 
   # S3
-  Scenario: An unread token yields an advisory
-    Given a stylesheet whose only finding is an override of an unread public token
+  Scenario: Unread semantic and component tokens yield advisories
+    Given a stylesheet that overrides unread semantic and component tokens
     When the author runs the theme checker
-    Then the checker warns about the override and exits successfully
+    Then the checker warns about both overrides and exits successfully
 
   # S4
   Scenario: A more-contrast override gets the mode token as a fix
@@ -26,13 +26,25 @@ Feature: Check Kimen theme CSS
     Then the checker reports an error and suggests "--ki-contrast-more-text-supporting"
 
   # S5
-  Scenario: The Material 3 theme passes
-    Given the Material 3 stylesheet built from Kimen's theme sources
+  Scenario: Material 3 follows the same rules as any theme
+    Given Kimen's built Material 3 stylesheet and a copy with an extra comment
     When the author runs the theme checker
-    Then the checker returns no findings and exits successfully
+    Then both versions exit successfully with the same findings
 
   # S6
-  Scenario: The MCP tool agrees with the command line
-    Given a stylesheet with token mistakes and the same filename on both interfaces
-    When the author checks it via MCP and the CLI
-    Then both interfaces return the same findings in source order
+  Scenario: Every interface reports the same findings
+    Given a stylesheet with token mistakes and the same filename on all interfaces
+    When the author checks it via MCP, the CLI and the function export
+    Then all three interfaces return the same findings in source order
+
+  # S7
+  Scenario: Palette, primitive and aliased tokens pass their unread checks
+    Given a theme overrides unused palette and primitive tokens and a token read through an alias
+    When the author checks the stylesheet
+    Then the checker returns no findings
+
+  # S8
+  Scenario: The installed checker has a Kimen-specific command
+    Given the @kimen/tokens package is installed
+    When the author looks up its executable
+    Then kimen-tokens is the package's only command

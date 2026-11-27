@@ -12,7 +12,7 @@ const fixture = filePath('./fixtures/theme-mistakes.css');
 const findings = () => checkTheme(readFileSync(fixture, 'utf8'), { file: fixture });
 const manifest = JSON.parse(readFileSync(filePath('../package.json'), 'utf8'));
 const cli = (...args) =>
-  spawnSync(process.execPath, [filePath(`../${manifest.bin.tokens}`), ...args], {
+  spawnSync(process.execPath, [filePath(`../${manifest.bin['kimen-tokens']}`), ...args], {
     encoding: 'utf8',
   });
 
@@ -45,13 +45,17 @@ test('S2: bare zero suggests an explicit length while CSS functions and sizing k
   );
 });
 
-test('S3: an unread token yields a warning and a successful exit', () => {
+test('S3: unread semantic and component tokens yield warnings and a successful exit', () => {
   const warningFile = filePath('./fixtures/theme-warning.css');
   const result = cli('check-theme', '--json', warningFile);
   assert.equal(result.status, 0, result.stderr);
-  const [warning] = JSON.parse(result.stdout);
-  assert.equal(warning.code, 'unread-token');
-  assert.equal(warning.severity, 'warning');
+  assert.deepEqual(
+    JSON.parse(result.stdout).map(({ code, severity, token }) => [code, severity, token]),
+    [
+      ['unread-token', 'warning', '--ki-surface-warning-high-em'],
+      ['unread-token', 'warning', '--ki-select-hover-bg'],
+    ],
+  );
 });
 
 test('S4: active preference overrides suggest the mode-value token that wins', () => {
@@ -76,14 +80,35 @@ test('S4: active preference overrides suggest the mode-value token that wins', (
   );
 });
 
-test('S5: the stylesheet built from the Material 3 token sources passes', () => {
-  const result = cli('check-theme', filePath('../dist/css/tokens.material3.css'), '--json');
+test('S5: the shipped Material 3 stylesheet and a commented copy produce the same findings', () => {
+  const file = filePath('../dist/css/tokens.material3.css');
+  const css = readFileSync(file, 'utf8');
+  const result = cli('check-theme', file, '--json');
   assert.equal(result.status, 0, result.stderr);
-  assert.deepEqual(JSON.parse(result.stdout), []);
+  const findings = JSON.parse(result.stdout);
+  assert.ok(
+    findings.every(({ code, severity }) => code === 'unread-token' && severity === 'warning'),
+  );
+  assert.deepEqual(checkTheme(`${css}\n/* Theme notes */`, { file }), findings);
+});
+
+test('S7: unused palette and primitive overrides and an alias target produce no warnings', () => {
+  assert.deepEqual(
+    checkTheme(`:root {
+      --ki-color-brand-400: #333;
+      --ki-color-gray-800: #333;
+      --ki-surface-special-light-s2-dark-s3: #333;
+    }`),
+    [],
+  );
+});
+
+test('S8: kimen-tokens is the only installed command', () => {
+  assert.deepEqual(Object.keys(manifest.bin), ['kimen-tokens']);
 });
 
 test('the CLI reports each mistake and preserves input order across files', () => {
-  const clean = filePath('../dist/css/tokens.material3.css');
+  const clean = filePath('../dist/css/base.css');
   const result = cli('check-theme', fixture, clean, '--json');
   assert.equal(result.status, 1, result.stderr);
   const actual = JSON.parse(result.stdout);

@@ -347,5 +347,4 @@ await writeThemeCheckerData({
   usage,
   baseModes,
   sheets: [fullCss, material3Css, pageContractCss],
-  material3Css,
 });

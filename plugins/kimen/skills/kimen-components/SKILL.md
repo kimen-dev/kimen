@@ -214,8 +214,9 @@ right-to-left languages.
 
 Before you finish any changes to `--ki-*` declarations, run
 `npx @kimen/tokens check-theme <file.css…>` with the app's installed version.
-Use `--json` for structured findings or send the CSS text to MCP
-`check_theme`. Fix errors and review warnings.
+The installed command is `kimen-tokens`. Use `--json` for structured findings
+or send the CSS text to MCP `check_theme`. Fix errors and review warnings on
+unread semantic and component tokens.
 
 ## Testing
 

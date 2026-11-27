@@ -4,7 +4,7 @@ import { parseArgs } from 'node:util';
 
 import { checkTheme } from './check-theme.mjs';
 
-const usage = 'Usage: npx @kimen/tokens check-theme [--json] <file.css…>';
+const usage = 'Usage: kimen-tokens check-theme [--json] <file.css…>';
 
 async function main([command, ...args]) {
   if (command === '--help') {

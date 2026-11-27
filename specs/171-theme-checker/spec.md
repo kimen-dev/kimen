@@ -15,8 +15,9 @@ also override a theme's assignments to their base tokens.
 
 ## Public API and decisions
 
-- `npx @kimen/tokens check-theme <file.css…>` reports each finding with its
-  file, line, column and fix. `--json` emits an array of findings in input
+- `kimen-tokens check-theme <file.css…>` reports each finding with its file,
+  line, column and fix. `npx @kimen/tokens check-theme <file.css…>` runs the
+  same command. `--json` emits an array of findings in input
   order. The process exits 1 for errors and 0 for a clean or warnings-only run.
 - `checkTheme(css, { file? })` from `@kimen/tokens/check-theme` returns the
   same findings as data. The MCP tool `check_theme` accepts CSS text as `css`
@@ -28,10 +29,10 @@ also override a theme's assignments to their base tokens.
   name when a guessed `md-` infix is the only difference.
 - Accept CSS keywords used for sizing, including `auto`, and leave the
   arithmetic and substitution inside CSS functions to the browser. Warn
-  about tokens that have no reader in Kimen's shipped component and token
-  styles. Applications may still read those tokens in their own CSS. The
-  exact shipped Material 3 stylesheet defines the reference palette and
-  receives no unread-override warnings.
+  about semantic and component tokens that no Kimen component reads and
+  no shipped token aliases. Applications can override palette and primitive
+  tokens for their own CSS without receiving unread warnings. Kimen's own
+  Material 3 stylesheet follows the same rule.
 - Suggest the mode value token that wins in the active preference. Generate
   the token types, reads and mode mappings from the same build that emits the
   installed stylesheets. Checking runs offline.
@@ -55,10 +56,10 @@ Feature: Check Kimen theme CSS
     Then the checker reports an error and suggests "0px"
 
   # S3
-  Scenario: An unread token yields an advisory
-    Given a stylesheet whose only finding is an override of an unread public token
+  Scenario: Unread semantic and component tokens yield advisories
+    Given a stylesheet that overrides unread semantic and component tokens
     When the author runs the theme checker
-    Then the checker warns about the override and exits successfully
+    Then the checker warns about both overrides and exits successfully
 
   # S4
   Scenario: A more-contrast override gets the mode token as a fix
@@ -67,23 +68,35 @@ Feature: Check Kimen theme CSS
     Then the checker reports an error and suggests "--ki-contrast-more-text-supporting"
 
   # S5
-  Scenario: The Material 3 theme passes
-    Given the Material 3 stylesheet built from Kimen's theme sources
+  Scenario: Material 3 follows the same rules as any theme
+    Given Kimen's built Material 3 stylesheet and a copy with an extra comment
     When the author runs the theme checker
-    Then the checker returns no findings and exits successfully
+    Then both versions exit successfully with the same findings
 
   # S6
-  Scenario: The MCP tool agrees with the command line
-    Given a stylesheet with token mistakes and the same filename on both interfaces
-    When the author checks it via MCP and the CLI
-    Then both interfaces return the same findings in source order
+  Scenario: Every interface reports the same findings
+    Given a stylesheet with token mistakes and the same filename on all interfaces
+    When the author checks it via MCP, the CLI and the function export
+    Then all three interfaces return the same findings in source order
+
+  # S7
+  Scenario: Palette, primitive and aliased tokens pass their unread checks
+    Given a theme overrides unused palette and primitive tokens and a token read through an alias
+    When the author checks the stylesheet
+    Then the checker returns no findings
+
+  # S8
+  Scenario: The installed checker has a Kimen-specific command
+    Given the @kimen/tokens package is installed
+    When the author looks up its executable
+    Then kimen-tokens is the package's only command
 ```
 
 ### Scenario Family Coverage
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8 | |
 | Keyboard path | | This tool has no component interaction. |
 | Assistive-tech outcome | | This tool has no rendered surface. |
 | Form participation | | This tool has no form control. |
