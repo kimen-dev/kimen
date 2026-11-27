@@ -10,9 +10,12 @@
   "catalogAction": "ki-copy",
   "sizeBudget": {
     "mcpApps": {
-      "raw": 10073,
+      "raw": 10446,
       "gzip": 3046,
       "brotli": 2542
+    },
+    "mcpAppsProfileStylesheet": {
+      "raw": 33
     },
     "mcpServer": {
       "raw": 16640,
