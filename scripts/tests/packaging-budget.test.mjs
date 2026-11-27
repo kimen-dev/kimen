@@ -346,7 +346,7 @@ test('each exported generated token stylesheet has one size budget outside the p
   // A pattern export (spec 166 `./css/ki-*`) is every file it resolves to.
   const built = await readdir(new URL('dist/css/', tokens));
   const exported = Object.values(manifest.exports)
-    .filter((target) => target.startsWith('./dist/css/'))
+    .filter((target) => typeof target === 'string' && target.startsWith('./dist/css/'))
     .flatMap((target) => {
       if (!target.includes('*')) return [target];
       const [prefix, suffix] = target.slice('./dist/css/'.length).split('*');

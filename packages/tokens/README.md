@@ -432,6 +432,29 @@ loaded after the core (or the full sheet). Two declarations need care:
 The approved public contract for this feature is documented in the
 [theming contract](https://github.com/kimen-dev/kimen/blob/main/specs/001-tokens-theming/contracts/theming-contract.md).
 
+### Check your theme
+
+Run the checker with the `@kimen/tokens` version your app uses.
+
+```sh
+npx @kimen/tokens check-theme theme.css
+npx @kimen/tokens check-theme theme.css overrides.css --json
+```
+
+An installed package also exposes the `kimen-tokens` command.
+
+Findings include the file, line, column and a suggested fix. For example,
+write `0px` for a dimension token used in CSS math. An `unread-token` warning
+applies only to a component-layer token that no Kimen component reads and no
+shipped token aliases. Applications can override semantic, palette and
+primitive tokens for their own CSS without unread warnings. Errors exit with
+status 1. Warnings alone exit with status 0.
+
+For Node tools, import `checkTheme` from `@kimen/tokens/check-theme`. Pass
+the CSS text and an optional `{ file }` label to get the findings array.
+The MCP tool `check_theme` accepts `{ css, file? }` and returns
+`{ findings }`. Both use the token data shipped with their Kimen version.
+
 ### Turning off shadows
 
 In token source files, any `$type: "shadow"` token can have a `$value` of

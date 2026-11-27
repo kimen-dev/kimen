@@ -15,6 +15,7 @@ const bin = 'kimen-mcp';
 const files = [MCP_BINARY, 'COMPAT.md', 'NOTICE'];
 const protocolVersion = '2025-11-25';
 const toolNames = [
+  'check_theme',
   'kimen_describe_component',
   'kimen_list_components',
   'kimen_render_spec',
@@ -152,7 +153,7 @@ async function probeStdio(command, cwd, env, version) {
       !Array.isArray(tools) ||
       !isDeepStrictEqual(tools.map((tool) => tool?.name).sort(), toolNames)
     ) {
-      throw new Error('tools/list must return the five Kimen tools');
+      throw new Error('tools/list must return the six Kimen tools');
     }
     child.stdin.end();
     if ((await closed) !== 0) throw new Error('the stdio binary did not exit cleanly');

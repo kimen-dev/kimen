@@ -186,17 +186,24 @@ logical properties (`margin-inline`, `padding-block`) so layouts mirror in
 right-to-left languages.
 
 Give dimensions a unit, even zero (`0px`), and use keywords such as `auto`
-where supported. Components do arithmetic with tokens: `calc(8px - 0)` is
-invalid, so the browser silently drops the declaration (`--ki-button-label-padding-inline: 0`
-drops the label-to-icon gap). Check your theme with
-`npx @kimen/tokens check-theme theme.css` or send the CSS to the
-`check_theme` MCP tool.
+where supported. Components use tokens in calculations such as `calc(8px -
+var(--ki-button-label-padding-inline))`. Setting that token to `0` drops the
+label-to-icon gap because the subtraction requires a length.
 
 For choice cards use `--ki-button-inline-size`, `--ki-button-justify-content`,
 `--ki-button-text-align` and the outline state tokens. For a header that
 keeps its links visible on phones, use `collapse-at="none"`.
 See [theming recipes](references/theming-recipes.md) for markup and tokens
 for both patterns, a switch settings row and headerless Gherkin.
+
+### Theme checker
+
+Run `npx @kimen/tokens check-theme theme.css` with the version your app uses.
+If the package is installed, you can also run `kimen-tokens check-theme theme.css`.
+Add `--json` for structured findings or send the CSS text to the MCP tool
+`check_theme`. Review `unread-token` warnings on component tokens that Kimen
+neither reads nor aliases. You can override semantic, palette and primitive
+tokens in application CSS without unread warnings.
 
 ## Testing
 

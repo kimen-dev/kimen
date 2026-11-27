@@ -269,11 +269,13 @@ jobs:
           content="$RUNNER_TEMP/candidate-content"
           metadata="$RUNNER_TEMP/elements-metadata"
           consumer_cache="$RUNNER_TEMP/consumer-cache"
-          mkdir -p "$content" "$metadata" "$consumer_cache/npm" "$consumer_cache/pnpm-store" "$consumer_cache/xdg"
+          mkdir -p "$content" "$metadata" "$consumer_cache/npm" "$consumer_cache/pnpm-store" "$consumer_cache/xdg" "$consumer_cache/pnpm-prime"
           tar -xf "$archive" -C "$content"
           tar -xzf "$content/kimen-elements-$version.tgz" -C "$metadata" package/llms.txt
-          # Neither packed package declares a runtime dependency, so the
-          # offline installer stores need nothing primed.
+          # Prime the token checker's parser for both offline installers.
+          npm cache add --cache "$consumer_cache/npm" @csstools/css-tokenizer@4.0.3
+          printf '%s\n' '{"private": true}' >"$consumer_cache/pnpm-prime/package.json"
+          pnpm --dir "$consumer_cache/pnpm-prime" --store-dir "$consumer_cache/pnpm-store" add --ignore-scripts --save-exact @csstools/css-tokenizer@4.0.3
           NPM_CONFIG_OFFLINE=true npm_config_offline=true node scripts/consumer-contract.mjs \
             --elements-tarball "$content/kimen-elements-$version.tgz" \
             --tokens-tarball "$content/kimen-tokens-$version.tgz" \

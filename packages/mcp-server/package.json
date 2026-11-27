@@ -30,6 +30,7 @@
     "@kimen/adapter-mcp-apps": "workspace:*",
     "@kimen/catalog": "workspace:*",
     "@kimen/emitter": "workspace:*",
+    "@kimen/tokens": "workspace:*",
     "@modelcontextprotocol/client": "2.4.0",
     "@modelcontextprotocol/server": "2.4.0",
     "@types/node": "26.6.6",

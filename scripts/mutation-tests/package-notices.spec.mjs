@@ -103,6 +103,7 @@ it('a notice file with two sections of the same title is rejected', () => {
 });
 
 const mcpNotices = [
+  '@csstools/css-tokenizer (MIT)',
   '@modelcontextprotocol/core (Apache-2.0)',
   '@modelcontextprotocol/server (Apache-2.0)',
   'zod (MIT)',

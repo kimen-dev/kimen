@@ -11,5 +11,6 @@
 /packages/react/src/components.ts merge=kimen-generated
 /packages/react/src/ki-*.ts merge=kimen-generated
 /packages/tokens/dist/css/*.css merge=kimen-generated
+/packages/tokens/generated/theme-checker-data.json merge=kimen-generated
 /packages/vue/src/index.ts merge=kimen-generated
 /packages/vue/src/ki-*.ts merge=kimen-generated

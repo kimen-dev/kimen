@@ -1,0 +1,21 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/tokens": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1tokens/exports/.~1check-theme": "ae6526f62aee17e1893fc76aa1caff6a158b7dc2b924d6e6a0808971e0c41b13",
+    "/packages/@kimen~1tokens/modules/.~1check-theme": "c96b95af7b6d90ab7815eb21a0d271420aa7f324d8b311cf7cf51b2735a94dbc",
+    "/packages/@kimen~1tokens/modules/.~1check-theme/declaration": "090dae9112d5ed33c1f6eecaff36fcf6f3576a96e45a553304f0c5cd93a4e3db",
+    "/packages/@kimen~1tokens/modules/.~1check-theme/symbols/ThemeFinding": "78f03565387dfa45a4f6b4a3072d91bf45c390e7c0eca615111a159cb296030c",
+    "/packages/@kimen~1tokens/modules/.~1check-theme/symbols/ThemeFindingCode": "1fa3ca014b2f29c6020125757ed3782811d93851d0aa4a687f1e681e5d3deb72",
+    "/packages/@kimen~1tokens/modules/.~1check-theme/symbols/checkTheme": "770cdba35f6eb473562e8a6d0eba3556dcb51ae07217d9be2e31bef7d494ee5c",
+    "/packages/@kimen~1tokens/modules/.~1check-theme/target": "b775956bea07ba2ac37cda465dde1f0f0f66046d8691f8a9338c2ade2c9dacee"
+  },
+  "packages": [
+    "@kimen/tokens"
+  ],
+  "reason": "Add the theme checker function, CLI and MCP tool.",
+  "release": "minor",
+  "schemaVersion": 2
+}

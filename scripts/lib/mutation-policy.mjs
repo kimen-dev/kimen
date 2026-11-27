@@ -128,7 +128,8 @@ const classifyKnownPath = (path) => {
   }
   if (
     /^packages\/elements\/src\/(?:index\.ts|components\.d\.ts)$/.test(path) ||
-    /^packages\/[^/]+\/index\.mjs$/.test(path)
+    /^packages\/[^/]+\/index\.mjs$/.test(path) ||
+    path === 'packages/tokens/theme-checker/cli.mjs'
   ) {
     return excluded(
       path,
@@ -152,7 +153,7 @@ const classifyKnownPath = (path) => {
     /^packages\/[^/]+\/(?:src|scripts)\/.*\.[cm]?[jt]sx?$/.test(path) ||
     // The MCP Apps surface runtime, bundled into the generated surface document.
     /^packages\/adapter-mcp-apps\/surface\/.*\.[cm]?[jt]sx?$/.test(path) ||
-    /^packages\/tokens\/build\.mjs$/.test(path)
+    /^packages\/tokens\/(?:build\.mjs|theme-checker\/[^/]+\.mjs)$/.test(path)
   ) {
     return core(path, 'node');
   }
