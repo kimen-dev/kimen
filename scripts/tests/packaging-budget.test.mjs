@@ -123,13 +123,13 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 510_950, gzip: 85_032, brotli: 66_517 },
-    mcpServer: { raw: 1_780_939, gzip: 323_130, brotli: 294_608 },
+    mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
+    mcpServer: { raw: 1_751_052, gzip: 318_322, brotli: 294_479 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 18_566, tenComponents: 47_401 },
-    fullSheetPages: { button: 29_554, tenComponents: 55_206 },
+    pages: { button: 18_559, tenComponents: 47_337 },
+    fullSheetPages: { button: 29_547, tenComponents: 55_142 },
   });
 });
 
@@ -152,13 +152,13 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 513_150, gzip: 85_212, brotli: 66_682 },
-    mcpServer: { raw: 1_782_239, gzip: 323_320, brotli: 294_783 },
+    mcpApps: { raw: 483_542, gzip: 80_315, brotli: 66_320 },
+    mcpServer: { raw: 1_752_352, gzip: 318_512, brotli: 294_654 },
     genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
     tokenStylesheets: { onmars: 11_781, material3: 5_215, base: 250 },
     tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 18_566, tenComponents: 47_441 },
-    fullSheetPages: { button: 29_584, tenComponents: 55_206 },
+    pages: { button: 18_559, tenComponents: 47_377 },
+    fullSheetPages: { button: 29_577, tenComponents: 55_142 },
   });
 });
 
@@ -296,14 +296,14 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 1_919_710, unpacked: 8_205_366 },
+      '@kimen/elements': { packed: 1_904_782, unpacked: 7_909_758 },
       // Rebased for Newsreader at weight 500.
       '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
-      '@kimen/mcp-server': { packed: 644_422, unpacked: 3_299_872 },
+      '@kimen/mcp-server': { packed: 639_409, unpacked: 3_176_921 },
       '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
       '@kimen/emitter': { packed: 43_008, unpacked: 151_552 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
-      '@kimen/adapter-mcp-apps': { packed: 504_500, unpacked: 2_307_036 },
+      '@kimen/adapter-mcp-apps': { packed: 499_558, unpacked: 2_209_335 },
       '@kimen/react': { packed: 46_952, unpacked: 345_886 },
       '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
       '@kimen/angular': { packed: 56_320, unpacked: 649_216 },

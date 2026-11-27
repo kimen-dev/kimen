@@ -10,6 +10,7 @@ import { compactButtonPalette } from './scripts/compact-button-palette';
 import { componentChunkNames } from './scripts/component-chunk-names.mjs';
 import { readComponentFormBindings } from './scripts/component-metadata.mjs';
 import { glyphChunks } from './scripts/glyph-chunks';
+import { shareShadowStyles } from './scripts/share-shadow-styles';
 import { shortVdomKeys } from './scripts/short-vdom-keys.mjs';
 
 // Form controls re-dispatch native input/change events across the shadow
@@ -19,7 +20,7 @@ const formValueBindings = readComponentFormBindings(resolve(__dirname, 'src/comp
 // Stencil's CLI defaults to production and gives --prod precedence over --dev.
 // HMR can diff against the previous build's VNodes, where the same ordinal
 // short key may have belonged to another element.
-const { dev, prod } = parseFlags(process.argv.slice(2));
+const { dev, prod, watch } = parseFlags(process.argv.slice(2));
 
 // Kimen elements build (constitution Art. I, IV).
 // docs-json output feeds the Art. I pipeline: docs-json → CEM → catalog → llms.txt.
@@ -44,6 +45,7 @@ export const config: Config = {
       // chunk names, its runtime's among them, for the glyph prefix to wrap.
       booleanAttributes,
       componentChunkNames,
+      ...(watch || (dev && !prod) ? [] : [shareShadowStyles(resolve(__dirname, 'src'))]),
       glyphChunks(resolve(__dirname, 'icons'), resolve(__dirname, 'src/utils/icon-registry.mjs')),
     ],
     after: dev && !prod ? [compactButtonPalette] : [compactButtonPalette, shortVdomKeys],

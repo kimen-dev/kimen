@@ -40,9 +40,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['generated/custom-elements.json', 'llms.txt', 'llms/']),
-    // Spec 167 removes dist/esm. After short vDOM keys the package measures
-    // 1,863,796 B packed and 7,966,374 B unpacked. Both limits add 3 %.
-    budget: Object.freeze({ packed: 1_919_710, unpacked: 8_205_366 }),
+    // Shared shadow styles bring the package to 1,849,302 B packed and
+    // 7,901,856 B unpacked, with 3% and 0.1% headroom respectively.
+    budget: Object.freeze({ packed: 1_904_782, unpacked: 7_909_758 }),
   }),
   '@kimen/tokens': Object.freeze({
     mapsEveryModule: false,
@@ -56,8 +56,9 @@ export const packageContentRules = Object.freeze({
     mapsEveryModule: false,
     unmappedModules: Object.freeze([]),
     assets: Object.freeze(['COMPAT.md']),
-    // Short vDOM keys reduced this to 625,652 / 3,203,759 B, plus 3 %.
-    budget: Object.freeze({ packed: 644_422, unpacked: 3_299_872 }),
+    // Shared shadow styles bring this to 620,785 / 3,173,747 B, with
+    // 3% packed and 0.1% unpacked headroom.
+    budget: Object.freeze({ packed: 639_409, unpacked: 3_176_921 }),
   }),
   '@kimen/catalog': Object.freeze({
     mapsEveryModule: true,
@@ -89,8 +90,9 @@ export const packageContentRules = Object.freeze({
       'dist/generated/surface-profile-form.js',
     ]),
     assets: Object.freeze([]),
-    // Short vDOM keys reduced this to 489,805 / 2,239,840 B, plus 3 %.
-    budget: Object.freeze({ packed: 504_500, unpacked: 2_307_036 }),
+    // Shared shadow styles bring this to 485,007 / 2,207,127 B, with
+    // 3% packed and 0.1% unpacked headroom.
+    budget: Object.freeze({ packed: 499_558, unpacked: 2_209_335 }),
   }),
   '@kimen/react': Object.freeze({
     mapsEveryModule: true,
