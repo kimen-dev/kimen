@@ -57,7 +57,7 @@ None.
 
 ## CSS custom properties
 
-- `--ki-chip-group-font-family`: Font family inherited by chip group content.
-- `--ki-chip-group-gap`: Gap between adjacent chips and rows.
-- `--ki-chip-height-sm`: Small height of a compact pill.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
+- `--ki-chip-group-font-family`: Font family inherited by chip group content. Default: `var(--ki-typography-family-body)`.
+- `--ki-chip-group-gap`: Gap between adjacent chips and rows. Default: `var(--ki-control-compact-pill-collection-gap)`.
+- `--ki-chip-height-sm`: Small height of a compact pill. Default: `var(--ki-control-compact-pill-height-sm)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.

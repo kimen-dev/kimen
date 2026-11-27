@@ -100,42 +100,42 @@ None.
 
 ## CSS custom properties
 
-- `--ki-corner-activity-mark`: Round corners for rings and typing dots.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-7xl`: The 7xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-layout-spacing-sm`: The sm spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap.
-- `--ki-step-description-bg`: Backing of a step description.
-- `--ki-step-description-fg`: Ink of a step description.
-- `--ki-stepper-connector`: Decorative connector from a step that is still incomplete.
-- `--ki-stepper-connector-done`: Decorative connector from a completed step.
-- `--ki-stepper-current-bg`: Fill of the current step marker.
-- `--ki-stepper-current-border`: Outline of the current step marker.
-- `--ki-stepper-current-fg`: Number ink on the current step marker.
-- `--ki-stepper-done-bg`: Fill of a completed step marker.
-- `--ki-stepper-done-fg`: Glyph ink on the completed step marker.
-- `--ki-stepper-dot-size`: Diameter of the step marker.
-- `--ki-stepper-error-bg`: Fill of the step error marker.
-- `--ki-stepper-error-border`: Outline of the step error marker.
-- `--ki-stepper-error-fg`: Glyph ink of the step error marker.
-- `--ki-stepper-glyph-size`: Size of the marker and disclosure glyphs.
-- `--ki-stepper-label-bg`: Default backing of a step label.
-- `--ki-stepper-label-fg`: Default ink of a step label.
-- `--ki-stepper-stroke`: Width of the marker outline and connector.
-- `--ki-stepper-summary-bg`: Backing of the compact disclosure.
-- `--ki-stepper-summary-fg`: Ink of the compact disclosure.
-- `--ki-stepper-upcoming-bg`: Fill of an upcoming step marker.
-- `--ki-stepper-upcoming-border`: Outline of an upcoming step marker.
-- `--ki-stepper-upcoming-fg`: Number and label ink of an upcoming step.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-corner-activity-mark`: Round corners for rings and typing dots. Default: `var(--ki-radius-round)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-layout-spacing-7xl`: The 7xl spacing step for a stack or grid gap. Default: `var(--ki-space-7xl)`.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-layout-spacing-sm`: The sm spacing step for a stack or grid gap. Default: `var(--ki-space-sm)`.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap. Default: `var(--ki-space-xl)`.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap. Default: `var(--ki-space-xs)`.
+- `--ki-layout-spacing-xxs`: The xxs spacing step for a stack or grid gap. Default: `var(--ki-space-xxs)`.
+- `--ki-step-description-bg`: Backing of a step description. Default: `var(--ki-surface-transparent)`.
+- `--ki-step-description-fg`: Ink of a step description. Default: `var(--ki-text-supporting)`.
+- `--ki-stepper-connector`: Decorative connector from a step that is still incomplete. Default: `var(--ki-outline-low-em)`.
+- `--ki-stepper-connector-done`: Decorative connector from a completed step. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-stepper-current-bg`: Fill of the current step marker. Default: `var(--ki-surface-transparent)`.
+- `--ki-stepper-current-border`: Outline of the current step marker. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-stepper-current-fg`: Number ink on the current step marker. Default: `var(--ki-text-primary-high-em)`.
+- `--ki-stepper-done-bg`: Fill of a completed step marker. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-stepper-done-fg`: Glyph ink on the completed step marker. Default: `var(--ki-text-primary-on-primary)`.
+- `--ki-stepper-dot-size`: Diameter of the step marker. Default: `var(--ki-layout-spacing-7xl)`.
+- `--ki-stepper-error-bg`: Fill of the step error marker. Default: `var(--ki-surface-transparent)`.
+- `--ki-stepper-error-border`: Outline of the step error marker. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-stepper-error-fg`: Glyph ink of the step error marker. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-stepper-glyph-size`: Size of the marker and disclosure glyphs. Default: `var(--ki-layout-spacing-2xl)`.
+- `--ki-stepper-label-bg`: Default backing of a step label. Default: `var(--ki-surface-transparent)`.
+- `--ki-stepper-label-fg`: Default ink of a step label. Default: `var(--ki-text-high-em)`.
+- `--ki-stepper-stroke`: Width of the marker outline and connector. Default: `var(--ki-activity-size-stroke)`.
+- `--ki-stepper-summary-bg`: Backing of the compact disclosure. Default: `var(--ki-surface-transparent)`.
+- `--ki-stepper-summary-fg`: Ink of the compact disclosure. Default: `var(--ki-text-high-em)`.
+- `--ki-stepper-upcoming-bg`: Fill of an upcoming step marker. Default: `var(--ki-surface-transparent)`.
+- `--ki-stepper-upcoming-border`: Outline of an upcoming step marker. Default: `var(--ki-outline-control)`.
+- `--ki-stepper-upcoming-fg`: Number and label ink of an upcoming step. Default: `var(--ki-text-supporting)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.

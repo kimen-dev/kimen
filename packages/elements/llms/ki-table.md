@@ -146,43 +146,43 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-table-backdrop-filter`: Complete filter applied behind the frame.
-- `--ki-table-bg`: Table frame and caption surface.
-- `--ki-table-bg-image`: Optional image layered over the table frame.
-- `--ki-table-border`: Frame and row dividers.
-- `--ki-table-border-width`: Frame and row divider stroke.
-- `--ki-table-caption-font-family`: Typeface of the native table caption.
-- `--ki-table-cell-padding-inline`: Horizontal space inside cells.
-- `--ki-table-fg`: Primary record and caption ink.
-- `--ki-table-focus-radius`: Corner radius of the sort button focus ring.
-- `--ki-table-focus-ring-color`: Keyboard focus outline ink.
-- `--ki-table-focus-ring-offset`: Space between a focus outline and its control.
-- `--ki-table-focus-ring-width`: Keyboard focus outline stroke.
-- `--ki-table-header-bg`: Column header surface, including when sticky.
-- `--ki-table-header-bg-image`: Optional image layered over the column header.
-- `--ki-table-header-fg`: Column header ink.
-- `--ki-table-header-height`: Column header row height.
-- `--ki-table-meta-fg`: Secondary and numeric value ink.
-- `--ki-table-radius`: Outer frame corner radius.
-- `--ki-table-row-height`: Default data row height.
-- `--ki-table-row-height-compact`: Compact data row height.
-- `--ki-table-row-hover-bg`: Surface under a record on hover.
-- `--ki-table-row-hover-fg`: Record ink on hover.
-- `--ki-table-row-selected-bg`: Surface under a selected record.
-- `--ki-table-row-selected-fg`: Record ink when selected.
-- `--ki-table-skeleton`: Decorative loading bar fill.
-- `--ki-table-skeleton-height`: Loading bar height.
-- `--ki-table-skeleton-radius`: Loading bar corner radius.
-- `--ki-table-sort-gap`: Space between a column label and sort indicator.
-- `--ki-table-sort-glyph-size`: Decorative sort indicator edge.
-- `--ki-table-touch-target-min`: Minimum width and height of controls with a coarse pointer.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min. Default: `var(--ki-space-zero)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-table-backdrop-filter`: Complete filter applied behind the frame. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-table-bg`: Table frame and caption surface. Default: `var(--ki-surface-s0)`.
+- `--ki-table-bg-image`: Optional image layered over the table frame. Default: `var(--ki-surface-image-none)`.
+- `--ki-table-border`: Frame and row dividers. Default: `var(--ki-outline-low-em)`.
+- `--ki-table-border-width`: Frame and row divider stroke. Default: `var(--ki-layout-rule-width)`.
+- `--ki-table-caption-font-family`: Typeface of the native table caption. Default: `var(--ki-typography-family-heading)`.
+- `--ki-table-cell-padding-inline`: Horizontal space inside cells. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-table-fg`: Primary record and caption ink. Default: `var(--ki-text-high-em)`.
+- `--ki-table-focus-radius`: Corner radius of the sort button focus ring. Default: `var(--ki-corner-inline)`.
+- `--ki-table-focus-ring-color`: Keyboard focus outline ink. Default: `var(--ki-focus-ring-color)`.
+- `--ki-table-focus-ring-offset`: Space between a focus outline and its control. Default: `var(--ki-focus-ring-offset)`.
+- `--ki-table-focus-ring-width`: Keyboard focus outline stroke. Default: `var(--ki-focus-ring-width)`.
+- `--ki-table-header-bg`: Column header surface, including when sticky. Default: `var(--ki-surface-s1)`.
+- `--ki-table-header-bg-image`: Optional image layered over the column header. Default: `var(--ki-surface-image-none)`.
+- `--ki-table-header-fg`: Column header ink. Default: `var(--ki-text-supporting)`.
+- `--ki-table-header-height`: Column header row height. Default: `var(--ki-layout-spacing-12xl)`.
+- `--ki-table-meta-fg`: Secondary and numeric value ink. Default: `var(--ki-text-supporting)`.
+- `--ki-table-radius`: Outer frame corner radius. Default: `var(--ki-radius-component-lg)`.
+- `--ki-table-row-height`: Default data row height. Default: `var(--ki-layout-spacing-14xl)`.
+- `--ki-table-row-height-compact`: Compact data row height. Default: `var(--ki-layout-spacing-12xl)`.
+- `--ki-table-row-hover-bg`: Surface under a record on hover. Default: `var(--ki-surface-s1)`.
+- `--ki-table-row-hover-fg`: Record ink on hover. Default: `var(--ki-text-high-em)`.
+- `--ki-table-row-selected-bg`: Surface under a selected record. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-table-row-selected-fg`: Record ink when selected. Default: `var(--ki-text-high-em)`.
+- `--ki-table-skeleton`: Decorative loading bar fill. Default: `var(--ki-surface-s3)`.
+- `--ki-table-skeleton-height`: Loading bar height. Default: `var(--ki-layout-spacing-lg)`.
+- `--ki-table-skeleton-radius`: Loading bar corner radius. Default: `var(--ki-radius-round)`.
+- `--ki-table-sort-gap`: Space between a column label and sort indicator. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-table-sort-glyph-size`: Decorative sort indicator edge. Default: `var(--ki-layout-spacing-2xl)`.
+- `--ki-table-touch-target-min`: Minimum width and height of controls with a coarse pointer. Default: `var(--ki-layout-spacing-13xl)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.

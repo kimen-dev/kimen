@@ -105,15 +105,15 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-tree-backdrop-filter`: Complete backdrop filter behind the surface.
-- `--ki-tree-bg`: Base surface of the hierarchy.
-- `--ki-tree-bg-image`: Optional image layered over the tree surface.
-- `--ki-tree-edge`: Perimeter color of the hierarchy surface.
-- `--ki-tree-edge-width`: Width of the surface and checkbox outlines.
-- `--ki-tree-fg`: Text on the base surface.
-- `--ki-tree-padding`: Interior padding of the hierarchy surface.
-- `--ki-tree-radius`: Rounding of the hierarchy surface.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-tree-backdrop-filter`: Complete backdrop filter behind the surface. Default: `var(--ki-effect-no-backdrop-filter)`.
+- `--ki-tree-bg`: Base surface of the hierarchy. Default: `var(--ki-surface-s0)`.
+- `--ki-tree-bg-image`: Optional image layered over the tree surface. Default: `var(--ki-surface-image-none)`.
+- `--ki-tree-edge`: Perimeter color of the hierarchy surface. Default: `var(--ki-outline-low-em)`.
+- `--ki-tree-edge-width`: Width of the surface and checkbox outlines. Default: `var(--ki-menu-layout-edge-width)`.
+- `--ki-tree-fg`: Text on the base surface. Default: `var(--ki-text-high-em)`.
+- `--ki-tree-padding`: Interior padding of the hierarchy surface. Default: `var(--ki-spacing-action-inset)`.
+- `--ki-tree-radius`: Rounding of the hierarchy surface. Default: onmars `var(--ki-tree-layout-surface-radius)`, material3 `var(--ki-corner-action-frame)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.

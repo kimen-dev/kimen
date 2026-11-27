@@ -79,17 +79,17 @@ None.
 
 ## CSS custom properties
 
-- `--ki-image-caption-fg`: Text colour of the visible caption.
-- `--ki-image-caption-font-family`: Typeface of the visible caption.
-- `--ki-image-caption-font-size`: Type size of the visible caption.
-- `--ki-image-caption-gap`: Space between the image frame and its caption.
-- `--ki-image-caption-line-height`: Line height of the visible caption.
-- `--ki-image-fallback-backdrop-filter`: Complete filter applied behind the media surface.
-- `--ki-image-fallback-bg`: Solid fill behind the image and fallback symbol.
-- `--ki-image-fallback-bg-image`: Optional background image over the media fill.
-- `--ki-image-fallback-fg`: Foreground of the fallback symbol.
-- `--ki-image-fallback-icon-size`: Inline and block size of the unavailable-image symbol.
-- `--ki-image-fallback-icon-stroke-width`: Stroke width of the unavailable-image symbol.
-- `--ki-image-radius`: Corner radius of the default media frame.
-- `--ki-image-radius-md`: Corner radius of the medium media frame.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-image-caption-fg`: Text colour of the visible caption. Default: `var(--ki-text-supporting)`.
+- `--ki-image-caption-font-family`: Typeface of the visible caption. Default: `var(--ki-typography-family-body)`.
+- `--ki-image-caption-font-size`: Type size of the visible caption. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-image-caption-gap`: Space between the image frame and its caption. Default: `var(--ki-spacing-media-caption)`.
+- `--ki-image-caption-line-height`: Line height of the visible caption. Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-image-fallback-backdrop-filter`: Complete filter applied behind the media surface. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-image-fallback-bg`: Solid fill behind the image and fallback symbol. Default: `var(--ki-surface-s2)`.
+- `--ki-image-fallback-bg-image`: Optional background image over the media fill. Default: `var(--ki-surface-image-none)`.
+- `--ki-image-fallback-fg`: Foreground of the fallback symbol. Default: `var(--ki-text-med-em)`.
+- `--ki-image-fallback-icon-size`: Inline and block size of the unavailable-image symbol. Default: `var(--ki-glyph-size-md)`.
+- `--ki-image-fallback-icon-stroke-width`: Stroke width of the unavailable-image symbol. Default: `var(--ki-glyph-stroke-width)`.
+- `--ki-image-radius`: Corner radius of the default media frame. Default: `var(--ki-radius-component-lg)`.
+- `--ki-image-radius-md`: Corner radius of the medium media frame. Default: `var(--ki-radius-component-md)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

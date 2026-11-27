@@ -85,34 +85,39 @@ appears before the label in secondary tabs. Set `icon-layout="inline"` or
 
 None.
 
-## CSS custom properties
+## Other CSS custom properties
 
-- `--ki-tab-icon-stacked-gap`: Gap from a stacked tab icon to its label.
-- `--ki-tab-icon-stacked-min-block-size`: Minimum block size for a tab with a stacked icon.
-- `--ki-tab-lg-font-size`: dimension used by the tab component for lg font size (Tab-nav-item 10048:1068 lg: UI/body-2).
-- `--ki-tab-lg-line-height`: dimension used by the tab component for lg line height (Tab-nav-item 10048:1068 lg: UI/body-2).
-- `--ki-tab-lg-min-block-size`: dimension used by the tab component for lg min block size (Tab-nav-item 10048:1068 lg: 48px).
-- `--ki-tab-padding-block-end`: dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes).
-- `--ki-tab-primary-indicator-height`: Height of the content-width indicator on a primary icon tab.
-- `--ki-tab-secondary-indicator-height`: Height of the full-width indicator on a secondary tab.
-- `--ki-tab-sm-font-size`: dimension used by the tab component for sm font size (Tab-nav-item 10048:1068 sm: UI/para).
-- `--ki-tab-sm-line-height`: dimension used by the tab component for sm line height (Tab-nav-item 10048:1068 sm: UI/para).
-- `--ki-tab-sm-min-block-size`: dimension used by the tab component for sm min block size (Tab-nav-item 10048:1068 sm: 32px).
-- `--ki-tab-xl-font-size`: dimension used by the tab component for xl font size (Tab-nav-item 10048:1068 xl: UI/title-2).
-- `--ki-tab-xl-line-height`: dimension used by the tab component for xl line height (Tab-nav-item 10048:1068 xl: UI/title-2).
-- `--ki-tab-xl-min-block-size`: dimension used by the tab component for xl min block size (Tab-nav-item 10048:1068 xl: 56px).
-- `--ki-tab-xs-font-size`: dimension used by the tab component for xs font size (Tab-nav-item 10048:1068 xs: UI/caption-2). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7).
-- `--ki-tab-xs-line-height`: dimension used by the tab component for xs line height (Tab-nav-item 10048:1068 xs: UI/caption-2).
-- `--ki-tab-xs-min-block-size`: dimension used by the tab component for xs min block size (Tab-nav-item 10048:1068 xs: 24px).
-- `--ki-tabs-divider-color`: color used by the tabs component for divider color.
-- `--ki-tabs-divider-width`: dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override).
-- `--ki-tabs-gap`: dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding).
-- `--ki-tabs-lg-gap`: dimension used by the tabs component for the lg gap between tabs (Tab-nav 10048:1249 lg binds Space/9xl, 28px).
-- `--ki-tabs-secondary-selected-rest-bg`: Selected secondary tab background at rest.
-- `--ki-tabs-secondary-selected-rest-fg`: Selected secondary tab label foreground at rest.
-- `--ki-tabs-secondary-unselected-rest-bg`: Secondary tab background at rest.
-- `--ki-tabs-secondary-unselected-rest-fg`: Secondary tab label foreground at rest.
-- `--ki-tabs-sm-gap`: dimension used by the tabs component for the sm gap between tabs (Tab-nav 10048:1249 sm binds Space/7xl, 24px).
-- `--ki-tabs-xl-gap`: dimension used by the tabs component for the xl gap between tabs (Tab-nav 10048:1249 xl binds Space/10xl, 32px).
-- `--ki-tabs-xs-gap`: dimension used by the tabs component for the xs gap between tabs (Tab-nav 10048:1249 xs binds Space/5xl, 20px).
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-tab-icon-stacked-gap`: Gap from a stacked tab icon to its label. Default: `var(--ki-layout-spacing-xxs)`.
+- `--ki-tab-icon-stacked-min-block-size`: Minimum block size for a tab with a stacked icon. Default: `var(--ki-layout-spacing-18xl)`.
+- `--ki-tab-lg-font-size`: dimension used by the tab component for lg font size (Tab-nav-item 10048:1068 lg: UI/body-2). Default: onmars `var(--ki-typography-size-body-2)`, material3 `var(--ki-typography-size-body-1)`.
+- `--ki-tab-lg-line-height`: dimension used by the tab component for lg line height (Tab-nav-item 10048:1068 lg: UI/body-2). Default: onmars `var(--ki-typography-line-height-body-2)`, material3 `var(--ki-typography-line-height-body-1)`.
+- `--ki-tab-lg-min-block-size`: dimension used by the tab component for lg min block size (Tab-nav-item 10048:1068 lg: 48px). Default: onmars `var(--ki-space-14xl)`, material3 `var(--ki-space-7xl)`.
+- `--ki-tab-padding-block-end`: dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes). Default: `var(--ki-space-md)`.
+- `--ki-tab-primary-indicator-height`: Height of the content-width indicator on a primary icon tab. Default: `var(--ki-control-indicator-width-medium)`.
+- `--ki-tab-secondary-indicator-height`: Height of the full-width indicator on a secondary tab. Default: `var(--ki-control-indicator-width-thin)`.
+- `--ki-tab-sm-font-size`: dimension used by the tab component for sm font size (Tab-nav-item 10048:1068 sm: UI/para). Default: `var(--ki-typography-size-body-1)`.
+- `--ki-tab-sm-line-height`: dimension used by the tab component for sm line height (Tab-nav-item 10048:1068 sm: UI/para). Default: onmars `var(--ki-typography-line-height-para)`, material3 `var(--ki-typography-line-height-body-1)`.
+- `--ki-tab-sm-min-block-size`: dimension used by the tab component for sm min block size (Tab-nav-item 10048:1068 sm: 32px). Default: onmars `var(--ki-space-10xl)`, material3 `var(--ki-space-7xl)`.
+- `--ki-tab-xl-font-size`: dimension used by the tab component for xl font size (Tab-nav-item 10048:1068 xl: UI/title-2). Default: onmars `var(--ki-typography-size-title-2)`, material3 `var(--ki-typography-size-body-1)`.
+- `--ki-tab-xl-line-height`: dimension used by the tab component for xl line height (Tab-nav-item 10048:1068 xl: UI/title-2). Default: onmars `var(--ki-typography-line-height-title-2)`, material3 `var(--ki-typography-line-height-body-1)`.
+- `--ki-tab-xl-min-block-size`: dimension used by the tab component for xl min block size (Tab-nav-item 10048:1068 xl: 56px). Default: onmars `var(--ki-space-16xl)`, material3 `var(--ki-space-7xl)`.
+- `--ki-tab-xs-font-size`: dimension used by the tab component for xs font size (Tab-nav-item 10048:1068 xs: UI/caption-2). Figma draws caption_1, 10px; caption_2, 12px, is the smallest text the library ships (spec 050 D7). Default: onmars `var(--ki-typography-size-caption-2)`, material3 `var(--ki-typography-size-body-1)`.
+- `--ki-tab-xs-line-height`: dimension used by the tab component for xs line height (Tab-nav-item 10048:1068 xs: UI/caption-2). Default: onmars `var(--ki-typography-line-height-caption-2)`, material3 `var(--ki-typography-line-height-body-1)`.
+- `--ki-tab-xs-min-block-size`: dimension used by the tab component for xs min block size (Tab-nav-item 10048:1068 xs: 24px). Default: `var(--ki-space-7xl)`.
+- `--ki-tabs-divider-color`: color used by the tabs component for divider color. Default: onmars `var(--ki-outline-low-em)`, material3 `var(--ki-outline-med-em)`.
+- `--ki-tabs-divider-width`: dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override). Default: onmars `var(--ki-space-zero)`, material3 `var(--ki-size-border-hairline)`.
+- `--ki-tabs-gap`: dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding). Default: onmars `var(--ki-space-8xl)`, material3 `var(--ki-space-zero)`.
+- `--ki-tabs-lg-gap`: dimension used by the tabs component for the lg gap between tabs (Tab-nav 10048:1249 lg binds Space/9xl, 28px). Default: onmars `var(--ki-space-9xl)`, material3 `var(--ki-space-zero)`.
+- `--ki-tabs-sm-gap`: dimension used by the tabs component for the sm gap between tabs (Tab-nav 10048:1249 sm binds Space/7xl, 24px). Default: onmars `var(--ki-space-7xl)`, material3 `var(--ki-space-zero)`.
+- `--ki-tabs-xl-gap`: dimension used by the tabs component for the xl gap between tabs (Tab-nav 10048:1249 xl binds Space/10xl, 32px). Default: onmars `var(--ki-space-10xl)`, material3 `var(--ki-space-zero)`.
+- `--ki-tabs-xs-gap`: dimension used by the tabs component for the xs gap between tabs (Tab-nav 10048:1249 xs binds Space/5xl, 20px). Default: onmars `var(--ki-space-5xl)`, material3 `var(--ki-space-zero)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+
+## CSS custom properties by variant and state
+
+| Variant | Tone | State | Token | Default | Description |
+| --- | --- | --- | --- | --- | --- |
+| secondary | — | selected-rest | `--ki-tabs-secondary-selected-rest-bg` | onmars `var(--ki-transparent-inverse)`, material3 `var(--ki-surface-s0)` | Selected secondary tab background at rest. |
+| secondary | — | selected-rest | `--ki-tabs-secondary-selected-rest-fg` | `var(--ki-text-high-em)` | Selected secondary tab label foreground at rest. |
+| secondary | — | unselected-rest | `--ki-tabs-secondary-unselected-rest-bg` | onmars `var(--ki-transparent-inverse)`, material3 `var(--ki-surface-s0)` | Secondary tab background at rest. |
+| secondary | — | unselected-rest | `--ki-tabs-secondary-unselected-rest-fg` | `var(--ki-text-supporting)` | Secondary tab label foreground at rest. |

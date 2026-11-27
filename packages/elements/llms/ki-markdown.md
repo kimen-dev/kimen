@@ -113,42 +113,42 @@ None.
 
 ## CSS custom properties
 
-- `--ki-corner-inline`: Small radius for an outline around inline content.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-layout-spacing-5xl`: The 5xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-markdown-backdrop-filter`: Complete backdrop filter for the answer surface.
-- `--ki-markdown-bg`: Answer surface backing. It defaults to transparent so the enclosing surface shows through.
-- `--ki-markdown-bg-image`: Optional image over the answer's solid backing.
-- `--ki-markdown-block-gap`: Spacing between Markdown blocks at standard density.
-- `--ki-markdown-fg`: Ink for prose and headings.
-- `--ki-markdown-heading-family`: Typeface for Markdown headings.
-- `--ki-markdown-inline-code-backdrop-filter`: Complete backdrop filter for inline code.
-- `--ki-markdown-inline-code-bg`: Solid backing of an inline code span.
-- `--ki-markdown-inline-code-bg-image`: Optional image over the inline code backing.
-- `--ki-markdown-inline-code-fg`: Ink for source within an inline code span.
-- `--ki-markdown-muted-backdrop-filter`: Complete backdrop filter for quotes and table headings.
-- `--ki-markdown-muted-bg`: Backing of quotes and table headings.
-- `--ki-markdown-muted-bg-image`: Optional image over the muted backing.
-- `--ki-markdown-muted-fg`: Ink for quotes and table headings, strengthened under more contrast.
-- `--ki-markdown-quote-border`: Logical start rule of a quotation and the ink of a thematic divider.
-- `--ki-outline-low-em`: semantic color for outline low em.
-- `--ki-spacing-action-hairline`: Width of the frame and divider in an action surface.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-family-mono`: semantic font family for typography family mono.
-- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
-- `--ki-typography-line-height-heading-1`: semantic dimension for typography line height heading 1.
-- `--ki-typography-line-height-heading-2`: semantic dimension for typography line height heading 2.
-- `--ki-typography-line-height-title-1`: semantic dimension for typography line height title 1.
-- `--ki-typography-line-height-title-2`: semantic dimension for typography line height title 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-size-heading-1`: semantic dimension for typography size heading 1.
-- `--ki-typography-size-heading-2`: semantic dimension for typography size heading 2.
-- `--ki-typography-size-title-1`: semantic dimension for typography size title 1.
-- `--ki-typography-size-title-2`: semantic dimension for typography size title 2.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-corner-inline`: Small radius for an outline around inline content. Default: `var(--ki-radius-xxs)`.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-layout-spacing-5xl`: The 5xl spacing step for a stack or grid gap. Default: `var(--ki-space-5xl)`.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap. Default: `var(--ki-space-xs)`.
+- `--ki-markdown-backdrop-filter`: Complete backdrop filter for the answer surface. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-markdown-bg`: Answer surface backing. It defaults to transparent so the enclosing surface shows through. Default: `var(--ki-surface-transparent)`.
+- `--ki-markdown-bg-image`: Optional image over the answer's solid backing. Default: `var(--ki-surface-image-none)`.
+- `--ki-markdown-block-gap`: Spacing between Markdown blocks at standard density. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-markdown-fg`: Ink for prose and headings. Default: `var(--ki-text-high-em)`.
+- `--ki-markdown-heading-family`: Typeface for Markdown headings. Default: `var(--ki-typography-family-heading)`.
+- `--ki-markdown-inline-code-backdrop-filter`: Complete backdrop filter for inline code. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-markdown-inline-code-bg`: Solid backing of an inline code span. Default: `var(--ki-surface-s2)`.
+- `--ki-markdown-inline-code-bg-image`: Optional image over the inline code backing. Default: `var(--ki-surface-image-none)`.
+- `--ki-markdown-inline-code-fg`: Ink for source within an inline code span. Default: `var(--ki-text-high-em)`.
+- `--ki-markdown-muted-backdrop-filter`: Complete backdrop filter for quotes and table headings. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-markdown-muted-bg`: Backing of quotes and table headings. Default: `var(--ki-surface-transparent)`.
+- `--ki-markdown-muted-bg-image`: Optional image over the muted backing. Default: `var(--ki-surface-image-none)`.
+- `--ki-markdown-muted-fg`: Ink for quotes and table headings, strengthened under more contrast. Default: `var(--ki-text-supporting)`.
+- `--ki-markdown-quote-border`: Logical start rule of a quotation and the ink of a thematic divider. Default: `var(--ki-outline-med-em)`.
+- `--ki-outline-low-em`: semantic color for outline low em. Default: onmars `light-dark(rgba(24,22,19,0.1),rgba(255,250,240,0.1))`, material3 `light-dark(#e7e0ec,#36343b)`.
+- `--ki-spacing-action-hairline`: Width of the frame and divider in an action surface. Default: `var(--ki-size-border-hairline)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-family-mono`: semantic font family for typography family mono. Default: `var(--ki-font-family-mono)`.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2. Default: `var(--ki-font-line-height-body-2)`.
+- `--ki-typography-line-height-heading-1`: semantic dimension for typography line height heading 1. Default: `var(--ki-font-line-height-heading-1)`.
+- `--ki-typography-line-height-heading-2`: semantic dimension for typography line height heading 2. Default: `var(--ki-font-line-height-heading-2)`.
+- `--ki-typography-line-height-title-1`: semantic dimension for typography line height title 1. Default: `var(--ki-font-line-height-title-1)`.
+- `--ki-typography-line-height-title-2`: semantic dimension for typography line height title 2. Default: `var(--ki-font-line-height-title-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2. Default: `var(--ki-font-size-body-2)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-size-heading-1`: semantic dimension for typography size heading 1. Default: `var(--ki-font-size-heading-1)`.
+- `--ki-typography-size-heading-2`: semantic dimension for typography size heading 2. Default: `var(--ki-font-size-heading-2)`.
+- `--ki-typography-size-title-1`: semantic dimension for typography size title 1. Default: `var(--ki-font-size-title-1)`.
+- `--ki-typography-size-title-2`: semantic dimension for typography size title 2. Default: `var(--ki-font-size-title-2)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.

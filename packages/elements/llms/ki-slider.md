@@ -104,36 +104,36 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-slider-coarse-target`: Minimum target size on a coarse pointer.
-- `--ki-slider-fill-backdrop-filter`: Optional effect behind the active rail.
-- `--ki-slider-fill-bg`: Colour of the active section of the rail.
-- `--ki-slider-fill-bg-image`: Optional image painted on the active rail.
-- `--ki-slider-gap`: Gap between the slider control and its labels.
-- `--ki-slider-label-bg`: Background beneath the field label.
-- `--ki-slider-label-fg`: Ink of the field label.
-- `--ki-slider-mark-width`: Thickness of each interval tick.
-- `--ki-slider-radius`: Round rail, grip and midpoint tick corners.
-- `--ki-slider-text-bg`: Background beneath the value readout and help.
-- `--ki-slider-text-fg`: Ink of the value readout and help.
-- `--ki-slider-thumb-backdrop-filter`: Optional effect behind the grip.
-- `--ki-slider-thumb-bg`: Grip surface behind the outline.
-- `--ki-slider-thumb-bg-image`: Optional image painted on the grip.
-- `--ki-slider-thumb-border`: Outline colour of the visible grip.
-- `--ki-slider-thumb-border-width`: Outline thickness of the visible grip.
-- `--ki-slider-thumb-shadow`: Optional grip elevation.
-- `--ki-slider-thumb-size`: Diameter of the visible grip within the pointer target.
-- `--ki-slider-track-backdrop-filter`: Optional effect behind the inactive rail.
-- `--ki-slider-track-bg`: Inactive rail colour against the surrounding surface.
-- `--ki-slider-track-bg-image`: Optional image painted on the inactive rail.
-- `--ki-slider-track-height`: Inactive rail thickness.
-- `--ki-slider-vertical-length`: Length of the vertical rail.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-slider-coarse-target`: Minimum target size on a coarse pointer. Default: `var(--ki-scale-control-coarse-target)`.
+- `--ki-slider-fill-backdrop-filter`: Optional effect behind the active rail. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-slider-fill-bg`: Colour of the active section of the rail. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-slider-fill-bg-image`: Optional image painted on the active rail. Default: `var(--ki-surface-image-none)`.
+- `--ki-slider-gap`: Gap between the slider control and its labels. Default: `var(--ki-spacing-activity-label-gap)`.
+- `--ki-slider-label-bg`: Background beneath the field label. Default: `var(--ki-surface-transparent)`.
+- `--ki-slider-label-fg`: Ink of the field label. Default: `var(--ki-text-high-em)`.
+- `--ki-slider-mark-width`: Thickness of each interval tick. Default: `var(--ki-scale-control-mark-width)`.
+- `--ki-slider-radius`: Round rail, grip and midpoint tick corners. Default: `var(--ki-corner-activity-mark)`.
+- `--ki-slider-text-bg`: Background beneath the value readout and help. Default: `var(--ki-surface-transparent)`.
+- `--ki-slider-text-fg`: Ink of the value readout and help. Default: `var(--ki-text-high-em)`.
+- `--ki-slider-thumb-backdrop-filter`: Optional effect behind the grip. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-slider-thumb-bg`: Grip surface behind the outline. Default: `var(--ki-surface-s0)`.
+- `--ki-slider-thumb-bg-image`: Optional image painted on the grip. Default: `var(--ki-surface-image-none)`.
+- `--ki-slider-thumb-border`: Outline colour of the visible grip. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-slider-thumb-border-width`: Outline thickness of the visible grip. Default: `var(--ki-scale-control-thumb-border-width)`.
+- `--ki-slider-thumb-shadow`: Optional grip elevation. Default: `var(--ki-elevation-e2)`.
+- `--ki-slider-thumb-size`: Diameter of the visible grip within the pointer target. Default: `var(--ki-glyph-size-md)`.
+- `--ki-slider-track-backdrop-filter`: Optional effect behind the inactive rail. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-slider-track-bg`: Inactive rail colour against the surrounding surface. Default: `var(--ki-outline-control)`.
+- `--ki-slider-track-bg-image`: Optional image painted on the inactive rail. Default: `var(--ki-surface-image-none)`.
+- `--ki-slider-track-height`: Inactive rail thickness. Default: `var(--ki-scale-control-track-height)`.
+- `--ki-slider-vertical-length`: Length of the vertical rail. Default: `var(--ki-scale-control-vertical-length)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.

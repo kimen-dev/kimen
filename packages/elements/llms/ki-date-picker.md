@@ -117,53 +117,53 @@ None.
 
 ## CSS custom properties
 
-- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
-- `--ki-control-radius-track`: Corner radius of a track containing adjacent controls.
-- `--ki-control-size-sm`: Small control track height, 32 CSS px at the default root size.
-- `--ki-control-size-touch`: Touch target size for controls on a coarse pointer.
-- `--ki-date-picker-backdrop-filter`: Complete filter behind the calendar.
-- `--ki-date-picker-bg`: Fill of the calendar dialog.
-- `--ki-date-picker-bg-image`: Optional image layered over the calendar fill.
-- `--ki-date-picker-border`: Calendar surface edge.
-- `--ki-date-picker-day-hover-bg`: Hover fill of an available unselected day.
-- `--ki-date-picker-day-hover-fg`: Ink on the hover fill.
-- `--ki-date-picker-day-radius`: Radius of a day and the ends of a range.
-- `--ki-date-picker-day-size`: Default size of a day target.
-- `--ki-date-picker-fg`: Default calendar text.
-- `--ki-date-picker-field-bg`: Fill of the text field.
-- `--ki-date-picker-field-fg`: Text, icon and caret of the field.
-- `--ki-date-picker-heading-family`: Family of the calendar month heading.
-- `--ki-date-picker-outside-bg`: Fill behind dates in neighboring months.
-- `--ki-date-picker-outside-fg`: Ink of dates in neighboring months.
-- `--ki-date-picker-radius`: Calendar popup corner radius.
-- `--ki-date-picker-range-bg`: Fill of the span between selected endpoints.
-- `--ki-date-picker-range-fg`: Text of dates within the span.
-- `--ki-date-picker-selected-bg`: Fill of a chosen day or range endpoint.
-- `--ki-date-picker-selected-fg`: Text of a chosen day or range endpoint.
-- `--ki-date-picker-shadow`: Calendar popup elevation.
-- `--ki-date-picker-today-border`: Outline of the current date.
-- `--ki-date-picker-weekday-bg`: Fill behind weekday names.
-- `--ki-date-picker-weekday-fg`: Ink of weekday names.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-glyph-size-md`: Medium glyph for body content (20px at the default root size).
-- `--ki-layout-spacing-3xl`: The 3xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-lg`: The lg spacing step for a stack or grid gap.
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap.
-- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap.
-- `--ki-outline-control`: The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as an edge over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation.
-- `--ki-outline-danger-high-em`: semantic color for outline danger high em.
-- `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity.
-- `--ki-text-danger-high-em`: semantic color for text danger high em.
-- `--ki-text-high-em`: semantic color for text high em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-control-border-width`: Stroke width of the boundary of a compact control. Default: `var(--ki-size-border-hairline)`.
+- `--ki-control-radius-track`: Corner radius of a track containing adjacent controls. Default: `var(--ki-radius-component-md)`.
+- `--ki-control-size-sm`: Small control track height, 32 CSS px at the default root size. Default: `var(--ki-space-10xl)`.
+- `--ki-control-size-touch`: Touch target size for controls on a coarse pointer. Default: `var(--ki-size-target-touch)`.
+- `--ki-date-picker-backdrop-filter`: Complete filter behind the calendar. Default: `var(--ki-effect-no-backdrop-filter)`.
+- `--ki-date-picker-bg`: Fill of the calendar dialog. Default: `var(--ki-surface-raised)`.
+- `--ki-date-picker-bg-image`: Optional image layered over the calendar fill. Default: `var(--ki-surface-image-none)`.
+- `--ki-date-picker-border`: Calendar surface edge. Default: `var(--ki-outline-low-em)`.
+- `--ki-date-picker-day-hover-bg`: Hover fill of an available unselected day. Default: `var(--ki-surface-s3)`.
+- `--ki-date-picker-day-hover-fg`: Ink on the hover fill. Default: `var(--ki-text-high-em)`.
+- `--ki-date-picker-day-radius`: Radius of a day and the ends of a range. Default: `var(--ki-control-radius-item)`.
+- `--ki-date-picker-day-size`: Default size of a day target. Default: `var(--ki-control-size-md)`.
+- `--ki-date-picker-fg`: Default calendar text. Default: `var(--ki-text-high-em)`.
+- `--ki-date-picker-field-bg`: Fill of the text field. Default: `var(--ki-surface-s2)`.
+- `--ki-date-picker-field-fg`: Text, icon and caret of the field. Default: `var(--ki-text-high-em)`.
+- `--ki-date-picker-heading-family`: Family of the calendar month heading. Default: `var(--ki-typography-family-heading)`.
+- `--ki-date-picker-outside-bg`: Fill behind dates in neighboring months. Default: `var(--ki-surface-raised)`.
+- `--ki-date-picker-outside-fg`: Ink of dates in neighboring months. Default: `var(--ki-text-supporting)`.
+- `--ki-date-picker-radius`: Calendar popup corner radius. Default: onmars `var(--ki-corner-calendar-surface)`, material3 `var(--ki-menu-layout-surface-radius)`.
+- `--ki-date-picker-range-bg`: Fill of the span between selected endpoints. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-date-picker-range-fg`: Text of dates within the span. Default: `var(--ki-text-primary-on-primary-light)`.
+- `--ki-date-picker-selected-bg`: Fill of a chosen day or range endpoint. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-date-picker-selected-fg`: Text of a chosen day or range endpoint. Default: `var(--ki-text-primary-on-primary)`.
+- `--ki-date-picker-shadow`: Calendar popup elevation. Default: `var(--ki-elevation-e3)`.
+- `--ki-date-picker-today-border`: Outline of the current date. Default: `var(--ki-outline-primary-high-em)`.
+- `--ki-date-picker-weekday-bg`: Fill behind weekday names. Default: `var(--ki-surface-raised)`.
+- `--ki-date-picker-weekday-fg`: Ink of weekday names. Default: `var(--ki-text-supporting)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-glyph-size-md`: Medium glyph for body content (20px at the default root size). Default: `var(--ki-space-5xl)`.
+- `--ki-layout-spacing-3xl`: The 3xl spacing step for a stack or grid gap. Default: `var(--ki-space-3xl)`.
+- `--ki-layout-spacing-lg`: The lg spacing step for a stack or grid gap. Default: `var(--ki-space-lg)`.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-layout-spacing-xl`: The xl spacing step for a stack or grid gap. Default: `var(--ki-space-xl)`.
+- `--ki-layout-spacing-xs`: The xs spacing step for a stack or grid gap. Default: `var(--ki-space-xs)`.
+- `--ki-outline-control`: The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as an edge over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation. Default: onmars `light-dark(#86827b,#7f7c77)`, material3 `light-dark(#79747e,#938f99)`.
+- `--ki-outline-danger-high-em`: semantic color for outline danger high em. Default: onmars `light-dark(var(--ki-color-danger-500),var(--ki-color-danger-300))`, material3 `light-dark(#b3261e,#f2b8b5)`.
+- `--ki-surface-transparent`: Transparent surface backing for a background image that carries its own opacity. Default: `var(--ki-color-transparent-black)`.
+- `--ki-text-danger-high-em`: semantic color for text danger high em. Default: onmars `light-dark(#c21a45,var(--ki-color-danger-300))`, material3 `light-dark(#8c1d18,#f2b8b5)`.
+- `--ki-text-high-em`: semantic color for text high em. Default: onmars `light-dark(var(--ki-color-gray-950),#edebe7)`, material3 `light-dark(#1d1b20,#e6e0e9)`.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). Default: `var(--ki-text-med-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.

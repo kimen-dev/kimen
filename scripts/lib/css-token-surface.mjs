@@ -745,6 +745,29 @@ function themeDeclarations({ css, theme, label, base }) {
   return { base: base.base, baseModes: base.modes, densities: base.densities, overrides };
 }
 
+/** Default declarations as shipped, preserving aliases and light-dark() branches. */
+export function buildThemeTokenDefaults({ onmars, material3 }) {
+  const base = defaultThemeDeclarations(onmars, 'tokens.css');
+  const { overrides } = themeDeclarations({
+    css: material3,
+    theme: 'material3',
+    label: 'tokens.material3.css',
+    base,
+  });
+
+  return new Map(
+    [...base.base].map(([name, value]) => {
+      const override = overrides.get(name);
+      return [
+        name,
+        override === undefined || override === value
+          ? { default: value }
+          : { default: value, material3Default: override },
+      ];
+    }),
+  );
+}
+
 /**
  * The declaration map in effect in each published context: the standard
  * appearance, and each mode the default stylesheet declares, layered in the

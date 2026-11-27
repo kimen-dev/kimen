@@ -52,4 +52,4 @@ None.
 
 ## CSS custom properties
 
-- `--ki-relative-time-font-family`: Default body font family for ki-relative-time on a bare page.
+- `--ki-relative-time-font-family`: Default body font family for ki-relative-time on a bare page. Default: `var(--ki-typography-family-body)`.

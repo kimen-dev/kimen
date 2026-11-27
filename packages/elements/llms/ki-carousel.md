@@ -86,24 +86,24 @@ With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
 
 ## CSS custom properties
 
-- `--ki-carousel-control-backdrop-filter`: Complete optional backdrop filter for the carousel controls.
-- `--ki-carousel-control-bg`: Surface of the carousel navigation and rotation controls.
-- `--ki-carousel-control-bg-image`: Optional image layered over the carousel control background color.
-- `--ki-carousel-control-border`: Visible control boundary against the surrounding surface.
-- `--ki-carousel-control-fg`: Text and glyph ink against the carousel control surface.
-- `--ki-carousel-control-gap`: Spacing between carousel controls.
-- `--ki-carousel-control-icon-size`: Glyph size in the carousel navigation controls.
-- `--ki-carousel-control-radius`: Corner radius of the carousel controls.
-- `--ki-carousel-control-shadow`: Resting elevation of the carousel controls.
-- `--ki-carousel-control-size`: Resting carousel control size before applying the density target floor.
-- `--ki-carousel-full-screen-block-size`: Block size of the vertical carousel viewport.
-- `--ki-carousel-gap`: Gap between carousel slides and between the viewport and the controls.
-- `--ki-carousel-preview-min-inline-size`: Minimum inline size of a decorative carousel preview when space permits.
-- `--ki-carousel-radius`: Corner radius shared by the carousel viewport and slide surfaces.
-- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-carousel-control-backdrop-filter`: Complete optional backdrop filter for the carousel controls. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-carousel-control-bg`: Surface of the carousel navigation and rotation controls. Default: `var(--ki-surface-s1)`.
+- `--ki-carousel-control-bg-image`: Optional image layered over the carousel control background color. Default: `var(--ki-surface-image-none)`.
+- `--ki-carousel-control-border`: Visible control boundary against the surrounding surface. Default: `var(--ki-outline-control)`.
+- `--ki-carousel-control-fg`: Text and glyph ink against the carousel control surface. Default: `var(--ki-text-high-em)`.
+- `--ki-carousel-control-gap`: Spacing between carousel controls. Default: `var(--ki-space-xs)`.
+- `--ki-carousel-control-icon-size`: Glyph size in the carousel navigation controls. Default: `var(--ki-space-5xl)`.
+- `--ki-carousel-control-radius`: Corner radius of the carousel controls. Default: `var(--ki-radius-round)`.
+- `--ki-carousel-control-shadow`: Resting elevation of the carousel controls. Default: `var(--ki-elevation-e2)`.
+- `--ki-carousel-control-size`: Resting carousel control size before applying the density target floor. Default: `var(--ki-control-size-sm)`.
+- `--ki-carousel-full-screen-block-size`: Block size of the vertical carousel viewport. Default: `var(--ki-size-surface-xs)`.
+- `--ki-carousel-gap`: Gap between carousel slides and between the viewport and the controls. Default: `var(--ki-space-xl)`.
+- `--ki-carousel-preview-min-inline-size`: Minimum inline size of a decorative carousel preview when space permits. Default: `var(--ki-control-size-sm)`.
+- `--ki-carousel-radius`: Corner radius shared by the carousel viewport and slide surfaces. Default: `var(--ki-radius-big-component-xs)`.
+- `--ki-control-border-width`: Stroke width of the boundary of a compact control. Default: `var(--ki-size-border-hairline)`.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

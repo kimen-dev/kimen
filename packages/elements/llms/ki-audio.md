@@ -110,57 +110,57 @@ None.
 
 ## CSS custom properties
 
-- `--ki-audio-backdrop-filter`: Complete backdrop filter applied to the player, off by default.
-- `--ki-audio-bg`: Background behind the player and transcript link.
-- `--ki-audio-bg-image`: Optional image painted over the player background.
-- `--ki-audio-border`: Boundary of the player panel.
-- `--ki-audio-fg`: Text on the player background.
-- `--ki-audio-progress-bg`: Colour of the elapsed timeline and seek thumb.
-- `--ki-audio-radius`: Corner radius of the player panel.
-- `--ki-audio-speed-radius`: Corner radius of the playback speed button.
-- `--ki-audio-title-family`: Font family of the recording title.
-- `--ki-audio-track-bg`: Colour of the inactive timeline.
-- `--ki-button-ghost-neutral-disabled-border`: color used by the button component for ghost neutral disabled border.
-- `--ki-button-ghost-neutral-hover-border`: color used by the button component for ghost neutral hover border.
-- `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border.
-- `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).
-- `--ki-button-primary-neutral-disabled-border`: color used by the button component for primary neutral disabled border.
-- `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).
-- `--ki-button-primary-neutral-hover-bg`: color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
-- `--ki-button-primary-neutral-hover-border`: color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2).
-- `--ki-button-primary-neutral-hover-fg`: color used by the button component for primary neutral hover foreground.
-- `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).
-- `--ki-button-primary-neutral-rest-border`: color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2).
-- `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
-- `--ki-button-quaternary-neutral-disabled-bg`: color used by the button component for quaternary neutral disabled background.
-- `--ki-button-quaternary-neutral-disabled-fg`: color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars.
-- `--ki-button-quaternary-neutral-hover-bg`: color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill).
-- `--ki-button-quaternary-neutral-hover-fg`: color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent).
-- `--ki-button-quaternary-neutral-rest-bg`: color used by the button component for quaternary neutral rest background.
-- `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent).
-- `--ki-control-border-width`: Stroke width of the boundary of a compact control.
-- `--ki-control-radius-track`: Corner radius of a track containing adjacent controls.
-- `--ki-control-size-md`: Medium control track height, 40 CSS px at the default root size.
-- `--ki-control-size-sm`: Small control track height, 32 CSS px at the default root size.
-- `--ki-corner-activity-mark`: Round corners for rings and typing dots.
-- `--ki-corner-inline`: Small radius for an outline around inline content.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-glyph-size-md`: Medium glyph for body content (20px at the default root size).
-- `--ki-glyph-size-sm`: Small glyph for dense layouts (16px at the default root size).
-- `--ki-media-layout-inline-max`: Maximum inline size of a self-contained media control panel.
-- `--ki-scale-control-coarse-target`: Minimum grip target when a value scale has a coarse primary pointer.
-- `--ki-scale-control-track-height`: Thickness of the inactive rail of a value scale.
-- `--ki-spacing-action-inset`: Interior space at the edge of an action surface or divider.
-- `--ki-spacing-block`: Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl.
-- `--ki-spacing-media-caption`: Block spacing between a media frame and its caption.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-underline-offset`: Gap between text and its underline.
-- `--ki-typography-underline-thickness`: Stroke width of a resting text underline.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-audio-backdrop-filter`: Complete backdrop filter applied to the player, off by default. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-audio-bg`: Background behind the player and transcript link. Default: `var(--ki-surface-raised)`.
+- `--ki-audio-bg-image`: Optional image painted over the player background. Default: `var(--ki-surface-image-none)`.
+- `--ki-audio-border`: Boundary of the player panel. Default: `var(--ki-outline-low-em)`.
+- `--ki-audio-fg`: Text on the player background. Default: `var(--ki-text-high-em)`.
+- `--ki-audio-progress-bg`: Colour of the elapsed timeline and seek thumb. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-audio-radius`: Corner radius of the player panel. Default: `var(--ki-corner-media-panel)`.
+- `--ki-audio-speed-radius`: Corner radius of the playback speed button. Default: onmars `var(--ki-control-radius-item)`, material3 `var(--ki-control-compact-pill-radius)`.
+- `--ki-audio-title-family`: Font family of the recording title. Default: `var(--ki-typography-family-heading)`.
+- `--ki-audio-track-bg`: Colour of the inactive timeline. Default: `var(--ki-outline-control)`.
+- `--ki-button-ghost-neutral-disabled-border`: color used by the button component for ghost neutral disabled border. Default: `var(--ki-outline-none)`.
+- `--ki-button-ghost-neutral-hover-border`: color used by the button component for ghost neutral hover border. Default: `var(--ki-outline-none)`.
+- `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border. Default: `var(--ki-outline-none)`.
+- `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification). Default: `var(--ki-surface-disabled-low-em)`.
+- `--ki-button-primary-neutral-disabled-border`: color used by the button component for primary neutral disabled border. Default: `var(--ki-outline-none)`.
+- `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification). Default: `var(--ki-text-muted)`.
+- `--ki-button-primary-neutral-hover-bg`: color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay). Default: onmars `var(--ki-surface-primary-med-em-hover)`, material3 `var(--ki-surface-primary-med-em)`.
+- `--ki-button-primary-neutral-hover-border`: color used by the button component for primary neutral hover border (MarsUI top/inline edge; none in onmars v2). Default: onmars `var(--ki-outline-primary-button-top)`, material3 `var(--ki-outline-none)`.
+- `--ki-button-primary-neutral-hover-fg`: color used by the button component for primary neutral hover foreground. Default: `var(--ki-text-primary-on-primary)`.
+- `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500). Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-button-primary-neutral-rest-border`: color used by the button component for primary neutral rest border (MarsUI top/inline edge; none in onmars v2). Default: onmars `var(--ki-outline-primary-button-top)`, material3 `var(--ki-outline-none)`.
+- `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground. Default: `var(--ki-text-primary-on-primary)`.
+- `--ki-button-quaternary-neutral-disabled-bg`: color used by the button component for quaternary neutral disabled background. Default: `var(--ki-transparent-inverse)`.
+- `--ki-button-quaternary-neutral-disabled-fg`: color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars. Default: onmars `var(--ki-text-base-em)`, material3 `var(--ki-text-muted)`.
+- `--ki-button-quaternary-neutral-hover-bg`: color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover-overlay-inverse Black/3 wash over the transparent rest fill). Default: onmars `var(--ki-surface-hover-overlay-inverse)`, material3 `var(--ki-surface-primary-base-em-alpha)`.
+- `--ki-button-quaternary-neutral-hover-fg`: color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; never the accent). Default: onmars `var(--ki-text-supporting)`, material3 `var(--ki-text-primary-high-em)`.
+- `--ki-button-quaternary-neutral-rest-bg`: color used by the button component for quaternary neutral rest background. Default: `var(--ki-transparent-inverse)`.
+- `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; never the accent). Default: onmars `var(--ki-text-supporting)`, material3 `var(--ki-text-primary-high-em)`.
+- `--ki-control-border-width`: Stroke width of the boundary of a compact control. Default: `var(--ki-size-border-hairline)`.
+- `--ki-control-radius-track`: Corner radius of a track containing adjacent controls. Default: `var(--ki-radius-component-md)`.
+- `--ki-control-size-md`: Medium control track height, 40 CSS px at the default root size. Default: `var(--ki-space-12xl)`.
+- `--ki-control-size-sm`: Small control track height, 32 CSS px at the default root size. Default: `var(--ki-space-10xl)`.
+- `--ki-corner-activity-mark`: Round corners for rings and typing dots. Default: `var(--ki-radius-round)`.
+- `--ki-corner-inline`: Small radius for an outline around inline content. Default: `var(--ki-radius-xxs)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-glyph-size-md`: Medium glyph for body content (20px at the default root size). Default: `var(--ki-space-5xl)`.
+- `--ki-glyph-size-sm`: Small glyph for dense layouts (16px at the default root size). Default: `var(--ki-space-3xl)`.
+- `--ki-media-layout-inline-max`: Maximum inline size of a self-contained media control panel. Default: `var(--ki-size-surface-md)`.
+- `--ki-scale-control-coarse-target`: Minimum grip target when a value scale has a coarse primary pointer. Default: `var(--ki-size-target-touch)`.
+- `--ki-scale-control-track-height`: Thickness of the inactive rail of a value scale. Default: `var(--ki-space-xs)`.
+- `--ki-spacing-action-inset`: Interior space at the edge of an action surface or divider. Default: `var(--ki-space-xs)`.
+- `--ki-spacing-block`: Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. Default: `var(--ki-space-xl)`.
+- `--ki-spacing-media-caption`: Block spacing between a media frame and its caption. Default: `var(--ki-space-xs)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-underline-offset`: Gap between text and its underline. Default: `var(--ki-size-text-decoration-offset)`.
+- `--ki-typography-underline-thickness`: Stroke width of a resting text underline. Default: `var(--ki-size-border-hairline)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.
