@@ -95,6 +95,12 @@ server.registerTool(
 
 ## What to know
 
+- For model-authored specs, use the served surface's vocabulary. For a surface
+  returned by `defineKimenSurface()`, call
+  `catalogPrompt(surface.catalog, { icons: surface.icons, verbosity: 'compact' })`
+  or pass the same catalog and icons to `uiSpecJsonSchema` or `uiSpecTool`.
+  Check `derivation.ok` before using its artifact and `surface.validate(spec).ok`
+  before returning the spec.
 - The spec travels in `structuredContent.kimenSurface.spec`; `content` is the
   text the model and non-UI hosts see. Always write a meaningful text
   fallback.

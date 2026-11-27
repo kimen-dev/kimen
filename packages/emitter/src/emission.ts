@@ -75,7 +75,7 @@ function normalizeTree(root: unknown): unknown {
         }
         continue;
       }
-      if ((key === 'action' || key === 'id') && value === null) {
+      if ((key === 'action' || key === 'id' || key === 'collect') && value === null) {
         continue;
       }
       if (key === 'action' && isRecord(value)) {
@@ -123,7 +123,7 @@ function normalizeTree(root: unknown): unknown {
 /**
  * Strips strict-mode placeholders from an emission (S13): null-valued
  * props, null action bindings, null events of a binding per event and null
- * node ids disappear, empty props containers are dropped, and a binding per
+ * node ids and null collection maps disappear, empty props containers are dropped, and a binding per
  * event left with no event goes, and everything else — including values a model got WRONG — is
  * preserved untouched, so validation still sees the real mistake.
  * Pure data cleanup over a fresh clone; the input is never mutated and

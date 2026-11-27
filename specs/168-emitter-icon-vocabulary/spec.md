@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-27
 
-**Status**: Draft for 0.5.0. S4 requires explicit founder confirmation (Art. VIII).
+**Status**: Approved for 0.5.0 on 2026-11-27.
 
 ## Problem
 
@@ -118,9 +118,9 @@ MCP Apps recipes under `plugins/kimen/skills/kimen-genui/references/`
 (`catalog-direct.md` and `mcp-apps-server.md`). Update `docs/genui-surfaces.json`
 and regenerate `llms/emitter.md` and `llms-full.txt`.
 
-## Open questions for the founder
+## Founder decisions (2026-11-27)
 
-1. Is an empty list best treated as a configuration error for 0.5.0, or must
-   hosts express a surface with zero available icons in this release?
-2. Confirm S4’s existing registration and selection checks as the runtime
-   boundary for the new advisory artifacts.
+- An empty list returns `invalid-option` at `options.icons`. A host with no
+  icons leaves `ki-icon` out of `components`.
+- S4 is approved under Art. VIII. Registration and surface selection remain
+  the renderer's checks for whether a glyph is available.

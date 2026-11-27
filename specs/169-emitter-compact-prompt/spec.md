@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-27
 
-**Status**: Draft for 0.5.0.
+**Status**: Approved for 0.5.0 on 2026-11-27.
 
 ## Problem and measurement
 
@@ -104,8 +104,8 @@ At implementation, document the option and byte-based comparison in
 Update `docs/genui-surfaces.json` and regenerate `llms/emitter.md` and
 `llms-full.txt`.
 
-## Open questions for the founder
+## Founder decisions (2026-11-27)
 
-1. Approve the proposed 85% ceiling for both catalog selections?
-2. May compact prose paraphrase essential usage constraints when their
-   meaning is preserved, or are there rules that must be reproduced verbatim?
+- Keep the 85% UTF-8 byte ceiling for both catalog selections.
+- Compact guidance may paraphrase. S1 and S2 require it to retain the rules
+  for valid emissions.

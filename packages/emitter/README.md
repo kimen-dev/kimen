@@ -59,8 +59,13 @@ uiSpecTool(catalog, { target: 'openai-strict' });        // → { ok, artifact: 
 - **Tool** (`uiSpecTool`): `{ name: 'emit_ui', description, inputSchema }`
   — maps mechanically onto any provider's tool/function surface.
 
-Both the prompt and the schema offer a prop's values as a closed set only when
-the catalog declares it an `enum`. In the built-in catalog that includes
+Pass `{ components, icons }` to the prompt, schema or tool and use the same
+list with `selectSpecIcons(icons)` after importing the host's glyphs. Add
+`verbosity: 'compact'` to the prompt for shorter guidance. Omission preserves
+the standard text. [See the cart surface recipe](https://kimen.dev/docs/guides/emitting-specs/#configure-the-cart-surface).
+
+The prompt and schema close icon props over `icons` when provided. Other
+props get their closed set from the catalog's `enum` constraint. In the built-in catalog that includes
 `ki-alert` and `ki-toast` `tone` and `ki-toaster` `placement`, whose elements
 accept any string in markup (spec 164). A consumer prop declared as an open
 `string` with `documentedValues` reaches the model as a plain string; declare
@@ -70,7 +75,7 @@ it an `enum` when the model must pick one of its values.
 
 | Provider mode | Target | Why |
 |---|---|---|
-| OpenAI Structured Outputs / strict function calling | `openai-strict` | Stays inside the documented subset: `pattern` instead of `minLength`, every size limit checked. A test measures the artifact against the published numbers. The subset closes every object over listed properties, so a node's `collect` (a map of free names) is not offered there: a form under this target binds an action per field. A binding per event is offered with every declared event listed, each an action name or `null`. |
+| OpenAI Structured Outputs / strict function calling | `openai-strict` | Stays inside the documented subset: `pattern` instead of `minLength`, every size limit checked. A test measures the artifact against the published numbers. Pass `collect: { save: ['customerName', 'region'] }` to offer exact collection keys for a button's named `save` action. Each value names a field's node ID. An omitted declaration offers no strict map. A binding per event is offered with every declared event listed, each an action name or `null`. |
 | Anthropic tools | `draft-2020-12` on a regular (non-strict) tool | Anthropic's strict mode rejects recursive schemas and caps a request at 24 optional and 16 union-typed parameters; no catalog-specialized schema of a real catalog fits, so the kit ships no strict target for it. |
 | Anything else that takes a JSON Schema as guidance | `draft-2020-12` | The neutral default. |
 | No schema support at all | prompt only | `catalogPrompt` works with any model. |
@@ -105,8 +110,8 @@ renderUiSpec(spec, { surface, catalog });   // renders the ACCEPTED emission
 
 `normalizeEmission` strips exactly the placeholders strict-mode
 all-required schemas force a model to emit (null-valued props, null action
-bindings and null events of a binding per event, null node ids, empty props
-containers) and touches nothing else — a value the
+bindings and null events of a binding per event, null node ids, null collection maps and empty
+props containers) and touches nothing else — a value the
 model got WRONG stays wrong so validation reports it. `repairPrompt`
 formats every issue (code, path, named offender) into a single corrective
 message; the one-round-then-fail-closed policy is deliberate and fixed.

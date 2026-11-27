@@ -11,7 +11,7 @@ import type { Catalog, CatalogEntry, CatalogPropConstraint } from '@kimen/catalo
 import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS, NODE_ID_GRAMMAR } from '@kimen/catalog';
 
 import type { Derivation, EmitterIssue, ResolvedEntry } from './issues.js';
-import { resolveEntries, versionStamp } from './issues.js';
+import { invalidOption, resolveEntries, versionStamp } from './issues.js';
 
 /**
  * Schema lowering targets (research D2). `draft-2020-12` is the stable
@@ -32,6 +32,12 @@ export type EmitterTarget = 'draft-2020-12' | 'openai-strict';
 export interface DerivationOptions {
   /** Restrict the artifact to these tags; default: the whole catalog. */
   readonly components?: readonly string[];
+  /** Glyph names this host offers. Pass the same list to selectSpecIcons. */
+  readonly icons?: readonly string[];
+  /** Compact catalogPrompt output. Omit for the standard prompt. */
+  readonly verbosity?: 'compact';
+  /** Exact data keys by named button action, for the openai-strict schema and tool. */
+  readonly collect?: Readonly<Record<string, readonly string[]>>;
   /** Schema lowering target; default `draft-2020-12`. */
   readonly target?: EmitterTarget;
 }
@@ -78,6 +84,7 @@ function fnv1a(input: string): string {
 // (027 S16), and "contains one non-white-space character" is the same rule
 // as a regular expression every target supports.
 const NON_BLANK = '\\S';
+const NODE_ID = { pattern: NODE_ID_GRAMMAR.source, type: 'string' };
 
 /**
  * An action name: non-empty at the boundary. The default dialect says so
@@ -170,8 +177,7 @@ function componentBranch(
   // The optional stable node id (spec 035), in the boundary's own grammar so
   // a schema-accepted id is a boundary-accepted one (S19). Uniqueness within
   // the document is a cross-node rule only the boundary can state.
-  const id = { pattern: NODE_ID_GRAMMAR.source, type: 'string' };
-  properties['id'] = strict ? { anyOf: [id, { type: 'null' }] } : id;
+  properties['id'] = nullable(NODE_ID, strict);
   if (strict) {
     required.push('id');
   }
@@ -204,13 +210,10 @@ function componentBranch(
       required.push('action');
     }
     // The fields a bound action collects (spec 153): data names mapped to
-    // node ids; the prompt states the rules. OpenAI's strict subset closes
-    // every object over listed properties, so a map of free names has no
-    // form there and only the default dialect offers it; the boundary
-    // accepts it from any emitter.
+    // node ids. Only the default dialect offers a map of free names.
     if (!strict) {
       properties['collect'] = {
-        additionalProperties: { pattern: NODE_ID_GRAMMAR.source, type: 'string' },
+        additionalProperties: NODE_ID,
         maxProperties: COLLECT_MAX_ENTRIES,
         type: 'object',
       };
@@ -235,6 +238,92 @@ function componentBranch(
     properties,
     required,
     type: 'object',
+  };
+}
+
+type Collection = readonly (readonly [action: string, keys: readonly string[]])[];
+// Match the UI-spec data boundary's forbidden own keys without exposing its set.
+const FORBIDDEN_COLLECT_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
+function resolveCollection(value: unknown): Derivation<Collection> {
+  const path = 'options.collect';
+  if (value === undefined) return { ok: true, artifact: [], issues: [] };
+  if (
+    value === null ||
+    typeof value !== 'object' ||
+    Array.isArray(value) ||
+    ![Object.prototype, null].includes(Object.getPrototypeOf(value) as object | null)
+  ) {
+    return invalidOption(path, 'collect must be a record of named actions and their data keys');
+  }
+  const collections: [string, string[]][] = [];
+  for (const action of Reflect.ownKeys(value)) {
+    if (typeof action !== 'string' || action.trim() === '' || FORBIDDEN_COLLECT_KEYS.has(action)) {
+      return invalidOption(
+        path,
+        'collect requires a nonblank, permitted action name',
+        String(action),
+      );
+    }
+    const keys: unknown = Object.getOwnPropertyDescriptor(value, action)?.value;
+    const at = `${path}.${action}`;
+    if (!Array.isArray(keys) || keys.length === 0 || keys.length > COLLECT_MAX_ENTRIES) {
+      return invalidOption(
+        at,
+        `declare 1 to ${String(COLLECT_MAX_ENTRIES)} distinct collection keys`,
+      );
+    }
+    const unique = new Set<string>();
+    for (const key of keys as unknown[]) {
+      if (
+        typeof key !== 'string' ||
+        key.trim() === '' ||
+        FORBIDDEN_COLLECT_KEYS.has(key) ||
+        unique.has(key)
+      ) {
+        return invalidOption(
+          at,
+          'collection keys must be nonblank, permitted and distinct',
+          typeof key === 'string' ? key : undefined,
+        );
+      }
+      unique.add(key);
+    }
+    collections.push([action, [...unique].sort()]);
+  }
+  return { ok: true, artifact: collections.sort(([a], [b]) => (a < b ? -1 : 1)), issues: [] };
+}
+
+/** Strict objects need a separate closed branch for each bound key set. */
+function strictCollectionBranch(
+  base: Record<string, unknown>,
+  entry: CatalogEntry,
+  collections: Collection,
+): Record<string, unknown> {
+  const branches = collections.filter(([, keys]) =>
+    keys.every((key) => !Object.hasOwn(entry.props, key)),
+  );
+  if (branches.length === 0) return base;
+  const branch = (action: unknown, collect: Record<string, unknown>) => ({
+    ...base,
+    properties: { ...(base['properties'] as Record<string, unknown>), action, collect },
+    required: [...(base['required'] as string[]), 'collect'],
+  });
+  return {
+    anyOf: [
+      branch((base['properties'] as Record<string, unknown>)['action'], { type: 'null' }),
+      ...branches.map(([action, keys]) =>
+        branch(
+          { const: action },
+          {
+            additionalProperties: false,
+            properties: Object.fromEntries(keys.map((key) => [key, NODE_ID])),
+            required: keys,
+            type: 'object',
+          },
+        ),
+      ),
+    ],
   };
 }
 
@@ -317,10 +406,13 @@ function tallyDocument(artifact: unknown): LimitTally {
  * many-short-enums component could be blamed for a nameAndEnumChars overflow
  * actually caused by another component's single very long value).
  */
-function limitContributors(entries: readonly ResolvedEntry[]): ReadonlyMap<string, LimitTally> {
+function limitContributors(
+  entries: readonly ResolvedEntry[],
+  definitions: Record<string, unknown>,
+): ReadonlyMap<string, LimitTally> {
   const perEntry = new Map<string, LimitTally>();
-  for (const [tag, entry] of entries) {
-    perEntry.set(tag, tallyDocument(componentBranch(tag, entry, true, '#/$defs/child')));
+  for (const [tag] of entries) {
+    perEntry.set(tag, tallyDocument(definitions[tag]));
   }
   return perEntry;
 }
@@ -340,9 +432,10 @@ function worstFor(limit: keyof LimitTally, perEntry: ReadonlyMap<string, LimitTa
 function openAiLimitIssues(
   artifact: unknown,
   entries: readonly ResolvedEntry[],
+  definitions: Record<string, unknown>,
 ): readonly EmitterIssue[] {
   const tally = tallyDocument(artifact);
-  const perEntry = limitContributors(entries);
+  const perEntry = limitContributors(entries, definitions);
   const issues: EmitterIssue[] = [];
   const totals: readonly (readonly [keyof typeof OPENAI_LIMITS, number])[] = [
     ['enumValues', tally.enumValues],
@@ -403,13 +496,15 @@ function baseDocument(catalog: Catalog, target: EmitterTarget): Record<string, u
 function recursiveDefinitions(
   entries: readonly ResolvedEntry[],
   strict: boolean,
+  collections: Collection,
 ): Record<string, unknown> {
   const defs: Record<string, unknown> = {
     child: { anyOf: [{ type: 'string' }, { $ref: '#/$defs/node' }] },
     node: { anyOf: entries.map(([tag]) => ({ $ref: `#/$defs/${tag}` })) },
   };
   for (const [tag, entry] of entries) {
-    defs[tag] = componentBranch(tag, entry, strict, '#/$defs/child');
+    const base = componentBranch(tag, entry, strict, '#/$defs/child');
+    defs[tag] = tag === 'ki-button' ? strictCollectionBranch(base, entry, collections) : base;
   }
   return defs;
 }
@@ -424,7 +519,7 @@ export function uiSpecJsonSchema(
   catalog: Catalog,
   options: DerivationOptions = {},
 ): Derivation<Record<string, unknown>> {
-  const resolved = resolveEntries(catalog, options.components);
+  const resolved = resolveEntries(catalog, options.components, options.icons);
   if (resolved.issues.length > 0) {
     return { issues: resolved.issues, ok: false };
   }
@@ -446,8 +541,11 @@ export function uiSpecJsonSchema(
     };
   }
   const strict = target === 'openai-strict';
+  const collection = resolveCollection(strict ? options.collect : undefined);
+  if (!collection.ok) return collection;
   const document = baseDocument(catalog, target);
-  document['$defs'] = recursiveDefinitions(resolved.entries, strict);
+  const definitions = recursiveDefinitions(resolved.entries, strict, collection.artifact);
+  document['$defs'] = definitions;
   const artifact = pruneUndefined(document) as Record<string, unknown>;
   // Finalize the $id with a content hash of the built $defs, so two materially
   // different derivations (different catalogs, subsets or targets) never share
@@ -455,7 +553,7 @@ export function uiSpecJsonSchema(
   // built in sorted order.
   artifact['$id'] = `${String(artifact['$id'])}/${fnv1a(JSON.stringify(artifact['$defs']))}`;
   if (target === 'openai-strict') {
-    const limitIssues = openAiLimitIssues(artifact, resolved.entries);
+    const limitIssues = openAiLimitIssues(artifact, resolved.entries, definitions);
     if (limitIssues.length > 0) {
       return { issues: limitIssues, ok: false };
     }

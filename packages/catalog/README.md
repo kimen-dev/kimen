@@ -389,6 +389,12 @@ MCP Apps document and `kimen-mcp` both declare their stock selection, so they
 accept and reject the same names. Without a declaration, any imported glyph
 is accepted.
 
+When deriving a prompt, schema or tool, pass that same list as `icons`.
+A strict tool can declare the keys its button action collects, for example
+`collect: { save: ['customerName'] }`. The renderer reads the live value
+from the referenced node and passes it to the host in the action report.
+[See the cart surface recipe](https://kimen.dev/docs/guides/emitting-specs/#configure-the-cart-surface).
+
 `preflightUiSpec(input, options?)` returns the renderer's verdict without a
 DOM: it runs exactly the preparation `renderUiSpec` runs before its first
 attach (purity wall, version gate, payload budget, catalog validation, then

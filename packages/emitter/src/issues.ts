@@ -5,7 +5,7 @@
  * offenders (FR-009) — and reports failures in the 032 diagnostic idiom.
  */
 import type { Catalog, CatalogEntry } from '@kimen/catalog';
-import { CATALOG_SCHEMA_VERSION } from '@kimen/catalog';
+import { CATALOG_SCHEMA_VERSION, NODE_ID_GRAMMAR } from '@kimen/catalog';
 
 /** Machine-readable derivation rejection classes (spec 033 FR-007/FR-009). */
 export type EmitterIssueCode =
@@ -42,6 +42,10 @@ export type ResolvedEntry = readonly [string, CatalogEntry];
 export interface ResolvedEntries {
   readonly entries: readonly ResolvedEntry[];
   readonly issues: readonly EmitterIssue[];
+}
+
+export function invalidOption(path: string, message: string, value?: string): Derivation<never> {
+  return { ok: false, issues: [{ code: 'invalid-option', path, message, value }] };
 }
 
 /**
@@ -120,7 +124,11 @@ function isEntryShaped(value: unknown): value is CatalogEntry {
   );
 }
 
-export function resolveEntries(catalog: Catalog, components?: readonly string[]): ResolvedEntries {
+export function resolveEntries(
+  catalog: Catalog,
+  components?: readonly string[],
+  icons?: readonly string[],
+): ResolvedEntries {
   const issues: EmitterIssue[] = [];
   // JS callers can hand over anything despite the Catalog type; the guard
   // inspects the value as unknown so the check is real, not tautological.
@@ -219,7 +227,57 @@ export function resolveEntries(catalog: Catalog, components?: readonly string[])
   if (issues.length > 0) {
     return { entries: [], issues };
   }
-  return { entries, issues: [] };
+  if (icons === undefined) {
+    return { entries, issues: [] };
+  }
+  const vocabulary = restrictIcons(entries, icons);
+  return vocabulary.ok
+    ? { entries: vocabulary.artifact, issues: [] }
+    : { entries: [], issues: vocabulary.issues };
+}
+
+/** Close icon props for artifact derivation, leaving the runtime catalog intact. */
+function restrictIcons(
+  entries: readonly ResolvedEntry[],
+  icons: readonly string[],
+): Derivation<readonly ResolvedEntry[]> {
+  const path = 'options.icons';
+  const candidate: unknown = icons;
+  if (
+    !Array.isArray(candidate) ||
+    icons.length === 0 ||
+    [...icons].some((name: unknown) => typeof name !== 'string' || name.trim() === '')
+  ) {
+    return invalidOption(path, 'icons must be a nonempty list of nonblank glyph names');
+  }
+  const values = [...new Set(icons)];
+  const narrowed: ResolvedEntry[] = [];
+  for (const [tag, entry] of entries) {
+    const props = { ...entry.props };
+    for (const name of tag === 'ki-icon' ? ['name', 'icon-name'] : ['icon-name']) {
+      const prop = props[name];
+      if (prop === undefined) continue;
+      const conflict = values.find((value) => {
+        if (prop.format === 'idref') return !NODE_ID_GRAMMAR.test(value);
+        // A URL prop can be restricted by the host's origin policy; a glyph
+        // selection does not carry enough information to offer URL values.
+        if (prop.format === 'url') return true;
+        if (prop.type === 'enum') return prop.values?.includes(value) !== true;
+        return prop.type !== 'string' && prop.type !== 'number-or-string';
+      });
+      if (conflict !== undefined) {
+        return invalidOption(path, `glyph "${conflict}" conflicts with ${tag}.${name}`, conflict);
+      }
+      // The prop prose can mention built-in glyphs unavailable here.
+      const constraint = { ...prop, description: '', type: 'enum' as const, values };
+      if (typeof constraint.default !== 'string' || !values.includes(constraint.default)) {
+        delete constraint.default;
+      }
+      props[name] = constraint;
+    }
+    narrowed.push([tag, { ...entry, props }]);
+  }
+  return { artifact: narrowed, issues: [], ok: true };
 }
 
 /** The human version stamp every artifact carries (S10, FR-012). */

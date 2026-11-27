@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-27
 
-**Status**: Draft for 0.5.0. S1–S7 require explicit founder confirmation (Art. VIII).
+**Status**: Approved for 0.5.0 on 2026-11-27.
 
 ## Problem
 
@@ -144,10 +144,9 @@ and `plugins/kimen/skills/kimen-genui/references/catalog-direct.md`.
 Update `docs/genui-surfaces.json` and regenerate `llms/emitter.md` and
 `llms-full.txt`.
 
-## Open questions for the founder
+## Founder decisions (2026-11-27)
 
-1. Approve one exact key set per action and a single named binding for 0.5.0?
-   Does the demo need collection on per-event bindings or optional keys in a
-   populated map?
-2. Explicitly confirm S1–S7, including that the strict schema narrows the
-   emission while the host remains responsible for validation and authorization.
+- S1–S7 are approved under Art. VIII. Host validation and authorization
+  remain required for action reports.
+- For 0.5.0, offer collection on single named button actions only. A
+  populated map contains exactly the keys declared for its bound action.

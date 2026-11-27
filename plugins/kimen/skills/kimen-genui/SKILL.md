@@ -112,9 +112,11 @@ and `kimen_describe_component` (MCP), from `catalogPrompt` (emitter), or from
 ## The loop that makes it reliable
 
 1. **Constrain** the model with the emitter's artifacts, restricted to the
-   components the surface needs (`{ components: [...] }`). The full catalog
-   prompt is about 200 KB (roughly 50,000 tokens); eight components are
-   about 23 KB.
+   components the surface needs (`{ components }`). For prompt-only or
+   combined guidance, add `verbosity: 'compact'`. Import each host glyph
+   and pass the same `icons` list to the emitter and `selectSpecIcons()`.
+   With `openai-strict`, declare exact `collect` keys per named button
+   action. See [catalog-direct.md](references/catalog-direct.md).
 2. **Validate** every emission (`validateUiSpec`, or `preflightUiSpec` where
    there is no DOM, or the `kimen_validate_spec` tool). Validation returns
    every issue with a code, a path and the offending value.

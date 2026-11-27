@@ -139,6 +139,12 @@ The person types "Buy milk" and 2, then activates **Add**. The host receives
   node's own component declares) and `collect-budget` (more than
   `COLLECT_MAX_ENTRIES`, 32, entries).
 
+With `openai-strict`, the emitter can offer an exact set of collection keys
+for a button bound to one action. `collect: null` means the report has no
+collection. Normalization drops that placeholder before validation.
+Use the same host glyph list in `selectSpecIcons()` and the emitter's
+`icons` option. [See the cart surface recipe](./emitting-specs.md#configure-the-cart-surface).
+
 ### An action per event
 
 A node bound by name fires its action on one event, the one its catalog

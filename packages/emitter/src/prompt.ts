@@ -7,7 +7,7 @@
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
 import { COLLECT_MAX_ENTRIES, NATIVE_PRIMITIVE_TAGS, validateUiSpec } from '@kimen/catalog';
 import type { Derivation, ResolvedEntry } from './issues.js';
-import { resolveEntries, versionStamp } from './issues.js';
+import { invalidOption, resolveEntries, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
 
 /** The declared range of a bounded number as the prompt states it (S17). */
@@ -22,16 +22,38 @@ function rangeText(constraint: CatalogPropConstraint): string {
   return maximum === undefined ? '' : `, at most ${String(maximum)}`;
 }
 
-function propLine(name: string, constraint: CatalogPropConstraint): string {
+// Usage paragraphs come from the component contract. Keep those and any
+// preceding operational rules while omitting plain property descriptions.
+const RULE_PROSE =
+  /\b(?:always|must|never|requires?|only|forbids?|do not|should|choose|keep|avoid|supply|provide|match|belongs|invalid|rejected|when|if)\b/iu;
+
+function compactPropDescription(description: string): string {
+  const usage = description.search(/\nWhen (?:NOT )?to use:/u);
+  const summary = usage === -1 ? description : description.slice(0, usage);
+  if (RULE_PROSE.test(summary)) return description;
+  const directive = summary.search(
+    /(?<=^|\.\s)(?:Set|Pass|Pair|Use|Include|Omit|Place|Add|Remove|Give|Declare)\b/u,
+  );
+  if (directive !== -1) return description.slice(directive);
+  return usage === -1 ? '' : description.slice(usage + 1);
+}
+
+function propLine(
+  name: string,
+  constraint: CatalogPropConstraint,
+  compact: boolean,
+  quoteValues: boolean,
+): string {
   const kind =
     constraint.type === 'enum'
-      ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
+      ? `enum: ${(constraint.values ?? []).map((value) => (quoteValues ? JSON.stringify(value) : `"${value}"`)).join(' | ')}`
       : `${constraint.type}${rangeText(constraint)}`;
   const url =
     constraint.format === 'url' ? ', URL' : constraint.format === 'idref' ? ', node id' : '';
   const emptiable = constraint.allowEmpty === true ? ', may be empty' : '';
   const required = constraint.required === true ? `, required${emptiable}` : '';
-  const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
+  const prose = compact ? compactPropDescription(constraint.description) : constraint.description;
+  const description = prose === '' ? '' : ` — ${prose}`;
   const fallback =
     constraint.default === undefined ? '' : ` (default: ${JSON.stringify(constraint.default)})`;
   return `  - \`${name}\` (${kind}${url}${required})${description}${fallback}`;
@@ -55,7 +77,12 @@ function exampleValue(constraint: CatalogPropConstraint): boolean | number | str
   }
 }
 
-function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
+function componentBlock(
+  tag: string,
+  entry: CatalogEntry,
+  compact: boolean,
+  quoteValues: boolean,
+): readonly string[] {
   const lines: string[] = [`### <${tag}>`, entry.description];
   lines.push(`- Use when: ${entry.whenToUse}`, `- Avoid when: ${entry.whenNotToUse}`);
   if (NATIVE_PRIMITIVE_TAGS.includes(tag)) {
@@ -65,7 +92,7 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
   if (propEntries.length > 0) {
     lines.push('- Props:');
     for (const [name, constraint] of propEntries) {
-      lines.push(propLine(name, constraint));
+      lines.push(propLine(name, constraint, compact && tag.startsWith('ki-'), quoteValues));
     }
   }
   const slotNames = Object.keys(entry.slots);
@@ -162,7 +189,11 @@ export function catalogPrompt(
   catalog: Catalog,
   options: DerivationOptions = {},
 ): Derivation<string> {
-  const resolved = resolveEntries(catalog, options.components);
+  const compact = options.verbosity === 'compact';
+  if (options.verbosity !== undefined && !compact) {
+    return invalidOption('options.verbosity', 'verbosity must be compact when provided');
+  }
+  const resolved = resolveEntries(catalog, options.components, options.icons);
   if (resolved.issues.length > 0) {
     return { issues: resolved.issues, ok: false };
   }
@@ -186,8 +217,18 @@ export function catalogPrompt(
     '',
     '## Components',
   ];
+  if (compact) {
+    // Keep the cross-prop rules that are not expressed by the prop types.
+    lines.splice(
+      lines.indexOf('## Components') - 1,
+      0,
+      '- For a dialog command, pair "command" with "commandfor", the id of a ki-dialog in the same spec.',
+      '- A button reports an action with type "button". Keep "href-template" off a ki-pagination that binds actions.',
+      '- To bind a removal action to a ki-chip of type "input", set "removable" to true.',
+    );
+  }
   for (const [tag, entry] of resolved.entries) {
-    lines.push(...componentBlock(tag, entry), '');
+    lines.push(...componentBlock(tag, entry, compact, options.icons !== undefined), '');
   }
   const example = exampleSpec(catalog, resolved.entries);
   if (example !== undefined) {

@@ -13,11 +13,13 @@ import { catalogData } from '@kimen/catalog';
 import { catalogPrompt, uiSpecTool, uiSpecJsonSchema } from '@kimen/emitter';
 
 // Only the components this surface needs: the whole catalog is ~200 KB.
-const components = ['ki-card', 'ki-button', 'ki-input', 'ki-badge', 'ki-alert', 'ki-stack', 'h2', 'p'];
+const components = ['ki-card', 'ki-icon', 'ki-button', 'ki-input', 'ki-select', 'ki-option', 'ki-textarea', 'ki-table'];
+const icons = ['shopping-bag', 'tag', 'search'] as const; // share these names with the renderer
+const collect = { save: ['customerName', 'region', 'notes'], preview: ['region'] };
 
-const prompt = catalogPrompt(catalogData, { components }); // system prompt text
-const tool = uiSpecTool(catalogData, { components });      // { name: 'emit_ui', description, inputSchema }
-const strict = uiSpecJsonSchema(catalogData, { components, target: 'openai-strict' }); // provider-strict schema
+const prompt = catalogPrompt(catalogData, { components, icons, verbosity: 'compact' }); // system prompt text
+const tool = uiSpecTool(catalogData, { components, icons });      // { name: 'emit_ui', description, inputSchema }
+const strict = uiSpecJsonSchema(catalogData, { components, icons, collect, target: 'openai-strict' }); // provider-strict schema
 
 for (const derivation of [prompt, tool, strict]) {
   if (!derivation.ok) throw new Error(JSON.stringify(derivation.issues)); // fail closed, never truncated
@@ -33,6 +35,11 @@ Pick one mode per provider:
 - **Prompt only** (any model): use `prompt.artifact` as the system prompt and
   parse the answer as JSON.
 
+With the strict schema, a `save` button can emit `collect: null` or
+`{ "customerName": "f-name", "region": "f-region", "notes": "f-notes" }`.
+Set the referenced fields' IDs and declare `save` in top-level `actions`.
+The host receives a report and decides whether to act on it.
+
 The derivations are advisory: they make valid output likely, never
 guaranteed. Validation below is what decides.
 
@@ -44,7 +51,7 @@ import { normalizeEmission, repairPrompt } from '@kimen/emitter';
 
 // parse() is yours: JSON.parse the text answer, or take the tool call's input object.
 // normalizeEmission drops the null placeholders strict structured output forces
-// (null props, null action, null id) and leaves every real mistake for validation.
+// (null props, action, id or collect) and leaves every real mistake for validation.
 let spec = normalizeEmission(parse(modelOutput));
 let report = validateUiSpec(spec);
 if (!report.ok) {
@@ -62,11 +69,15 @@ if (!report.ok) {
 ## 3. Render in the browser
 
 ```ts
-import { renderUiSpec } from '@kimen/catalog';
+import { renderUiSpec, selectSpecIcons } from '@kimen/catalog';
 import { defineCustomElements } from '@kimen/elements/loader';
+import '@kimen/elements/icons/shopping-bag';
+import '@kimen/elements/icons/tag';
+import '@kimen/elements/icons/search';
 import '@kimen/tokens/css'; // every token: agent output can name any catalog tag
 
-defineCustomElements(); // agent output can name any catalog tag
+defineCustomElements();
+selectSpecIcons(icons); // same names as the model receives
 
 const result = renderUiSpec(spec, {
   surface: document.querySelector('#genui')!,
