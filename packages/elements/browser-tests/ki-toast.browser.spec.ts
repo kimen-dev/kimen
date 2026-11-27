@@ -13,6 +13,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
+import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-toast.js';
 import { expectAccessible, parkPointer } from './axe';
@@ -642,6 +643,34 @@ describe('ki-toast assistive-technology outcome', () => {
 });
 
 describe('ki-toast theming', () => {
+  it.each(['light', 'dark'])('S46 uses the alert dismiss ink in onmars %s', async (scheme) => {
+    await browserCommands.emulateReducedMotion('reduce');
+    try {
+      defineKiAlert();
+      document.documentElement.setAttribute('data-ki-color-scheme', scheme);
+      const toast = await mountToast({ duration: 0, heading: 'Changes saved' });
+      const alert = document.createElement('ki-alert');
+      alert.dismissible = true;
+      alert.textContent = 'Changes saved';
+      document.body.append(alert);
+      await expect.element(page.getByRole('button', { name: 'Dismiss' }).last()).toBeVisible();
+
+      const ink = (host: Element) => {
+        const glyph = part(host, 'dismiss').querySelector('path');
+        if (glyph === null) throw new Error('Expected a dismiss glyph');
+        return getComputedStyle(glyph).fill;
+      };
+      const alertInk = ink(alert);
+      expect(ink(toast)).toBe(alertInk);
+
+      toast.style.setProperty('--ki-toast-dismiss-fg', 'rgb(42, 71, 98)');
+      expect(ink(toast)).toBe('rgb(42, 71, 98)');
+      expect(ink(alert)).toBe(alertInk);
+    } finally {
+      await browserCommands.emulateReducedMotion(null);
+    }
+  });
+
   it('S35 restyles every tone through the material3 tokens alone', async () => {
     const onmars = new Map<string, string>();
     for (const tone of tones) {

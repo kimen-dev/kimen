@@ -34805,6 +34805,10 @@
               "description": "color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353)."
             },
             {
+              "name": "--ki-toast-dismiss-fg",
+              "description": "Foreground of the toast dismiss glyph."
+            },
+            {
               "name": "--ki-toast-fg",
               "description": "color used by the toast component for the heading ink (issue #353)."
             },

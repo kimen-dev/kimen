@@ -739,6 +739,7 @@
   --ki-timeline-dot-warning-bg:var(--ki-surface-warning-base-em);
   --ki-timeline-dot-danger-bg:var(--ki-surface-danger-base-em);
   --ki-toast-bg:var(--ki-surface-s2);
+  --ki-toast-dismiss-fg:var(--ki-text-primary-high-em);
   --ki-toast-border:var(--ki-outline-none);
   --ki-toast-shadow:var(--ki-elevation-e3);
   --ki-toast-radius:var(--ki-radius-component-xxs);

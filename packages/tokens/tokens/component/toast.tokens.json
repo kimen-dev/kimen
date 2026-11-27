@@ -24,6 +24,11 @@
         "$value": "{ki.text.med-em}",
         "$description": "color used by the toast component for the message ink (issue #353)."
       },
+      "dismiss-fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Foreground of the toast dismiss glyph."
+      },
       "border": {
         "$type": "color",
         "$value": "{ki.outline.low-em}",
