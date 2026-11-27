@@ -352,6 +352,7 @@
   --ki-toast-backdrop-filter:none;
   --ki-toast-fg:var(--ki-text-high-em);
   --ki-toast-message-fg:var(--ki-text-med-em);
+  --ki-toast-dismiss-fg:var(--ki-text-high-em);
   --ki-toast-border:var(--ki-outline-low-em);
   --ki-toast-border-width:var(--ki-size-border-hairline);
   --ki-toast-shadow:var(--ki-elevation-e4);

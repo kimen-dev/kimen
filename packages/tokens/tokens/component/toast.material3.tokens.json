@@ -6,6 +6,11 @@
         "$value": "{ki.surface.s2}",
         "$description": "Material 3 snackbar-like container for the toast: a surface step above the page."
       },
+      "dismiss-fg": {
+        "$type": "color",
+        "$value": "{ki.text.primary-high-em}",
+        "$description": "Material 3 foreground of the toast dismiss glyph."
+      },
       "border": {
         "$type": "color",
         "$value": "{ki.outline.none}",

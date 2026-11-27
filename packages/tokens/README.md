@@ -441,7 +441,7 @@ npx @kimen/tokens check-theme theme.css
 npx @kimen/tokens check-theme theme.css overrides.css --json
 ```
 
-An installed package also exposes the `kimen-tokens` command.
+If the package is installed, you can also run `kimen-tokens check-theme theme.css`.
 
 Findings include the file, line, column and a suggested fix. For example,
 write `0px` for a dimension token used in CSS math. An `unread-token` warning

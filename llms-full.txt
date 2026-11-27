@@ -2840,11 +2840,11 @@ element if another request for the same tool replaces a pending one.
 
 Attributes:
 - `action` (string, required): Tool identifier shown to the person and available for reporting by the host.
-- `approve-label` (string, required): Verb or short phrase that describes what approval does, such as "Send email".
+- `approve-label` (string, required): Approval text, such as "Send email". Required for pending HTML and all generated specs.
 - `approved-label` (string, default 'Approved'): Localized outcome text when the host marks the request approved.
 - `consequence` (string | undefined): Cost or irreversible effect to read before deciding, displayed as a warning note.
 - `denied-label` (string, default 'Denied'): Localized outcome text when the host marks the request denied.
-- `deny-label` (string, required): Verb or short phrase for refusal, such as "Keep draft".
+- `deny-label` (string, required): Refusal text, such as "Keep draft". Required for pending HTML and all generated specs.
 - `expired-label` (string, default 'Expired'): Localized outcome text when the host marks the request expired.
 - `heading` (string, required): Question naming the proposed action. Provide it before asking for a decision.
 - `remember` (boolean, default false): Offers an unchecked preference limited to this action in the current conversation.
@@ -11051,6 +11051,7 @@ CSS custom properties:
 - `--ki-toast-border`: color used by the toast component for its hairline edge (issue #353). Default: onmars `var(--ki-outline-low-em)`, material3 `var(--ki-outline-none)`.
 - `--ki-toast-border-width`: dimension used by the toast component for its hairline edge. Default: `var(--ki-size-border-hairline)`.
 - `--ki-toast-danger-icon`: color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353). Default: `var(--ki-text-danger-high-em)`.
+- `--ki-toast-dismiss-fg`: Foreground of the toast dismiss glyph. Default: onmars `var(--ki-text-high-em)`, material3 `var(--ki-text-primary-high-em)`.
 - `--ki-toast-fg`: color used by the toast component for the heading ink (issue #353). Default: `var(--ki-text-high-em)`.
 - `--ki-toast-gap`: dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px). Default: `var(--ki-space-xl)`.
 - `--ki-toast-heading-font-family`: Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface. Default: `var(--ki-typography-family-heading)`.

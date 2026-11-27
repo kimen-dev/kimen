@@ -447,11 +447,11 @@ export const catalogGuidance: CatalogGuidance = {
     },
     "props": {
       "action": "Tool identifier shown to the person and available for reporting by the host.",
-      "approve-label": "Verb or short phrase that describes what approval does, such as \"Send email\".",
+      "approve-label": "Approval text, such as \"Send email\". Required for pending HTML and all generated specs.",
       "approved-label": "Localized outcome text when the host marks the request approved.",
       "consequence": "Cost or irreversible effect to read before deciding, displayed as a warning note.",
       "denied-label": "Localized outcome text when the host marks the request denied.",
-      "deny-label": "Verb or short phrase for refusal, such as \"Keep draft\".",
+      "deny-label": "Refusal text, such as \"Keep draft\". Required for pending HTML and all generated specs.",
       "expired-label": "Localized outcome text when the host marks the request expired.",
       "heading": "Question naming the proposed action. Provide it before asking for a decision.",
       "remember": "Offers an unchecked preference limited to this action in the current conversation.",

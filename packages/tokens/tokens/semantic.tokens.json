@@ -1522,7 +1522,7 @@
         "display": {
           "normal": {
             "$value": "{ki.font.weight.display.normal}",
-            "$description": "semantic font weight for typography weight display normal."
+            "$description": "Normal display weight. Onmars uses only 500."
           },
           "medium": {
             "$value": "{ki.font.weight.display.medium}",
@@ -1534,7 +1534,7 @@
           },
           "bold": {
             "$value": "{ki.font.weight.display.bold}",
-            "$description": "semantic font weight for typography weight display bold."
+            "$description": "Bold display weight. Onmars uses only 500."
           }
         },
         "body": {

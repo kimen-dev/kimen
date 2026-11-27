@@ -107,6 +107,9 @@
 }
 
 [part="dismiss"] {
+  --ki-button-ghost-neutral-rest-fg: var(--ki-toast-dismiss-fg);
+  --ki-button-ghost-neutral-hover-fg: var(--ki-toast-dismiss-fg);
+
   flex: none;
 }
 

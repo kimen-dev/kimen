@@ -1,6 +1,7 @@
 // @spec:033-emitter-kit
 // @spec:002-ki-button
 // @spec:022-ki-icon-button
+// @spec:098-ki-confirmation
 // @spec:154-action-per-event
 // Schema derivation (S1-S5, S10-S12, S15-S19): the catalog-specialized JSON
 // Schema behaves under an independent oracle (ajv, draft 2020-12) exactly
@@ -406,6 +407,35 @@ describe('uiSpecJsonSchema', () => {
     expect(strict(strictCard({ 'ki-approve': null, 'ki-deny': 'tool.denied' }))).toBe(true);
     expect(strict(strictCard({ 'ki-deny': 'tool.denied' }))).toBe(false);
   });
+
+  it.each(['approve-label', 'deny-label'])(
+    'S20 rejects a generated confirmation without %s',
+    (missing) => {
+      const components = ['ki-confirmation'];
+      const validate = compile(deriveOrThrow(catalogData, { components }));
+      const props = {
+        action: 'send_email',
+        heading: 'Send?',
+        'approve-label': 'Send',
+        'deny-label': 'Keep draft',
+      };
+      const spec = { root: { component: 'ki-confirmation', props }, version: 1 };
+      expect(validate(spec)).toBe(true);
+      expect(validateUiSpec(spec).ok).toBe(true);
+
+      const incomplete = {
+        ...spec,
+        root: {
+          ...spec.root,
+          props: Object.fromEntries(Object.entries(props).filter(([name]) => name !== missing)),
+        },
+      };
+      expect(validate(incomplete)).toBe(false);
+      expect(validateUiSpec(incomplete).issues).toEqual([
+        expect.objectContaining({ code: 'missing-required-prop', path: `root.props.${missing}` }),
+      ]);
+    },
+  );
 
   it('offers collect as a bounded map of node ids under draft-2020-12 only (spec 153)', () => {
     const validate = compile(deriveOrThrow(catalogData, { components: ['ki-button'] }));

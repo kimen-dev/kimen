@@ -1,0 +1,40 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0",
+    "@kimen/tokens": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-toast/cssProperties/--ki-toast-dismiss-fg": "092af5d9b0c04d7828ec06eceb0de73be114aecc5e9d3470c270251a2bd46b0a",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/compact~1dark/--ki-toast-dismiss-fg": "a093f8316152a33ceaf2203858c631e3ad85abe1b4355f07a9ad74a7dc53cf5b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/compact~1light/--ki-toast-dismiss-fg": "921b4840b80d63f383bca34d5a1fa5605483fef5a477252f2234ee4b307e13ce",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/contrast-more~1dark/--ki-toast-dismiss-fg": "a093f8316152a33ceaf2203858c631e3ad85abe1b4355f07a9ad74a7dc53cf5b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/contrast-more~1light/--ki-toast-dismiss-fg": "921b4840b80d63f383bca34d5a1fa5605483fef5a477252f2234ee4b307e13ce",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/dark/--ki-toast-dismiss-fg": "a093f8316152a33ceaf2203858c631e3ad85abe1b4355f07a9ad74a7dc53cf5b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/light/--ki-toast-dismiss-fg": "921b4840b80d63f383bca34d5a1fa5605483fef5a477252f2234ee4b307e13ce",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/reduced-transparency~1dark/--ki-toast-dismiss-fg": "a093f8316152a33ceaf2203858c631e3ad85abe1b4355f07a9ad74a7dc53cf5b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/reduced-transparency~1light/--ki-toast-dismiss-fg": "921b4840b80d63f383bca34d5a1fa5605483fef5a477252f2234ee4b307e13ce",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/touch~1dark/--ki-toast-dismiss-fg": "a093f8316152a33ceaf2203858c631e3ad85abe1b4355f07a9ad74a7dc53cf5b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/touch~1light/--ki-toast-dismiss-fg": "921b4840b80d63f383bca34d5a1fa5605483fef5a477252f2234ee4b307e13ce",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-toast": "e2b8b39a460f2cce4a05de9e3f860162fd9609eb460b8f7382ddf3c369e3fbb8",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-toaster": "dd56baa5b79c97f958278e9dfb10d3df9cb787415224e237881677afdf7a5eb2",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/compact~1dark/--ki-toast-dismiss-fg": "1b7803b159498c7f437349117ecd0e2695131e7060e91b6e7034d996124b7f32",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/compact~1light/--ki-toast-dismiss-fg": "86b9591a37334303365ed94e3e91500a5b8a66db9e36d912e2b03c894c9b637b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/contrast-more~1dark/--ki-toast-dismiss-fg": "1b7803b159498c7f437349117ecd0e2695131e7060e91b6e7034d996124b7f32",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/contrast-more~1light/--ki-toast-dismiss-fg": "86b9591a37334303365ed94e3e91500a5b8a66db9e36d912e2b03c894c9b637b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/dark/--ki-toast-dismiss-fg": "1b7803b159498c7f437349117ecd0e2695131e7060e91b6e7034d996124b7f32",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/light/--ki-toast-dismiss-fg": "86b9591a37334303365ed94e3e91500a5b8a66db9e36d912e2b03c894c9b637b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/reduced-transparency~1dark/--ki-toast-dismiss-fg": "1b7803b159498c7f437349117ecd0e2695131e7060e91b6e7034d996124b7f32",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/reduced-transparency~1light/--ki-toast-dismiss-fg": "86b9591a37334303365ed94e3e91500a5b8a66db9e36d912e2b03c894c9b637b",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/touch~1dark/--ki-toast-dismiss-fg": "1b7803b159498c7f437349117ecd0e2695131e7060e91b6e7034d996124b7f32",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/touch~1light/--ki-toast-dismiss-fg": "86b9591a37334303365ed94e3e91500a5b8a66db9e36d912e2b03c894c9b637b",
+    "/packages/@kimen~1tokens/tokens/--ki-toast-dismiss-fg": "ed51e70a4202d0be03df737c84406d3fa4f53cc4d441801b6706f79bf5841832"
+  },
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Give toast dismiss glyphs a neutral onmars default and a dedicated token. Bind the combined toast and toaster sheets.",
+  "release": "major",
+  "schemaVersion": 2
+}

@@ -104,6 +104,7 @@ None.
 - `--ki-toast-border`: color used by the toast component for its hairline edge (issue #353). Default: onmars `var(--ki-outline-low-em)`, material3 `var(--ki-outline-none)`.
 - `--ki-toast-border-width`: dimension used by the toast component for its hairline edge. Default: `var(--ki-size-border-hairline)`.
 - `--ki-toast-danger-icon`: color used by the toast component for the danger tone icon: the tone lives in the icon alone (issue #353). Default: `var(--ki-text-danger-high-em)`.
+- `--ki-toast-dismiss-fg`: Foreground of the toast dismiss glyph. Default: onmars `var(--ki-text-high-em)`, material3 `var(--ki-text-primary-high-em)`.
 - `--ki-toast-fg`: color used by the toast component for the heading ink (issue #353). Default: `var(--ki-text-high-em)`.
 - `--ki-toast-gap`: dimension used by the toast component between icon, text, action and dismiss button (issue #353: 12px). Default: `var(--ki-space-xl)`.
 - `--ki-toast-heading-font-family`: Font family for the toast heading (document 2, rule 6; issue #347). Override it to give toasts their own heading typeface. Default: `var(--ki-typography-family-heading)`.

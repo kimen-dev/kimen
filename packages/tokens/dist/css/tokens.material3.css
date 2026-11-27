@@ -303,7 +303,9 @@
   --ki-effect-component-secondary-hover-shadow:0px 1px 2px 0px rgba(0,0,0,0.3),0px 2px 6px 2px rgba(0,0,0,0.15);
   --ki-effect-video-hover-opacity:0;
   --ki-focus-ring-color:var(--ki-outline-primary-high-em);
+  --ki-typography-weight-display-normal:var(--ki-font-weight-display-normal);
   --ki-typography-weight-display-semibold:var(--ki-font-weight-display-semibold);
+  --ki-typography-weight-display-bold:var(--ki-font-weight-display-bold);
   --ki-typography-letter-spacing-xs:var(--ki-font-letter-spacing-xs);
   --ki-typography-letter-spacing-sm:var(--ki-font-letter-spacing-sm);
   --ki-typography-letter-spacing-md:var(--ki-font-letter-spacing-md);
@@ -741,6 +743,7 @@
   --ki-timeline-dot-warning-bg:var(--ki-surface-warning-base-em);
   --ki-timeline-dot-danger-bg:var(--ki-surface-danger-base-em);
   --ki-toast-bg:var(--ki-surface-s2);
+  --ki-toast-dismiss-fg:var(--ki-text-primary-high-em);
   --ki-toast-border:var(--ki-outline-none);
   --ki-toast-shadow:var(--ki-elevation-e3);
   --ki-toast-radius:var(--ki-radius-component-xxs);

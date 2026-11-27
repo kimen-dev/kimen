@@ -1198,7 +1198,7 @@ export namespace Components {
          */
         "action": string;
         /**
-          * Verb or short phrase that describes what approval does, such as "Send email".
+          * Approval text, such as "Send email". Required for pending HTML and all generated specs.
          */
         "approveLabel": string;
         /**
@@ -1216,7 +1216,7 @@ export namespace Components {
          */
         "deniedLabel": string;
         /**
-          * Verb or short phrase for refusal, such as "Keep draft".
+          * Refusal text, such as "Keep draft". Required for pending HTML and all generated specs.
          */
         "denyLabel": string;
         /**
@@ -8446,7 +8446,7 @@ declare namespace LocalJSX {
          */
         "action": string;
         /**
-          * Verb or short phrase that describes what approval does, such as "Send email".
+          * Approval text, such as "Send email". Required for pending HTML and all generated specs.
          */
         "approveLabel": string;
         /**
@@ -8464,7 +8464,7 @@ declare namespace LocalJSX {
          */
         "deniedLabel"?: string;
         /**
-          * Verb or short phrase for refusal, such as "Keep draft".
+          * Refusal text, such as "Keep draft". Required for pending HTML and all generated specs.
          */
         "denyLabel": string;
         /**

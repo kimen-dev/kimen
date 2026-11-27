@@ -673,10 +673,10 @@
   --ki-typography-line-height-display-1:var(--ki-font-line-height-display-1);
   --ki-typography-line-height-display-2:var(--ki-font-line-height-display-2);
   --ki-typography-line-height-display-3:var(--ki-font-line-height-display-3);
-  --ki-typography-weight-display-normal:var(--ki-font-weight-display-normal);
+  --ki-typography-weight-display-normal:var(--ki-font-weight-body-normal);
   --ki-typography-weight-display-medium:var(--ki-font-weight-display-medium);
   --ki-typography-weight-display-semibold:var(--ki-font-weight-body-normal);
-  --ki-typography-weight-display-bold:var(--ki-font-weight-display-bold);
+  --ki-typography-weight-display-bold:var(--ki-font-weight-body-normal);
   --ki-typography-weight-body-normal:var(--ki-font-weight-body-normal);
   --ki-typography-weight-body-medium:var(--ki-font-weight-body-medium);
   --ki-typography-weight-body-semibold:var(--ki-font-weight-body-semibold);
@@ -3225,6 +3225,7 @@
   --ki-toast-backdrop-filter:none;
   --ki-toast-fg:var(--ki-text-high-em);
   --ki-toast-message-fg:var(--ki-text-med-em);
+  --ki-toast-dismiss-fg:var(--ki-text-high-em);
   --ki-toast-border:var(--ki-outline-low-em);
   --ki-toast-border-width:var(--ki-size-border-hairline);
   --ki-toast-shadow:var(--ki-elevation-e4);
