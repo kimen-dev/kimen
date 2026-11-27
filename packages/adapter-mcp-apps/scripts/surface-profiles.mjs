@@ -5,7 +5,8 @@
 // is the only set a spec may name in that document (FR-003).
 //
 // `budget` holds the document's raw, gzip and brotli bytes (Art. IV): the size
-// measured after shortening vDOM keys, plus 0.1 % raw and 1 % compressed.
+// measured after shortening vDOM keys and sharing shadow styles, plus
+// 0.1 % raw and 1 % compressed.
 // tests/subset-documents.spec.ts enforces it. A change that grows a profile's
 // components re-measures its budget here.
 export const SURFACE_PROFILES = Object.freeze({
@@ -24,6 +25,6 @@ export const SURFACE_PROFILES = Object.freeze({
       'ki-stack',
       'ki-textarea',
     ]),
-    budget: Object.freeze({ raw: 434_330, gzip: 86_365, brotli: 72_089 }),
+    budget: Object.freeze({ raw: 431_801, gzip: 86_346, brotli: 71_987 }),
   }),
 });
