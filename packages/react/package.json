@@ -1,6 +1,6 @@
 {
   "name": "@kimen/react",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": false,
   "license": "Apache-2.0",
   "description": "Generated React bindings for the Kimen ki-* web components (spec 034): typed props from the component contract, ki-* custom events as callback props, tree-shakable per-component imports. Client-side rendering; generated from the same source of truth as every other Kimen artifact and never hand-edited.",

@@ -1,6 +1,6 @@
 {
   "name": "kimen",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Skills for building with Kimen: the ki-* web components and design tokens for ordinary pages, and the guarded generative UI layer (kimen-mcp, MCP Apps, A2UI, UI specs).",
   "author": { "name": "Kimen", "url": "https://kimen.dev" },
   "homepage": "https://kimen.dev/docs/guides/connect-agents/",

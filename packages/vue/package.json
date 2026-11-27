@@ -1,6 +1,6 @@
 {
   "name": "@kimen/vue",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": false,
   "license": "Apache-2.0",
   "description": "Generated Vue 3 bindings for the Kimen ki-* web components (spec 034): typed props, native event bindings and v-model on the form components over their re-dispatched native events, tree-shakable per-component imports. Client-side rendering; generated from the same source of truth as every other Kimen artifact and never hand-edited.",

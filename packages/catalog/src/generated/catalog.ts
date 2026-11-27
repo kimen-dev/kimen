@@ -10,7 +10,7 @@ import { catalogStructure } from './catalog-structure.js';
 export const catalogData = /* @__PURE__ */ withGuidance(
   catalogStructure,
   catalogGuidance,
-  "0.5.0",
+  "0.6.0",
 ) as {
   readonly catalogSchemaVersion: "1.9.0";
   readonly components: {
@@ -5305,5 +5305,5 @@ export const catalogData = /* @__PURE__ */ withGuidance(
       readonly whenToUse: "Hold one record, or the header row, inside a thead or a tbody.";
     };
   };
-  readonly elementsVersion: "0.5.0";
+  readonly elementsVersion: "0.6.0";
 };

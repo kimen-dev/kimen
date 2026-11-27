@@ -102,7 +102,7 @@ interface PendingAction {
  */
 export const KIMEN_APP_INFO: Implementation = {
   name: 'kimen-surface',
-  version: '0.5.0',
+  version: '0.6.0',
 };
 
 /** Where the surface is in the MCP Apps lifecycle. */

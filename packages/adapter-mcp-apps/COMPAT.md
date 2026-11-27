@@ -18,7 +18,7 @@ release pins that revision:
 
 | Adapter version | MCP Apps protocol version(s) | Status |
 | --- | --- | --- |
-| 0.5.0 | 2026-01-26 | supported |
+| 0.6.0 | 2026-01-26 | supported |
 
 Normative source: `specification/2026-01-26/apps.mdx` (status "Stable") in
 [github.com/modelcontextprotocol/ext-apps](https://github.com/modelcontextprotocol/ext-apps)
