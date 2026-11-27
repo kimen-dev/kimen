@@ -10,5 +10,7 @@
 }
 
 @media (prefers-contrast: more) {
-  :root { --ki-text-supporting: white; }
+  :root {
+    --ki-text-supporting: white;
+  }
 }

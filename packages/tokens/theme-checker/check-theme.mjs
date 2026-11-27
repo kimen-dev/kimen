@@ -122,13 +122,13 @@ function checkValue(type, value, report) {
   ) {
     report('type-mismatch', 'Use a CSS color.');
   }
-  if (
-    type === 'duration' &&
-    (kind === T.Number ||
-      kind === T.Percentage ||
-      (kind === T.Dimension && !/^(?:ms|s)$/iu.test(unit)))
-  ) {
-    report('type-mismatch', 'Use a duration with ms or s, for example 0ms.');
+  if (type === 'duration') {
+    const timeValue = kind === T.Dimension && /^(?:ms|s)$/iu.test(unit);
+    const calculated = kind === T.Function && !COLOR_FUNCTION.test(identifier);
+    const auto = kind === T.Ident && /^auto$/iu.test(identifier);
+    if (!timeValue && !calculated && !auto) {
+      report('type-mismatch', 'Use a duration with ms or s, for example 0ms.');
+    }
   }
 }
 

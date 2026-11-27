@@ -16,7 +16,7 @@ function closingType(token) {
 
 export const tokenValue = (token) => token?.[4]?.value;
 
-export function preferenceModes(head, modes) {
+function preferenceModes(head, modes) {
   const atRule = head[0]?.[0] === T.AtKeyword;
   const media = atRule && tokenValue(head[0]).toLowerCase() === 'media';
   if (atRule && !media) return 0;

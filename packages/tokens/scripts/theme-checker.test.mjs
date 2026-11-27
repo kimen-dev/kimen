@@ -4,7 +4,8 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { checkTheme } from '@kimen/tokens/check-theme';
+
+import { checkTheme } from '../theme-checker/check-theme.mjs';
 
 const filePath = (relative) => fileURLToPath(new URL(relative, import.meta.url));
 const fixture = filePath('./fixtures/theme-mistakes.css');
@@ -103,6 +104,14 @@ test('the CLI reports each mistake and preserves input order across files', () =
   const human = cli('check-theme', fixture);
   assert.ok(human.stdout.includes(`${fixture}:4:3`));
   assert.match(human.stdout, /0px/u);
+});
+
+test('a duration requires a time unit for a literal value', () => {
+  const css = ':root { --ki-duration-fast: red; --ki-duration-fast: 0s; }';
+  assert.deepEqual(
+    checkTheme(css).map(({ code }) => code),
+    ['type-mismatch'],
+  );
 });
 
 test('token detection respects CSS strings, selectors, nesting, escapes and comments', () => {
