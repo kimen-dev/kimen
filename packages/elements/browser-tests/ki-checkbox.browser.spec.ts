@@ -249,53 +249,16 @@ describe('ki-checkbox in a real browser', () => {
     expect(events).toEqual([]);
   });
 
-  it('S4 applies boolean presence semantics to attributes set after hydration', async () => {
+  it('S24 clears checked after the checkbox moves to another parent', async () => {
     cleanup();
-    const el = await mount();
-    const input = inputOf(el);
-    expect(el.checked).toBe(false);
-
-    // A present-but-falsy attribute set post-hydration means checked (presence).
-    el.setAttribute('checked', 'false');
-    await waitForStyles();
-    expect(el.checked).toBe(true);
-    expect(input.checked).toBe(true);
-
-    // Reflection is not fought: a normal toggle still unchecks and stays off.
-    await userEvent.click(input);
-    await waitForStyles();
-    expect(el.checked).toBe(false);
-    expect(el.hasAttribute('checked')).toBe(false);
-
-    // Native add/remove keep working through Stencil's own observation.
-    el.setAttribute('checked', '');
-    await waitForStyles();
-    expect(el.checked).toBe(true);
-    el.removeAttribute('checked');
-    await waitForStyles();
-    expect(el.checked).toBe(false);
-  });
-
-  it('S4 keeps boolean presence semantics after the checkbox moves to another parent', async () => {
-    cleanup();
-    const el = await mount();
+    const el = await mount('Email notifications', { checked: true });
     const input = inputOf(el);
 
     moveToNewParent(el);
     el.setAttribute('checked', 'false');
 
-    await expect.poll(() => el.checked).toBe(true);
-    await expect.poll(() => input.checked).toBe(true);
-    await expect.poll(() => el.getAttribute('checked')).toBe('');
-  });
-
-  it('S4 checked="false" in the markup renders the checkbox checked', async () => {
-    cleanup();
-    const el = await mount('Email notifications', { checked: 'false' });
-
-    expect(el.checked).toBe(true);
-    expect(inputOf(el).checked).toBe(true);
-    await expect.element(page.getByRole('checkbox', { name: 'Email notifications' })).toBeChecked();
+    await expect.poll(() => el.checked).toBe(false);
+    await expect.poll(() => input.checked).toBe(false);
   });
 
   it('S2 disabled checkbox stays inert, unfocused and emits no change', async () => {
@@ -633,39 +596,21 @@ describe('ki-checkbox in a real browser', () => {
   });
 });
 
-// Boolean presence semantics (native HTML parity): a present attribute means
-// true whatever its value. Stencil >= 4.45 removes a host attribute when it
-// reflects a parsed `false`, so these run against the built output.
-describe('ki-checkbox boolean presence in a real browser', () => {
-  it('S22 disabled="false" and required="false" written after the first render keep presence', async () => {
+describe('ki-checkbox boolean attributes', () => {
+  it('S24 disabled="false" and required="false" leave the checkbox operable and optional', async () => {
     cleanup();
-    const el = await mount();
+    const el = await mount('Email notifications', { disabled: true, required: true });
     el.setAttribute('disabled', 'false');
     el.setAttribute('required', 'false');
     await waitForStyles();
 
-    expect(inputOf(el).disabled).toBe(true);
-    expect(inputOf(el).required).toBe(true);
-    await userEvent.click(el, { force: true }).catch(() => undefined);
-    expect(el.checked).toBe(false);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
-    expect(el.getAttribute('required')).toBe('');
+    expect(inputOf(el).disabled).toBe(false);
+    expect(inputOf(el).required).toBe(false);
+    expect(el.checkValidity()).toBe(true);
+    await userEvent.click(inputOf(el));
+    expect(el.checked).toBe(true);
   });
 
-  it('S22 disabled="false" in the markup keeps the checkbox disabled', async () => {
-    cleanup();
-    const el = await mount('Email notifications', { disabled: 'false' });
-
-    expect(inputOf(el).disabled).toBe(true);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
-  });
-
-  // Stencil reflects a prop on its next render, so right after `checked =
-  // false` the `checked` attribute is still on the host. Presence must be
-  // re-read only for the attribute that was actually written: re-reading
-  // every observed one turned an unrelated write into "checked is present".
   it('unchecking by property survives another attribute written in the same tick', async () => {
     cleanup();
     const el = await mount('Email notifications', { checked: true, indeterminate: true });

@@ -83,6 +83,7 @@ const surfaces = Object.freeze([
   'packages/elements/llms.txt',
   ...wrapperTags.map((tag) => `packages/elements/llms/${tag}.md`),
   'packages/elements/llms/agent-setup.md',
+  'packages/elements/llms/boolean-attributes.md',
   'packages/elements/llms/theming.md',
   'packages/elements/src/components.d.ts',
 ]);

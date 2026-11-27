@@ -1,8 +1,4 @@
-import { Component, Element, Prop, State, h } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
+import { Component, Element, Prop, State, Watch, h } from '@stencil/core';
 import { formatSourceLabel } from './sources-model';
 import { connectSources, type NumberedSource, sameSource } from './sources-scope';
 
@@ -50,24 +46,13 @@ export class KiSources {
   @State() private sources: NumberedSource[] = [];
 
   private disconnect: (() => void) | undefined;
-  private openObserver?: MutationObserver;
 
   connectedCallback(): void {
     this.disconnect = connectSources(this.host, { update: this.update, reveal: this.reveal });
-    this.openObserver = observeAttributePresence(this.host, ['open'], () => {
-      if (!this.open) {
-        this.open = true;
-      }
-    });
-  }
-
-  componentWillLoad(): void {
-    this.open = booleanFromAttributePresence(this.open, this.host.hasAttribute('open'));
   }
 
   disconnectedCallback(): void {
     this.disconnect?.();
-    this.openObserver?.disconnect();
   }
 
   private update = (sources: NumberedSource[]): void => {
@@ -88,10 +73,17 @@ export class KiSources {
       return false;
     }
     this.open = true;
-    disclosure.open = true;
     target.focus();
     return true;
   };
+
+  // A queued native toggle must see the latest property write even if the
+  // next render has not run. User toggles still flow from details to the host.
+  @Watch('open')
+  protected syncDisclosure(open: boolean): void {
+    const disclosure = this.host.shadowRoot?.querySelector('details');
+    if (disclosure && disclosure.open !== open) disclosure.open = open;
+  }
 
   private onToggle = (event: Event): void => {
     if (event.currentTarget instanceof HTMLDetailsElement) {

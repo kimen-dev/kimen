@@ -61,6 +61,8 @@ appears before the label in secondary tabs. Set `icon-layout="inline"` or
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-tabs`: the default, only the tokens ki-tabs needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `icon-layout` ("inline" | "stacked" | undefined): Positions the decorative icon relative to its tab label. When omitted, primary stacks the icon above the label and secondary puts it inline.

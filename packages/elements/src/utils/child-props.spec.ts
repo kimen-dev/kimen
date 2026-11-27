@@ -9,7 +9,6 @@ function aChild(
   return {
     ...properties,
     getAttribute: (name: string) => attributes[name] ?? null,
-    hasAttribute: (name: string) => name in attributes,
   };
 }
 
@@ -44,9 +43,14 @@ describe('childDisabled', () => {
     expect(childDisabled(aChild({ disabled: true }))).toBe(true);
   });
 
-  it('keeps presence semantics: a present attribute disables whatever the property says', () => {
-    expect(childDisabled(aChild({ disabled: false }, { disabled: 'false' }))).toBe(true);
+  it('uses the same boolean rule for children that have not been upgraded', () => {
     expect(childDisabled(aChild({}, { disabled: '' }))).toBe(true);
+    expect(childDisabled(aChild({}, { disabled: 'true' }))).toBe(true);
+    expect(childDisabled(aChild({}, { disabled: 'false' }))).toBe(false);
+  });
+
+  it('prefers the current property to a stale reflected attribute', () => {
+    expect(childDisabled(aChild({ disabled: false }, { disabled: '' }))).toBe(false);
   });
 
   it('answers false for an enabled child', () => {

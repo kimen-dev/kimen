@@ -1,5 +1,7 @@
 # Feature Specification: ki-icon-button
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
@@ -330,13 +332,24 @@ Feature: Icon button
     When the person activates it
     Then the icon button becomes selected and reports the new pressed state
     And the icon button emits a change carrying the new state
+
+  # S20
+  Scenario Outline: Removing an optional state returns the icon button to an ordinary action
+    Given an icon button with the <attribute> attribute set to "false"
+    When the application removes the attribute
+    Then the button no longer exposes the corresponding accessibility state
+
+    Examples:
+      | attribute |
+      | pressed   |
+      | expanded  |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S16, S17, S19 | |
+| Core behavior | S1, S2, S3, S16, S17, S19, S20 | |
 | Keyboard path | S4, S5, S14 | |
 | Assistive-tech outcome | S6, S7, S8, S12, S13 | |
 | Form participation | S9 | |

@@ -13,10 +13,6 @@ import {
 } from '@stencil/core';
 import '../../../icons/x.js';
 import { setOverlayOpen } from '../../utils/anchored-overlay';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 import { childDisabled, childValue } from '../../utils/child-props';
 import {
   type ComboboxFilter,
@@ -38,7 +34,6 @@ interface Option {
 type Choice = Option & { match?: readonly [number, number] };
 
 const OPTION_TAG = ['ki', 'option'].join('-');
-const NATIVE_BOOLEAN_PROPS = ['disabled', 'required'] as const;
 
 /**
  * An editable, form-associated combobox with local or remote filtering,
@@ -164,7 +159,6 @@ export class KiCombobox {
   private initialValue: string | string[] = '';
   private selectedLabels = new Map<string, string>();
   private observer?: MutationObserver;
-  private presenceObserver?: MutationObserver;
   private requiredMessage?: string;
   // Whether the person's committed selection or a form reset withdrew `custom-error`.
   private customErrorWithdrawn = false;
@@ -179,23 +173,10 @@ export class KiCombobox {
       attributes: true,
       subtree: true,
     });
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      NATIVE_BOOLEAN_PROPS,
-      (attribute) => {
-        this[attribute] = true;
-      },
-    );
     this.readOptions();
   }
 
   componentWillLoad(): void {
-    for (const attribute of NATIVE_BOOLEAN_PROPS) {
-      this[attribute] = booleanFromAttributePresence(
-        this[attribute],
-        this.host.hasAttribute(attribute),
-      );
-    }
     this.initialValue = Array.isArray(this.value) ? [...this.value] : this.value;
     this.syncForm();
   }
@@ -213,7 +194,6 @@ export class KiCombobox {
 
   disconnectedCallback(): void {
     this.observer?.disconnect();
-    this.presenceObserver?.disconnect();
     this.dismiss();
   }
 

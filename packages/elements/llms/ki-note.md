@@ -46,6 +46,8 @@ consequence.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-note`: the default, only the tokens ki-note needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `icon` (boolean, default true): Shows the decorative icon. Set icon="false" in HTML to hide it.

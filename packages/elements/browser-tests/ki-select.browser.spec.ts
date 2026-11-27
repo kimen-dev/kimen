@@ -1340,71 +1340,43 @@ describe('ki-select active and selected options can be told apart', () => {
   );
 });
 
-// Boolean presence semantics (native HTML parity): a present attribute means
-// true whatever its value. Stencil >= 4.45 removes a host attribute when it
-// reflects a parsed `false`, so these run against the built output.
-describe('ki-select boolean presence in a real browser', () => {
+describe('ki-select boolean attributes', () => {
   async function frames(count = 2): Promise<void> {
     for (let index = 0; index < count; index += 1) {
       await new Promise((resolve) => requestAnimationFrame(resolve));
     }
   }
 
-  it('S26 disabled="false" and required="false" in the markup keep the select disabled and required', async () => {
+  it('S28 disabled="false" and required="false" leave the select operable and optional', async () => {
     const el = await mountSelect('disabled="false" required="false"');
-
-    expect(trigger(el).disabled).toBe(true);
-    expect(trigger(el).getAttribute('aria-required')).toBe('true');
-    trigger(el).click();
-    await frames();
-    expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
-    expect(el.getAttribute('required')).toBe('');
-  });
-
-  it('S26 disabled="false" written after the first render disables the select', async () => {
-    const el = await mountSelect();
     expect(trigger(el).disabled).toBe(false);
+    expect(trigger(el).getAttribute('aria-required')).toBeNull();
+    expect(el.checkValidity()).toBe(true);
 
-    el.setAttribute('disabled', 'false');
-    await frames();
-
-    expect(trigger(el).disabled).toBe(true);
     trigger(el).click();
     await frames();
-    expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
+    expect(trigger(el).getAttribute('aria-expanded')).toBe('true');
   });
 
-  it('S26 disabled="false" keeps an option unavailable in the markup and after the first render', async () => {
+  it('S28 disabled="false" keeps an option selectable in markup and after the first render', async () => {
     const el = await mountSelect(
       '',
-      `<ki-option value="es">Spain</ki-option><ki-option value="fr" disabled="false">France</ki-option><ki-option value="pt">Portugal</ki-option>`,
+      `<ki-option value="es">Spain</ki-option><ki-option value="fr" disabled="false">France</ki-option><ki-option value="pt" disabled>Portugal</ki-option>`,
     );
-    const options = [...el.querySelectorAll('ki-option')];
-
-    options[2]?.setAttribute('disabled', 'false');
-    await frames();
-
     trigger(el).click();
     await frames();
-    expect(rowAt(el, 1).getAttribute('aria-disabled')).toBe('true');
-    expect(rowAt(el, 2).getAttribute('aria-disabled')).toBe('true');
     rowAt(el, 1).click();
+    await frames();
+    expect(el.value).toBe('fr');
+
+    el.querySelector('[value="pt"]')?.setAttribute('disabled', 'false');
+    trigger(el).click();
+    await frames();
     rowAt(el, 2).click();
     await frames();
-    expect(el.value).toBe('');
-    expect(valueText(el)).toBe('Choose a country');
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(options[1]?.getAttribute('disabled')).toBe('');
-    expect(options[2]?.getAttribute('disabled')).toBe('');
+    expect(el.value).toBe('pt');
   });
 
-  // Presence semantics are about ATTRIBUTES. Framework wrappers assign
-  // PROPERTIES, and Stencil un-reflects a cleared property only at the next
-  // render: state derived from the still-present attribute goes stale.
   it('S14 clearing the required property lifts the requirement from the form', async () => {
     const { form, el } = await mountForm('required');
     expect(form.checkValidity()).toBe(false);

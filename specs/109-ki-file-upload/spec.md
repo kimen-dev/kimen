@@ -1,5 +1,7 @@
 # FileUpload
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 **Issue** #390 · **Branch** `feat/390-ki-file-upload`
 
 A form-associated file picker for attachments, imports and media. People can browse or
@@ -10,7 +12,7 @@ The application owns all file transfers and handles cancellation requests.
 
 | Family | Scenarios |
 | --- | --- |
-| Core behavior | S1, S2, S3 |
+| Core behavior | S1, S2, S3, S13 |
 | Keyboard path | S4, S5 |
 | Assistive-tech outcome | S6 |
 | Form participation | S7, S8, S9 |
@@ -130,4 +132,20 @@ Feature: ki-file-upload collects files for an application
     Given a coarse pointer device and "Attachments" with a removable file
     When the document opts into touch density
     Then Browse and Remove each have a target of at least 44 by 44 pixels
+
+  # S13
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a file upload control
+    When an attribute (disabled, required, and multiple) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 ```

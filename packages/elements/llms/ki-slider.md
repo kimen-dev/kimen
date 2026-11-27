@@ -59,6 +59,8 @@ action to receive the current value on commit.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-slider`: the default, only the tokens ki-slider needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `centered` (boolean, default false): Shows a midpoint tick and fills from that point to a single thumb.

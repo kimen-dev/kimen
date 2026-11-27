@@ -1,5 +1,7 @@
 # Phase 1 Data Model: ki-tabs
 
+Boolean attributes follow the [2026-11-27 founder decision](spec.md).
+
 No persistent data. The model is the composite's public state surface and
 its token vocabulary. The normative API contract lives in
 [contracts/tabs-contract.md](./contracts/tabs-contract.md); this file
@@ -17,7 +19,7 @@ models values, defaults and transitions for ALL THREE elements.
 | Attribute | Values | Default | Reflected | Invalid/absent behavior |
 |---|---|---|---|---|
 | `value` | string | `""` (effective when unset) | yes | the pairing identifier (FR-001); the FIRST tab in document order bearing a value owns it — later duplicates render but are never selectable (FR-014, research D3); an unset value participates as `""` under the same rules (documented misuse, never fatal) |
-| `disabled` | boolean | `false` | **yes — the group's MutationObserver watches this attribute** (research D3) | not selectable by any modality (S2), skipped by arrows and fallback (S12, S13), `tabindex="-1"` always, exposed unavailable via `internals.ariaDisabled` (FR-007); presence semantics (`disabled="false"` still disables — 006 D2 normalizer) |
+| `disabled` | boolean | `false` | **yes — the group's MutationObserver watches this attribute** (research D3) | not selectable by any modality (S2), skipped by arrows and fallback (S12, S13), `tabindex="-1"` always, exposed unavailable via `internals.ariaDisabled` (FR-007) |
 | `selected` | boolean | `false` | **yes — OUTPUT-ONLY** | written exclusively by the group's resolution; any author-set `selected` is ignored and overwritten on first render (FR-003); drives `:host([selected])` styling, the indicator, and `internals.ariaSelected` |
 
 ## Attribute model — `ki-tab-panel`

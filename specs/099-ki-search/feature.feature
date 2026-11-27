@@ -139,3 +139,9 @@ Feature: Search
     Given a coarse pointer and a search view with a removable recent search
     When the recent-search group appears
     Then the remove control offers a target of at least 44 by 44 pixels
+
+  # S22
+  Scenario: Removing a boolean override restores its default on state
+    Given a search field with highlight set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true

@@ -1,0 +1,30 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-checkbox/attributes/checked/description": "fb1760e5b9cf677ae01b4b9798dd7604be9f9d5e3e45bab1065b262e6221f17d",
+    "/packages/@kimen~1elements/components/ki-checkbox/properties/checked/description": "fb1760e5b9cf677ae01b4b9798dd7604be9f9d5e3e45bab1065b262e6221f17d",
+    "/packages/@kimen~1elements/components/ki-dialog/attributes/close-on-backdrop/description": "d4947a8891aa74cdb8483b2f770b2d35a1944b9e8b7d77b085e9811240e4712e",
+    "/packages/@kimen~1elements/components/ki-dialog/properties/closeOnBackdrop/description": "d4947a8891aa74cdb8483b2f770b2d35a1944b9e8b7d77b085e9811240e4712e",
+    "/packages/@kimen~1elements/components/ki-select/attributes/disabled/description": "ee67bebdbdd6980c427491e833401307f52589c8a6599e383371592ea0798c27",
+    "/packages/@kimen~1elements/components/ki-select/properties/disabled/description": "ee67bebdbdd6980c427491e833401307f52589c8a6599e383371592ea0798c27",
+    "/packages/@kimen~1elements/components/ki-switch/attributes/checked/description": "7c7bfdf2da58a33f6f2e522d41d2cc0f4cf9622e72758686f4b1ebb050ee6fbd",
+    "/packages/@kimen~1elements/components/ki-switch/properties/checked/description": "7c7bfdf2da58a33f6f2e522d41d2cc0f4cf9622e72758686f4b1ebb050ee6fbd",
+    "/packages/@kimen~1elements/components/ki-tab/attributes/disabled/description": "16051b2eef7e96f4c03135aba982b1af596184fd97e494a81c3c6e33e84569b9",
+    "/packages/@kimen~1elements/components/ki-tab/properties/disabled/description": "16051b2eef7e96f4c03135aba982b1af596184fd97e494a81c3c6e33e84569b9",
+    "/packages/@kimen~1elements/modules/./symbols/KiCheckbox": "93e08f221af2ff72d2a36fa05f1706305373a49fad5933c5473357eba2977c4f",
+    "/packages/@kimen~1elements/modules/./symbols/KiDialog": "96515980deced752599fbc5b8c7f0b3e7fb589b15f53ab07ff30c7f3ea9f8529",
+    "/packages/@kimen~1elements/modules/./symbols/KiOption": "c6412695afac4afe682eca8bd0a05efac4bd0211878b65a47684f4e1ca37d450",
+    "/packages/@kimen~1elements/modules/./symbols/KiRadio": "7ff84d99df35987797a993ac46dc9e2be028d14ec97f7a383be93d579cdda640",
+    "/packages/@kimen~1elements/modules/./symbols/KiSelect": "db3a5ab6e1617f1dd16f05ca8bfc4c2088ddb412b697afbce91d714eddc05442",
+    "/packages/@kimen~1elements/modules/./symbols/KiSwitch": "9ab3d9f2e8731ee655696acf3c941cd9c9ef786310f8d207bf77b91a4853f5d6"
+  },
+  "packages": [
+    "@kimen/elements"
+  ],
+  "reason": "F4 standardizes boolean attributes and changes existing markup behavior for exact false and default restoration",
+  "release": "major",
+  "schemaVersion": 2
+}

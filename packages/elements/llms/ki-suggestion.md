@@ -34,6 +34,8 @@ for the chosen title.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-suggestion`: the default, only the tokens ki-suggestion needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `description` (string | undefined): Optional accessible description, visible below the title in cards.

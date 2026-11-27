@@ -90,6 +90,8 @@ state. Its native button exposes that state as `aria-expanded`.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-button-group`: the default, only the tokens ki-button-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `attached` (boolean, default false): Joins neighboring actions at their inner edges. Buttons share the first button's variant and use its size when the group has no explicit size. Use for a closely related set of actions or for a split button.

@@ -311,34 +311,15 @@ describe('ki-switch in a real browser', () => {
     expect(el.checked).toBe(false);
   });
 
-  it('S4 applies boolean presence semantics to checked set after hydration', async () => {
-    const el = await mount();
-    const input = internalInput(el);
-    expect(el.checked).toBe(false);
-
-    // Present-but-falsy attribute set post-hydration means on (presence).
-    el.setAttribute('checked', 'false');
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    expect(el.checked).toBe(true);
-    expect(input.checked).toBe(true);
-
-    // Reflection is not fought: a normal toggle still turns it off and stays off.
-    await userEvent.click(input);
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    expect(el.checked).toBe(false);
-    expect(el.hasAttribute('checked')).toBe(false);
-  });
-
-  it('S4 keeps boolean presence semantics after the switch moves to another parent', async () => {
-    const el = await mount();
+  it('S27 clears checked after the switch moves to another parent', async () => {
+    const el = await mount('checked');
     const input = internalInput(el);
 
     moveToNewParent(el);
     el.setAttribute('checked', 'false');
 
-    await expect.poll(() => el.checked).toBe(true);
-    await expect.poll(() => input.checked).toBe(true);
-    await expect.poll(() => el.getAttribute('checked')).toBe('');
+    await expect.poll(() => el.checked).toBe(false);
+    await expect.poll(() => input.checked).toBe(false);
   });
 
   it('S5 Tab reaches the switch and its focus indication is visible', async () => {
@@ -770,42 +751,17 @@ describe('ki-switch in a real browser', () => {
   });
 });
 
-// Boolean presence semantics (native HTML parity): a present attribute means
-// true whatever its value. Stencil >= 4.45 removes a host attribute when it
-// reflects a parsed `false`, so these run against the built output.
-describe('ki-switch boolean presence in a real browser', () => {
-  it('S22 disabled="false" in the markup keeps the switch disabled', async () => {
+describe('ki-switch boolean attributes', () => {
+  it('S27 disabled="false" leaves the switch operable', async () => {
     const el = await mount('disabled="false"');
     const counts = eventCounts(el);
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(internalInput(el).disabled).toBe(false);
 
-    expect(internalInput(el).disabled).toBe(true);
-    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
-    expect(el.checked).toBe(false);
-    expect(counts.change()).toBe(0);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
+    await userEvent.click(internalInput(el));
+    expect(el.checked).toBe(true);
+    expect(counts.change()).toBe(1);
   });
 
-  it('S22 disabled="false" written after the first render disables the switch', async () => {
-    const el = await mount();
-    const counts = eventCounts(el);
-    el.setAttribute('disabled', 'false');
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-
-    expect(internalInput(el).disabled).toBe(true);
-    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
-    expect(el.checked).toBe(false);
-    expect(counts.change()).toBe(0);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
-  });
-
-  // Stencil reflects a prop on its next render, so right after `checked =
-  // false` the `checked` attribute is still on the host. Presence must be
-  // re-read only for the attribute that was actually written: re-reading
-  // every observed one turned an unrelated write into "checked is present".
   it('turning the switch off by property survives another attribute written in the same tick', async () => {
     const el = await mount('checked');
     expect(el.checked).toBe(true);

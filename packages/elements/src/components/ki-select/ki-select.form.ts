@@ -4,10 +4,6 @@ export interface SelectOptionRecord {
   disabled: boolean;
 }
 
-export function normalizeBooleanPresence(value: unknown): boolean {
-  return value !== false && value !== null && value !== undefined;
-}
-
 export function optionValue(value: string | null | undefined, label: string): string {
   return value ?? label.trim();
 }

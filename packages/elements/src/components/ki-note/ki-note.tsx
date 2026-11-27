@@ -1,4 +1,4 @@
-import { AttrDeserialize, Component, Element, Prop, h } from '@stencil/core';
+import { Component, Prop, h } from '@stencil/core';
 import { type KiNoteTone, noteGlyph } from './ki-note.icons';
 
 export type KiNoteSize = 'sm' | 'md';
@@ -19,8 +19,6 @@ export type KiNoteSize = 'sm' | 'md';
  */
 @Component({ tag: 'ki-note', styleUrl: 'ki-note.css', shadow: true })
 export class KiNote {
-  @Element() private host!: HTMLElement;
-
   /** Selects the background tint and decorative icon. Unknown values use neutral. */
   @Prop({ reflect: true }) tone: KiNoteTone = 'neutral';
 
@@ -29,23 +27,6 @@ export class KiNote {
 
   /** Shows the decorative icon. Set icon="false" in HTML to hide it. */
   @Prop({ mutable: true }) icon = true;
-
-  @AttrDeserialize('icon')
-  protected deserializeIcon(value: string | null): boolean {
-    return value !== 'false';
-  }
-
-  componentWillLoad(): void {
-    // The external custom-elements runtime skips AttrDeserialize and parses
-    // removal as false. Observe the host once for its lifetime so clearing
-    // the attribute also restores the default while the loaded note is detached.
-    const host = this.host;
-    new MutationObserver(() => {
-      if (!host.hasAttribute('icon') && !this.icon) {
-        this.icon = true;
-      }
-    }).observe(host, { attributeFilter: ['icon'] });
-  }
 
   private renderIcon() {
     return (

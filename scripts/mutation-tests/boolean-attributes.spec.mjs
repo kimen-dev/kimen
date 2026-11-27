@@ -16,22 +16,20 @@ const parse = [
 ].join('\n');
 const attribute =
   '            newValue = newValue === null || newValue === "false" && !isFormAssociated ? false : true;';
-const runtime = `${parse}\n${attribute}\n`;
+const reflectedValue = 'let xlink = false;';
+const runtime = `${parse}\n${attribute}\n${reflectedValue}\n`;
 
 describe('boolean-attributes', () => {
-  it('drops both form-associated exceptions and moves no line', () => {
-    expect(kimenBooleanAttributes(runtime)).toBe(
-      [
-        '    if (BUILD15.propBoolean && propType & 4 /* Boolean */) {',
-        '      if (false) {',
-        '        return propValue === "" || !!propValue;',
-        '      } else {',
-        '        return propValue === "false" ? false : propValue === "" || !!propValue;',
-        '      }',
-        '            newValue = newValue === null || newValue === "false" ? false : true;',
-        '',
-      ].join('\n'),
+  it('applies the Kimen parsing and reflection rules without moving lines', () => {
+    const rewritten = kimenBooleanAttributes(runtime, { enabled: 1, optional: 2 });
+    expect(rewritten).toContain('if (false) {');
+    expect(rewritten).toContain(
+      'newValue = newValue === null ? defaultValue : newValue !== "false";',
     );
+    expect(rewritten).toContain('this.removeAttribute(attrName)');
+    expect(rewritten).toContain('newValue === false && flags & 4 && kimenBooleanDefault');
+    expect(rewritten).toContain('const kimenBooleanDefaults = {"enabled":1,"optional":2};');
+    expect(rewritten.split('\n')).toHaveLength(runtime.split('\n').length);
     expect(kimenBooleanAttributes(runtime.replace('BUILD15', 'BUILD'))).toContain('if (false) {');
   });
 

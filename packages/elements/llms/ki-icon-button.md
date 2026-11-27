@@ -96,6 +96,8 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-icon-button`: the default, only the tokens ki-icon-button needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `command` ("close" | "request-close" | "show-modal" | undefined): Dialog action to run for `commandfor`. Use `show-modal` to open, `close` for direct dismissal, or `request-close` for guarded dismissal. Choose a command for local dialog control and omit it for other actions.

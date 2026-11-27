@@ -1,14 +1,4 @@
-import {
-  AttrDeserialize,
-  Component,
-  Element,
-  Event,
-  type EventEmitter,
-  Prop,
-  State,
-  Watch,
-  h,
-} from '@stencil/core';
+import { Component, Element, Event, type EventEmitter, Prop, State, Watch, h } from '@stencil/core';
 import { anchoredOverlayPosition } from '../../utils/anchored-overlay-layout';
 import type { OverlayPlacement } from '../../utils/anchored-overlay-position';
 import { AnchoredOverlay, resolveOverlayAnchor } from '../../utils/anchored-overlay';
@@ -74,11 +64,6 @@ export class KiPopover {
   /** Shows the arrow toward the trigger. */
   @Prop({ mutable: true }) arrow = true;
 
-  @AttrDeserialize('arrow')
-  protected deserializeArrow(value: string | null): boolean {
-    return value !== 'false';
-  }
-
   /** Use dialog for controls or toggletip for supplemental information. Rich toggletips can contain actions. */
   @Prop() kind: KiPopoverKind = 'dialog';
 
@@ -120,17 +105,6 @@ export class KiPopover {
     if (this.popup) {
       this.connect();
     }
-  }
-
-  componentWillLoad(): void {
-    // The external custom-elements runtime skips AttrDeserialize and treats
-    // removal as false. Observe the host for its lifetime, including detaches.
-    const host = this.host;
-    new MutationObserver(() => {
-      if (!host.hasAttribute('arrow') && !this.arrow) {
-        this.arrow = true;
-      }
-    }).observe(host, { attributeFilter: ['arrow'] });
   }
 
   componentDidLoad(): void {

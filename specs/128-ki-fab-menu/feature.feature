@@ -119,3 +119,9 @@ Feature: Floating action menu
     Given a coarse-pointer device displays the "Create" menu at compact density
     When the user opens the menu
     Then the trigger and actions each have a target at least 56 pixels wide and high
+
+  # S17
+  Scenario: Removing a boolean override restores its default on state
+    Given a floating action menu with scrim set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true

@@ -104,3 +104,9 @@ Feature: ki-code-block presents a source snippet with syntax and copy controls
     Given a theme with a custom syntax keyword ink
     When the reader views a Gherkin snippet
     Then its Gherkin keywords use that ink
+
+  # S17
+  Scenario: Removing a boolean override restores its default on state
+    Given a code block with copyable set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true

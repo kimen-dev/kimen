@@ -1,5 +1,7 @@
 # Phase 1 Data Model: ki-switch
 
+Boolean attributes follow the [2026-11-27 founder decision](spec.md).
+
 No persistent data. The model is the component's public state surface and
 its token vocabulary. The normative API contract lives in
 [contracts/switch-contract.md](./contracts/switch-contract.md); this file
@@ -9,8 +11,8 @@ models values, defaults and transitions.
 
 | Attribute | Values | Default | Reflected | Invalid/absent behavior |
 |---|---|---|---|---|
-| `checked` | boolean (presence) | off | **yes** — the attribute reflects LIVE state so CSS selects the on/off matrix | any present value — `"maybe"`, `"false"`, nonsense — means on (S4, FR-001); rendering never breaks |
-| `disabled` | boolean (presence) | `false` | yes (propagated to the internal input) | — |
+| `checked` | boolean | off | **yes** — the attribute reflects LIVE state so CSS selects the on/off matrix | `checked="false"` starts off and `checked="maybe"` starts on (S4, S27, FR-001) |
+| `disabled` | boolean | `false` | yes (propagated to the internal input) | — |
 | `name` | string | — | yes (host-level, FACE) | omitted → the switch contributes no form entry even when on |
 | `value` | string | `"on"` (submitted default, native checkbox parity) | yes | replaces the default submitted value only; an off switch never contributes any value, custom or not (S18, S11) |
 
@@ -20,12 +22,11 @@ Assumptions exclude each explicitly (Art. VII).
 ## Checked model (reflection + snapshot reset, FR-005)
 
 ```text
-              markup: checked attribute PRESENT (any value) = on
-                              │  (presence normalized over Stencil's
-                              │   string-"false" coercion — research D2)
-   first render ──────────────┘  checked property = presence   S4
+              markup: checked attribute parsed using the common rule
+                              │
+   first render ──────────────┘  checked property = parsed value   S27
         │
-        ├─ form association  → resetChecked := hasAttribute('checked')
+        ├─ form association  → resetChecked := checked
         │                      (snapshot, captured ONCE per association,
         │                       never updated by later mutations)
         ├─ user toggle       → checked flips, attribute reflects,
@@ -54,7 +55,7 @@ Invariants:
 
 | State | Type | Set by | Consumed by |
 |---|---|---|---|
-| `resetChecked` | boolean snapshot | `formAssociatedCallback` (once per association, from attribute presence) | `formResetCallback` (S12, S21) |
+| `resetChecked` | boolean snapshot | `formAssociatedCallback` (once per association, from the parsed checked state) | `formResetCallback` (S12, S21) |
 | `formDisabled` | boolean | `formDisabledCallback` (`fieldset[disabled]`, `form[disabled]` ancestry) | effective-disabled = `disabled \|\| formDisabled` → internal input `disabled`, no toggle, no form entry (S13) |
 
 ## State model (CSS states, never attributes/props — FR-009)

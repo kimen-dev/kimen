@@ -32,6 +32,8 @@ badge and is announced as “Inbox, 125 unread”. A zero count hides the badge.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-mobile-nav-item`: the default, only the tokens ki-mobile-nav-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `count` (number | undefined): Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.

@@ -1,5 +1,7 @@
 # Feature specification · Floating action menu
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`.
+
 **Branch** `feat/415-ki-fab-menu`  
 **Issue** #415  
 **Sources** Issue #415, the FabMenu reference preview, and the shipped FAB and Menu contracts.
@@ -130,13 +132,19 @@ Feature: Floating action menu
     Given a coarse-pointer device displays the "Create" menu at compact density
     When the user opens the menu
     Then the trigger and actions each have a target at least 56 pixels wide and high
+
+  # S17
+  Scenario: Removing a boolean override restores its default on state
+    Given a floating action menu with scrim set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true
 ```
 
 ## Scenario family coverage
 
 | Family | Scenario IDs | N/A justification |
 | --- | --- | --- |
-| Core behavior | S1–S5 | |
+| Core behavior | S1–S5, S17 | |
 | Keyboard path | S6–S10 | |
 | Assistive-tech outcome | S11 | |
 | Form participation | N/A | The actions are commands and native links. Buttons use `type="button"` and the component contributes no form value. |

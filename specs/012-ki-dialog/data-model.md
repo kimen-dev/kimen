@@ -1,5 +1,7 @@
 # Phase 1 Data Model: ki-dialog
 
+Boolean attributes follow the [2026-11-27 founder decision](spec.md).
+
 No persistent data. The model is the component's public state surface, its
 open/close lifecycle, its focus contract and its token vocabulary. The
 normative API contract lives in
@@ -10,9 +12,9 @@ models values, defaults and transitions.
 
 | Surface | Values | Default | Reflected | Invalid/absent behavior |
 |---|---|---|---|---|
-| `open` | boolean (presence) | `false` (closed) | **yes** — reflected live state; every close path removes it (FR-001) | absent → closed. Present in initial markup → the dialog opens modally on load (focus enters per FR-005; the recorded previously-focused element is the body, so close falls back to the body — Edge Cases). The internal native `<dialog>` NEVER carries its own `open` content attribute (research D1: that would render non-modally) |
+| `open` | boolean | `false` (closed) | **yes** — reflected live state; every close path removes it (FR-001) | false → closed. True in initial markup → the dialog opens modally on load (focus enters per FR-005; the recorded previously-focused element is the body, so close falls back to the body — Edge Cases). The internal native `<dialog>` NEVER carries its own `open` content attribute (research D1: that would render non-modally) |
 | `heading` | string | — (no heading) | yes (string attribute) | absent OR empty string → no `<h2>` rendered, no `aria-labelledby` set, dialog has NO accessible name — documented invalid usage in the catalog (FR-008, Edge Cases), never a crash |
-| `close-on-backdrop` | boolean (presence) | `false` | yes | absent → backdrop clicks never close (S3). Present — including `close-on-backdrop="false"` (HTML boolean semantics, Edge Cases) → backdrop click closes with reason `backdrop` (S4); catalog tells agents to omit the attribute rather than set `"false"` |
+| `close-on-backdrop` | boolean | `false` | yes | false → backdrop clicks leave the dialog open (S3, S17). True → a backdrop click closes it with reason `backdrop` (S4). |
 | `show()` | `Promise<void>` (Stencil `@Method`) | — | — | same observable result as adding `open`; no-op while already open — no state change, no event (FR-002) |
 | `close()` | `Promise<void>` (Stencil `@Method`) | — | — | same observable result as removing `open`; reports reason `method`; no-op while already closed (FR-002, S15) |
 

@@ -1,5 +1,7 @@
 # Feature Specification: ki-radio-group
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
@@ -262,27 +264,28 @@ Feature: Radio group
     When the user attempts to select "SMS"
     Then no selection change is observed and the group is exposed as unavailable
 
-  # S26
-  Scenario Outline: A boolean attribute written as "false" keeps presence semantics
-    Given a radio group "Contact preference" offering "Email", "SMS" and "Phone"
-    When the attribute <attribute>="false" is written on <target> <moment>
-    Then <target> behaves as <state>
-    And the attribute stays present on <target> with an empty value
-
-    Examples:
-      | attribute | target           | moment                 | state       |
-      | disabled  | the group        | in the initial markup  | disabled    |
-      | disabled  | the group        | after the first render | disabled    |
-      | required  | the group        | in the initial markup  | required    |
-      | disabled  | the option "SMS" | in the initial markup  | unavailable |
-      | disabled  | the option "SMS" | after the first render | unavailable |
-
   # S27
   Scenario: A script click on an option selects it as it selects a native radio
     Given the "Contact preference" group with no option selected
     When a script clicks the "SMS" option
     Then "SMS" is the selected option and the group's value reads "sms"
     And the page observes exactly one input event followed by exactly one change event
+
+  # S31
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a radio group with options
+    When an attribute (disabled, required, label-hidden, and option disabled) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S5
@@ -435,7 +438,7 @@ Feature: Radio group
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S19, S26, S27 | |
+| Core behavior | S1, S2, S3, S4, S19, S27, S31 | |
 | Keyboard path | S5, S6, S7, S8, S9, S20, S21, S25 | |
 | Assistive-tech outcome | S10, S11, S22, S23, S28, S29, S30 | |
 | Form participation | S12, S13, S14, S15, S24 | |

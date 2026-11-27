@@ -12,10 +12,6 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 import { fieldText } from '../../utils/field-message';
 import { clampValue } from '../ki-progress/ki-progress.math';
 import { type FileRejection, validateFileBatch } from './file-upload.validation';
@@ -179,7 +175,6 @@ export class KiFileUpload {
   private browse: HTMLButtonElement | undefined;
   private input: HTMLInputElement | undefined;
   private dragDepth = 0;
-  private presenceObserver?: MutationObserver;
   private loaded = false;
   private rows = new Map<string, KiFile>();
   private announcement = '';
@@ -202,28 +197,11 @@ export class KiFileUpload {
     return fieldText(this.errorText) || (this.showRequiredError ? this.requiredMessage : '');
   }
 
-  connectedCallback(): void {
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      ['disabled', 'required', 'multiple'],
-      (attribute) => {
-        this[attribute] = true;
-      },
-    );
-  }
-
   disconnectedCallback(): void {
-    this.presenceObserver?.disconnect();
     this.clearDrag();
   }
 
   componentWillLoad(): void {
-    for (const attribute of ['disabled', 'required', 'multiple'] as const) {
-      this[attribute] = booleanFromAttributePresence(
-        this[attribute],
-        this.host.hasAttribute(attribute),
-      );
-    }
     this.syncForm();
   }
 

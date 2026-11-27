@@ -4,7 +4,7 @@
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
+        "description": "Prevents selection by every modality and exposes the unavailable state.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -389,7 +389,7 @@
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
+        "description": "Prevents selection by every modality and exposes the unavailable state.",
         "replacement": null,
         "required": false,
         "type": "boolean"

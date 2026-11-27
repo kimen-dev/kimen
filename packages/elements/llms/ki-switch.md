@@ -15,7 +15,7 @@ choices, and ki-button for actions.
 
 ## Examples
 
-The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:
+The slotted label provides the accessible name.
 
 ```html
 <ki-switch checked>Autosave</ki-switch>
@@ -53,9 +53,11 @@ shows nothing.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-switch`: the default, only the tokens ki-switch needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
-- `checked` (boolean, default false): Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+- `checked` (boolean, default false): Live on/off state. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted setting ("Two-step sign-in needs a phone number"). While it holds text the switch is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles the switch, or when the form is reset, so it never blocks the corrected answer. It outranks an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for help that is not an error; use `help-text`. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
 - `disabled` (boolean, default false): Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
 - `help-text` (string | undefined): One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `custom-error` or `setCustomValidity` shows in this line's place.

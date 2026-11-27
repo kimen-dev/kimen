@@ -61,6 +61,8 @@ message comes from the event's default slot.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-timeline`: the default, only the tokens ki-timeline needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name of the ordered list.

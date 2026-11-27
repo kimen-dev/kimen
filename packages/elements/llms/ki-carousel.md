@@ -40,6 +40,8 @@ With per-tag imports, define both `ki-carousel` and `ki-carousel-item`.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-carousel`: the default, only the tokens ki-carousel needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `autoplay` (number | undefined, minimum 1, maximum 2147483647): Rotation interval in milliseconds. Omitting it leaves rotation off. Values below 5000 rotate every 5000 ms.

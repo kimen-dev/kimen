@@ -89,6 +89,8 @@ defineCustomElement();
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-reasoning`: the default, only the tokens ki-reasoning needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `done-label` (string, default 'Thought'): Summary text when done and elapsed time is unavailable.

@@ -1,4 +1,4 @@
-The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:
+The slotted label provides the accessible name.
 
 ```html
 <ki-switch checked>Autosave</ki-switch>

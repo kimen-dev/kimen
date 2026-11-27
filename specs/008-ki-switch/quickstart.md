@@ -75,7 +75,7 @@ bash scripts/gates/check-traceability.sh specs/008-ki-switch
    changes instantly with no thumb travel animation (S19).
 6. **Agent contract (US4)** — open `generated/docs.json`: every ki-switch
    member carries when-to-use/when-NOT-to-use including the
-   switch-vs-checkbox distinction; the boolean-presence note is there
+   switch-vs-checkbox distinction; the boolean attribute rule is there
    (S4's robustness contract).
 7. **Engine matrix (pre-release)** —
    `KIMEN_BROWSER_MATRIX=1 pnpm --filter @kimen/elements run test-browser`.

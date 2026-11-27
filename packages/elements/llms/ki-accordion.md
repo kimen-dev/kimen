@@ -34,6 +34,8 @@ one answer at a time.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-accordion`: the default, only the tokens ki-accordion needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `exclusive` (boolean, default false): Whether the accordion allows at most one direct member to be open.
